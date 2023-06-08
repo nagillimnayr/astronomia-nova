@@ -15,6 +15,7 @@
     "react": "^18.2.0",
     "react-aria": "^3.25.0",
     "react-dom": "^18.2.0",
+    "three": "^0.153.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {
@@ -23,6 +24,7 @@
     "@types/prettier": "^2.7.2",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
+    "@types/three": "^0.152.1",
     "@typescript-eslint/eslint-plugin": "^5.59.6",
     "@typescript-eslint/parser": "^5.59.6",
     "autoprefixer": "^10.4.14",
