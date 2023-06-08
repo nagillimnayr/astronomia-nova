@@ -13,6 +13,7 @@
     "@react-three/fiber": "^8.13.0",
     "@t3-oss/env-nextjs": "^0.3.1",
     "framer-motion": "^10.12.16",
+    "jotai": "^2.1.1",
     "next": "^13.4.4",
     "react": "^18.2.0",
     "react-aria": "^3.25.0",
