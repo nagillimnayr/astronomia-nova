@@ -37,12 +37,12 @@ const SolarSystem = () => {
   // use ref to store root of tree
   const root = useRef<KeplerBody>(null!);
 
-  useEventListener("keypress", (e: KeyboardEvent) => {
-    if (e.key === " ") {
-      console.log("Tree root node: ", root.current.name);
-      console.log("Children of root node: ", root.current.orbitingBodies);
-    }
-  });
+  // useEventListener("keypress", (e: KeyboardEvent) => {
+  //   if (e.key === " ") {
+  //     console.log("Tree root node: ", root.current.name);
+  //     console.log("Children of root node: ", root.current.orbitingBodies);
+  //   }
+  // });
 
   const assignAsRoot = (body: DynamicBody) => {
     if (!body) {
