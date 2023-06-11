@@ -1,0 +1,349 @@
+{
+  "Mercury": {
+    "Mass_KG": 0.330103e24,
+
+    "MeanRadius_Ratio": 0.383,
+    "MeanRadius_M": 2439.4e3,
+    "EquatorialRadius_M": 2440.53e3,
+    "PolarRadius_M": 2438.3e3,
+
+    "SurfaceGravity_Ms": 3.7,
+    "SurfaceAcceleration_Ms": 3.7,
+
+    "TopographicRange_M": 7.0e3,
+
+    "SemiMajorAxis_M": 57.909e9,
+    "SemiMajorAxis_AU": 0.38709927,
+
+    "SiderealOrbitPeriod_Days": 87.969,
+    "TropicalOrbitPeriod_Days": 87.968,
+
+    "Periapsis_M": 46.0e9,
+    "Apoapsis_M": 69.818e9,
+
+    "SynodicPeriod_Days": 115.88,
+
+    "MaxVelocity_KMs": 58.98,
+    "MinVelocity_KMs": 38.86,
+
+    "Eccentricity": 0.20563661,
+
+    "Inclination_Deg": 7.00559432,
+    "MeanLongitude_Deg": 252.2503235,
+    "LongitudeOfPeriapsis_Deg": 77.45779628,
+    "LongitudeOfAscendingNode_Deg": 48.33076593,
+
+    "ArgumentOfPeriapsis_Deg": 29.12478,
+
+    "MeanAngularMotion_Deg_Day": 4.0923388,
+
+    "AxialTilt_Deg": 0.034,
+
+    "SiderealRotationPeriod_Hrs": 1407.6,
+    "SiderealRotationPeriod_Days": 58.6462,
+
+    "Color": "0xF7F7F7"
+  },
+
+  "Venus": {
+    "Mass_KG": 4.86731e24,
+
+    "MeanRadius_Ratio": 0.95,
+    "MeanRadius_M": 6051.8e3,
+    "EquatorialRadius_M": 6051.8e3,
+    "PolarRadius_M": 6051.8e3,
+
+    "SurfaceGravity": 8.87,
+    "SurfaceAcceleration": 8.87,
+
+    "TopographicRange_M": 13.0e3,
+
+    "SemiMajorAxis_M": 108.21e9,
+    "SemiMajorAxis_AU": 0.72333566,
+
+    "SiderealOrbitPeriod_Days": 224.701,
+    "TropicalOrbitPeriod_Days": 224.695,
+
+    "Periapsis_M": 107.48e9,
+    "Apoapsis_M": 108.941e9,
+
+    "SynodicPeriod_Days": 583.92,
+
+    "MaxVelocity_KMs": 35.26,
+    "MinVelocity_KMs": 34.79,
+
+    "Eccentricity": 0.0068,
+
+    "Inclination_Deg": 3.3947,
+
+    "MeanLongitude_Deg": 181.9790995,
+    "LongitudeOfPeriapsis_Deg": 131.60246718,
+    "LongitudeOfAscendingNode_Deg": 76.67984255,
+
+    "ArgumentOfPeriapsis_Deg": 54.85229,
+
+    "AxialTilt_Deg": 177.36,
+
+    "SiderealRotationPeriod_Hrs": -5832.6,
+    "SiderealRotationPeriod_Days": -243.018,
+
+    "Color": "0xFCF75E"
+  },
+
+  "Earth": {
+    "Mass_KG": 5.97217e24,
+
+    "MeanRadius_Ratio": 1.0,
+    "MeanRadius_M": 6371.0084e3,
+    "EquatorialRadius_M": 6378.137e3,
+    "PolarRadius_M": 6356.752e3,
+
+    "SurfaceGravity": 9.798,
+    "SurfaceAcceleration": 9.78,
+
+    "SemiMajorAxis_M": 149.598e9,
+
+    "SiderealOrbitPeriod_Days": 365.256,
+    "TropicalOrbitPeriod_Days": 365.242,
+
+    "Periapsis_M": 147.095e9,
+    "Apoapsis_M": 152.1e9,
+
+    "MaxVelocity_KMs": 30.29,
+    "MinVelocity_KMs": 29.29,
+
+    "Eccentricity": 0.01671022,
+
+    "Inclination_Deg": 0.00005,
+
+    "MeanLongitude_Deg": 100.46435,
+    "LongitudeOfPeriapsis_Deg": 102.94719,
+    "LongitudeOfAscendingNode_Deg": -11.26064,
+
+    "ArgumentOfPeriapsis_Deg": 114.20783,
+
+    "AxialTilt_Deg": 23.44,
+
+    "SiderealRotationPeriod_Hrs": 23.9345,
+    "SiderealRotationPeriod_Days": 0.99726968,
+
+    "Color": "0x03C03C"
+  },
+
+  "EarthMoonBarycenter": {
+    "SemiMajorAxis_AU": 1.00000261,
+    "Eccentricity": 0.01671123,
+    "Inclination_Deg": -0.00001531,
+
+    "MeanLongitude_Deg": 100.46457166,
+    "LongitudeOfPeriapsis_Deg": 102.93768193,
+    "LongitudeOfAscendingNode_Deg": 0.0,
+
+    "ArgumentOfPeriapsis_Deg": 102.93768193
+  },
+
+  "Mars": {
+    "Mass_KG": 0.641691e24,
+
+    "MeanRadius_Ratio": 0.532,
+    "MeanRadius_M": 3389.5e3,
+    "EquatorialRadius_M": 3396.2e3,
+    "PolarRadius_M": 3376.2e3,
+
+    "SurfaceGravity": 3.71,
+    "SurfaceAcceleration": 3.69,
+
+    "SemiMajorAxis_M": 227.956e9,
+    "SemiMajorAxis_AU": 1.52371034,
+
+    "SiderealOrbitPeriod_Days": 686.98,
+    "TropicalOrbitPeriod_Days": 686.973,
+
+    "Periapsis_M": 206.65e9,
+    "Apoapsis_M": 249.261e9,
+
+    "MaxVelocity_KMs": 26.5,
+    "MinVelocity_KMs": 21.97,
+
+    "Eccentricity": 0.0933941,
+
+    "Inclination_Deg": 1.84969142,
+
+    "MeanLongitude_Deg": -4.55343205,
+    "LongitudeOfPeriapsis_Deg": -23.94362959,
+    "LongitudeOfAscendingNode_Deg": 49.55953891,
+
+    "ArgumentOfPeriapsis_Deg": null,
+
+    "AxialTilt_Deg": 25.19,
+
+    "SiderealRotationPeriod_Hrs": 24.6229,
+    "SiderealRotationPeriod_Days": 1.02595676,
+
+    "Color": "0xFF4F00"
+  },
+
+  "Jupiter": {
+    "Mass_KG": 1898.125e24,
+
+    "MeanRadius_Ratio": 10.973,
+    "MeanRadius_M": 69911.0e3,
+    "EquatorialRadius_M": 71492.0e3,
+    "PolarRadius_M": 66854.0e3,
+
+    "SurfaceGravity": 24.79,
+    "SurfaceAcceleration": 23.12,
+
+    "SemiMajorAxis_M": 778.479e9,
+    "SemiMajorAxis_AU": 5.202887,
+
+    "SiderealOrbitPeriod_Days": 4332.589,
+    "TropicalOrbitPeriod_Days": 4330.595,
+
+    "Periapsis_M": 740.595e9,
+    "Apoapsis_M": 816.363e9,
+
+    "MaxVelocity_KMs": 13.72,
+    "MinVelocity_KMs": 12.44,
+
+    "Eccentricity": 0.04838624,
+
+    "Inclination_Deg": 1.30439695,
+
+    "MeanLongitude_Deg": 34.39644051,
+    "LongitudeOfPeriapsis_Deg": 14.72847983,
+    "LongitudeOfAscendingNode_Deg": 100.47390909,
+
+    "ArgumentOfPeriapsis_Deg": null,
+
+    "AxialTilt_Deg": 3.13,
+
+    "SiderealRotationPeriod_Hrs": 9.925,
+    "SiderealRotationPeriod_Days": 0.41354,
+
+    "Color": "0xF4C430"
+  },
+
+  "Saturn": {
+    "Mass_KG": 568.317e24,
+
+    "MeanRadius_Ratio": 9.14,
+    "MeanRadius_M": 58232.0e3,
+    "EquatorialRadius_M": 60268.0e3,
+    "PolarRadius_M": 54364.0e3,
+
+    "SurfaceGravity": 10.44,
+    "SurfaceAcceleration": 8.96,
+
+    "SemiMajorAxis_M": 1432.041e9,
+    "SemiMajorAxis_AU": 9.53667594,
+
+    "SiderealOrbitPeriod_Days": 10759.22,
+    "TropicalOrbitPeriod_Days": 10746.94,
+
+    "Periapsis_M": 1357.554e9,
+    "Apoapsis_M": 1506.527e9,
+
+    "MaxVelocity_KMs": 10.18,
+    "MinVelocity_KMs": 9.09,
+
+    "Eccentricity": 0.05386179,
+
+    "Inclination_Deg": 2.48599187,
+
+    "MeanLongitude_Deg": 49.95424423,
+    "LongitudeOfPeriapsis_Deg": 92.59887831,
+    "LongitudeOfAscendingNode_Deg": 113.66242448,
+
+    "ArgumentOfPeriapsis_Deg": null,
+
+    "AxialTilt_Deg": 26.73,
+
+    "SiderealRotationPeriod_Hrs": 10.656,
+    "SiderealRotationPeriod_Days": 0.44401,
+
+    "Color": "F8DE7E"
+  },
+
+  "Uranus": {
+    "Mass_KG": 86.8099e24,
+
+    "MeanRadius_Ratio": 3.981,
+    "MeanRadius_M": 25362e3,
+    "EquatorialRadius_M": 25559.0e3,
+    "PolarRadius_M": 24973.0e3,
+
+    "SurfaceGravity": 8.87,
+    "SurfaceAcceleration": 8.69,
+
+    "SemiMajorAxis_M": 2867.043e9,
+    "SemiMajorAxis_AU": 19.18916464,
+
+    "SiderealOrbitPeriod_Days": 30685.4,
+    "TropicalOrbitPeriod_Days": 30588.74,
+
+    "Periapsis_M": 2732.696e9,
+    "Apoapsis_M": 3001.39e9,
+
+    "MaxVelocity_KMs": 7.11,
+    "MinVelocity_KMs": 6.49,
+
+    "Eccentricity": 0.04725744,
+
+    "Inclination_Deg": 0.77263783,
+
+    "MeanLongitude_Deg": 313.23810451,
+    "LongitudeOfPeriapsis_Deg": 170.9542763,
+    "LongitudeOfAscendingNode_Deg": 74.01692503,
+
+    "ArgumentOfPeriapsis_Deg": null,
+
+    "AxialTilt_Deg": 97.77,
+
+    "SiderealRotationPeriod_Hrs": -17.24,
+    "SiderealRotationPeriod_Days": -0.71833,
+
+    "Color": "0xAFDBF5"
+  },
+
+  "Neptune": {
+    "Mass_KG": 102.4092e24,
+
+    "MeanRadius_Ratio": 3.865,
+    "MeanRadius_M": 24622e3,
+    "EquatorialRadius_M": 24764.0e3,
+    "PolarRadius_M": 24341.0e3,
+
+    "SurfaceGravity": 11.15,
+    "SurfaceAcceleration": 11.0,
+
+    "SemiMajorAxis_M": 4514.953e9,
+    "SemiMajorAxis_AU": 30.06992276,
+
+    "SiderealOrbitPeriod_Days": 60189.0,
+    "TropicalOrbitPeriod_Days": 59799.9,
+
+    "Periapsis_M": 4471.05e9,
+    "Apoapsis_M": 4558.857e9,
+
+    "MaxVelocity_KMs": 5.5,
+    "MinVelocity_KMs": 5.37,
+
+    "Eccentricity": 0.00859048,
+
+    "Inclination_Deg": 1.77004347,
+
+    "MeanLongitude_Deg": -55.12002969,
+    "LongitudeOfPeriapsis_Deg": 44.96476227,
+    "LongitudeOfAscendingNode_Deg": 131.78422574,
+
+    "ArgumentOfPeriapsis_Deg": null,
+
+    "AxialTilt_Deg": 28.32,
+
+    "SiderealRotationPeriod_Hrs": 16.11,
+    "SiderealRotationPeriod_Days": 0.67125,
+
+    "Color": "0x4666FF"
+  }
+}

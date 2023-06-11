@@ -1,0 +1,167 @@
+{
+    "Pluto": {
+        "Mass_KG": ,
+        "EquatorialRadius_KM": ,
+        "PolarRadius_KM": ,
+
+        "SurfaceGravity": ,
+        "SurfaceAcceleration": ,
+
+        "SemiMajorAxis_M": ,
+        "SemiMinorAxis_M": ,
+
+        "SiderealOrbitPeriod_Days": ,
+        "TropicalOrbitPeriod_Days": ,
+
+        "Periapsis_M": ,
+        "Apoapsis_M": ,
+        
+        "SynodicPeriod_Days": ,
+
+        "MaxVelocity_KMs": ,
+        "MinVelocity_KMs": ,
+
+        "Eccentricity": ,
+
+        "Inclination_Deg": ,
+        "LongitudeOfAscendingNode_Deg": ,
+        "ArgumentOfPeriapsis_Deg": ,
+        
+        "AxialTilt_Deg": ,
+        
+        "SiderealRotationPeriod_Hrs": ,
+    },
+    
+    "Ceres": {
+        "Mass_KG": ,
+        "EquatorialRadius_KM": ,
+        "PolarRadius_KM": ,
+
+        "SurfaceGravity": ,
+        "SurfaceAcceleration": ,
+
+        "SemiMajorAxis_M": ,
+        "SemiMinorAxis_M": ,
+
+        "SiderealOrbitPeriod_Days": ,
+        "TropicalOrbitPeriod_Days": ,
+
+        "Periapsis_M": ,
+        "Apoapsis_M": ,
+        
+        "SynodicPeriod_Days": ,
+
+        "MaxVelocity_KMs": ,
+        "MinVelocity_KMs": ,
+
+        "Eccentricity": ,
+
+        "Inclination_Deg": ,
+        "LongitudeOfAscendingNode_Deg": ,
+        "ArgumentOfPeriapsis_Deg": ,
+        
+        "AxialTilt_Deg": ,
+        
+        "SiderealRotationPeriod_Hrs": ,
+    },
+    
+    "": {
+        "Mass_KG": ,
+        "EquatorialRadius_KM": ,
+        "PolarRadius_KM": ,
+
+        "SurfaceGravity": ,
+        "SurfaceAcceleration": ,
+
+        "SemiMajorAxis_M": ,
+        "SemiMinorAxis_M": ,
+
+        "SiderealOrbitPeriod_Days": ,
+        "TropicalOrbitPeriod_Days": ,
+
+        "Periapsis_M": ,
+        "Apoapsis_M": ,
+        
+        "SynodicPeriod_Days": ,
+
+        "MaxVelocity_KMs": ,
+        "MinVelocity_KMs": ,
+
+        "Eccentricity": ,
+
+        "Inclination_Deg": ,
+        "LongitudeOfAscendingNode_Deg": ,
+        "ArgumentOfPeriapsis_Deg": ,
+        
+        "AxialTilt_Deg": ,
+        
+        "SiderealRotationPeriod_Hrs": ,
+    },
+    
+    "": {
+        "Mass_KG": ,
+        "EquatorialRadius_KM": ,
+        "PolarRadius_KM": ,
+
+        "SurfaceGravity": ,
+        "SurfaceAcceleration": ,
+
+        "SemiMajorAxis_M": ,
+        "SemiMinorAxis_M": ,
+
+        "SiderealOrbitPeriod_Days": ,
+        "TropicalOrbitPeriod_Days": ,
+
+        "Periapsis_M": ,
+        "Apoapsis_M": ,
+        
+        "SynodicPeriod_Days": ,
+
+        "MaxVelocity_KMs": ,
+        "MinVelocity_KMs": ,
+
+        "Eccentricity": ,
+
+        "Inclination_Deg": ,
+        "LongitudeOfAscendingNode_Deg": ,
+        "ArgumentOfPeriapsis_Deg": ,
+        
+        "AxialTilt_Deg": ,
+        
+        "SiderealRotationPeriod_Hrs": ,
+    },
+    
+    "": {
+        "Mass_KG": ,
+        "EquatorialRadius_KM": ,
+        "PolarRadius_KM": ,
+
+        "SurfaceGravity": ,
+        "SurfaceAcceleration": ,
+
+        "SemiMajorAxis_M": ,
+        "SemiMinorAxis_M": ,
+
+        "SiderealOrbitPeriod_Days": ,
+        "TropicalOrbitPeriod_Days": ,
+
+        "Periapsis_M": ,
+        "Apoapsis_M": ,
+        
+        "SynodicPeriod_Days": ,
+
+        "MaxVelocity_KMs": ,
+        "MinVelocity_KMs": ,
+
+        "Eccentricity": ,
+
+        "Inclination_Deg": ,
+        "LongitudeOfAscendingNode_Deg": ,
+        "ArgumentOfPeriapsis_Deg": ,
+        
+        "AxialTilt_Deg": ,
+        
+        "SiderealRotationPeriod_Hrs": ,
+    },
+
+}
