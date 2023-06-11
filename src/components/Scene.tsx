@@ -1,4 +1,5 @@
 import { Canvas } from "@react-three/fiber";
+import SpinCube from "./SpinCube";
 
 const Scene = () => {
   return (
@@ -7,6 +8,7 @@ const Scene = () => {
         <spotLight />
       </perspectiveCamera>
       <ambientLight intensity={0.1} />
+      <SpinCube />
     </Canvas>
   );
 };
