@@ -1,10 +1,10 @@
 import React, { useCallback, useRef, useState } from "react";
 import { useLoader, useFrame } from "@react-three/fiber";
-import { type DynamicBody } from "../../Classes/Dynamics";
+import { type DynamicBody } from "../../classes/Dynamics";
 import Body from "../Body/Body";
 import loadBodyPreset from "../../utils/loadBodyPreset";
-import type KeplerBody from "../../Classes/KeplerBody";
-import { traverseTree } from "../../Classes/KeplerBody";
+import type KeplerBody from "../../classes/KeplerBody";
+import { traverseTree } from "../../classes/KeplerBody";
 import KeplerTreeContext from "../../context/KeplerTreeContext";
 import { useEventListener } from "@react-hooks-library/core";
 import { useTexture } from "@react-three/drei";
