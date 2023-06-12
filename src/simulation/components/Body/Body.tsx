@@ -14,7 +14,7 @@ import {
 } from "three";
 import KeplerTreeContext from "../../context/KeplerTreeContext";
 import KeplerBody from "../../classes/KeplerBody";
-import { Trail } from "~/drei-imports/Trail";
+import { Trail } from "~/drei-imports/abstractions/Trail";
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
