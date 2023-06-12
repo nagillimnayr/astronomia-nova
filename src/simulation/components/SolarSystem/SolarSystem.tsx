@@ -77,7 +77,7 @@ const SolarSystem = () => {
     makeFixedUpdateFn((timeStep: number) => {
       traverseTree(root.current, timeStep * DAY);
     }, 24),
-    [root.current]
+    []
   );
 
   useFrame(({ clock }, delta) => {

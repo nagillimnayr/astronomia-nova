@@ -22,6 +22,7 @@ import KeplerBody from '../../classes/KeplerBody';
 import { Trail } from '~/drei-imports/abstractions/Trail';
 import { MeshLineGeometry } from '@react-three/drei';
 import { TextureLoader } from 'three';
+import Vec3 from '~/simulation/types/Vec3';
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -35,8 +36,8 @@ type BodyAttributes = {
   name: string;
   color: ColorRepresentation;
   mass?: number;
-  initialPosition?: Vector3;
-  initialVelocity?: Vector3;
+  initialPosition?: Vec3;
+  initialVelocity?: Vec3;
   meanRadius?: number;
 };
 type BodyProps = {

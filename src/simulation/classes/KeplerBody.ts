@@ -1,14 +1,11 @@
 import { Vector3 } from 'three';
 import { DynamicBody } from './Dynamics';
 import calculateGravitation from '../systems/physics/forces/calculateGravitation';
+import Vec3 from '../types/Vec3';
 
 class KeplerBody extends DynamicBody {
   private _orbitingBodies: KeplerBody[];
-  constructor(
-    mass?: number,
-    initialPosition?: Vector3,
-    initialVelocity?: Vector3
-  ) {
+  constructor(mass?: number, initialPosition?: Vec3, initialVelocity?: Vec3) {
     super(mass, initialPosition, initialVelocity);
     this._orbitingBodies = [];
   }

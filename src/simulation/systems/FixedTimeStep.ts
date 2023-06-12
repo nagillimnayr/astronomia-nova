@@ -51,8 +51,8 @@ export function makeFixedUpdateFn(
   updateFn: (timeStep: number) => void,
   stepsPerSecond: number
 ) {
-  let remainder: number = 0; // Will be captured in closure
-  const timeStep = 1 / stepsPerSecond;
+  let remainder = 0; // Will be captured in closure
+  const timeStep = 1 / stepsPerSecond; // constant time step between updates
 
   const update = (deltaTime: number) => {
     // determine how many updates we need to do for this frame
