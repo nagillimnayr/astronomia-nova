@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useLoader } from "@react-three/fiber";
 import { type DynamicBody } from "../../classes/Dynamics";
 import Body from "../Body/Body";
 import loadBodyPreset from "../../utils/loadBodyPreset";
@@ -10,6 +10,7 @@ import KeplerTreeContext from "../../context/KeplerTreeContext";
 import { makeFixedUpdateFn } from "../../systems/FixedTimeStep";
 import { DAY } from "../../utils/constants";
 import { useTexture } from "@react-three/drei";
+import { TextureLoader } from "three";
 
 const SolarSystem = () => {
   // load textures
@@ -23,7 +24,7 @@ const SolarSystem = () => {
     saturnTexture,
     uranusTexture,
     neptuneTexture,
-  ] = useTexture([
+  ] = useLoader(TextureLoader, [
     "src/simulation/assets/textures/2k_sun.jpg",
     "src/simulation/assets/textures/2k_mercury.jpg",
     "src/simulation/assets/textures/2k_venus_atmosphere.jpg",
