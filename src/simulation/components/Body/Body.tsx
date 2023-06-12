@@ -3,20 +3,15 @@ import React, {
   useContext,
   useImperativeHandle,
   useRef,
-  useState,
 } from "react";
-import { extend, Object3DNode, ThreeEvent, useFrame } from "@react-three/fiber";
+import { extend, type Object3DNode, type ThreeEvent } from "@react-three/fiber";
 
 import {
-  ColorRepresentation,
-  Mesh,
-  Object3D,
-  Vector3,
-  Color,
-  Material,
-  Texture,
+  type ColorRepresentation,
+  type Mesh,
+  type Vector3,
+  type Texture,
 } from "three";
-import { DynamicBody } from "../../classes/Dynamics";
 import KeplerTreeContext from "../../context/KeplerTreeContext";
 import KeplerBody from "../../classes/KeplerBody";
 import { Trail } from "~/dynamic-imports/Trail";
