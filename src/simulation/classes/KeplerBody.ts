@@ -34,7 +34,12 @@ const traverseTree = (node: KeplerBody, deltaTime: number) => {
   console.assert(node, 'null node');
 
   for (const orbitingBody of node.orbitingBodies) {
-    orbitingBody.acceleration = calculateGravitation(orbitingBody, node);
+    // convert the vector returned into an array and spread it so that we can use the .set()
+    // method so as to avoid unnecessary garbage collection
+    orbitingBody.acceleration.set(
+      ...calculateGravitation(orbitingBody, node).toArray()
+    );
+
     // update velocity and position
     orbitingBody.update(deltaTime);
 
