@@ -4,7 +4,12 @@ import React, {
   useImperativeHandle,
   useRef,
 } from 'react';
-import { extend, type Object3DNode, type ThreeEvent } from '@react-three/fiber';
+import {
+  extend,
+  type Object3DNode,
+  type ThreeEvent,
+  useLoader,
+} from '@react-three/fiber';
 
 import {
   type ColorRepresentation,
@@ -16,6 +21,7 @@ import KeplerTreeContext from '../../context/KeplerTreeContext';
 import KeplerBody from '../../classes/KeplerBody';
 import { Trail } from '~/drei-imports/abstractions/Trail';
 import { MeshLineGeometry } from '@react-three/drei';
+import { TextureLoader } from 'three';
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -36,16 +42,20 @@ type BodyAttributes = {
 type BodyProps = {
   children?: React.ReactNode;
   args: BodyAttributes;
-  texture?: Texture;
+  texturePath?: string;
 };
 
 const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   props: BodyProps,
   fwdRef
 ) {
+  // destructure parameters
   const { name, color, mass, initialPosition, initialVelocity } = props.args;
 
-  // Get function from context
+  // load texture
+  const texture = useLoader(TextureLoader, props.texturePath ?? '');
+
+  // get function from context
   const addSelfToTree = useContext(KeplerTreeContext);
 
   // get refs
@@ -101,8 +111,8 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     >
       <mesh visible ref={meshRef} scale={props.args.meanRadius ?? 1}>
         <sphereGeometry />
-        {props.texture ? (
-          <meshBasicMaterial map={props.texture} />
+        {props.texturePath ? (
+          <meshBasicMaterial map={texture} />
         ) : (
           <meshBasicMaterial color={props.args.color} />
         )}
