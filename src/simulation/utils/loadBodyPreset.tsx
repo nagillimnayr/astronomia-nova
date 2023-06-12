@@ -1,7 +1,7 @@
 import Body from '../components/Body/Body';
 import data from '../data/presets/Planets.json';
 import { Color, MeshBasicMaterial, Vector3 } from 'three';
-import { DIST_MULT, KM_TO_M, SOLAR_MASS } from './constants';
+import { DIST_MULT, EARTH_RADIUS, KM_TO_M, SOLAR_MASS } from './constants';
 import React from 'react';
 
 type key =
@@ -57,6 +57,7 @@ export default function loadBodyPreset(name: key) {
     0,
     -(planetData.MaxVelocity_KMs * KM_TO_M) / DIST_MULT
   );
+  const meanRadius = planetData.MeanRadius_M / EARTH_RADIUS / 2;
 
   return {
     name: name as string,
@@ -64,5 +65,6 @@ export default function loadBodyPreset(name: key) {
     mass,
     initialPosition,
     initialVelocity,
+    meanRadius,
   };
 }
