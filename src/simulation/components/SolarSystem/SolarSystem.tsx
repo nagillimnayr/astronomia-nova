@@ -9,8 +9,7 @@ import KeplerTreeContext from "../../context/KeplerTreeContext";
 //import { useEventListener } from "@react-hooks-library/core";
 import { makeFixedUpdateFn } from "../../systems/FixedTimeStep";
 import { DAY } from "../../utils/constants";
-//import { useTexture } from "@react-three/drei";
-import useTexture from "~/drei-imports/usetexture";
+import { useTexture } from "@react-three/drei";
 
 const SolarSystem = () => {
   // load textures
@@ -25,15 +24,15 @@ const SolarSystem = () => {
     uranusTexture,
     neptuneTexture,
   ] = useTexture([
-    "src/assets/textures/2k_sun.jpg",
-    "src/assets/textures/2k_mercury.jpg",
-    "src/assets/textures/2k_venus_atmosphere.jpg",
-    "src/assets/textures/2k_earth_daymap.jpg",
-    "src/assets/textures/2k_mars.jpg",
-    "src/assets/textures/2k_jupiter.jpg",
-    "src/assets/textures/2k_saturn.jpg",
-    "src/assets/textures/2k_uranus.jpg",
-    "src/assets/textures/2k_neptune.jpg",
+    "src/simulation/assets/textures/2k_sun.jpg",
+    "src/simulation/assets/textures/2k_mercury.jpg",
+    "src/simulation/assets/textures/2k_venus_atmosphere.jpg",
+    "src/simulation/assets/textures/2k_earth_daymap.jpg",
+    "src/simulation/assets/textures/2k_mars.jpg",
+    "src/simulation/assets/textures/2k_jupiter.jpg",
+    "src/simulation/assets/textures/2k_saturn.jpg",
+    "src/simulation/assets/textures/2k_uranus.jpg",
+    "src/simulation/assets/textures/2k_neptune.jpg",
   ]);
   // use ref to store root of tree
   const root = useRef<KeplerBody>(null!);
