@@ -48,7 +48,7 @@ export default function loadBodyPreset(name: key) {
   const planetData: PlanetData = jsonData[index];
 
   const color = new Color(parseInt(planetData.Color, 16));
-  console.log(color);
+
   const mass = planetData.Mass_KG / SOLAR_MASS;
   const initialPosition: Vec3 = [planetData.Periapsis_M / DIST_MULT, 0, 0];
   const initialVelocity: Vec3 = [
