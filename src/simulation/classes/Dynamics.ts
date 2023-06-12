@@ -1,17 +1,19 @@
 import { Object3D, Vector3 } from 'three';
 import PointMass from '../interfaces/PointMass';
 
+type vec3 = [number, number, number];
+
 class KinematicBody extends Object3D {
   private _velocity: Vector3;
   private _acceleration: Vector3;
 
-  constructor(initialPosition?: Vector3, initialVelocity?: Vector3) {
+  constructor(initialPosition?: vec3, initialVelocity?: vec3) {
     super();
     if (initialPosition) {
-      this.position.set(...initialPosition.toArray());
+      this.position.set(...initialPosition);
     }
     this._velocity = initialVelocity
-      ? new Vector3(...initialVelocity.toArray())
+      ? new Vector3(...initialVelocity)
       : new Vector3(0, 0, 0);
     this._acceleration = new Vector3(0, 0, 0);
   }
@@ -20,13 +22,13 @@ class KinematicBody extends Object3D {
   get velocity(): Vector3 {
     return this._velocity;
   }
-  set velocity(newVelocity: Vector3) {
-    this._velocity.set(...newVelocity.toArray());
+  set velocity(newVelocity: vec3) {
+    this._velocity.set(...newVelocity);
   }
 
   // acceleration
-  set acceleration(newAcceleration: Vector3) {
-    this._acceleration.set(...newAcceleration.toArray());
+  set acceleration(newAcceleration: vec3) {
+    this._acceleration.set(...newAcceleration);
   }
   get acceleration(): Vector3 {
     return this._acceleration;
@@ -48,11 +50,7 @@ class KinematicBody extends Object3D {
 class DynamicBody extends KinematicBody implements PointMass {
   private _mass: number;
 
-  constructor(
-    mass?: number,
-    initialPosition?: Vector3,
-    initialVelocity?: Vector3
-  ) {
+  constructor(mass?: number, initialPosition?: vec3, initialVelocity?: vec3) {
     super(initialPosition, initialVelocity);
     this._mass = mass ?? 0;
   }
