@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.6",
+    "@heroicons/react": "^2.0.18",
     "@react-hooks-library/core": "^0.5.1",
     "@react-spring/web": "^9.7.2",
     "@react-three/drei": "^9.74.6",
