@@ -15,6 +15,7 @@ import {
 import KeplerTreeContext from "../../context/KeplerTreeContext";
 import KeplerBody from "../../classes/KeplerBody";
 import { Trail } from "~/drei-imports/abstractions/Trail";
+import { MeshLineGeometry } from "@react-three/drei";
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -30,6 +31,7 @@ type BodyAttributes = {
   mass?: number;
   initialPosition?: Vector3;
   initialVelocity?: Vector3;
+  meanRadius?: number;
 };
 type BodyProps = {
   children?: React.ReactNode;
@@ -50,6 +52,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   const meshRef = useRef<Mesh>(null!);
   const bodyRef = useRef<KeplerBody>(null!);
   const childrenRefs = useRef<KeplerBody[]>([]);
+  const trailRef = useRef<MeshLineGeometry>(null!);
 
   const addChildToTree = (body: KeplerBody) => {
     // add child to array
@@ -96,10 +99,21 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
       args={[mass, initialPosition, initialVelocity]}
       onClick={handleClick}
     >
-      <mesh visible ref={meshRef}>
+      <mesh visible ref={meshRef} scale={props.args.meanRadius ?? 1}>
         <sphereGeometry />
-        {<meshBasicMaterial map={props.texture} />}
-        <Trail target={meshRef} width={2} length={500} decay={0.1} />
+        {props.texture ? (
+          <meshBasicMaterial map={props.texture} />
+        ) : (
+          <meshBasicMaterial color={props.args.color} />
+        )}
+
+        <Trail
+          ref={trailRef}
+          target={meshRef}
+          width={1}
+          length={400}
+          decay={0.1}
+        />
       </mesh>
 
       <KeplerTreeContext.Provider value={addChildToTree}>
