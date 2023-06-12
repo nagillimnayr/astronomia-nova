@@ -1,5 +1,5 @@
-import React from 'react';
-import SolarSystem from './SolarSystem/SolarSystem';
+import React from "react";
+import SolarSystem from "./SolarSystem/SolarSystem";
 
 const Simulation = () => {
   return (
@@ -9,3 +9,5 @@ const Simulation = () => {
     </group>
   );
 };
+
+export default Simulation;
