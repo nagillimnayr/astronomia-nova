@@ -1,7 +1,7 @@
-import { type NextPage } from "next";
-import Head from "next/head";
-import Link from "next/link";
-import Scene from "~/components/Scene";
+import { type NextPage } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
+import Scene from '~/components/Scene';
 
 const Home: NextPage = () => {
   return (
@@ -35,18 +35,12 @@ const Home: NextPage = () => {
             >
               <h3 className="text-2xl font-bold">First Steps →</h3>
               <div className="text-lg">
-                Gathered by gravity Sea of Tranquility billions upon billions
-                birth corpus callosum the only home we've ever known. Something
-                incredible is waiting to be known dream of the mind's eye
-                intelligent beings take root and flourish vastness is bearable
-                only through love cosmic ocean. From which we spring bits of
-                moving fluff astonishment a mote of dust suspended in a sunbeam
-                astonishment stirred by starlight? Something incredible is
-                waiting to be known star stuff harvesting star light hundreds of
-                thousands descended from astronomers extraordinary claims
-                require extraordinary evidence across the centuries and billions
-                upon billions upon billions upon billions upon billions upon
-                billions upon billions.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                vulputate faucibus mollis. Nam lorem nisl, porttitor et
+                consequat non, consectetur eget magna. Proin facilisis
+                consectetur tellus, at porta leo euismod viverra. Cras vulputate
+                nec purus in posuere. Proin at dapibus neque. Maecenas vel orci
+                non orci mollis aliquam.
               </div>
             </Link>
             <Link
@@ -56,8 +50,11 @@ const Home: NextPage = () => {
             >
               <h3 className="text-2xl font-bold">Documentation →</h3>
               <div className="text-lg">
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Maecenas congue faucibus dui quis tempor. Proin ut metus est.
+                Class aptent taciti sociosqu ad litora torquent per conubia
+                nostra, per inceptos himenaeos. Maecenas vel commodo dui. Duis
+                sed mi ex.
               </div>
             </Link>
           </div>
