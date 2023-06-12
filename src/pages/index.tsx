@@ -15,7 +15,7 @@ const Home: NextPage = () => {
       <div className="flex min-h-screen flex-col items-center justify-start bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <header className="box-border flex min-h-min min-w-full flex-row content-center justify-center justify-items-center border-2 border-white text-center">
           <h1 className="text-center text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-            Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
+            VR <span className="text-[hsl(280,100%,70%)]">Astro</span> Sim
           </h1>
         </header>
 
@@ -35,8 +35,18 @@ const Home: NextPage = () => {
             >
               <h3 className="text-2xl font-bold">First Steps →</h3>
               <div className="text-lg">
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
+                Gathered by gravity Sea of Tranquility billions upon billions
+                birth corpus callosum the only home we've ever known. Something
+                incredible is waiting to be known dream of the mind's eye
+                intelligent beings take root and flourish vastness is bearable
+                only through love cosmic ocean. From which we spring bits of
+                moving fluff astonishment a mote of dust suspended in a sunbeam
+                astonishment stirred by starlight? Something incredible is
+                waiting to be known star stuff harvesting star light hundreds of
+                thousands descended from astronomers extraordinary claims
+                require extraordinary evidence across the centuries and billions
+                upon billions upon billions upon billions upon billions upon
+                billions upon billions.
               </div>
             </Link>
             <Link
