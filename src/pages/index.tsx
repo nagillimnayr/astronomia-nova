@@ -1,6 +1,7 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRef } from 'react';
 import Scene from '~/components/Scene';
 
 const Home: NextPage = () => {
@@ -20,19 +21,16 @@ const Home: NextPage = () => {
         </header>
 
         <main className="container flex min-h-fit flex-col items-center justify-start gap-12  border-2 border-blue-500 px-4 py-16">
+          {/* Canvas */}
           <div
             id="canvas-holder"
-            className="h-96 min-w-full border-2 border-green-500"
+            className="h-96 min-w-full border-2 border-white"
           >
             <Scene />
           </div>
 
           <div className="grid grid-cols-1 gap-4 border-2 border-red-500 sm:grid-cols-2 md:gap-8">
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
+            <div className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
               <h3 className="text-2xl font-bold">First Steps →</h3>
               <div className="text-lg">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
@@ -42,12 +40,8 @@ const Home: NextPage = () => {
                 nec purus in posuere. Proin at dapibus neque. Maecenas vel orci
                 non orci mollis aliquam.
               </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
+            </div>
+            <div className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
               <h3 className="text-2xl font-bold">Documentation →</h3>
               <div className="text-lg">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -56,7 +50,7 @@ const Home: NextPage = () => {
                 nostra, per inceptos himenaeos. Maecenas vel commodo dui. Duis
                 sed mi ex.
               </div>
-            </Link>
+            </div>
           </div>
         </main>
         <footer className="flex min-h-fit min-w-full flex-row border-2 border-white text-white">
