@@ -22,9 +22,6 @@ const TimeDisplay = forwardRef<HTMLSpanElement>(function TimeDisplay() {
           </span>
         </span>
       </div>
-      <div>
-        <button></button>
-      </div>
     </div>
   );
 });
