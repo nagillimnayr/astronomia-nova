@@ -66,6 +66,9 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   const trailRef = useRef<MeshLineGeometry>(null!);
 
   const addChildToTree = (body: KeplerBody) => {
+    if (!body) {
+      return;
+    }
     // add child to array
     childrenRefs.current.push(body);
 
@@ -101,7 +104,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
       ref={(body: KeplerBody) => {
         bodyRef.current = body;
 
-        console.log(`adding ${body.name} node to tree`);
+        console.log(`adding ${body?.name} node to tree`);
 
         // pass ref to parent to add it to the tree
         addSelfToTree(body);
