@@ -3,23 +3,23 @@ import React, {
   useContext,
   useImperativeHandle,
   useRef,
-} from "react";
-import { extend, type Object3DNode, type ThreeEvent } from "@react-three/fiber";
+} from 'react';
+import { extend, type Object3DNode, type ThreeEvent } from '@react-three/fiber';
 
 import {
   type ColorRepresentation,
   type Mesh,
   type Vector3,
   type Texture,
-} from "three";
-import KeplerTreeContext from "../../context/KeplerTreeContext";
-import KeplerBody from "../../classes/KeplerBody";
-import { Trail } from "~/drei-imports/abstractions/Trail";
-import { MeshLineGeometry } from "@react-three/drei";
+} from 'three';
+import KeplerTreeContext from '../../context/KeplerTreeContext';
+import KeplerBody from '../../classes/KeplerBody';
+import { Trail } from '~/drei-imports/abstractions/Trail';
+import { MeshLineGeometry } from '@react-three/drei';
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
-declare module "@react-three/fiber" {
+declare module '@react-three/fiber' {
   interface ThreeElements {
     keplerBody: Object3DNode<KeplerBody, typeof KeplerBody>;
   }
@@ -60,7 +60,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
 
     // setup attachment with parent
     const parent: KeplerBody = body.parent as KeplerBody;
-    console.assert(parent, "failed to cast to parent");
+    console.assert(parent, 'failed to cast to parent');
     parent.addOrbitingBody(body);
   };
 
@@ -95,7 +95,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         // pass ref to parent to add it to the tree
         addSelfToTree(body);
       }}
-      name={name ?? ""}
+      name={name ?? ''}
       args={[mass, initialPosition, initialVelocity]}
       onClick={handleClick}
     >
@@ -113,6 +113,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
           width={1}
           length={400}
           decay={0.1}
+          color={props.args.color}
         />
       </mesh>
 
