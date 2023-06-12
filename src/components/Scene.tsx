@@ -2,6 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import SpinCube from "./SpinCube";
 import TrailSphere from "./TrailSphere";
 import { OrbitControls } from "~/drei-imports/OrbitControls";
+import Simulation from "~/simulation/components/Simulation";
 
 const Scene = () => {
   return (
@@ -10,9 +11,10 @@ const Scene = () => {
         <spotLight />
       </perspectiveCamera>
       <ambientLight intensity={0.1} />
-      <SpinCube />
-      <TrailSphere />
+      {/* <SpinCube />
+      <TrailSphere /> */}
       <OrbitControls />
+      <Simulation />
     </Canvas>
   );
 };
