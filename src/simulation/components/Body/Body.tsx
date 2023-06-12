@@ -16,10 +16,10 @@ import {
   Material,
   Texture,
 } from "three";
-import { DynamicBody } from "../../Classes/Dynamics";
+import { DynamicBody } from "../../classes/Dynamics";
 //import GravBody from '../../Classes/GravBody';
 import KeplerTreeContext from "../../context/KeplerTreeContext";
-import KeplerBody from "../../Classes/KeplerBody";
+import KeplerBody from "../../classes/KeplerBody";
 
 // extend DynamicBody so the reconciler is aware of it
 // extend({ DynamicBody });
@@ -49,7 +49,10 @@ type BodyProps = {
   texture?: Texture;
 };
 
-const Body = forwardRef<KeplerBody, BodyProps>((props: BodyProps, fwdRef) => {
+const Body = forwardRef<KeplerBody, BodyProps>(function Body(
+  props: BodyProps,
+  fwdRef
+) {
   const { name, color, mass, initialPosition, initialVelocity } = props.args;
 
   // Get function from context
@@ -87,7 +90,7 @@ const Body = forwardRef<KeplerBody, BodyProps>((props: BodyProps, fwdRef) => {
       return;
     }
     const body: KeplerBody = bodyRef.current;
-    const parent = body.parent;
+    //const parent = body.parent;
     console.log(`${body.name}:`, body);
   };
 
