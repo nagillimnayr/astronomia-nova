@@ -1,10 +1,10 @@
-import React from "react";
-import SolarSystem from "./SolarSystem/SolarSystem";
+import React from 'react';
+import SolarSystem from './SolarSystem/SolarSystem';
 
 const Simulation = () => {
   return (
     <group>
-      <polarGridHelper />
+      <polarGridHelper args={[24, 16, 24, 64]} />
       <SolarSystem />
     </group>
   );
