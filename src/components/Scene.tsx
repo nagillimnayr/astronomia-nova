@@ -1,8 +1,6 @@
-import { Canvas } from "@react-three/fiber";
-import SpinCube from "./SpinCube";
-import TrailSphere from "./TrailSphere";
-import { OrbitControls } from "~/drei-imports/controls/OrbitControls";
-import Simulation from "~/simulation/components/Simulation";
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '~/drei-imports/controls/OrbitControls';
+import Simulation from '~/simulation/components/Simulation';
 
 const Scene = () => {
   return (
@@ -11,8 +9,6 @@ const Scene = () => {
         <spotLight />
       </perspectiveCamera>
       <ambientLight intensity={0.1} />
-      {/* <SpinCube />
-      <TrailSphere /> */}
       <OrbitControls />
       <Simulation />
     </Canvas>
