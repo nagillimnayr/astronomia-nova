@@ -1,5 +1,5 @@
-import { Object3D, Vector3 } from "three";
-import PointMass from "../interfaces/PointMass";
+import { Object3D, Vector3 } from 'three';
+import PointMass from '../interfaces/PointMass';
 
 class KinematicBody extends Object3D {
   private _velocity: Vector3;
@@ -16,20 +16,20 @@ class KinematicBody extends Object3D {
     this._acceleration = new Vector3(0, 0, 0);
   }
 
-  // getters
+  // velocity
   get velocity(): Vector3 {
     return this._velocity;
   }
-  get acceleration(): Vector3 {
-    return this._acceleration;
-  }
-
-  // setters
   set velocity(newVelocity: Vector3) {
     this._velocity.set(...newVelocity.toArray());
   }
+
+  // acceleration
   set acceleration(newAcceleration: Vector3) {
     this._acceleration.set(...newAcceleration.toArray());
+  }
+  get acceleration(): Vector3 {
+    return this._acceleration;
   }
 
   // update
@@ -64,7 +64,7 @@ class DynamicBody extends KinematicBody implements PointMass {
     if (newMass >= 0) {
       this._mass = newMass;
     } else {
-      throw new Error("mass cannot be negative");
+      throw new Error('mass cannot be negative');
     }
   }
 }
