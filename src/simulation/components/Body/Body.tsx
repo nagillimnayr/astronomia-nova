@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { extend, Object3DNode, ThreeEvent, useFrame } from "@react-three/fiber";
-import { Trail } from "@react-three/drei";
+
 import {
   ColorRepresentation,
   Mesh,
@@ -17,17 +17,10 @@ import {
   Texture,
 } from "three";
 import { DynamicBody } from "../../classes/Dynamics";
-//import GravBody from '../../Classes/GravBody';
 import KeplerTreeContext from "../../context/KeplerTreeContext";
 import KeplerBody from "../../classes/KeplerBody";
+import { Trail } from "~/dynamic-imports/Trail";
 
-// extend DynamicBody so the reconciler is aware of it
-// extend({ DynamicBody });
-// declare module '@react-three/fiber' {
-//   interface ThreeElements {
-//     dynamicBody: Object3DNode<DynamicBody, typeof DynamicBody>;
-//   }
-// }
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
 declare module "@react-three/fiber" {
