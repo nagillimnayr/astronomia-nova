@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import SpinCube from "./SpinCube";
 import TrailSphere from "./TrailSphere";
-import { OrbitControls } from "~/dynamic-imports/OrbitControls";
+import { OrbitControls } from "~/drei-imports/OrbitControls";
 
 const Scene = () => {
   return (

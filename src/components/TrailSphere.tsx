@@ -3,8 +3,8 @@ import { useRef } from "react";
 import { Object3D } from "three";
 import { type ColorRepresentation } from "three/src/math/Color";
 import { type Mesh } from "three/src/objects/Mesh";
-import { Sphere } from "~/dynamic-imports/Shapes";
-import { Trail } from "~/dynamic-imports/Trail";
+import { Sphere } from "~/drei-imports/Shapes";
+import { Trail } from "~/drei-imports/Trail";
 
 type SphereProps = {
   color?: ColorRepresentation;
