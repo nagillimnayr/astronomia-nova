@@ -1,6 +1,7 @@
 import data from '../data/presets/Planets.json';
 import { Color } from 'three';
 import { DIST_MULT, EARTH_RADIUS, KM_TO_M, SOLAR_MASS } from './constants';
+import Vec3 from '../types/Vec3';
 
 type key =
   | 'Mercury'
@@ -49,8 +50,8 @@ export default function loadBodyPreset(name: key) {
   const color = new Color(parseInt(planetData.Color, 16));
   console.log(color);
   const mass = planetData.Mass_KG / SOLAR_MASS;
-  const initialPosition = [planetData.Periapsis_M / DIST_MULT, 0, 0];
-  const initialVelocity = [
+  const initialPosition: Vec3 = [planetData.Periapsis_M / DIST_MULT, 0, 0];
+  const initialVelocity: Vec3 = [
     0,
     0,
     -(planetData.MaxVelocity_KMs * KM_TO_M) / DIST_MULT,
