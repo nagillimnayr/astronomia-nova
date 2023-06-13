@@ -24,7 +24,7 @@ const Scene = () => {
           dateRef,
         }}
       >
-        <div className="h-min-fit h-96 w-full border-2 border-green-500">
+        <div className="h-min-fit h-[36rem] w-full border-2 border-green-500">
           <Canvas>
             <PerspectiveCamera position={[0, 0, 5]}>
               <spotLight />
