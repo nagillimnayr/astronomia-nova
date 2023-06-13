@@ -1,9 +1,10 @@
 import { PlayIcon } from '@heroicons/react/24/solid';
+import IconButton from '~/components/IconButton';
 const PauseButton = () => {
   return (
-    <button className="rounded-full border-2 border-white">
+    <IconButton>
       <PlayIcon />
-    </button>
+    </IconButton>
   );
 };
 
