@@ -4,23 +4,26 @@ import { useFrame } from '@react-three/fiber';
 import { round } from 'mathjs';
 import { Html } from '~/drei-imports/abstractions/text/Html';
 import TimeDisplay from './Time/TimeDisplay';
-import TimerContext from '../context/TimerContext';
+import { TimeContext } from '../context/TimeContext';
 import { Hud } from '~/drei-imports/portals/Hud';
 import { ScreenSpace } from '~/drei-imports/abstractions/ScreenSpace';
+import TimePanel from './Time/TimePanel';
 
 //type SimProps = {};
 const Simulation = () => {
-  const { timerRef } = useContext(TimerContext);
+  const timeContext = useContext(TimeContext);
   useFrame(({ clock }) => {
-    timerRef.current.textContent = round(clock.elapsedTime).toString();
+    timeContext.timerRef.current.textContent = round(
+      clock.elapsedTime
+    ).toString();
   });
   return (
-    <>
+    <TimeContext.Provider value={timeContext}>
       <group>
         <polarGridHelper args={[24, 16, 24, 64]} />
         <SolarSystem />
       </group>
-    </>
+    </TimeContext.Provider>
   );
 };
 

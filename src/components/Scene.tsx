@@ -4,17 +4,21 @@ import Simulation from '~/simulation/components/Simulation';
 import { PerspectiveCamera } from '~/drei-imports/cameras/PerspectiveCamera';
 import { Stats } from '~/drei-imports/misc/Stats';
 import { useRef } from 'react';
-import TimerContext from '~/simulation/context/TimerContext';
+import { TimeContext } from '~/simulation/context/TimeContext';
 import TimeDisplay from '~/simulation/components/Time/TimeDisplay';
 import TimePanel from '~/simulation/components/Time/TimePanel';
 
 const Scene = () => {
   const timerRef = useRef<HTMLSpanElement>(null!);
   const timerPortalRef = useRef<HTMLDivElement>(null!);
+  const hoursRef = useRef<HTMLParagraphElement>(null!);
+  const dateRef = useRef<HTMLParagraphElement>(null!);
 
   return (
     <div className="flex h-full w-full flex-col justify-start">
-      <TimerContext.Provider value={{ timerRef, portalRef: timerPortalRef }}>
+      <TimeContext.Provider
+        value={{ timerRef, portalRef: timerPortalRef, hoursRef, dateRef }}
+      >
         <div className="h-full w-full border-2 border-green-500">
           <Canvas>
             <PerspectiveCamera position={[0, 0, 5]}>
@@ -29,7 +33,7 @@ const Scene = () => {
 
         {/* Timer */}
         <TimePanel />
-      </TimerContext.Provider>
+      </TimeContext.Provider>
     </div>
   );
 };
