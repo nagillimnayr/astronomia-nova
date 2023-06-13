@@ -26,7 +26,7 @@ const Simulation = () => {
     timeContext.timerRef.current.textContent = round(elapsedDays).toString();
     const currentDate = addSeconds(j2000, elapsedDays * DAY);
 
-    timeContext.hourRef.current.textContent = format(currentDate, 'pp');
+    timeContext.hourRef.current.textContent = format(currentDate, 'hh:mm:ss a');
     timeContext.dateRef.current.textContent = format(currentDate, 'PPP');
   });
   return (
