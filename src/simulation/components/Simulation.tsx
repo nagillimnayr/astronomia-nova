@@ -8,14 +8,18 @@ import { TimeContext } from '../context/TimeContext';
 import { Hud } from '~/drei-imports/portals/Hud';
 import { ScreenSpace } from '~/drei-imports/abstractions/ScreenSpace';
 import TimePanel from './Time/TimePanel';
+import { format, addDays } from 'date-fns';
 
 //type SimProps = {};
 const Simulation = () => {
   const timeContext = useContext(TimeContext);
+  const j2000 = new Date(2000, 0, 1, 12, 0, 0, 0);
   useFrame(({ clock }) => {
-    timeContext.timerRef.current.textContent = round(
-      clock.elapsedTime
-    ).toString();
+    const elapsedDays = clock.elapsedTime;
+    timeContext.timerRef.current.textContent = round(elapsedDays).toString();
+    const currentDate = addDays(j2000, elapsedDays);
+    timeContext.hourRef.current.textContent = format(currentDate, 'p');
+    timeContext.dateRef.current.textContent = format(currentDate, 'PPP');
   });
   return (
     <TimeContext.Provider value={timeContext}>

@@ -1,23 +1,14 @@
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { format, addDays } from 'date-fns';
 import { useFrame } from '@react-three/fiber';
+import { TimeContext } from '~/simulation/context/TimeContext';
 const DateDisplay = () => {
-  const [date, setDate] = useState<Date>(new Date(2000, 0, 1, 12, 0, 0, 0));
-  const hourRef = useRef<HTMLParagraphElement>(null!);
-  const dateRef = useRef<HTMLParagraphElement>(null!);
-  useFrame(({ clock }) => {
-    if (clock.running) {
-      const daysElapsed = clock.elapsedTime;
-      const currentDate = addDays(date, daysElapsed);
+  const time = useContext(TimeContext);
 
-      hourRef.current.textContent = format(currentDate, 'p');
-      dateRef.current.textContent = format(currentDate, 'PPP');
-    }
-  });
   return (
-    <div>
-      <p ref={hourRef}></p>
-      <p ref={dateRef}></p>
+    <div className="text-white">
+      <p ref={time.hourRef}></p>
+      <p ref={time.dateRef}></p>
     </div>
   );
 };

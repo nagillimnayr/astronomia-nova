@@ -17,7 +17,12 @@ const Scene = () => {
   return (
     <div className="flex h-full w-full flex-col justify-start">
       <TimeContext.Provider
-        value={{ timerRef, portalRef: timerPortalRef, hoursRef, dateRef }}
+        value={{
+          timerRef,
+          portalRef: timerPortalRef,
+          hourRef: hoursRef,
+          dateRef,
+        }}
       >
         <div className="h-full w-full border-2 border-green-500">
           <Canvas>
