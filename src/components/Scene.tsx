@@ -6,6 +6,7 @@ import { Stats } from '~/drei-imports/misc/Stats';
 import { useRef } from 'react';
 import TimerContext from '~/simulation/context/TimerContext';
 import TimeDisplay from '~/simulation/components/Time/TimeDisplay';
+import TimePanel from '~/simulation/components/Time/TimePanel';
 
 const Scene = () => {
   const timerRef = useRef<HTMLSpanElement>(null!);
@@ -27,7 +28,7 @@ const Scene = () => {
         </div>
 
         {/* Timer */}
-        <TimeDisplay />
+        <TimePanel />
       </TimerContext.Provider>
     </div>
   );
