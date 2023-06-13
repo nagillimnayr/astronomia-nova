@@ -1,14 +1,21 @@
 import React, { MutableRefObject, useContext, useRef } from 'react';
 import SolarSystem from './SolarSystem/SolarSystem';
 import { useFrame } from '@react-three/fiber';
-import { round } from 'mathjs';
+import { floor, round } from 'mathjs';
 import { Html } from '~/drei-imports/abstractions/text/Html';
 import TimeDisplay from './Time/TimeDisplay';
 import { TimeContext } from '../context/TimeContext';
 import { Hud } from '~/drei-imports/portals/Hud';
 import { ScreenSpace } from '~/drei-imports/abstractions/ScreenSpace';
 import TimePanel from './Time/TimePanel';
-import { format, addDays } from 'date-fns';
+import {
+  format,
+  addDays,
+  secondsToHours,
+  addHours,
+  addSeconds,
+} from 'date-fns';
+import { DAY } from '../utils/constants';
 
 //type SimProps = {};
 const Simulation = () => {
@@ -17,8 +24,9 @@ const Simulation = () => {
   useFrame(({ clock }) => {
     const elapsedDays = clock.elapsedTime;
     timeContext.timerRef.current.textContent = round(elapsedDays).toString();
-    const currentDate = addDays(j2000, elapsedDays);
-    timeContext.hourRef.current.textContent = format(currentDate, 'p');
+    const currentDate = addSeconds(j2000, elapsedDays * DAY);
+
+    timeContext.hourRef.current.textContent = format(currentDate, 'pp');
     timeContext.dateRef.current.textContent = format(currentDate, 'PPP');
   });
   return (
