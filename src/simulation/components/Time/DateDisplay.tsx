@@ -6,7 +6,7 @@ const DateDisplay = () => {
   const time = useContext(TimeContext);
 
   return (
-    <div className="text-white">
+    <div className="flex flex-col items-center text-white">
       <p ref={time.hourRef}></p>
       <p ref={time.dateRef}></p>
     </div>
