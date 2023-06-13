@@ -24,7 +24,7 @@ const Home: NextPage = () => {
           {/* Canvas */}
           <div
             id="canvas-holder"
-            className="h-96 min-w-full border-2 border-white"
+            className="h-min-fit h-fit min-w-full border-2 border-white"
           >
             <Scene />
           </div>
