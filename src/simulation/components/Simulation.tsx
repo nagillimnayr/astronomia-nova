@@ -29,7 +29,7 @@ const Simulation = () => {
     if (!clock.running) {
       return;
     }
-    // scale delta time to be in days
+    // scale delta time
     const scaledDelta = delta * time.timescaleRef.current * DAY;
     // increase time elapsed by scaled delta time
     time.timeElapsedRef.current += scaledDelta;
