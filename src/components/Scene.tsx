@@ -10,18 +10,20 @@ import TimePanel from '~/simulation/components/Time/TimePanel';
 
 const Scene = () => {
   const timerRef = useRef<HTMLSpanElement>(null!);
-  const timerPortalRef = useRef<HTMLDivElement>(null!);
-  const hoursRef = useRef<HTMLParagraphElement>(null!);
+  const hourRef = useRef<HTMLParagraphElement>(null!);
   const dateRef = useRef<HTMLParagraphElement>(null!);
+  const timeElapsedRef = useRef<number>(0);
+  const timescaleRef = useRef<number>(1);
 
   return (
     <div className="flex h-full w-full flex-col justify-start">
       <TimeContext.Provider
         value={{
           timerRef,
-          portalRef: timerPortalRef,
-          hourRef: hoursRef,
+          hourRef,
           dateRef,
+          timeElapsedRef,
+          timescaleRef,
         }}
       >
         <div className="h-min-fit h-[36rem] w-full border-2 border-green-500">

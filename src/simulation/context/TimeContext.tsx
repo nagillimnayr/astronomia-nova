@@ -1,10 +1,13 @@
 import { MutableRefObject, createContext } from 'react';
 
 type TimeContextObject = {
+  // refs to DOM Elements
   timerRef: MutableRefObject<HTMLSpanElement>;
-  portalRef: MutableRefObject<HTMLDivElement>;
   hourRef: MutableRefObject<HTMLParagraphElement>;
   dateRef: MutableRefObject<HTMLParagraphElement>;
+
+  timeElapsedRef: MutableRefObject<number>;
+  timescaleRef: MutableRefObject<number>;
 };
 const TimeContext = createContext<TimeContextObject>(null!);
 

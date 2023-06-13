@@ -14,23 +14,35 @@ import {
   secondsToHours,
   addHours,
   addSeconds,
+  formatDistance,
 } from 'date-fns';
 import { DAY } from '../utils/constants';
 
 //type SimProps = {};
 const Simulation = () => {
-  const timeContext = useContext(TimeContext);
+  // get TimeContextObject
+  const time = useContext(TimeContext);
+  // J2000 epoch reference date
   const j2000 = new Date(2000, 0, 1, 12, 0, 0, 0);
-  useFrame(({ clock }) => {
-    const elapsedDays = clock.elapsedTime;
-    timeContext.timerRef.current.textContent = round(elapsedDays).toString();
-    const currentDate = addSeconds(j2000, elapsedDays * DAY);
 
-    timeContext.hourRef.current.textContent = format(currentDate, 'hh:mm:ss a');
-    timeContext.dateRef.current.textContent = format(currentDate, 'PPP');
+  useFrame(({ clock }, delta) => {
+    if (!clock.running) {
+      return;
+    }
+    // scale delta time to be in days
+    const scaledDelta = delta * time.timescaleRef.current * DAY;
+    // increase time elapsed by scaled delta time
+    time.timeElapsedRef.current += scaledDelta;
+
+    // get date relative to J2000 epoch
+    const currentDate = addSeconds(j2000, time.timeElapsedRef.current);
+    time.timerRef.current.textContent = formatDistance(currentDate, j2000);
+
+    time.hourRef.current.textContent = format(currentDate, 'hh:mm:ss a');
+    time.dateRef.current.textContent = format(currentDate, 'PPP');
   });
   return (
-    <TimeContext.Provider value={timeContext}>
+    <TimeContext.Provider value={time}>
       <group>
         <polarGridHelper args={[24, 16, 24, 64]} />
         <SolarSystem />
