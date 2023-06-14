@@ -23,6 +23,8 @@ import { Trail } from '~/drei-imports/abstractions/Trail';
 import { MeshLineGeometry } from '@react-three/drei';
 import { TextureLoader } from 'three';
 import Vec3 from '~/simulation/types/Vec3';
+import { Html } from '~/drei-imports/abstractions/text/Html';
+import Annotation from '../Annotation';
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -134,6 +136,8 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
       <KeplerTreeContext.Provider value={addChildToTree}>
         {props.children}
       </KeplerTreeContext.Provider>
+
+      <Annotation annotation={props.args.name} />
     </keplerBody>
   );
 });
