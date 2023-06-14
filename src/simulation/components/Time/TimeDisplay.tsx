@@ -15,7 +15,7 @@ const TimeDisplay = () => {
       {/* Days Elapsed */}
       <div>
         <p className="w-min-fit flex flex-row whitespace-nowrap ">
-          Days Elapsed: &nbsp;
+          Time Elapsed: &nbsp;
           <span ref={timerRef} className="text-green-300">
             0
           </span>
