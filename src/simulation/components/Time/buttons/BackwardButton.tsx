@@ -8,10 +8,8 @@ const BackwardButton = () => {
   const { timescaleDisplayRef, timescaleRef } = useContext(TimeContext);
 
   const handleClick = () => {
-    timescaleDisplayRef.current.textContent = Math.max(
-      --timescaleRef.current,
-      0
-    ).toString();
+    timescaleRef.current = Math.max(timescaleRef.current - 1, 0);
+    timescaleDisplayRef.current.textContent = timescaleRef.current.toString();
   };
   return (
     <IconButton onClick={handleClick}>

@@ -12,10 +12,8 @@ const ForwardButton = () => {
   const { timescaleDisplayRef, timescaleRef } = useContext(TimeContext);
 
   const handleClick = () => {
-    timescaleDisplayRef.current.textContent = Math.max(
-      ++timescaleRef.current,
-      0
-    ).toString();
+    timescaleRef.current = Math.min(timescaleRef.current + 1, 100);
+    timescaleDisplayRef.current.textContent = timescaleRef.current.toString();
   };
 
   return (
