@@ -40,7 +40,12 @@ function getFromApoapsis(eccentricity: number, apoapsis: number): number {
   return semiMajorAxis;
 }
 
-function getFromLinearEccentricity() {}
+function getFromLinearEccentricity(
+  eccentricity: number,
+  linearEccentricity: number
+) {
+  return linearEccentricity / eccentricity;
+}
 
 function getFromSpecificOrbitalEnergy(
   centralMass: number,
