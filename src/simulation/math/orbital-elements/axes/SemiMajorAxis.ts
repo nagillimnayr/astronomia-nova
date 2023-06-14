@@ -52,7 +52,11 @@ function getFromSpecificOrbitalEnergy(
 
 
 /**
- * @description
+ * @summary Calculate the semi-major axis from the orbital period and the mass of the central body.
+ * 
+ * @description 
+ * \displaystyle a = \sqrt[3]{\frac{GM T^2}{4\pi^2}}
+ * 
  * @author Ryan Milligan
  * @date 14/06/2023
  * @param {number} period
@@ -62,12 +66,21 @@ function getFromSpecificOrbitalEnergy(
 function getFromPeriod(period: number, centralMass: number): number {
   // cube root of (G*M * T^2) / (4PI^2)
   const semiMajorAxis = nthRoot(
-    ((GRAV_CONST * centralMass * square(period)) / 4.0) * PI_SQUARED,
+    (GRAV_CONST * centralMass * square(period)) / (4.0 * PI_SQUARED),
     3
   ) as number;
   return (semiMajorAxis);
 }
 
+
+/**
+ * @description
+ * @author Ryan Milligan
+ * @date 14/06/2023
+ * @param {number} apoapsis
+ * @param {number} periapsis
+ * @returns {*} 
+ */
 function getFromApsides(apoapsis: number, periapsis: number) {
   return (periapsis + apoapsis) / 2.0;
 }
