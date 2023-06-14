@@ -5,6 +5,7 @@ type TimeContextObject = {
   timerRef: MutableRefObject<HTMLSpanElement>;
   hourRef: MutableRefObject<HTMLParagraphElement>;
   dateRef: MutableRefObject<HTMLParagraphElement>;
+  timescaleDisplayRef: MutableRefObject<HTMLSpanElement>;
 
   timeElapsedRef: MutableRefObject<number>;
   timescaleRef: MutableRefObject<number>;
