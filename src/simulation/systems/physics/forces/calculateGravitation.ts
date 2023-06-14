@@ -21,7 +21,7 @@ export default function calculateGravitation(
 
   const direction = diffPos.clone().normalize();
 
-  const gravForce = (GRAV_CONST * obj2.mass * SOLAR_MASS) / distSquared;
+  const gravForce = (GRAV_CONST * obj2.mass) / distSquared;
 
   const acceleration = direction.clone().multiplyScalar(gravForce);
   return acceleration.multiplyScalar(1 / DIST_MULT);
