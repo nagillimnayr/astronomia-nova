@@ -7,7 +7,7 @@ import { useRef } from 'react';
 import { TimeContext } from '~/simulation/context/TimeContext';
 import TimeDisplay from '~/simulation/components/Time/TimeDisplay';
 import TimePanel from '~/simulation/components/Time/TimePanel';
-import { Perf } from 'r3f-perf';
+import { Perf } from '~/drei-imports/performance/Perf';
 
 const Scene = () => {
   const timerRef = useRef<HTMLSpanElement>(null!);
