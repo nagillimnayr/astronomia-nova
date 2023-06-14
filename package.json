@@ -33,7 +33,6 @@
     "react-dom": "^18.2.0",
     "tailwind-merge": "^1.13.1",
     "three": "^0.153.0",
-    "three.meshline": "^1.4.0",
     "valtio": "^1.10.5",
     "zod": "^3.21.4",
     "zustand": "^4.3.8"
