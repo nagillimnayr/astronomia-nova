@@ -7,6 +7,7 @@ import { useRef } from 'react';
 import { TimeContext } from '~/simulation/context/TimeContext';
 import TimeDisplay from '~/simulation/components/Time/TimeDisplay';
 import TimePanel from '~/simulation/components/Time/TimePanel';
+import { Perf } from 'r3f-perf';
 
 const Scene = () => {
   const timerRef = useRef<HTMLSpanElement>(null!);
@@ -38,6 +39,7 @@ const Scene = () => {
             <OrbitControls />
             <Simulation />
             <Stats />
+            <Perf />
           </Canvas>
         </div>
 
