@@ -12,7 +12,7 @@ type ControlsProps = {
 };
 const TimeControls = (props: ControlsProps) => {
   return (
-    <div className="flex flex-row justify-between ">
+    <div className="mt-2 flex w-40 flex-row justify-between self-center">
       <BackwardButton />
       <PauseButton getClock={props.getClock} />
       <ForwardButton />
