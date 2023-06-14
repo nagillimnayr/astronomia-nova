@@ -9,6 +9,7 @@ import {
   TimeContext,
   TimeContextObject,
 } from '~/simulation/context/TimeContext';
+import { Camera, Object3D } from 'three';
 
 //type TimePanelProps = {};
 const TimePanel = () => {
@@ -21,9 +22,12 @@ const TimePanel = () => {
   };
 
   return (
-    <Html className="min-h-fit min-w-fit whitespace-nowrap">
+    <Html
+      fullscreen
+      className="flex min-h-fit  min-w-fit flex-col items-center justify-end whitespace-nowrap border-2 border-red-500"
+    >
       <TimeContext.Provider value={time}>
-        <div className="w-min-fit h-min-fit flex h-fit w-64  flex-col self-center border-2 border-blue-500">
+        <div className="w-min-fit h-min-fit flex h-fit w-64  flex-col items-center justify-start self-center border-2 border-blue-500">
           <TimeDisplay />
           <TimescaleDisplay />
           <DateDisplay />
