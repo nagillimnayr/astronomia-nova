@@ -13,7 +13,7 @@ import { traverseTree } from '../../classes/KeplerBody';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 //import { useEventListener } from "@react-hooks-library/core";
 import { makeFixedUpdateFn } from '../../systems/FixedTimeStep';
-import { DAY } from '../../utils/constants';
+import { DAY, SOLAR_MASS } from '../../utils/constants';
 import { useTexture } from '@react-three/drei';
 import { TextureLoader } from 'three';
 
@@ -102,7 +102,7 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
         ref={root}
         args={{
           name: 'Sun',
-          mass: 1,
+          mass: SOLAR_MASS,
           color: 0xfdee00,
         }}
         texturePath={sunTexture}
