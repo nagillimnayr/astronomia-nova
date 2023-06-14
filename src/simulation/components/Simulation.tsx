@@ -61,9 +61,8 @@ const Simulation = () => {
         <polarGridHelper args={[24, 16, 24, 64]} />
         <SolarSystem ref={updateRef} />
       </group>
-      <Html className="min-h-fit min-w-fit whitespace-nowrap">
-        <TimePanel time={time} getState={getState} />
-      </Html>
+
+      <TimePanel />
     </>
   );
 };
