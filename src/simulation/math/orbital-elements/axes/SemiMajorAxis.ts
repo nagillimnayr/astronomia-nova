@@ -6,12 +6,6 @@ import {
   SOLAR_MASS,
 } from '~/simulation/utils/constants';
 
-export const SemiMajorAxis = {
-  getFromPeriapsis: getFromPeriapsis,
-
-  getFromApoapsis: getFromApoapsis,
-};
-
 /**
  * @description
  * @author Ryan Milligan
@@ -88,3 +82,12 @@ function getFromPeriod(period: number, centralMass: number): number {
 function getFromApsides(apoapsis: number, periapsis: number) {
   return (periapsis + apoapsis) / 2.0;
 }
+
+export const SemiMajorAxis = {
+  getFromPeriapsis,
+  getFromApoapsis,
+  getFromLinearEccentricity,
+  getFromSpecificOrbitalEnergy,
+  getFromPeriod,
+  getFromApsides,
+};
