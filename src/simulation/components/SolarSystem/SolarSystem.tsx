@@ -17,10 +17,8 @@ import { DAY } from '../../utils/constants';
 import { useTexture } from '@react-three/drei';
 import { TextureLoader } from 'three';
 
-const SolarSystem = forwardRef<KeplerBody>(function SolarSystem(
-  {},
-  fwdRootRef
-) {
+export type UpdateFn = (deltaTime: number) => void;
+const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
   // load textures
   // const [
   //   sunTexture,
@@ -67,14 +65,6 @@ const SolarSystem = forwardRef<KeplerBody>(function SolarSystem(
   // use ref to store root of tree
   const root = useRef<KeplerBody>(null!);
 
-  useImperativeHandle(
-    fwdRootRef,
-    () => {
-      return root.current;
-    },
-    [root]
-  );
-
   const assignAsRoot = (body: DynamicBody) => {
     if (!body) {
       return;
@@ -89,12 +79,22 @@ const SolarSystem = forwardRef<KeplerBody>(function SolarSystem(
     []
   );
 
-  useFrame(({ clock }, delta) => {
-    if (!clock.running) {
-      return;
-    }
-    fixedUpdate(delta);
-  });
+  // pass fixedUpdate back up to parent
+  useImperativeHandle(
+    updateRef,
+    () => {
+      return fixedUpdate;
+    },
+    [fixedUpdate]
+  );
+
+  // useFrame(({ clock }, delta) => {
+  //   if (!clock.running) {
+  //     return;
+  //   }
+
+  //   fixedUpdate(delta);
+  // });
 
   return (
     <KeplerTreeContext.Provider value={assignAsRoot}>

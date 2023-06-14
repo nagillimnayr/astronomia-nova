@@ -1,5 +1,5 @@
 import React, { MutableRefObject, useContext, useRef } from 'react';
-import SolarSystem from './SolarSystem/SolarSystem';
+import SolarSystem, { UpdateFn } from './SolarSystem/SolarSystem';
 import { useFrame, useThree } from '@react-three/fiber';
 import { floor, round } from 'mathjs';
 import { Html } from '~/drei-imports/abstractions/text/Html';
@@ -25,17 +25,15 @@ const Simulation = () => {
 
   const getState = useThree((state) => state.get);
 
+  // set clock to be stopped initially
   getState().clock.stop();
+
+  const updateRef = useRef<UpdateFn>(null!);
 
   // J2000 epoch reference date
   const j2000 = new Date(2000, 0, 1, 12, 0, 0, 0);
 
-  useFrame(({ clock }, delta) => {
-    if (!clock.running) {
-      return;
-    }
-    // scale delta time
-    const scaledDelta = delta * time.timescaleRef.current * DAY;
+  const updateClock = (scaledDelta: number) => {
     // increase time elapsed by scaled delta time
     time.timeElapsedRef.current += scaledDelta;
 
@@ -45,12 +43,23 @@ const Simulation = () => {
 
     time.hourRef.current.textContent = format(currentDate, 'hh:mm:ss a');
     time.dateRef.current.textContent = format(currentDate, 'PPP');
+  };
+  useFrame(({ clock }, delta) => {
+    if (!clock.running) {
+      return;
+    }
+    // scale delta time
+    const scaledDelta = delta * time.timescaleRef.current;
+    updateClock(scaledDelta * DAY);
+
+    const fixedUpdate = updateRef.current;
+    fixedUpdate(scaledDelta);
   });
   return (
     <>
       <group>
         <polarGridHelper args={[24, 16, 24, 64]} />
-        <SolarSystem />
+        <SolarSystem ref={updateRef} />
       </group>
       <Html className="min-h-fit min-w-fit whitespace-nowrap">
         <TimePanel time={time} getState={getState} />
