@@ -17,6 +17,7 @@ import {
   formatDistance,
 } from 'date-fns';
 import { DAY } from '../utils/constants';
+import { HUD } from './HUD/HUD';
 
 //type SimProps = {};
 const Simulation = () => {
@@ -62,7 +63,7 @@ const Simulation = () => {
         <SolarSystem ref={updateRef} />
       </group>
 
-      <TimePanel />
+      <HUD />
     </>
   );
 };
