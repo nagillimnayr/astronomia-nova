@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useContext, useRef } from 'react';
 import SolarSystem from './SolarSystem/SolarSystem';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { floor, round } from 'mathjs';
 import { Html } from '~/drei-imports/abstractions/text/Html';
 import TimeDisplay from './Time/TimeDisplay';
@@ -22,6 +22,11 @@ import { DAY } from '../utils/constants';
 const Simulation = () => {
   // get TimeContextObject
   const time = useContext(TimeContext);
+
+  const getState = useThree((state) => state.get);
+
+  getState().clock.stop();
+
   // J2000 epoch reference date
   const j2000 = new Date(2000, 0, 1, 12, 0, 0, 0);
 
@@ -42,12 +47,15 @@ const Simulation = () => {
     time.dateRef.current.textContent = format(currentDate, 'PPP');
   });
   return (
-    <TimeContext.Provider value={time}>
+    <>
       <group>
         <polarGridHelper args={[24, 16, 24, 64]} />
         <SolarSystem />
       </group>
-    </TimeContext.Provider>
+      <Html className="min-h-fit min-w-fit whitespace-nowrap">
+        <TimePanel time={time} getState={getState} />
+      </Html>
+    </>
   );
 };
 

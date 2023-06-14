@@ -8,9 +8,8 @@ import { round } from 'mathjs';
 //   timerRef: MutableRefObject<HTMLSpanElement>;
 //   portalRef: MutableRefObject<HTMLDivElement>;
 // };
-const TimeDisplay = forwardRef<HTMLSpanElement>(function TimeDisplay() {
+const TimeDisplay = () => {
   const { timerRef } = useContext(TimeContext);
-
   return (
     <div className="w-min-fit h-min-fit  flex h-fit w-fit flex-row self-center border-2 border-blue-500 px-2 text-center text-white">
       {/* Days Elapsed */}
@@ -25,6 +24,6 @@ const TimeDisplay = forwardRef<HTMLSpanElement>(function TimeDisplay() {
       <div></div>
     </div>
   );
-});
+};
 
 export default TimeDisplay;

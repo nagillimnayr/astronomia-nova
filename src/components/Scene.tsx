@@ -12,6 +12,8 @@ const Scene = () => {
   const timerRef = useRef<HTMLSpanElement>(null!);
   const hourRef = useRef<HTMLParagraphElement>(null!);
   const dateRef = useRef<HTMLParagraphElement>(null!);
+  const timescaleDisplayRef = useRef<HTMLSpanElement>(null!);
+
   const timeElapsedRef = useRef<number>(0);
   const timescaleRef = useRef<number>(1);
 
@@ -22,6 +24,7 @@ const Scene = () => {
           timerRef,
           hourRef,
           dateRef,
+          timescaleDisplayRef,
           timeElapsedRef,
           timescaleRef,
         }}
@@ -39,7 +42,7 @@ const Scene = () => {
         </div>
 
         {/* Timer */}
-        <TimePanel />
+        {/* <TimePanel /> */}
       </TimeContext.Provider>
     </div>
   );

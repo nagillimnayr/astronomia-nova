@@ -1,4 +1,9 @@
-import React, { useCallback, useRef } from 'react';
+import React, {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 import { useFrame, useLoader } from '@react-three/fiber';
 import { type DynamicBody } from '../../classes/Dynamics';
 import Body from '../Body/Body';
@@ -12,7 +17,10 @@ import { DAY } from '../../utils/constants';
 import { useTexture } from '@react-three/drei';
 import { TextureLoader } from 'three';
 
-const SolarSystem = () => {
+const SolarSystem = forwardRef<KeplerBody>(function SolarSystem(
+  {},
+  fwdRootRef
+) {
   // load textures
   // const [
   //   sunTexture,
@@ -59,12 +67,13 @@ const SolarSystem = () => {
   // use ref to store root of tree
   const root = useRef<KeplerBody>(null!);
 
-  // useEventListener("keypress", (e: KeyboardEvent) => {
-  //   if (e.key === " ") {
-  //     console.log("Tree root node: ", root.current.name);
-  //     console.log("Children of root node: ", root.current.orbitingBodies);
-  //   }
-  // });
+  useImperativeHandle(
+    fwdRootRef,
+    () => {
+      return root.current;
+    },
+    [root]
+  );
 
   const assignAsRoot = (body: DynamicBody) => {
     if (!body) {
@@ -81,6 +90,9 @@ const SolarSystem = () => {
   );
 
   useFrame(({ clock }, delta) => {
+    if (!clock.running) {
+      return;
+    }
     fixedUpdate(delta);
   });
 
@@ -111,6 +123,6 @@ const SolarSystem = () => {
       </Body>
     </KeplerTreeContext.Provider>
   );
-};
+});
 
 export default SolarSystem;
