@@ -100,7 +100,7 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
   return (
     <KeplerTreeContext.Provider value={assignAsRoot}>
       <CelestialSphere>
-        <Bounds>
+        <Bounds fit observe>
           <Body
             ref={root}
             args={{
