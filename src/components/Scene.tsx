@@ -8,14 +8,6 @@ import { VRButton, ARButton, XR } from '@react-three/xr';
 import { Suspense } from 'react';
 
 const Scene = () => {
-  // const timerRef = useRef<HTMLSpanElement>(null!);
-  // const hourRef = useRef<HTMLParagraphElement>(null!);
-  // const dateRef = useRef<HTMLParagraphElement>(null!);
-  // const timescaleDisplayRef = useRef<HTMLSpanElement>(null!);
-
-  // const timeElapsedRef = useRef<number>(0);
-  // const timescaleRef = useRef<number>(1);
-
   return (
     <div className="h-min-[42rem] flex h-[42rem] w-full flex-col justify-start">
       <div className="h-min-fit relative h-[42rem] w-full border-2 border-green-500">
@@ -25,11 +17,6 @@ const Scene = () => {
         <Suspense fallback={<div>Loading...</div>}>
           <Canvas>
             <XR>
-              <PerspectiveCamera position={[0, 0, 5]}>
-                <spotLight />
-              </PerspectiveCamera>
-              <ambientLight intensity={0.1} />
-              <OrbitControls makeDefault />
               <Simulation />
               <Stats />
               <Perf />

@@ -1,23 +1,12 @@
 import React, { MutableRefObject, useContext, useRef } from 'react';
 import SolarSystem, { UpdateFn } from './SolarSystem/SolarSystem';
 import { useFrame, useThree } from '@react-three/fiber';
-import { floor, round } from 'mathjs';
-import { Html } from '~/drei-imports/abstractions/text/Html';
-import TimeDisplay from './Time/TimeDisplay';
 import { TimeContext, TimeContextObject } from '../context/TimeContext';
-import { Hud } from '~/drei-imports/portals/Hud';
-import { ScreenSpace } from '~/drei-imports/abstractions/ScreenSpace';
 import TimePanel from './Time/TimePanel';
-import {
-  format,
-  addDays,
-  secondsToHours,
-  addHours,
-  addSeconds,
-  formatDistance,
-} from 'date-fns';
+import { format, addSeconds, formatDistance } from 'date-fns';
 import { DAY } from '../utils/constants';
 import { HUD } from './HUD/HUD';
+import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
 
 //type SimProps = {};
 const Simulation = () => {
@@ -70,9 +59,14 @@ const Simulation = () => {
       <group>
         {/* <polarGridHelper args={[24, 16, 24, 64]} /> */}
         <SolarSystem ref={updateRef} />
-      </group>
 
-      <HUD />
+        <PerspectiveCamera position={[0, 0, 15]}>
+          <spotLight />
+          <HUD />
+          <OrbitControls makeDefault />
+        </PerspectiveCamera>
+      </group>
+      <ambientLight intensity={0.1} />
     </TimeContext.Provider>
   );
 };
