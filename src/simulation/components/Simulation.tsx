@@ -6,12 +6,22 @@ import TimePanel from './Time/TimePanel';
 import { format, addSeconds, formatDistance } from 'date-fns';
 import { DAY } from '../utils/constants';
 import { HUD } from './HUD/HUD';
-import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
+import { useState } from 'react';
+import {
+  PerspectiveCamera,
+  OrbitControls,
+  CameraControls,
+} from '@react-three/drei';
+import { useSnapshot } from 'valtio';
+import { SimState } from '../state/SimState';
 
 //type SimProps = {};
 const Simulation = () => {
   // function for accessing scene state
   const getState = useThree((state) => state.get);
+
+  // get sim state
+  //const simState = useSnapshot(SimState);
 
   // set clock to be stopped initially
   getState().clock.stop();
@@ -59,11 +69,17 @@ const Simulation = () => {
       <group>
         {/* <polarGridHelper args={[24, 16, 24, 64]} /> */}
         <SolarSystem ref={updateRef} />
-
-        <OrbitControls makeDefault minDistance={10} enablePan={false}>
-          <HUD />
-        </OrbitControls>
       </group>
+      <PerspectiveCamera makeDefault position={[0, 0, 20]}>
+        <HUD />
+      </PerspectiveCamera>
+
+      <OrbitControls
+        makeDefault
+        minDistance={10}
+        enablePan={false}
+      ></OrbitControls>
+
       <ambientLight intensity={0.1} />
     </TimeContext.Provider>
   );
