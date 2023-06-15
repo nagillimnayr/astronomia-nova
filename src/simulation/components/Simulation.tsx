@@ -60,7 +60,7 @@ const Simulation = () => {
         {/* <polarGridHelper args={[24, 16, 24, 64]} /> */}
         <SolarSystem ref={updateRef} />
 
-        <OrbitControls makeDefault minDistance={10}>
+        <OrbitControls makeDefault minDistance={10} enablePan={false}>
           <HUD />
         </OrbitControls>
       </group>
