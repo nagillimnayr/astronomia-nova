@@ -128,7 +128,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
           target={meshRef}
           width={1}
           length={300}
-          decay={0.25}
+          decay={0.001}
           color={props.args.color}
         />
       </mesh>
