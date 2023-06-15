@@ -9,6 +9,7 @@ import {
   type Object3DNode,
   type ThreeEvent,
   useLoader,
+  useThree,
 } from '@react-three/fiber';
 
 import {
@@ -20,7 +21,7 @@ import {
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 import KeplerBody from '../../classes/KeplerBody';
 import { Trail } from '~/drei-imports/abstractions/Trail';
-import { MeshLineGeometry } from '@react-three/drei';
+import { MeshLineGeometry, useBounds } from '@react-three/drei';
 import { TextureLoader } from 'three';
 import Vec3 from '~/simulation/types/Vec3';
 import { Html } from '~/drei-imports/abstractions/text/Html';
@@ -58,6 +59,12 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   // load texture
   const texture = useLoader(TextureLoader, props.texturePath ?? '');
 
+  // get bounds
+  const bounds = useBounds();
+
+  // get three.js state
+  const getState = useThree((state) => state.get);
+
   // get function from context
   const addSelfToTree = useContext(KeplerTreeContext);
 
@@ -89,6 +96,10 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     },
     [bodyRef]
   );
+
+  const focus = () => {
+    const state = getState();
+  };
 
   // event handlers
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
