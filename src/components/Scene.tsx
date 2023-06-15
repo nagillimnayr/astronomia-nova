@@ -29,7 +29,7 @@ const Scene = () => {
                 <spotLight />
               </PerspectiveCamera>
               <ambientLight intensity={0.1} />
-              <OrbitControls />
+              <OrbitControls makeDefault />
               <Simulation />
               <Stats />
               <Perf />
