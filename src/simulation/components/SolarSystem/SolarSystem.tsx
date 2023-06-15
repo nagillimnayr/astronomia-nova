@@ -125,10 +125,22 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
             texturePath={earthTexture}
           ></Body>
           <Body args={loadBodyPreset('Mars')} texturePath={marsTexture}></Body>
-          {/* <Body args={loadBodyPreset('Jupiter')} texturePath={jupiterTexture}></Body> */}
-          {/* <Body args={loadBodyPreset('Saturn')} texturePath={saturnTexture}></Body>
-          <Body args={loadBodyPreset('Uranus')} texturePath={uranusTexture}></Body>
-          <Body args={loadBodyPreset('Neptune')} texturePath={neptuneTexture}></Body> */}
+          <Body
+            args={loadBodyPreset('Jupiter')}
+            texturePath={jupiterTexture}
+          ></Body>
+          <Body
+            args={loadBodyPreset('Saturn')}
+            texturePath={saturnTexture}
+          ></Body>
+          <Body
+            args={loadBodyPreset('Uranus')}
+            texturePath={uranusTexture}
+          ></Body>
+          <Body
+            args={loadBodyPreset('Neptune')}
+            texturePath={neptuneTexture}
+          ></Body>
         </Body>
       </CelestialSphere>
     </KeplerTreeContext.Provider>
