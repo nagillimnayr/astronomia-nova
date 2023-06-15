@@ -14,7 +14,7 @@ const Scene = () => {
         <VRButton />
       </div>
       <Suspense fallback={<div>Loading...</div>}>
-        <Canvas>
+        <Canvas gl={{ logarithmicDepthBuffer: true }}>
           <XR>
             <Simulation />
             <Stats />
