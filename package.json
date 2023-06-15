@@ -16,6 +16,7 @@
     "@react-three/drei": "^9.74.6",
     "@react-three/fiber": "^8.13.0",
     "@react-three/flex": "^1.0.1",
+    "@react-three/xr": "^5.5.0",
     "@t3-oss/env-nextjs": "^0.3.1",
     "@use-gesture/react": "^10.2.27",
     "clsx": "^1.2.1",
