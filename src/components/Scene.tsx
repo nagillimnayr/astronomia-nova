@@ -17,7 +17,10 @@ const Scene = () => {
 
   return (
     <div className="flex h-full w-full flex-col justify-start">
-      <div className="h-min-fit h-[36rem] w-full border-2 border-green-500">
+      <div className="h-min-fit relative h-[36rem] w-full border-2 border-green-500">
+        <div className=" absolute bottom-0 right-1 h-24 w-40 select-none whitespace-nowrap border-2 border-green-400">
+          <VRButton />
+        </div>
         <Canvas>
           <XR>
             <PerspectiveCamera position={[0, 0, 5]}>
@@ -30,7 +33,6 @@ const Scene = () => {
             <Perf />
           </XR>
         </Canvas>
-        <VRButton />
       </div>
     </div>
   );
