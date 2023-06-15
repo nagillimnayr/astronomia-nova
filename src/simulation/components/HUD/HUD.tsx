@@ -9,13 +9,7 @@ export const HUD = () => {
   return (
     <>
       <Hud>
-        <ScreenSpace depth={1}>
-          <BBAnchor anchor={[0, 0, 0]}>
-            <object3D position={[0, 0, 0]}>
-              <TimePanel />
-            </object3D>
-          </BBAnchor>
-        </ScreenSpace>
+        <TimePanel />
       </Hud>
     </>
   );
