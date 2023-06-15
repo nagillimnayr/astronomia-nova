@@ -3,11 +3,8 @@ import { OrbitControls } from '~/drei-imports/controls/OrbitControls';
 import Simulation from '~/simulation/components/Simulation';
 import { PerspectiveCamera } from '~/drei-imports/cameras/PerspectiveCamera';
 import { Stats } from '~/drei-imports/misc/Stats';
-import { useRef } from 'react';
-import { TimeContext } from '~/simulation/context/TimeContext';
-import TimeDisplay from '~/simulation/components/Time/TimeDisplay';
-import TimePanel from '~/simulation/components/Time/TimePanel';
 import { Perf } from '~/drei-imports/performance/Perf';
+import { VRButton, ARButton, XR } from '@react-three/xr';
 
 const Scene = () => {
   // const timerRef = useRef<HTMLSpanElement>(null!);
@@ -22,15 +19,18 @@ const Scene = () => {
     <div className="flex h-full w-full flex-col justify-start">
       <div className="h-min-fit h-[36rem] w-full border-2 border-green-500">
         <Canvas>
-          <PerspectiveCamera position={[0, 0, 5]}>
-            <spotLight />
-          </PerspectiveCamera>
-          <ambientLight intensity={0.1} />
-          <OrbitControls />
-          <Simulation />
-          <Stats />
-          <Perf />
+          <XR>
+            <PerspectiveCamera position={[0, 0, 5]}>
+              <spotLight />
+            </PerspectiveCamera>
+            <ambientLight intensity={0.1} />
+            <OrbitControls />
+            <Simulation />
+            <Stats />
+            <Perf />
+          </XR>
         </Canvas>
+        <VRButton />
       </div>
     </div>
   );
