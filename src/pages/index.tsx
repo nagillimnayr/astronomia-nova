@@ -2,7 +2,8 @@ import { type NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { Suspense, useRef } from 'react';
+import { LoadingFallback } from '~/components/LoadingFallback';
 //import Scene from '~/components/Scene';
 
 const Scene = dynamic(
@@ -47,9 +48,11 @@ const Home: NextPage = () => {
           {/* Canvas */}
           <div
             id="canvas-holder"
-            className="h-min-fit h-fit min-w-full border-2 border-white"
+            className="h-min-[42rem] flex h-[42rem] min-w-full flex-col items-center justify-center border-2 border-white "
           >
-            <Scene />
+            <Suspense fallback={<LoadingFallback />}>
+              <Scene />
+            </Suspense>
           </div>
 
           <div className="grid grid-cols-1 gap-4 border-2 border-red-500 sm:grid-cols-2 md:gap-8">

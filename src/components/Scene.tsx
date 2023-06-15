@@ -9,21 +9,19 @@ import { Suspense } from 'react';
 
 const Scene = () => {
   return (
-    <div className="h-min-[42rem] flex h-[42rem] w-full flex-col justify-start">
-      <div className="h-min-fit relative h-[42rem] w-full border-2 border-green-500">
-        <div className=" absolute bottom-0 right-1 h-24 w-40 select-none whitespace-nowrap border-2 border-green-400">
-          <VRButton />
-        </div>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Canvas>
-            <XR>
-              <Simulation />
-              <Stats />
-              <Perf />
-            </XR>
-          </Canvas>
-        </Suspense>
+    <div className="h-min-[42rem] flex h-[42rem] w-full flex-col justify-center">
+      <div className=" absolute bottom-0 right-1 h-24 w-40 select-none whitespace-nowrap border-2 border-green-400">
+        <VRButton />
       </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Canvas>
+          <XR>
+            <Simulation />
+            <Stats />
+            <Perf />
+          </XR>
+        </Canvas>
+      </Suspense>
     </div>
   );
 };
