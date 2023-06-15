@@ -60,11 +60,9 @@ const Simulation = () => {
         {/* <polarGridHelper args={[24, 16, 24, 64]} /> */}
         <SolarSystem ref={updateRef} />
 
-        <PerspectiveCamera position={[0, 0, 15]}>
-          <spotLight />
+        <OrbitControls makeDefault minDistance={10}>
           <HUD />
-          <OrbitControls makeDefault />
-        </PerspectiveCamera>
+        </OrbitControls>
       </group>
       <ambientLight intensity={0.1} />
     </TimeContext.Provider>
