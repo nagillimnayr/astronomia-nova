@@ -99,6 +99,11 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
 
   const focus = () => {
     const state = getState();
+    bounds.refresh(bodyRef.current);
+    bounds.fit();
+    const camera = state.camera;
+    camera.parent?.remove(camera);
+    bodyRef.current.add(camera);
   };
 
   // event handlers
@@ -110,11 +115,24 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     const body: KeplerBody = bodyRef.current;
     //const parent = body.parent;
     console.log(`${body.name}:`, body);
+    focus();
   };
 
   return (
     <keplerBody
       ref={(body: KeplerBody) => {
+        if (!body) {
+          console.log(`removing ${bodyRef.current?.name} node from tree`);
+          if (!bodyRef.current) {
+            return;
+          }
+          const parent = bodyRef.current.parent as KeplerBody;
+          if (!parent) {
+            return;
+          }
+          //parent?.removeOrbitingBody(bodyRef.current);
+          return;
+        }
         bodyRef.current = body;
 
         console.log(`adding ${body?.name} node to tree`);
