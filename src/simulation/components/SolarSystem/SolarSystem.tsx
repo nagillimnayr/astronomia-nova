@@ -106,6 +106,7 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
             name: 'Sun',
             mass: SOLAR_MASS,
             color: 0xfdee00,
+            meanRadius: 1.5,
           }}
           texturePath={sunTexture}
         >
