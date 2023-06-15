@@ -1,8 +1,16 @@
 import { type NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRef } from 'react';
-import Scene from '~/components/Scene';
+//import Scene from '~/components/Scene';
+
+const Scene = dynamic(
+  () => import('~/components/Scene').then((mod) => mod.default),
+  {
+    ssr: false,
+  }
+);
 
 const Home: NextPage = () => {
   return (
