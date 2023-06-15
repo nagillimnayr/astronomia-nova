@@ -4,7 +4,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { floor, round } from 'mathjs';
 import { Html } from '~/drei-imports/abstractions/text/Html';
 import TimeDisplay from './Time/TimeDisplay';
-import { TimeContext } from '../context/TimeContext';
+import { TimeContext, TimeContextObject } from '../context/TimeContext';
 import { Hud } from '~/drei-imports/portals/Hud';
 import { ScreenSpace } from '~/drei-imports/abstractions/ScreenSpace';
 import TimePanel from './Time/TimePanel';
@@ -21,15 +21,24 @@ import { HUD } from './HUD/HUD';
 
 //type SimProps = {};
 const Simulation = () => {
-  // get TimeContextObject
-  const time = useContext(TimeContext);
-
+  // function for accessing scene state
   const getState = useThree((state) => state.get);
 
   // set clock to be stopped initially
   getState().clock.stop();
 
+  // reference to update function that will be passed back up by the SolarSystem component
   const updateRef = useRef<UpdateFn>(null!);
+
+  // create time context object
+  const time: TimeContextObject = {
+    timerRef: useRef<HTMLSpanElement>(null!),
+    hourRef: useRef<HTMLParagraphElement>(null!),
+    dateRef: useRef<HTMLParagraphElement>(null!),
+    timescaleDisplayRef: useRef<HTMLSpanElement>(null!),
+    timeElapsedRef: useRef<number>(0),
+    timescaleRef: useRef<number>(1),
+  };
 
   // J2000 epoch reference date
   const j2000 = new Date(2000, 0, 1, 12, 0, 0, 0);
@@ -57,14 +66,14 @@ const Simulation = () => {
     fixedUpdate(scaledDelta);
   });
   return (
-    <>
+    <TimeContext.Provider value={time}>
       <group>
         {/* <polarGridHelper args={[24, 16, 24, 64]} /> */}
         <SolarSystem ref={updateRef} />
       </group>
 
       <HUD />
-    </>
+    </TimeContext.Provider>
   );
 };
 

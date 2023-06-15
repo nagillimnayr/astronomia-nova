@@ -10,42 +10,28 @@ import TimePanel from '~/simulation/components/Time/TimePanel';
 import { Perf } from '~/drei-imports/performance/Perf';
 
 const Scene = () => {
-  const timerRef = useRef<HTMLSpanElement>(null!);
-  const hourRef = useRef<HTMLParagraphElement>(null!);
-  const dateRef = useRef<HTMLParagraphElement>(null!);
-  const timescaleDisplayRef = useRef<HTMLSpanElement>(null!);
+  // const timerRef = useRef<HTMLSpanElement>(null!);
+  // const hourRef = useRef<HTMLParagraphElement>(null!);
+  // const dateRef = useRef<HTMLParagraphElement>(null!);
+  // const timescaleDisplayRef = useRef<HTMLSpanElement>(null!);
 
-  const timeElapsedRef = useRef<number>(0);
-  const timescaleRef = useRef<number>(1);
+  // const timeElapsedRef = useRef<number>(0);
+  // const timescaleRef = useRef<number>(1);
 
   return (
     <div className="flex h-full w-full flex-col justify-start">
-      <TimeContext.Provider
-        value={{
-          timerRef,
-          hourRef,
-          dateRef,
-          timescaleDisplayRef,
-          timeElapsedRef,
-          timescaleRef,
-        }}
-      >
-        <div className="h-min-fit h-[36rem] w-full border-2 border-green-500">
-          <Canvas>
-            <PerspectiveCamera position={[0, 0, 5]}>
-              <spotLight />
-            </PerspectiveCamera>
-            <ambientLight intensity={0.1} />
-            <OrbitControls />
-            <Simulation />
-            <Stats />
-            <Perf />
-          </Canvas>
-        </div>
-
-        {/* Timer */}
-        {/* <TimePanel /> */}
-      </TimeContext.Provider>
+      <div className="h-min-fit h-[36rem] w-full border-2 border-green-500">
+        <Canvas>
+          <PerspectiveCamera position={[0, 0, 5]}>
+            <spotLight />
+          </PerspectiveCamera>
+          <ambientLight intensity={0.1} />
+          <OrbitControls />
+          <Simulation />
+          <Stats />
+          <Perf />
+        </Canvas>
+      </div>
     </div>
   );
 };
