@@ -6,7 +6,6 @@ import {
   OrbitControls,
   CameraControls,
 } from '@react-three/drei';
-import { useSnapshot } from 'valtio';
 import { simState } from '../state/SimState';
 import { useEventListener, useTimeout } from 'usehooks-ts';
 //import { type CameraControls as CameraController } from 'three-stdlib';
@@ -46,9 +45,6 @@ const Simulation = () => {
     if (e.key === ' ') {
       const state = getState();
       console.log('state controls: ', state.controls);
-      console.log('simState controls: ', simState.controls);
-      console.log('state camera: ', state.camera);
-      console.log('simState controls camera: ', simState.controls.camera);
       console.log('selected: ', simState.selected);
     }
   });

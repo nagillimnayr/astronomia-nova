@@ -9,6 +9,7 @@ import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 import { simState } from '~/simulation/state/SimState';
 import { useEventListener } from 'usehooks-ts';
 import { HUD } from '~/simulation/components/HUD/HUD';
+import { camState } from '~/simulation/state/CamState';
 
 const Scene = () => {
   return (
@@ -28,7 +29,7 @@ const Scene = () => {
                 return;
               }
 
-              simState.controls = controls;
+              camState.setControls(controls);
             }}
           >
             <HUD />
