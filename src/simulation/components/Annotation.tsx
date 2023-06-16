@@ -1,5 +1,4 @@
-import { Html } from '~/drei-imports/abstractions/text/Html';
-import { BBAnchor } from '~/drei-imports/staging/BBAnchor';
+import { Html, BBAnchor } from '@react-three/drei';
 
 type AnnotationProps = {
   annotation: string;

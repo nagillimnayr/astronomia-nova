@@ -1,7 +1,6 @@
 import { useLoader } from '@react-three/fiber';
 import { BackSide, DoubleSide, FrontSide } from 'three';
-import { Wireframe } from '~/drei-imports/misc/Wireframe';
-import { Stars } from '~/drei-imports/staging/Stars';
+
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
 
 type CelestialSphereProps = {

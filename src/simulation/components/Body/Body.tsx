@@ -21,11 +21,9 @@ import {
 } from 'three';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 import KeplerBody from '../../classes/KeplerBody';
-import { Trail } from '~/drei-imports/abstractions/Trail';
-import { MeshLineGeometry, Edges } from '@react-three/drei';
+import { MeshLineGeometry, Edges, Trail } from '@react-three/drei';
 import { TextureLoader } from 'three';
 import Vec3 from '~/simulation/types/Vec3';
-import { Html } from '~/drei-imports/abstractions/text/Html';
 import Annotation from '../Annotation';
 import { select, unselect } from '~/simulation/state/SimState';
 import { Selection, Select } from '@react-three/postprocessing';

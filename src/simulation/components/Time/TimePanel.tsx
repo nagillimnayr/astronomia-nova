@@ -3,13 +3,13 @@ import DateDisplay from './DateDisplay';
 import TimeControls from './TimeControls';
 import TimeDisplay from './TimeDisplay';
 import TimescaleDisplay from './TimescaleDisplay';
-import { Html } from '~/drei-imports/abstractions/text/Html';
 import { useContext, useRef } from 'react';
 import {
   TimeContext,
   TimeContextObject,
 } from '~/simulation/context/TimeContext';
 import { Camera, Object3D } from 'three';
+import { Html } from '@react-three/drei';
 
 //type TimePanelProps = {};
 const TimePanel = () => {
