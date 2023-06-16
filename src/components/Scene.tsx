@@ -1,12 +1,14 @@
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '~/drei-imports/controls/OrbitControls';
+import { Canvas, useThree } from '@react-three/fiber';
 import Simulation from '~/simulation/components/Simulation';
-import { PerspectiveCamera } from '~/drei-imports/cameras/PerspectiveCamera';
-import { Stats } from '~/drei-imports/misc/Stats';
-import { Perf } from '~/drei-imports/performance/Perf';
+
+import { Perf } from 'r3f-perf';
 import { VRButton, ARButton, XR } from '@react-three/xr';
 import { Suspense } from 'react';
 import { LoadingFallback } from './LoadingFallback';
+import { CameraControls, PerspectiveCamera } from '@react-three/drei';
+import { simState } from '~/simulation/state/SimState';
+import { useEventListener } from 'usehooks-ts';
+import { HUD } from '~/simulation/components/HUD/HUD';
 
 const Scene = () => {
   return (
@@ -16,11 +18,25 @@ const Scene = () => {
       </div>
       <Suspense fallback={<LoadingFallback />}>
         <Canvas gl={{ logarithmicDepthBuffer: true }}>
-          <XR>
-            <Simulation />
-            {/* <Stats /> */}
-            <Perf />
-          </XR>
+          {/* <XR> */}
+          {/* <PerspectiveCamera position={[0, 0, 20]}></PerspectiveCamera> */}
+          <CameraControls
+            makeDefault
+            minDistance={5}
+            ref={(controls) => {
+              if (!controls) {
+                return;
+              }
+
+              simState.controls = controls;
+            }}
+          >
+            <HUD />
+          </CameraControls>
+          <Simulation />
+          {/* <Stats /> */}
+          {/* <Perf /> */}
+          {/* </XR> */}
         </Canvas>
       </Suspense>
     </div>

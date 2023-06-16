@@ -1,13 +1,14 @@
 import { Object3D } from 'three';
 import { proxy } from 'valtio';
 import KeplerBody from '../classes/KeplerBody';
-import { OrbitControls } from 'three-stdlib';
+//import { OrbitControls, CameraControls } from 'three-stdlib';
+import { CameraControls } from '@react-three/drei';
 import { RootState } from '@react-three/fiber';
 
 type SimStateObj = {
   root: KeplerBody;
   selected: KeplerBody | null;
-  controls: OrbitControls;
+  controls: CameraControls;
 
   getState: () => RootState;
   update: (deltaTime: number) => void;
@@ -23,10 +24,17 @@ export const select = (newSelection: KeplerBody) => {
 
   console.log(`New selection: ${newSelection.name}:`, simState.selected);
 
-  simState.controls.target = newSelection.position;
-  simState.controls.object.lookAt(newSelection.position);
-  simState.controls.update();
-  simState.controls.object.updateProjectionMatrix();
+  simState.controls.setTarget(...newSelection.position.toArray(), true).then(
+    () => {
+      console.log('promise fulfilled!');
+    },
+    (reason) => {
+      console.log('promise rejected!: ', reason);
+    }
+  );
+  //simState.controls.object.lookAt(newSelection.position);
+  //simState.controls.update();
+  //simState.controls.object.updateProjectionMatrix();
 };
 export const unselect = () => {
   simState.selected = null;

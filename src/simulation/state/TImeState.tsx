@@ -2,10 +2,13 @@ import { proxy } from 'valtio';
 import { DAY } from '../utils/constants';
 import { addSeconds } from 'date-fns';
 import { simState } from '~/simulation/state/SimState';
+import { Clock } from 'three';
 
 const j2000 = new Date(2000, 0, 1, 12, 0, 0, 0);
 
 type TimeStateObj = {
+  //clock: Clock; // internal clock, separate from the three state clock so that the camera controls can still move while paused
+  isPaused: boolean;
   timeElapsed: number;
   timescale: number;
   refDate: Date;
@@ -27,12 +30,14 @@ const decrementTimescale = (val = 1) => {
 };
 const pause = () => {
   console.log('pause');
-  simState.getState().clock.stop();
+  //timeState.clock.stop();
+  timeState.isPaused = true;
   console.log('clock running: ', simState.getState().clock.running);
 };
 const unpause = () => {
   console.log('unpause');
-  simState.getState().clock.start();
+  //timeState.clock.start();
+  timeState.isPaused = false;
   console.log('clock running: ', simState.getState().clock.running);
 };
 
@@ -45,6 +50,8 @@ const updateClock = (scaledDelta: number) => {
 };
 
 export const timeState = proxy<TimeStateObj>({
+  //clock: new Clock(true),
+  isPaused: true,
   timeElapsed: 0,
   timescale: 1,
   refDate: j2000,
