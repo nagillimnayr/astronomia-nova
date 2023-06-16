@@ -13,7 +13,7 @@ type CamStateObj = {
 
 const setControls = (controls: CameraControls) => {
   camState.controls = controls;
-  controls.mouseButtons.right = 0; // disable pan
+  controls.mouseButtons.right = 1; // disable pan (set to rotate on right mouse button instead)
   controls.addEventListener('update', camState.updateControls);
   camState.updateControls();
 };
