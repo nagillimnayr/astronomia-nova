@@ -1,5 +1,4 @@
 import { CameraControls } from '@react-three/drei';
-import { CameraControls as CamControls } from 'three-stdlib';
 import { simState } from './SimState';
 import { proxy } from 'valtio';
 import Vec3 from '../types/Vec3';
