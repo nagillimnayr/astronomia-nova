@@ -23,6 +23,8 @@ import {
   EffectComposer,
   Outline,
 } from '@react-three/postprocessing';
+import { useEventListener } from 'usehooks-ts';
+import { SimState, setRoot } from '~/simulation/state/SimState';
 
 export type UpdateFn = (deltaTime: number) => void;
 const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
@@ -72,11 +74,12 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
   // use ref to store root of tree
   const root = useRef<KeplerBody>(null!);
 
-  const assignAsRoot = (body: DynamicBody) => {
+  const assignAsRoot = (body: KeplerBody) => {
     if (!body) {
       return;
     }
     console.log(`setting ${body.name} as root`);
+    setRoot(body);
   };
 
   const fixedUpdate = useCallback(
@@ -102,6 +105,13 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
 
   //   fixedUpdate(delta);
   // });
+
+  useEventListener('keypress', (e) => {
+    e.preventDefault();
+    if (e.key === ' ') {
+      console.log('root: ', root);
+    }
+  });
 
   return (
     <KeplerTreeContext.Provider value={assignAsRoot}>
