@@ -24,7 +24,7 @@ import {
   Outline,
 } from '@react-three/postprocessing';
 import { useEventListener } from 'usehooks-ts';
-import { SimState, setRoot } from '~/simulation/state/SimState';
+import { simState, setRoot } from '~/simulation/state/SimState';
 
 export type UpdateFn = (deltaTime: number) => void;
 const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {

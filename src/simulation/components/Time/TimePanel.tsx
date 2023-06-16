@@ -13,16 +13,7 @@ import { Camera, Object3D } from 'three';
 
 //type TimePanelProps = {};
 const TimePanel = () => {
-  // the Html wrapper will render its contents outside of the canvas
-  // so we need to bridge the context
-  const time = useContext(TimeContext);
-
   const htmlRef = useRef<HTMLDivElement>(null!);
-
-  const getState = useThree((state) => state.get);
-  const getClock = () => {
-    return getState().clock;
-  };
 
   return (
     <Html
@@ -30,14 +21,12 @@ const TimePanel = () => {
       fullscreen
       className="flex min-h-fit  min-w-fit flex-col items-center justify-end whitespace-nowrap border-2 border-red-500"
     >
-      <TimeContext.Provider value={time}>
-        <div className="w-min-fit h-min-fit flex h-fit w-64 select-none flex-col items-center justify-start self-center border-2 border-blue-500">
-          <TimeDisplay />
-          <TimescaleDisplay />
-          <DateDisplay />
-          <TimeControls getClock={getClock} />
-        </div>
-      </TimeContext.Provider>
+      <div className="w-min-fit h-min-fit flex h-fit w-64 select-none flex-col items-center justify-start self-center border-2 border-blue-500">
+        <TimeDisplay />
+        <TimescaleDisplay />
+        <DateDisplay />
+        <TimeControls />
+      </div>
     </Html>
   );
 };

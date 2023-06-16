@@ -1,14 +1,11 @@
-import { useContext } from 'react';
-import { TimeContext } from '~/simulation/context/TimeContext';
+import { useSnapshot } from 'valtio';
+import { timeState } from '~/simulation/state/TimeState';
 
 const TimescaleDisplay = () => {
-  const { timescaleDisplayRef, timescaleRef } = useContext(TimeContext);
-
-  const timescale = timescaleRef.current;
-
+  const snap = useSnapshot(timeState);
   return (
     <span className="w-min-fit flex flex-row justify-center whitespace-nowrap text-white">
-      <span ref={timescaleDisplayRef}>{timescale}</span>&nbsp;Days / second
+      <span>{snap.timescale}</span>&nbsp;Days / second
     </span>
   );
 };

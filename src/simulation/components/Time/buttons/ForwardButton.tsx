@@ -7,17 +7,15 @@ import {
 } from 'lucide-react';
 import { useContext } from 'react';
 import IconButton from '~/components/IconButton';
-import { TimeContext } from '~/simulation/context/TimeContext';
+import { timeState } from '~/simulation/state/TimeState';
 const ForwardButton = () => {
-  const { timescaleDisplayRef, timescaleRef } = useContext(TimeContext);
-
-  const handleClick = () => {
-    timescaleRef.current = Math.min(timescaleRef.current + 1, 100);
-    timescaleDisplayRef.current.textContent = timescaleRef.current.toString();
-  };
-
   return (
-    <IconButton onClick={handleClick}>
+    <IconButton
+      onClick={(e) => {
+        e.stopPropagation();
+        timeState.incrementTimescale();
+      }}
+    >
       <FastForwardIcon />
     </IconButton>
   );

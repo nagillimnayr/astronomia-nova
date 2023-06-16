@@ -1,14 +1,14 @@
-import { useContext, useRef, useState } from 'react';
-import { format, addDays } from 'date-fns';
-import { useFrame } from '@react-three/fiber';
-import { TimeContext } from '~/simulation/context/TimeContext';
+import { format } from 'date-fns';
+import { useSnapshot } from 'valtio';
+import { timeState } from '~/simulation/state/TimeState';
 const DateDisplay = () => {
-  const time = useContext(TimeContext);
-
+  const snap = useSnapshot(timeState);
   return (
     <div className="flex flex-col items-center text-white">
-      <p ref={time.hourRef}></p>
-      <p ref={time.dateRef}></p>
+      {/* hours */}
+      <p>{format(snap.date, 'hh:mm:ss a')}</p>
+      {/* date */}
+      <p>{format(snap.date, 'PPP')}</p>
     </div>
   );
 };

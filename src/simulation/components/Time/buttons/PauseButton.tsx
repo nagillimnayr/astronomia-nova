@@ -6,38 +6,35 @@ import {
 } from '@heroicons/react/24/solid';
 import { useThree } from '@react-three/fiber';
 import { Play, Pause, PlayCircle, PauseCircle } from 'lucide-react';
-import { useContext, useState } from 'react';
-import { Clock } from 'three';
+import { useCallback, useContext, useState } from 'react';
 import IconButton from '~/components/IconButton';
-import { TimeContext } from '~/simulation/context/TimeContext';
+import { timeState } from '~/simulation/state/TimeState';
 
-type PauseBtnProps = {
-  getClock: () => Clock;
-};
-const PauseButton = (props: PauseBtnProps) => {
+const PauseButton = () => {
   //const { timescaleDisplayRef, timescaleRef } = useContext(TimeContext);
 
   const [isPaused, setPaused] = useState<boolean>(true);
 
   //const clock = useThree((state) => state.clock);
 
-  const pause = () => {
-    const clock = props.getClock();
-    clock.stop();
+  const pause = useCallback(() => {
+    timeState.pause();
     setPaused(true);
-  };
-  const unpause = () => {
-    const clock = props.getClock();
-    clock.start();
+  }, []);
+  const unpause = useCallback(() => {
+    timeState.unpause();
     setPaused(false);
-  };
-
-  const handleClick = () => {
-    isPaused ? unpause() : pause();
-  };
+  }, []);
 
   return (
-    <IconButton onClick={handleClick}>
+    <IconButton
+      onClick={(e) => {
+        console.log('pause/play:', isPaused);
+        console.log('timeState:', timeState);
+        e.stopPropagation();
+        isPaused ? unpause() : pause();
+      }}
+    >
       {isPaused ? <Play /> : <Pause />}
     </IconButton>
   );
