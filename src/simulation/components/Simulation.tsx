@@ -11,9 +11,11 @@ import {
   PerspectiveCamera,
   OrbitControls,
   CameraControls,
+  useKeyboardControls,
 } from '@react-three/drei';
 import { useSnapshot } from 'valtio';
 import { SimState } from '../state/SimState';
+import { useEventListener } from 'usehooks-ts';
 
 //type SimProps = {};
 const Simulation = () => {
@@ -64,6 +66,15 @@ const Simulation = () => {
     const fixedUpdate = updateRef.current;
     fixedUpdate(scaledDelta);
   });
+
+  useEventListener('keypress', (e) => {
+    e.preventDefault();
+    console.log('keydown: ', e.key);
+    if (e.key === ' ') {
+      console.log('selected: ', SimState.selected);
+    }
+  });
+
   return (
     <TimeContext.Provider value={time}>
       <group>
