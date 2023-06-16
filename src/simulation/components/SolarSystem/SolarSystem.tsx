@@ -17,6 +17,12 @@ import { DAY, SOLAR_MASS } from '../../utils/constants';
 import { Bounds, useTexture } from '@react-three/drei';
 import { TextureLoader } from 'three';
 import { CelestialSphere } from '../CelestialSphere';
+import {
+  Selection,
+  Select,
+  EffectComposer,
+  Outline,
+} from '@react-three/postprocessing';
 
 export type UpdateFn = (deltaTime: number) => void;
 const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
@@ -101,47 +107,61 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
     <KeplerTreeContext.Provider value={assignAsRoot}>
       <CelestialSphere>
         {/* <Bounds fit clip observe margin={1.2}> */}
-        <Body
-          ref={root}
-          args={{
-            name: 'Sun',
-            mass: SOLAR_MASS,
-            color: 0xfdee00,
-            meanRadius: 1.5,
-          }}
-          texturePath={sunTexture}
-        >
+        <Selection>
+          <EffectComposer autoClear={false} multisampling={8}>
+            <Outline
+              blur
+              edgeStrength={100}
+              visibleEdgeColor={0xffffff}
+              width={1000}
+            />
+          </EffectComposer>
+
           <Body
-            args={loadBodyPreset('Mercury')}
-            texturePath={mercuryTexture}
-          ></Body>
-          <Body
-            args={loadBodyPreset('Venus')}
-            texturePath={venusTexture}
-          ></Body>
-          <Body
-            args={loadBodyPreset('Earth')}
-            texturePath={earthTexture}
-          ></Body>
-          <Body args={loadBodyPreset('Mars')} texturePath={marsTexture}></Body>
-          <Body
-            args={loadBodyPreset('Jupiter')}
-            texturePath={jupiterTexture}
-          ></Body>
-          <Body
-            args={loadBodyPreset('Saturn')}
-            texturePath={saturnTexture}
-          ></Body>
-          <Body
-            args={loadBodyPreset('Uranus')}
-            texturePath={uranusTexture}
-          ></Body>
-          <Body
-            args={loadBodyPreset('Neptune')}
-            texturePath={neptuneTexture}
-          ></Body>
-        </Body>
-        {/* </Bounds> */}
+            ref={root}
+            args={{
+              name: 'Sun',
+              mass: SOLAR_MASS,
+              color: 0xfdee00,
+              meanRadius: 1.5,
+            }}
+            texturePath={sunTexture}
+          >
+            <Body
+              args={loadBodyPreset('Mercury')}
+              texturePath={mercuryTexture}
+            ></Body>
+            <Body
+              args={loadBodyPreset('Venus')}
+              texturePath={venusTexture}
+            ></Body>
+            <Body
+              args={loadBodyPreset('Earth')}
+              texturePath={earthTexture}
+            ></Body>
+            <Body
+              args={loadBodyPreset('Mars')}
+              texturePath={marsTexture}
+            ></Body>
+            <Body
+              args={loadBodyPreset('Jupiter')}
+              texturePath={jupiterTexture}
+            ></Body>
+            <Body
+              args={loadBodyPreset('Saturn')}
+              texturePath={saturnTexture}
+            ></Body>
+            <Body
+              args={loadBodyPreset('Uranus')}
+              texturePath={uranusTexture}
+            ></Body>
+            <Body
+              args={loadBodyPreset('Neptune')}
+              texturePath={neptuneTexture}
+            ></Body>
+          </Body>
+          {/* </Bounds> */}
+        </Selection>
       </CelestialSphere>
     </KeplerTreeContext.Provider>
   );
