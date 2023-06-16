@@ -26,6 +26,7 @@ import { TextureLoader } from 'three';
 import Vec3 from '~/simulation/types/Vec3';
 import { Html } from '~/drei-imports/abstractions/text/Html';
 import Annotation from '../Annotation';
+import { select } from '~/simulation/state/SimState';
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -99,11 +100,25 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
 
   const focus = () => {
     const state = getState();
+    console.log('focus: ', bodyRef.current.name);
+
+    const targetPos = bodyRef.current.position;
+
     bounds.refresh(bodyRef.current);
     bounds.fit();
+    // bounds.to({
+    //   position: bodyRef.current.position.toArray(),
+    //   target: bodyRef.current.position.toArray(),
+    // });
+
     const camera = state.camera;
-    camera.parent?.remove(camera);
-    bodyRef.current.add(camera);
+
+    // attach camera to our target so it moves along with it
+    // camera.parent?.remove(camera);
+    // bodyRef.current.add(camera);
+
+    camera.lookAt(targetPos);
+    camera.updateProjectionMatrix();
   };
 
   // event handlers
@@ -113,9 +128,10 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
       return;
     }
     const body: KeplerBody = bodyRef.current;
-    //const parent = body.parent;
-    console.log(`${body.name}:`, body);
-    focus();
+
+    //console.log(`${body.name}:`, body);
+
+    select(body);
   };
 
   return (
