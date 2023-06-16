@@ -18,10 +18,11 @@ import {
   type Mesh,
   type Vector3,
   type Texture,
+  BoxHelper,
 } from 'three';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 import KeplerBody from '../../classes/KeplerBody';
-import { MeshLineGeometry, Edges, Trail } from '@react-three/drei';
+import { MeshLineGeometry, Edges, Trail, useHelper } from '@react-three/drei';
 import { TextureLoader } from 'three';
 import Vec3 from '~/simulation/types/Vec3';
 import Annotation from '../Annotation';
@@ -77,6 +78,8 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   const meshRef = useRef<Mesh>(null!);
   const bodyRef = useRef<KeplerBody>(null!);
   const trailRef = useRef<MeshLineGeometry>(null!);
+
+  useHelper(meshRef, BoxHelper, 'cyan');
 
   const addChildToTree = (body: KeplerBody) => {
     if (!body) {
