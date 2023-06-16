@@ -10,6 +10,7 @@ import { simState } from '../state/SimState';
 import { useEventListener, useTimeout } from 'usehooks-ts';
 //import { type CameraControls as CameraController } from 'three-stdlib';
 import { timeState } from '../state/TimeState';
+import { camState } from '../state/CamState';
 
 //type SimProps = {};
 const Simulation = () => {
@@ -28,6 +29,7 @@ const Simulation = () => {
   const controlsRef = useRef<CameraControls>(null!);
 
   useFrame(({ clock }, delta) => {
+    camState.updateControls();
     if (timeState.isPaused) {
       return;
     }
