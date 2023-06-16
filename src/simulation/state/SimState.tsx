@@ -27,19 +27,6 @@ export const select = (newSelection: KeplerBody) => {
   console.log(`New selection: ${newSelection.name}:`, simState.selected);
 
   camState.controls.update(0.01); // update controls to follow target
-
-  // set camera controls target
-  // simState.controls.setTarget(...newSelection.position.toArray(), true).then(
-  //   () => {
-  //     console.log('promise fulfilled!');
-  //   },
-  //   (reason) => {
-  //     console.log('promise rejected!: ', reason);
-  //   }
-  // );
-  //simState.controls.object.lookAt(newSelection.position);
-  //simState.controls.update();
-  //simState.controls.object.updateProjectionMatrix();
 };
 export const unselect = () => {
   simState.selected = null;
