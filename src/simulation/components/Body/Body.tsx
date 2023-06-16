@@ -3,6 +3,7 @@ import React, {
   useContext,
   useImperativeHandle,
   useRef,
+  useState,
 } from 'react';
 import {
   extend,
@@ -21,12 +22,18 @@ import {
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 import KeplerBody from '../../classes/KeplerBody';
 import { Trail } from '~/drei-imports/abstractions/Trail';
-import { MeshLineGeometry, useBounds } from '@react-three/drei';
+import {
+  MeshLineGeometry,
+  useBounds,
+  Select,
+  useSelect,
+  Edges,
+} from '@react-three/drei';
 import { TextureLoader } from 'three';
 import Vec3 from '~/simulation/types/Vec3';
 import { Html } from '~/drei-imports/abstractions/text/Html';
 import Annotation from '../Annotation';
-import { select } from '~/simulation/state/SimState';
+import { select, unselect } from '~/simulation/state/SimState';
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -42,7 +49,7 @@ type BodyAttributes = {
   mass?: number;
   initialPosition?: Vec3;
   initialVelocity?: Vec3;
-  meanRadius?: number;
+  meanRadius: number;
 };
 type BodyProps = {
   children?: React.ReactNode;
@@ -61,7 +68,9 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   const texture = useLoader(TextureLoader, props.texturePath ?? '');
 
   // get bounds
-  const bounds = useBounds();
+  //const bounds = useBounds();
+
+  const [isSelected, setSelected] = useState<boolean>(false);
 
   // get three.js state
   const getState = useThree((state) => state.get);
@@ -104,8 +113,8 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
 
     const targetPos = bodyRef.current.position;
 
-    bounds.refresh(bodyRef.current);
-    bounds.fit();
+    // bounds.refresh(bodyRef.current);
+    // bounds.fit();
     // bounds.to({
     //   position: bodyRef.current.position.toArray(),
     //   target: bodyRef.current.position.toArray(),
@@ -131,7 +140,14 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
 
     //console.log(`${body.name}:`, body);
 
+    setSelected(true);
     select(body);
+  };
+  const handleMiss = (e: MouseEvent) => {
+    if (isSelected) {
+      unselect();
+      setSelected(false);
+    }
   };
 
   return (
@@ -159,14 +175,23 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
       name={name ?? ''}
       args={[mass, initialPosition, initialVelocity]}
       onClick={handleClick}
+      onPointerMissed={handleMiss}
     >
-      <mesh visible ref={meshRef} scale={props.args.meanRadius ?? 1}>
+      <mesh
+        visible
+        ref={meshRef}
+        scale={
+          isSelected ? props.args.meanRadius * 1.25 : props.args.meanRadius
+        }
+      >
         <sphereGeometry />
         {props.texturePath ? (
           <meshBasicMaterial map={texture} />
         ) : (
           <meshBasicMaterial color={props.args.color} />
         )}
+
+        {isSelected ? <Edges color={'white'} /> : <></>}
 
         <Trail
           ref={trailRef}
