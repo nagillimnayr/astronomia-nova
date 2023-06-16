@@ -65,7 +65,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   //const bounds = useBounds();
 
   const [isSelected, setSelected] = useState<boolean>(false);
-  //const snap = useSnapshot(simState.selected);
+  //const snap = useSnapshot(simState);
 
   // get three.js state
   const getState = useThree((state) => state.get);
@@ -76,15 +76,12 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   // get refs
   const meshRef = useRef<Mesh>(null!);
   const bodyRef = useRef<KeplerBody>(null!);
-  const childrenRefs = useRef<KeplerBody[]>([]);
   const trailRef = useRef<MeshLineGeometry>(null!);
 
   const addChildToTree = (body: KeplerBody) => {
     if (!body) {
       return;
     }
-    // add child to array
-    childrenRefs.current.push(body);
 
     // setup attachment with parent
     const parent: KeplerBody = body.parent as KeplerBody;
