@@ -1,4 +1,5 @@
 import { CameraControls } from '@react-three/drei';
+import { CameraControls as CamControls } from 'three-stdlib';
 import { simState } from './SimState';
 import { proxy } from 'valtio';
 import Vec3 from '../types/Vec3';
@@ -12,6 +13,7 @@ type CamStateObj = {
 
 const setControls = (controls: CameraControls) => {
   camState.controls = controls;
+  controls.mouseButtons.right = 0; // disable pan
   controls.addEventListener('update', camState.updateControls);
   camState.updateControls();
 };
