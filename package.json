@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fontsource/roboto": "^5.0.3",
     "@formkit/auto-animate": "^1.0.0-beta.6",
     "@heroicons/react": "^2.0.18",
     "@next/bundle-analyzer": "^13.4.5",
@@ -16,7 +17,7 @@
     "@react-spring/core": "^9.7.2",
     "@react-spring/three": "^9.7.2",
     "@react-spring/web": "^9.7.2",
-    "@react-three/drei": "^9.74.6",
+    "@react-three/drei": "^9.74.5",
     "@react-three/fiber": "^8.13.0",
     "@react-three/flex": "^1.0.1",
     "@react-three/postprocessing": "^2.14.10",
