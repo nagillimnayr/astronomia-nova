@@ -25,8 +25,9 @@ import { MeshLineGeometry, Edges, Trail } from '@react-three/drei';
 import { TextureLoader } from 'three';
 import Vec3 from '~/simulation/types/Vec3';
 import Annotation from '../Annotation';
-import { select, unselect } from '~/simulation/state/SimState';
+import { select, simState, unselect } from '~/simulation/state/SimState';
 import { Selection, Select } from '@react-three/postprocessing';
+import { useSnapshot } from 'valtio';
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -64,6 +65,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   //const bounds = useBounds();
 
   const [isSelected, setSelected] = useState<boolean>(false);
+  //const snap = useSnapshot(simState.selected);
 
   // get three.js state
   const getState = useThree((state) => state.get);
@@ -138,9 +140,8 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     //focus();
   };
   const handleMiss = (e: MouseEvent) => {
-    if (isSelected) {
-      unselect();
-      setSelected(false);
+    if (isSelected && simState.selected) {
+      setSelected(simState.selected.name === bodyRef.current.name);
     }
   };
 
