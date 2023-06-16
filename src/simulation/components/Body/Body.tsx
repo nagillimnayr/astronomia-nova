@@ -118,8 +118,8 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     const camera = state.camera;
 
     // attach camera to our target so it moves along with it
-    // camera.parent?.remove(camera);
-    // bodyRef.current.add(camera);
+    camera.parent?.remove(camera);
+    bodyRef.current.add(camera);
 
     camera.lookAt(targetPos);
     camera.updateProjectionMatrix();
@@ -137,6 +137,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
 
     setSelected(true);
     select(body);
+    //focus();
   };
   const handleMiss = (e: MouseEvent) => {
     if (isSelected) {
