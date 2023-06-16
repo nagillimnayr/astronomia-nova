@@ -17,7 +17,7 @@ const Scene = () => {
         <Canvas gl={{ logarithmicDepthBuffer: true }}>
           <XR>
             <Simulation />
-            <Stats />
+            {/* <Stats /> */}
             <Perf />
           </XR>
         </Canvas>
