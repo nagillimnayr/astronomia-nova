@@ -1,8 +1,3 @@
-import { MutableRefObject, forwardRef, useContext } from 'react';
-import { Html } from '~/drei-imports/abstractions/text/Html';
-import { TimeContext } from '../../context/TimeContext';
-import { useFrame } from '@react-three/fiber';
-import { round } from 'mathjs';
 import { timeState } from '~/simulation/state/TimeState';
 import { formatDistance } from 'date-fns';
 import { useSnapshot } from 'valtio';
