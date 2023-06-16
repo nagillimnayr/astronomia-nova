@@ -102,29 +102,6 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     [bodyRef]
   );
 
-  const focus = () => {
-    const state = getState();
-    console.log('focus: ', bodyRef.current.name);
-
-    const targetPos = bodyRef.current.position;
-
-    // bounds.refresh(bodyRef.current);
-    // bounds.fit();
-    // bounds.to({
-    //   position: bodyRef.current.position.toArray(),
-    //   target: bodyRef.current.position.toArray(),
-    // });
-
-    const camera = state.camera;
-
-    // attach camera to our target so it moves along with it
-    camera.parent?.remove(camera);
-    bodyRef.current.add(camera);
-
-    camera.lookAt(targetPos);
-    camera.updateProjectionMatrix();
-  };
-
   // event handlers
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
