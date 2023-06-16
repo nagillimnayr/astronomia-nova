@@ -4,7 +4,7 @@ import PauseButton from './buttons/PauseButton';
 
 const TimeControls = () => {
   return (
-    <div className="mt-2 flex w-40 flex-row justify-between self-center">
+    <div className="pointer-events-auto mt-2 flex w-40 flex-row justify-between self-center ">
       <BackwardButton />
       <PauseButton />
       <ForwardButton />
