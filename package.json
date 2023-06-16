@@ -37,7 +37,7 @@
     "react-dom": "^18.2.0",
     "tailwind-merge": "^1.13.1",
     "three": "^0.153.0",
-    "three-stdlib": "^2.23.9",
+    "three-stdlib": "^2.23.10",
     "usehooks-ts": "^2.9.1",
     "valtio": "^1.10.5",
     "zod": "^3.21.4",
