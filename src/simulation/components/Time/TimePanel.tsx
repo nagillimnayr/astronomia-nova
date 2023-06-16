@@ -4,7 +4,7 @@ import TimeControls from './TimeControls';
 import TimeDisplay from './TimeDisplay';
 import TimescaleDisplay from './TimescaleDisplay';
 import { Html } from '~/drei-imports/abstractions/text/Html';
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import {
   TimeContext,
   TimeContextObject,
@@ -16,6 +16,9 @@ const TimePanel = () => {
   // the Html wrapper will render its contents outside of the canvas
   // so we need to bridge the context
   const time = useContext(TimeContext);
+
+  const htmlRef = useRef<HTMLDivElement>(null!);
+
   const getState = useThree((state) => state.get);
   const getClock = () => {
     return getState().clock;
@@ -23,6 +26,7 @@ const TimePanel = () => {
 
   return (
     <Html
+      ref={htmlRef}
       fullscreen
       className="flex min-h-fit  min-w-fit flex-col items-center justify-end whitespace-nowrap border-2 border-red-500"
     >
