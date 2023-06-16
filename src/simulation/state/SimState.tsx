@@ -4,11 +4,12 @@ import KeplerBody from '../classes/KeplerBody';
 //import { OrbitControls, CameraControls } from 'three-stdlib';
 import { CameraControls } from '@react-three/drei';
 import { RootState } from '@react-three/fiber';
+import { camState } from './CamState';
 
 type SimStateObj = {
   root: KeplerBody;
   selected: KeplerBody | null;
-  controls: CameraControls;
+  //controls: CameraControls;
 
   getState: () => RootState;
   update: (deltaTime: number) => void;
@@ -20,18 +21,22 @@ export const select = (newSelection: KeplerBody) => {
     return;
   }
 
+  // set selected
   simState.selected = newSelection;
 
   console.log(`New selection: ${newSelection.name}:`, simState.selected);
 
-  simState.controls.setTarget(...newSelection.position.toArray(), true).then(
-    () => {
-      console.log('promise fulfilled!');
-    },
-    (reason) => {
-      console.log('promise rejected!: ', reason);
-    }
-  );
+  camState.controls.update(0.01); // update controls to follow target
+
+  // set camera controls target
+  // simState.controls.setTarget(...newSelection.position.toArray(), true).then(
+  //   () => {
+  //     console.log('promise fulfilled!');
+  //   },
+  //   (reason) => {
+  //     console.log('promise rejected!: ', reason);
+  //   }
+  // );
   //simState.controls.object.lookAt(newSelection.position);
   //simState.controls.update();
   //simState.controls.object.updateProjectionMatrix();
@@ -51,7 +56,6 @@ const updateFn = (deltaTime: number) => {
 export const simState = proxy<SimStateObj>({
   root: null!, // root of the Kepler Tree
   selected: null, // current selection
-  controls: null!,
 
   getState: null!,
   update: updateFn,
