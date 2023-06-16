@@ -22,18 +22,13 @@ import {
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 import KeplerBody from '../../classes/KeplerBody';
 import { Trail } from '~/drei-imports/abstractions/Trail';
-import {
-  MeshLineGeometry,
-  useBounds,
-  Select,
-  useSelect,
-  Edges,
-} from '@react-three/drei';
+import { MeshLineGeometry, Edges } from '@react-three/drei';
 import { TextureLoader } from 'three';
 import Vec3 from '~/simulation/types/Vec3';
 import { Html } from '~/drei-imports/abstractions/text/Html';
 import Annotation from '../Annotation';
 import { select, unselect } from '~/simulation/state/SimState';
+import { Selection, Select } from '@react-three/postprocessing';
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -177,31 +172,30 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
       onClick={handleClick}
       onPointerMissed={handleMiss}
     >
-      <mesh
-        visible
-        ref={meshRef}
-        scale={
-          isSelected ? props.args.meanRadius * 1.25 : props.args.meanRadius
-        }
-      >
-        <sphereGeometry />
-        {props.texturePath ? (
-          <meshBasicMaterial map={texture} />
-        ) : (
-          <meshBasicMaterial color={props.args.color} />
-        )}
-
-        {isSelected ? <Edges color={'white'} /> : <></>}
-
-        <Trail
-          ref={trailRef}
-          target={meshRef}
-          width={1}
-          length={300}
-          decay={0.001}
-          color={props.args.color}
-        />
-      </mesh>
+      <Select enabled={isSelected}>
+        <mesh
+          visible
+          ref={meshRef}
+          scale={
+            isSelected ? props.args.meanRadius * 1.25 : props.args.meanRadius
+          }
+        >
+          <sphereGeometry />
+          {props.texturePath ? (
+            <meshBasicMaterial map={texture} />
+          ) : (
+            <meshBasicMaterial color={props.args.color} />
+          )}
+        </mesh>
+      </Select>
+      <Trail
+        ref={trailRef}
+        target={meshRef}
+        width={1}
+        length={300}
+        decay={0.001}
+        color={props.args.color}
+      />
 
       <KeplerTreeContext.Provider value={addChildToTree}>
         {props.children}
