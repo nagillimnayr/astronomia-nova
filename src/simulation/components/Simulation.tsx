@@ -15,7 +15,7 @@ import {
 } from '@react-three/drei';
 import { useSnapshot } from 'valtio';
 import { SimState } from '../state/SimState';
-import { useEventListener } from 'usehooks-ts';
+import { useEventListener, useTimeout } from 'usehooks-ts';
 
 //type SimProps = {};
 const Simulation = () => {
@@ -46,7 +46,7 @@ const Simulation = () => {
 
   const updateClock = (scaledDelta: number) => {
     // increase time elapsed by scaled delta time
-    time.timeElapsedRef.current += scaledDelta;
+    time.timeElapsedRef.current += scaledDelta * DAY;
 
     // get date relative to J2000 epoch
     const currentDate = addSeconds(j2000, time.timeElapsedRef.current);
@@ -61,7 +61,7 @@ const Simulation = () => {
     }
     // scale delta time
     const scaledDelta = delta * time.timescaleRef.current;
-    updateClock(scaledDelta * DAY);
+    updateClock(scaledDelta);
 
     const fixedUpdate = updateRef.current;
     fixedUpdate(scaledDelta);
@@ -72,6 +72,8 @@ const Simulation = () => {
     console.log('keydown: ', e.key);
     if (e.key === ' ') {
       console.log('selected: ', SimState.selected);
+      console.log('time elapsed: ', time.timeElapsedRef.current / DAY);
+      console.log('timescale: ', time.timescaleRef.current);
     }
   });
 
