@@ -11,20 +11,18 @@ import {
   PerspectiveCamera,
   OrbitControls,
   CameraControls,
-  useKeyboardControls,
 } from '@react-three/drei';
 import { useSnapshot } from 'valtio';
-import { SimState } from '../state/SimState';
+import { simState } from '../state/SimState';
 import { useEventListener, useTimeout } from 'usehooks-ts';
 import { type OrbitControls as OrbitController } from 'three-stdlib';
+import { timeState } from '../state/TimeState';
 
 //type SimProps = {};
 const Simulation = () => {
   // function for accessing scene state
   const getState = useThree((state) => state.get);
-
-  // get sim state
-  //const simState = useSnapshot(SimState);
+  simState.getState = getState;
 
   // set clock to be stopped initially
   getState().clock.stop();
@@ -35,37 +33,13 @@ const Simulation = () => {
   // orbit ref
   const orbitRef = useRef<OrbitController>(null!);
 
-  // create time context object
-  const time: TimeContextObject = {
-    timerRef: useRef<HTMLSpanElement>(null!),
-    hourRef: useRef<HTMLParagraphElement>(null!),
-    dateRef: useRef<HTMLParagraphElement>(null!),
-    timescaleDisplayRef: useRef<HTMLSpanElement>(null!),
-    timeElapsedRef: useRef<number>(0),
-    timescaleRef: useRef<number>(1),
-  };
-
-  // J2000 epoch reference date
-  const j2000 = new Date(2000, 0, 1, 12, 0, 0, 0);
-
-  const updateClock = (scaledDelta: number) => {
-    // increase time elapsed by scaled delta time
-    time.timeElapsedRef.current += scaledDelta * DAY;
-
-    // get date relative to J2000 epoch
-    const currentDate = addSeconds(j2000, time.timeElapsedRef.current);
-    time.timerRef.current.textContent = formatDistance(currentDate, j2000);
-
-    time.hourRef.current.textContent = format(currentDate, 'hh:mm:ss a');
-    time.dateRef.current.textContent = format(currentDate, 'PPP');
-  };
   useFrame(({ clock }, delta) => {
     if (!clock.running) {
       return;
     }
     // scale delta time
-    const scaledDelta = delta * time.timescaleRef.current;
-    updateClock(scaledDelta);
+    const scaledDelta = delta * timeState.timescale;
+    timeState.updateClock(scaledDelta);
 
     const fixedUpdate = updateRef.current;
     fixedUpdate(scaledDelta);
@@ -75,14 +49,12 @@ const Simulation = () => {
     e.preventDefault();
     console.log('keydown: ', e.key);
     if (e.key === ' ') {
-      console.log('selected: ', SimState.selected);
-      console.log('time elapsed: ', time.timeElapsedRef.current / DAY);
-      console.log('timescale: ', time.timescaleRef.current);
+      console.log('selected: ', simState.selected);
     }
   });
 
   return (
-    <TimeContext.Provider value={time}>
+    <>
       <group>
         {/* <polarGridHelper args={[24, 16, 24, 64]} /> */}
         <SolarSystem ref={updateRef} />
@@ -97,7 +69,7 @@ const Simulation = () => {
             return;
           }
           orbitRef.current = controls;
-          SimState.controls = controls;
+          simState.controls = controls;
         }}
         makeDefault
         minDistance={10}
@@ -105,7 +77,7 @@ const Simulation = () => {
       />
 
       <ambientLight intensity={0.1} />
-    </TimeContext.Provider>
+    </>
   );
 };
 
