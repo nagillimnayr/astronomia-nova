@@ -6,6 +6,7 @@ import { Stats } from '~/drei-imports/misc/Stats';
 import { Perf } from '~/drei-imports/performance/Perf';
 import { VRButton, ARButton, XR } from '@react-three/xr';
 import { Suspense } from 'react';
+import { LoadingFallback } from './LoadingFallback';
 
 const Scene = () => {
   return (
@@ -13,7 +14,7 @@ const Scene = () => {
       <div className=" absolute bottom-0 right-1 h-24 w-40 select-none whitespace-nowrap border-2 border-green-400">
         <VRButton />
       </div>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingFallback />}>
         <Canvas gl={{ logarithmicDepthBuffer: true }}>
           <XR>
             <Simulation />
