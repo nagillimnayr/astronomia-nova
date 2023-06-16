@@ -16,6 +16,7 @@ import {
 import { useSnapshot } from 'valtio';
 import { SimState } from '../state/SimState';
 import { useEventListener, useTimeout } from 'usehooks-ts';
+import { type OrbitControls as OrbitController } from 'three-stdlib';
 
 //type SimProps = {};
 const Simulation = () => {
@@ -30,6 +31,9 @@ const Simulation = () => {
 
   // reference to update function that will be passed back up by the SolarSystem component
   const updateRef = useRef<UpdateFn>(null!);
+
+  // orbit ref
+  const orbitRef = useRef<OrbitController>(null!);
 
   // create time context object
   const time: TimeContextObject = {
@@ -88,10 +92,17 @@ const Simulation = () => {
       </PerspectiveCamera>
 
       <OrbitControls
+        ref={(controls) => {
+          if (!controls) {
+            return;
+          }
+          orbitRef.current = controls;
+          SimState.controls = controls;
+        }}
         makeDefault
         minDistance={10}
         enablePan={false}
-      ></OrbitControls>
+      />
 
       <ambientLight intensity={0.1} />
     </TimeContext.Provider>
