@@ -17,7 +17,7 @@ type SimStateObj = {
 
 export const select = (newSelection: KeplerBody) => {
   if (!newSelection) {
-    unselect();
+    //unselect();
     return;
   }
 
