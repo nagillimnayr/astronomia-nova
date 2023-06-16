@@ -150,13 +150,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
       onPointerMissed={handleMiss}
     >
       <Select enabled={isSelected}>
-        <mesh
-          visible
-          ref={meshRef}
-          scale={
-            isSelected ? props.args.meanRadius * 1.25 : props.args.meanRadius
-          }
-        >
+        <mesh visible ref={meshRef} scale={props.args.meanRadius ?? 1}>
           <sphereGeometry />
           {props.texturePath ? (
             <meshBasicMaterial map={texture} />
