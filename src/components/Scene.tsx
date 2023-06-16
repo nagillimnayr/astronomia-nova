@@ -19,25 +19,25 @@ const Scene = () => {
       </div>
       <Suspense fallback={<LoadingFallback />}>
         <Canvas gl={{ logarithmicDepthBuffer: true }}>
-          {/* <XR> */}
-          {/* <PerspectiveCamera position={[0, 0, 20]}></PerspectiveCamera> */}
-          <CameraControls
-            makeDefault
-            minDistance={5}
-            ref={(controls) => {
-              if (!controls) {
-                return;
-              }
+          <XR>
+            {/* <PerspectiveCamera position={[0, 0, 20]}></PerspectiveCamera> */}
+            <CameraControls
+              makeDefault
+              minDistance={5}
+              ref={(controls) => {
+                if (!controls) {
+                  return;
+                }
 
-              camState.setControls(controls);
-            }}
-          >
-            <HUD />
-          </CameraControls>
-          <Simulation />
-          {/* <Stats /> */}
-          {/* <Perf /> */}
-          {/* </XR> */}
+                camState.setControls(controls);
+              }}
+            >
+              <HUD />
+            </CameraControls>
+            <Simulation />
+            {/* <Stats /> */}
+            {/* <Perf /> */}
+          </XR>
         </Canvas>
       </Suspense>
     </div>
