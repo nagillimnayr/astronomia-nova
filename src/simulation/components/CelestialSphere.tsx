@@ -26,7 +26,7 @@ export const CelestialSphere = (props: CelestialSphereProps) => {
         />
         {props.children}
       </mesh>
-      <Stars
+      {/* <Stars
         radius={240}
         depth={1}
         count={5000}
@@ -34,7 +34,7 @@ export const CelestialSphere = (props: CelestialSphereProps) => {
         saturation={0}
         fade
         speed={1}
-      />
+      /> */}
     </group>
   );
 };
