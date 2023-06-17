@@ -33,6 +33,8 @@ import { useSnapshot } from 'valtio';
 import { Orbit } from '../Orbit/Orbit';
 import { KeplerOrbit } from '~/simulation/classes/KeplerOrbit';
 import { OrbitalElements } from '~/simulation/classes/OrbitalElements';
+import { Trajectory } from '../Orbit/Trajectory/Trajectory';
+import { CentralMassContext } from '~/simulation/context/CentralMassContext';
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -45,7 +47,7 @@ declare module '@react-three/fiber' {
 export type BodyAttributes = {
   name: string;
   color: ColorRepresentation;
-  mass?: number;
+  mass: number;
   initialPosition: number;
   initialVelocity: number;
   meanRadius: number;
@@ -67,7 +69,6 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   const texture = useLoader(TextureLoader, props.texturePath ?? '');
 
   const [isSelected, setSelected] = useState<boolean>(false);
-  //const snap = useSnapshot(simState);
 
   // get function from context
   const addSelfToTree = useContext(KeplerTreeContext);
@@ -137,59 +138,66 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   };
 
   return (
-    <keplerBody
-      ref={(body: KeplerBody) => {
-        if (!body) {
-          console.log(`removing ${bodyRef.current?.name} node from tree`);
-          if (!bodyRef.current) {
+    <>
+      <keplerBody
+        ref={(body: KeplerBody) => {
+          if (!body) {
+            console.log(`removing ${bodyRef.current?.name} node from tree`);
+            if (!bodyRef.current) {
+              return;
+            }
+            const parent = bodyRef.current.parent as KeplerBody;
+            if (!parent) {
+              return;
+            }
+            //parent?.removeOrbitingBody(bodyRef.current);
+
             return;
           }
-          const parent = bodyRef.current.parent as KeplerBody;
-          if (!parent) {
-            return;
-          }
-          //parent?.removeOrbitingBody(bodyRef.current);
 
-          return;
-        }
+          bodyRef.current = body;
 
-        bodyRef.current = body;
+          console.log(`adding ${body?.name} node to tree`);
 
-        console.log(`adding ${body?.name} node to tree`);
+          // pass ref to parent to add it to the tree
+          addSelfToTree(body);
+        }}
+        name={name ?? ''}
+        args={[mass, [initialPosition, 0, 0], [0, 0, -initialVelocity]]}
+        onClick={handleClick}
+        onPointerMissed={handleMiss}
+      >
+        <Select enabled={isSelected}>
+          <mesh visible ref={meshRef} scale={props.args.meanRadius ?? 1}>
+            <sphereGeometry />
+            {props.texturePath ? (
+              <meshBasicMaterial map={texture} />
+            ) : (
+              <meshBasicMaterial color={props.args.color} />
+            )}
+          </mesh>
+        </Select>
+        <Trail
+          ref={trailRef}
+          target={meshRef}
+          width={1}
+          length={300}
+          decay={0.001}
+          color={props.args.color}
+        />
 
-        // pass ref to parent to add it to the tree
-        addSelfToTree(body);
-      }}
-      name={name ?? ''}
-      args={[mass, [initialPosition, 0, 0], [0, 0, -initialVelocity]]}
-      onClick={handleClick}
-      onPointerMissed={handleMiss}
-    >
-      <Select enabled={isSelected}>
-        <mesh visible ref={meshRef} scale={props.args.meanRadius ?? 1}>
-          <sphereGeometry />
-          {props.texturePath ? (
-            <meshBasicMaterial map={texture} />
-          ) : (
-            <meshBasicMaterial color={props.args.color} />
-          )}
-        </mesh>
-      </Select>
-      <Trail
-        ref={trailRef}
-        target={meshRef}
-        width={1}
-        length={300}
-        decay={0.001}
-        color={props.args.color}
-      />
+        {/* <KeplerTreeContext.Provider value={addChildToTree}> */}
 
-      <KeplerTreeContext.Provider value={addChildToTree}>
-        {props.children}
-      </KeplerTreeContext.Provider>
+        {/* child orbits need to know the mass of their central body */}
+        <CentralMassContext.Provider value={props.args.mass}>
+          {props.children}
+        </CentralMassContext.Provider>
 
-      <Annotation annotation={props.args.name} />
-    </keplerBody>
+        {/* </KeplerTreeContext.Provider> */}
+
+        <Annotation annotation={props.args.name} />
+      </keplerBody>
+    </>
   );
 });
 
