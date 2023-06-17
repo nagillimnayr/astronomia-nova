@@ -1,3 +1,4 @@
+import { calculateOrbitFromPeriapsis } from '../math/orbit/calculateOrbit';
 import Vec3 from '../types/Vec3';
 
 type OrbitElements = {
@@ -27,9 +28,9 @@ type OrbitElements = {
 };
 
 type InitialParameters = {
-  eccentricity?: number;
-  semiMajorAxis?: number;
-  semiMinorAxis?: number;
+  periapsis: number;
+  maxOrbitalSpeed: number;
+  centralMass: number;
 };
 
 type StateVectors = {
@@ -38,33 +39,51 @@ type StateVectors = {
 };
 
 export class OrbitalElements {
-  private _semiMajorAxis!: number;
-  private _semiMinorAxis!: number;
-  private _semiLatusRectum!: number;
-  private _eccentricity!: number;
-  private _linearEccentricity!: number;
+  private _semiMajorAxis: number;
+  private _semiMinorAxis: number;
+  private _semiLatusRectum: number;
+  private _eccentricity: number;
+  private _linearEccentricity: number;
 
-  private _specificOrbitalEnergy!: number;
-  private _specificAngularMomentum!: number;
-  private _orbitalPeriod!: number;
-  private _orbitalSpeed!: number;
+  private _specificOrbitalEnergy: number;
+  // private _specificAngularMomentum!: number;
+  // private _orbitalPeriod!: number;
+  // private _orbitalSpeed!: number;
 
   // angular elements
-  private _inclination!: number;
-  private _longitudeOfPeriapsis!: number;
-  private _longitudeOfAscendingNode!: number;
-  private _argumentOfPeriapsis!: number;
-  private _axialTilt!: number; // Angle in degrees between the direction of the Orbiting Body's positive pole and the normal of the orbital plane, A.K.A Obliquity
+  // private _inclination!: number;
+  // private _longitudeOfPeriapsis!: number;
+  // private _longitudeOfAscendingNode!: number;
+  // private _argumentOfPeriapsis!: number;
+  // private _axialTilt!: number; // Angle in degrees between the direction of the Orbiting Body's positive pole and the normal of the orbital plane, A.K.A Obliquity
 
   // anomalies
-  private _trueAnomaly!: number;
-  private _eccentricAnomaly!: number;
-  private _meanAnomaly!: number;
-  private _meanAngularMotion!: number;
+  //private _trueAnomaly!: number;
+  //private _eccentricAnomaly!: number;
+  //private _meanAnomaly!: number;
+  //private _meanAngularMotion!: number;
 
-  constructor(parameters: StateVectors) {
+  // apsides
+  private _apoapsis: number;
+  private _periapsis: number;
+
+  constructor(parameters: InitialParameters) {
+    // calculate orbital elements from initial parameters
+    const { periapsis, maxOrbitalSpeed, centralMass } = parameters;
+    const elements = calculateOrbitFromPeriapsis(
+      periapsis,
+      maxOrbitalSpeed,
+      centralMass
+    );
     this._semiMajorAxis = elements.semiMajorAxis;
     this._semiMinorAxis = elements.semiMinorAxis;
-    this._;
+    this._semiLatusRectum = elements.semiLatusRectum;
+
+    this._apoapsis = elements.apoapsis;
+    this._periapsis = elements.periapsis;
+
+    this._linearEccentricity = elements.linearEccentricity;
+    this._eccentricity = elements.eccentricity;
+    this._specificOrbitalEnergy = elements.specificOrbitalEnergy;
   }
 }
