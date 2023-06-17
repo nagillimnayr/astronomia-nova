@@ -26,6 +26,7 @@ import {
 import { useEventListener } from 'usehooks-ts';
 import { simState, setRoot } from '~/simulation/state/SimState';
 import { keplerTreeState } from '../../state/keplerTreeState';
+import { Orbit } from '../Orbit/Orbit';
 
 export type UpdateFn = (deltaTime: number) => void;
 const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
@@ -131,38 +132,14 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
             }}
             texturePath={sunTexture}
           >
-            <Body
-              args={loadBodyPreset('Mercury')}
-              texturePath={mercuryTexture}
-            ></Body>
-            <Body
-              args={loadBodyPreset('Venus')}
-              texturePath={venusTexture}
-            ></Body>
-            <Body
-              args={loadBodyPreset('Earth')}
-              texturePath={earthTexture}
-            ></Body>
-            <Body
-              args={loadBodyPreset('Mars')}
-              texturePath={marsTexture}
-            ></Body>
-            <Body
-              args={loadBodyPreset('Jupiter')}
-              texturePath={jupiterTexture}
-            ></Body>
-            <Body
-              args={loadBodyPreset('Saturn')}
-              texturePath={saturnTexture}
-            ></Body>
-            <Body
-              args={loadBodyPreset('Uranus')}
-              texturePath={uranusTexture}
-            ></Body>
-            <Body
-              args={loadBodyPreset('Neptune')}
-              texturePath={neptuneTexture}
-            ></Body>
+            <Orbit name={'Mercury'} texturePath={mercuryTexture}></Orbit>
+            <Orbit name={'Venus'} texturePath={venusTexture}></Orbit>
+            <Orbit name={'Earth'} texturePath={earthTexture}></Orbit>
+            <Orbit name={'Mars'} texturePath={marsTexture}></Orbit>
+            <Orbit name={'Jupiter'} texturePath={jupiterTexture}></Orbit>
+            <Orbit name={'Saturn'} texturePath={saturnTexture}></Orbit>
+            <Orbit name={'Uranus'} texturePath={uranusTexture}></Orbit>
+            <Orbit name={'Neptune'} texturePath={neptuneTexture}></Orbit>
           </Body>
         </Selection>
       </CelestialSphere>
