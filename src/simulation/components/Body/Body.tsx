@@ -35,6 +35,7 @@ import { KeplerOrbit } from '~/simulation/classes/KeplerOrbit';
 import { OrbitalElements } from '~/simulation/classes/OrbitalElements';
 import { Trajectory } from '../Orbit/Trajectory/Trajectory';
 import { CentralMassContext } from '~/simulation/context/CentralMassContext';
+import { debugState } from '~/simulation/state/DebugState';
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -78,7 +79,9 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   const bodyRef = useRef<KeplerBody>(null!);
   const trailRef = useRef<MeshLineGeometry>(null!);
 
-  useHelper(meshRef, BoxHelper, 'cyan');
+  // check if we should show bounding boxes
+  const debugSnap = useSnapshot(debugState);
+  useHelper(debugSnap.showBoundingBoxes ? meshRef : null, BoxHelper, 'cyan');
 
   // callback function to be passed down to children via context provider
   // the child will call it within a callback ref and pass their reference
