@@ -1,5 +1,6 @@
 import React, {
   forwardRef,
+  useCallback,
   useContext,
   useImperativeHandle,
   useRef,
@@ -29,6 +30,9 @@ import Annotation from '../Annotation';
 import { select, simState, unselect } from '~/simulation/state/SimState';
 import { Selection, Select } from '@react-three/postprocessing';
 import { useSnapshot } from 'valtio';
+import { Orbit } from '../Orbit/Orbit';
+import { KeplerOrbit } from '~/simulation/classes/KeplerOrbit';
+import { OrbitalElements } from '~/simulation/classes/OrbitalElements';
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -75,16 +79,33 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
 
   useHelper(meshRef, BoxHelper, 'cyan');
 
-  const addChildToTree = (body: KeplerBody) => {
-    if (!body) {
-      return;
-    }
+  // callback function to be passed down to children via context provider
+  // the child will call it within a callback ref and pass their reference
+  // as the argument, where it will be used to construct the Kepler Tree
+  const addChildToTree = useCallback(
+    (body: KeplerBody) => {
+      if (!body) {
+        return;
+      }
 
-    // setup attachment with parent
-    const parent: KeplerBody = body.parent as KeplerBody;
-    console.assert(parent, 'failed to cast to parent');
-    parent.addOrbitingBody(body);
-  };
+      // setup attachment to parent
+      const parent: KeplerBody = body.parent as KeplerBody;
+      console.assert(parent, 'failed to cast to parent');
+      parent.addOrbitingBody(body);
+
+      // create orbit
+      const periapsis = props.args.initialPosition;
+      const maxOrbitalSpeed = props.args.initialVelocity;
+      const centralMass = parent.mass;
+      const orbit = new KeplerOrbit(
+        new OrbitalElements({ periapsis, maxOrbitalSpeed, centralMass })
+      );
+
+      // attach orbit to parent
+      parent.add(orbit);
+    },
+    [props.args]
+  );
 
   // Set forwarded ref
   // the return value of the callback function will be assigned to fwdRef
@@ -129,8 +150,10 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
             return;
           }
           //parent?.removeOrbitingBody(bodyRef.current);
+
           return;
         }
+
         bodyRef.current = body;
 
         console.log(`adding ${body?.name} node to tree`);
