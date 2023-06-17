@@ -7,6 +7,7 @@ import KeplerBody from '~/simulation/classes/KeplerBody';
 import KeplerTreeContext from '~/simulation/context/KeplerTreeContext';
 import { CentralMassContext } from '~/simulation/context/CentralMassContext';
 import { calculateOrbitFromPeriapsis } from '~/simulation/math/orbit/calculateOrbit';
+import { DIST_MULT } from '~/simulation/utils/constants';
 
 type OrbitProps = {
   children?: React.ReactNode;
@@ -27,8 +28,8 @@ export const Orbit = (props: OrbitProps) => {
   const elements = useMemo(
     () =>
       calculateOrbitFromPeriapsis(
-        preset.initialPosition,
-        preset.initialVelocity,
+        preset.initialPosition * DIST_MULT,
+        preset.initialVelocity * DIST_MULT,
         centralMass
       ),
     [preset.initialPosition, preset.initialVelocity, centralMass]
