@@ -77,7 +77,7 @@ function getFromPeriod(period: number, centralMass: number): number {
  * @date 14/06/2023
  * @param {number} apoapsis
  * @param {number} periapsis
- * @returns {*}
+ * @returns {*} {number} semiMajorAxis
  */
 function getFromApsides(apoapsis: number, periapsis: number) {
   return (periapsis + apoapsis) / 2.0;
