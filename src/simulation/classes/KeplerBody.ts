@@ -15,12 +15,14 @@ class KeplerBody extends DynamicBody {
   }
 
   addOrbitingBody(body: KeplerBody) {
+    console.log(`adding ${body.name} as orbiter of ${this.name}`);
     if (!this._orbitingBodies.includes(body)) {
       this._orbitingBodies.push(body);
     }
   }
 
   removeOrbitingBody(body: KeplerBody) {
+    console.log(`removing ${body.name} as orbiter of ${this.name}`);
     this._orbitingBodies = this._orbitingBodies.filter((item) => {
       return !Object.is(item, body);
     });
