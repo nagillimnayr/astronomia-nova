@@ -11,6 +11,9 @@ type SimStateObj = {
   selected: KeplerBody | null;
   //controls: CameraControls;
 
+  select: (newSelection: KeplerBody) => void;
+  deselect: () => void;
+
   getState: () => RootState;
   update: (deltaTime: number) => void;
 };
@@ -28,7 +31,7 @@ export const select = (newSelection: KeplerBody) => {
 
   camState.controls.update(0.01); // update controls to follow target
 };
-export const unselect = () => {
+export const deselect = () => {
   simState.selected = null;
 };
 
@@ -43,7 +46,8 @@ const updateFn = (deltaTime: number) => {
 export const simState = proxy<SimStateObj>({
   root: null!, // root of the Kepler Tree
   selected: null, // current selection
-
+  select,
+  deselect,
   getState: null!,
   update: updateFn,
 });
