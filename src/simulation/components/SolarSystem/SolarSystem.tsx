@@ -98,14 +98,6 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
     [fixedUpdate]
   );
 
-  // useFrame(({ clock }, delta) => {
-  //   if (!clock.running) {
-  //     return;
-  //   }
-
-  //   fixedUpdate(delta);
-  // });
-
   useEventListener('keypress', (e) => {
     e.preventDefault();
     if (e.key === ' ') {
