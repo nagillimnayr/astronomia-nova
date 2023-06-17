@@ -83,29 +83,29 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   // callback function to be passed down to children via context provider
   // the child will call it within a callback ref and pass their reference
   // as the argument, where it will be used to construct the Kepler Tree
-  const addChildToTree = useCallback(
-    (body: KeplerBody) => {
-      if (!body) {
-        return;
-      }
+  // const addChildToTree = useCallback(
+  //   (body: KeplerBody) => {
+  //     if (!body) {
+  //       return;
+  //     }
 
-      // setup attachment to parent
-      const parent: KeplerBody = body.parent as KeplerBody;
-      console.assert(parent, 'failed to cast to parent');
-      parent.addOrbitingBody(body);
+  //     // setup attachment to parent
+  //     const parent: KeplerBody = body.parent as KeplerBody;
+  //     console.assert(parent, 'failed to cast to parent');
+  //     parent.addOrbitingBody(body);
 
-      // create orbit
-      const periapsis = props.args.initialPosition;
-      const maxOrbitalSpeed = props.args.initialVelocity;
-      const centralMass = parent.mass;
-      const orbit = new KeplerOrbit(
-        parent,
-        body,
-        new OrbitalElements({ periapsis, maxOrbitalSpeed, centralMass })
-      );
-    },
-    [props.args]
-  );
+  //     // create orbit
+  //     const periapsis = props.args.initialPosition;
+  //     const maxOrbitalSpeed = props.args.initialVelocity;
+  //     const centralMass = parent.mass;
+  //     const orbit = new KeplerOrbit(
+  //       parent,
+  //       body,
+  //       new OrbitalElements({ periapsis, maxOrbitalSpeed, centralMass })
+  //     );
+  //   },
+  //   [props.args]
+  // );
 
   // Set forwarded ref
   // the return value of the callback function will be assigned to fwdRef
