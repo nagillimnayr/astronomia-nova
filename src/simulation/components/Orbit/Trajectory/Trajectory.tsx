@@ -2,6 +2,7 @@ import { CatmullRomLine, Line } from '@react-three/drei';
 import { useMemo } from 'react';
 import { EllipseCurve } from 'three';
 import { LinearEccentricity } from '~/simulation/math/orbital-elements/LinearEccentricity';
+import { DIST_MULT } from '~/simulation/utils/constants';
 
 type TrajectoryProps = {
   semiMajorAxis: number;
@@ -14,20 +15,21 @@ export const Trajectory = (props: TrajectoryProps) => {
       props.linearEccentricity ??
       LinearEccentricity.fromAxes(props.semiMajorAxis, props.semiMinorAxis);
     return new EllipseCurve(
-      -linearEccentricity,
+      -linearEccentricity / DIST_MULT,
       0,
-      props.semiMajorAxis,
-      props.semiMinorAxis
+      props.semiMajorAxis / DIST_MULT,
+      props.semiMinorAxis / DIST_MULT
     ).getSpacedPoints(64);
   }, [props.semiMajorAxis, props.semiMinorAxis, props.linearEccentricity]);
-
+  console.log('semi-major axis: ', props.semiMajorAxis);
+  console.log('semi-minor axis: ', props.semiMinorAxis);
   return (
     <>
-      <CatmullRomLine
+      <Line
         points={points}
         color={'white'}
-        curveType="catmullrom"
-        lineWidth={0.1}
+        // curveType="catmullrom"
+        lineWidth={0.25}
       />
     </>
   );
