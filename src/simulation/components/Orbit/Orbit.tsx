@@ -9,7 +9,7 @@ import { CentralMassContext } from '~/simulation/context/CentralMassContext';
 import { calculateOrbitFromPeriapsis } from '~/simulation/math/orbit/calculateOrbit';
 
 type OrbitProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   name: PresetKey;
   texturePath: string;
 };
