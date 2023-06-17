@@ -25,6 +25,7 @@ import {
 } from '@react-three/postprocessing';
 import { useEventListener } from 'usehooks-ts';
 import { simState, setRoot } from '~/simulation/state/SimState';
+import { keplerTreeState } from '../../state/keplerTreeState';
 
 export type UpdateFn = (deltaTime: number) => void;
 const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
@@ -79,7 +80,7 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
       return;
     }
     console.log(`setting ${body.name} as root`);
-    setRoot(body);
+    keplerTreeState.setRoot(body);
   };
 
   const fixedUpdate = useCallback(
@@ -125,6 +126,8 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
               mass: SOLAR_MASS,
               color: 0xfdee00,
               meanRadius: 1.5,
+              initialPosition: 0,
+              initialVelocity: 0,
             }}
             texturePath={sunTexture}
           >
