@@ -3,7 +3,7 @@ import { Color } from 'three';
 import { DIST_MULT, EARTH_RADIUS, KM_TO_M, SOLAR_MASS } from './constants';
 import Vec3 from '../types/Vec3';
 
-type key =
+export type PresetKey =
   | 'Mercury'
   | 'Venus'
   | 'Earth'
@@ -42,7 +42,7 @@ interface PlanetDataJSON {
   Uranus: PlanetData;
   Neptune: PlanetData;
 }
-export default function loadBodyPreset(name: key) {
+export default function loadBodyPreset(name: PresetKey) {
   const jsonData: PlanetDataJSON = data;
   const index: keyof typeof jsonData = name;
   const planetData: PlanetData = jsonData[index];
