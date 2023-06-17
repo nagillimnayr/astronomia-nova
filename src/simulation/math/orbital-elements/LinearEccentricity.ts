@@ -1,0 +1,81 @@
+import { assert } from 'console';
+import { sqrt } from 'mathjs';
+
+/**
+ * @description
+ * @author Ryan Milligan
+ * @date 16/06/2023
+ * @param {number} semiMajorAxis
+ * @param {number} eccentricity
+ * @returns {*}
+ */
+const fromEccentricity = (semiMajorAxis: number, eccentricity: number) => {
+  return semiMajorAxis * eccentricity;
+};
+
+/**
+ * @description
+ * @author Ryan Milligan
+ * @date 16/06/2023
+ * @param {number} semiMajorAxis
+ * @param {number} apsis
+ * @returns {*}
+ */
+const fromApsis = (semiMajorAxis: number, apsis: number) => {
+  // Linear eccentricity is the distance between the center of the ellipse and either of the foci, it can be
+  // calculated either from (semiMajorAxis - periapsis) or from (apoapsis - semiMajorAxis)
+  return semiMajorAxis > apsis ? semiMajorAxis - apsis : apsis - semiMajorAxis;
+};
+
+/**
+ * @description
+ * @author Ryan Milligan
+ * @date 16/06/2023
+ * @param {number} semiMajorAxis
+ * @param {number} apoapsis
+ * @returns {*}
+ */
+const fromApoapsis = (semiMajorAxis: number, apoapsis: number) => {
+  assert(
+    semiMajorAxis <= apoapsis,
+    'the semi-major axis should be smaller than the apoapsis'
+  );
+
+  return apoapsis - semiMajorAxis;
+};
+
+/**
+ * @description
+ * @author Ryan Milligan
+ * @date 16/06/2023
+ * @param {number} semiMajorAxis
+ * @param {number} periapsis
+ * @returns {*}
+ */
+const fromPeriapsis = (semiMajorAxis: number, periapsis: number) => {
+  assert(
+    semiMajorAxis >= periapsis,
+    'the semi-major axis should be larger than the periapsis'
+  );
+  return semiMajorAxis - periapsis;
+};
+
+/**
+ * @description
+ * @author Ryan Milligan
+ * @date 16/06/2023
+ * @param {number} semiMajorAxis
+ * @param {number} semiMinorAxis
+ * @returns {*}
+ */
+const fromAxes = (semiMajorAxis: number, semiMinorAxis: number) => {
+  return sqrt(semiMajorAxis * semiMajorAxis - semiMinorAxis * semiMinorAxis);
+};
+
+export const LinearEccentricity = {
+  fromEccentricity,
+  fromApsis,
+  fromApoapsis,
+  fromPeriapsis,
+  fromAxes,
+};
