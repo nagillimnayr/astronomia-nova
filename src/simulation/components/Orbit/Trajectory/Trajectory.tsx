@@ -1,6 +1,6 @@
 type TrajectoryProps = {
   semimajorAxis: number;
 };
-const OrbitalTrajectory = (props: TrajectoryProps) => {
+export const Trajectory = (props: TrajectoryProps) => {
   return <></>;
 };
