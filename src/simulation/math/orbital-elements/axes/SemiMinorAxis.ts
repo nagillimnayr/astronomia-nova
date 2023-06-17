@@ -1,4 +1,4 @@
-import { sqrt } from 'mathjs';
+//import { sqrt } from 'mathjs';
 
 /**
  * @description
@@ -12,7 +12,7 @@ const fromSemiLatusRectum = (
   semiMajorAxis: number,
   semiLatusRectum: number
 ): number => {
-  return sqrt(semiMajorAxis * semiLatusRectum) as number;
+  return Math.sqrt(semiMajorAxis * semiLatusRectum);
 };
 
 /**
@@ -24,7 +24,7 @@ const fromSemiLatusRectum = (
  * @returns {*}  {number} semiMinorAxis (m)
  */
 const fromApsides = (apoapsis: number, periapsis: number): number => {
-  return sqrt(apoapsis * periapsis) as number;
+  return Math.sqrt(apoapsis * periapsis);
 };
 
 export const SemiMinorAxis = {
