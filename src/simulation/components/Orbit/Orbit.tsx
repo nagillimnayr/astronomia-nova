@@ -15,6 +15,7 @@ type OrbitProps = {
 };
 
 export const Orbit = (props: OrbitProps) => {
+  // get Central mass from parent
   const centralMass = useContext(CentralMassContext);
 
   // Note: create usePreset to get memoized preset data
