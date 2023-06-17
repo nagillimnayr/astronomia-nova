@@ -51,6 +51,15 @@ export const calculateOrbitFromPeriapsis = (
     semiLatusRectum
   );
 
+  // console.log('periapsis: ', periapsis);
+  // console.log('apoapsis: ', apoapsis);
+  // console.log('semiMajorAxis: ', semiMajorAxis);
+  // console.log('semiMinorAxis: ', semiMinorAxis);
+  // console.log('semiLatusRectum: ', semiLatusRectum);
+  // console.log('specificOrbitalEnergy: ', specificOrbitalEnergy);
+  // console.log('eccentricity: ', eccentricity);
+  // console.log('linearEccentricity: ', linearEccentricity);
+
   return {
     periapsis,
     apoapsis,
