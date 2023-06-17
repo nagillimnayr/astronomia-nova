@@ -42,7 +42,7 @@ const Simulation = () => {
     <>
       <group>
         {/* <polarGridHelper args={[24, 16, 24, 64]} /> */}
-        <SolarSystem ref={updateRef} />
+        <SolarSystem />
       </group>
 
       <ambientLight intensity={0.1} />
