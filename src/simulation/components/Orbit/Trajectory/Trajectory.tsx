@@ -1,6 +1,7 @@
 import { CatmullRomLine, Line } from '@react-three/drei';
+import { pi } from 'mathjs';
 import { useMemo } from 'react';
-import { EllipseCurve } from 'three';
+import { EllipseCurve, Euler } from 'three';
 import { LinearEccentricity } from '~/simulation/math/orbital-elements/LinearEccentricity';
 import { DIST_MULT } from '~/simulation/utils/constants';
 
@@ -19,18 +20,20 @@ export const Trajectory = (props: TrajectoryProps) => {
       0,
       props.semiMajorAxis / DIST_MULT,
       props.semiMinorAxis / DIST_MULT
-    ).getSpacedPoints(64);
+    ).getSpacedPoints(128);
   }, [props.semiMajorAxis, props.semiMinorAxis, props.linearEccentricity]);
   console.log('semi-major axis: ', props.semiMajorAxis);
   console.log('semi-minor axis: ', props.semiMinorAxis);
   return (
     <>
-      <Line
-        points={points}
-        color={'white'}
-        // curveType="catmullrom"
-        lineWidth={0.25}
-      />
+      <object3D rotation={new Euler(pi / 2, 0, 0)}>
+        <Line
+          points={points}
+          color={'white'}
+          // curveType="catmullrom"
+          lineWidth={1}
+        />
+      </object3D>
     </>
   );
 };
