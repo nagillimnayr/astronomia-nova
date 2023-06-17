@@ -86,4 +86,11 @@ export class OrbitalElements {
     this._eccentricity = elements.eccentricity;
     this._specificOrbitalEnergy = elements.specificOrbitalEnergy;
   }
+
+  get semiMajorAxis() {
+    return this._semiMajorAxis;
+  }
+  get semiMinorAxis() {
+    return this._semiMinorAxis;
+  }
 }
