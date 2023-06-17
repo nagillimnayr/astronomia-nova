@@ -1,4 +1,9 @@
-import { MeshLineGeometry, Trail, useHelper } from '@react-three/drei';
+import {
+  MeshLineGeometry,
+  Trail,
+  useCursor,
+  useHelper,
+} from '@react-three/drei';
 import { ThreeEvent } from '@react-three/fiber';
 import { Select } from '@react-three/postprocessing';
 import { useRef, useState } from 'react';
@@ -22,6 +27,8 @@ export const BodyMesh = (props: BodyMeshProps) => {
   const trailRef = useRef<MeshLineGeometry>(null!);
 
   const [isSelected, setSelected] = useState<boolean>(false);
+  const [isHovered, setHovered] = useState<boolean>(false);
+  useCursor(isHovered, 'pointer');
 
   // check if we should show bounding boxes
   const debugSnap = useSnapshot(debugState);
@@ -53,6 +60,8 @@ export const BodyMesh = (props: BodyMeshProps) => {
           scale={props.meanRadius}
           onClick={handleClick}
           onPointerMissed={handleMiss}
+          onPointerOver={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
         >
           <sphereGeometry />
           <meshBasicMaterial map={props.texture} />
