@@ -1,4 +1,3 @@
-import { assert } from 'console';
 import { sqrt } from 'mathjs';
 
 /**
@@ -36,7 +35,7 @@ const fromApsis = (semiMajorAxis: number, apsis: number) => {
  * @returns {*}
  */
 const fromApoapsis = (semiMajorAxis: number, apoapsis: number) => {
-  assert(
+  console.assert(
     semiMajorAxis <= apoapsis,
     'the semi-major axis should be smaller than the apoapsis'
   );
