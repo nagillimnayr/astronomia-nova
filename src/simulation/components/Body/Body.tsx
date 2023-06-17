@@ -27,7 +27,7 @@ import { MeshLineGeometry, Edges, Trail, useHelper } from '@react-three/drei';
 import { TextureLoader } from 'three';
 import Vec3 from '~/simulation/types/Vec3';
 import Annotation from '../Annotation';
-import { select, simState, unselect } from '~/simulation/state/SimState';
+import { select, simState, deselect } from '~/simulation/state/SimState';
 import { Selection, Select } from '@react-three/postprocessing';
 import { useSnapshot } from 'valtio';
 import { Orbit } from '../Orbit/Orbit';
@@ -36,6 +36,7 @@ import { OrbitalElements } from '~/simulation/classes/OrbitalElements';
 import { Trajectory } from '../Orbit/Trajectory/Trajectory';
 import { CentralMassContext } from '~/simulation/context/CentralMassContext';
 import { debugState } from '~/simulation/state/DebugState';
+import { BodyMesh } from './BodyMesh';
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -69,46 +70,11 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   // load texture
   const texture = useLoader(TextureLoader, props.texturePath ?? '');
 
-  const [isSelected, setSelected] = useState<boolean>(false);
-
   // get function from context
   const addSelfToTree = useContext(KeplerTreeContext);
 
   // get refs
-  const meshRef = useRef<Mesh>(null!);
   const bodyRef = useRef<KeplerBody>(null!);
-  const trailRef = useRef<MeshLineGeometry>(null!);
-
-  // check if we should show bounding boxes
-  const debugSnap = useSnapshot(debugState);
-  useHelper(debugSnap.showBoundingBoxes ? meshRef : null, BoxHelper, 'cyan');
-
-  // callback function to be passed down to children via context provider
-  // the child will call it within a callback ref and pass their reference
-  // as the argument, where it will be used to construct the Kepler Tree
-  // const addChildToTree = useCallback(
-  //   (body: KeplerBody) => {
-  //     if (!body) {
-  //       return;
-  //     }
-
-  //     // setup attachment to parent
-  //     const parent: KeplerBody = body.parent as KeplerBody;
-  //     console.assert(parent, 'failed to cast to parent');
-  //     parent.addOrbitingBody(body);
-
-  //     // create orbit
-  //     const periapsis = props.args.initialPosition;
-  //     const maxOrbitalSpeed = props.args.initialVelocity;
-  //     const centralMass = parent.mass;
-  //     const orbit = new KeplerOrbit(
-  //       parent,
-  //       body,
-  //       new OrbitalElements({ periapsis, maxOrbitalSpeed, centralMass })
-  //     );
-  //   },
-  //   [props.args]
-  // );
 
   // Set forwarded ref
   // the return value of the callback function will be assigned to fwdRef
@@ -119,26 +85,6 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     },
     [bodyRef]
   );
-
-  // event handlers
-  const handleClick = (e: ThreeEvent<MouseEvent>) => {
-    e.stopPropagation();
-    if (!bodyRef.current) {
-      return;
-    }
-    const body: KeplerBody = bodyRef.current;
-
-    //console.log(`${body.name}:`, body);
-
-    setSelected(true);
-    select(body);
-    //focus();
-  };
-  const handleMiss = (e: MouseEvent) => {
-    if (isSelected && simState.selected) {
-      setSelected(simState.selected.name === bodyRef.current.name);
-    }
-  };
 
   return (
     <>
@@ -167,26 +113,11 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         }}
         name={name ?? ''}
         args={[mass, [initialPosition, 0, 0], [0, 0, -initialVelocity]]}
-        onClick={handleClick}
-        onPointerMissed={handleMiss}
       >
-        <Select enabled={isSelected}>
-          <mesh visible ref={meshRef} scale={props.args.meanRadius ?? 1}>
-            <sphereGeometry />
-            {props.texturePath ? (
-              <meshBasicMaterial map={texture} />
-            ) : (
-              <meshBasicMaterial color={props.args.color} />
-            )}
-          </mesh>
-        </Select>
-        <Trail
-          ref={trailRef}
-          target={meshRef}
-          width={1}
-          length={300}
-          decay={0.001}
+        <BodyMesh
+          meanRadius={props.args.meanRadius}
           color={props.args.color}
+          texture={texture}
         />
 
         {/* <KeplerTreeContext.Provider value={addChildToTree}> */}
