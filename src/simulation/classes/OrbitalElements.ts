@@ -1,3 +1,5 @@
+import Vec3 from '../types/Vec3';
+
 type OrbitElements = {
   semiMajorAxis: number;
   semiMinorAxis: number;
@@ -24,7 +26,18 @@ type OrbitElements = {
   meanAngularMotion: number;
 };
 
-export class OrbitalTrajectory {
+type InitialParameters = {
+  eccentricity?: number;
+  semiMajorAxis?: number;
+  semiMinorAxis?: number;
+};
+
+type StateVectors = {
+  position?: Vec3;
+  velocity?: Vec3;
+};
+
+export class OrbitalElements {
   private _semiMajorAxis!: number;
   private _semiMinorAxis!: number;
   private _semiLatusRectum!: number;
@@ -49,7 +62,9 @@ export class OrbitalTrajectory {
   private _meanAnomaly!: number;
   private _meanAngularMotion!: number;
 
-  constructor(elements: OrbitElements) {
+  constructor(parameters: StateVectors) {
     this._semiMajorAxis = elements.semiMajorAxis;
+    this._semiMinorAxis = elements.semiMinorAxis;
+    this._;
   }
 }
