@@ -80,7 +80,6 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
     if (!body) {
       return;
     }
-    console.log(`setting ${body.name} as root`);
     keplerTreeState.setRoot(body);
   };
 
