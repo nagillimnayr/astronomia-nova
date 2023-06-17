@@ -7,24 +7,30 @@ export class KeplerOrbit extends Object3D {
   private _orbitingBody!: KeplerBody;
   private _orbitalElements!: OrbitalElements;
 
-  constructor(elements: OrbitalElements) {
+  constructor(
+    centralBody: KeplerBody,
+    orbitingBody: KeplerBody,
+    elements: OrbitalElements
+  ) {
     super();
     this._orbitalElements = elements;
+    this._centralBody = centralBody;
+    this._orbitingBody = orbitingBody;
   }
 
   get centralBody() {
     return this._centralBody;
   }
-  set centralBody(body: KeplerBody) {
-    this._centralBody = body;
-  }
+  // set centralBody(body: KeplerBody) {
+  //   this._centralBody = body;
+  // }
 
   get orbitingBody() {
     return this._orbitingBody;
   }
-  set orbitingBody(body: KeplerBody) {
-    this._orbitingBody = body;
-  }
+  // set orbitingBody(body: KeplerBody) {
+  //   this._orbitingBody = body;
+  // }
 
   updateOrbitingBody(deltaTime: number) {
     this._orbitingBody.update(deltaTime);
