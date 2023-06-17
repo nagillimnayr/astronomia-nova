@@ -33,20 +33,15 @@ export const BodyMesh = (props: BodyMeshProps) => {
     if (!meshRef.current) {
       return;
     }
-    const body: KeplerBody = meshRef.current.parent as KeplerBody;
-
-    //console.log(`${body.name}:`, body);
+    const body: KeplerBody = meshRef.current.parent!.parent as KeplerBody;
 
     setSelected(true);
     simState.select(body);
-    //focus();
   };
   const handleMiss = (e: MouseEvent) => {
     if (!meshRef.current) return;
-    if (isSelected && simState.selected) {
-      const parent: Object3D | null = meshRef.current.parent;
-      if (!parent) return;
-      setSelected(simState.selected.name === parent.name);
+    if (isSelected) {
+      setSelected(false);
     }
   };
 
