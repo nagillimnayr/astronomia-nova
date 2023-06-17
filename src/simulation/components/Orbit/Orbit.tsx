@@ -30,7 +30,7 @@ export const Orbit = (props: OrbitProps) => {
         preset.initialVelocity,
         centralMass
       ),
-    []
+    [preset.initialPosition, preset.initialVelocity, centralMass]
   );
 
   // callback function to be passed down to children via context provider
