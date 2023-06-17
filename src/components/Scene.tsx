@@ -19,7 +19,12 @@ const Scene = () => {
       <Suspense fallback={<LoadingFallback />}>
         <Canvas gl={{ logarithmicDepthBuffer: true }}>
           <XR>
-            {/* <PerspectiveCamera position={[0, 0, 20]}></PerspectiveCamera> */}
+            <PerspectiveCamera
+              makeDefault
+              position={[0, 0, 20]}
+              near={0.01}
+              far={10000}
+            />
             <CameraControls
               makeDefault
               minDistance={5}
