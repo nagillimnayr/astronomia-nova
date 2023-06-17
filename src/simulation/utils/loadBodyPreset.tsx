@@ -50,12 +50,9 @@ export default function loadBodyPreset(name: PresetKey) {
   const color = new Color(parseInt(planetData.Color, 16));
 
   const mass = planetData.Mass_KG;
-  const initialPosition: Vec3 = [planetData.Periapsis_M / DIST_MULT, 0, 0];
-  const initialVelocity: Vec3 = [
-    0,
-    0,
-    -(planetData.MaxVelocity_KMs * KM_TO_M) / DIST_MULT,
-  ];
+  const initialPosition: number = planetData.Periapsis_M / DIST_MULT;
+  const initialVelocity: number =
+    (planetData.MaxVelocity_KMs * KM_TO_M) / DIST_MULT;
   const meanRadius = planetData.MeanRadius_M / EARTH_RADIUS / 2; // scale to be relative to Earth's radius
 
   return {
