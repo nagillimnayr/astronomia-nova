@@ -38,12 +38,12 @@ declare module '@react-three/fiber' {
   }
 }
 
-type BodyAttributes = {
+export type BodyAttributes = {
   name: string;
   color: ColorRepresentation;
   mass?: number;
-  initialPosition?: Vec3;
-  initialVelocity?: Vec3;
+  initialPosition: number;
+  initialVelocity: number;
   meanRadius: number;
 };
 type BodyProps = {
@@ -139,7 +139,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         addSelfToTree(body);
       }}
       name={name ?? ''}
-      args={[mass, initialPosition, initialVelocity]}
+      args={[mass, [initialPosition, 0, 0], [0, 0, -initialVelocity]]}
       onClick={handleClick}
       onPointerMissed={handleMiss}
     >
