@@ -22,17 +22,10 @@ export const Trajectory = (props: TrajectoryProps) => {
       props.semiMinorAxis / DIST_MULT
     ).getSpacedPoints(128);
   }, [props.semiMajorAxis, props.semiMinorAxis, props.linearEccentricity]);
-  console.log('semi-major axis: ', props.semiMajorAxis);
-  console.log('semi-minor axis: ', props.semiMinorAxis);
   return (
     <>
       <object3D rotation={new Euler(pi / 2, 0, 0)}>
-        <Line
-          points={points}
-          color={'white'}
-          // curveType="catmullrom"
-          lineWidth={1}
-        />
+        <Line points={points} color={'white'} lineWidth={1} />
       </object3D>
     </>
   );
