@@ -52,7 +52,7 @@ const fromApoapsis = (semiMajorAxis: number, apoapsis: number) => {
  * @returns {*}
  */
 const fromPeriapsis = (semiMajorAxis: number, periapsis: number) => {
-  assert(
+  console.assert(
     semiMajorAxis >= periapsis,
     'the semi-major axis should be larger than the periapsis'
   );
