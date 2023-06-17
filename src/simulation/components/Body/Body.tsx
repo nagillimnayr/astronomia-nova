@@ -62,14 +62,8 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   // load texture
   const texture = useLoader(TextureLoader, props.texturePath ?? '');
 
-  // get bounds
-  //const bounds = useBounds();
-
   const [isSelected, setSelected] = useState<boolean>(false);
   //const snap = useSnapshot(simState);
-
-  // get three.js state
-  const getState = useThree((state) => state.get);
 
   // get function from context
   const addSelfToTree = useContext(KeplerTreeContext);
