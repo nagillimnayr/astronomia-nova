@@ -116,7 +116,6 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
   return (
     <KeplerTreeContext.Provider value={assignAsRoot}>
       <CelestialSphere>
-        {/* <Bounds fit clip observe margin={1.2}> */}
         <Selection>
           <EffectComposer autoClear={false} multisampling={8}>
             <Outline
@@ -170,7 +169,6 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
               texturePath={neptuneTexture}
             ></Body>
           </Body>
-          {/* </Bounds> */}
         </Selection>
       </CelestialSphere>
     </KeplerTreeContext.Provider>
