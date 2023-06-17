@@ -4,7 +4,7 @@ import Simulation from '~/simulation/components/Simulation';
 import { Perf } from 'r3f-perf';
 import { VRButton, ARButton, XR } from '@react-three/xr';
 import { Suspense } from 'react';
-import { LoadingFallback } from './LoadingFallback';
+import { LoadingFallback } from '../LoadingFallback';
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 import { HUD } from '~/simulation/components/HUD/HUD';
 import { camState } from '~/simulation/state/CamState';

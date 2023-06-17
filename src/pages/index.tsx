@@ -7,7 +7,7 @@ import { LoadingFallback } from '~/components/LoadingFallback';
 //import Scene from '~/components/Scene';
 
 const Scene = dynamic(
-  () => import('~/components/Scene').then((mod) => mod.default),
+  () => import('~/components/scenes/Scene').then((mod) => mod.default),
   {
     ssr: false,
   }
