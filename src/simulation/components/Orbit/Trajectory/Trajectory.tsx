@@ -1,5 +1,6 @@
 type TrajectoryProps = {
-  semimajorAxis: number;
+  semiMajorAxis: number;
+  semiMinorAxis: number;
 };
 export const Trajectory = (props: TrajectoryProps) => {
   return <></>;
