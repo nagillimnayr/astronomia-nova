@@ -45,8 +45,10 @@ function getFromSpecificOrbitalEnergy(
   centralMass: number,
   specificOrbitalEnergy: number
 ) {
-  const semiMajorAxis =
-    -(GRAV_CONST * (centralMass / (2.0 * specificOrbitalEnergy))) / DIST_MULT; //scale distance
+  const semiMajorAxis = -(
+    GRAV_CONST *
+    (centralMass / (2.0 * specificOrbitalEnergy))
+  ); //scale distance
   return semiMajorAxis;
 }
 
