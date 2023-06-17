@@ -98,11 +98,10 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
       const maxOrbitalSpeed = props.args.initialVelocity;
       const centralMass = parent.mass;
       const orbit = new KeplerOrbit(
+        parent,
+        body,
         new OrbitalElements({ periapsis, maxOrbitalSpeed, centralMass })
       );
-
-      // attach orbit to parent
-      parent.add(orbit);
     },
     [props.args]
   );
