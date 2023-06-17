@@ -11,9 +11,11 @@ import { useEventListener, useTimeout } from 'usehooks-ts';
 //import { type CameraControls as CameraController } from 'three-stdlib';
 import { timeState } from '../state/TimeState';
 import { camState } from '../state/CamState';
+import { keplerTreeState } from '../state/keplerTreeState';
 
 //type SimProps = {};
 const Simulation = () => {
+  console.log('render Simulation');
   // function for accessing scene state
   const getState = useThree((state) => state.get);
   simState.getState = getState;
@@ -29,6 +31,7 @@ const Simulation = () => {
   const controlsRef = useRef<CameraControls>(null!);
 
   useFrame(({ clock }, delta) => {
+    // update camera
     camState.updateControls();
     if (timeState.isPaused) {
       return;
@@ -37,8 +40,8 @@ const Simulation = () => {
     const scaledDelta = delta * timeState.timescale;
     timeState.updateClock(scaledDelta);
 
-    const fixedUpdate = updateRef.current;
-    fixedUpdate(scaledDelta);
+    // update simulation
+    keplerTreeState.fixedUpdate(scaledDelta);
   });
 
   useEventListener('keypress', (e) => {
@@ -46,7 +49,6 @@ const Simulation = () => {
     console.log('keydown: ', e.key);
     if (e.key === ' ') {
       const state = getState();
-      console.log('state controls: ', state.controls);
       console.log('selected: ', simState.selected);
     }
   });

@@ -1,13 +1,14 @@
 import { Object3D } from 'three';
 import { proxy } from 'valtio';
-import KeplerBody from '../classes/KeplerBody';
+import KeplerBody, { traverseTree } from '../classes/KeplerBody';
 //import { OrbitControls, CameraControls } from 'three-stdlib';
 import { CameraControls } from '@react-three/drei';
 import { RootState } from '@react-three/fiber';
 import { camState } from './CamState';
+import { makeFixedUpdateFn } from '../systems/FixedTimeStep';
+import { DAY } from '../utils/constants';
 
 type SimStateObj = {
-  root: KeplerBody;
   selected: KeplerBody | null;
   //controls: CameraControls;
 
@@ -15,7 +16,6 @@ type SimStateObj = {
   deselect: () => void;
 
   getState: () => RootState;
-  update: (deltaTime: number) => void;
 };
 
 export const select = (newSelection: KeplerBody) => {
@@ -35,19 +35,9 @@ export const deselect = () => {
   simState.selected = null;
 };
 
-export const setRoot = (root: KeplerBody) => {
-  simState.root = root;
-};
-
-const updateFn = (deltaTime: number) => {
-  return;
-};
-
 export const simState = proxy<SimStateObj>({
-  root: null!, // root of the Kepler Tree
   selected: null, // current selection
   select,
   deselect,
   getState: null!,
-  update: updateFn,
 });

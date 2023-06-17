@@ -1,6 +1,7 @@
 import React, {
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useRef,
 } from 'react';
@@ -24,7 +25,6 @@ import {
   Outline,
 } from '@react-three/postprocessing';
 import { useEventListener } from 'usehooks-ts';
-import { simState, setRoot } from '~/simulation/state/SimState';
 import { keplerTreeState } from '../../state/keplerTreeState';
 import { Orbit } from '../Orbit/Orbit';
 
@@ -74,7 +74,7 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
     'assets/textures/2k_neptune.jpg',
   ];
   // use ref to store root of tree
-  const root = useRef<KeplerBody>(null!);
+  const rootRef = useRef<KeplerBody>(null!);
 
   const assignAsRoot = (body: KeplerBody) => {
     if (!body) {
@@ -83,26 +83,27 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
     keplerTreeState.setRoot(body);
   };
 
-  const fixedUpdate = useCallback(
-    makeFixedUpdateFn((timeStep: number) => {
-      traverseTree(root.current, timeStep * DAY);
-    }, 24),
-    []
-  );
+  // const fixedUpdate = useCallback(
+  //   makeFixedUpdateFn((timeStep: number) => {
+  //     traverseTree(root.current, timeStep * DAY);
+  //   }, 24),
+  //   []
+  // );
 
-  // pass fixedUpdate back up to parent
-  useImperativeHandle(
-    updateRef,
-    () => {
-      return fixedUpdate;
-    },
-    [fixedUpdate]
-  );
+  // // pass fixedUpdate back up to parent
+  // useImperativeHandle(
+  //   updateRef,
+  //   () => {
+  //     return fixedUpdate;
+  //   },
+  //   [fixedUpdate]
+  // );
 
   useEventListener('keypress', (e) => {
     e.preventDefault();
     if (e.key === ' ') {
-      console.log('root: ', root);
+      console.log('root: ', rootRef.current);
+      console.log('state root: ', keplerTreeState.root);
     }
   });
 
@@ -120,7 +121,7 @@ const SolarSystem = forwardRef<UpdateFn>(function SolarSystem({}, updateRef) {
           </EffectComposer>
 
           <Body
-            ref={root}
+            ref={rootRef}
             args={{
               name: 'Sun',
               mass: SOLAR_MASS,
