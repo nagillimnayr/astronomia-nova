@@ -38,7 +38,7 @@ const Scene = () => {
             />
             <Simulation />
             {/* <Stats /> */}
-            {/* <Perf /> */}
+            <Perf />
           </XR>
         </Canvas>
       </Suspense>
