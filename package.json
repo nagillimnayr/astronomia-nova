@@ -34,6 +34,7 @@
     "flowbite-react": "^0.4.7",
     "framer-motion": "^10.12.16",
     "framer-motion-3d": "^10.12.16",
+    "gray-matter": "^4.0.3",
     "jotai": "^2.1.1",
     "leva": "^0.9.35",
     "lucide-react": "^0.244.0",
