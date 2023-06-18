@@ -1,5 +1,7 @@
 {
   // Comments are supported, like tsconfig.json
-  "entryPoints": ["src/index.ts"],
-  "out": "docs"
+  "entryPoints": ["src/pages/index.tsx"],
+  "out": "docs",
+  "exclude": ["**/*.js", "**/*.json", "**/*.mjs", "**/*.cjs"],
+  "excludeNotDocumented": true
 }
