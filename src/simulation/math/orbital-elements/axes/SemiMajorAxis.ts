@@ -56,7 +56,7 @@ function getFromSpecificOrbitalEnergy(
  * @summary Calculate the semi-major axis from the orbital period and the mass of the central body.
  *
  * @description
- * \displaystyle a = \sqrt[3]{\frac{GM T^2}{4\pi^2}}
+ * $\displaystyle a = \sqrt[3]{\frac{GM T^2}{4\pi^2}}$
  *
  * @author Ryan Milligan
  * @date 14/06/2023
