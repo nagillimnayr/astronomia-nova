@@ -4,6 +4,12 @@
  */
 await import('./src/env.mjs');
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+const withMDX = require('@next/mdx')()
+
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
