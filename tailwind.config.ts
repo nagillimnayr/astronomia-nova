@@ -1,5 +1,5 @@
 import { type Config } from 'tailwindcss';
-const { blackA, violet } = require('@radix-ui/colors');
+import { blackA, violet } from '@radix-ui/colors';
 
 export default {
   content: [
@@ -8,7 +8,12 @@ export default {
     './public/**/*.html',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        ...blackA,
+        ...violet,
+      },
+    },
   },
   plugins: [require('flowbite/plugin')],
 } satisfies Config;
