@@ -1,4 +1,5 @@
 import { type Config } from 'tailwindcss';
+const { blackA, violet } = require('@radix-ui/colors');
 
 export default {
   content: [
