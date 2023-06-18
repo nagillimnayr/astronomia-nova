@@ -13,6 +13,7 @@
     "@formkit/auto-animate": "^1.0.0-beta.6",
     "@heroicons/react": "^2.0.18",
     "@next/bundle-analyzer": "^13.4.5",
+    "@radix-ui/react-slider": "^1.1.2",
     "@react-hooks-library/core": "^0.5.1",
     "@react-spring/core": "^9.7.2",
     "@react-spring/three": "^9.7.2",
