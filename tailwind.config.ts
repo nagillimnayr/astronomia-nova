@@ -4,7 +4,7 @@ import { blackA, violet } from '@radix-ui/colors';
 export default {
   content: [
     './node_modules/flowbite-react/**/*.js',
-    './src/**/*.{js,ts,jsx,tsx}',
+    './src/**/*.{js,ts,jsx,tsx,md,mdx}',
     './public/**/*.html',
   ],
   theme: {
@@ -15,5 +15,9 @@ export default {
       },
     },
   },
-  plugins: [require('flowbite/plugin'), require('@tailwindcss/typography'), require('@tailwindcss/container-queries') ],
+  plugins: [
+    require('flowbite/plugin'),
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/container-queries'),
+  ],
 } satisfies Config;
