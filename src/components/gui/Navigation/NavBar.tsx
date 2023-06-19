@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const NavBar = () => {
   return (
-    <header className="navbar sticky top-0 z-50 flex min-w-full flex-row items-stretch justify-start border-2 border-white py-0 pl-6 pr-36">
+    <header className="navbar sticky top-0 z-50 flex w-screen min-w-full flex-row items-stretch justify-start border-2 border-white py-0 pl-6 pr-36">
       <div className="flex-start mr-auto flex flex-row items-center">
         <Link className="h-full w-full" href="/">
           <div className="aspect-square w-24 border-2 border-white">
