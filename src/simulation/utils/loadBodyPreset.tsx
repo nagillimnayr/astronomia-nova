@@ -49,12 +49,23 @@ export default function loadBodyPreset(name: PresetKey) {
 
   const color = new Color(parseInt(planetData.Color, 16));
 
+  // extract data from JSON
   const mass = planetData.Mass_KG;
   const initialPosition: number = planetData.Periapsis_M / DIST_MULT;
   const initialVelocity: number =
     (planetData.MaxVelocity_KMs * KM_TO_M) / DIST_MULT;
   const meanRadius = planetData.MeanRadius_M / EARTH_RADIUS / 2; // scale to be relative to Earth's radius
 
+  const eccentricity = planetData.Eccentricity;
+
+  // angular parameters
+  const inclination = planetData.Inclination_Deg;
+  const longitudeOfPeriapsis = planetData.LongitudeOfPeriapsis_Deg;
+  const longitudeOfAscendingNode = planetData.LongitudeOfAscendingNode_Deg;
+  const argumentOfPeriapsis = longitudeOfPeriapsis - longitudeOfAscendingNode;
+  const axialTilt = planetData.AxialTilt_Deg;
+
+  // return extracted data
   return {
     name: name as string,
     color,
@@ -62,5 +73,11 @@ export default function loadBodyPreset(name: PresetKey) {
     initialPosition,
     initialVelocity,
     meanRadius,
+    eccentricity,
+    inclination,
+    longitudeOfAscendingNode,
+    longitudeOfPeriapsis,
+    argumentOfPeriapsis,
+    axialTilt,
   };
 }
