@@ -46,13 +46,12 @@ const Home: NextPage = () => {
 
         <main className="container flex min-h-fit flex-col items-center justify-start gap-12  border-2 border-blue-500 px-4 py-16">
           {/* Canvas */}
+
           <div
             id="canvas-holder"
             className="h-min-[42rem] flex h-[42rem] min-w-full flex-col items-center justify-center border-2 border-white "
           >
-            <Suspense fallback={<LoadingFallback />}>
-              <Scene />
-            </Suspense>
+            <Scene />
           </div>
 
           <div className="grid grid-cols-1 gap-4 border-2 border-red-500 sm:grid-cols-2 md:gap-8">
