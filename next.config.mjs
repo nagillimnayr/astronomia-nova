@@ -6,14 +6,15 @@ await import('./src/env.mjs');
 
 import bundleAnalyzer from '@next/bundle-analyzer';
 import mdx from '@next/mdx';
+
 import remarkGfm from 'remark-gfm';
 import remarkFootnotes from 'remark-footnotes';
 import remarkMath from 'remark-math';
-import remarkRehype from 'remark-rehype';
 import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
 import rehypeCitation from 'rehype-citation';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeHighlight from 'rehype-highlight';
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -25,12 +26,13 @@ const withMDX = mdx({
     // If you use remark-gfm, you'll need to use next.config.mjs
     // as the package is ESM only
     // https://github.com/remarkjs/remark-gfm#install
-    remarkPlugins: [remarkGfm, remarkFootnotes, remarkMath, remarkRehype],
+    remarkPlugins: [remarkGfm, remarkFootnotes, remarkMath],
     rehypePlugins: [
       rehypeCitation,
       rehypeKatex,
       rehypeSlug,
       rehypeAutolinkHeadings,
+      rehypeHighlight,
     ],
     // If you use `MDXProvider`, uncomment the following line.
     // providerImportSource: "@mdx-js/react",
