@@ -38,12 +38,6 @@ const Home: NextPage = () => {
       </Head>
 
       <div className="flex min-h-screen w-full min-w-full flex-col items-center justify-start ">
-        <header className="box-border flex min-h-min min-w-full flex-row content-center justify-center justify-items-center border-2 border-white text-center">
-          <h1 className="text-center text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-            VR <span className="text-[hsl(280,100%,70%)]">Astro</span> Sim
-          </h1>
-        </header>
-
         <main className="container flex min-h-fit flex-col items-center justify-start gap-12  border-2 border-blue-500 px-4 py-16">
           {/* Canvas */}
 
