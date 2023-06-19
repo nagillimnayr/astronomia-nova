@@ -72,9 +72,6 @@ const Home: NextPage = () => {
             </div>
           </div>
         </main>
-        <footer className="flex min-h-fit min-w-full flex-row border-2 border-white text-white">
-          <h2 className="py-2 pl-2">Footer</h2>
-        </footer>
       </div>
     </>
   );
