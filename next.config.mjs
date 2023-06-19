@@ -12,6 +12,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
 import rehypeCitation from 'rehype-citation';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -24,7 +25,12 @@ const withMDX = mdx({
     // as the package is ESM only
     // https://github.com/remarkjs/remark-gfm#install
     remarkPlugins: [remarkGfm, remarkFootnotes, remarkMath],
-    rehypePlugins: [rehypeCitation, rehypeKatex, rehypeSlug],
+    rehypePlugins: [
+      rehypeCitation,
+      rehypeKatex,
+      rehypeSlug,
+      rehypeAutolinkHeadings,
+    ],
     // If you use `MDXProvider`, uncomment the following line.
     // providerImportSource: "@mdx-js/react",
   },
