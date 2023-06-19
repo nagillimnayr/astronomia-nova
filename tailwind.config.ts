@@ -15,5 +15,5 @@ export default {
       },
     },
   },
-  plugins: [require('flowbite/plugin'), require('@tailwind/typography'), require('@tailwindcss/container-queries') ],
+  plugins: [require('flowbite/plugin'), require('@tailwindcss/typography'), require('@tailwindcss/container-queries') ],
 } satisfies Config;
