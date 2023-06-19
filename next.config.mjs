@@ -1,19 +1,16 @@
-
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
  */
 await import('./src/env.mjs');
 
-
-
 import bundleAnalyzer from '@next/bundle-analyzer';
 import mdx from '@next/mdx';
+import remarkGfm from 'remark-gfm';
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 });
-
 
 const withMDX = mdx({
   extension: /\.mdx?$/,
@@ -21,7 +18,7 @@ const withMDX = mdx({
     // If you use remark-gfm, you'll need to use next.config.mjs
     // as the package is ESM only
     // https://github.com/remarkjs/remark-gfm#install
-    remarkPlugins: [],
+    remarkPlugins: [remarkGfm],
     rehypePlugins: [],
     // If you use `MDXProvider`, uncomment the following line.
     // providerImportSource: "@mdx-js/react",
@@ -45,7 +42,5 @@ const nextConfig = {
   },
   transpilePackages: ['three', 'drei'],
 };
-
-
 
 export default withMDX(nextConfig);
