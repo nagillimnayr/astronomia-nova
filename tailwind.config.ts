@@ -19,5 +19,6 @@ export default {
     require('flowbite/plugin'),
     require('@tailwindcss/typography'),
     require('@tailwindcss/container-queries'),
+    require('daisyui'),
   ],
 } satisfies Config;
