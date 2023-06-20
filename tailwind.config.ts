@@ -1,6 +1,7 @@
 import { type Config } from 'tailwindcss';
 import { blackA, violet } from '@radix-ui/colors';
 import colors from 'tailwindcss/colors';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 export default {
   content: [
@@ -10,6 +11,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        display: ['var(--font-orbitron)'],
+      },
       colors: {
         ...blackA,
         ...violet,

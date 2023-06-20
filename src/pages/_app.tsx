@@ -2,6 +2,7 @@ import { type AppType } from 'next/dist/shared/lib/utils';
 import '~/styles/globals.css';
 import { MDXProvider } from '@mdx-js/react';
 import { Roboto } from 'next/font/google';
+import { Orbitron } from 'next/font/google';
 import NavBar from '~/components/gui/Navigation/NavBar';
 import Footer from '~/components/gui/Footer/Footer';
 const roboto = Roboto({ weight: '400', subsets: ['latin'] });
