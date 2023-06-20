@@ -1,0 +1,41 @@
+FONTLOG for the Foundation Titles Hand font
+
+This file provides detailed information on the Foundation Titles Hand font software.  This information should be distributed along with the Foundation Titles Hand font and any derivative works.
+
+Basic Font Information
+
+Foundation Titles Hand is a Unicode typeface family that supports all languages that use the Latin script and its variants, and could be expanded to support other scripts.
+
+More specifically, this release supports the following Unicode ranges:  U+0020 - U+007E, U+2013 - U+201D
+
+This release contains most of the Basic Latin codeblock, with the "lowercase" characters being duplicates of the uppercase), 103 characters (or 106 glyphs counting spaces) in all.
+
+Documentation can be found at github.com/rsperberg/foundation-titles-hand
+
+Foundation Titles Hand was created using iFontMaker, the iPad font-design tool made by Eiji and Tom, Inc., which you can find at 2ttf.com.  The regular font can also be downloaded from 2ttf.com/JbTu7kcPduW, and the semibold from 2ttf.com/5jvRKCvKCG0 (the Gallery at 2ttf.com hosts some 65,000 fonts created with iFontMaker that are available for downloading).
+
+To contribute to the project, visit the Github page.
+
+ChangeLog
+
+1-2 November 2021 (Roger Sperberg) Foundation Titles Hand, both weights, version 0.85
+- brought character set up to Basic Latin
+13 October 2021 (Roger Sperberg) Foundation Titles Hand version 0.8
+- added semibold version
+10-11 October 2021 (Roger Sperberg) Foundation Titles Hand version 0.8
+- created Github repository with ttf and source files, OFL and other information files and samples
+- initial release
+
+Acknowledgments
+
+If you make modifications be sure to add your name (N), email (E), web-address (if you have one) (W) and description (D).  This list is in alphabetical order.
+
+N: Roger Sperberg
+E: glypheryfonts@gmail.com
+W: http://glyphery.com
+D: Designer - made original Roman glyphs from character design used in the title sequence of Foundation, an Apple TV+ series, which was created by Imaginary Forces
+
+Glyphery is a font foundry created by Roger Sperberg, located on the web at glyphery.com.
+Imaginary Forces is a Los Angeles-based design studio and creative agency whose website is at imaginaryforces.com.
+
+-----
