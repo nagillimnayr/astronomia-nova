@@ -18,6 +18,26 @@
 }
 
 @layer utilities {
+  .bg-primary {
+    @apply bg-spaceCadet-900;
+  }
+  .bg-primary-light {
+    @apply bg-spaceCadet-800;
+  }
+  .bg-secondary {
+    @apply bg-outerSpace-900;
+  }
+  .bg-secondary-light {
+    @apply bg-outerSpace-800;
+  }
+
+  .bg-gradient-primary {
+    @apply bg-gradient-to-b from-spaceCadet-900 to-spaceCadet-800;
+  }
+  .bg-gradient-secondary {
+    @apply bg-gradient-to-b from-outerSpace-900 to-outerSpace-800;
+  }
+
   .bg-gradient-purple {
     @apply bg-gradient-to-b from-[#2e026d] to-[#15162c];
   }

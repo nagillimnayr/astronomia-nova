@@ -69,7 +69,6 @@ export default {
         eerieBlack: '#1B1B1B',
         night: '#111111',
         raisinBlack: '#242124',
-        background: colors.neutral,
       },
     },
   },
