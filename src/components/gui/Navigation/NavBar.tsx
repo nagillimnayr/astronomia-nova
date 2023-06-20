@@ -18,7 +18,7 @@ const NavBar = () => {
         </Link>
         <Link className="whitespace-nowrap" href="/">
           <h2 className="mx-6 text-center text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-            Placeholder <span className="text-[hsl(280,100%,70%)]">Title</span>
+            Placeholder <span className="text-spaceCadet-400">Title</span>
           </h2>
         </Link>
       </div>
