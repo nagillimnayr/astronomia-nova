@@ -31,7 +31,7 @@ const PauseButton = () => {
 
   return (
     <button
-      className="aspect-square w-8 rounded-full border-2 border-white "
+      className="bg-translucent btn-icon box-content p-1 "
       onClick={(e) => {
         console.log('pause/play:', isPaused);
         console.log('timeState:', timeState);
@@ -39,7 +39,7 @@ const PauseButton = () => {
         isPaused ? unpause() : pause();
       }}
     >
-      <Icon path={isPaused ? mdiPlay : mdiPause} />
+      <Icon path={isPaused ? mdiPlay : mdiPause} size={1.5} />
     </button>
   );
 };
