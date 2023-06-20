@@ -24,7 +24,7 @@ const NavBar = () => {
           href="/"
         >
           <h3
-            className={`mx-6  text-center font-display  text-5xl font-extrabold tracking-tight`}
+            className={`mx-6  text-center font-display text-5xl font-extrabold tracking-tight`}
           >
             Astronomia <span className="text-spaceCadet-400">Nova</span>
           </h3>

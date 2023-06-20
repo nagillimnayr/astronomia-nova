@@ -14,6 +14,8 @@ export default {
       fontFamily: {
         sans: ['var(--font-roboto)', ...defaultTheme.fontFamily.sans],
         display: ['var(--font-orbitron)'],
+        orbitron: ['var(--font-orbitron)'],
+        atomicAge: ['var(--font-atomic-age)'],
       },
       colors: {
         ...blackA,
