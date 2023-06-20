@@ -11,7 +11,7 @@ const components = {};
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <MDXProvider components={components}>
-      <div className="min-w-screen bg-gradient-neutral relative m-0 flex h-fit min-h-screen w-screen flex-col items-center justify-start p-0 text-white">
+      <div className="min-w-screen relative m-0 flex h-fit min-h-screen w-screen flex-col items-center justify-start bg-gray-900 p-0 text-white">
         <NavBar />
         <Component {...pageProps} />
         <Footer />

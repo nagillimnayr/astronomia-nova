@@ -43,4 +43,7 @@
   .bg-gradient-neutral {
     @apply bg-gradient-to-b from-neutral-900 to-neutral-800;
   }
+  .bg-gradient-gray {
+    @apply bg-gradient-to-b from-gray-900 to-gray-800;
+  }
 }

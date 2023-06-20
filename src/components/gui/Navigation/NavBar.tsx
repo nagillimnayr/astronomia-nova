@@ -4,10 +4,13 @@ import Image from 'next/image';
 
 const NavBar = () => {
   return (
-    <header className="navbar sticky top-0 z-50 flex w-screen min-w-full flex-row items-stretch justify-start border-2 border-white bg-eerieBlack  py-2 pl-6 pr-36">
-      <div className="flex-start mr-auto flex flex-row items-center">
-        <Link className="h-full w-full" href="/">
-          <div className="aspect-square w-20 border-2 border-white">
+    <header className="bg-gradient-neutral navbar sticky top-0 z-50 flex h-28 w-screen min-w-full flex-row items-stretch justify-start py-0 pl-6 pr-36 text-neutral-100">
+      <div className="flex-start my-2 mr-auto flex flex-row items-center">
+        <Link
+          className="flex h-full w-full items-center justify-center"
+          href="/"
+        >
+          <div className="aspect-square w-16 ">
             <Image
               src="/logo/Douglas_College_logo_inverted.svg"
               alt=""
@@ -16,8 +19,11 @@ const NavBar = () => {
             />
           </div>
         </Link>
-        <Link className="whitespace-nowrap" href="/">
-          <h2 className="mx-6 text-center text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+        <Link
+          className="flex h-full w-full items-center justify-center whitespace-nowrap"
+          href="/"
+        >
+          <h2 className="mx-6 text-center font-extrabold tracking-tight sm:text-[5rem]">
             Placeholder <span className="text-spaceCadet-400">Title</span>
           </h2>
         </Link>

@@ -38,7 +38,7 @@ const Home: NextPage = () => {
       </Head>
 
       <div className="flex min-h-screen w-full min-w-full flex-col items-center justify-start ">
-        <main className="container flex min-h-fit flex-col items-center justify-start gap-12  border-2 border-blue-500 px-4 py-16">
+        <main className="container flex min-h-fit flex-col items-center justify-start gap-12   px-4 py-16">
           {/* Canvas */}
 
           <div
