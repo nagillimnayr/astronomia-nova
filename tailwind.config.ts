@@ -58,6 +58,7 @@ export default {
           100: '#A6ABAD',
         },
         gunmetal: '#2A3439',
+        background: colors.neutral,
       },
     },
   },
