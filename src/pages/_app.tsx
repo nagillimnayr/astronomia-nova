@@ -27,7 +27,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <MDXProvider components={components}>
       <div
-        className={`${roboto.variable} ${orbitron.variable} ${atomicAge.variable} min-w-screen relative m-0 flex h-fit min-h-screen w-screen flex-col items-center justify-start bg-gray-900 p-0 font-sans text-white`}
+        className={`${roboto.variable} ${orbitron.variable} ${atomicAge.variable} min-w-screen relative m-0 flex h-fit min-h-screen w-screen flex-col items-center justify-start bg-primary p-0 font-sans text-white`}
       >
         <NavBar />
         <Component {...pageProps} />
