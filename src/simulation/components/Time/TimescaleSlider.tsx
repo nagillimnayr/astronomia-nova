@@ -13,6 +13,7 @@ export const TimescaleSlider = () => {
     <RadixSlider.Root
       className="relative flex h-5 w-[200px] touch-none select-none items-center "
       defaultValue={[1]}
+      min={0}
       max={100}
       step={1}
       onValueChange={handleChange}
