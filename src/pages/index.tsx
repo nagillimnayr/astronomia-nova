@@ -43,12 +43,12 @@ const Home: NextPage = () => {
 
           <div
             id="canvas-holder"
-            className="h-min-[42rem] flex h-[42rem] min-w-full flex-col items-center justify-center border-2 border-white "
+            className="h-min-[42rem] flex h-[42rem] min-w-full flex-col items-center justify-center "
           >
             <Scene />
           </div>
 
-          <div className="grid grid-cols-1 gap-4 border-2 border-red-500 sm:grid-cols-2 md:gap-8">
+          <div className="grid grid-cols-1 gap-4  sm:grid-cols-2 md:gap-8">
             <div className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
               <h3 className="text-2xl font-bold">First Steps →</h3>
               <div className="text-lg">
