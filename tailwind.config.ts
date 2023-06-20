@@ -12,6 +12,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        sans: ['var(--font-roboto)', ...defaultTheme.fontFamily.sans],
         display: ['var(--font-orbitron)'],
       },
       colors: {
