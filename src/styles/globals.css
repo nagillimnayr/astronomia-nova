@@ -27,6 +27,12 @@
   .bg-gradient-spaceCadet {
     @apply bg-gradient-to-b from-spaceCadet-900 to-spaceCadet-800;
   }
+  .bg-gradient-jet {
+    @apply bg-gradient-to-b from-jet-900 to-jet-800;
+  }
+  .bg-gradient-onyx {
+    @apply bg-gradient-to-b from-onyx-900 to-onyx-800;
+  }
   .bg-gradient-darkness {
     @apply bg-gradient-to-r from-slate-900 to-slate-700;
   }
