@@ -9,6 +9,21 @@ import { CentralMassContext } from '~/simulation/context/CentralMassContext';
 import { calculateOrbitFromPeriapsis } from '~/simulation/math/orbit/calculateOrbit';
 import { DIST_MULT } from '~/simulation/utils/constants';
 import { Arrow } from './Arrow';
+import { Object3D } from 'three';
+import { degToRad } from 'three/src/math/MathUtils';
+
+// Date needed by Orbit but not by Body
+type OrbitData = {
+  eccentricity: number;
+  inclination: number;
+  longitudeOfAscendingNode: number;
+  longitudeOfPeriapsis: number;
+  argumentOfPeriapsis: number;
+  axialTilt: number;
+};
+
+// intersection type to combine the data needed by Orbit and the data needed by Body
+type PresetData = OrbitData & BodyAttributes;
 
 type OrbitProps = {
   children?: React.ReactNode;
@@ -20,8 +35,11 @@ export const Orbit = (props: OrbitProps) => {
   // get Central mass from parent
   const centralMass = useContext(CentralMassContext);
 
+  // ref to Object3D
+  const orbitRef = useRef<Object3D>(null!);
+
   // Note: create usePreset to get memoized preset data
-  const preset = useMemo<BodyAttributes>(
+  const preset = useMemo<PresetData>(
     () => loadBodyPreset(props.name),
     [props.name]
   );
@@ -45,14 +63,24 @@ export const Orbit = (props: OrbitProps) => {
       return;
     }
 
-    // setup attachment to parent
-    const parent: KeplerBody = body.parent as KeplerBody;
+    // setup attachment to central body
+    if (!body.parent) return;
+    // go up by two levels to get to the parent body
+    const parent: KeplerBody = body.parent.parent as KeplerBody;
     console.assert(parent, 'failed to cast to parent');
     parent.addOrbitingBody(body);
   }, []);
 
   return (
-    <>
+    <object3D
+      ref={(orbit) => {
+        if (!orbit) return;
+        orbitRef.current = orbit;
+        orbit.rotateY(degToRad(preset.longitudeOfAscendingNode));
+        orbit.rotateX(degToRad(preset.inclination));
+        orbit.rotateY(degToRad(preset.argumentOfPeriapsis));
+      }}
+    >
       <KeplerTreeContext.Provider value={addChildToTree}>
         <Body ref={bodyRef} args={preset} texturePath={props.texturePath}>
           {props.children}
@@ -63,6 +91,6 @@ export const Orbit = (props: OrbitProps) => {
         semiMinorAxis={elements.semiMinorAxis}
       />
       <Arrow color={preset.color} target={bodyRef} />
-    </>
+    </object3D>
   );
 };
