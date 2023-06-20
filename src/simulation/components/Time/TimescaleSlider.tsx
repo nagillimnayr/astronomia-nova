@@ -8,16 +8,24 @@ import {
 } from 'react';
 import { useSnapshot } from 'valtio';
 import { timeState } from '~/simulation/state/TimeState';
+import TimescaleTooltip from './TimescaleTooltip';
 
 export const TimescaleSlider = () => {
   const snap = useSnapshot(timeState);
-  // const [value, setValue] = useState(1);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
 
   const handleChange = useCallback((values: number[]) => {
     if (values.length > 0 && values[0] !== undefined) {
       // setValue(values[0]);
       timeState.setTimescale(values[0]);
     }
+  }, []);
+
+  const handlePointerEnter = useCallback(() => {
+    setIsHovered(true);
+  }, []);
+  const handlePointerLeave = useCallback(() => {
+    setIsHovered(false);
   }, []);
 
   return (
@@ -34,7 +42,13 @@ export const TimescaleSlider = () => {
         <RadixSlider.Track className="relative h-[3px] grow rounded-full bg-blackA10  ">
           <RadixSlider.Range className="absolute h-full  rounded-full bg-white" />
         </RadixSlider.Track>
-        <RadixSlider.Thumb className="pointer-events-auto block aspect-square h-5 w-5 cursor-pointer rounded-full bg-white shadow-[0_2px_10px] shadow-blackA7 hover:bg-violet3 focus:shadow-[0_0_0_6px] focus:shadow-blackA8 focus:outline-none" />
+        <TimescaleTooltip show={isHovered}>
+          <RadixSlider.Thumb
+            className="pointer-events-auto block aspect-square h-5 w-5 cursor-pointer rounded-full bg-white shadow-[0_2px_10px] shadow-blackA7 hover:bg-violet3 focus:shadow-[0_0_0_6px] focus:shadow-blackA8 focus:outline-none"
+            onPointerEnter={handlePointerEnter}
+            onPointerLeave={handlePointerLeave}
+          />
+        </TimescaleTooltip>
       </RadixSlider.Root>
     </form>
   );
