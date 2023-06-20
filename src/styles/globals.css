@@ -1,3 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply text-4xl;
+  }
+  h2 {
+    @apply text-3xl;
+  }
+  h3 {
+    @apply text-2xl;
+  }
+  h4 {
+    @apply text-xl;
+  }
+}
+
+@layer utilities {
+  .bg-gradient-purple {
+    @apply bg-gradient-to-b from-[#2e026d] to-[#15162c];
+  }
+  .bg-gradient-outerSpace {
+    @apply bg-gradient-to-b from-outerSpace-900 to-outerSpace-800;
+  }
+  .bg-gradient-spaceCadet {
+    @apply bg-gradient-to-b from-spaceCadet-900 to-spaceCadet-800;
+  }
+  .bg-gradient-darkness {
+    @apply bg-gradient-to-r from-slate-900 to-slate-700;
+  }
+
+  .bg-gradient-space {
+    @apply bg-gradient-to-b  from-gray-900 to-gray-800;
+  }
+  .bg-gradient-neutral {
+    @apply bg-gradient-to-b from-neutral-900 to-neutral-800;
+  }
+}
