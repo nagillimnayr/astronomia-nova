@@ -16,6 +16,7 @@ type TimeStateObj = {
 
   incrementTimescale: (val?: number) => void;
   decrementTimescale: (val?: number) => void;
+  setTimescale: (val: number) => void;
   pause: () => void;
   unpause: () => void;
 
@@ -28,6 +29,11 @@ const incrementTimescale = (val = 1) => {
 const decrementTimescale = (val = 1) => {
   timeState.timescale = Math.max(timeState.timescale - val, 0);
 };
+const setTimescale = (val: number) => {
+  // clamp value
+  timeState.timescale = Math.min(100, Math.max(0, val));
+};
+
 const pause = () => {
   console.log('pause');
   //timeState.clock.stop();
@@ -59,6 +65,7 @@ export const timeState = proxy<TimeStateObj>({
 
   incrementTimescale,
   decrementTimescale,
+  setTimescale,
   pause,
   unpause,
 
