@@ -16,11 +16,12 @@ import Head from 'next/head';
   />
 </Head>
 
-#Markdown test
+<div className="mt-4">
+# Markdown test
 
 ---
 
-This is a test of **\@next/mdx**
+<div className="text-lg">This is a test of **\@next/mdx**</div>
 
 # GFM
 
@@ -52,4 +53,30 @@ $$ I = \int_0^{2\pi} \sin(x)\,dx $$
 
 $$\displaystyle a = \sqrt[3]{\frac{GM T^2}{4\pi^2}}$$
 
-The **Pythagorean equation**: $$a=\sqrt{b^2 + c^2}$$.
+The **Pythagorean equation**: $$=\sqrt{b^2 + c^2}$$.
+
+---
+
+## Blockquote
+
+> This is a blockquote
+
+---
+
+## Inline Code
+
+this is `inline` code
+
+---
+
+## Code Block
+
+this is a
+
+```
+code block
+```
+
+---
+
+</div>
