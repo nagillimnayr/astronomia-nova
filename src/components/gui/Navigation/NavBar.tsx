@@ -46,6 +46,7 @@ const NavBar = () => {
           </Link>
         </div>
         <NavBtn href="about">About</NavBtn>
+        <NavBtn href="equations">Equations</NavBtn>
         <NavBtn href="markdown">MDX</NavBtn>
         <NavBtn href="timeline">Timeline</NavBtn>
         <NavBtn href="other">Other</NavBtn>
