@@ -14,7 +14,7 @@ export const CelestialSphere = (props: CelestialSphereProps) => {
   return (
     <group>
       <mesh>
-        <sphereGeometry args={[1000]} />
+        <sphereGeometry args={[100000]} />
         <meshBasicMaterial
           args={[
             {
