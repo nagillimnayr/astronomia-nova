@@ -27,6 +27,7 @@ const updateControls = () => {
     return;
   }
   if (!camState.focusTarget) return;
+
   const worldPos = new Vector3();
   camState.focusTarget.getWorldPosition(worldPos);
   const targetPos: Vec3 = worldPos.toArray();
@@ -41,6 +42,7 @@ const setFocus = (target: Object3D) => {
   camState.focusTarget = target;
   if (!target) return;
 
+  target.attach(camState.controls.camera);
   camState.updateControls();
 };
 
