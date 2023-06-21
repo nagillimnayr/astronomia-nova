@@ -2,6 +2,7 @@ import { proxy } from 'valtio';
 import KeplerBody, { traverseTree } from '../classes/KeplerBody';
 import { DAY } from '../utils/constants';
 import { makeFixedUpdateFn } from '../systems/FixedTimeStep';
+import { retrogradeState } from '../components/Retrograde/retrogradeState';
 
 type KeplerTreeStateObj = {
   root: KeplerBody;
@@ -21,6 +22,14 @@ const setRoot = (root: KeplerBody) => {
   keplerTreeState.fixedUpdate = makeFixedUpdateFn((timeStep: number) => {
     traverseTree(root, timeStep * DAY);
   }, 60);
+
+  if (retrogradeState.path) {
+    keplerTreeState.root.add(retrogradeState.path);
+    console.log('adding path to tree');
+  }
+  if (retrogradeState.line) {
+    keplerTreeState.root.add(retrogradeState.line);
+  }
 };
 
 const setUpdateFn = (updateFn: (deltaTime: number) => void) => {

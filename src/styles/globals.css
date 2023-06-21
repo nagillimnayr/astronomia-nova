@@ -1,3 +1,79 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply font-display text-4xl;
+  }
+  h2 {
+    @apply font-display text-3xl;
+  }
+  h3 {
+    @apply font-display text-2xl;
+  }
+  h4 {
+    @apply font-display text-xl;
+  }
+
+  p {
+    @apply text-base;
+  }
+}
+
+@layer utilities {
+  .btn-icon {
+    @apply flex aspect-square w-fit items-center justify-center rounded-full;
+  }
+  .bg-translucent {
+    @apply bg-gray-500 bg-opacity-40;
+  }
+  .bg-primary {
+    @apply bg-spaceCadet-900;
+  }
+  .bg-primary-light {
+    @apply bg-spaceCadet-800;
+  }
+  .bg-secondary {
+    @apply bg-outerSpace-900;
+  }
+  .bg-secondary-light {
+    @apply bg-outerSpace-800;
+  }
+
+  .bg-gradient-primary {
+    @apply bg-gradient-to-b from-spaceCadet-900 to-spaceCadet-800;
+  }
+  .bg-gradient-secondary {
+    @apply bg-gradient-to-b from-outerSpace-900 to-outerSpace-800;
+  }
+
+  .bg-gradient-purple {
+    @apply bg-gradient-to-b from-[#2e026d] to-[#15162c];
+  }
+  .bg-gradient-outerSpace {
+    @apply bg-gradient-to-b from-outerSpace-900 to-outerSpace-800;
+  }
+  .bg-gradient-spaceCadet {
+    @apply bg-gradient-to-b from-spaceCadet-900 to-spaceCadet-800;
+  }
+  .bg-gradient-jet {
+    @apply bg-gradient-to-b from-jet-900 to-jet-800;
+  }
+  .bg-gradient-onyx {
+    @apply bg-gradient-to-b from-onyx-900 to-onyx-800;
+  }
+  .bg-gradient-darkness {
+    @apply bg-gradient-to-r from-slate-900 to-slate-700;
+  }
+
+  .bg-gradient-space {
+    @apply bg-gradient-to-b  from-gray-900 to-gray-800;
+  }
+  .bg-gradient-neutral {
+    @apply bg-gradient-to-b from-neutral-900 to-neutral-800;
+  }
+  .bg-gradient-gray {
+    @apply bg-gradient-to-b from-gray-900 to-gray-800;
+  }
+}
