@@ -8,7 +8,7 @@ import KeplerTreeContext from '~/simulation/context/KeplerTreeContext';
 import { CentralMassContext } from '~/simulation/context/CentralMassContext';
 import { calculateOrbitFromPeriapsis } from '~/simulation/math/orbit/calculateOrbit';
 import { DIST_MULT } from '~/simulation/utils/constants';
-import { TrueAnomalyArrow } from './TrueAnomalyArrow';
+import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
 import { Object3D } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { RetrogradeContext } from '../Retrograde/RetrogradeContext';
