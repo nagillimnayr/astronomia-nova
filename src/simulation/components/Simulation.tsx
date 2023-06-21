@@ -9,6 +9,9 @@ import { timeState } from '../state/TimeState';
 import { camState } from '../state/CamState';
 import { keplerTreeState } from '../state/keplerTreeState';
 import { useControls } from 'leva';
+import { DebugPanel } from './leva/DebugPanel';
+import EarthMars from './SolarSystem/EarthMars';
+import { retrogradeState } from './Retrograde/retrogradeState';
 
 //type SimProps = {};
 const Simulation = () => {
@@ -16,11 +19,6 @@ const Simulation = () => {
   // function for accessing scene state
   const getState = useThree((state) => state.get);
   simState.getState = getState;
-
-  // leva controls
-  const debug = useControls({
-    foo: false,
-  });
 
   useFrame(({ clock }, delta) => {
     // update camera
@@ -34,6 +32,8 @@ const Simulation = () => {
 
     // update simulation
     keplerTreeState.fixedUpdate(scaledDelta);
+
+    retrogradeState.update();
   });
 
   useEventListener('keypress', (e) => {
@@ -41,6 +41,7 @@ const Simulation = () => {
     console.log('keydown: ', e.key);
     if (e.key === ' ') {
       console.log('selected: ', simState.selected);
+      console.log('focusTarget: ', camState.focusTarget);
     }
   });
 
@@ -48,9 +49,10 @@ const Simulation = () => {
     <>
       <group>
         {/* <polarGridHelper args={[24, 16, 24, 64]} /> */}
-        <SolarSystem />
+        {/* <SolarSystem /> */}
+        <EarthMars />
       </group>
-      {debug.foo ? <ambientLight intensity={0.1} /> : null}
+      <DebugPanel />
     </>
   );
 };
