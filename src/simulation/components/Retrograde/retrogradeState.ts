@@ -7,6 +7,7 @@ import {
 } from 'three';
 import { proxy } from 'valtio';
 import KeplerBody from '~/simulation/classes/KeplerBody';
+import { camState } from '~/simulation/state/CamState';
 import { keplerTreeState } from '~/simulation/state/keplerTreeState';
 
 const maxSize = 10000;
@@ -25,7 +26,7 @@ type RetrogradeStateObj = {
 
 const setReferenceBody = (body: Object3D) => {
   retrogradeState.referenceBody = body;
-
+  camState.setFocus(body);
   body.add(retrogradeState.path);
   // keplerTreeState.root.add(retrogradeState.path);
   // keplerTreeState.root.add(retrogradeState.line);
