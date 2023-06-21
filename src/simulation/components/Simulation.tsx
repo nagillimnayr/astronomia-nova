@@ -8,6 +8,7 @@ import { useEventListener } from 'usehooks-ts';
 import { timeState } from '../state/TimeState';
 import { camState } from '../state/CamState';
 import { keplerTreeState } from '../state/keplerTreeState';
+import { useControls } from 'leva';
 
 //type SimProps = {};
 const Simulation = () => {
@@ -15,6 +16,11 @@ const Simulation = () => {
   // function for accessing scene state
   const getState = useThree((state) => state.get);
   simState.getState = getState;
+
+  // leva controls
+  const debug = useControls({
+    foo: false,
+  });
 
   useFrame(({ clock }, delta) => {
     // update camera
@@ -44,8 +50,7 @@ const Simulation = () => {
         {/* <polarGridHelper args={[24, 16, 24, 64]} /> */}
         <SolarSystem />
       </group>
-
-      <ambientLight intensity={0.1} />
+      {debug.foo ? <ambientLight intensity={0.1} /> : null}
     </>
   );
 };
