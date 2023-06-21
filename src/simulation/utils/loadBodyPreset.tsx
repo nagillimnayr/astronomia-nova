@@ -65,6 +65,8 @@ export default function loadBodyPreset(name: PresetKey) {
   const argumentOfPeriapsis = longitudeOfPeriapsis - longitudeOfAscendingNode;
   const axialTilt = planetData.AxialTilt_Deg;
 
+  const meanLongitude = planetData.MeanLongitude_Deg;
+
   // return extracted data
   return {
     name: name as string,
@@ -79,5 +81,6 @@ export default function loadBodyPreset(name: PresetKey) {
     longitudeOfPeriapsis,
     argumentOfPeriapsis,
     axialTilt,
+    meanLongitude,
   };
 }

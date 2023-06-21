@@ -22,6 +22,7 @@ type OrbitData = {
   longitudeOfPeriapsis: number;
   argumentOfPeriapsis: number;
   axialTilt: number;
+  meanLongitude: number;
 };
 
 // intersection type to combine the data needed by Orbit and the data needed by Body
