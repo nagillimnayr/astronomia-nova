@@ -100,7 +100,7 @@ export const BodyMesh = (props: BodyMeshProps) => {
       </Select>
 
       {/* <Line ref={lineRef} points={[300]} color={props.color} /> */}
-      <Trail
+      {/* <Trail
         ref={trailRef}
         target={meshRef}
         width={1}
@@ -110,7 +110,7 @@ export const BodyMesh = (props: BodyMeshProps) => {
         attenuation={(t: number) => {
           return t * t;
         }}
-      />
+      /> */}
     </>
   );
 };
