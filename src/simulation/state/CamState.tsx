@@ -2,9 +2,11 @@ import { CameraControls } from '@react-three/drei';
 import { simState } from './SimState';
 import { proxy } from 'valtio';
 import Vec3 from '../types/Vec3';
+import { Object3D } from 'three';
 
 type CamStateObj = {
   controls: CameraControls;
+  focusTarget: Object3D | null;
 
   setControls: (controls: CameraControls) => void;
   updateControls: () => void;
@@ -21,11 +23,10 @@ const updateControls = () => {
   if (!camState.controls) {
     return;
   }
-  let targetPos: Vec3 = [0, 0, 0];
-  if (simState.selected) {
-    // if no selection, focus on origin
-    targetPos = simState.selected.position.toArray();
-  }
+  if (!camState.focusTarget) return;
+
+  const targetPos: Vec3 = camState.focusTarget.position.toArray();
+
   // update controls to follow target
   camState.controls.setTarget(...targetPos, true).catch((reason) => {
     console.log('promise rejected: ', reason);
@@ -34,6 +35,8 @@ const updateControls = () => {
 
 export const camState = proxy<CamStateObj>({
   controls: null!,
+  focusTarget: null,
+
   setControls,
   updateControls,
 });
