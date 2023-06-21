@@ -17,7 +17,7 @@ const Sim: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Astronomia Nova</title>
+        <title>Solar System</title>
         <meta name="description" content="" />
         <link
           rel="icon"
