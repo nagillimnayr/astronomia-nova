@@ -8,6 +8,8 @@ type CamStateObj = {
   controls: CameraControls;
   focusTarget: Object3D | null;
 
+  isTransitioning: boolean;
+
   setControls: (controls: CameraControls) => void;
   updateControls: () => void;
   setFocus: (target: Object3D) => void;
@@ -30,7 +32,7 @@ const updateControls = () => {
   const targetPos: Vec3 = worldPos.toArray();
 
   // update controls to follow target
-  camState.controls.setTarget(...targetPos, true).catch((reason) => {
+  camState.controls.setTarget(...targetPos, false).catch((reason) => {
     console.log('promise rejected: ', reason);
   });
 };
@@ -38,12 +40,15 @@ const updateControls = () => {
 const setFocus = (target: Object3D) => {
   camState.focusTarget = target;
   if (!target) return;
+
   camState.updateControls();
 };
 
 export const camState = proxy<CamStateObj>({
   controls: null!,
   focusTarget: null,
+
+  isTransitioning: false,
 
   setControls,
   updateControls,

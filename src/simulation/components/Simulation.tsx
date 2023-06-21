@@ -22,18 +22,17 @@ const Simulation = () => {
 
   useFrame(({ clock }, delta) => {
     // update camera
-    camState.updateControls();
-    if (timeState.isPaused) {
-      return;
+    if (!timeState.isPaused) {
+      // scale delta time
+      const scaledDelta = delta * timeState.timescale;
+      timeState.updateClock(scaledDelta);
+
+      // update simulation
+      keplerTreeState.fixedUpdate(scaledDelta);
+
+      retrogradeState.update();
     }
-    // scale delta time
-    const scaledDelta = delta * timeState.timescale;
-    timeState.updateClock(scaledDelta);
-
-    // update simulation
-    keplerTreeState.fixedUpdate(scaledDelta);
-
-    retrogradeState.update();
+    camState.updateControls();
   });
 
   useEventListener('keypress', (e) => {
