@@ -24,7 +24,7 @@ const Scene = () => {
               makeDefault
               position={[0, 0, 20]}
               near={0.01}
-              far={10000}
+              far={1000000}
             />
             <CameraControls
               makeDefault
