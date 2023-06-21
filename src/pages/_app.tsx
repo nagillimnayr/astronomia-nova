@@ -29,9 +29,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       <div
         className={`${roboto.variable} ${orbitron.variable} ${atomicAge.variable} min-w-screen relative m-0 flex h-fit min-h-screen w-screen flex-col items-center justify-start bg-primary p-0 font-sans text-white`}
       >
-        {/* <NavBar /> */}
+        <NavBar />
         <Component {...pageProps} />
-        {/* <Footer /> */}
+        <Footer />
       </div>
     </MDXProvider>
   );
