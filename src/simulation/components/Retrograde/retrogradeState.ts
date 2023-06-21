@@ -42,7 +42,7 @@ const update = () => {
 
   retrogradeState.line.geometry.setFromPoints([refPos, otherPos]);
   // record relative position
-  retrogradeState.points.push(refPos.subVectors(refPos, otherPos));
+  retrogradeState.points.push(new Vector3().subVectors(otherPos, refPos));
 
   // if over maxSize, remove the first point
   if (retrogradeState.points.length > maxSize) {
