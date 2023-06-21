@@ -51,7 +51,7 @@ const Simulation = () => {
         {/* <SolarSystem /> */}
         <EarthMars />
       </group>
-      <DebugPanel />
+      {/* <DebugPanel /> */}
     </>
   );
 };
