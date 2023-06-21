@@ -37,7 +37,7 @@ const Sim: NextPage = () => {
 
           <div
             id="canvas-holder"
-            className="h-min-screen m-0 flex h-screen w-screen flex-col items-center justify-center border-2 border-green-500 p-0"
+            className="h-min-screen m-0 flex h-screen w-screen flex-col items-center justify-center p-0"
           >
             <Scene />
           </div>
