@@ -7,6 +7,7 @@ import {
 } from 'three';
 import { proxy } from 'valtio';
 import KeplerBody from '~/simulation/classes/KeplerBody';
+import { keplerTreeState } from '~/simulation/state/keplerTreeState';
 
 const maxSize = 10000;
 
@@ -24,9 +25,10 @@ type RetrogradeStateObj = {
 
 const setReferenceBody = (body: Object3D) => {
   retrogradeState.referenceBody = body;
-  body.add(retrogradeState.path);
 
-  retrogradeState.path.position.setScalar(0);
+  body.add(retrogradeState.path);
+  // keplerTreeState.root.add(retrogradeState.path);
+  // keplerTreeState.root.add(retrogradeState.line);
 };
 const setOtherBody = (body: Object3D) => {
   retrogradeState.otherBody = body;
@@ -50,6 +52,7 @@ const update = () => {
   }
 
   // update line
+  retrogradeState.path.position.set(...refPos.toArray());
   retrogradeState.path.geometry.setFromPoints(retrogradeState.points);
 };
 
