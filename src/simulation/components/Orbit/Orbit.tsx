@@ -8,9 +8,11 @@ import KeplerTreeContext from '~/simulation/context/KeplerTreeContext';
 import { CentralMassContext } from '~/simulation/context/CentralMassContext';
 import { calculateOrbitFromPeriapsis } from '~/simulation/math/orbit/calculateOrbit';
 import { DIST_MULT } from '~/simulation/utils/constants';
-import { Arrow } from './Arrow';
+import { TrueAnomalyArrow } from './TrueAnomalyArrow';
 import { Object3D } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
+import { RetrogradeContext } from '../Retrograde/RetrogradeContext';
+import { retrogradeState } from '../Retrograde/retrogradeState';
 
 // Date needed by Orbit but not by Body
 type OrbitData = {
@@ -34,6 +36,8 @@ type OrbitProps = {
 export const Orbit = (props: OrbitProps) => {
   // get Central mass from parent
   const centralMass = useContext(CentralMassContext);
+
+  const retrogradeContext = useContext(RetrogradeContext);
 
   // ref to Object3D
   const orbitRef = useRef<Object3D>(null!);
@@ -69,6 +73,13 @@ export const Orbit = (props: OrbitProps) => {
     const parent: KeplerBody = body.parent.parent as KeplerBody;
     console.assert(parent, 'failed to cast to parent');
     parent.addOrbitingBody(body);
+
+    if (retrogradeContext === 'referenceBody') {
+      retrogradeState.setReferenceBody(body);
+    }
+    if (retrogradeContext === 'otherBody') {
+      retrogradeState.setOtherBody(body);
+    }
   }, []);
 
   return (
@@ -90,7 +101,7 @@ export const Orbit = (props: OrbitProps) => {
         semiMajorAxis={elements.semiMajorAxis}
         semiMinorAxis={elements.semiMinorAxis}
       />
-      <Arrow color={preset.color} target={bodyRef} />
+      <TrueAnomalyArrow color={preset.color} target={bodyRef} />
     </object3D>
   );
 };
