@@ -12,7 +12,7 @@ import { camState } from '~/simulation/state/CamState';
 const Scene = () => {
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <div className="h-min-[42rem] relative flex h-[42rem] w-full flex-col justify-center">
+      <div className="h-min-full relative flex h-full w-full flex-col justify-center">
         <HUD />
         <div className=" absolute bottom-0 right-1 z-[9999] h-24 w-40 select-none whitespace-nowrap">
           <VRButton />
