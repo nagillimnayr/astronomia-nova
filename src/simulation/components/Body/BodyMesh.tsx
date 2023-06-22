@@ -58,7 +58,7 @@ export const BodyMesh = (props: BodyMeshProps) => {
     }
     const body: KeplerBody = meshRef.current.parent!.parent as KeplerBody;
 
-    camState.focusTarget = meshRef.current;
+    camState.setFocus(meshRef.current);
     setSelected(true);
     selectState.select(body);
   };
