@@ -8,10 +8,12 @@ import { useEventListener } from 'usehooks-ts';
 import { timeState } from '../state/TimeState';
 import { camState } from '../state/CamState';
 import { keplerTreeState } from '../state/keplerTreeState';
-import { useControls } from 'leva';
+import { Leva, useControls } from 'leva';
 import { DebugPanel } from './leva/DebugPanel';
 import EarthMars from './SolarSystem/EarthMars';
 import { retrogradeState } from './Retrograde/retrogradeState';
+import { selectState } from '../state/SelectState';
+import { SelectionPanel } from './leva/SelectionPanel';
 
 //type SimProps = {};
 const Simulation = () => {
@@ -39,7 +41,7 @@ const Simulation = () => {
     e.preventDefault();
     console.log('keydown: ', e.key);
     if (e.key === ' ') {
-      console.log('selected: ', simState.selected);
+      console.log('selected: ', selectState.selected);
       console.log('focusTarget: ', camState.focusTarget);
     }
   });
@@ -51,7 +53,9 @@ const Simulation = () => {
         <SolarSystem />
         {/* <EarthMars /> */}
       </group>
-      {/* <DebugPanel /> */}
+      <DebugPanel />
+      <SelectionPanel />
+      <ambientLight intensity={0.2} />
     </>
   );
 };
