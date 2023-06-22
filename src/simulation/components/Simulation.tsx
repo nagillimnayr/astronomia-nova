@@ -14,6 +14,8 @@ import EarthMars from './SolarSystem/EarthMars';
 import { retrogradeState } from './Retrograde/retrogradeState';
 import { selectState } from '../state/SelectState';
 import { SelectionPanel } from './leva/SelectionPanel';
+import { CameraPanel } from './leva/CameraPanel';
+import { CameraTarget } from './Camera/CameraTarget';
 
 //type SimProps = {};
 const Simulation = () => {
@@ -23,6 +25,7 @@ const Simulation = () => {
   simState.getState = getState;
 
   useFrame(({ clock }, delta) => {
+    // camState.controls.update(delta);
     // update camera
     if (!timeState.isPaused) {
       // scale delta time
@@ -43,6 +46,8 @@ const Simulation = () => {
     if (e.key === ' ') {
       console.log('selected: ', selectState.selected);
       console.log('focusTarget: ', camState.focusTarget);
+      console.log('camera: ', camState.controls.camera);
+      console.log('camera state: ', camState);
     }
   });
 
@@ -55,6 +60,8 @@ const Simulation = () => {
       </group>
       <DebugPanel />
       <SelectionPanel />
+      <CameraPanel />
+      <CameraTarget />
       <ambientLight intensity={0.2} />
     </>
   );
