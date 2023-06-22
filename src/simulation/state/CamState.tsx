@@ -10,8 +10,6 @@ type CamStateObj = {
   marker: Object3D;
   focusTarget: Object3D | null;
 
-  isTransitioning: boolean;
-
   setControls: (controls: CameraControls) => void;
   updateControls: () => void;
   setFocus: (target: Object3D) => void;
@@ -19,26 +17,27 @@ type CamStateObj = {
 
 const setControls = (controls: CameraControls) => {
   camState.controls = controls;
-  // controls.mouseButtons.right = 1; // disable pan (set to rotate on right mouse button instead)
+  controls.mouseButtons.right = 8; // disable pan (set to dolly on right mouse button instead)
   // controls.addEventListener('update', camState.updateControls);
   // camState.updateControls();
 };
 
-let isTransitioning = false;
 const updateControls = () => {
   if (!camState.controls) {
     return;
   }
   if (!camState.focusTarget) return;
-  // if (isTransitioning) return;
   const worldPos = new Vector3();
   camState.focusTarget.getWorldPosition(worldPos);
   const targetPos: Vec3 = worldPos.toArray();
 
   // update controls to follow target
-  camState.controls.setTarget(...targetPos, false).catch((reason) => {
-    console.log('promise rejected: ', reason);
-  });
+  camState.controls
+    .setTarget(...targetPos, true)
+
+    .catch((reason) => {
+      console.log('promise rejected: ', reason);
+    });
 };
 
 const setFocus = (target: Object3D) => {
@@ -55,15 +54,14 @@ const setFocus = (target: Object3D) => {
   const worldPos = new Vector3();
   camState.focusTarget.getWorldPosition(worldPos);
   const targetPos: Vec3 = worldPos.toArray();
-  isTransitioning = true;
-  camState.controls
-    .setTarget(...targetPos, true)
-    .then(() => {
-      isTransitioning = false;
-    })
-    .catch((reason) => {
-      console.log('promise rejected: ', reason);
-    });
+  // camState.controls
+  //   .setTarget(...targetPos, true)
+  //   .then(() => {
+  //     camState.isTransitioning = false;
+  //   })
+  //   .catch((reason) => {
+  //     console.log('promise rejected: ', reason);
+  //   });
 
   camState.updateControls();
 };
@@ -72,8 +70,6 @@ export const camState = proxy<CamStateObj>({
   controls: null!,
   marker: null!,
   focusTarget: null,
-
-  isTransitioning: false,
 
   setControls,
   updateControls,
