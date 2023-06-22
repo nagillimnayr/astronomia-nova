@@ -13,7 +13,7 @@ const NavBar = () => {
     <>
       <header
         className={cn(
-          `sticky top-0 z-[99999999] flex h-28 w-screen min-w-full flex-row items-stretch justify-start bg-secondary py-0 pl-6 pr-36 text-white`,
+          `sticky top-0 z-[99999999] flex h-20 w-screen min-w-full flex-row items-stretch justify-start bg-secondary py-0 pl-6 pr-36 text-white`,
           {
             'top-0 -translate-y-[100%] transition-transform duration-300 ease-out':
               !isOpen,
@@ -25,7 +25,7 @@ const NavBar = () => {
             className="flex h-full w-full items-center justify-center"
             href="/"
           >
-            <div className="aspect-square w-16 ">
+            <div className="aspect-square w-10 ">
               <Image
                 src="/logo/Douglas_College_logo_inverted.svg"
                 alt=""
@@ -38,22 +38,22 @@ const NavBar = () => {
             className="flex h-full w-full items-center justify-center whitespace-nowrap"
             href="/"
           >
-            <h3
-              className={`mx-6  text-center font-display text-5xl font-extrabold tracking-tight`}
+            <h2
+              className={`mx-4 text-center font-display text-3xl font-extrabold tracking-tight`}
             >
               Astronomia <span className="text-spaceCadet-300">Nova</span>
-            </h3>
+            </h2>
           </Link>
         </div>
         <NavBtn href="about">About</NavBtn>
         <NavBtn href="equations">Equations</NavBtn>
-        <NavBtn href="markdown">MDX</NavBtn>
+        <NavBtn href="kepler">Kepler</NavBtn>
         <NavBtn href="timeline">Timeline</NavBtn>
-        <NavBtn href="other">Other</NavBtn>
+        <NavBtn href="markdown">MDX</NavBtn>
 
         {/* visibility toggle */}
         <button
-          className="absolute left-[50%] top-full flex h-6 w-10 -translate-x-1/2 flex-row items-center justify-center rounded-b-xl  bg-gray-200 bg-opacity-40 p-0"
+          className="absolute left-[50%] top-full flex h-4 w-10 -translate-x-1/2 flex-row items-center justify-center rounded-b-xl  bg-gray-200 bg-opacity-40 p-0"
           onClick={() => {
             setIsOpen(!isOpen);
           }}

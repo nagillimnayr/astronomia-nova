@@ -6,12 +6,12 @@ type NavBtnProps = {
 };
 const NavBtn = (props: NavBtnProps) => {
   return (
-    <button className="mx-0 my-0  px-4 hover:bg-neutral-300/10">
+    <button className="mx-0 my-0  px-4 font-orbitron hover:bg-neutral-300/10">
       <Link
         className="flex h-full w-full items-center justify-center"
         href={props.href}
       >
-        <h3 className="text-3xl ">{props.children}</h3>
+        <h3 className="text-xl ">{props.children}</h3>
       </Link>
     </button>
   );
