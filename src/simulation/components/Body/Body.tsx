@@ -27,7 +27,7 @@ import { MeshLineGeometry, Edges, Trail, useHelper } from '@react-three/drei';
 import { TextureLoader } from 'three';
 import Vec3 from '~/simulation/types/Vec3';
 import Annotation from '../Annotation';
-import { select, simState, deselect } from '~/simulation/state/SimState';
+import { simState } from '~/simulation/state/SimState';
 import { Selection, Select } from '@react-three/postprocessing';
 import { useSnapshot } from 'valtio';
 import { Orbit } from '../Orbit/Orbit';

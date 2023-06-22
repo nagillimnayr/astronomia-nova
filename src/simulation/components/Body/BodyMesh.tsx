@@ -22,6 +22,7 @@ import { useSnapshot } from 'valtio';
 import KeplerBody from '~/simulation/classes/KeplerBody';
 import { camState } from '~/simulation/state/CamState';
 import { debugState } from '~/simulation/state/DebugState';
+import { selectState } from '~/simulation/state/SelectState';
 import { simState } from '~/simulation/state/SimState';
 import { timeState } from '~/simulation/state/TimeState';
 
@@ -59,7 +60,7 @@ export const BodyMesh = (props: BodyMeshProps) => {
 
     camState.focusTarget = meshRef.current;
     setSelected(true);
-    simState.select(body);
+    selectState.select(body);
   };
   const handleMiss = (e: MouseEvent) => {
     if (!meshRef.current) return;
