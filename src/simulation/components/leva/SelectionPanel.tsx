@@ -7,8 +7,8 @@ import { selectState } from '~/simulation/state/SelectState';
 
 export const SelectionPanel = () => {
   const snap = useSnapshot(selectState);
-  const [{ name, focus }, set] = useControls('Selected', () => ({
-    name: { value: '', editable: false },
+  const [{ name }, set] = useControls('Selected', () => ({
+    name: { value: ' ', editable: false },
     focus: {
       value: false,
       onChange: (isFocus: boolean) => {
@@ -19,9 +19,14 @@ export const SelectionPanel = () => {
     },
   }));
 
-  set({
-    name: snap.selected ? snap.selected.name : '',
-  });
-
+  if (snap.selected) {
+    set({
+      name: snap.selected.name ?? 'none',
+    });
+  } else {
+    set({
+      name: 'none',
+    });
+  }
   return <></>;
 };
