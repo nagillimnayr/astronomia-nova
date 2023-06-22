@@ -5,7 +5,11 @@ import { Perf } from 'r3f-perf';
 import { VRButton, ARButton, XR } from '@react-three/xr';
 import { Suspense } from 'react';
 import { LoadingFallback } from '../LoadingFallback';
-import { CameraControls, PerspectiveCamera } from '@react-three/drei';
+import {
+  OrbitControls,
+  CameraControls,
+  PerspectiveCamera,
+} from '@react-three/drei';
 import { HUD } from '~/simulation/components/HUD/HUD';
 import { camState } from '~/simulation/state/CamState';
 
@@ -25,6 +29,10 @@ const Scene = () => {
               position={[0, 0, 20]}
               near={0.01}
               far={1000000}
+              // ref={(camera) => {
+              //   if (!camera) return;
+              //   camState.setCamera(camera);
+              // }}
             />
             <CameraControls
               makeDefault
@@ -37,9 +45,22 @@ const Scene = () => {
                 camState.setControls(controls);
               }}
             />
+            {/* <OrbitControls
+              makeDefault
+              enableDamping
+              minDistance={1.5}
+              enablePan={false}
+              ref={(controls) => {
+                if (!controls) {
+                  return;
+                }
+
+                camState.setControls(controls);
+              }}
+            /> */}
             <Simulation />
             {/* <Stats /> */}
-            {/* <Perf /> */}
+            <Perf />
           </XR>
         </Canvas>
         {/* </Suspense> */}
