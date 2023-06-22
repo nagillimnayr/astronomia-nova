@@ -60,11 +60,11 @@ export const traverseTree = (node: KeplerBody, deltaTime: number) => {
  * @date 22/06/2023
  * @export
  * @param {(body: KeplerBody, deltaTime: number) => void} updateFn
- * @returns {*}
+ * @returns {(root: KeplerBody, deltaTime: number) => void}
  */
 export function makePreOrderTreeTraversalFn(
   updateFn: (body: KeplerBody, deltaTime: number) => void
-) {
+): (root: KeplerBody, deltaTime: number) => void {
   return (root: KeplerBody, deltaTime: number) => {
     console.assert(root, 'null root');
 
