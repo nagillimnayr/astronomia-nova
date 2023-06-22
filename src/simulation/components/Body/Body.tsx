@@ -115,6 +115,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         args={[mass, [initialPosition, 0, 0], [0, 0, -initialVelocity]]}
       >
         <BodyMesh
+          name={props.args.name}
           meanRadius={props.args.meanRadius}
           color={props.args.color}
           texture={texture}

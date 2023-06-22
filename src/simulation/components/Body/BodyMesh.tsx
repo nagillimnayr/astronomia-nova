@@ -25,11 +25,13 @@ import { debugState } from '~/simulation/state/DebugState';
 import { selectState } from '~/simulation/state/SelectState';
 import { simState } from '~/simulation/state/SimState';
 import { timeState } from '~/simulation/state/TimeState';
+import { useControls } from 'leva';
 
 // separate out the Mesh part of the Body to keep visual updates separate from
 // the simulation logic
 
 type BodyMeshProps = {
+  name: string;
   meanRadius: number;
   texture: Texture;
   color: ColorRepresentation;
@@ -38,8 +40,22 @@ type BodyMeshProps = {
 export const BodyMesh = (props: BodyMeshProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [mesh, setMesh] = useState<Mesh>(null!);
-  const trailRef = useRef<MeshLineGeometry>(null!);
-  const lineRef = useRef<Line2>(null!);
+  const [isVisible, setVisible] = useState<boolean>(true);
+  const trailRef = useRef<Line2>(null!);
+
+  const [controls, set] = useControls(props.name, () => ({
+    select: { value: false },
+    name: {
+      value: props.name,
+      editable: false,
+    },
+    visible: {
+      value: isVisible,
+      onChange: (vis: boolean) => {
+        setVisible(vis);
+      },
+    },
+  }));
 
   const [isSelected, setSelected] = useState<boolean>(false);
   const [isHovered, setHovered] = useState<boolean>(false);
@@ -84,10 +100,11 @@ export const BodyMesh = (props: BodyMeshProps) => {
     <>
       <Select enabled={isSelected}>
         <mesh
+          visible={isVisible}
           ref={(meshObj) => {
             if (!meshObj) return;
             meshRef.current = meshObj;
-            setMesh(meshObj);
+            //setMesh(meshObj);
           }}
           scale={props.meanRadius}
           onClick={handleClick}
@@ -99,7 +116,6 @@ export const BodyMesh = (props: BodyMeshProps) => {
           <meshBasicMaterial map={props.texture} />
         </mesh>
       </Select>
-
       {/* <Line ref={lineRef} points={[300]} color={props.color} /> */}
       {/* <Trail
         ref={trailRef}
