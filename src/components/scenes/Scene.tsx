@@ -36,7 +36,7 @@ const Scene = () => {
             />
             <CameraControls
               makeDefault
-              minDistance={5}
+              minDistance={0.1}
               ref={(controls) => {
                 if (!controls) {
                   return;
@@ -60,7 +60,7 @@ const Scene = () => {
             /> */}
             <Simulation />
             {/* <Stats /> */}
-            <Perf />
+            {/* <Perf /> */}
           </XR>
         </Canvas>
         {/* </Suspense> */}
