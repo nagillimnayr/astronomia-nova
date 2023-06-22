@@ -65,7 +65,7 @@ export function makePreOrderTreeTraversalFn(
   return (root: KeplerBody, deltaTime: number) => {
     console.assert(root, 'null root');
 
-    // stack to hold the visited nodes
+    // stack to hold the nodes that still need to be visited
     const stack: KeplerBody[] = [];
 
     // call the updateFn on the root node
