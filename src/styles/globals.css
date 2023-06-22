@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+/* @layer base {
   h1 {
     @apply font-display text-4xl;
   }
@@ -19,9 +19,12 @@
   p {
     @apply text-base;
   }
-}
+} */
 
 @layer utilities {
+  .code {
+    @apply rounded-md bg-neutral-700;
+  }
   .btn-icon {
     @apply flex aspect-square w-fit items-center justify-center rounded-full;
   }
