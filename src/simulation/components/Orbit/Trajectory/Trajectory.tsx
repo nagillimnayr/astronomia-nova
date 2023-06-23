@@ -4,6 +4,8 @@ import { useMemo } from 'react';
 import { EllipseCurve, Euler } from 'three';
 import { LinearEccentricity } from '~/simulation/math/orbital-elements/LinearEccentricity';
 import { DIST_MULT } from '~/simulation/utils/constants';
+import { useSnapshot } from 'valtio';
+import { debugState } from '~/simulation/state/DebugState';
 
 type TrajectoryProps = {
   semiMajorAxis: number;
@@ -22,11 +24,13 @@ export const Trajectory = (props: TrajectoryProps) => {
       props.semiMinorAxis / DIST_MULT
     ).getSpacedPoints(128);
   }, [props.semiMajorAxis, props.semiMinorAxis, props.linearEccentricity]);
-  return (
+
+  const debug = useSnapshot(debugState);
+  return debug.trajectories ? (
     <>
       <object3D rotation={new Euler(pi / 2, 0, 0)}>
         <Line points={points} color={'white'} lineWidth={1} />
       </object3D>
     </>
-  );
+  ) : (<></>);
 };
