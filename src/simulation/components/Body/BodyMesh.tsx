@@ -48,19 +48,19 @@ export const BodyMesh = (props: BodyMeshProps) => {
 
   const texture = useTexture(props.texturePath ?? '');
 
-  const [controls, set] = useControls(props.name, () => ({
-    select: { value: false },
-    name: {
-      value: props.name,
-      editable: false,
-    },
-    visible: {
-      value: isVisible,
-      onChange: (vis: boolean) => {
-        setVisible(vis);
-      },
-    },
-  }));
+  // const [controls, set] = useControls(props.name, () => ({
+  //   select: { value: false },
+  //   name: {
+  //     value: props.name,
+  //     editable: false,
+  //   },
+  //   visible: {
+  //     value: isVisible,
+  //     onChange: (vis: boolean) => {
+  //       setVisible(vis);
+  //     },
+  //   },
+  // }));
 
   const [isSelected, setSelected] = useState<boolean>(false);
   const [isHovered, setHovered] = useState<boolean>(false);
@@ -69,7 +69,7 @@ export const BodyMesh = (props: BodyMeshProps) => {
 
   // check if we should show bounding boxes
   const debugSnap = useSnapshot(debugState);
-  useHelper(debugSnap.showBoundingBoxes ? meshRef : null, BoxHelper, 'cyan');
+  useHelper(debugSnap.boundingBoxes ? meshRef : null, BoxHelper, 'cyan');
 
   // event handlers
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
