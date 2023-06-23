@@ -13,6 +13,7 @@ import {
 import { useEventListener } from 'usehooks-ts';
 import { keplerTreeState } from '../../state/keplerTreeState';
 import { Orbit } from '../Orbit/Orbit';
+import { BodyMesh } from '../Body/BodyMesh';
 
 export type UpdateFn = (deltaTime: number) => void;
 const SolarSystem = () => {
@@ -78,8 +79,14 @@ const SolarSystem = () => {
               initialPosition: 0,
               initialVelocity: 0,
             }}
-            texturePath={sunTexture}
           >
+            <BodyMesh
+              name="Sun"
+              color="0xfdee00"
+              meanRadius={1.5}
+              texturePath={sunTexture}
+              body={rootRef}
+            />
             <Orbit name={'Mercury'} texturePath={mercuryTexture}></Orbit>
             <Orbit name={'Venus'} texturePath={venusTexture}></Orbit>
             <Orbit name={'Earth'} texturePath={earthTexture}></Orbit>
