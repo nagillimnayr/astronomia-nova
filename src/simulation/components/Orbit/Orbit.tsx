@@ -9,10 +9,11 @@ import { CentralMassContext } from '~/simulation/context/CentralMassContext';
 import { calculateOrbitFromPeriapsis } from '~/simulation/math/orbit/calculateOrbit';
 import { DIST_MULT } from '~/simulation/utils/constants';
 import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
-import { Object3D } from 'three';
+import { Mesh, Object3D } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { RetrogradeContext } from '../Retrograde/RetrogradeContext';
 import { retrogradeState } from '../Retrograde/retrogradeState';
+import { BodyMesh } from '../Body/BodyMesh';
 
 // Date needed by Orbit but not by Body
 type OrbitData = {
@@ -60,6 +61,8 @@ export const Orbit = (props: OrbitProps) => {
   );
 
   const bodyRef = useRef<KeplerBody>(null!);
+  const meshRef = useRef<Mesh>(null!);
+
   // callback function to be passed down to children via context provider
   // the child will call it within a callback ref and pass their reference
   // as the argument, where it will be used to construct the Kepler Tree
@@ -94,9 +97,16 @@ export const Orbit = (props: OrbitProps) => {
       }}
     >
       <KeplerTreeContext.Provider value={addChildToTree}>
-        <Body ref={bodyRef} args={preset} texturePath={props.texturePath}>
+        <Body ref={bodyRef} args={preset}>
           {props.children}
         </Body>
+        <BodyMesh
+          name={props.name}
+          meanRadius={preset.meanRadius}
+          color={preset.color}
+          texturePath={props.texturePath}
+          body={bodyRef}
+        />
       </KeplerTreeContext.Provider>
       <Trajectory
         semiMajorAxis={elements.semiMajorAxis}

@@ -4,11 +4,12 @@ import {
   Trail,
   useCursor,
   useHelper,
+  useTexture,
   useTrail,
 } from '@react-three/drei';
 import { ThreeEvent, useFrame } from '@react-three/fiber';
 import { Select } from '@react-three/postprocessing';
-import { useMemo, useRef, useState } from 'react';
+import { MutableRefObject, useMemo, useRef, useState } from 'react';
 import {
   BoxHelper,
   ColorRepresentation,
@@ -26,14 +27,16 @@ import { selectState } from '~/simulation/state/SelectState';
 import { simState } from '~/simulation/state/SimState';
 import { timeState } from '~/simulation/state/TimeState';
 import { useControls } from 'leva';
+import Annotation from '../Annotation';
 
 // separate out the Mesh part of the Body to keep visual updates separate from
 // the simulation logic
 
 type BodyMeshProps = {
   name: string;
+  body: MutableRefObject<KeplerBody>;
   meanRadius: number;
-  texture: Texture;
+  texturePath: string;
   color: ColorRepresentation;
 };
 
@@ -42,6 +45,8 @@ export const BodyMesh = (props: BodyMeshProps) => {
   const [mesh, setMesh] = useState<Mesh>(null!);
   const [isVisible, setVisible] = useState<boolean>(true);
   const trailRef = useRef<Line2>(null!);
+
+  const texture = useTexture(props.texturePath ?? '');
 
   const [controls, set] = useControls(props.name, () => ({
     select: { value: false },
@@ -69,12 +74,12 @@ export const BodyMesh = (props: BodyMeshProps) => {
   // event handlers
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
-    if (!meshRef.current) {
+    if (!meshRef.current || !props.body.current) {
       return;
     }
-    const body: KeplerBody = meshRef.current.parent!.parent as KeplerBody;
+    const body: KeplerBody = props.body.current;
 
-    camState.setFocus(meshRef.current);
+    camState.setFocus(body);
     setSelected(true);
     selectState.select(body);
   };
@@ -96,6 +101,13 @@ export const BodyMesh = (props: BodyMeshProps) => {
   //   lineRef.current.geometry.setPositions(trailPoints.current);
   // });
 
+  useFrame(() => {
+    if (!meshRef.current || !props.body.current) {
+      return;
+    }
+    meshRef.current.position.set(...props.body.current.position.toArray());
+  });
+
   return (
     <>
       <Select enabled={isSelected}>
@@ -113,7 +125,9 @@ export const BodyMesh = (props: BodyMeshProps) => {
           onPointerLeave={() => setHovered(false)}
         >
           <sphereGeometry />
-          <meshBasicMaterial map={props.texture} />
+          <meshBasicMaterial map={texture} />
+
+          <Annotation annotation={props.name} />
         </mesh>
       </Select>
       {/* <Line ref={lineRef} points={[300]} color={props.color} /> */}

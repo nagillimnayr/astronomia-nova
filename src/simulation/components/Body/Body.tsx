@@ -12,6 +12,7 @@ import {
   type ThreeEvent,
   useLoader,
   useThree,
+  useFrame,
 } from '@react-three/fiber';
 
 import {
@@ -57,7 +58,7 @@ export type BodyAttributes = {
 type BodyProps = {
   children?: React.ReactNode;
   args: BodyAttributes;
-  texturePath?: string;
+  // texturePath?: string;
 };
 
 const Body = forwardRef<KeplerBody, BodyProps>(function Body(
@@ -68,7 +69,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   const { name, color, mass, initialPosition, initialVelocity } = props.args;
 
   // load texture
-  const texture = useLoader(TextureLoader, props.texturePath ?? '');
+  // const texture = useLoader(TextureLoader, props.texturePath ?? '');
 
   // get function from context
   const addSelfToTree = useContext(KeplerTreeContext);
@@ -114,12 +115,12 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         name={name ?? ''}
         args={[mass, [initialPosition, 0, 0], [0, 0, -initialVelocity]]}
       >
-        <BodyMesh
+        {/* <BodyMesh
           name={props.args.name}
           meanRadius={props.args.meanRadius}
           color={props.args.color}
           texture={texture}
-        />
+        /> */}
 
         {/* <KeplerTreeContext.Provider value={addChildToTree}> */}
 
@@ -129,8 +130,6 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         </CentralMassContext.Provider>
 
         {/* </KeplerTreeContext.Provider> */}
-
-        <Annotation annotation={props.args.name} />
       </keplerBody>
     </>
   );
