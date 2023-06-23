@@ -32,22 +32,18 @@ const updateControls = () => {
   const targetPos: Vec3 = worldPos.toArray();
 
   // update controls to follow target
-  camState.controls
-    .setTarget(...targetPos, true)
-
-    .catch((reason) => {
-      console.log('promise rejected: ', reason);
-    });
+  camState.controls.setTarget(...targetPos, false).catch((reason) => {
+    console.log('promise rejected: ', reason);
+  });
 };
 
 const setFocus = (target: Object3D) => {
   if (!target) return;
 
-  const body = target.parent!.parent!;
-  camState.focusTarget = body;
+  camState.focusTarget = target;
   // attach camera to target
   // body.add(camState.controls.camera);
-  body.add(camState.controls.camera);
+  target.add(camState.controls.camera);
 
   // update controls to follow target
   if (!camState.focusTarget) return;
