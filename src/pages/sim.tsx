@@ -6,8 +6,9 @@ import { Suspense, useRef } from 'react';
 import { LoadingFallback } from '~/components/LoadingFallback';
 //import Scene from '~/components/Scene';
 
-const Scene = dynamic(
-  () => import('~/components/scenes/Scene').then((mod) => mod.default),
+const SolarSystemScene = dynamic(
+  () =>
+    import('~/components/scenes/SolarSystemScene').then((mod) => mod.default),
   {
     ssr: false,
   }
@@ -39,7 +40,7 @@ const Sim: NextPage = () => {
             id="canvas-holder"
             className="h-min-screen m-0 flex h-screen w-screen flex-col items-center justify-center p-0"
           >
-            <Scene />
+            <SolarSystemScene />
           </div>
         </main>
       </div>
