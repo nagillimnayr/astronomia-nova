@@ -46,10 +46,13 @@ const NavBar = () => {
           </Link>
         </div>
         <NavBtn href="about">About</NavBtn>
-        <NavBtn href="equations">Equations</NavBtn>
+        <NavBtn href="sim">Solar System</NavBtn>
+        <NavBtn href="earthMars">Stellae Martis</NavBtn>
+        <NavBtn href="kepler">Kepler</NavBtn>
+        {/* <NavBtn href="equations">Equations</NavBtn>
         <NavBtn href="kepler">Kepler</NavBtn>
         <NavBtn href="timeline">Timeline</NavBtn>
-        <NavBtn href="markdown">MDX</NavBtn>
+        <NavBtn href="markdown">MDX</NavBtn> */}
 
         {/* visibility toggle */}
         <button
