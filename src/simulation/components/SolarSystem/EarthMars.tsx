@@ -14,6 +14,7 @@ import { useEventListener } from 'usehooks-ts';
 import { keplerTreeState } from '../../state/keplerTreeState';
 import { Orbit } from '../Orbit/Orbit';
 import { RetrogradeContext } from '../Retrograde/RetrogradeContext';
+import { BodyMesh } from '../Body/BodyMesh';
 
 export type UpdateFn = (deltaTime: number) => void;
 const EarthMars = () => {
@@ -79,8 +80,14 @@ const EarthMars = () => {
               initialPosition: 0,
               initialVelocity: 0,
             }}
-            texturePath={sunTexture}
           >
+            <BodyMesh
+              name="Sun"
+              color="0xfdee00"
+              meanRadius={1.5}
+              texturePath={sunTexture}
+              body={rootRef}
+            />
             <RetrogradeContext.Provider value={'referenceBody'}>
               <Orbit name={'Earth'} texturePath={earthTexture}></Orbit>
             </RetrogradeContext.Provider>
