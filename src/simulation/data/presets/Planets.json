@@ -127,6 +127,9 @@
     "siderealRotationPeriod_hrs": 23.9345,
     "siderealRotationPeriod_days": 0.99726968,
 
+    "meanAnomaly_deg_j2000": ,
+    "trueAnomaly_deg_j2000": ,
+
     "color": "0x03C03C"
   },
   "Moon": {
@@ -137,9 +140,6 @@
 
     "periapsis_m": 0.3633e9,
     "apoapsis_m": 0.4055e9,
-
-    "synodicPeriod_days": 29.53,
-    "siderealPeriod_days": 27.322,
 
     "maxVelocity_kms": 1.082,
     "minVelocity_kms": 0.97,
@@ -153,8 +153,10 @@
     "axialTilt_deg": 6.68,
 
     "siderealRotationPeriod_hrs": 655.72,
+    "siderealRotationPeriod_days": 27.322,
 
-    "meanAnomaly_deg_j2000": 135.27,
+    "meanAnomaly_deg_j2000": 1.466732747774804e2,
+    "trueAnomaly_deg_j2000": 1.503997599893869e2,
 
     "argPeriapsisPrecession_yr": 5.997,
     "longitudeAscendingNodePrecession_yr": 18.6
