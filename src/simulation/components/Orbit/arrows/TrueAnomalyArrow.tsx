@@ -30,7 +30,7 @@ export const TrueAnomalyArrow = (props: ArrowProps) => {
   return (
     <>
       <arrowHelper
-        visible={debugSnap.showArrows}
+        visible={debugSnap.arrows}
         ref={(arrow) => {
           if (!arrow) return;
           arrowRef.current = arrow;
