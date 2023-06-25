@@ -1,349 +1,373 @@
 {
   "Mercury": {
-    "Mass_KG": 0.330103e24,
+    "mass_kg": 0.330103e24,
 
-    "MeanRadius_Ratio": 0.383,
-    "MeanRadius_M": 2439.4e3,
-    "EquatorialRadius_M": 2440.53e3,
-    "PolarRadius_M": 2438.3e3,
+    "meanRadius_ratio": 0.383,
+    "meanRadius_m": 2439.4e3,
+    "equatorialRadius_m": 2440.53e3,
+    "polarRadius_m": 2438.3e3,
 
     "SurfaceGravity_Ms": 3.7,
     "SurfaceAcceleration_Ms": 3.7,
 
-    "TopographicRange_M": 7.0e3,
+    "topographicRange_m": 7.0e3,
 
-    "SemiMajorAxis_M": 57.909e9,
-    "SemiMajorAxis_AU": 0.38709927,
+    "semiMajorAxis_m": 57.909e9,
+    "semiMajorAxis_au": 0.38709927,
 
-    "SiderealOrbitPeriod_Days": 87.969,
-    "TropicalOrbitPeriod_Days": 87.968,
+    "siderealOrbitPeriod_days": 87.969,
+    "tropicalOrbitPeriod_days": 87.968,
 
-    "Periapsis_M": 46.0e9,
-    "Apoapsis_M": 69.818e9,
+    "periapsis_m": 46.0e9,
+    "apoapsis_m": 69.818e9,
 
-    "SynodicPeriod_Days": 115.88,
+    "synodicPeriod_days": 115.88,
 
-    "MaxVelocity_KMs": 58.98,
-    "MinVelocity_KMs": 38.86,
+    "maxVelocity_kms": 58.98,
+    "minVelocity_kms": 38.86,
 
-    "Eccentricity": 0.20563661,
+    "eccentricity": 0.20563661,
 
-    "Inclination_Deg": 7.00559432,
-    "MeanLongitude_Deg": 252.2503235,
-    "LongitudeOfPeriapsis_Deg": 77.45779628,
-    "LongitudeOfAscendingNode_Deg": 48.33076593,
+    "inclination_deg": 7.00559432,
+    "meanLongitude_deg": 252.2503235,
+    "longitudeOfPeriapsis_deg": 77.45779628,
+    "longitudeOfAscendingNode_deg": 48.33076593,
 
-    "ArgumentOfPeriapsis_Deg": 29.12478,
+    "argumentOfPeriapsis_deg": 29.12478,
 
     "MeanAngularMotion_Deg_Day": 4.0923388,
 
-    "AxialTilt_Deg": 0.034,
+    "axialTilt_deg": 0.034,
 
-    "SiderealRotationPeriod_Hrs": 1407.6,
-    "SiderealRotationPeriod_Days": 58.6462,
+    "siderealRotationPeriod_hrs": 1407.6,
+    "siderealRotationPeriod_days": 58.6462,
 
-    "Color": "0xF7F7F7"
+    "color": "0xF7F7F7"
   },
 
   "Venus": {
-    "Mass_KG": 4.86731e24,
+    "mass_kg": 4.86731e24,
 
-    "MeanRadius_Ratio": 0.95,
-    "MeanRadius_M": 6051.8e3,
-    "EquatorialRadius_M": 6051.8e3,
-    "PolarRadius_M": 6051.8e3,
+    "meanRadius_ratio": 0.95,
+    "meanRadius_m": 6051.8e3,
+    "equatorialRadius_m": 6051.8e3,
+    "polarRadius_m": 6051.8e3,
 
-    "SurfaceGravity": 8.87,
-    "SurfaceAcceleration": 8.87,
+    "surfaceGravity": 8.87,
+    "surfaceAcceleration": 8.87,
 
-    "TopographicRange_M": 13.0e3,
+    "topographicRange_m": 13.0e3,
 
-    "SemiMajorAxis_M": 108.21e9,
-    "SemiMajorAxis_AU": 0.72333566,
+    "semiMajorAxis_m": 108.21e9,
+    "semiMajorAxis_au": 0.72333566,
 
-    "SiderealOrbitPeriod_Days": 224.701,
-    "TropicalOrbitPeriod_Days": 224.695,
+    "siderealOrbitPeriod_days": 224.701,
+    "tropicalOrbitPeriod_days": 224.695,
 
-    "Periapsis_M": 107.48e9,
-    "Apoapsis_M": 108.941e9,
+    "periapsis_m": 107.48e9,
+    "apoapsis_m": 108.941e9,
 
-    "SynodicPeriod_Days": 583.92,
+    "synodicPeriod_days": 583.92,
 
-    "MaxVelocity_KMs": 35.26,
-    "MinVelocity_KMs": 34.79,
+    "maxVelocity_kms": 35.26,
+    "minVelocity_kms": 34.79,
 
-    "Eccentricity": 0.0068,
+    "eccentricity": 0.0068,
 
-    "Inclination_Deg": 3.3947,
+    "inclination_deg": 3.3947,
 
-    "MeanLongitude_Deg": 181.9790995,
-    "LongitudeOfPeriapsis_Deg": 131.60246718,
-    "LongitudeOfAscendingNode_Deg": 76.67984255,
+    "meanLongitude_deg": 181.9790995,
+    "longitudeOfPeriapsis_deg": 131.60246718,
+    "longitudeOfAscendingNode_deg": 76.67984255,
 
-    "ArgumentOfPeriapsis_Deg": 54.85229,
+    "argumentOfPeriapsis_deg": 54.85229,
 
-    "AxialTilt_Deg": 177.36,
+    "axialTilt_deg": 177.36,
 
-    "SiderealRotationPeriod_Hrs": -5832.6,
-    "SiderealRotationPeriod_Days": -243.018,
+    "siderealRotationPeriod_hrs": -5832.6,
+    "siderealRotationPeriod_days": -243.018,
 
-    "Color": "0xFCF75E"
+    "color": "0xFCF75E"
   },
 
   "Earth": {
-    "Mass_KG": 5.97217e24,
+    "mass_kg": 5.97217e24,
 
-    "MeanRadius_Ratio": 1.0,
-    "MeanRadius_M": 6371.0084e3,
-    "EquatorialRadius_M": 6378.137e3,
-    "PolarRadius_M": 6356.752e3,
+    "meanRadius_ratio": 1.0,
+    "meanRadius_m": 6371.0084e3,
+    "equatorialRadius_m": 6378.137e3,
+    "polarRadius_m": 6356.752e3,
 
-    "SurfaceGravity": 9.798,
-    "SurfaceAcceleration": 9.78,
+    "surfaceGravity": 9.798,
+    "surfaceAcceleration": 9.78,
 
-    "SemiMajorAxis_M": 149.598e9,
+    "semiMajorAxis_m": 149.598e9,
 
-    "SiderealOrbitPeriod_Days": 365.256,
-    "TropicalOrbitPeriod_Days": 365.242,
+    "siderealOrbitPeriod_days": 365.256,
+    "tropicalOrbitPeriod_days": 365.242,
 
-    "Periapsis_M": 147.095e9,
-    "Apoapsis_M": 152.1e9,
+    "periapsis_m": 147.095e9,
+    "apoapsis_m": 152.1e9,
 
-    "MaxVelocity_KMs": 30.29,
-    "MinVelocity_KMs": 29.29,
+    "maxVelocity_kms": 30.29,
+    "minVelocity_kms": 29.29,
 
-    "Eccentricity": 0.01671022,
+    "eccentricity": 0.01671022,
 
-    "Inclination_Deg": 0.00005,
+    "inclination_deg": 0.00005,
 
-    "MeanLongitude_Deg": 100.46435,
-    "LongitudeOfPeriapsis_Deg": 102.94719,
-    "LongitudeOfAscendingNode_Deg": -11.26064,
+    "meanLongitude_deg": 100.46435,
+    "longitudeOfPeriapsis_deg": 102.94719,
+    "longitudeOfAscendingNode_deg": -11.26064,
 
-    "ArgumentOfPeriapsis_Deg": 114.20783,
+    "argumentOfPeriapsis_deg": 114.20783,
 
-    "AxialTilt_Deg": 23.44,
+    "axialTilt_deg": 23.44,
 
-    "SiderealRotationPeriod_Hrs": 23.9345,
-    "SiderealRotationPeriod_Days": 0.99726968,
+    "siderealRotationPeriod_hrs": 23.9345,
+    "siderealRotationPeriod_days": 0.99726968,
 
-    "Color": "0x03C03C"
+    "color": "0x03C03C"
+  },
+  "Moon": {
+    "mass_kg": 0.07346e24,
+    "meanRadius_m": 1737.4e3,
+
+    "semiMajorAxis_m": 0.3844e9,
+
+    "periapsis_M": 0.3633e9,
+    "apoapsis_M": 0.4055e9,
+
+    "synodicPeriod_Days": 29.53,
+
+    "maxVelocity_km/s": 1.082,
+    "minVelocity_km/s": 0.97,
+
+    "eccentricity": 0.0549,
+
+    "inclination_deg": 5.145,
+    "longitudeOfAscendingNode_deg": 125.08,
+    "argumentOfPeriapsis_deg": 318.15,
+
+    "axialTilt_deg": 6.68,
+
+    "siderealRotationPeriod_hr": 655.72
   },
 
   "EarthMoonBarycenter": {
-    "SemiMajorAxis_AU": 1.00000261,
-    "Eccentricity": 0.01671123,
-    "Inclination_Deg": -0.00001531,
+    "semiMajorAxis_au": 1.00000261,
+    "eccentricity": 0.01671123,
+    "inclination_deg": -0.00001531,
 
-    "MeanLongitude_Deg": 100.46457166,
-    "LongitudeOfPeriapsis_Deg": 102.93768193,
-    "LongitudeOfAscendingNode_Deg": 0.0,
+    "meanLongitude_deg": 100.46457166,
+    "longitudeOfPeriapsis_deg": 102.93768193,
+    "longitudeOfAscendingNode_deg": 0.0,
 
-    "ArgumentOfPeriapsis_Deg": 102.93768193
+    "argumentOfPeriapsis_deg": 102.93768193
   },
 
   "Mars": {
-    "Mass_KG": 0.641691e24,
+    "mass_kg": 0.641691e24,
 
-    "MeanRadius_Ratio": 0.532,
-    "MeanRadius_M": 3389.5e3,
-    "EquatorialRadius_M": 3396.2e3,
-    "PolarRadius_M": 3376.2e3,
+    "meanRadius_ratio": 0.532,
+    "meanRadius_m": 3389.5e3,
+    "equatorialRadius_m": 3396.2e3,
+    "polarRadius_m": 3376.2e3,
 
-    "SurfaceGravity": 3.71,
-    "SurfaceAcceleration": 3.69,
+    "surfaceGravity": 3.71,
+    "surfaceAcceleration": 3.69,
 
-    "SemiMajorAxis_M": 227.956e9,
-    "SemiMajorAxis_AU": 1.52371034,
+    "semiMajorAxis_m": 227.956e9,
+    "semiMajorAxis_au": 1.52371034,
 
-    "SiderealOrbitPeriod_Days": 686.98,
-    "TropicalOrbitPeriod_Days": 686.973,
+    "siderealOrbitPeriod_days": 686.98,
+    "tropicalOrbitPeriod_days": 686.973,
 
-    "Periapsis_M": 206.65e9,
-    "Apoapsis_M": 249.261e9,
+    "periapsis_m": 206.65e9,
+    "apoapsis_m": 249.261e9,
 
-    "MaxVelocity_KMs": 26.5,
-    "MinVelocity_KMs": 21.97,
+    "maxVelocity_kms": 26.5,
+    "minVelocity_kms": 21.97,
 
-    "Eccentricity": 0.0933941,
+    "eccentricity": 0.0933941,
 
-    "Inclination_Deg": 1.84969142,
+    "inclination_deg": 1.84969142,
 
-    "MeanLongitude_Deg": -4.55343205,
-    "LongitudeOfPeriapsis_Deg": -23.94362959,
-    "LongitudeOfAscendingNode_Deg": 49.55953891,
+    "meanLongitude_deg": -4.55343205,
+    "longitudeOfPeriapsis_deg": -23.94362959,
+    "longitudeOfAscendingNode_deg": 49.55953891,
 
-    "ArgumentOfPeriapsis_Deg": null,
+    "argumentOfPeriapsis_deg": null,
 
-    "AxialTilt_Deg": 25.19,
+    "axialTilt_deg": 25.19,
 
-    "SiderealRotationPeriod_Hrs": 24.6229,
-    "SiderealRotationPeriod_Days": 1.02595676,
+    "siderealRotationPeriod_hrs": 24.6229,
+    "siderealRotationPeriod_days": 1.02595676,
 
-    "Color": "0xFF4F00"
+    "color": "0xFF4F00"
   },
 
   "Jupiter": {
-    "Mass_KG": 1898.125e24,
+    "mass_kg": 1898.125e24,
 
-    "MeanRadius_Ratio": 10.973,
-    "MeanRadius_M": 69911.0e3,
-    "EquatorialRadius_M": 71492.0e3,
-    "PolarRadius_M": 66854.0e3,
+    "meanRadius_ratio": 10.973,
+    "meanRadius_m": 69911.0e3,
+    "equatorialRadius_m": 71492.0e3,
+    "polarRadius_m": 66854.0e3,
 
-    "SurfaceGravity": 24.79,
-    "SurfaceAcceleration": 23.12,
+    "surfaceGravity": 24.79,
+    "surfaceAcceleration": 23.12,
 
-    "SemiMajorAxis_M": 778.479e9,
-    "SemiMajorAxis_AU": 5.202887,
+    "semiMajorAxis_m": 778.479e9,
+    "semiMajorAxis_au": 5.202887,
 
-    "SiderealOrbitPeriod_Days": 4332.589,
-    "TropicalOrbitPeriod_Days": 4330.595,
+    "siderealOrbitPeriod_days": 4332.589,
+    "tropicalOrbitPeriod_days": 4330.595,
 
-    "Periapsis_M": 740.595e9,
-    "Apoapsis_M": 816.363e9,
+    "periapsis_m": 740.595e9,
+    "apoapsis_m": 816.363e9,
 
-    "MaxVelocity_KMs": 13.72,
-    "MinVelocity_KMs": 12.44,
+    "maxVelocity_kms": 13.72,
+    "minVelocity_kms": 12.44,
 
-    "Eccentricity": 0.04838624,
+    "eccentricity": 0.04838624,
 
-    "Inclination_Deg": 1.30439695,
+    "inclination_deg": 1.30439695,
 
-    "MeanLongitude_Deg": 34.39644051,
-    "LongitudeOfPeriapsis_Deg": 14.72847983,
-    "LongitudeOfAscendingNode_Deg": 100.47390909,
+    "meanLongitude_deg": 34.39644051,
+    "longitudeOfPeriapsis_deg": 14.72847983,
+    "longitudeOfAscendingNode_deg": 100.47390909,
 
-    "ArgumentOfPeriapsis_Deg": null,
+    "argumentOfPeriapsis_deg": null,
 
-    "AxialTilt_Deg": 3.13,
+    "axialTilt_deg": 3.13,
 
-    "SiderealRotationPeriod_Hrs": 9.925,
-    "SiderealRotationPeriod_Days": 0.41354,
+    "siderealRotationPeriod_hrs": 9.925,
+    "siderealRotationPeriod_days": 0.41354,
 
-    "Color": "0xF4C430"
+    "color": "0xF4C430"
   },
 
   "Saturn": {
-    "Mass_KG": 568.317e24,
+    "mass_kg": 568.317e24,
 
-    "MeanRadius_Ratio": 9.14,
-    "MeanRadius_M": 58232.0e3,
-    "EquatorialRadius_M": 60268.0e3,
-    "PolarRadius_M": 54364.0e3,
+    "meanRadius_ratio": 9.14,
+    "meanRadius_m": 58232.0e3,
+    "equatorialRadius_m": 60268.0e3,
+    "polarRadius_m": 54364.0e3,
 
-    "SurfaceGravity": 10.44,
-    "SurfaceAcceleration": 8.96,
+    "surfaceGravity": 10.44,
+    "surfaceAcceleration": 8.96,
 
-    "SemiMajorAxis_M": 1432.041e9,
-    "SemiMajorAxis_AU": 9.53667594,
+    "semiMajorAxis_m": 1432.041e9,
+    "semiMajorAxis_au": 9.53667594,
 
-    "SiderealOrbitPeriod_Days": 10759.22,
-    "TropicalOrbitPeriod_Days": 10746.94,
+    "siderealOrbitPeriod_days": 10759.22,
+    "tropicalOrbitPeriod_days": 10746.94,
 
-    "Periapsis_M": 1357.554e9,
-    "Apoapsis_M": 1506.527e9,
+    "periapsis_m": 1357.554e9,
+    "apoapsis_m": 1506.527e9,
 
-    "MaxVelocity_KMs": 10.18,
-    "MinVelocity_KMs": 9.09,
+    "maxVelocity_kms": 10.18,
+    "minVelocity_kms": 9.09,
 
-    "Eccentricity": 0.05386179,
+    "eccentricity": 0.05386179,
 
-    "Inclination_Deg": 2.48599187,
+    "inclination_deg": 2.48599187,
 
-    "MeanLongitude_Deg": 49.95424423,
-    "LongitudeOfPeriapsis_Deg": 92.59887831,
-    "LongitudeOfAscendingNode_Deg": 113.66242448,
+    "meanLongitude_deg": 49.95424423,
+    "longitudeOfPeriapsis_deg": 92.59887831,
+    "longitudeOfAscendingNode_deg": 113.66242448,
 
-    "ArgumentOfPeriapsis_Deg": null,
+    "argumentOfPeriapsis_deg": null,
 
-    "AxialTilt_Deg": 26.73,
+    "axialTilt_deg": 26.73,
 
-    "SiderealRotationPeriod_Hrs": 10.656,
-    "SiderealRotationPeriod_Days": 0.44401,
+    "siderealRotationPeriod_hrs": 10.656,
+    "siderealRotationPeriod_days": 0.44401,
 
-    "Color": "F8DE7E"
+    "color": "F8DE7E"
   },
 
   "Uranus": {
-    "Mass_KG": 86.8099e24,
+    "mass_kg": 86.8099e24,
 
-    "MeanRadius_Ratio": 3.981,
-    "MeanRadius_M": 25362e3,
-    "EquatorialRadius_M": 25559.0e3,
-    "PolarRadius_M": 24973.0e3,
+    "meanRadius_ratio": 3.981,
+    "meanRadius_m": 25362e3,
+    "equatorialRadius_m": 25559.0e3,
+    "polarRadius_m": 24973.0e3,
 
-    "SurfaceGravity": 8.87,
-    "SurfaceAcceleration": 8.69,
+    "surfaceGravity": 8.87,
+    "surfaceAcceleration": 8.69,
 
-    "SemiMajorAxis_M": 2867.043e9,
-    "SemiMajorAxis_AU": 19.18916464,
+    "semiMajorAxis_m": 2867.043e9,
+    "semiMajorAxis_au": 19.18916464,
 
-    "SiderealOrbitPeriod_Days": 30685.4,
-    "TropicalOrbitPeriod_Days": 30588.74,
+    "siderealOrbitPeriod_days": 30685.4,
+    "tropicalOrbitPeriod_days": 30588.74,
 
-    "Periapsis_M": 2732.696e9,
-    "Apoapsis_M": 3001.39e9,
+    "periapsis_m": 2732.696e9,
+    "apoapsis_m": 3001.39e9,
 
-    "MaxVelocity_KMs": 7.11,
-    "MinVelocity_KMs": 6.49,
+    "maxVelocity_kms": 7.11,
+    "minVelocity_kms": 6.49,
 
-    "Eccentricity": 0.04725744,
+    "eccentricity": 0.04725744,
 
-    "Inclination_Deg": 0.77263783,
+    "inclination_deg": 0.77263783,
 
-    "MeanLongitude_Deg": 313.23810451,
-    "LongitudeOfPeriapsis_Deg": 170.9542763,
-    "LongitudeOfAscendingNode_Deg": 74.01692503,
+    "meanLongitude_deg": 313.23810451,
+    "longitudeOfPeriapsis_deg": 170.9542763,
+    "longitudeOfAscendingNode_deg": 74.01692503,
 
-    "ArgumentOfPeriapsis_Deg": null,
+    "argumentOfPeriapsis_deg": null,
 
-    "AxialTilt_Deg": 97.77,
+    "axialTilt_deg": 97.77,
 
-    "SiderealRotationPeriod_Hrs": -17.24,
-    "SiderealRotationPeriod_Days": -0.71833,
+    "siderealRotationPeriod_hrs": -17.24,
+    "siderealRotationPeriod_days": -0.71833,
 
-    "Color": "0xAFDBF5"
+    "color": "0xAFDBF5"
   },
 
   "Neptune": {
-    "Mass_KG": 102.4092e24,
+    "mass_kg": 102.4092e24,
 
-    "MeanRadius_Ratio": 3.865,
-    "MeanRadius_M": 24622e3,
-    "EquatorialRadius_M": 24764.0e3,
-    "PolarRadius_M": 24341.0e3,
+    "meanRadius_ratio": 3.865,
+    "meanRadius_m": 24622e3,
+    "equatorialRadius_m": 24764.0e3,
+    "polarRadius_m": 24341.0e3,
 
-    "SurfaceGravity": 11.15,
-    "SurfaceAcceleration": 11.0,
+    "surfaceGravity": 11.15,
+    "surfaceAcceleration": 11.0,
 
-    "SemiMajorAxis_M": 4514.953e9,
-    "SemiMajorAxis_AU": 30.06992276,
+    "semiMajorAxis_m": 4514.953e9,
+    "semiMajorAxis_au": 30.06992276,
 
-    "SiderealOrbitPeriod_Days": 60189.0,
-    "TropicalOrbitPeriod_Days": 59799.9,
+    "siderealOrbitPeriod_days": 60189.0,
+    "tropicalOrbitPeriod_days": 59799.9,
 
-    "Periapsis_M": 4471.05e9,
-    "Apoapsis_M": 4558.857e9,
+    "periapsis_m": 4471.05e9,
+    "apoapsis_m": 4558.857e9,
 
-    "MaxVelocity_KMs": 5.5,
-    "MinVelocity_KMs": 5.37,
+    "maxVelocity_kms": 5.5,
+    "minVelocity_kms": 5.37,
 
-    "Eccentricity": 0.00859048,
+    "eccentricity": 0.00859048,
 
-    "Inclination_Deg": 1.77004347,
+    "inclination_deg": 1.77004347,
 
-    "MeanLongitude_Deg": -55.12002969,
-    "LongitudeOfPeriapsis_Deg": 44.96476227,
-    "LongitudeOfAscendingNode_Deg": 131.78422574,
+    "meanLongitude_deg": -55.12002969,
+    "longitudeOfPeriapsis_deg": 44.96476227,
+    "longitudeOfAscendingNode_deg": 131.78422574,
 
-    "ArgumentOfPeriapsis_Deg": null,
+    "argumentOfPeriapsis_deg": null,
 
-    "AxialTilt_Deg": 28.32,
+    "axialTilt_deg": 28.32,
 
-    "SiderealRotationPeriod_Hrs": 16.11,
-    "SiderealRotationPeriod_Days": 0.67125,
+    "siderealRotationPeriod_hrs": 16.11,
+    "siderealRotationPeriod_days": 0.67125,
 
-    "Color": "0x4666FF"
+    "color": "0x4666FF"
   }
 }
