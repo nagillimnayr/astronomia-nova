@@ -12,6 +12,13 @@ const Scene = dynamic(
     ssr: false,
   }
 );
+const SolarSystemScene = dynamic(
+  () =>
+    import('~/components/scenes/SolarSystemScene').then((mod) => mod.default),
+  {
+    ssr: false,
+  }
+);
 
 const Home: NextPage = () => {
   return (
@@ -45,7 +52,7 @@ const Home: NextPage = () => {
             id="canvas-holder"
             className="h-min-[42rem] flex h-[42rem] min-w-full flex-col items-center justify-center "
           >
-            <Scene />
+            <SolarSystemScene />
           </div>
 
           {/* <div className="grid grid-cols-1 gap-4  sm:grid-cols-2 md:gap-8">
