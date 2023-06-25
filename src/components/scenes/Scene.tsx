@@ -13,7 +13,10 @@ import {
 import { HUD } from '~/simulation/components/HUD/HUD';
 import { camState } from '~/simulation/state/CamState';
 
-const Scene = () => {
+type SceneProps = {
+  children?: React.ReactNode;
+};
+const Scene = (props: SceneProps) => {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <div className="h-min-full relative flex h-full w-full flex-col justify-center">
@@ -58,7 +61,7 @@ const Scene = () => {
                 camState.setControls(controls);
               }}
             /> */}
-            <Simulation />
+            <Simulation>{props.children}</Simulation>
             {/* <Stats /> */}
             {/* <Perf /> */}
           </XR>
