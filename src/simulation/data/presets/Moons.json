@@ -5,9 +5,6 @@
 
         "semiMajorAxis_m": 0.3844e9,
 
-        "siderealOrbitPeriod_days": ,
-        "tropicalOrbitPeriod_Days": ,
-
         "periapsis_M": 0.3633e9,
         "apoapsis_M": 0.4055e9,
         
@@ -19,12 +16,12 @@
         "eccentricity": 0.0549,
 
         "inclination_deg": 5.145,
-        "longitudeOfAscendingNode_deg": ,
-        "argumentOfPeriapsis_deg": ,
+        "longitudeOfAscendingNode_deg": 125.08,
+        "argumentOfPeriapsis_deg": 318.15,
         
         "axialTilt_deg": 6.68,
         
-        "siderealRotationPeriod_hr": 655.720,
+        "siderealRotationPeriod_hr": 655.720
     },
 
     "Phobos": {
