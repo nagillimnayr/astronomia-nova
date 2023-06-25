@@ -17,7 +17,7 @@ import { RetrogradeContext } from '../Retrograde/RetrogradeContext';
 import { BodyMesh } from '../Body/BodyMesh';
 
 export type UpdateFn = (deltaTime: number) => void;
-const EarthMars = () => {
+const SunEarthMars = () => {
   const [
     sunTexture,
     mercuryTexture,
@@ -101,4 +101,4 @@ const EarthMars = () => {
   );
 };
 
-export default EarthMars;
+export default SunEarthMars;

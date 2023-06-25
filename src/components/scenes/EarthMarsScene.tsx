@@ -13,7 +13,7 @@ import {
 import { HUD } from '~/simulation/components/HUD/HUD';
 import { camState } from '~/simulation/state/CamState';
 import SolarSystem from '~/simulation/components/SolarSystem/SolarSystem';
-import EarthMars from '~/simulation/components/SolarSystem/EarthMars';
+import SunEarthMars from '~/simulation/components/SolarSystem/SunEarthMars';
 
 const EarthMarsScene = () => {
   return (
@@ -44,7 +44,7 @@ const EarthMarsScene = () => {
             />
 
             <Simulation>
-              <EarthMars />
+              <SunEarthMars />
             </Simulation>
             {/* <Stats /> */}
             {/* <Perf /> */}

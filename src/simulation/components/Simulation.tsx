@@ -10,7 +10,7 @@ import { camState } from '../state/CamState';
 import { keplerTreeState } from '../state/keplerTreeState';
 import { Leva, useControls } from 'leva';
 import { DebugPanel } from './leva/DebugPanel';
-import EarthMars from './SolarSystem/EarthMars';
+import SunEarthMars from './SolarSystem/SunEarthMars';
 import { retrogradeState } from './Retrograde/retrogradeState';
 import { selectState } from '../state/SelectState';
 import { SelectionPanel } from './leva/SelectionPanel';
