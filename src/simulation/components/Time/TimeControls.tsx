@@ -13,7 +13,7 @@ const TimeControls = () => {
         <PauseButton />
       </div>
 
-      <div className="bg-translucent pointer-events-auto my-2 box-content flex w-60 min-w-fit flex-row items-center justify-center self-center rounded-full px-2 py-2">
+      <div className="bg-translucent pointer-events-auto my-2 box-content flex w-48 min-w-fit flex-row items-center justify-center self-center rounded-full px-2 py-2">
         <DecreaseButton />
         <div className="mx-2">
           <TimescaleSlider />
