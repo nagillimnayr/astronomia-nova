@@ -1,13 +1,18 @@
 import { folder, useControls } from 'leva';
 import { debugState } from '~/simulation/state/DebugState';
+import Annotation from '../Annotation';
 export const DebugPanel = () => {
   const debug = useControls('debug', {
-    showBoundingBoxes: false,
-    showArrows: false,
+    boundingBoxes: false,
+    arrows: false,
+    annotations: true,
+    trajectories: true,
   });
 
-  debugState.showBoundingBoxes = debug.showBoundingBoxes;
-  debugState.showArrows = debug.showArrows;
+  debugState.boundingBoxes = debug.boundingBoxes;
+  debugState.arrows = debug.arrows;
+  debugState.annotations = debug.annotations;
+  debugState.trajectories = debug.trajectories;
 
   return <></>;
 };

@@ -1,10 +1,14 @@
 import { proxy } from 'valtio';
 
 type DebugStateObj = {
-  showBoundingBoxes: boolean;
-  showArrows: boolean;
+  boundingBoxes: boolean;
+  arrows: boolean;
+  annotations: boolean;
+  trajectories: boolean;
 };
 export const debugState = proxy<DebugStateObj>({
-  showBoundingBoxes: false,
-  showArrows: false,
+  boundingBoxes: false,
+  arrows: false,
+  annotations: true,
+  trajectories: true,
 });

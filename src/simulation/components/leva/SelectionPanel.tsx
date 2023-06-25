@@ -9,14 +9,14 @@ export const SelectionPanel = () => {
   const snap = useSnapshot(selectState);
   const [{ name }, set] = useControls('Selected', () => ({
     name: { value: ' ', editable: false },
-    focus: {
-      value: false,
-      onChange: (isFocus: boolean) => {
-        if (isFocus && selectState.selected) {
-          camState.setFocus(selectState.selected);
-        }
-      },
-    },
+    // focus: {
+    //   value: false,
+    //   onChange: (isFocus: boolean) => {
+    //     if (isFocus && selectState.selected) {
+    //       camState.setFocus(selectState.selected);
+    //     }
+    //   },
+    // },
   }));
 
   if (snap.selected) {
