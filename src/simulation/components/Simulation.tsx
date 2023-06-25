@@ -17,8 +17,10 @@ import { SelectionPanel } from './leva/SelectionPanel';
 import { CameraPanel } from './leva/CameraPanel';
 import { CameraTarget } from './Camera/CameraTarget';
 
-//type SimProps = {};
-const Simulation = () => {
+type SimProps = {
+  children: React.ReactNode;
+};
+const Simulation = (props: SimProps) => {
   console.log('render Simulation');
   // function for accessing scene state
   const getState = useThree((state) => state.get);
@@ -55,7 +57,8 @@ const Simulation = () => {
     <>
       <group>
         {/* <polarGridHelper args={[24, 16, 24, 64]} /> */}
-        <SolarSystem />
+        {/* <SolarSystem /> */}
+        {props.children}
         {/* <EarthMars /> */}
       </group>
       <DebugPanel />
