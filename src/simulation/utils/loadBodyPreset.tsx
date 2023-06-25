@@ -7,6 +7,7 @@ export type PresetKey =
   | 'Mercury'
   | 'Venus'
   | 'Earth'
+  | 'Moon'
   | 'Mars'
   | 'Jupiter'
   | 'Saturn'
@@ -14,23 +15,23 @@ export type PresetKey =
   | 'Neptune';
 
 interface PlanetData {
-  Mass_KG: number;
-  MeanRadius_M: number;
-  SemiMajorAxis_M: number;
-  SiderealOrbitPeriod_Days: number;
-  Periapsis_M: number;
-  Apoapsis_M: number;
-  MaxVelocity_KMs: number;
-  MinVelocity_KMs: number;
-  Eccentricity: number;
-  Inclination_Deg: number;
-  MeanLongitude_Deg: number;
-  LongitudeOfPeriapsis_Deg: number;
-  LongitudeOfAscendingNode_Deg: number;
-  AxialTilt_Deg: number;
-  SiderealRotationPeriod_Hrs: number;
-  SiderealRotationPeriod_Days: number;
-  Color: string;
+  mass_kg: number;
+  meanRadius_m: number;
+  semiMajorAxis_m: number;
+  // SiderealOrbitPeriod_Days: number;
+  periapsis_m: number;
+  apoapsis_m: number;
+  maxVelocity_kms: number;
+  minVelocity_kms: number;
+  eccentricity: number;
+  inclination_deg: number;
+  meanLongitude_deg: number;
+  longitudeOfPeriapsis_deg: number;
+  longitudeOfAscendingNode_deg: number;
+  axialTilt_deg: number;
+  siderealRotationPeriod_hrs: number;
+  siderealRotationPeriod_days: number;
+  color: string;
 }
 interface PlanetDataJSON {
   Mercury: PlanetData;
