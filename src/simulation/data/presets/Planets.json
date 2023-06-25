@@ -23,8 +23,8 @@
 
     "synodicPeriod_days": 115.88,
 
-    "maxVelocity_km/s": 58.98,
-    "minVelocity_km/s": 38.86,
+    "maxVelocity_kms": 58.98,
+    "minVelocity_kms": 38.86,
 
     "eccentricity": 0.20563661,
 
@@ -69,8 +69,8 @@
 
     "synodicPeriod_days": 583.92,
 
-    "maxVelocity_km/s": 35.26,
-    "minVelocity_km/s": 34.79,
+    "maxVelocity_kms": 35.26,
+    "minVelocity_kms": 34.79,
 
     "eccentricity": 0.0068,
 
@@ -109,8 +109,8 @@
     "periapsis_m": 147.095e9,
     "apoapsis_m": 152.1e9,
 
-    "maxVelocity_km/s": 30.29,
-    "minVelocity_km/s": 29.29,
+    "maxVelocity_kms": 30.29,
+    "minVelocity_kms": 29.29,
 
     "eccentricity": 0.01671022,
 
@@ -141,8 +141,8 @@
     "synodicPeriod_days": 29.53,
     "siderealPeriod_days": 27.322,
 
-    "maxVelocity_km/s": 1.082,
-    "minVelocity_km/s": 0.97,
+    "maxVelocity_kms": 1.082,
+    "minVelocity_kms": 0.97,
 
     "eccentricity": 0.0554,
 
@@ -154,7 +154,10 @@
 
     "siderealRotationPeriod_hr": 655.72,
 
-    "meanAnomaly_deg_j2000": 135.27
+    "meanAnomaly_deg_j2000": 135.27,
+
+    "argPeriapsisPrecession_yr": 5.997,
+    "longitudeAscendingNodePrecession_yr": 18.6
   },
 
   "EarthMoonBarycenter": {
@@ -189,8 +192,8 @@
     "periapsis_m": 206.65e9,
     "apoapsis_m": 249.261e9,
 
-    "maxVelocity_km/s": 26.5,
-    "minVelocity_km/s": 21.97,
+    "maxVelocity_kms": 26.5,
+    "minVelocity_kms": 21.97,
 
     "eccentricity": 0.0933941,
 
@@ -230,8 +233,8 @@
     "periapsis_m": 740.595e9,
     "apoapsis_m": 816.363e9,
 
-    "maxVelocity_km/s": 13.72,
-    "minVelocity_km/s": 12.44,
+    "maxVelocity_kms": 13.72,
+    "minVelocity_kms": 12.44,
 
     "eccentricity": 0.04838624,
 
@@ -271,8 +274,8 @@
     "periapsis_m": 1357.554e9,
     "apoapsis_m": 1506.527e9,
 
-    "maxVelocity_km/s": 10.18,
-    "minVelocity_km/s": 9.09,
+    "maxVelocity_kms": 10.18,
+    "minVelocity_kms": 9.09,
 
     "eccentricity": 0.05386179,
 
@@ -312,8 +315,8 @@
     "periapsis_m": 2732.696e9,
     "apoapsis_m": 3001.39e9,
 
-    "maxVelocity_km/s": 7.11,
-    "minVelocity_km/s": 6.49,
+    "maxVelocity_kms": 7.11,
+    "minVelocity_kms": 6.49,
 
     "eccentricity": 0.04725744,
 
@@ -353,8 +356,8 @@
     "periapsis_m": 4471.05e9,
     "apoapsis_m": 4558.857e9,
 
-    "maxVelocity_km/s": 5.5,
-    "minVelocity_km/s": 5.37,
+    "maxVelocity_kms": 5.5,
+    "minVelocity_kms": 5.37,
 
     "eccentricity": 0.00859048,
 
