@@ -20,10 +20,11 @@ type OrbitData = {
   eccentricity: number;
   inclination: number;
   longitudeOfAscendingNode: number;
-  longitudeOfPeriapsis: number;
+  // longitudeOfPeriapsis: number;
   argumentOfPeriapsis: number;
   axialTilt: number;
-  meanLongitude: number;
+  // meanLongitude: number;
+  trueAnomaly: number;
 };
 
 // intersection type to combine the data needed by Orbit and the data needed by Body
