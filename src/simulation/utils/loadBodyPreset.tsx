@@ -58,8 +58,8 @@ export default function loadBodyPreset(name: PresetKey) {
 
   // extract data from JSON
   const mass = planetData.mass_kg;
-  const initialPosition: number = planetData.periapsis_m / DIST_MULT;
-  const initialVelocity: number =
+  const periapsis: number = planetData.periapsis_m / DIST_MULT;
+  const maxVelocity: number =
     (planetData.maxVelocity_kms * KM_TO_M) / DIST_MULT;
   const meanRadius = planetData.meanRadius_m / EARTH_RADIUS / 2; // scale to be relative to Earth's radius
 
@@ -81,8 +81,8 @@ export default function loadBodyPreset(name: PresetKey) {
     name: name as string,
     color,
     mass,
-    initialPosition,
-    initialVelocity,
+    periapsis,
+    maxVelocity,
     meanRadius,
     eccentricity,
     inclination,
