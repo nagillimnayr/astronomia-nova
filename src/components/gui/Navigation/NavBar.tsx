@@ -49,6 +49,7 @@ const NavBar = () => {
         <NavBtn href="sim">Solar System</NavBtn>
         <NavBtn href="earthMars">Stellae Martis</NavBtn>
         <NavBtn href="kepler">Kepler</NavBtn>
+        <NavBtn href="equations">Equations</NavBtn>
         {/* <NavBtn href="equations">Equations</NavBtn>
         <NavBtn href="kepler">Kepler</NavBtn>
         <NavBtn href="timeline">Timeline</NavBtn>
