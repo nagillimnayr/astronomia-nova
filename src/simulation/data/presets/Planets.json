@@ -42,6 +42,9 @@
     "siderealRotationPeriod_hrs": 1407.6,
     "siderealRotationPeriod_days": 58.6462,
 
+    "meanAnomaly_deg_j2000": 1.747958829169579e2,
+    "trueAnomaly_deg_j2000": 1.764950862746721e2,
+
     "color": "0xF7F7F7"
   },
 
@@ -86,6 +89,9 @@
 
     "siderealRotationPeriod_hrs": -5832.6,
     "siderealRotationPeriod_days": -243.018,
+
+    "meanAnomaly_deg_j2000": 5.011477187404461e1,
+    "trueAnomaly_deg_j2000": 5.071202823960058e1,
 
     "color": "0xFCF75E"
   },
@@ -207,12 +213,15 @@
     "longitudeOfPeriapsis_deg": -23.94362959,
     "longitudeOfAscendingNode_deg": 49.55953891,
 
-    "argumentOfPeriapsis_deg": null,
+    "argumentOfPeriapsis_deg": 2.865373830861993e2,
 
     "axialTilt_deg": 25.19,
 
     "siderealRotationPeriod_hrs": 24.6229,
     "siderealRotationPeriod_days": 1.02595676,
+
+    "meanAnomaly_deg_j2000": 1.935648274725794e1,
+    "trueAnomaly_deg_j2000": 2.333319664407224e1,
 
     "color": "0xFF4F00"
   },
@@ -248,12 +257,15 @@
     "longitudeOfPeriapsis_deg": 14.72847983,
     "longitudeOfAscendingNode_deg": 100.47390909,
 
-    "argumentOfPeriapsis_deg": null,
+    "argumentOfPeriapsis_deg": 2.750690666066695e2,
 
     "axialTilt_deg": 3.13,
 
     "siderealRotationPeriod_hrs": 9.925,
     "siderealRotationPeriod_days": 0.41354,
+
+    "meanAnomaly_deg_j2000": 1.881562710723796e1,
+    "trueAnomaly_deg_j2000": 2.072855615535333e1,
 
     "color": "0xF4C430"
   },
@@ -289,12 +301,15 @@
     "longitudeOfPeriapsis_deg": 92.59887831,
     "longitudeOfAscendingNode_deg": 113.66242448,
 
-    "argumentOfPeriapsis_deg": null,
+    "argumentOfPeriapsis_deg": 3.358655937185864e2,
 
     "axialTilt_deg": 26.73,
 
     "siderealRotationPeriod_hrs": 10.656,
     "siderealRotationPeriod_days": 0.44401,
+
+    "meanAnomaly_deg_j2000": 3.204255572592746e2,
+    "trueAnomaly_deg_j2000": 3.161382469801452e2,
 
     "color": "F8DE7E"
   },
@@ -330,12 +345,15 @@
     "longitudeOfPeriapsis_deg": 170.9542763,
     "longitudeOfAscendingNode_deg": 74.01692503,
 
-    "argumentOfPeriapsis_deg": null,
+    "argumentOfPeriapsis_deg": 9.659158989666786e1,
 
     "axialTilt_deg": 97.77,
 
     "siderealRotationPeriod_hrs": -17.24,
     "siderealRotationPeriod_days": -0.71833,
+
+    "meanAnomaly_deg_j2000": 1.428889650360195e2,
+    "trueAnomaly_deg_j2000": 1.458267121145811e2,
 
     "color": "0xAFDBF5"
   },
@@ -371,12 +389,15 @@
     "longitudeOfPeriapsis_deg": 44.96476227,
     "longitudeOfAscendingNode_deg": 131.78422574,
 
-    "argumentOfPeriapsis_deg": null,
+    "argumentOfPeriapsis_deg": 2.661071489542577e2,
 
     "axialTilt_deg": 28.32,
 
     "siderealRotationPeriod_hrs": 16.11,
     "siderealRotationPeriod_days": 0.67125,
+
+    "meanAnomaly_deg_j2000": 2.672982359930508e2,
+    "trueAnomaly_deg_j2000": 2.660092669094219e2,
 
     "color": "0x4666FF"
   }

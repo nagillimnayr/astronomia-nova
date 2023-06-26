@@ -25,8 +25,8 @@ interface PlanetData {
   minVelocity_kms: number;
   eccentricity: number;
   inclination_deg: number;
-  meanLongitude_deg: number;
-  longitudeOfPeriapsis_deg: number;
+  // meanLongitude_deg: number;
+  // longitudeOfPeriapsis_deg: number;
   longitudeOfAscendingNode_deg: number;
   axialTilt_deg: number;
   siderealRotationPeriod_hrs: number;
