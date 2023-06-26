@@ -21,6 +21,7 @@ import {
   type Vector3,
   type Texture,
   BoxHelper,
+  Vector3Tuple,
 } from 'three';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 import KeplerBody from '../../classes/KeplerBody';
@@ -47,17 +48,17 @@ declare module '@react-three/fiber' {
   }
 }
 
-export type BodyAttributes = {
+export type BodyArgs = {
   name: string;
   color: ColorRepresentation;
   mass: number;
-  initialPosition: number;
-  initialVelocity: number;
   meanRadius: number;
+  initialPosition: Vector3;
+  initialVelocity: Vector3;
 };
 type BodyProps = {
   children?: React.ReactNode;
-  args: BodyAttributes;
+  args: BodyArgs;
   // texturePath?: string;
 };
 
@@ -113,7 +114,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
           addSelfToTree(body);
         }}
         name={name ?? ''}
-        args={[mass, [initialPosition, 0, 0], [0, 0, -initialVelocity]]}
+        args={[mass, initialPosition.toArray(), initialVelocity.toArray()]}
       >
         {/* <BodyMesh
           name={props.args.name}
