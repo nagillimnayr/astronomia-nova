@@ -37,7 +37,7 @@ export function getVelocityDirectionAtRadius(
   trueAnomaly: number,
   semiMajorAxis: number,
   semiMinorAxis: number
-): Vector3Tuple {
+): Vector3 {
   // parameterize to get the x, y coordinates at radius
   const radians = degToRad(trueAnomaly);
   const x = radius * Math.cos(radians);
@@ -47,6 +47,6 @@ export function getVelocityDirectionAtRadius(
   const dirX = -y * semiMajorAxis ** 2;
   const dirY = x * semiMinorAxis ** 2;
 
-  const velocityDirection = new Vector3(dirX, 0, -dirY);
-  return velocityDirection.normalize().toArray();
+  const velocityDirection = new Vector3(dirX, 0, -dirY).normalize();
+  return velocityDirection;
 }
