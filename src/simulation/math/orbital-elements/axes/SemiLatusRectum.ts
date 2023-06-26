@@ -1,13 +1,12 @@
-import { square } from 'mathjs';
-
-const fromEccentricity = (semiMajorAxis: number, eccentricity: number) => {
-  return semiMajorAxis * (1.0 - square(eccentricity));
+export const getSemiLatusRectumFromEccentricity = (
+  semiMajorAxis: number,
+  eccentricity: number
+) => {
+  return semiMajorAxis * (1.0 - eccentricity ** 2);
 };
-const fromApsides = (apoapsis: number, periapsis: number) => {
+export const getSemiLatusRectumFromApsides = (
+  apoapsis: number,
+  periapsis: number
+) => {
   return (2.0 * apoapsis * periapsis) / (apoapsis + periapsis);
-};
-
-export const SemiLatusRectum = {
-  fromEccentricity,
-  fromApsides,
 };
