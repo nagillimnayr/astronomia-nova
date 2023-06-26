@@ -87,6 +87,7 @@ export const Orbit = (props: OrbitProps) => {
     [preset.periapsis, preset.maxVelocity, centralMass]
   );
 
+  // memoize orbital state vectors at j2000
   const [initialPosition, initialVelocity] = useMemo(() => {
     // get orbital radius at true anomaly
     const radius = getRadiusAtTrueAnomaly(
