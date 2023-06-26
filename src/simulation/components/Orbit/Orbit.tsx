@@ -9,7 +9,7 @@ import { CentralMassContext } from '~/simulation/context/CentralMassContext';
 import { calculateOrbitFromPeriapsis } from '~/simulation/math/orbit/calculateOrbit';
 import { DIST_MULT } from '~/simulation/utils/constants';
 import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
-import { Mesh, Object3D } from 'three';
+import { Mesh, Object3D, Texture } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { RetrogradeContext } from '../Retrograde/RetrogradeContext';
 import { retrogradeState } from '../Retrograde/retrogradeState';
@@ -32,7 +32,7 @@ type PresetData = OrbitData & BodyAttributes;
 type OrbitProps = {
   children?: React.ReactNode;
   name: PresetKey;
-  texturePath: string;
+  texture: Texture;
 };
 
 export const Orbit = (props: OrbitProps) => {
@@ -104,7 +104,7 @@ export const Orbit = (props: OrbitProps) => {
           name={props.name}
           meanRadius={preset.meanRadius}
           color={preset.color}
-          texturePath={props.texturePath}
+          texture={props.texture}
           body={bodyRef}
         />
       </KeplerTreeContext.Provider>

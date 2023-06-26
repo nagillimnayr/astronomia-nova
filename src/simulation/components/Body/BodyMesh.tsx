@@ -36,7 +36,7 @@ type BodyMeshProps = {
   name: string;
   body: MutableRefObject<KeplerBody>;
   meanRadius: number;
-  texturePath: string;
+  texture: Texture;
   color: ColorRepresentation;
 };
 
@@ -46,7 +46,7 @@ export const BodyMesh = (props: BodyMeshProps) => {
   const [isVisible, setVisible] = useState<boolean>(true);
   const trailRef = useRef<Line2>(null!);
 
-  const texture = useTexture(props.texturePath ?? '');
+  // const texture = useTexture(props.texturePath ?? '');
 
   // const [controls, set] = useControls(props.name, () => ({
   //   select: { value: false },
@@ -125,7 +125,7 @@ export const BodyMesh = (props: BodyMeshProps) => {
           onPointerLeave={() => setHovered(false)}
         >
           <sphereGeometry />
-          <meshBasicMaterial map={texture} />
+          <meshBasicMaterial map={props.texture} />
 
           <Annotation annotation={props.name} />
         </mesh>
