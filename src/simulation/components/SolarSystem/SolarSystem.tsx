@@ -27,7 +27,7 @@ const SolarSystem = () => {
     saturnTexture,
     uranusTexture,
     neptuneTexture,
-  ] = [
+  ] = useTexture([
     'assets/textures/2k_sun.jpg',
     'assets/textures/2k_mercury.jpg',
     'assets/textures/2k_venus_atmosphere.jpg',
@@ -37,7 +37,7 @@ const SolarSystem = () => {
     'assets/textures/2k_saturn.jpg',
     'assets/textures/2k_uranus.jpg',
     'assets/textures/2k_neptune.jpg',
-  ];
+  ]);
   // use ref to store root of tree
   const rootRef = useRef<KeplerBody>(null!);
 
@@ -84,17 +84,17 @@ const SolarSystem = () => {
               name="Sun"
               color="0xfdee00"
               meanRadius={1.5}
-              texturePath={sunTexture}
+              texture={sunTexture}
               body={rootRef}
             />
-            <Orbit name={'Mercury'} texturePath={mercuryTexture}></Orbit>
-            <Orbit name={'Venus'} texturePath={venusTexture}></Orbit>
-            <Orbit name={'Earth'} texturePath={earthTexture}></Orbit>
-            <Orbit name={'Mars'} texturePath={marsTexture}></Orbit>
-            <Orbit name={'Jupiter'} texturePath={jupiterTexture}></Orbit>
-            <Orbit name={'Saturn'} texturePath={saturnTexture}></Orbit>
-            <Orbit name={'Uranus'} texturePath={uranusTexture}></Orbit>
-            <Orbit name={'Neptune'} texturePath={neptuneTexture}></Orbit>
+            <Orbit name={'Mercury'} texture={mercuryTexture}></Orbit>
+            <Orbit name={'Venus'} texture={venusTexture}></Orbit>
+            <Orbit name={'Earth'} texture={earthTexture}></Orbit>
+            <Orbit name={'Mars'} texture={marsTexture}></Orbit>
+            <Orbit name={'Jupiter'} texture={jupiterTexture}></Orbit>
+            <Orbit name={'Saturn'} texture={saturnTexture}></Orbit>
+            <Orbit name={'Uranus'} texture={uranusTexture}></Orbit>
+            <Orbit name={'Neptune'} texture={neptuneTexture}></Orbit>
           </Body>
         </Selection>
       </CelestialSphere>

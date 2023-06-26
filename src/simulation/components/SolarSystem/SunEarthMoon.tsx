@@ -18,27 +18,22 @@ import { BodyMesh } from '../Body/BodyMesh';
 
 export type UpdateFn = (deltaTime: number) => void;
 const EarthMoon = () => {
-  const [
-    sunTexture,
-    mercuryTexture,
-    venusTexture,
-    earthTexture,
-    marsTexture,
-    jupiterTexture,
-    saturnTexture,
-    uranusTexture,
-    neptuneTexture,
-  ] = [
+  const [sunTexture, earthTexture, moonTexture] = useTexture([
     'assets/textures/2k_sun.jpg',
-    'assets/textures/2k_mercury.jpg',
-    'assets/textures/2k_venus_atmosphere.jpg',
     'assets/textures/2k_earth_daymap.jpg',
-    'assets/textures/2k_mars.jpg',
-    'assets/textures/2k_jupiter.jpg',
-    'assets/textures/2k_saturn.jpg',
-    'assets/textures/2k_uranus.jpg',
-    'assets/textures/2k_neptune.jpg',
-  ];
+    'assets/textures/2k_moon.jpg',
+  ]);
+
+  if (!sunTexture) {
+    console.error('error: could not load sun texture');
+  }
+  if (!earthTexture) {
+    console.error('error: could not load earth texture');
+  }
+  if (!moonTexture) {
+    console.error('error: could not load moon texture');
+  }
+
   // use ref to store root of tree
   const rootRef = useRef<KeplerBody>(null!);
 
@@ -85,11 +80,11 @@ const EarthMoon = () => {
               name="Sun"
               color="0xfdee00"
               meanRadius={1.5}
-              texturePath={sunTexture}
+              texture={sunTexture}
               body={rootRef}
             />
-            <Orbit name={'Earth'} texturePath={earthTexture}>
-              <Orbit name={'Moon'} texturePath={marsTexture}></Orbit>
+            <Orbit name={'Earth'} texture={earthTexture}>
+              <Orbit name={'Moon'} texture={moonTexture}></Orbit>
             </Orbit>
           </Body>
         </Selection>

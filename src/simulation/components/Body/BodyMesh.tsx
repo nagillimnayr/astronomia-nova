@@ -36,7 +36,7 @@ type BodyMeshProps = {
   name: string;
   body: MutableRefObject<KeplerBody>;
   meanRadius: number;
-  texture: Texture;
+  texture?: Texture;
   color: ColorRepresentation;
 };
 
@@ -125,7 +125,10 @@ export const BodyMesh = (props: BodyMeshProps) => {
           onPointerLeave={() => setHovered(false)}
         >
           <sphereGeometry />
-          <meshBasicMaterial map={props.texture} />
+          <meshBasicMaterial
+            map={props.texture}
+            color={!props.texture ? props.color : undefined}
+          />
 
           <Annotation annotation={props.name} />
         </mesh>

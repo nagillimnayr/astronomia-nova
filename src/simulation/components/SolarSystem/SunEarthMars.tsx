@@ -18,27 +18,11 @@ import { BodyMesh } from '../Body/BodyMesh';
 
 export type UpdateFn = (deltaTime: number) => void;
 const SunEarthMars = () => {
-  const [
-    sunTexture,
-    mercuryTexture,
-    venusTexture,
-    earthTexture,
-    marsTexture,
-    jupiterTexture,
-    saturnTexture,
-    uranusTexture,
-    neptuneTexture,
-  ] = [
+  const [sunTexture, earthTexture, marsTexture] = useTexture([
     'assets/textures/2k_sun.jpg',
-    'assets/textures/2k_mercury.jpg',
-    'assets/textures/2k_venus_atmosphere.jpg',
     'assets/textures/2k_earth_daymap.jpg',
     'assets/textures/2k_mars.jpg',
-    'assets/textures/2k_jupiter.jpg',
-    'assets/textures/2k_saturn.jpg',
-    'assets/textures/2k_uranus.jpg',
-    'assets/textures/2k_neptune.jpg',
-  ];
+  ]);
   // use ref to store root of tree
   const rootRef = useRef<KeplerBody>(null!);
 
@@ -85,14 +69,14 @@ const SunEarthMars = () => {
               name="Sun"
               color="0xfdee00"
               meanRadius={1.5}
-              texturePath={sunTexture}
+              texture={sunTexture}
               body={rootRef}
             />
             <RetrogradeContext.Provider value={'referenceBody'}>
-              <Orbit name={'Earth'} texturePath={earthTexture}></Orbit>
+              <Orbit name={'Earth'} texture={earthTexture}></Orbit>
             </RetrogradeContext.Provider>
             <RetrogradeContext.Provider value={'otherBody'}>
-              <Orbit name={'Mars'} texturePath={marsTexture}></Orbit>
+              <Orbit name={'Mars'} texture={marsTexture}></Orbit>
             </RetrogradeContext.Provider>
           </Body>
         </Selection>

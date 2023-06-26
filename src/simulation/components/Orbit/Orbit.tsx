@@ -32,7 +32,7 @@ type PresetData = OrbitData & BodyAttributes;
 type OrbitProps = {
   children?: React.ReactNode;
   name: PresetKey;
-  texture: Texture;
+  texture?: Texture;
 };
 
 export const Orbit = (props: OrbitProps) => {
