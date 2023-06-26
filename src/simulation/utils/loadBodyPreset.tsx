@@ -28,15 +28,21 @@ interface PlanetData {
   // meanLongitude_deg: number;
   // longitudeOfPeriapsis_deg: number;
   longitudeOfAscendingNode_deg: number;
+  argumentOfPeriapsis_deg: number;
   axialTilt_deg: number;
   siderealRotationPeriod_hrs: number;
   siderealRotationPeriod_days: number;
+
+  meanAnomaly_deg_j2000: number;
+  trueAnomaly_deg_j2000: number;
+
   color: string;
 }
 interface PlanetDataJSON {
   Mercury: PlanetData;
   Venus: PlanetData;
   Earth: PlanetData;
+  Moon: PlanetData;
   Mars: PlanetData;
   Jupiter: PlanetData;
   Saturn: PlanetData;
@@ -48,25 +54,27 @@ export default function loadBodyPreset(name: PresetKey) {
   const index: keyof typeof jsonData = name;
   const planetData: PlanetData = jsonData[index];
 
-  const color = new Color(parseInt(planetData.Color, 16));
+  const color = new Color(parseInt(planetData.color, 16));
 
   // extract data from JSON
-  const mass = planetData.Mass_KG;
-  const initialPosition: number = planetData.Periapsis_M / DIST_MULT;
+  const mass = planetData.mass_kg;
+  const initialPosition: number = planetData.periapsis_m / DIST_MULT;
   const initialVelocity: number =
-    (planetData.MaxVelocity_KMs * KM_TO_M) / DIST_MULT;
-  const meanRadius = planetData.MeanRadius_M / EARTH_RADIUS / 2; // scale to be relative to Earth's radius
+    (planetData.maxVelocity_kms * KM_TO_M) / DIST_MULT;
+  const meanRadius = planetData.meanRadius_m / EARTH_RADIUS / 2; // scale to be relative to Earth's radius
 
-  const eccentricity = planetData.Eccentricity;
+  const eccentricity = planetData.eccentricity;
 
   // angular parameters
-  const inclination = planetData.Inclination_Deg;
-  const longitudeOfPeriapsis = planetData.LongitudeOfPeriapsis_Deg;
-  const longitudeOfAscendingNode = planetData.LongitudeOfAscendingNode_Deg;
-  const argumentOfPeriapsis = longitudeOfPeriapsis - longitudeOfAscendingNode;
-  const axialTilt = planetData.AxialTilt_Deg;
+  const inclination = planetData.inclination_deg;
+  const argumentOfPeriapsis = planetData.argumentOfPeriapsis_deg;
+  const longitudeOfAscendingNode = planetData.longitudeOfAscendingNode_deg;
+  const axialTilt = planetData.axialTilt_deg;
 
-  const meanLongitude = planetData.MeanLongitude_Deg;
+  // const meanLongitude = planetData.meanLongitude_deg;
+
+  const meanAnomaly = planetData.meanAnomaly_deg_j2000;
+  const trueAnomaly = planetData.trueAnomaly_deg_j2000;
 
   // return extracted data
   return {
@@ -79,9 +87,9 @@ export default function loadBodyPreset(name: PresetKey) {
     eccentricity,
     inclination,
     longitudeOfAscendingNode,
-    longitudeOfPeriapsis,
     argumentOfPeriapsis,
     axialTilt,
-    meanLongitude,
+    meanAnomaly,
+    trueAnomaly,
   };
 }
