@@ -1,37 +1,35 @@
-import { sqrt, square } from 'mathjs';
 import { Vector3 } from 'three';
 import { GRAV_CONST } from '~/simulation/utils/constants';
 
-const fromLinearEccentricity = (
+export function getEccentricityFromLinearEccentricity(
   semiMajorAxis: number,
   linearEccentricity: number
-) => {
+) {
   return linearEccentricity / semiMajorAxis;
-};
+}
 
-const fromAxes = (semiMajorAxis: number, semiMinorAxis: number) => {
-  return sqrt(1.0 - square(semiMinorAxis) / square(semiMajorAxis));
-};
+export function getEccentricityFromAxes(
+  semiMajorAxis: number,
+  semiMinorAxis: number
+) {
+  return Math.sqrt(1.0 - semiMinorAxis ** 2 / semiMajorAxis ** 2);
+}
 
-const fromSpecificAngularMomentum = (
+export function getEccentricityFromSpecificAngularMomentum(
   specificOrbitalEnergy: number,
   centralMass: number,
   specificAngularMomentum: Vector3
-) => {
-  return sqrt(
+) {
+  return Math.sqrt(
     1.0 +
-      (2.0 * specificOrbitalEnergy * square(specificAngularMomentum.length())) /
-        square(GRAV_CONST * centralMass)
+      (2.0 * specificOrbitalEnergy * specificAngularMomentum.length() ** 2) /
+        (GRAV_CONST * centralMass) ** 2
   );
-};
+}
 
-const fromApsides = (apoapsis: number, periapsis: number) => {
+export function getEccentricityFromApsides(
+  apoapsis: number,
+  periapsis: number
+) {
   return (apoapsis - periapsis) / (apoapsis + periapsis);
-};
-
-export const Eccentricity = {
-  fromLinearEccentricity,
-  fromAxes,
-  fromSpecificAngularMomentum,
-  fromApsides,
-};
+}

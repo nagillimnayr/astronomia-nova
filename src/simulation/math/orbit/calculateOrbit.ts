@@ -1,10 +1,10 @@
-import { SpecificOrbitalEnergy } from '../orbital-elements/SpecificOrbitalEnergy';
-import { Apoapsis } from '../orbital-elements/apsides/Apoapsis';
-import { SemiMajorAxis } from '../orbital-elements/axes/SemiMajorAxis';
-import { LinearEccentricity } from '../orbital-elements/LinearEccentricity';
-import { Eccentricity } from '../orbital-elements/Eccentricity';
-import { SemiLatusRectum } from '../orbital-elements/axes/SemiLatusRectum';
-import { SemiMinorAxis } from '../orbital-elements/axes/SemiMinorAxis';
+import { getSpecificOrbitalEnergy } from '../orbital-elements/SpecificOrbitalEnergy';
+import { getApoapsisFromPeriapsis } from '../orbital-elements/apsides/Apoapsis';
+import { getSemiMajorAxisFromSpecificOrbitalEnergy } from '../orbital-elements/axes/SemiMajorAxis';
+import { getLinearEccentricityFromApsis } from '../orbital-elements/LinearEccentricity';
+import { getEccentricityFromLinearEccentricity } from '../orbital-elements/Eccentricity';
+import { getSemiLatusRectumFromEccentricity } from '../orbital-elements/axes/SemiLatusRectum';
+import { getSemiMinorAxisFromSemiLatusRectum } from '../orbital-elements/axes/SemiMinorAxis';
 
 export const calculateOrbitFromPeriapsis = (
   periapsis: number,
@@ -12,41 +12,41 @@ export const calculateOrbitFromPeriapsis = (
   centralMass: number
 ) => {
   // calculate specificOrbitalEnergy
-  const specificOrbitalEnergy = SpecificOrbitalEnergy.calculate(
+  const specificOrbitalEnergy = getSpecificOrbitalEnergy(
     maxOrbitalSpeed,
     centralMass,
     periapsis
   );
 
   // calculate semiMajorAxis
-  const semiMajorAxis = SemiMajorAxis.getFromSpecificOrbitalEnergy(
+  const semiMajorAxis = getSemiMajorAxisFromSpecificOrbitalEnergy(
     centralMass,
     specificOrbitalEnergy
   );
 
   // calculate apoapsis
-  const apoapsis = Apoapsis.fromPeriapsis(semiMajorAxis, periapsis);
+  const apoapsis = getApoapsisFromPeriapsis(semiMajorAxis, periapsis);
 
   // linear eccentricity
-  const linearEccentricity = LinearEccentricity.fromApsis(
+  const linearEccentricity = getLinearEccentricityFromApsis(
     semiMajorAxis,
     apoapsis
   );
 
   // eccentricity
-  const eccentricity = Eccentricity.fromLinearEccentricity(
+  const eccentricity = getEccentricityFromLinearEccentricity(
     semiMajorAxis,
     linearEccentricity
   );
 
   // semiLatusRectum
-  const semiLatusRectum = SemiLatusRectum.fromEccentricity(
+  const semiLatusRectum = getSemiLatusRectumFromEccentricity(
     semiMajorAxis,
     eccentricity
   );
 
   // semiMinorAxis
-  const semiMinorAxis = SemiMinorAxis.fromSemiLatusRectum(
+  const semiMinorAxis = getSemiMinorAxisFromSemiLatusRectum(
     semiMajorAxis,
     semiLatusRectum
   );

@@ -8,12 +8,12 @@
  * @param {number} semiLatusRectum (meters)
  * @returns {*}  {number} semiMinorAxis (m)
  */
-const fromSemiLatusRectum = (
+export function getSemiMinorAxisFromSemiLatusRectum(
   semiMajorAxis: number,
   semiLatusRectum: number
-): number => {
+): number {
   return Math.sqrt(semiMajorAxis * semiLatusRectum);
-};
+}
 
 /**
  * @description
@@ -23,11 +23,9 @@ const fromSemiLatusRectum = (
  * @param {number} periapsis (meters)
  * @returns {*}  {number} semiMinorAxis (m)
  */
-const fromApsides = (apoapsis: number, periapsis: number): number => {
+export function getSemiMinorAxisFromApsides(
+  apoapsis: number,
+  periapsis: number
+): number {
   return Math.sqrt(apoapsis * periapsis);
-};
-
-export const SemiMinorAxis = {
-  fromSemiLatusRectum,
-  fromApsides,
-};
+}

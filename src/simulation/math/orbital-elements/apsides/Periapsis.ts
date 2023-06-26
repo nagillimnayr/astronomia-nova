@@ -9,9 +9,12 @@
  * @param {number} eccentricity
  * @returns {*}
  */
-const fromEccentricity = (semiMajorAxis: number, eccentricity: number) => {
+export function getPeriapsisFromEccentricity(
+  semiMajorAxis: number,
+  eccentricity: number
+) {
   return (1.0 - eccentricity) * semiMajorAxis;
-};
+}
 
 /**
  * @summary The length of the orbital radius at periapsis is the length of the major axis - the length of the radius at apoapsis.
@@ -23,11 +26,9 @@ const fromEccentricity = (semiMajorAxis: number, eccentricity: number) => {
  * @param {number} apoapsis
  * @returns {*}
  */
-const fromApoapsis = (semiMajorAxis: number, apoapsis: number) => {
+export function getPeriapsisFromApoapsis(
+  semiMajorAxis: number,
+  apoapsis: number
+) {
   return 2.0 * semiMajorAxis - apoapsis;
-};
-
-export const Periapsis = {
-  fromEccentricity,
-  fromApoapsis,
-};
+}

@@ -14,7 +14,10 @@ import {
  * @param {number} periapsis
  * @returns {number} {number} semiMajorAxis
  */
-function getFromPeriapsis(eccentricity: number, periapsis: number): number {
+export function getFromPeriapsis(
+  eccentricity: number,
+  periapsis: number
+): number {
   const semiMajorAxis = periapsis / (1 - eccentricity);
 
   return semiMajorAxis;
@@ -28,20 +31,23 @@ function getFromPeriapsis(eccentricity: number, periapsis: number): number {
  * @param {number} apoapsis
  * @returns {number} {number} semiMajorAxis
  */
-function getFromApoapsis(eccentricity: number, apoapsis: number): number {
+export function getSemiMajorAxisFromApoapsis(
+  eccentricity: number,
+  apoapsis: number
+): number {
   const semiMajorAxis = apoapsis / (1 + eccentricity);
 
   return semiMajorAxis;
 }
 
-function getFromLinearEccentricity(
+export function getSemiMajorAxisFromLinearEccentricity(
   eccentricity: number,
   linearEccentricity: number
 ) {
   return linearEccentricity / eccentricity;
 }
 
-function getFromSpecificOrbitalEnergy(
+export function getSemiMajorAxisFromSpecificOrbitalEnergy(
   centralMass: number,
   specificOrbitalEnergy: number
 ) {
@@ -64,10 +70,13 @@ function getFromSpecificOrbitalEnergy(
  * @param {number} centralMass
  * @returns {*}  {number} semiMajorAxis
  */
-function getFromPeriod(period: number, centralMass: number): number {
+export function getSemiMajorAxisFromPeriod(
+  period: number,
+  centralMass: number
+): number {
   // cube root of (G*M * T^2) / (4PI^2)
   const semiMajorAxis = nthRoot(
-    (GRAV_CONST * centralMass * square(period)) / (4.0 * PI_SQUARED),
+    (GRAV_CONST * centralMass * period ** 2) / (4.0 * PI_SQUARED),
     3
   ) as number;
   return semiMajorAxis;
@@ -81,15 +90,9 @@ function getFromPeriod(period: number, centralMass: number): number {
  * @param {number} periapsis
  * @returns {*} {number} semiMajorAxis
  */
-function getFromApsides(apoapsis: number, periapsis: number) {
+export function getSemiMajorAxisFromApsides(
+  apoapsis: number,
+  periapsis: number
+) {
   return (periapsis + apoapsis) / 2.0;
 }
-
-export const SemiMajorAxis = {
-  getFromPeriapsis,
-  getFromApoapsis,
-  getFromLinearEccentricity,
-  getFromSpecificOrbitalEnergy,
-  getFromPeriod,
-  getFromApsides,
-};

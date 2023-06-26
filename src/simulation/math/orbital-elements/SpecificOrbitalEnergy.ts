@@ -1,4 +1,3 @@
-import { square } from 'mathjs';
 import { GRAV_CONST } from '~/simulation/utils/constants';
 
 /**
@@ -12,16 +11,12 @@ import { GRAV_CONST } from '~/simulation/utils/constants';
  *
  * @returns {number} {number} specificOrbitalEnergy
  */
-const calculate = (
+export function getSpecificOrbitalEnergy(
   orbitalSpeed: number,
   centralMass: number,
   periapsis: number
-) => {
+) {
   const specificOrbitalEnergy =
-    square(orbitalSpeed) / 2.0 - (GRAV_CONST * centralMass) / periapsis;
+    orbitalSpeed ** 2 / 2.0 - (GRAV_CONST * centralMass) / periapsis;
   return specificOrbitalEnergy;
-};
-
-export const SpecificOrbitalEnergy = {
-  calculate,
-};
+}
