@@ -1,7 +1,9 @@
 // The velocity of the orbiting body can be determined with the 'vis-viva' equation
 // $$ \displaystyle |\vec{v}| = \sqrt{GM \left( \frac{2}{r} - \frac{1}{a} \right)} $$
 
+import { degToRad } from 'three/src/math/MathUtils';
 import { GRAV_CONST } from '~/simulation/utils/constants';
+import { Vector3, type Vector3Tuple } from 'three';
 
 /**
  * @summary
@@ -28,4 +30,23 @@ export function getOrbitalSpeedFromRadius(
   );
 
   return orbitalSpeed;
+}
+
+export function getVelocityDirectionAtRadius(
+  radius: number,
+  trueAnomaly: number,
+  semiMajorAxis: number,
+  semiMinorAxis: number
+): Vector3Tuple {
+  // parameterize to get the x, y coordinates at radius
+  const radians = degToRad(trueAnomaly);
+  const x = radius * Math.cos(radians);
+  const y = radius * Math.sin(radians);
+
+  // get the direction vector of the tangent line of the ellipse at the point (x, y)
+  const dirX = -y * semiMajorAxis ** 2;
+  const dirY = x * semiMinorAxis ** 2;
+
+  const velocityDirection = new Vector3(dirX, 0, -dirY);
+  return velocityDirection.normalize().toArray();
 }
