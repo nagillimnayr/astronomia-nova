@@ -133,8 +133,8 @@
     "siderealRotationPeriod_hrs": 23.9345,
     "siderealRotationPeriod_days": 0.99726968,
 
-    "meanAnomaly_deg_j2000": 1.466732747774582e2,
-    "trueAnomaly_deg_j2000": 1.503997599893647e2,
+    "meanAnomaly_deg_j2000": 3.586172562416435e2,
+    "trueAnomaly_deg_j2000": 3.585688856532555e2,
 
     "color": "0x03C03C"
   },
