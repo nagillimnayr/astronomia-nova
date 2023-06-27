@@ -6,6 +6,7 @@ import { mdiMenuUp, mdiMenuDown, mdiChevronUp, mdiChevronDown } from '@mdi/js';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { cn } from '~/simulation/utils/cn';
+import { NavDropdown } from './dropdown/NavDropdown';
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -46,8 +47,9 @@ const NavBar = () => {
           </Link>
         </div>
         <NavBtn href="about">About</NavBtn>
-        <NavBtn href="sim">Solar System</NavBtn>
-        <NavBtn href="earthMars">Stellae Martis</NavBtn>
+        <NavDropdown />
+        {/* <NavBtn href="sim">Solar System</NavBtn>
+        <NavBtn href="earthMars">Stellae Martis</NavBtn> */}
         <NavBtn href="kepler">Kepler</NavBtn>
         <NavBtn href="equations">Equations</NavBtn>
         {/* <NavBtn href="equations">Equations</NavBtn>
