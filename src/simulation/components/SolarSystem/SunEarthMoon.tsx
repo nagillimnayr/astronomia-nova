@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import Body from '../Body/Body';
 import type KeplerBody from '../../classes/KeplerBody';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
@@ -15,6 +15,7 @@ import { keplerTreeState } from '../../state/keplerTreeState';
 import { Orbit } from '../Orbit/Orbit';
 import { RetrogradeContext } from '../Retrograde/RetrogradeContext';
 import { BodyMesh } from '../Body/BodyMesh';
+import { Vector3 } from 'three';
 
 export type UpdateFn = (deltaTime: number) => void;
 const EarthMoon = () => {
@@ -52,6 +53,8 @@ const EarthMoon = () => {
     }
   });
 
+  const origin: Vector3 = useMemo(() => new Vector3(0, 0, 0), []);
+  const zeroVector: Vector3 = useMemo(() => new Vector3(0, 0, 0), []);
   return (
     <KeplerTreeContext.Provider value={assignAsRoot}>
       <CelestialSphere>
@@ -72,8 +75,8 @@ const EarthMoon = () => {
               mass: SOLAR_MASS,
               color: 0xfdee00,
               meanRadius: 1.5,
-              initialPosition: 0,
-              initialVelocity: 0,
+              initialPosition: origin,
+              initialVelocity: zeroVector,
             }}
           >
             <BodyMesh
