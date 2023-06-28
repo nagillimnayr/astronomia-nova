@@ -15,13 +15,11 @@ export const NavDropdown = () => {
         <DropdownMenu.Portal>
           <DropdownMenu.Content className="items-left flex min-w-[220px] flex-col justify-start rounded-md bg-white text-black">
             {/* <DropdownMenu.Label /> */}
-            <DropdownMenu.Item>
-              <NavDropdownBtn href="sim">Solar System</NavDropdownBtn>
-            </DropdownMenu.Item>
 
-            <DropdownMenu.Item>
-              <NavDropdownBtn href="earthMars">Stellae Martis</NavDropdownBtn>
-            </DropdownMenu.Item>
+            <NavDropdownBtn href="sim">Solar System</NavDropdownBtn>
+            <NavDropdownBtn href="earthMars">Stellae Martis</NavDropdownBtn>
+            <NavDropdownBtn href="earth">Earth</NavDropdownBtn>
+            <NavDropdownBtn href="mars">Mars</NavDropdownBtn>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
