@@ -39,7 +39,9 @@ export const Trajectory = (props: TrajectoryProps) => {
     <>
       <object3D rotation={new Euler(Math.PI / 2, 0, 0)}>
         <Line points={points} color={'white'} lineWidth={1} />
-        <arrowHelper
+
+        {/* Semi-major Axis / Periapsis */}
+        {/* <arrowHelper
           ref={(arrow) => {
             if (!arrow) return;
             arrowRef.current = arrow;
@@ -48,7 +50,7 @@ export const Trajectory = (props: TrajectoryProps) => {
             arrow.setDirection(XUNITVECTOR);
             arrow.setLength(props.semiMajorAxis / DIST_MULT, 1, 0.25);
           }}
-        />
+        /> */}
       </object3D>
     </>
   ) : (
