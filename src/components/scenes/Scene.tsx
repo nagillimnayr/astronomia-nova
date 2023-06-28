@@ -32,10 +32,6 @@ const Scene = (props: SceneProps) => {
               position={[0, 0, 20]}
               near={0.01}
               far={1000000}
-              // ref={(camera) => {
-              //   if (!camera) return;
-              //   camState.setCamera(camera);
-              // }}
             />
             <CameraControls
               makeDefault
@@ -48,25 +44,13 @@ const Scene = (props: SceneProps) => {
                 camState.setControls(controls);
               }}
             />
-            {/* <OrbitControls
-              makeDefault
-              enableDamping
-              minDistance={1.5}
-              enablePan={false}
-              ref={(controls) => {
-                if (!controls) {
-                  return;
-                }
 
-                camState.setControls(controls);
-              }}
-            /> */}
             <Simulation>{props.children}</Simulation>
+
             {/* <Stats /> */}
             {/* <Perf /> */}
           </XR>
         </Canvas>
-        {/* </Suspense> */}
       </div>
     </Suspense>
   );
