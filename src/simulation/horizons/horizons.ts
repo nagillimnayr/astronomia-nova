@@ -67,7 +67,7 @@ export function horizons(
         response
           .text()
           .then((value) => {
-            const parsedData = parseHorizons(value);
+            const parsedData = parseHorizonsElements(value);
             console.log(parsedData);
             fs.writeFile(outputFile, value)
               .then(() => {

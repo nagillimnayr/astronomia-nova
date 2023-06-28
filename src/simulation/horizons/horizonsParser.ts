@@ -12,7 +12,7 @@ type Elements = {
   apoapsis: number;
   siderealOrbitPeriod: number;
 };
-export function parseHorizons(text: string) {
+export function parseHorizonsElements(text: string) {
   const parsedData: Elements = {
     eccentricity: 0,
     periapsis: 0,
@@ -27,11 +27,20 @@ export function parseHorizons(text: string) {
     apoapsis: 0,
     siderealOrbitPeriod: 0,
   };
-  const eccentricityStr = text.match(/EC= (.*) QR=/)![1];
-  const periapsisStr = text.match(/QR= (.*) IN=/)![1];
-  const inclinationStr = text.match(/IN= (.*)/)![1];
+
+  // get text with elements data
+  const elementsStr = text.match(/$$SOE(.*)$$EOE/)![1];
+  if (!elementsStr) {
+    console.error('error: no element data found');
+  }
+
+  const eccentricityStr = elementsStr.match(/EC= (.*) QR=/)![1];
   parsedData.eccentricity = parseFloat(eccentricityStr ?? '') ?? 0;
+
+  const periapsisStr = elementsStr.match(/QR= (.*) IN=/)![1];
   parsedData.periapsis = parseFloat(periapsisStr ?? '') ?? 0;
+
+  const inclinationStr = elementsStr.match(/IN= (.*)/)![1];
   parsedData.inclination = parseFloat(inclinationStr ?? '') ?? 0;
 
   return parsedData;
