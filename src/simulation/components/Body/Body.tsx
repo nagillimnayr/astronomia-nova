@@ -89,14 +89,6 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     [bodyRef]
   );
 
-  const velocityArrowRef = useRef<ArrowHelper>(null!);
-
-  useFrame(() => {
-    if (!velocityArrowRef.current || !bodyRef.current) return;
-    const direction = bodyRef.current.velocity.clone().normalize();
-    velocityArrowRef.current.setDirection(direction);
-  });
-
   return (
     <>
       <keplerBody
@@ -140,17 +132,6 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         </CentralMassContext.Provider>
 
         {/* </KeplerTreeContext.Provider> */}
-        <arrowHelper
-          ref={velocityArrowRef}
-          args={[
-            new Vector3(1, 0, 0),
-            new Vector3(0, 0, 0),
-            1,
-            'green',
-            0.1,
-            0.1,
-          ]}
-        />
       </keplerBody>
     </>
   );

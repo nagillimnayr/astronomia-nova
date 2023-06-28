@@ -10,6 +10,7 @@ import { calculateOrbitFromPeriapsis } from '~/simulation/math/orbit/calculateOr
 import { DIST_MULT } from '~/simulation/utils/constants';
 import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
 import {
+  ArrowHelper,
   ColorRepresentation,
   Mesh,
   Object3D,
@@ -30,6 +31,7 @@ import {
   getPosition,
   getPositionFromRadius,
 } from '~/simulation/math/orbital-elements/Position';
+import { useFrame } from '@react-three/fiber';
 
 // Date needed by Orbit but not by Body
 type OrbitData = {
@@ -108,9 +110,12 @@ export const Orbit = (props: OrbitProps) => {
       ...getPositionFromRadius(radius, preset.trueAnomaly)
     ).divideScalar(DIST_MULT);
 
+    const centerRadius = new Vector3(-elements.linearEccentricity, 0, 0);
+    const radiusFromCenter = initialPosition.clone().sub(centerRadius);
+
     // get velocity direction at true anomaly
     const velocityDirection: Vector3 = getVelocityDirectionAtRadius(
-      radius,
+      radiusFromCenter.clone().length() * DIST_MULT,
       preset.trueAnomaly,
       elements.semiMajorAxis,
       elements.semiMinorAxis
@@ -123,6 +128,7 @@ export const Orbit = (props: OrbitProps) => {
   }, [
     centralMass,
     elements.eccentricity,
+    elements.linearEccentricity,
     elements.semiMajorAxis,
     elements.semiMinorAxis,
     preset.trueAnomaly,
@@ -149,6 +155,16 @@ export const Orbit = (props: OrbitProps) => {
 
   const bodyRef = useRef<KeplerBody>(null!);
   const meshRef = useRef<Mesh>(null!);
+
+  const velocityArrowRef = useRef<ArrowHelper>(null!);
+
+  useFrame(() => {
+    if (!velocityArrowRef.current || !bodyRef.current) return;
+    const position = bodyRef.current.position.clone();
+    velocityArrowRef.current.position.set(...position.toArray());
+    const direction = bodyRef.current.velocity.clone().normalize();
+    velocityArrowRef.current.setDirection(direction);
+  });
 
   // callback function to be passed down to children via context provider
   // the child will call it within a callback ref and pass their reference
@@ -200,6 +216,18 @@ export const Orbit = (props: OrbitProps) => {
         semiMinorAxis={elements.semiMinorAxis}
       />
       <TrueAnomalyArrow color={preset.color} target={bodyRef} />
+
+      <arrowHelper
+        ref={velocityArrowRef}
+        args={[
+          new Vector3(1, 0, 0),
+          new Vector3(0, 0, 0),
+          1,
+          'green',
+          0.1,
+          0.1,
+        ]}
+      />
     </object3D>
   );
 };
