@@ -1,6 +1,4 @@
 import fs from 'fs-extra';
-import { parseHorizonsElements } from './parseHorizonsElements';
-import { getElementsJ2000 } from './getElementsJ2000';
 import { getEphemerides } from './getEphemerides';
 
 const url = 'https://ssd.jpl.nasa.gov/api/horizons.api';
