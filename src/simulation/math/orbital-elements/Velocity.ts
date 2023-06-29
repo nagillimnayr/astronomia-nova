@@ -38,6 +38,8 @@ export function getVelocityDirectionAtRadius(
   semiMajorAxis: number,
   semiMinorAxis: number
 ): Vector3 {
+  // get the radius relative to the center of the ellipse
+
   // parameterize to get the x, y coordinates at radius
   const radians = degToRad(trueAnomaly);
   const x = radius * Math.cos(radians);
