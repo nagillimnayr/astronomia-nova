@@ -52,3 +52,27 @@ export function getVelocityDirectionAtRadius(
   const velocityDirection = new Vector3(dirX, 0, -dirY).normalize();
   return velocityDirection;
 }
+
+/**
+ * the velocity is the derivative of position
+ *
+ * https://orbital-mechanics.space/classical-orbital-elements/orbital-elements-and-the-state-vector.html#orbital-elements-state-vector
+ *
+ * Orbital Elements -> State Vectors
+ * Step 1: Transform to Perifocal frame
+ * Step 2: Rotate Perifocal frame to transform it to the Inertial frame
+ * Step 3:
+ *
+ *
+ * */
+
+export function getVelocityFromOrbitalElements(
+  trueAnomaly: number,
+  eccentricity: number
+): Vector3Tuple {
+  const trueAnomalyRadians = degToRad(trueAnomaly);
+  const vx = -Math.sin(trueAnomalyRadians);
+  const vy = eccentricity + Math.cos(trueAnomalyRadians);
+
+  return [vx, 0, -vy];
+}
