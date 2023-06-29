@@ -17,7 +17,9 @@ export type Elements = {
 
 export function parseElement(text: string, elementCode: Readonly<ElementCode>) {
   // const regexp = new RegExp('\s*=\s*([^\s]*)\s');
-  const regexp = new RegExp(`${elementCode}\s*=\s*([^\s]*)\s`);
+  const str = `${elementCode}\\s*=\\s*([^\\s]*)\\s`;
+  console.log(str);
+  const regexp = new RegExp(str);
   const matches = text.match(regexp);
   if (!matches || matches.length < 2 || !matches[1]) {
     console.error('no match found');
