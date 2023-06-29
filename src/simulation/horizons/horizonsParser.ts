@@ -29,19 +29,69 @@ export function parseHorizonsElements(text: string) {
   };
 
   // get text with elements data
-  const elementsStr = text.match(/$$SOE(.*)$$EOE/)![1];
+  const elementsStr = text.match(/SOE([^]*)\$\$EOE/)![1];
+  console.log('elementStr:', elementsStr);
   if (!elementsStr) {
-    console.error('error: no element data found');
+    const errorMsg = 'error: no element data found';
+    console.error(errorMsg);
+    throw new Error(errorMsg);
   }
 
-  const eccentricityStr = elementsStr.match(/EC= (.*) QR=/)![1];
+  // first line: EC QR IN
+  const eccentricityStr = elementsStr.match(/EC\s*=\s*([^\s]*)\s/)![1];
+  console.log('eccentricityStr:', eccentricityStr);
   parsedData.eccentricity = parseFloat(eccentricityStr ?? '') ?? 0;
 
-  const periapsisStr = elementsStr.match(/QR= (.*) IN=/)![1];
+  const periapsisStr = elementsStr.match(/QR\s*=\s*([^\s]*)\s/)![1];
+  console.log('periapsisStr:', periapsisStr);
   parsedData.periapsis = parseFloat(periapsisStr ?? '') ?? 0;
 
-  const inclinationStr = elementsStr.match(/IN= (.*)/)![1];
+  const inclinationStr = elementsStr.match(/IN\s*=\s*([^\s]*)\s/)![1];
+  console.log('inclinationStr:', inclinationStr);
   parsedData.inclination = parseFloat(inclinationStr ?? '') ?? 0;
+
+  // second line: OM W Tp
+  const longitudeOfAscendingNodeStr =
+    elementsStr.match(/OM\s*=\s*([^\s]*)\s/)![1];
+  console.log('longitudeOfAscendingNodeStr:', longitudeOfAscendingNodeStr);
+  parsedData.longitudeOfAscendingNode =
+    parseFloat(longitudeOfAscendingNodeStr ?? '') ?? 0;
+
+  const argumentOfPeriapsisStr = elementsStr.match(/W\s*=\s*([^\s]*)\s/)![1];
+  console.log('argumentOfPeriapsisStr:', argumentOfPeriapsisStr);
+  parsedData.argumentOfPeriapsis =
+    parseFloat(argumentOfPeriapsisStr ?? '') ?? 0;
+
+  const timeOfPeriapsisStr = elementsStr.match(/Tp\s*=\s*([^\s]*)\s/)![1];
+  console.log('timeOfPeriapsisStr:', timeOfPeriapsisStr);
+  parsedData.timeOfPeriapsis = parseFloat(timeOfPeriapsisStr ?? '') ?? 0;
+
+  // third line: N MA TA
+  const meanMotionStr = elementsStr.match(/N\s*=\s*([^\s]*)\s/)![1];
+  console.log('meanMotionStr:', meanMotionStr);
+  parsedData.meanMotion = parseFloat(meanMotionStr ?? '') ?? 0;
+
+  const meanAnomalyStr = elementsStr.match(/MA\s*=\s*([^\s]*)\s/)![1];
+  console.log('meanAnomalyStr:', meanAnomalyStr);
+  parsedData.meanAnomaly = parseFloat(meanAnomalyStr ?? '') ?? 0;
+
+  const trueAnomalyStr = elementsStr.match(/TA\s*=\s*([^\s]*)\s/)![1];
+  console.log('trueAnomalyStr:', trueAnomalyStr);
+  parsedData.trueAnomaly = parseFloat(trueAnomalyStr ?? '') ?? 0;
+
+  // fourth line: A AD PR
+  const semiMajorAxisStr = elementsStr.match(/A\s*=\s*([^\s]*)\s/)![1];
+  console.log('semiMajorAxisStr:', semiMajorAxisStr);
+  parsedData.semiMajorAxis = parseFloat(semiMajorAxisStr ?? '') ?? 0;
+
+  const apoapsisStr = elementsStr.match(/AD\s*=\s*([^\s]*)\s/)![1];
+  console.log('apoapsisStr:', apoapsisStr);
+  parsedData.apoapsis = parseFloat(apoapsisStr ?? '') ?? 0;
+
+  const siderealOrbitPeriodStr = elementsStr.match(/PR\s*=\s*([^\s]*)\s/)![1];
+  console.log('siderealOrbitPeriodStr:', siderealOrbitPeriodStr);
+  parsedData.siderealOrbitPeriod =
+    parseFloat(siderealOrbitPeriodStr ?? '') ?? 0;
 
   return parsedData;
 }
