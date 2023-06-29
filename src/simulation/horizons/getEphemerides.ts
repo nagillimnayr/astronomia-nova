@@ -1,9 +1,9 @@
 import fs from 'fs-extra';
 import { z } from 'zod';
 import url from './horizonsURL';
-import { ElementTable } from './parseEphemerides';
+import { ElementTable, parseElements, parseVectors } from './parseEphemerides';
 
-const J2000 = `'2000-Jan-01%2012:00:00'`;
+const J2000 = `\'2000-Jan-01 12:00:00\'`;
 
 const horizonsSchema = z.object({
   result: z.string(),
@@ -13,21 +13,15 @@ const horizonsSchema = z.object({
   }),
 });
 
-type EphemerisParams = {
-  bodyCode: string;
-  centerCode: string;
-  referencePlane: 'ECLIPTIC' | 'FRAME' | 'BODY' | 'EQUATOR';
-};
-type APIParams = EphemerisParams & {
-  ephemerisType: 'ELEMENTS' | 'VECTORS';
-};
+type ReferencePlane = 'ECLIPTIC' | 'FRAME' | 'BODY' | 'EQUATOR';
+type EphemerisType = 'ELEMENTS' | 'VECTORS';
 
-async function fetchEphemerides({
-  bodyCode,
-  centerCode,
-  referencePlane,
-  ephemerisType,
-}: APIParams) {
+async function fetchEphemerides(
+  bodyCode: string,
+  centerCode: string,
+  referencePlane: ReferencePlane = 'ECLIPTIC',
+  ephemerisType: EphemerisType
+) {
   // get URLSearchParam string
   const searchParams = new URLSearchParams({
     format: 'json',
@@ -40,50 +34,64 @@ async function fetchEphemerides({
     TLIST: J2000,
     CSV_FORMAT: 'NO',
   });
-
-  const horizonsResponse = await fetch(url + searchParams.toString());
+  console.log('url search params:', searchParams);
+  const urlQuery = url + '?' + searchParams.toString();
+  console.log('url:', urlQuery);
+  // fetch ephemeris data from Horizons API
+  const horizonsResponse = await fetch(urlQuery);
   const text = await horizonsResponse.text();
 
   // parse the JSON string and return the text result
   const parsedData = horizonsSchema.safeParse(JSON.parse(text));
   if (!parsedData.success) {
     console.error('error:', parsedData.error);
+    throw new Error('error: parsing failed');
   } else {
-    // get the string containing the ephemeris data
+    // get the string containing the ephemeris data and return it
     const result = parsedData.data.result;
     return result;
   }
 }
 
-export async function getElements({
-  bodyCode,
+export async function getElements(
+  bodyCode: string,
   centerCode = '500@10',
-  referencePlane = 'ECLIPTIC',
-}: EphemerisParams) {
-  const text = await fetchEphemerides({
+  referencePlane: ReferencePlane = 'ECLIPTIC'
+) {
+  // get the raw text data from Horizons API
+  const text = await fetchEphemerides(
     bodyCode,
     centerCode,
     referencePlane,
-    ephemerisType: 'ELEMENTS',
-  });
+    'ELEMENTS'
+  );
+
+  // parse the string to extract the element data
+  const elementTable = parseElements(text);
+  return elementTable;
 }
-export async function getVectors({
-  bodyCode,
+export async function getVectors(
+  bodyCode: string,
   centerCode = '500@10',
-  referencePlane = 'ECLIPTIC',
-}: EphemerisParams) {
-  const text = await fetchEphemerides({
+  referencePlane: ReferencePlane = 'ECLIPTIC'
+) {
+  // get the raw text data from Horizons API
+  const text = await fetchEphemerides(
     bodyCode,
     centerCode,
     referencePlane,
-    ephemerisType: 'VECTORS',
-  });
+    'VECTORS'
+  );
+
+  // parse the string to extract the element data
+  const vectorTable = parseVectors(text);
+  return vectorTable;
 }
 
-export async function getEphemrides(
+export async function getEphemerides(
   bodyCode: string,
-  centerCode?: string,
-  referencePlane?: string
+  centerCode = '500@10',
+  referencePlane: ReferencePlane = 'ECLIPTIC'
 ) {
   const elements = await getElements(bodyCode, centerCode, referencePlane);
   const vectors = await getVectors(bodyCode, centerCode, referencePlane);

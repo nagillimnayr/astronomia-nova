@@ -42,7 +42,12 @@ export function parseEphemeris(
 
 export function parseElements(text: Readonly<string>): ElementTable {
   // get text with elements data
-  const elementsStr = text.match(/SOE([^]*)\$\$EOE/)![1];
+  const matches = text.match(/SOE([^]*)\$\$EOE/);
+  if (!matches || matches.length < 2) {
+    console.log('error! no match found in:', text);
+    throw new Error('no match found!');
+  }
+  const elementsStr = matches[1];
   if (!elementsStr) {
     const errorMsg = 'error: no element data found';
     console.error(errorMsg);
@@ -67,7 +72,14 @@ export function parseElements(text: Readonly<string>): ElementTable {
 
 export function parseVectors(text: Readonly<string>): VectorTable {
   // get text with vector data
-  const vectorStr = text.match(/SOE([^]*)\$\$EOE/)![1];
+
+  const matches = text.match(/SOE([^]*)\$\$EOE/);
+  if (!matches || matches.length < 2) {
+    console.log('error! no match found in:', text);
+    throw new Error('no match found!');
+  }
+
+  const vectorStr = matches[1];
   if (!vectorStr) {
     const errorMsg = 'error: no element data found';
     console.error(errorMsg);

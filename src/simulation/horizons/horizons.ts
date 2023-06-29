@@ -1,6 +1,7 @@
 import fs from 'fs-extra';
 import { parseHorizonsElements } from './parseHorizonsElements';
 import { getElementsJ2000 } from './getElementsJ2000';
+import { getEphemerides } from './getEphemerides';
 
 const url = 'https://ssd.jpl.nasa.gov/api/horizons.api';
 
@@ -55,12 +56,8 @@ const CSV_FORMAT = 'NO';
 // }
 
 async function horizons(code: string) {
-  try {
-    const elements = await getElementsJ2000(code);
-    console.log(elements);
-  } catch (e) {
-    console.error(e);
-  }
+  const ephemerides = await getEphemerides(code);
+  return ephemerides;
 }
 
 if (process.argv.length >= 3) {
@@ -68,7 +65,14 @@ if (process.argv.length >= 3) {
   // const outputFile = process.argv[3];
 
   if (code) {
-    await horizons(code);
+    try {
+      const ephemerides = await horizons(code);
+      ephemerides;
+      console.log('elements:', ephemerides.elements);
+      console.log('vectors:', ephemerides.vectors);
+    } catch (e) {
+      console.error(e);
+    }
   }
 } else {
   console.log('not enough arguments');
