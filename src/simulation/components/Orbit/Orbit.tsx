@@ -26,6 +26,7 @@ import { getRadiusAtTrueAnomaly } from '~/simulation/math/orbital-elements/Orbit
 import {
   getOrbitalSpeedFromRadius,
   getVelocityDirectionAtRadius,
+  getVelocityDirectionFromOrbitalElements,
 } from '~/simulation/math/orbital-elements/Velocity';
 import {
   getPosition,
@@ -114,11 +115,15 @@ export const Orbit = (props: OrbitProps) => {
     const radiusFromCenter = initialPosition.clone().sub(centerRadius);
 
     // get velocity direction at true anomaly
-    const velocityDirection: Vector3 = getVelocityDirectionAtRadius(
-      radiusFromCenter.clone().length() * DIST_MULT,
+    // const velocityDirection: Vector3 = getVelocityDirectionAtRadius(
+    //   radiusFromCenter.clone().length() * DIST_MULT,
+    //   preset.trueAnomaly,
+    //   elements.semiMajorAxis,
+    //   elements.semiMinorAxis
+    // );
+    const velocityDirection: Vector3 = getVelocityDirectionFromOrbitalElements(
       preset.trueAnomaly,
-      elements.semiMajorAxis,
-      elements.semiMinorAxis
+      elements.eccentricity
     );
     const initialVelocity: Vector3 = velocityDirection
       .multiplyScalar(speed)
