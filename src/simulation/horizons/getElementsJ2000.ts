@@ -25,13 +25,13 @@ const horizonsSchema = z.object({
 type Options = {
   bodyCode: string;
   centerCode?: string;
-  elementCodes?: ReadonlyArray<ElementCode>;
+  // elementCodes?: ReadonlyArray<ElementCode>;
 };
 
 export async function getElementsJ2000(options: Options) {
   const COMMAND = options.bodyCode;
   const CENTER = options.centerCode ?? '500@10'; // if not defined, set default as the Sun
-  const elementCodes = options.elementCodes ?? ALL_ELEMENT_CODES; // if not defined, set default as all codes
+  // const elementCodes = options.elementCodes ?? ALL_ELEMENT_CODES; // if not defined, set default as all codes
 
   const query = `${url}?format=${format}&COMMAND=${COMMAND}&OBJ_DATA=${OBJ_DATA}&MAKE_EPHEM=${MAKE_EPHEM}&EPHEM_TYPE=${EPHEM_TYPE}&CENTER=${CENTER}&REF_PLANE=${REF_PLANE}&TLIST=${TLIST}&CSV_FORMAT=${CSV_FORMAT}`;
 
