@@ -46,7 +46,7 @@ export async function getElementsJ2000(options: Options) {
       const result = parsedData.data.result;
       // parse the string and extract the elements
 
-      const elements = parseHorizonsElements(result, elementCodes);
+      const elements = parseHorizonsElements(result);
       console.log(elements);
       return elements;
     }
