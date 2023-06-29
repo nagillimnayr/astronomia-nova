@@ -114,7 +114,7 @@ export const Orbit = (props: OrbitProps) => {
     const centerRadius = new Vector3(-elements.linearEccentricity, 0, 0);
     const radiusFromCenter = initialPosition.clone().sub(centerRadius);
 
-    // get velocity direction at true anomaly
+    //get velocity direction at true anomaly
     // const velocityDirection: Vector3 = getVelocityDirectionAtRadius(
     //   radiusFromCenter.clone().length() * DIST_MULT,
     //   preset.trueAnomaly,

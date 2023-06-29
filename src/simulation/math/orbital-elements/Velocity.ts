@@ -58,14 +58,27 @@ export function getVelocityDirectionAtRadius(
  *
  * https://orbital-mechanics.space/classical-orbital-elements/orbital-elements-and-the-state-vector.html#orbital-elements-state-vector
  *
- * Orbital Elements -> State Vectors
- * Step 1: Transform to Perifocal frame
- * Step 2: Rotate Perifocal frame to transform it to the Inertial frame
- * Step 3:
- *
  *
  * */
 
+/**
+ * @summary Get the direction of the velocity vector
+ * at an arbitrary point from the true anomaly and the
+ * eccentricity.
+ *
+ *
+ * @description
+ * https://orbital-mechanics.space/classical-orbital-elements/perifocal-frame.html#equation-eq-perifocal-simplified-velocity-vector#equation-eq-perifocal-simplified-velocity-vector
+ * The velocity is the derivative of the position.
+ *
+ *
+ * @author Ryan Milligan
+ * @date 29/06/2023
+ * @export
+ * @param {number} trueAnomaly
+ * @param {number} eccentricity
+ * @returns {*}  {Vector3}
+ */
 export function getVelocityDirectionFromOrbitalElements(
   trueAnomaly: number,
   eccentricity: number
