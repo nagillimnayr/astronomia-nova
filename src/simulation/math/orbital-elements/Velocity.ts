@@ -66,13 +66,13 @@ export function getVelocityDirectionAtRadius(
  *
  * */
 
-export function getVelocityFromOrbitalElements(
+export function getVelocityDirectionFromOrbitalElements(
   trueAnomaly: number,
   eccentricity: number
-): Vector3Tuple {
+): Vector3 {
   const trueAnomalyRadians = degToRad(trueAnomaly);
   const vx = -Math.sin(trueAnomalyRadians);
   const vy = eccentricity + Math.cos(trueAnomalyRadians);
 
-  return [vx, 0, -vy];
+  return new Vector3(vx, 0, -vy).normalize();
 }
