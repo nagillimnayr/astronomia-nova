@@ -1,9 +1,10 @@
 import fs from 'fs-extra';
 import { z } from 'zod';
 import url from './horizonsURL';
-import { ElementTable, parseElements, parseVectors } from './parseEphemerides';
+import { parseElements, parseVectors } from './parseEphemerides';
+import type { ElementTable } from './types/ElementTable';
 
-const J2000 = `\'2000-Jan-01 12:00:00\'`;
+const J2000 = `'2000-Jan-01 12:00:00'`;
 
 const horizonsSchema = z.object({
   result: z.string(),
@@ -25,7 +26,7 @@ async function fetchEphemerides(
   // get URLSearchParam string
   const searchParams = new URLSearchParams({
     format: 'json',
-    COMMAND: bodyCode,
+    COMMAND: `'${bodyCode}'`,
     OBJ_DATA: 'NO',
     MAKE_EPHEM: 'YES',
     EPHEM_TYPE: ephemerisType,
