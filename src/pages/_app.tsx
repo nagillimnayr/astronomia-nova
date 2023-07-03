@@ -2,8 +2,8 @@ import { type AppType } from 'next/dist/shared/lib/utils';
 import '~/styles/globals.css';
 import { MDXProvider } from '@mdx-js/react';
 import { Atomic_Age, Roboto, Orbitron } from 'next/font/google';
-import NavBar from '~/components/gui/Navigation/NavBar';
-import Footer from '~/components/gui/Footer/Footer';
+import NavBar from '~/components/layout/site-layout/Navigation/NavBar';
+import Footer from '~/components/layout/site-layout/Footer/Footer';
 const atomicAge = Atomic_Age({
   weight: '400',
   subsets: ['latin'],

@@ -3,22 +3,31 @@ import NavBtn from './NavBtn';
 import Image from 'next/image';
 import { Icon } from '@mdi/react';
 import { mdiMenuUp, mdiMenuDown, mdiChevronUp, mdiChevronDown } from '@mdi/js';
-import { useState } from 'react';
+import { useCallback, useRef, useState, MouseEventHandler } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { cn } from '~/simulation/utils/cn';
 import { NavDropdown } from './dropdown/NavDropdown';
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
+  const headerRef = useRef<HTMLElement>(null!);
+
+  const handleClick = useCallback(()=>{
+   
+    headerRef.current.setAttribute('data-state',  isOpen ? 'closed' : 'reopened') 
+
+    setIsOpen(!isOpen);
+  },[isOpen])
+
   return (
     <>
-      <header
+      <header 
+        ref={headerRef}
+        data-state='open'
         className={cn(
-          `sticky top-0 z-[99999999] flex h-20 w-screen min-w-full flex-row items-stretch justify-start bg-secondary py-0 pl-6 pr-36 text-white`,
-          {
-            'top-0 -translate-y-[100%] transition-transform duration-300 ease-out':
-              !isOpen,
-          }
+          `sticky top-0 z-[99999999] flex h-20 w-screen min-w-full flex-row items-stretch justify-start bg-secondary py-0 pl-6 pr-36 text-white transition-transform translate-y-[0%] duration-300 ease-in`,
+          `data-[state=closed]:-translate-y-[100%]`,
+
         )}
       >
         <div className="flex-start my-2 mr-auto flex flex-row items-center">
@@ -60,9 +69,7 @@ const NavBar = () => {
         {/* visibility toggle */}
         <button
           className="absolute left-[50%] top-full flex h-4 w-10 -translate-x-1/2 flex-row items-center justify-center rounded-b-xl  bg-gray-200 bg-opacity-40 p-0"
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
+          onClick={handleClick}
         >
           <Icon
             className="-translate-y-0.5"
