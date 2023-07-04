@@ -1,82 +1,78 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* @layer base {
-  h1 {
-    @apply font-display text-4xl;
+ 
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+ 
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+ 
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+ 
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+ 
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+ 
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --ring: 215 20.2% 65.1%;
+ 
+    --radius: 0.5rem;
   }
-  h2 {
-    @apply font-display text-3xl;
+ 
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+ 
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+ 
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+ 
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+ 
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+ 
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+ 
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+ 
+    --ring: 217.2 32.6% 17.5%;
   }
-  h3 {
-    @apply font-display text-2xl;
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
   }
-  h4 {
-    @apply font-display text-xl;
-  }
-
-  p {
-    @apply text-base;
-  }
-} */
-
-@layer utilities {
-  .code {
-    @apply rounded-md bg-neutral-700;
-  }
-  .btn-icon {
-    @apply flex aspect-square w-fit items-center justify-center rounded-full;
-  }
-  .bg-translucent {
-    @apply bg-gray-500 bg-opacity-40;
-  }
-  .bg-primary {
-    @apply bg-spaceCadet-900;
-  }
-  .bg-primary-light {
-    @apply bg-spaceCadet-800;
-  }
-  .bg-secondary {
-    @apply bg-outerSpace-900;
-  }
-  .bg-secondary-light {
-    @apply bg-outerSpace-800;
-  }
-
-  .bg-gradient-primary {
-    @apply bg-gradient-to-b from-spaceCadet-900 to-spaceCadet-800;
-  }
-  .bg-gradient-secondary {
-    @apply bg-gradient-to-b from-outerSpace-900 to-outerSpace-800;
-  }
-
-  .bg-gradient-purple {
-    @apply bg-gradient-to-b from-[#2e026d] to-[#15162c];
-  }
-  .bg-gradient-outerSpace {
-    @apply bg-gradient-to-b from-outerSpace-900 to-outerSpace-800;
-  }
-  .bg-gradient-spaceCadet {
-    @apply bg-gradient-to-b from-spaceCadet-900 to-spaceCadet-800;
-  }
-  .bg-gradient-jet {
-    @apply bg-gradient-to-b from-jet-900 to-jet-800;
-  }
-  .bg-gradient-onyx {
-    @apply bg-gradient-to-b from-onyx-900 to-onyx-800;
-  }
-  .bg-gradient-darkness {
-    @apply bg-gradient-to-r from-slate-900 to-slate-700;
-  }
-
-  .bg-gradient-space {
-    @apply bg-gradient-to-b  from-gray-900 to-gray-800;
-  }
-  .bg-gradient-neutral {
-    @apply bg-gradient-to-b from-neutral-900 to-neutral-800;
-  }
-  .bg-gradient-gray {
-    @apply bg-gradient-to-b from-gray-900 to-gray-800;
+  body {
+    @apply bg-background text-foreground;
   }
 }

@@ -7,7 +7,7 @@ import { LoadingFallback } from '~/components/LoadingFallback';
 //import Scene from '~/components/Scene';
 
 const EarthMarsScene = dynamic(
-  () => import('~/components/scenes/earthMarsScene').then((mod) => mod.default),
+  () => import('~/components/scenes/EarthMarsScene').then((mod) => mod.default),
   {
     ssr: false,
   }

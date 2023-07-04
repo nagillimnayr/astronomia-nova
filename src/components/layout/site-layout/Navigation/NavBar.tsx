@@ -5,29 +5,30 @@ import { Icon } from '@mdi/react';
 import { mdiMenuUp, mdiMenuDown, mdiChevronUp, mdiChevronDown } from '@mdi/js';
 import { useCallback, useRef, useState, MouseEventHandler } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { cn } from '~/simulation/utils/cn';
+import { cn } from '~/lib/utils/cn';
 import { NavDropdown } from './dropdown/NavDropdown';
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const headerRef = useRef<HTMLElement>(null!);
 
-  const handleClick = useCallback(()=>{
-   
-    headerRef.current.setAttribute('data-state',  isOpen ? 'closed' : 'reopened') 
+  const handleClick = useCallback(() => {
+    headerRef.current.setAttribute(
+      'data-state',
+      isOpen ? 'closed' : 'reopened'
+    );
 
     setIsOpen(!isOpen);
-  },[isOpen])
+  }, [isOpen]);
 
   return (
     <>
-      <header 
+      <header
         ref={headerRef}
-        data-state='open'
+        data-state="open"
         className={cn(
-          `sticky top-0 z-[99999999] flex h-20 w-screen min-w-full flex-row items-stretch justify-start bg-secondary py-0 pl-6 pr-36 text-white transition-transform translate-y-[0%] duration-300 ease-in`,
-          `data-[state=closed]:-translate-y-[100%]`,
-
+          `sticky top-0 z-[99999999] flex h-20 w-screen min-w-full translate-y-[0%] flex-row items-stretch justify-start bg-secondary py-0 pl-6 pr-36 text-white transition-transform duration-300 ease-in`,
+          `data-[state=closed]:-translate-y-[100%]`
         )}
       >
         <div className="flex-start my-2 mr-auto flex flex-row items-center">
@@ -49,7 +50,7 @@ const NavBar = () => {
             href="/"
           >
             <h2
-              className={`mx-4 text-center font-display text-3xl font-extrabold tracking-tight`}
+              className={`font-display mx-4 text-center text-3xl font-extrabold tracking-tight`}
             >
               Astronomia <span className="text-spaceCadet-300">Nova</span>
             </h2>
