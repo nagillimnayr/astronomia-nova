@@ -8,7 +8,6 @@ import bundleAnalyzer from '@next/bundle-analyzer';
 import mdx from '@next/mdx';
 
 import remarkGfm from 'remark-gfm';
-import remarkFootnotes from 'remark-footnotes';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
@@ -26,7 +25,7 @@ const withMDX = mdx({
     // If you use remark-gfm, you'll need to use next.config.mjs
     // as the package is ESM only
     // https://github.com/remarkjs/remark-gfm#install
-    remarkPlugins: [remarkGfm, remarkFootnotes, remarkMath],
+    remarkPlugins: [remarkGfm, remarkMath],
     rehypePlugins: [
       rehypeCitation,
       rehypeKatex,
