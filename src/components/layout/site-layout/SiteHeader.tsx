@@ -1,14 +1,14 @@
 import Link from 'next/link';
-import NavBtn from './NavBtn';
+import NavBtn from './Navigation/NavBtn';
 import Image from 'next/image';
 import { Icon } from '@mdi/react';
 import { mdiMenuUp, mdiMenuDown, mdiChevronUp, mdiChevronDown } from '@mdi/js';
 import { useCallback, useRef, useState, MouseEventHandler } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { cn } from '~/lib/utils/cn';
-import { NavDropdown } from './dropdown/NavDropdown';
+import { NavDropdown } from './Navigation/dropdown/NavDropdown';
 
-const NavBar = () => {
+const SiteHeader = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const headerRef = useRef<HTMLElement>(null!);
 
@@ -50,7 +50,7 @@ const NavBar = () => {
             href="/"
           >
             <h2
-              className={`font-display mx-4 text-center text-3xl font-extrabold tracking-tight`}
+              className={`mx-4 text-center font-display text-3xl font-extrabold tracking-tight`}
             >
               Astronomia <span className="text-spaceCadet-300">Nova</span>
             </h2>
@@ -83,4 +83,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default SiteHeader;

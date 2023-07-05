@@ -1,4 +1,4 @@
-const Footer = () => {
+const SiteFooter = () => {
   return (
     <footer className="relative bottom-0 mt-auto h-60 w-screen shrink-0 grow-0  bg-secondary">
       <div></div>
@@ -6,4 +6,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default SiteFooter;
