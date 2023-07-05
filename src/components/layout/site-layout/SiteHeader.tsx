@@ -6,7 +6,7 @@ import { mdiMenuUp, mdiMenuDown, mdiChevronUp, mdiChevronDown } from '@mdi/js';
 import { useCallback, useRef, useState, MouseEventHandler } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { cn } from '~/lib/utils/cn';
-import { NavDropdown } from './Navigation/dropdown/NavDropdown';
+import { SystemsDropdownMenu } from './Navigation/dropdown/SystemsDropdownMenu';
 
 const SiteHeader = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -57,7 +57,7 @@ const SiteHeader = () => {
           </Link>
         </div>
         <NavBtn href="about">About</NavBtn>
-        <NavDropdown />
+        <SystemsDropdownMenu />
         {/* <NavBtn href="sim">Solar System</NavBtn>
         <NavBtn href="earthMars">Stellae Martis</NavBtn> */}
         <NavBtn href="kepler">Kepler</NavBtn>

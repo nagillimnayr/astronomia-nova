@@ -2,7 +2,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import Link from 'next/link';
 import NavDropdownBtn from './NavDropdownBtn';
 
-export const NavDropdown = () => {
+export const SystemsDropdownMenu = () => {
   return (
     <>
       <DropdownMenu.Root>
