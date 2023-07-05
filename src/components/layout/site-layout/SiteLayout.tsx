@@ -13,7 +13,7 @@ const SiteLayout = ({ children }: SiteLayoutProps) => {
     <div
       className={cn(
         ...fontVariables,
-        `min-w-screen relative m-0 flex h-fit min-h-screen w-screen flex-col items-center justify-start bg-primary p-0 font-sans text-white`
+        `min-w-screen relative m-0 flex h-fit min-h-screen w-screen flex-col items-center justify-start bg-background p-0 font-sans text-foreground`
       )}
     >
       <SiteHeader />
