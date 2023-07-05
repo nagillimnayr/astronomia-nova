@@ -13,7 +13,6 @@ import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
 import rehypeCitation from 'rehype-citation';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypeHighlight from 'rehype-highlight';
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -31,7 +30,6 @@ const withMDX = mdx({
       rehypeKatex,
       rehypeSlug,
       rehypeAutolinkHeadings,
-      rehypeHighlight,
     ],
     // If you use `MDXProvider`, uncomment the following line.
     providerImportSource: '@mdx-js/react',
