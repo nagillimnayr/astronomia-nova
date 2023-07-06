@@ -20,6 +20,12 @@ const systemLinks = [
   { href: '/systems/mars', label: 'Mars' },
 ];
 
+const otherLinks = [
+  { href: '/test-fs', label: 'Test FS' },
+  { href: '/misc', label: 'Misc' },
+  { href: '/other', label: 'Other' },
+];
+
 const btnStyle = `rounded-md border-0 py-2 px-4 font-sans h-full hover:bg-foreground/10 ui-open:bg-foreground/10`;
 const NavMenu = () => {
   return (
@@ -36,7 +42,10 @@ const NavMenu = () => {
         );
       })}
       <NavDropdownMenu links={systemLinks} className={btnStyle}>
-        <div className="inline-flex gap-3">Systems </div>
+        <div className="inline-flex gap-3">Systems</div>
+      </NavDropdownMenu>
+      <NavDropdownMenu links={otherLinks} className={btnStyle}>
+        <div className="inline-flex gap-3">Other</div>
       </NavDropdownMenu>
     </div>
   );
