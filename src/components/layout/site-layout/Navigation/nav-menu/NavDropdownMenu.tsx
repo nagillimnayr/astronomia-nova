@@ -3,21 +3,21 @@ import { Fragment } from 'react';
 import Link from 'next/link';
 import { cn } from '~/lib/cn';
 import { ChevronDownIcon } from 'lucide-react';
-import type { Props } from '~/components/props/Props';
+import type { CommonProps } from '~/components/props/Props';
 
 type link = {
   href: string;
   label: string;
 };
 
-type DropdownProps = Props & {
+type NavDropdownProps = CommonProps & {
   links: link[];
 };
-const NavDropdownMenu = ({ children, className, links }: DropdownProps) => {
+const NavDropdownMenu = ({ children, className, links }: NavDropdownProps) => {
   return (
     <Menu as="div" className={'relative ml-auto flex flex-col'}>
       <div className="relative">
-        <Menu.Button className={cn('', className)}>
+        <Menu.Button className={cn(className)}>
           {({ open }) => {
             // render prop to switch chevron direction
             return (

@@ -1,8 +1,10 @@
-export type Props = {
-  children?: React.ReactNode;
+export type ClassNameProp = {
   className?: string;
 };
+export type CommonProps = ClassNameProp & {
+  children?: React.ReactNode;
+};
 
-export type LinkProps = Props & {
+export type LinkProps = CommonProps & {
   href: string;
 };
