@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 import Link from 'next/link';
 import { cn } from '~/lib/utils/cn';
 import { ChevronDownIcon } from 'lucide-react';
-import { Props } from '~/components/props/Props';
+import type { Props } from '~/components/props/Props';
 
 type link = {
   href: string;
@@ -17,9 +17,7 @@ const NavDropdownMenu = ({ children, className, links }: DropdownProps) => {
   return (
     <Menu as="div" className={'relative ml-auto flex flex-col'}>
       <div className="relative">
-        <Menu.Button
-          className={cn('rounded-md border-2 p-2 font-sans', className)}
-        >
+        <Menu.Button className={cn('', className)}>
           {({ open }) => {
             // render prop to switch chevron direction
             return (
@@ -27,7 +25,7 @@ const NavDropdownMenu = ({ children, className, links }: DropdownProps) => {
                 {children}{' '}
                 <ChevronDownIcon
                   data-open={open ? 'open' : 'closed'}
-                  className={cn('transition-transform ui-open:-rotate-180')}
+                  className={'transition-transform ui-open:-rotate-180'}
                 />
               </div>
             );
@@ -35,7 +33,7 @@ const NavDropdownMenu = ({ children, className, links }: DropdownProps) => {
         </Menu.Button>
         <Menu.Items
           className={
-            'dropdown-center flex w-fit min-w-fit  flex-col justify-start whitespace-nowrap rounded-md border-2'
+            'dropdown-center flex w-fit min-w-fit  flex-col justify-start whitespace-nowrap rounded-md border-2 bg-popover text-popover-foreground'
           }
         >
           {links.map(({ href, label }) => {
@@ -45,7 +43,7 @@ const NavDropdownMenu = ({ children, className, links }: DropdownProps) => {
                 <Link
                   href={href}
                   className={
-                    'bg-background px-2 font-sans text-foreground ui-active:bg-indigo-400 ui-active:text-white'
+                    'rounded-md bg-transparent px-2 font-sans  ui-active:bg-indigo-400 ui-active:text-white'
                   }
                 >
                   {label}

@@ -20,10 +20,7 @@ const systemLinks = [
   { href: '/systems/mars', label: 'Mars' },
 ];
 
-const btnStyle = cn(
-  'rounded-md border-0 py-2 px-4 font-sans h-full hover:bg-foreground/20'
-);
-
+const btnStyle = `rounded-md border-0 py-2 px-4 font-sans h-full hover:bg-foreground/10 ui-open:bg-foreground/10`;
 const NavMenu = () => {
   return (
     <div
@@ -38,7 +35,6 @@ const NavMenu = () => {
           </NavMenuLink>
         );
       })}
-      <NavMenuLink href=""></NavMenuLink>
       <NavDropdownMenu links={systemLinks} className={btnStyle}>
         <div className="inline-flex gap-3">Systems </div>
       </NavDropdownMenu>
