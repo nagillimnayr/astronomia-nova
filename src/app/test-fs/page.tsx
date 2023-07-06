@@ -1,6 +1,7 @@
+'use client';
 import { type Metadata } from 'next';
 import { Button } from '~/components/ui/button';
-import TestForm from '~/components/ui/form/test-form';
+import TestForm from '~/components/forms/TestForm';
 
 export const metadata: Metadata = {
   title: 'Test Page',
@@ -13,7 +14,6 @@ export default function Page() {
       </header>
       <div className="container m-4 flex h-96 flex-col items-center justify-center border-2">
         <TestForm />
-        {/* <Button>Save to file</Button> */}
       </div>
     </section>
   );
