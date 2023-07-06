@@ -1,3 +1,4 @@
+'use client';
 import { cn } from '~/lib/cn';
 import { atomicAge, orbitron, roboto } from '../../../lib/fonts';
 import SiteHeader from './SiteHeader';
