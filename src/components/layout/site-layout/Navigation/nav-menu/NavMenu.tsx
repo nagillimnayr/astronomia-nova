@@ -36,7 +36,7 @@ const NavMenu = () => {
     >
       {mainLinks.map(({ href, label }) => {
         return (
-          <NavMenuLink key="href" href={href} className={btnStyle}>
+          <NavMenuLink key={href} href={href} className={btnStyle}>
             {label}
           </NavMenuLink>
         );
