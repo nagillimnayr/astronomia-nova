@@ -6,7 +6,9 @@ import { mdiMenuUp, mdiMenuDown, mdiChevronUp, mdiChevronDown } from '@mdi/js';
 import { useCallback, useRef, useState, MouseEventHandler } from 'react';
 import { cn } from '~/lib/cn';
 
-import NavMenu from './Navigation/nav-menu/NavMenu';
+import NavBar from './Navigation/nav-menu/NavBar';
+import { Button } from '~/components/ui/button';
+import { SettingsIcon } from 'lucide-react';
 
 const SiteHeader = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -57,7 +59,11 @@ const SiteHeader = () => {
           </Link>
         </div>
 
-        <NavMenu />
+        <NavBar />
+
+        <Button>
+          <SettingsIcon />
+        </Button>
 
         {/* visibility toggle */}
         <button
