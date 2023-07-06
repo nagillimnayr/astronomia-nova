@@ -1,4 +1,5 @@
 import { Button } from '~/components/ui/button';
+import TestForm from '~/components/ui/form/test-form';
 
 export default function Page() {
   return (
@@ -7,7 +8,8 @@ export default function Page() {
         <h1 className="border-b-2 px-8">Test Page</h1>
       </header>
       <div className="container m-4 flex h-96 flex-col items-center justify-center border-2">
-        <Button>Save to file</Button>
+        <TestForm />
+        {/* <Button>Save to file</Button> */}
       </div>
     </section>
   );
