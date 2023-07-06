@@ -7,6 +7,7 @@ import { useCallback, useRef, useState, MouseEventHandler } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { cn } from '~/lib/utils/cn';
 import { SystemsDropdownMenu } from './Navigation/dropdown/SystemsDropdownMenu';
+import NavMenu from './Navigation/nav-menu/NavMenu';
 
 const SiteHeader = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -27,7 +28,7 @@ const SiteHeader = () => {
         ref={headerRef}
         data-state="open"
         className={cn(
-          `sticky top-0 z-[99999999] flex h-20 w-screen min-w-full translate-y-[0%] flex-row items-stretch justify-start border-b-2 border-border bg-background py-0 pl-6 pr-36 text-foreground transition-transform duration-300 ease-in`,
+          `sticky top-0 z-[99999999] flex h-20 w-screen min-w-full translate-y-[0%] flex-row items-center justify-start border-b-2 border-border bg-background py-0 pl-6 pr-36 text-foreground transition-transform duration-300 ease-in`,
           `data-[state=closed]:-translate-y-[100%]`
         )}
       >
@@ -56,16 +57,8 @@ const SiteHeader = () => {
             </h2>
           </Link>
         </div>
-        <NavBtn href="about">About</NavBtn>
-        <SystemsDropdownMenu />
-        {/* <NavBtn href="sim">Solar System</NavBtn>
-        <NavBtn href="earthMars">Stellae Martis</NavBtn> */}
-        <NavBtn href="kepler">Kepler</NavBtn>
-        <NavBtn href="equations">Equations</NavBtn>
-        {/* <NavBtn href="equations">Equations</NavBtn>
-        <NavBtn href="kepler">Kepler</NavBtn>
-        <NavBtn href="timeline">Timeline</NavBtn>
-        <NavBtn href="markdown">MDX</NavBtn> */}
+
+        <NavMenu />
 
         {/* visibility toggle */}
         <button
