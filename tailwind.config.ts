@@ -80,6 +80,32 @@ export default {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            '--tw-prose-body': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-headings': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-lead': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-links': 'colors.sky[900]',
+            '--tw-prose-bold': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-counters': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-bullets': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-hr': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-quotes': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-quote-borders':
+              'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-captions': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-code': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-pre-code': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-pre-bg': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-th-borders': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-td-borders': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-invert-body': 'hsl(var(--foreground) / <alpha-value>)',
+            '--tw-prose-invert-headings':
+              'hsl(var(--foreground) / <alpha-value>)',
+          },
+        },
+      },
     },
   },
   plugins: [
