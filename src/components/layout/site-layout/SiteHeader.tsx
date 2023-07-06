@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Icon } from '@mdi/react';
 import { mdiMenuUp, mdiMenuDown, mdiChevronUp, mdiChevronDown } from '@mdi/js';
 import { useCallback, useRef, useState, MouseEventHandler } from 'react';
-import { cn } from '~/lib/utils/cn';
+import { cn } from '~/lib/cn';
 
 import NavMenu from './Navigation/nav-menu/NavMenu';
 

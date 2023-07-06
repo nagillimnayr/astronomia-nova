@@ -1,4 +1,4 @@
-import { cn } from '~/lib/utils/cn';
+import { cn } from '~/lib/cn';
 import NavDropdownMenu from './NavDropdownMenu';
 import NavMenuLink from './NavMenuLink';
 
