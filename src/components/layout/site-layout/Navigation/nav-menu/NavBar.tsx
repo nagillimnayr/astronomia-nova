@@ -27,7 +27,7 @@ const otherLinks = [
 ];
 
 const btnStyle = `rounded-md border-0 py-2 px-4 font-sans h-full hover:bg-foreground/10 ui-open:bg-foreground/10`;
-const NavMenu = () => {
+const NavBar = () => {
   return (
     <div
       className={
@@ -51,4 +51,4 @@ const NavMenu = () => {
   );
 };
 
-export default NavMenu;
+export default NavBar;
