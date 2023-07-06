@@ -1,12 +1,10 @@
 import Link from 'next/link';
-import NavBtn from './Navigation/NavBtn';
 import Image from 'next/image';
 import { Icon } from '@mdi/react';
 import { mdiMenuUp, mdiMenuDown, mdiChevronUp, mdiChevronDown } from '@mdi/js';
 import { useCallback, useRef, useState, MouseEventHandler } from 'react';
-import { twMerge } from 'tailwind-merge';
 import { cn } from '~/lib/utils/cn';
-import { SystemsDropdownMenu } from './Navigation/dropdown/SystemsDropdownMenu';
+
 import NavMenu from './Navigation/nav-menu/NavMenu';
 
 const SiteHeader = () => {
