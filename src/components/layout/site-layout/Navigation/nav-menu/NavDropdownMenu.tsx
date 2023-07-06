@@ -43,7 +43,7 @@ const NavDropdownMenu = ({ children, className, links }: DropdownProps) => {
                 <Link
                   href={href}
                   className={
-                    'rounded-md bg-transparent px-2 font-sans  ui-active:bg-indigo-400 ui-active:text-white'
+                    'min-w-full rounded-md bg-transparent px-2 py-1 font-sans  ui-active:bg-indigo-400 ui-active:text-white'
                   }
                 >
                   {label}
