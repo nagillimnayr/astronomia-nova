@@ -2,20 +2,18 @@ import { Menu } from '@headlessui/react';
 import { Fragment } from 'react';
 import Link from 'next/link';
 import { cn } from '~/lib/utils/cn';
-import NavMenuButton from './NavMenuButton';
 import { ChevronDownIcon } from 'lucide-react';
+import { Props } from '~/components/props/Props';
 
 type link = {
   href: string;
   label: string;
 };
 
-type Props = {
-  children?: React.ReactNode;
+type DropdownProps = Props & {
   links: link[];
-  className?: string;
 };
-const NavDropdownMenu = ({ children, links, className }: Props) => {
+const NavDropdownMenu = ({ children, className, links }: DropdownProps) => {
   return (
     <Menu as="div" className={'relative ml-auto flex flex-col'}>
       <div className="relative">
