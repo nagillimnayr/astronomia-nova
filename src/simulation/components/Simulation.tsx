@@ -61,9 +61,9 @@ const Simulation = (props: SimProps) => {
         {props.children}
         {/* <EarthMars /> */}
       </group>
-      <DebugPanel />
+      {/* <DebugPanel />
       <SelectionPanel />
-      <CameraPanel />
+      <CameraPanel /> */}
       <CameraTarget />
       <ambientLight intensity={0.2} />
     </>

@@ -1,6 +1,10 @@
+import { type Metadata } from 'next';
 import { Button } from '~/components/ui/button';
 import TestForm from '~/components/ui/form/test-form';
 
+export const metadata: Metadata = {
+  title: 'Test Page',
+};
 export default function Page() {
   return (
     <section className="container prose mt-8 flex flex-col items-center justify-start">

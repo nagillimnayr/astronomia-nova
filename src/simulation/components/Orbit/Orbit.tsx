@@ -135,7 +135,6 @@ export const Orbit = (props: OrbitProps) => {
     elements.eccentricity,
     elements.linearEccentricity,
     elements.semiMajorAxis,
-    elements.semiMinorAxis,
     preset.trueAnomaly,
   ]);
 
