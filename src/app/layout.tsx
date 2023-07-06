@@ -1,5 +1,5 @@
 import '~/styles/globals.css';
-import { Metadata } from 'next';
+import { type Metadata } from 'next';
 import SiteLayout from '~/components/layout/site-layout/SiteLayout';
 import Providers from '~/components/layout/site-layout/providers/providers';
 import type { CommonProps } from '~/components/props/Props';
