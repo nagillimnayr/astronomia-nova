@@ -14,6 +14,8 @@ import rehypeSlug from 'rehype-slug';
 import rehypeCitation from 'rehype-citation';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
+import unocss from '@unocss/webpack';
+
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 });
@@ -40,6 +42,12 @@ const withMDX = mdx({
 const nextConfig = {
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   reactStrictMode: true,
+
+  webpack: (config) => {
+    config.plugins.push(unocss());
+    config.cache = false; // have to be false for hmr
+    return config;
+  },
 
   /**
    * If you have `experimental: { appDir: true }` set, then you must comment the below `i18n` config
