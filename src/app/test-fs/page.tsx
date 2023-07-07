@@ -1,7 +1,7 @@
 'use client';
 import { type Metadata } from 'next';
 import { Button } from '~/components/ui/button';
-import TestForm from '~/components/forms/TestForm';
+import EphemerisForm from '~/components/forms/EphemerisForm';
 
 export const metadata: Metadata = {
   title: 'Test Page',
@@ -13,7 +13,7 @@ export default function Page() {
         <h1 className="border-b-2 px-8">Test Page</h1>
       </header>
       <div className="container m-4 flex h-96 flex-col items-center justify-center border-2">
-        <TestForm />
+        <EphemerisForm className="rounded-lg border-2 p-4" />
       </div>
     </section>
   );
