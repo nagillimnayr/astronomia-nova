@@ -96,6 +96,8 @@
     "@types/three": "^0.152.1",
     "@typescript-eslint/eslint-plugin": "^5.59.6",
     "@typescript-eslint/parser": "^5.59.6",
+    "@unocss/postcss": "^0.53.4",
+    "@unocss/webpack": "^0.53.4",
     "autoprefixer": "^10.4.14",
     "daisyui": "^3.1.1",
     "eslint": "^8.40.0",
@@ -115,6 +117,7 @@
     "typedoc-plugin-markdown": "^3.15.3",
     "typedoc-plugin-mdn-links": "^3.0.3",
     "typescript": "^5.0.4",
+    "unocss": "^0.53.4",
     "url-loader": "^4.1.1"
   },
   "ct3aMetadata": {
