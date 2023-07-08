@@ -49,6 +49,7 @@ const EphemerisForm = ({ className }: FormProps) => {
             name="ephemeris-type"
             id="elements"
             value="elements"
+            checked
           />
           <label htmlFor="elements">Orbital Elements</label>
         </div>
