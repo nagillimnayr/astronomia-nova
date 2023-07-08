@@ -1,12 +1,13 @@
 import type { Vector3Tuple } from 'three';
-import { KM_TO_M } from '../utils/constants';
+// import { KM_TO_M } from '../utils/constants';
 import type { ElementCode } from './elementCodes';
 import type { VectorCode } from './vectorCodes';
 
 import type { ElementTable } from './types/ElementTable';
 import type { VectorTable } from './types/VectorTable';
 import _ from 'lodash';
-import { object } from 'zod';
+
+const KM_TO_M = 1000;
 
 export function parseEphemeris(
   text: string,
@@ -42,10 +43,12 @@ export function parseEphemerisDate(text: Readonly<string>) {
   // split the year/month/day on '-'
   const [year, month, day] = _.split(yearMonthDay, /\-/);
 
+  // todo: convert to numbers
+
   // construct a date object
   const date = new Date();
 
-  return date;
+  return dateStr;
 }
 export function parseEphemerisName(text: Readonly<string>) {
   const regexp = /Target body name:\s*(\S*)\s/;
