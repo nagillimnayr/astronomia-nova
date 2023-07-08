@@ -29,12 +29,5 @@ export function saveEphemeris(ephemeris: ElementTable | VectorTable) {
   );
   console.log('pathToNewFile:', pathToNewFile);
 
-  fs.writeJSON(pathToNewFile, ephemeris).then(
-    () => {
-      console.log('success writing to json:', pathToNewFile);
-    },
-    (reason) => {
-      console.error('error writing to json', reason);
-    }
-  );
+  return fs.writeJSON(pathToNewFile, ephemeris);
 }
