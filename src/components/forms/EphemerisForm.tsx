@@ -15,19 +15,14 @@ const EphemerisForm = ({ className }: FormProps) => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FormData>({
-    defaultValues: {
-      bodyCode: '',
-      ephemerisType: 'elements',
-    },
-  });
+  } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = (data: FormData) => {
     console.log(data);
     alert(JSON.stringify(data));
   };
 
-  console.log(watch('bodyCode')); // watch input value by passing the name of it
+  // console.log(watch('bodyCode')); // watch input value by passing the name of it
 
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
@@ -42,7 +37,6 @@ const EphemerisForm = ({ className }: FormProps) => {
       <input
         className="w-full rounded-md border-2 px-2 text-center"
         placeholder="body code"
-        defaultValue={''}
         {...register('bodyCode', { required: true })}
       />
 
@@ -72,8 +66,8 @@ const EphemerisForm = ({ className }: FormProps) => {
       </div>
 
       {/* errors will return when field validation fails  */}
-      {errors.bodyCode && <span>This field is required</span>}
-      {errors.ephemerisType && <span>This field is required</span>}
+      {errors.bodyCode && <span>Body code is required</span>}
+      {errors.ephemerisType && <span>Ephemeris type is required</span>}
 
       <input
         type="submit"
