@@ -3,7 +3,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import _ from 'lodash';
 
-
 import { ElementTable } from './types/ElementTable';
 import { VectorTable } from './types/VectorTable';
 
@@ -19,17 +18,23 @@ export function saveEphemeris(ephemeris: ElementTable | VectorTable) {
   const name = ephemeris.name;
   const date = ephemeris.date;
   // create file path
-  const fileName = _.kebabCase(name)
+  const fileName = _.kebabCase(name);
   const __filename = fileURLToPath(import.meta.url);
+  console.log('__fileName:', __filename);
   const __dirname = path.dirname(__filename);
+  console.log('__dirname:', __dirname);
   const pathToNewFile = path.resolve(
     __dirname,
     path.join('recordedData', `${fileName}.json`)
   );
+  console.log('pathToNewFile:', pathToNewFile);
 
-  fs.writeJSON(pathToNewFile, ephemeris).then(()=>{
-    console.log('success writing to json:', pathToNewFile);
-  }, (reason)=> {
-    console.error('error writing to json', reason);
-  })
+  fs.writeJSON(pathToNewFile, ephemeris).then(
+    () => {
+      console.log('success writing to json:', pathToNewFile);
+    },
+    (reason) => {
+      console.error('error writing to json', reason);
+    }
+  );
 }
