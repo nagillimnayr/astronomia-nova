@@ -1,10 +1,14 @@
-import type { Vector3Tuple } from 'three';
+import z from 'zod';
 
-export type VectorTable = {
-  name: string;
-  date: string;
-  position: Vector3Tuple;
-  velocity: Vector3Tuple;
-  range: number;
-  rangeRate: number;
-};
+const Vector3Schema = z.array(z.number()).length(3);
+
+export const VectorTableSchema = z.object({
+  name: z.string(),
+  date: z.string(),
+  position: Vector3Schema,
+  velocity: Vector3Schema,
+  range: z.number(),
+  rangeRate: z.number(),
+});
+
+export type VectorTable = z.infer<typeof VectorTableSchema>;
