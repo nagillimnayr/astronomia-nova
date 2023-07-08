@@ -1,8 +1,9 @@
 import { cn } from '~/lib/cn';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
-type Inputs = {
+type FormData = {
   bodyCode: string;
+  ephemerisType: 'elements' | 'vectors';
 };
 
 type FormProps = {
@@ -14,9 +15,14 @@ const EphemerisForm = ({ className }: FormProps) => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<FormData>({
+    defaultValues: {
+      bodyCode: '',
+      ephemerisType: 'elements',
+    },
+  });
 
-  const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
+  const onSubmit: SubmitHandler<FormData> = (data: FormData) => {
     console.log(data);
     alert(JSON.stringify(data));
   };
@@ -34,40 +40,40 @@ const EphemerisForm = ({ className }: FormProps) => {
     >
       {/* register your input into the hook by invoking the "register" function */}
       <input
-        className="w-full rounded-md border-2 px-2"
+        className="w-full rounded-md border-2 px-2 text-center"
         placeholder="body code"
         defaultValue={''}
         {...register('bodyCode', { required: true })}
       />
 
-      <fieldset className="border-2 p-2">
-        <legend className="border-2 px-1">Select ephemeris type</legend>
+      <div className="rounded-md border-2 p-2">
+        <legend className="border-b-2 px-1">Select ephemeris type</legend>
         {/* include validation with required or other standard HTML validation rules */}
-        <div flex="~ row" gap="2" p="1" className="h-fit w-full min-w-fit">
+        <div className="flex flex-row gap-2">
           <input
+            {...register('ephemerisType', { required: true })}
             type="radio"
-            name="ephemeris-type"
-            id="elements"
             value="elements"
+            id="elements"
             checked
           />
-          <label htmlFor="elements">Orbital Elements</label>
+          <label htmlFor="">Orbital Elements</label>
         </div>
 
-        <div flex="~ row" gap="2" p="1" className="h-fit w-full min-w-fit">
+        <div className="flex flex-row gap-2">
           <input
+            {...register('ephemerisType', { required: true })}
             type="radio"
-            name="ephemeris-type"
-            id="vectors"
             value="vectors"
+            id="vectors"
           />
           <label htmlFor="vectors">State Vectors</label>
         </div>
-      </fieldset>
+      </div>
 
       {/* errors will return when field validation fails  */}
       {errors.bodyCode && <span>This field is required</span>}
-      {/* {errors.fileContents && <span>This field is required</span>} */}
+      {errors.ephemerisType && <span>This field is required</span>}
 
       <input
         type="submit"
