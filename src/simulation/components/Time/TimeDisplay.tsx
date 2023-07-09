@@ -1,4 +1,4 @@
-import { timeState } from '~/simulation/state/TimeState';
+import { timeState } from '@/simulation/state/TimeState';
 import { formatDistance } from 'date-fns';
 import { useSnapshot } from 'valtio';
 

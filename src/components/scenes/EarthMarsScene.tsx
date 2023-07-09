@@ -1,4 +1,4 @@
-import SunEarthMars from '~/simulation/components/SolarSystem/SunEarthMars';
+import SunEarthMars from '@/simulation/components/SolarSystem/SunEarthMars';
 import Scene from './Scene';
 
 const EarthMarsScene = () => {

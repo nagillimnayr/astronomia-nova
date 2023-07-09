@@ -1,5 +1,5 @@
 import { Canvas, useThree } from '@react-three/fiber';
-import Simulation from '~/simulation/components/Simulation';
+import Simulation from '@/simulation/components/Simulation';
 
 import { Perf } from 'r3f-perf';
 import { VRButton, ARButton, XR } from '@react-three/xr';
@@ -10,8 +10,8 @@ import {
   CameraControls,
   PerspectiveCamera,
 } from '@react-three/drei';
-import { HUD } from '~/simulation/components/HUD/HUD';
-import { camState } from '~/simulation/state/CamState';
+import { HUD } from '@/simulation/components/HUD/HUD';
+import { camState } from '@/simulation/state/CamState';
 
 type SceneProps = {
   children?: React.ReactNode;

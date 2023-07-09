@@ -1,5 +1,5 @@
 import { folder, useControls } from 'leva';
-import { debugState } from '~/simulation/state/DebugState';
+import { debugState } from '@/simulation/state/DebugState';
 import Annotation from '../Annotation';
 export const DebugPanel = () => {
   const debug = useControls('debug', {

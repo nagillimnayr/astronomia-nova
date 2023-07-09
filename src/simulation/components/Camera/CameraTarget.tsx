@@ -1,8 +1,8 @@
 import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
 import { Object3D, Vector3 } from 'three';
-import { camState } from '~/simulation/state/CamState';
-import Vec3 from '~/simulation/types/Vec3';
+import { camState } from '@/simulation/state/CamState';
+import Vec3 from '@/simulation/types/Vec3';
 
 export const CameraTarget = () => {
   const ref = useRef<Object3D>(null!);

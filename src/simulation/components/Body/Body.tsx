@@ -28,17 +28,17 @@ import KeplerTreeContext from '../../context/KeplerTreeContext';
 import KeplerBody from '../../classes/KeplerBody';
 import { MeshLineGeometry, Edges, Trail, useHelper } from '@react-three/drei';
 import { TextureLoader } from 'three';
-import Vec3 from '~/simulation/types/Vec3';
+import Vec3 from '@/simulation/types/Vec3';
 import Annotation from '../Annotation';
-import { simState } from '~/simulation/state/SimState';
+import { simState } from '@/simulation/state/SimState';
 import { Selection, Select } from '@react-three/postprocessing';
 import { useSnapshot } from 'valtio';
 import { Orbit } from '../Orbit/Orbit';
-import { KeplerOrbit } from '~/simulation/classes/KeplerOrbit';
-import { OrbitalElements } from '~/simulation/classes/OrbitalElements';
+import { KeplerOrbit } from '@/simulation/classes/KeplerOrbit';
+import { OrbitalElements } from '@/simulation/classes/OrbitalElements';
 import { Trajectory } from '../Orbit/Trajectory/Trajectory';
-import { CentralMassContext } from '~/simulation/context/CentralMassContext';
-import { debugState } from '~/simulation/state/DebugState';
+import { CentralMassContext } from '@/simulation/context/CentralMassContext';
+import { debugState } from '@/simulation/state/DebugState';
 import { BodyMesh } from './BodyMesh';
 
 // extend KeplerBody so the reconciler is aware of it

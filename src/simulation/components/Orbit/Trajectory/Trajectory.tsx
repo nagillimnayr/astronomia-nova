@@ -2,10 +2,10 @@ import { CatmullRomLine, Line } from '@react-three/drei';
 import { pi } from 'mathjs';
 import { useMemo, useRef } from 'react';
 import { ArrowHelper, EllipseCurve, Euler, Vector3 } from 'three';
-import { getLinearEccentricityFromAxes } from '~/simulation/math/orbital-elements/LinearEccentricity';
-import { DIST_MULT } from '~/simulation/utils/constants';
+import { getLinearEccentricityFromAxes } from '@/simulation/math/orbital-elements/LinearEccentricity';
+import { DIST_MULT } from '@/simulation/utils/constants';
 import { useSnapshot } from 'valtio';
-import { debugState } from '~/simulation/state/DebugState';
+import { debugState } from '@/simulation/state/DebugState';
 // import { Arrow } from '../arrows/Arrow';
 
 const XUNITVECTOR = new Vector3(1, 0, 0);

@@ -1,5 +1,5 @@
 import { useSnapshot } from 'valtio';
-import { timeState } from '~/simulation/state/TimeState';
+import { timeState } from '@/simulation/state/TimeState';
 
 const TimescaleDisplay = () => {
   const snap = useSnapshot(timeState);

@@ -1,8 +1,8 @@
-import '~/styles/globals.css';
+import '@/styles/globals.css';
 import { type Metadata } from 'next';
-import SiteLayout from '~/components/layout/site-layout/SiteLayout';
-import Providers from '~/components/layout/site-layout/providers/providers';
-import type { CommonProps } from '~/components/props/Props';
+import SiteLayout from '@/components/layout/site-layout/SiteLayout';
+import Providers from '@/components/layout/site-layout/providers/providers';
+import type { CommonProps } from '@/components/props/Props';
 
 export const metadata: Metadata = {
   icons: {

@@ -27,12 +27,12 @@ import {
 } from 'three';
 import { Line2 } from 'three-stdlib';
 import { useSnapshot } from 'valtio';
-import KeplerBody from '~/simulation/classes/KeplerBody';
-import { camState } from '~/simulation/state/CamState';
-import { debugState } from '~/simulation/state/DebugState';
-import { selectState } from '~/simulation/state/SelectState';
-import { simState } from '~/simulation/state/SimState';
-import { timeState } from '~/simulation/state/TimeState';
+import KeplerBody from '@/simulation/classes/KeplerBody';
+import { camState } from '@/simulation/state/CamState';
+import { debugState } from '@/simulation/state/DebugState';
+import { selectState } from '@/simulation/state/SelectState';
+import { simState } from '@/simulation/state/SimState';
+import { timeState } from '@/simulation/state/TimeState';
 import { useControls } from 'leva';
 import Annotation from '../Annotation';
 

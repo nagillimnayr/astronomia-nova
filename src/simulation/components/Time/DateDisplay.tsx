@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { useSnapshot } from 'valtio';
-import { timeState } from '~/simulation/state/TimeState';
+import { timeState } from '@/simulation/state/TimeState';
 const DateDisplay = () => {
   const snap = useSnapshot(timeState);
   return (

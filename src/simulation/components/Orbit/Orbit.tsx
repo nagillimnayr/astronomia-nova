@@ -1,13 +1,13 @@
-import { OrbitalElements } from '~/simulation/classes/OrbitalElements';
+import { OrbitalElements } from '@/simulation/classes/OrbitalElements';
 import { Trajectory } from './Trajectory/Trajectory';
 import { useCallback, useContext, useMemo, useRef } from 'react';
-import loadBodyPreset, { PresetKey } from '~/simulation/utils/loadBodyPreset';
+import loadBodyPreset, { PresetKey } from '@/simulation/utils/loadBodyPreset';
 import Body, { BodyArgs } from '../Body/Body';
-import KeplerBody from '~/simulation/classes/KeplerBody';
-import KeplerTreeContext from '~/simulation/context/KeplerTreeContext';
-import { CentralMassContext } from '~/simulation/context/CentralMassContext';
-import { calculateOrbitFromPeriapsis } from '~/simulation/math/orbit/calculateOrbit';
-import { DIST_MULT } from '~/simulation/utils/constants';
+import KeplerBody from '@/simulation/classes/KeplerBody';
+import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
+import { CentralMassContext } from '@/simulation/context/CentralMassContext';
+import { calculateOrbitFromPeriapsis } from '@/simulation/math/orbit/calculateOrbit';
+import { DIST_MULT } from '@/simulation/utils/constants';
 import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
 import {
   ArrowHelper,
@@ -22,18 +22,18 @@ import { degToRad } from 'three/src/math/MathUtils';
 import { RetrogradeContext } from '../Retrograde/RetrogradeContext';
 import { retrogradeState } from '../Retrograde/retrogradeState';
 import { BodyMesh } from '../Body/BodyMesh';
-import { getRadiusAtTrueAnomaly } from '~/simulation/math/orbital-elements/OrbitalRadius';
+import { getRadiusAtTrueAnomaly } from '@/simulation/math/orbital-elements/OrbitalRadius';
 import {
   getOrbitalSpeedFromRadius,
   getVelocityDirectionAtRadius,
   getVelocityDirectionFromOrbitalElements,
-} from '~/simulation/math/orbital-elements/Velocity';
+} from '@/simulation/math/orbital-elements/Velocity';
 import {
   getPosition,
   getPositionFromRadius,
-} from '~/simulation/math/orbital-elements/Position';
+} from '@/simulation/math/orbital-elements/Position';
 import { useFrame } from '@react-three/fiber';
-import { timeState } from '~/simulation/state/TimeState';
+import { timeState } from '@/simulation/state/TimeState';
 
 // Date needed by Orbit but not by Body
 type OrbitData = {

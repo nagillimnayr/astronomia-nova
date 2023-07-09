@@ -1,4 +1,4 @@
-import { cn } from '~/lib/cn';
+import { cn } from '@/lib/cn';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 type FormData = {

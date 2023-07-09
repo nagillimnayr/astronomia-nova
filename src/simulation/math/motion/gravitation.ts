@@ -1,6 +1,10 @@
 import { Vector3 } from 'three';
-import { DIST_MULT, GRAV_CONST, SOLAR_MASS } from './../../utils/constants';
-import Vec3 from '~/simulation/types/Vec3';
+import {
+  DIST_MULT,
+  GRAV_CONST,
+  SOLAR_MASS,
+} from '@/simulation/utils/constants';
+import Vec3 from '@/simulation/types/Vec3';
 
 /**
  * @summary

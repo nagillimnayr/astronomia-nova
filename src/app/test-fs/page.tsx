@@ -1,7 +1,7 @@
 'use client';
 import { type Metadata } from 'next';
-import { Button } from '~/components/ui/button';
-import EphemerisForm from '~/components/forms/EphemerisForm';
+import { Button } from '@/components/ui/button';
+import EphemerisForm from '@/components/forms/EphemerisForm';
 
 export const metadata: Metadata = {
   title: 'Test Page',

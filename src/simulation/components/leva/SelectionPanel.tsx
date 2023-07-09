@@ -1,9 +1,9 @@
 import { folder, useControls } from 'leva';
 import { useEffect } from 'react';
 import { useSnapshot } from 'valtio';
-import { camState } from '~/simulation/state/CamState';
-import { debugState } from '~/simulation/state/DebugState';
-import { selectState } from '~/simulation/state/SelectState';
+import { camState } from '@/simulation/state/CamState';
+import { debugState } from '@/simulation/state/DebugState';
+import { selectState } from '@/simulation/state/SelectState';
 
 export const SelectionPanel = () => {
   const snap = useSnapshot(selectState);

@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import { useSnapshot } from 'valtio';
-import { timeState } from '~/simulation/state/TimeState';
+import { timeState } from '@/simulation/state/TimeState';
 import TimescaleTooltip from '../TimescaleTooltip';
 
 export const TimescaleSlider = () => {

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Button } from '~/components/ui/button';
+import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
   title: '404 Not Found',

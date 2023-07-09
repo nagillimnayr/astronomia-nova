@@ -1,5 +1,5 @@
-import { cn } from '~/lib/cn';
-import type { LinkProps } from '~/components/props/Props';
+import { cn } from '@/lib/cn';
+import type { LinkProps } from '@/components/props/Props';
 import Link from 'next/link';
 
 const NavMenuLink = ({ children, className, href }: LinkProps) => {

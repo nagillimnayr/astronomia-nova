@@ -6,8 +6,8 @@ import {
   StepForward,
 } from 'lucide-react';
 import { useContext } from 'react';
-import IconButton from '~/components/IconButton';
-import { timeState } from '~/simulation/state/TimeState';
+import IconButton from '@/components/IconButton';
+import { timeState } from '@/simulation/state/TimeState';
 const ForwardButton = () => {
   return (
     <IconButton

@@ -4,7 +4,7 @@ import {
   GRAV_CONST,
   PI_SQUARED,
   SOLAR_MASS,
-} from '~/simulation/utils/constants';
+} from '@/simulation/utils/constants';
 
 /**
  * @description

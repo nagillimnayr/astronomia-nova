@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import z from 'zod';
 import { ValidationError, fromZodError } from 'zod-validation-error';
-import { getElementTable, getVectorTable } from '~/lib/horizons/getEphemerides';
-import { saveEphemeris } from '../../lib/horizons/saveEphemerides';
+import { getElementTable, getVectorTable } from '@/lib/horizons/getEphemerides';
+import { saveEphemeris } from '@/lib/horizons/saveEphemerides';
 
 import {
   ElementTableSchema,
   ElementTable,
-} from '~/lib/horizons/types/ElementTable';
+} from '@/lib/horizons/types/ElementTable';
 import {
   VectorTableSchema,
   VectorTable,
-} from '~/lib/horizons/types/VectorTable';
+} from '@/lib/horizons/types/VectorTable';
 
 const GetRequestSchema = z.object({
   method: z.string(),

@@ -2,7 +2,7 @@
 // $$ \displaystyle |\vec{v}| = \sqrt{GM \left( \frac{2}{r} - \frac{1}{a} \right)} $$
 
 import { degToRad } from 'three/src/math/MathUtils';
-import { GRAV_CONST } from '~/simulation/utils/constants';
+import { GRAV_CONST } from '@/simulation/utils/constants';
 import { Vector3, type Vector3Tuple } from 'three';
 
 /**

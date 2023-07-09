@@ -1,4 +1,4 @@
-import { GRAV_CONST } from '~/simulation/utils/constants';
+import { GRAV_CONST } from '@/simulation/utils/constants';
 
 /**
  * @description

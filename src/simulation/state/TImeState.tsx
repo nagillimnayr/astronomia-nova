@@ -1,7 +1,7 @@
 import { proxy } from 'valtio';
 import { DAY } from '../utils/constants';
 import { addSeconds } from 'date-fns';
-import { simState } from '~/simulation/state/SimState';
+import { simState } from '@/simulation/state/SimState';
 import { Clock } from 'three';
 
 const j2000 = new Date(2000, 0, 1, 12, 0, 0, 0);

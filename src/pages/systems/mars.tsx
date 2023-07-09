@@ -3,19 +3,19 @@ import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import Link from 'next/link';
 import { Suspense, useRef } from 'react';
-import { LoadingFallback } from '~/components/LoadingFallback';
-import { FullscreenLayout } from '~/components/layout/FullscreenLayout';
+import { LoadingFallback } from '@/components/LoadingFallback';
+import { FullscreenLayout } from '@/components/layout/FullscreenLayout';
 //import Scene from '~/components/Scene';
 
 const Scene = dynamic(
-  () => import('~/components/scenes/Scene').then((mod) => mod.default),
+  () => import('@/components/scenes/Scene').then((mod) => mod.default),
   {
     ssr: false,
   }
 );
 const SunMars = dynamic(
   () =>
-    import('~/simulation/components/SolarSystem/SunMars').then(
+    import('@/simulation/components/SolarSystem/SunMars').then(
       (mod) => mod.default
     ),
   {

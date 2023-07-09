@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
 
-import { Button } from '~/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -13,8 +13,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '~/components/ui/form/form';
-import { Input } from '~/components/ui/input';
+} from '@/components/ui/form/form';
+import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { toast } from '../use-toast';
 

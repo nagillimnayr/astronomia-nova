@@ -1,6 +1,6 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import Timeline from '~/components/Timeline/Timeline';
+import Timeline from '@/components/Timeline/Timeline';
 //import { Timeline } from 'flowbite-react';
 
 const TimelinePage: NextPage = () => {
