@@ -126,11 +126,14 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       return;
     }
     if (!timeState.isPaused && isSelected) {
-      // console.log({
-      //   name: props.name,
-      //   bodyPosition: props.body.current.position,
-      //   meshPosition: meshRef.current.position,
-      // });
+      console.log('mesh-before-update', {
+        name: props.name,
+        updateIteration: simState.updateIteration,
+        bodyPosition: props.body.current.position,
+        meshPosition: meshRef.current.position,
+        meshId: meshRef.current.id,
+        bodyId: props.body.current.id,
+      });
     }
     meshRef.current.position.set(...props.body.current.position.toArray());
   });
@@ -156,7 +159,6 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
             map={props.texture}
             color={!props.texture ? props.color : undefined}
           />
-
           <Annotation annotation={props.name} />
         </mesh>
       </Select>

@@ -34,6 +34,8 @@ import {
 } from '@/simulation/math/orbital-elements/Position';
 import { useFrame } from '@react-three/fiber';
 import { timeState } from '@/simulation/state/TimeState';
+import { simState } from '@/simulation/state/SimState';
+import { selectState } from '@/simulation/state/SelectState';
 
 // Date needed by Orbit but not by Body
 type OrbitData = {
@@ -166,11 +168,18 @@ export const Orbit = (props: OrbitProps) => {
   useFrame(() => {
     if (!velocityArrowRef.current || !bodyRef.current) return;
     const position = bodyRef.current.position.clone();
-    if (!timeState.isPaused) {
-      console.log({
+    if (
+      !timeState.isPaused &&
+      selectState.selected &&
+      props.name === selectState.selected.name
+    ) {
+      console.log('orbit:', {
+        updateIteration: simState.updateIteration,
         name: props.name,
-        bodyPosition: position,
+        bodyPosition: bodyRef.current.position,
         meshPosition: meshRef.current.position,
+        meshId: meshRef.current.id,
+        bodyId: bodyRef.current.id,
       });
     }
     velocityArrowRef.current.position.set(...position.toArray());

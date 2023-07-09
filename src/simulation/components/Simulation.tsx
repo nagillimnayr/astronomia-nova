@@ -34,6 +34,17 @@ const Simulation = (props: SimProps) => {
       const scaledDelta = delta * timeState.timescale;
       timeState.updateClock(scaledDelta);
 
+      if (selectState.selected) {
+        const selected = selectState.selected;
+        console.log('selected', {
+          updateIteration: simState.updateIteration,
+          name: selected.name,
+          position: selected.position,
+          id: selected.id,
+        });
+      }
+      simState.updateIteration += 1;
+
       // update simulation
       keplerTreeState.fixedUpdate(scaledDelta);
 

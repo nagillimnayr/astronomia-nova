@@ -10,8 +10,10 @@ import { DAY } from '../utils/constants';
 
 type SimStateObj = {
   getState: () => RootState;
+  updateIteration: number;
 };
 
 export const simState = proxy<SimStateObj>({
   getState: null!,
+  updateIteration: 0,
 });
