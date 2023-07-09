@@ -1,5 +1,5 @@
 import DateDisplay from './DateDisplay';
-import TimeControls from './TimeControls';
+import TimeControls from './time-controls/TimeControls';
 import TimeDisplay from './TimeDisplay';
 import TimescaleDisplay from './TimescaleDisplay';
 //type TimePanelProps = {};

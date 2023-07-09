@@ -14,7 +14,7 @@ import { mdiMenuLeft } from '@mdi/js';
 const DecreaseButton = () => {
   return (
     <button
-      className="btn-icon translate-x-1"
+      className="translate-x-1"
       onClick={(e) => {
         e.stopPropagation();
         timeState.decrementTimescale();
