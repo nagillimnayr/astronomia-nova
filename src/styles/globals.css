@@ -1,8 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import '@unocss/reset/tailwind.css';
-@unocss all;
 
 @layer base {
   :root {
