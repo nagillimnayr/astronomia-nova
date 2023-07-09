@@ -31,7 +31,7 @@ export const TimescaleSlider = () => {
   return (
     <form>
       <RadixSlider.Root
-        className="relative flex h-5 w-[200px] touch-none select-none items-center rounded-full "
+        className="relative flex h-5 w-[200px] touch-none select-none items-center rounded-full"
         defaultValue={[1]}
         value={[snap.timescale]}
         min={0}
