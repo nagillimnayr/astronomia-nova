@@ -70,7 +70,6 @@
     "react-aria": "^3.25.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.1",
-    "rehype-autolink-headings": "^6.1.1",
     "rehype-citation": "^1.0.1",
     "rehype-katex": "^6.0.3",
     "rehype-slug": "^5.1.0",
