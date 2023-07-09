@@ -9,6 +9,7 @@ type FormData = {
 type FormProps = {
   className?: string;
 };
+
 const EphemerisForm = ({ className }: FormProps) => {
   const {
     register,
@@ -17,9 +18,29 @@ const EphemerisForm = ({ className }: FormProps) => {
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FormData> = (data: FormData) => {
-    console.log(data);
-    alert(JSON.stringify(data));
+  const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
+    // convert data to json format before sending to server
+    const jsonData = JSON.stringify(data);
+    console.log('data', jsonData);
+
+    // API endpoint to send the data to
+    const endpoint = '/horizons';
+
+    // Form the request for sending data to the server.
+    const options = {
+      // The method is POST because we are sending data to the server.
+      method: 'POST',
+      // Tell the server we're sending JSON.
+      headers: {
+        'content-type': 'application/json',
+      },
+      // Body of the request is the JSON data we created above.
+      body: jsonData,
+    };
+
+    // send the request to the server
+    const response = await fetch(endpoint, options);
+    console.log('success?:', await response.json());
   };
 
   // console.log(watch('bodyCode')); // watch input value by passing the name of it
@@ -36,7 +57,7 @@ const EphemerisForm = ({ className }: FormProps) => {
       {/* register your input into the hook by invoking the "register" function */}
       <input
         className="w-full rounded-md border-2 px-2 text-center"
-        placeholder="body code"
+        placeholder="body id"
         {...register('bodyCode', { required: true })}
       />
 
@@ -66,7 +87,7 @@ const EphemerisForm = ({ className }: FormProps) => {
       </div>
 
       {/* errors will return when field validation fails  */}
-      {errors.bodyCode && <span>Body code is required</span>}
+      {errors.bodyCode && <span>Body id is required</span>}
       {errors.ephemerisType && <span>Ephemeris type is required</span>}
 
       <input

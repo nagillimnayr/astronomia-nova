@@ -1,0 +1,20 @@
+{
+  "id": "499",
+  "name": "Mars ",
+  "epoch": "2000-Jan-01 12:00:00.0000",
+  "ephemerisType": "ELEMENTS",
+  "table": {
+    "eccentricity": 0.093315101458261,
+    "periapsis": 206668969.6541986,
+    "inclination": 1.849876477108884,
+    "longitudeOfAscendingNode": 49.56200565861963,
+    "argumentOfPeriapsis": 286.5373830861993,
+    "timeOfPeriapsis": 2451508.062923341,
+    "meanMotion": 1.849876477108884,
+    "meanAnomaly": 19.35648274725794,
+    "trueAnomaly": 23.33319664407224,
+    "semiMajorAxis": 19.35648274725794,
+    "apoapsis": 249209296.2937473,
+    "siderealOrbitPeriod": 59354318.00266414
+  }
+}

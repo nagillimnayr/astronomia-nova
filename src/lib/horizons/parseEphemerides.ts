@@ -6,10 +6,20 @@ import type { VectorCode } from './vectorCodes';
 import type { ElementTable } from './types/ElementTable';
 import type { VectorTable } from './types/VectorTable';
 import _ from 'lodash';
+import { Ephemeris } from './types/Ephemeris';
 
 const KM_TO_M = 1000;
 
-export function parseEphemeris(
+/**
+ * @description
+ * @author Ryan Milligan
+ * @date 08/07/2023
+ * @export
+ * @param {string} text
+ * @param {(Readonly<ElementCode | VectorCode>)} code
+ * @returns {*}
+ */
+export function parseEphemerisTable(
   text: string,
   code: Readonly<ElementCode | VectorCode>
 ) {
@@ -22,7 +32,13 @@ export function parseEphemeris(
     console.log('matches:', matches);
     throw new Error('no match found!');
   }
-  const ephemeris = parseFloat(matches[1]) ?? 0;
+
+  const match = matches[1];
+  // parse string into float
+  const ephemeris = parseFloat(match);
+  if (ephemeris === undefined) {
+    throw new Error(`error: failed to parse value (${match}) into a float`);
+  }
   return ephemeris;
 }
 
@@ -51,19 +67,48 @@ export function parseEphemerisDate(text: Readonly<string>) {
   return dateStr;
 }
 export function parseEphemerisName(text: Readonly<string>) {
-  const regexp = /Target body name:\s*(\S*)\s/;
+  // extracts the substring that contains name and id of the body
+  // takes the form:
+  /**
+   * captures the substrings that contain the name and id of the body
+   *
+   * The line in the raw text that contains the name and id takes the form:
+   * Target body name: Mars (499)                      {source: mar097}
+   *
+   * we want to capture 'Mars' and '499'
+   *
+   * '\s' = character class escape for matching whitespace characters
+   * '\S' = character class escape for matching non-whitespace characters
+   * '\d' = character escape class for matching digits (0 - 9)
+   * '.' = wildcard, matches any character except line terminators
+   * '()' = capture group, records any substring that matches the pattern inside of the parentheses
+   * '\(' and '\)' = character escapes for literal parentheses characters
+   * '+' = quantifier for (1 - infinity) occurrences
+   * '*' = quantifier for (0 - infinity) occurrences
+   *
+   * the '\s*(.+)\s' pattern will capture a substring between whitespace characters
+   * We must take into consideration that some bodies have names which contain numbers and/or spaces, or ids which contain letters and/or spaces (i.e. 1999 Hirayama (1973 DR))
+   * the \((.+)\) pattern will capture a substring between parentheses
+   * '/Target body name:\s*(.+)\s*\((.+)\)/' will capture the substring in-between 'Target body name: ' and ' (' and then capture the substring between the parentheses.
+   * */
+  const regexp = /Target body name:\s*(.+)\s*\((.+)\)/;
   const matches = text.match(regexp);
-  if (!matches || matches.length < 2 || !matches[1]) {
+
+  // the captured substrings start at index 1, so the length of the array should be 3
+  if (!matches || matches.length < 3 || !matches[1] || !matches[2]) {
     console.error('text:', text);
     console.error('matches:', matches);
+
     throw new Error('no match found!');
   }
-  const targetName = matches[1];
-  return targetName;
+  const name = matches[1];
+  const id = matches[2];
+
+  return { name, id };
 }
 
-export function parseElements(text: Readonly<string>): ElementTable {
-  // get text with elements data
+export function parseElements(text: Readonly<string>): Ephemeris {
+  // get substring with elements data
   const matches = text.match(/SOE\n([^]*)\$\$EOE/);
   if (!matches || matches.length < 2) {
     console.log('error! no match found in:', text);
@@ -77,25 +122,34 @@ export function parseElements(text: Readonly<string>): ElementTable {
     throw new Error(errorMsg);
   }
 
-  return {
-    name: parseEphemerisName(text),
-    date: parseEphemerisDate(substr),
-    eccentricity: parseEphemeris(substr, 'EC'),
-    periapsis: parseEphemeris(substr, 'QR'),
-    inclination: parseEphemeris(substr, 'IN'),
-    longitudeOfAscendingNode: parseEphemeris(substr, 'OM'),
-    argumentOfPeriapsis: parseEphemeris(substr, 'W'),
-    timeOfPeriapsis: parseEphemeris(substr, 'Tp'),
-    meanMotion: parseEphemeris(substr, 'N'),
-    meanAnomaly: parseEphemeris(substr, 'MA'),
-    trueAnomaly: parseEphemeris(substr, 'TA'),
-    semiMajorAxis: parseEphemeris(substr, 'A'),
-    apoapsis: parseEphemeris(substr, 'AD'),
-    siderealOrbitPeriod: parseEphemeris(substr, 'PR'),
+  const { name, id } = parseEphemerisName(text);
+  const date = parseEphemerisDate(substr);
+  const elementTable: ElementTable = {
+    eccentricity: parseEphemerisTable(substr, 'EC'),
+    periapsis: parseEphemerisTable(substr, 'QR'),
+    inclination: parseEphemerisTable(substr, 'IN'),
+    longitudeOfAscendingNode: parseEphemerisTable(substr, 'OM'),
+    argumentOfPeriapsis: parseEphemerisTable(substr, 'W'),
+    timeOfPeriapsis: parseEphemerisTable(substr, 'Tp'),
+    meanMotion: parseEphemerisTable(substr, 'N'),
+    meanAnomaly: parseEphemerisTable(substr, 'MA'),
+    trueAnomaly: parseEphemerisTable(substr, 'TA'),
+    semiMajorAxis: parseEphemerisTable(substr, 'A'),
+    apoapsis: parseEphemerisTable(substr, 'AD'),
+    siderealOrbitPeriod: parseEphemerisTable(substr, 'PR'),
   };
+
+  const ephemeris: Ephemeris = {
+    id,
+    name,
+    epoch: parseEphemerisDate(substr),
+    ephemerisType: 'ELEMENTS',
+    table: elementTable,
+  };
+  return ephemeris;
 }
 
-export function parseVectors(text: Readonly<string>): VectorTable {
+export function parseVectors(text: Readonly<string>): Ephemeris {
   // get text with vector data
 
   const matches = text.match(/SOE\n([^]*)\$\$EOE/);
@@ -111,21 +165,30 @@ export function parseVectors(text: Readonly<string>): VectorTable {
     throw new Error(errorMsg);
   }
 
-  const x = parseEphemeris(substr, 'X') * KM_TO_M; // (m)
-  const y = parseEphemeris(substr, 'Y') * KM_TO_M; // (m)
-  const z = parseEphemeris(substr, 'Z') * KM_TO_M; // (m)
-  const vx = parseEphemeris(substr, 'VX') * KM_TO_M; // (m/s)
-  const vy = parseEphemeris(substr, 'VY') * KM_TO_M; // (m/s)
-  const vz = parseEphemeris(substr, 'VZ') * KM_TO_M; // (m/s)
-  const range = parseEphemeris(substr, 'RG') * KM_TO_M; // (m)
-  const rangeRate = parseEphemeris(substr, 'RR') * KM_TO_M; // (m/s)
+  const x = parseEphemerisTable(substr, 'X') * KM_TO_M; // (m)
+  const y = parseEphemerisTable(substr, 'Y') * KM_TO_M; // (m)
+  const z = parseEphemerisTable(substr, 'Z') * KM_TO_M; // (m)
+  const vx = parseEphemerisTable(substr, 'VX') * KM_TO_M; // (m/s)
+  const vy = parseEphemerisTable(substr, 'VY') * KM_TO_M; // (m/s)
+  const vz = parseEphemerisTable(substr, 'VZ') * KM_TO_M; // (m/s)
+  const range = parseEphemerisTable(substr, 'RG') * KM_TO_M; // (m)
+  const rangeRate = parseEphemerisTable(substr, 'RR') * KM_TO_M; // (m/s)
 
-  return {
-    name: parseEphemerisName(text),
-    date: parseEphemerisDate(substr),
+  const { name, id } = parseEphemerisName(text);
+  const vectorTable: VectorTable = {
     position: [x, y, z],
     velocity: [vx, vy, vz],
     range,
     rangeRate,
   };
+
+  const ephemeris: Ephemeris = {
+    id,
+    name,
+    epoch: parseEphemerisDate(substr),
+    ephemerisType: 'VECTORS',
+    table: vectorTable,
+  };
+
+  return ephemeris;
 }

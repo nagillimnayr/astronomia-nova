@@ -1,8 +1,6 @@
 import z from 'zod';
 
 export const ElementTableSchema = z.object({
-  name: z.string(),
-  date: z.string(),
   eccentricity: z.number(),
   periapsis: z.number(),
   inclination: z.number(),

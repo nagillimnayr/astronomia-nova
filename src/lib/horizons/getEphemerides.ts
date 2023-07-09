@@ -1,8 +1,13 @@
 import fs from 'fs-extra';
 import { z } from 'zod';
 import url from './horizonsURL';
-import { parseElements, parseVectors } from './parseEphemerides';
+import {
+  parseElements,
+  parseVectors as parseVectorTable,
+} from './parseEphemerides';
 import type { ElementTable } from './types/ElementTable';
+import { VectorTable } from './types/VectorTable';
+import { Ephemeris } from './types/Ephemeris';
 
 const J2000 = `'2000-Jan-01 12:00:00'`;
 
@@ -54,24 +59,26 @@ async function fetchEphemerides(
   }
 }
 
-export async function getElements(
-  bodyCode: string,
+export async function getElementTable(
+  id: string,
   centerCode = '500@10',
   referencePlane: ReferencePlane = 'ECLIPTIC'
 ) {
-  // get the raw text data from Horizons API
+  // get the raw text data from the Horizons API
   const text = await fetchEphemerides(
-    bodyCode,
+    id,
     centerCode,
     referencePlane,
     'ELEMENTS'
   );
 
   // parse the string to extract the element data
-  const elementTable = parseElements(text);
-  return elementTable;
+  const ephemeris: Ephemeris = parseElements(text);
+
+  return ephemeris;
 }
-export async function getVectors(
+
+export async function getVectorTable(
   bodyCode: string,
   centerCode = '500@10',
   referencePlane: ReferencePlane = 'ECLIPTIC'
@@ -85,8 +92,8 @@ export async function getVectors(
   );
 
   // parse the string to extract the element data
-  const vectorTable = parseVectors(text);
-  return vectorTable;
+  const ephemeris: Ephemeris = parseVectorTable(text);
+  return ephemeris;
 }
 
 export async function getEphemerides(
@@ -94,8 +101,8 @@ export async function getEphemerides(
   centerCode = '500@10',
   referencePlane: ReferencePlane = 'ECLIPTIC'
 ) {
-  const elements = await getElements(bodyCode, centerCode, referencePlane);
-  const vectors = await getVectors(bodyCode, centerCode, referencePlane);
+  const elements = await getElementTable(bodyCode, centerCode, referencePlane);
+  const vectors = await getVectorTable(bodyCode, centerCode, referencePlane);
 
   return {
     elements,

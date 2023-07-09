@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 import { ElementTable } from './types/ElementTable';
 import { VectorTable } from './types/VectorTable';
+import { Ephemeris } from './types/Ephemeris';
 
 export function saveElementTable(elementTable: ElementTable) {
   //
@@ -14,9 +15,9 @@ export function saveVectorTable(vectorTable: VectorTable) {
   //
 }
 
-export function saveEphemeris(ephemeris: ElementTable | VectorTable) {
+export async function saveEphemeris(ephemeris: Ephemeris) {
   const name = ephemeris.name;
-  const date = ephemeris.date;
+  const date = ephemeris.epoch;
   // create file path
   const fileName = _.kebabCase(name);
   const __filename = fileURLToPath(import.meta.url);
@@ -25,9 +26,11 @@ export function saveEphemeris(ephemeris: ElementTable | VectorTable) {
   console.log('__dirname:', __dirname);
   const pathToNewFile = path.resolve(
     __dirname,
-    path.join('recordedData', `${fileName}.json`)
+    path.join('ephemerides', `${fileName}.json`)
   );
   console.log('pathToNewFile:', pathToNewFile);
 
-  return fs.writeJSON(pathToNewFile, ephemeris);
+  await fs.writeJSON(pathToNewFile, ephemeris);
+
+  return { path: pathToNewFile };
 }
