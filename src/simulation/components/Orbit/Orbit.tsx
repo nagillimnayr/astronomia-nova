@@ -33,6 +33,7 @@ import {
   getPositionFromRadius,
 } from '~/simulation/math/orbital-elements/Position';
 import { useFrame } from '@react-three/fiber';
+import { timeState } from '~/simulation/state/TimeState';
 
 // Date needed by Orbit but not by Body
 type OrbitData = {
@@ -165,6 +166,13 @@ export const Orbit = (props: OrbitProps) => {
   useFrame(() => {
     if (!velocityArrowRef.current || !bodyRef.current) return;
     const position = bodyRef.current.position.clone();
+    if (!timeState.isPaused) {
+      console.log({
+        name: props.name,
+        bodyPosition: position,
+        meshPosition: meshRef.current.position,
+      });
+    }
     velocityArrowRef.current.position.set(...position.toArray());
     const direction = bodyRef.current.velocity.clone().normalize();
     velocityArrowRef.current.setDirection(direction);
@@ -213,6 +221,7 @@ export const Orbit = (props: OrbitProps) => {
           color={preset.color}
           texture={props.texture}
           body={bodyRef}
+          ref={meshRef}
         />
       </KeplerTreeContext.Provider>
       <Trajectory

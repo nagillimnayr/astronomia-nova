@@ -9,7 +9,14 @@ import {
 } from '@react-three/drei';
 import { ThreeEvent, useFrame } from '@react-three/fiber';
 import { Select } from '@react-three/postprocessing';
-import { MutableRefObject, useMemo, useRef, useState } from 'react';
+import {
+  MutableRefObject,
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   BoxHelper,
   ColorRepresentation,
@@ -40,9 +47,12 @@ type BodyMeshProps = {
   color: ColorRepresentation;
 };
 
-export const BodyMesh = (props: BodyMeshProps) => {
+export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
+  props: BodyMeshProps,
+  fwdRef
+) {
   const meshRef = useRef<Mesh>(null!);
-  const [mesh, setMesh] = useState<Mesh>(null!);
+
   const [isVisible, setVisible] = useState<boolean>(true);
   const trailRef = useRef<Line2>(null!);
 
@@ -101,9 +111,26 @@ export const BodyMesh = (props: BodyMeshProps) => {
   //   lineRef.current.geometry.setPositions(trailPoints.current);
   // });
 
+  // Set forwarded ref
+  // the return value of the callback function will be assigned to fwdRef
+  useImperativeHandle(
+    fwdRef,
+    () => {
+      return meshRef.current;
+    },
+    [meshRef]
+  );
+
   useFrame(() => {
     if (!meshRef.current || !props.body.current) {
       return;
+    }
+    if (!timeState.isPaused && isSelected) {
+      // console.log({
+      //   name: props.name,
+      //   bodyPosition: props.body.current.position,
+      //   meshPosition: meshRef.current.position,
+      // });
     }
     meshRef.current.position.set(...props.body.current.position.toArray());
   });
@@ -147,4 +174,4 @@ export const BodyMesh = (props: BodyMeshProps) => {
       /> */}
     </>
   );
-};
+});
