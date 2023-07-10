@@ -15,6 +15,7 @@ import { keplerTreeState } from '../../state/keplerTreeState';
 import { Orbit } from '../Orbit/Orbit';
 import { BodyMesh } from '../Body/BodyMesh';
 import { Vector3 } from 'three';
+import { useLoader } from '@react-three/fiber';
 
 export type UpdateFn = (deltaTime: number) => void;
 const SolarSystem = () => {
@@ -39,6 +40,7 @@ const SolarSystem = () => {
     'assets/textures/2k_uranus.jpg',
     'assets/textures/2k_neptune.jpg',
   ]);
+
   // use ref to store root of tree
   const rootRef = useRef<KeplerBody>(null!);
 
@@ -56,7 +58,6 @@ const SolarSystem = () => {
       console.log('state root: ', keplerTreeState.root);
     }
   });
-
 
   const origin = useMemo(() => new Vector3(0, 0, 0), []);
   const zeroVector = useMemo(() => new Vector3(0, 0, 0), []);
@@ -84,14 +85,15 @@ const SolarSystem = () => {
               initialPosition: origin,
               initialVelocity: zeroVector,
             }}
+            texture={sunTexture}
           >
-            <BodyMesh
+            {/* <BodyMesh
               name="Sun"
               color="0xfdee00"
               meanRadius={1.5}
               texture={sunTexture}
               body={rootRef}
-            />
+            /> */}
             <Orbit name={'Mercury'} texture={mercuryTexture}></Orbit>
             <Orbit name={'Venus'} texture={venusTexture}></Orbit>
             <Orbit name={'Earth'} texture={earthTexture}></Orbit>
