@@ -37,6 +37,7 @@ import { timeState } from '@/simulation/state/TimeState';
 import { simState } from '@/simulation/state/SimState';
 import { selectState } from '@/simulation/state/SelectState';
 import { camState } from '@/simulation/state/CamState';
+import Annotation from '../Annotation';
 
 // Date needed by Orbit but not by Body
 type OrbitData = {
@@ -169,24 +170,28 @@ export const Orbit = (props: OrbitProps) => {
   useFrame(() => {
     if (!velocityArrowRef.current || !bodyRef.current) return;
     const position = bodyRef.current.position.clone();
-    if (
-      !timeState.isPaused &&
-      selectState.selected &&
-      props.name === selectState.selected.name
-    ) {
-      console.log('orbit:', {
-        updateIteration: simState.updateIteration,
-        name: props.name,
-        bodyPosition: bodyRef.current.position,
-        meshPosition: meshRef.current.position,
-        meshId: meshRef.current.id,
-        bodyId: bodyRef.current.id,
-        camTargetPosition: camState.focusTarget?.position,
-      });
-    }
     velocityArrowRef.current.position.set(...position.toArray());
     const direction = bodyRef.current.velocity.clone().normalize();
     velocityArrowRef.current.setDirection(direction);
+    // if (
+    //   !timeState.isPaused &&
+    //   selectState.selected &&
+    //   props.name === selectState.selected.name
+    // ) {
+    //   const gazeTarget = new Vector3();
+    //   camState.controls.getTarget(gazeTarget).toArray();
+    //   const gazeTargetLocal = bodyRef.current.worldToLocal(gazeTarget);
+    //   console.log('orbit:', {
+    //     updateIteration: simState.updateIteration,
+    //     name: props.name,
+    //     bodyPosition: bodyRef.current.position.toArray(),
+    //     meshPosition: meshRef.current.position.toArray(),
+    //     meshId: meshRef.current.id,
+    //     bodyId: bodyRef.current.id,
+    //     camTargetPosition: camState.focusTarget?.position.toArray(),
+    //     camLookPosition: camState.controls.getTarget(gazeTargetLocal).toArray(),
+    //   });
+    // }
   });
 
   // callback function to be passed down to children via context provider
@@ -223,16 +228,19 @@ export const Orbit = (props: OrbitProps) => {
       }}
     >
       <KeplerTreeContext.Provider value={addChildToTree}>
-        <Body ref={bodyRef} args={bodyArgs}>
+        <Body ref={bodyRef} args={bodyArgs} texture={props.texture}>
           {props.children}
-          <BodyMesh
-            name={props.name}
-            meanRadius={preset.meanRadius}
-            color={preset.color}
-            texture={props.texture}
-            body={bodyRef}
-            ref={meshRef}
-          />
+          <object3D>
+            {/* <Annotation annotation={props.name} /> */}
+            <BodyMesh
+              name={props.name}
+              meanRadius={preset.meanRadius}
+              color={preset.color}
+              texture={props.texture}
+              body={bodyRef}
+              ref={meshRef}
+            />
+          </object3D>
         </Body>
       </KeplerTreeContext.Provider>
       <Trajectory

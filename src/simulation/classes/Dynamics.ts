@@ -38,74 +38,30 @@ class KinematicBody extends Object3D {
 
   // update
   private updatePosition(deltaTime: number) {
-    this.position.addScaledVector(this.velocity, deltaTime);
-
-    // update the transformation matrix
+    // log position before and after update
     // if (selectState.selected && this.id === selectState.selected.id) {
-    //   console.log('kepler-body-before-matrix-update', {
-    //     updateIteration: simState.updateIteration,
-    //     name: this.name,
-    //     position: this.position,
-    //     localMatrix: this.matrix,
-    //     id: this.id,
-    //   });
-    //   this.updateMatrix();
+    //   console.log('position pre-update:', this.position.toArray());
+    //   console.log('matrix pre-update:', this.matrix.toArray());
+
+    //   this.position.addScaledVector(this.velocity, deltaTime);
+
+    //   console.log('position post-update:', this.position.toArray());
+    //   console.log('matrix post-update:', this.matrix.toArray());
+    // } else {
+    //   this.position.addScaledVector(this.velocity, deltaTime);
     // }
+    this.position.addScaledVector(this.velocity, deltaTime);
   }
   private updateVelocity(deltaTime: number) {
     this.velocity.addScaledVector(this.acceleration, deltaTime);
   }
 
   update(deltaTime: number) {
-    if (selectState.selected && this.id === selectState.selected.id) {
-      const matrixPos = new Vector3();
-      const matrixRot = new Quaternion();
-      const matrixScale = new Vector3();
-      this.matrix.decompose(matrixPos, matrixRot, matrixScale);
-      console.log('kepler-body-before-update', {
-        updateIteration: simState.updateIteration,
-        name: this.name,
-        position: this.position,
-        positionClone: this.position.clone(),
-        x: this.position.x,
-        y: this.position.y,
-        z: this.position.z,
-        arrayVec: this.position.toArray(),
-        matrixPos: matrixPos,
-        matrix: this.matrix,
-        id: this.id,
-      });
-    }
-
+    // update velocity
     this.updateVelocity(deltaTime);
 
-    const updatedPosition = this.position
-      .clone()
-      .addScaledVector(this.velocity, deltaTime);
-
+    // update position
     this.updatePosition(deltaTime);
-
-    if (selectState.selected && this.id === selectState.selected.id) {
-      this.updateMatrixWorld(true);
-      const matrixPos = new Vector3();
-      const matrixRot = new Quaternion();
-      const matrixScale = new Vector3();
-      this.matrix.decompose(matrixPos, matrixRot, matrixScale);
-      console.log('kepler-body-after-update', {
-        updateIteration: simState.updateIteration,
-        name: this.name,
-        position: this.position,
-        positionClone: this.position.clone(),
-        x: this.position.x,
-        y: this.position.y,
-        z: this.position.z,
-        arrayVec: this.position.toArray(),
-        updatedPosition: updatedPosition,
-        matrixPos: matrixPos,
-        matrix: this.matrix,
-        id: this.id,
-      });
-    }
   }
 }
 

@@ -16,6 +16,7 @@ import { selectState } from '../state/SelectState';
 import { SelectionPanel } from './leva/SelectionPanel';
 import { CameraPanel } from './leva/CameraPanel';
 import { CameraTarget } from './Camera/CameraTarget';
+import { Vector3 } from 'three';
 
 type SimProps = {
   children: React.ReactNode;
@@ -37,16 +38,22 @@ const Simulation = (props: SimProps) => {
 
       simState.updateIteration += 1;
 
-      if (selectState.selected) {
-        const selected = selectState.selected;
-        console.log('selected', {
-          updateIteration: simState.updateIteration,
-          name: selected.name,
-          position: selected.position,
-          id: selected.id,
-          camTargetPosition: camState.focusTarget?.position,
-        });
-      }
+      // if (selectState.selected) {
+      //   const selected = selectState.selected;
+      //   const gazeTarget = new Vector3();
+      //   camState.controls.getTarget(gazeTarget).toArray();
+      //   const gazeTargetLocal = selected.worldToLocal(gazeTarget);
+      //   console.log('selected', {
+      //     updateIteration: simState.updateIteration,
+      //     name: selected.name,
+      //     position: selected.position.toArray(),
+      //     id: selected.id,
+      //     camTargetPosition: camState.focusTarget?.position.toArray(),
+      //     camLookPosition: camState.controls
+      //       .getTarget(gazeTargetLocal)
+      //       .toArray(),
+      //   });
+      // }
       // camera.
 
       // update simulation
@@ -55,7 +62,7 @@ const Simulation = (props: SimProps) => {
       retrogradeState.update();
     }
     camState.updateControls();
-  }, -1);
+  });
 
   useEventListener('keypress', (e) => {
     e.preventDefault();

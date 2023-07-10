@@ -125,44 +125,48 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     if (!meshRef.current || !props.body.current) {
       return;
     }
-    if (!timeState.isPaused && isSelected) {
-      console.log('mesh', {
-        name: props.name,
-        updateIteration: simState.updateIteration,
-        bodyPosition: props.body.current.position,
-        meshPosition: meshRef.current.position,
-        meshId: meshRef.current.id,
-        bodyId: props.body.current.id,
-        camTargetPosition: camState.focusTarget?.position,
-      });
-    }
+    // if (!timeState.isPaused && isSelected) {
+    //   const gazeTarget = new Vector3();
+    //   camState.controls.getTarget(gazeTarget).toArray();
+    //   const gazeTargetLocal = props.body.current.worldToLocal(gazeTarget);
+    //   console.log('mesh', {
+    //     name: props.name,
+    //     updateIteration: simState.updateIteration,
+    //     bodyPosition: props.body.current.position.toArray(),
+    //     meshPosition: meshRef.current.position.toArray(),
+    //     meshId: meshRef.current.id,
+    //     bodyId: props.body.current.id,
+    //     camTargetPosition: camState.focusTarget?.position.toArray(),
+    //     camGazePosition: camState.controls.getTarget(gazeTargetLocal).toArray(),
+    //   });
+    // }
     // meshRef.current.position.set(...props.body.current.position.toArray());
   });
 
   return (
-    <>
-      <Select enabled={isSelected}>
-        <mesh
-          visible={isVisible}
-          ref={(meshObj) => {
-            if (!meshObj) return;
-            meshRef.current = meshObj;
-            //setMesh(meshObj);
-          }}
-          scale={props.meanRadius}
-          onClick={handleClick}
-          onPointerMissed={handleMiss}
-          onPointerOver={() => setHovered(true)}
-          onPointerLeave={() => setHovered(false)}
-        >
-          <sphereGeometry />
-          <meshBasicMaterial
-            map={props.texture}
-            color={!props.texture ? props.color : undefined}
-          />
+    <Select enabled={isSelected}>
+      <mesh
+        visible={isVisible}
+        ref={(meshObj) => {
+          if (!meshObj) return;
+          meshRef.current = meshObj;
+          //setMesh(meshObj);
+        }}
+        scale={props.meanRadius}
+        onClick={handleClick}
+        onPointerMissed={handleMiss}
+        onPointerOver={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
+      >
+        <sphereGeometry />
+        <meshBasicMaterial
+          map={props.texture}
+          color={!props.texture ? props.color : undefined}
+        />
+        <object3D>
           <Annotation annotation={props.name} />
-        </mesh>
-      </Select>
+        </object3D>
+      </mesh>
       {/* <Line ref={lineRef} points={[300]} color={props.color} /> */}
       {/* <Trail
         ref={trailRef}
@@ -175,6 +179,6 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
           return t * t;
         }}
       /> */}
-    </>
+    </Select>
   );
 });

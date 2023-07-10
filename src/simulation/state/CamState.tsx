@@ -2,7 +2,7 @@ import { CameraControls } from '@react-three/drei';
 import { simState } from './SimState';
 import { proxy } from 'valtio';
 import Vec3 from '../types/Vec3';
-import { Camera, Object3D, Vector3 } from 'three';
+import { Camera, Object3D, Vector3, Vector3Tuple } from 'three';
 import { OrbitControls } from 'three-stdlib';
 
 type CamStateObj = {
@@ -28,8 +28,10 @@ const updateControls = () => {
   }
   if (!camState.focusTarget) return;
   const worldPos = new Vector3();
+
+  // camState.focusTarget.updateMatrixWorld(true); // update world matrix of target
   camState.focusTarget.getWorldPosition(worldPos);
-  const targetPos: Vec3 = worldPos.toArray();
+  const targetPos: Vector3Tuple = worldPos.toArray();
 
   // update controls to follow target
   camState.controls.setTarget(...targetPos, false).catch((reason) => {

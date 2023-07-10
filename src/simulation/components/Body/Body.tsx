@@ -32,6 +32,7 @@ import { TextureLoader } from 'three';
 import { CentralMassContext } from '@/simulation/context/CentralMassContext';
 import { debugState } from '@/simulation/state/DebugState';
 import { BodyMesh } from './BodyMesh';
+import Annotation from '../Annotation';
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -52,7 +53,7 @@ export type BodyArgs = {
 type BodyProps = {
   children?: React.ReactNode;
   args: BodyArgs;
-  // texturePath?: string;
+  texture?: Texture;
 };
 
 const Body = forwardRef<KeplerBody, BodyProps>(function Body(
@@ -70,6 +71,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
 
   // get refs
   const bodyRef = useRef<KeplerBody>(null!);
+  const meshRef = useRef<Mesh>(null!);
 
   // Set forwarded ref
   // the return value of the callback function will be assigned to fwdRef
@@ -80,6 +82,12 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     },
     [bodyRef]
   );
+
+  useFrame(() => {
+    if (!bodyRef || !meshRef) return;
+    // update mesh position to be in sync with body
+    meshRef.current.position.set(...bodyRef.current.position.toArray());
+  });
 
   return (
     <>
@@ -109,13 +117,21 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         name={name ?? ''}
         args={[mass, initialPosition.toArray(), initialVelocity.toArray()]}
       >
-        {/* <BodyMesh
-          name={props.args.name}
-          meanRadius={props.args.meanRadius}
-          color={props.args.color}
-          texture={texture}
-        /> */}
+        <object3D>
+          <BodyMesh
+            name={props.args.name}
+            meanRadius={props.args.meanRadius}
+            color={props.args.color}
+            texture={props.texture}
+            body={bodyRef}
+          />
+        </object3D>
 
+        <object3D>
+          <Annotation annotation={props.args.name} />
+        </object3D>
+
+        {/* <Annotation annotation={props.args.name} /> */}
         {/* <KeplerTreeContext.Provider value={addChildToTree}> */}
 
         {/* child orbits need to know the mass of their central body */}
@@ -125,6 +141,14 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
 
         {/* </KeplerTreeContext.Provider> */}
       </keplerBody>
+      <BodyMesh
+        name={props.args.name}
+        meanRadius={props.args.meanRadius}
+        color={props.args.color}
+        texture={props.texture}
+        body={bodyRef}
+        ref={meshRef}
+      />
     </>
   );
 });
