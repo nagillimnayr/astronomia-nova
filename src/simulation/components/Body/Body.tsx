@@ -78,6 +78,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   // get refs
   const bodyRef = useRef<KeplerBody>(null!);
   const meshRef = useRef<Mesh>(null!);
+  const velocityArrowRef = useRef<ArrowHelper>(null!);
 
   // Set forwarded ref
   // the return value of the callback function will be assigned to fwdRef
@@ -91,8 +92,16 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
 
   useFrame(() => {
     if (!bodyRef.current || !meshRef.current) return;
+
     // update mesh position to be in sync with body
-    meshRef.current.position.set(...bodyRef.current.position.toArray());
+    const position = bodyRef.current.position.toArray();
+    meshRef.current.position.set(...position);
+
+    if (!velocityArrowRef.current) return;
+    // update direction of velocity arrow
+    const direction = bodyRef.current.velocity.clone().normalize();
+    velocityArrowRef.current.setDirection(direction);
+    velocityArrowRef.current.position.set(...position);
   });
 
   return (
@@ -129,7 +138,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         </object3D>
 
         {/** for whatever reason, the same does not work for BodyMesh */}
-        <object3D>
+        {/* <object3D>
           <BodyMesh
             name={props.args.name}
             meanRadius={props.args.meanRadius}
@@ -137,17 +146,12 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
             texture={props.texture}
             body={bodyRef}
           />
-        </object3D>
-
-        {/* <Annotation annotation={props.args.name} /> */}
-        {/* <KeplerTreeContext.Provider value={addChildToTree}> */}
+        </object3D> */}
 
         {/* child orbits need to know the mass of their central body */}
         <CentralMassContext.Provider value={props.args.mass}>
           {props.children}
         </CentralMassContext.Provider>
-
-        {/* </KeplerTreeContext.Provider> */}
       </keplerBody>
 
       {/** putting BodyMesh outside of KeplerBody and updating its position manually does however */}
@@ -158,6 +162,15 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         texture={props.texture}
         body={bodyRef}
         ref={meshRef}
+      />
+
+      <arrowHelper
+        ref={(arrow) => {
+          if (!arrow) return;
+          velocityArrowRef.current = arrow;
+          arrow.setColor('green');
+          arrow.setLength(1, 0.2, 0.05);
+        }}
       />
     </>
   );

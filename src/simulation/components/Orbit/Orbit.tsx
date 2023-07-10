@@ -165,14 +165,7 @@ export const Orbit = (props: OrbitProps) => {
   const bodyRef = useRef<KeplerBody>(null!);
   const meshRef = useRef<Mesh>(null!);
 
-  const velocityArrowRef = useRef<ArrowHelper>(null!);
-
   useFrame(() => {
-    if (!velocityArrowRef.current || !bodyRef.current) return;
-    const position = bodyRef.current.position.clone();
-    velocityArrowRef.current.position.set(...position.toArray());
-    const direction = bodyRef.current.velocity.clone().normalize();
-    velocityArrowRef.current.setDirection(direction);
     // if (
     //   !timeState.isPaused &&
     //   selectState.selected &&
@@ -248,18 +241,6 @@ export const Orbit = (props: OrbitProps) => {
         semiMinorAxis={elements.semiMinorAxis}
       />
       <TrueAnomalyArrow color={preset.color} target={bodyRef} />
-
-      <arrowHelper
-        ref={velocityArrowRef}
-        args={[
-          new Vector3(1, 0, 0),
-          new Vector3(0, 0, 0),
-          1,
-          'green',
-          0.1,
-          0.1,
-        ]}
-      />
     </object3D>
   );
 };
