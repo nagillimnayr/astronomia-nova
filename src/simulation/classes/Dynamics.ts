@@ -39,12 +39,18 @@ class KinematicBody extends Object3D {
   // update
   private updatePosition(deltaTime: number) {
     this.position.addScaledVector(this.velocity, deltaTime);
-    // const newPosition = this.position
-    //   .clone()
-    //   .addScaledVector(this.velocity, deltaTime);
 
-    // set the objects translation component of its transformation matrix
-    // this.matrix.setPosition(newPosition);
+    // update the transformation matrix
+    // if (selectState.selected && this.id === selectState.selected.id) {
+    //   console.log('kepler-body-before-matrix-update', {
+    //     updateIteration: simState.updateIteration,
+    //     name: this.name,
+    //     position: this.position,
+    //     localMatrix: this.matrix,
+    //     id: this.id,
+    //   });
+    //   this.updateMatrix();
+    // }
   }
   private updateVelocity(deltaTime: number) {
     this.velocity.addScaledVector(this.acceleration, deltaTime);
@@ -60,7 +66,13 @@ class KinematicBody extends Object3D {
         updateIteration: simState.updateIteration,
         name: this.name,
         position: this.position,
+        positionClone: this.position.clone(),
+        x: this.position.x,
+        y: this.position.y,
+        z: this.position.z,
+        arrayVec: this.position.toArray(),
         matrixPos: matrixPos,
+        matrix: this.matrix,
         id: this.id,
       });
     }
@@ -83,8 +95,14 @@ class KinematicBody extends Object3D {
         updateIteration: simState.updateIteration,
         name: this.name,
         position: this.position,
+        positionClone: this.position.clone(),
+        x: this.position.x,
+        y: this.position.y,
+        z: this.position.z,
+        arrayVec: this.position.toArray(),
         updatedPosition: updatedPosition,
         matrixPos: matrixPos,
+        matrix: this.matrix,
         id: this.id,
       });
     }

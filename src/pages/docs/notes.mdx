@@ -37,9 +37,45 @@ I suspect that this is the source of the issue, as I retrieving the objects posi
 Mutating the object's position vector does not immediately update the actual renderer poition of the object, nor does it immediately update the object's transformation matrix.
 The transformation matrices, both the local and world matrices, are only updated once per frame. We can force it to update the world matrix, which also updates the local matrix, by calling `obj.updateMatrixWorld(true)`.
 
+When logging the position vector and the local matrix to the console, at a timescale of 1, the two seem to stay in sync, but at higher timescales, the local matrix appears to update properly, but retrieving the position vector through `obj.position` returns a value which seems to not be updating at all. Yet, when setting a breakpoint, the values suddenly seemt to coincide.
 
+```
+id
+: 
+57
+matrix
+: 
+Matrix4
+elements
+: 
+(16) [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -10.868367698331614, 0, -0.6750350179198271, 1]
+[[Prototype]]
+: 
+Object
+matrixPos
+: 
+Vector3 {x: -10.868053109392976, y: 0, z: -0.6800366858868129}
+name
+: 
+"Venus"
+position
+: 
+Vector3 {x: -10.868367698331614, y: 0, z: -0.6750350179198271}
+positionClone
+: 
+Vector3 {x: -10.868053109392976, y: 0, z: -0.6800366858868129}
+updateIteration
+: 
+73
+updatedPosition
+: 
+Vector3 {x: -10.868053109392976, y: 0, z: -0.6800366858868129}
+```
 
+Getting the value from `obj.position` appears to return the value of the position vector component of the local matrix. However, when cloning the position vector with `obj.position.clone()`, the new vector has the correct values that the position vector should have after being updated. 
 
+Decomposing the local matrix and logging the value of the decomposed position vector gives the proper updated values, but logging the matrix directly gives the same values as directly logging `obj.position`.
+The `clone()` method constructs a new Vector3 by accessing the vector's x, y, and z components seperately. Directly accessing the vector components returns the same values.
 ---
 
 </pre>
