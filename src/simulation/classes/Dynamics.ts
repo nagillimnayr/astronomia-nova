@@ -1,6 +1,9 @@
-import { Object3D, Vector3 } from 'three';
+import { Object3D, Quaternion, Vector3 } from 'three';
 import PointMass from '../interfaces/PointMass';
 import Vec3 from '../types/Vec3';
+import { selectState } from '../state/SelectState';
+import { simState } from '../state/SimState';
+import { camState } from '../state/CamState';
 
 class KinematicBody extends Object3D {
   private _velocity: Vector3;
@@ -36,13 +39,55 @@ class KinematicBody extends Object3D {
   // update
   private updatePosition(deltaTime: number) {
     this.position.addScaledVector(this.velocity, deltaTime);
+    // const newPosition = this.position
+    //   .clone()
+    //   .addScaledVector(this.velocity, deltaTime);
+
+    // set the objects translation component of its transformation matrix
+    // this.matrix.setPosition(newPosition);
   }
   private updateVelocity(deltaTime: number) {
     this.velocity.addScaledVector(this.acceleration, deltaTime);
   }
+
   update(deltaTime: number) {
+    if (selectState.selected && this.id === selectState.selected.id) {
+      const matrixPos = new Vector3();
+      const matrixRot = new Quaternion();
+      const matrixScale = new Vector3();
+      this.matrix.decompose(matrixPos, matrixRot, matrixScale);
+      console.log('kepler-body-before-update', {
+        updateIteration: simState.updateIteration,
+        name: this.name,
+        position: this.position,
+        matrixPos: matrixPos,
+        id: this.id,
+      });
+    }
+
     this.updateVelocity(deltaTime);
+
+    const updatedPosition = this.position
+      .clone()
+      .addScaledVector(this.velocity, deltaTime);
+
     this.updatePosition(deltaTime);
+
+    if (selectState.selected && this.id === selectState.selected.id) {
+      this.updateMatrixWorld(true);
+      const matrixPos = new Vector3();
+      const matrixRot = new Quaternion();
+      const matrixScale = new Vector3();
+      this.matrix.decompose(matrixPos, matrixRot, matrixScale);
+      console.log('kepler-body-after-update', {
+        updateIteration: simState.updateIteration,
+        name: this.name,
+        position: this.position,
+        updatedPosition: updatedPosition,
+        matrixPos: matrixPos,
+        id: this.id,
+      });
+    }
   }
 }
 

@@ -14,8 +14,33 @@ import Head from 'next/head';
 # Notes
 ---
 
+## Problems with object positions not updating together
+I have been having issues with objects attached to the KeplerBody objects not updating correctly. Either the attached object is lagging behind, or the KeplerBody is jumping ahead. The effect is much more noticeable at higher timescales. When the simulation is paused, everything snaps together into one place.  
+
+---
+
+I was able to seemingly fix most of the issue by detaching the objects and setting their positons to that of the underlying KeplerBody manually once per frame. That at least resulted in the mesh and the target position of the camera being in the same place, but the underlying KeplerBody object was not. Furthermore, the Annotation object (the html that renders the name of the object), which is attached to the mesh, faced the same original issue, in that it lagged behind the mesh.
+
+I suspected at first that the issue was somehow caused by the order in which objects are updating. That the underlying KeplerBody was updating its position after the objects attached to it had updated, thus seeming to jump ahead of them. But after experimenting with it, I'm not sure that this is the cause.
+
 - render order: (mesh > orbit > simulation)  
 seems to render useFrame callbacks from bottom up
+
+---
+
+After experimenting some more, I think the issue has something to do with how the transformation matrices are updated. 
+
+
+Additionally, accessing the object's position vector through the dot operator (i.e. obj.position) allows us to modify the position vector, which seems to properly update the transformation matrix (at the end of the frame, not immediately), but accessing the value of the vector, even after modifying it, seems to return the same value as it does when accessing it before modifying it. 
+I suspect that this is the source of the issue, as I retrieving the objects position in this way, in order to update the positions of other objects, so while the actual object continues to move, accessing its position vector is returning a stale value. 
+
+Mutating the object's position vector does not immediately update the actual renderer poition of the object, nor does it immediately update the object's transformation matrix.
+The transformation matrices, both the local and world matrices, are only updated once per frame. We can force it to update the world matrix, which also updates the local matrix, by calling `obj.updateMatrixWorld(true)`.
+
+
+
+
+---
 
 </pre>
 </section>

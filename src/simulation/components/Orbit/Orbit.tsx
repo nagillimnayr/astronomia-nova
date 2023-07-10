@@ -36,6 +36,7 @@ import { useFrame } from '@react-three/fiber';
 import { timeState } from '@/simulation/state/TimeState';
 import { simState } from '@/simulation/state/SimState';
 import { selectState } from '@/simulation/state/SelectState';
+import { camState } from '@/simulation/state/CamState';
 
 // Date needed by Orbit but not by Body
 type OrbitData = {
@@ -180,6 +181,7 @@ export const Orbit = (props: OrbitProps) => {
         meshPosition: meshRef.current.position,
         meshId: meshRef.current.id,
         bodyId: bodyRef.current.id,
+        camTargetPosition: camState.focusTarget?.position,
       });
     }
     velocityArrowRef.current.position.set(...position.toArray());
@@ -223,15 +225,15 @@ export const Orbit = (props: OrbitProps) => {
       <KeplerTreeContext.Provider value={addChildToTree}>
         <Body ref={bodyRef} args={bodyArgs}>
           {props.children}
+          <BodyMesh
+            name={props.name}
+            meanRadius={preset.meanRadius}
+            color={preset.color}
+            texture={props.texture}
+            body={bodyRef}
+            ref={meshRef}
+          />
         </Body>
-        <BodyMesh
-          name={props.name}
-          meanRadius={preset.meanRadius}
-          color={preset.color}
-          texture={props.texture}
-          body={bodyRef}
-          ref={meshRef}
-        />
       </KeplerTreeContext.Provider>
       <Trajectory
         semiMajorAxis={elements.semiMajorAxis}

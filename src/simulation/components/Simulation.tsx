@@ -26,13 +26,16 @@ const Simulation = (props: SimProps) => {
   const getState = useThree((state) => state.get);
   simState.getState = getState;
 
-  useFrame(({ clock }, delta) => {
+  useFrame(({ clock, camera }, delta) => {
     // camState.controls.update(delta);
     // update camera
+    camState.updateControls();
     if (!timeState.isPaused) {
       // scale delta time
       const scaledDelta = delta * timeState.timescale;
       timeState.updateClock(scaledDelta);
+
+      simState.updateIteration += 1;
 
       if (selectState.selected) {
         const selected = selectState.selected;
@@ -41,9 +44,10 @@ const Simulation = (props: SimProps) => {
           name: selected.name,
           position: selected.position,
           id: selected.id,
+          camTargetPosition: camState.focusTarget?.position,
         });
       }
-      simState.updateIteration += 1;
+      // camera.
 
       // update simulation
       keplerTreeState.fixedUpdate(scaledDelta);
@@ -51,7 +55,7 @@ const Simulation = (props: SimProps) => {
       retrogradeState.update();
     }
     camState.updateControls();
-  });
+  }, -1);
 
   useEventListener('keypress', (e) => {
     e.preventDefault();

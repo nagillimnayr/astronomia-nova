@@ -126,16 +126,17 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       return;
     }
     if (!timeState.isPaused && isSelected) {
-      console.log('mesh-before-update', {
+      console.log('mesh', {
         name: props.name,
         updateIteration: simState.updateIteration,
         bodyPosition: props.body.current.position,
         meshPosition: meshRef.current.position,
         meshId: meshRef.current.id,
         bodyId: props.body.current.id,
+        camTargetPosition: camState.focusTarget?.position,
       });
     }
-    meshRef.current.position.set(...props.body.current.position.toArray());
+    // meshRef.current.position.set(...props.body.current.position.toArray());
   });
 
   return (
