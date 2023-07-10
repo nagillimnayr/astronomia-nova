@@ -1,6 +1,7 @@
 import {
   Line,
   MeshLineGeometry,
+  Sphere,
   Trail,
   useCursor,
   useHelper,
@@ -144,31 +145,33 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   });
 
   return (
-    <Select enabled={isSelected}>
-      <mesh
-        visible={isVisible}
-        ref={(meshObj) => {
-          if (!meshObj) return;
-          meshRef.current = meshObj;
-          //setMesh(meshObj);
-        }}
-        scale={props.meanRadius}
-        onClick={handleClick}
-        onPointerMissed={handleMiss}
-        onPointerOver={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
-      >
-        <sphereGeometry />
-        <meshBasicMaterial
-          map={props.texture}
-          color={!props.texture ? props.color : undefined}
-        />
-        <object3D>
+    <>
+      <Select enabled={isSelected}>
+        <Sphere
+          visible={isVisible}
+          ref={(meshObj) => {
+            if (!meshObj) return;
+            meshRef.current = meshObj;
+            //setMesh(meshObj);
+          }}
+          args={[props.meanRadius]}
+          // scale={props.meanRadius}
+          onClick={handleClick}
+          onPointerMissed={handleMiss}
+          onPointerOver={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+        >
+          {/* <sphereGeometry /> */}
+          <meshBasicMaterial
+            map={props.texture}
+            color={!props.texture ? props.color : undefined}
+          />
+          {/* <object3D>
           <Annotation annotation={props.name} />
-        </object3D>
-      </mesh>
-      {/* <Line ref={lineRef} points={[300]} color={props.color} /> */}
-      {/* <Trail
+        </object3D> */}
+        </Sphere>
+        {/* <Line ref={lineRef} points={[300]} color={props.color} /> */}
+        {/* <Trail
         ref={trailRef}
         target={meshRef}
         width={1}
@@ -179,6 +182,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
           return t * t;
         }}
       /> */}
-    </Select>
+      </Select>
+    </>
   );
 });

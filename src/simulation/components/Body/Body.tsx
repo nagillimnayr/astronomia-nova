@@ -26,7 +26,13 @@ import {
 } from 'three';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 import KeplerBody from '../../classes/KeplerBody';
-import { MeshLineGeometry, Edges, Trail, useHelper } from '@react-three/drei';
+import {
+  MeshLineGeometry,
+  Edges,
+  Trail,
+  useHelper,
+  BBAnchor,
+} from '@react-three/drei';
 import { TextureLoader } from 'three';
 
 import { CentralMassContext } from '@/simulation/context/CentralMassContext';
@@ -84,7 +90,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   );
 
   useFrame(() => {
-    if (!bodyRef || !meshRef) return;
+    if (!bodyRef.current || !meshRef.current) return;
     // update mesh position to be in sync with body
     meshRef.current.position.set(...bodyRef.current.position.toArray());
   });
@@ -117,6 +123,12 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         name={name ?? ''}
         args={[mass, initialPosition.toArray(), initialVelocity.toArray()]}
       >
+        {/** for some reason, wrapping the Annotation in an object3D stops it from stuttering */}
+        <object3D>
+          <Annotation annotation={props.args.name} />
+        </object3D>
+
+        {/** for whatever reason, the same does not work for BodyMesh */}
         <object3D>
           <BodyMesh
             name={props.args.name}
@@ -125,10 +137,6 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
             texture={props.texture}
             body={bodyRef}
           />
-        </object3D>
-
-        <object3D>
-          <Annotation annotation={props.args.name} />
         </object3D>
 
         {/* <Annotation annotation={props.args.name} /> */}
@@ -141,6 +149,8 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
 
         {/* </KeplerTreeContext.Provider> */}
       </keplerBody>
+
+      {/** putting BodyMesh outside of KeplerBody and updating its position manually does however */}
       <BodyMesh
         name={props.args.name}
         meanRadius={props.args.meanRadius}

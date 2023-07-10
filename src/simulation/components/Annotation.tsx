@@ -10,11 +10,13 @@ const Annotation = (props: AnnotationProps) => {
 
   return debugSnap.annotations ? (
     <BBAnchor anchor={[0, -1, 0]}>
-      <Html center className="min-h-fit min-w-fit ">
-        <div className="flex min-h-fit min-w-fit translate-y-1/2 select-none flex-row  rounded-lg px-2 text-white">
-          {props.annotation}
-        </div>
-      </Html>
+      <object3D>
+        <Html center className="min-h-fit min-w-fit ">
+          <div className="flex min-h-fit min-w-fit translate-y-1/2 select-none flex-row  rounded-lg px-2 text-white">
+            {props.annotation}
+          </div>
+        </Html>
+      </object3D>
     </BBAnchor>
   ) : (
     <></>

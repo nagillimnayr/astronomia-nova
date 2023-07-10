@@ -40,26 +40,43 @@ const Simulation = (props: SimProps) => {
 
       // if (selectState.selected) {
       //   const selected = selectState.selected;
-      //   const gazeTarget = new Vector3();
-      //   camState.controls.getTarget(gazeTarget).toArray();
-      //   const gazeTargetLocal = selected.worldToLocal(gazeTarget);
-      //   console.log('selected', {
+      //   // const gazeTarget = new Vector3();
+      //   // camState.controls.getTarget(gazeTarget).toArray();
+      //   const worldPos = new Vector3();
+      //   selected.getWorldPosition(worldPos);
+      //   console.log('pre-update', {
       //     updateIteration: simState.updateIteration,
       //     name: selected.name,
-      //     position: selected.position.toArray(),
       //     id: selected.id,
+      //     position: selected.position.toArray(),
+      //     worldPos: worldPos.toArray(),
       //     camTargetPosition: camState.focusTarget?.position.toArray(),
-      //     camLookPosition: camState.controls
-      //       .getTarget(gazeTargetLocal)
-      //       .toArray(),
+      //     camGazePosition: camState.controls.getTarget(new Vector3()).toArray(),
       //   });
       // }
-      // camera.
 
       // update simulation
       keplerTreeState.fixedUpdate(scaledDelta);
 
       retrogradeState.update();
+
+      // if (selectState.selected) {
+      //   camState.updateControls();
+      //   const selected = selectState.selected;
+      //   // const gazeTarget = new Vector3();
+      //   // camState.controls.getTarget(gazeTarget).toArray();
+      //   const worldPos = new Vector3();
+      //   selected.getWorldPosition(worldPos);
+      //   console.log('post-update', {
+      //     updateIteration: simState.updateIteration,
+      //     name: selected.name,
+      //     id: selected.id,
+      //     position: selected.position.toArray(),
+      //     worldPos: worldPos.toArray(),
+      //     camTargetPosition: camState.focusTarget?.position.toArray(),
+      //     camGazePosition: camState.controls.getTarget(new Vector3()).toArray(),
+      //   });
+      // }
     }
     camState.updateControls();
   });
