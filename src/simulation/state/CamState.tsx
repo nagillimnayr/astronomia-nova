@@ -5,6 +5,8 @@ import Vec3 from '../types/Vec3';
 import { Camera, Object3D, Vector3, Vector3Tuple } from 'three';
 import { OrbitControls } from 'three-stdlib';
 
+const worldPos = new Vector3();
+
 type CamStateObj = {
   controls: CameraControls;
   marker: Object3D;
@@ -27,7 +29,7 @@ const updateControls = () => {
     return;
   }
   if (!camState.focusTarget) return;
-  const worldPos = new Vector3();
+  // const worldPos = new Vector3();
 
   // camState.focusTarget.updateMatrixWorld(true); // update world matrix of target
   camState.focusTarget.getWorldPosition(worldPos);

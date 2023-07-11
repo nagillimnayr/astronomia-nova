@@ -1,11 +1,21 @@
-import { Object3D, Quaternion, Vector3 } from 'three';
+import {
+  Object3D,
+  Quaternion,
+  Vector3,
+  Mesh,
+  SphereGeometry,
+  MeshBasicMaterial,
+} from 'three';
 import PointMass from '../interfaces/PointMass';
 import Vec3 from '../types/Vec3';
 import { selectState } from '../state/SelectState';
 import { simState } from '../state/SimState';
 import { camState } from '../state/CamState';
 
-class KinematicBody extends Object3D {
+const _v1 = new Vector3();
+const _v2 = new Vector3();
+
+class KinematicBody extends Mesh {
   private _velocity: Vector3;
   private _acceleration: Vector3;
 
@@ -18,6 +28,8 @@ class KinematicBody extends Object3D {
       ? new Vector3(...initialVelocity)
       : new Vector3(0, 0, 0);
     this._acceleration = new Vector3(0, 0, 0);
+    this.geometry = new SphereGeometry(0.5);
+    this.material = new MeshBasicMaterial();
   }
 
   // velocity
@@ -50,7 +62,14 @@ class KinematicBody extends Object3D {
     // } else {
     //   this.position.addScaledVector(this.velocity, deltaTime);
     // }
+
     this.position.addScaledVector(this.velocity, deltaTime);
+
+    if (selectState.selected && this.id === selectState.selected.id) {
+      camState.updateControls();
+      // check that id of camera focus target is same as this object
+      console.log(this.id, camState.focusTarget?.id);
+    }
   }
   private updateVelocity(deltaTime: number) {
     this.velocity.addScaledVector(this.acceleration, deltaTime);
