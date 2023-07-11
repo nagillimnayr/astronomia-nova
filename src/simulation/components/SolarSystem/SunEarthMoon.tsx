@@ -78,14 +78,8 @@ const EarthMoon = () => {
               initialPosition: origin,
               initialVelocity: zeroVector,
             }}
+            texture={sunTexture}
           >
-            <BodyMesh
-              name="Sun"
-              color="0xfdee00"
-              meanRadius={1.5}
-              texture={sunTexture}
-              body={rootRef}
-            />
             <Orbit name={'Earth'} texture={earthTexture}>
               <Orbit name={'Moon'} texture={moonTexture}></Orbit>
             </Orbit>

@@ -3,6 +3,7 @@ import {
   MeshLineGeometry,
   Sphere,
   Trail,
+  Wireframe,
   useCursor,
   useHelper,
   useTexture,
@@ -144,6 +145,10 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     // meshRef.current.position.set(...props.body.current.position.toArray());
   });
 
+  const topOfSphere = useMemo(
+    () => new Vector3(0, props.meanRadius, 0),
+    [props.meanRadius]
+  );
   return (
     <>
       <Select enabled={isSelected}>
@@ -168,7 +173,19 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
           />
           {/* <object3D>
           <Annotation annotation={props.name} />
+
         </object3D> */}
+          <Sphere args={[0.1]} position={topOfSphere}>
+            <Wireframe />
+          </Sphere>
+          <arrowHelper
+            ref={(arrow) => {
+              if (!arrow) return;
+              arrow.setDirection(topOfSphere);
+              arrow.setColor('blue');
+              arrow.setLength(1, 0.2, 0.05);
+            }}
+          />
         </Sphere>
         {/* <Line ref={lineRef} points={[300]} color={props.color} /> */}
         {/* <Trail

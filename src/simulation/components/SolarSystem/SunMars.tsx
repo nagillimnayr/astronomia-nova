@@ -68,14 +68,8 @@ const SunMars = () => {
               initialPosition: origin,
               initialVelocity: zeroVector,
             }}
+            texture={sunTexture}
           >
-            <BodyMesh
-              name="Sun"
-              color="0xfdee00"
-              meanRadius={1.5}
-              texture={sunTexture}
-              body={rootRef}
-            />
             <Orbit name={'Mars'} texture={marsTexture}></Orbit>
           </Body>
         </Selection>

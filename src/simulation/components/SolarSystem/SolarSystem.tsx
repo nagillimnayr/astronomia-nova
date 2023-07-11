@@ -15,7 +15,6 @@ import { keplerTreeState } from '../../state/keplerTreeState';
 import { Orbit } from '../Orbit/Orbit';
 import { BodyMesh } from '../Body/BodyMesh';
 import { Vector3 } from 'three';
-import { useLoader } from '@react-three/fiber';
 
 export type UpdateFn = (deltaTime: number) => void;
 const SolarSystem = () => {

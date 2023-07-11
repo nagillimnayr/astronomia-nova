@@ -223,17 +223,6 @@ export const Orbit = (props: OrbitProps) => {
       <KeplerTreeContext.Provider value={addChildToTree}>
         <Body ref={bodyRef} args={bodyArgs} texture={props.texture}>
           {props.children}
-          <object3D>
-            {/* <Annotation annotation={props.name} /> */}
-            <BodyMesh
-              name={props.name}
-              meanRadius={preset.meanRadius}
-              color={preset.color}
-              texture={props.texture}
-              body={bodyRef}
-              ref={meshRef}
-            />
-          </object3D>
         </Body>
       </KeplerTreeContext.Provider>
       <Trajectory
