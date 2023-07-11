@@ -65,11 +65,16 @@ class KinematicBody extends Mesh {
 
     this.position.addScaledVector(this.velocity, deltaTime);
 
-    if (selectState.selected && this.id === selectState.selected.id) {
-      camState.updateControls();
-      // check that id of camera focus target is same as this object
-      console.log(this.id, camState.focusTarget?.id);
-    }
+    // if (selectState.selected && this.id === selectState.selected.id) {
+    //   camState.updateControls();
+    //   // check that id of camera focus target is same as this object
+
+    //   this.getWorldPosition(_v1);
+    //   camState.controls.getTarget(_v2);
+    //   console.log(performance.now());
+    //   console.log('obj position:', _v1.toArray());
+    //   console.log('cam gaze position:', _v2.toArray());
+    // }
   }
   private updateVelocity(deltaTime: number) {
     this.velocity.addScaledVector(this.acceleration, deltaTime);
