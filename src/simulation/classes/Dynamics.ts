@@ -15,7 +15,7 @@ import { camState } from '../state/CamState';
 const _v1 = new Vector3();
 const _v2 = new Vector3();
 
-class KinematicBody extends Mesh {
+class KinematicBody extends Object3D {
   private _velocity: Vector3;
   private _acceleration: Vector3;
 
@@ -28,8 +28,6 @@ class KinematicBody extends Mesh {
       ? new Vector3(...initialVelocity)
       : new Vector3(0, 0, 0);
     this._acceleration = new Vector3(0, 0, 0);
-    this.geometry = new SphereGeometry(0.5);
-    this.material = new MeshBasicMaterial();
   }
 
   // velocity

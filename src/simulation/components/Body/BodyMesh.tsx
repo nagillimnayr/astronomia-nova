@@ -175,7 +175,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
           <Annotation annotation={props.name} />
 
         </object3D> */}
-          <Sphere args={[0.1]} position={topOfSphere}>
+          {/* <Sphere args={[0.1]} position={topOfSphere}>
             <Wireframe />
           </Sphere>
           <arrowHelper
@@ -185,7 +185,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
               arrow.setColor('blue');
               arrow.setLength(1, 0.2, 0.05);
             }}
-          />
+          /> */}
         </Sphere>
         {/* <Line ref={lineRef} points={[300]} color={props.color} /> */}
         {/* <Trail
