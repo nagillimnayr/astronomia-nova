@@ -15,7 +15,6 @@ import { retrogradeState } from './Retrograde/retrogradeState';
 import { selectState } from '../state/SelectState';
 import { SelectionPanel } from './leva/SelectionPanel';
 import { CameraPanel } from './leva/CameraPanel';
-import { CameraTarget } from './Camera/CameraTarget';
 import { Vector3 } from 'three';
 
 type SimProps = {
@@ -103,7 +102,6 @@ const Simulation = (props: SimProps) => {
       {/* <DebugPanel />
       <SelectionPanel />
       <CameraPanel /> */}
-      <CameraTarget />
       <ambientLight intensity={0.2} />
     </>
   );
