@@ -7,12 +7,12 @@ import { LoadingFallback } from '@/components/LoadingFallback';
 import Outliner from '@/components/Outliner/Outliner';
 //import Scene from '~/components/Scene';
 
-// const CanvasWrapper = dynamic(
-//   () => import('@/components/scenes/CanvasWrapper').then((mod) => mod.default),
-//   {
-//     ssr: false,
-//   }
-// );
+const Scene = dynamic(
+  () => import('@/components/scenes/Scene').then((mod) => mod.default),
+  {
+    ssr: false,
+  }
+);
 const SolarSystemScene = dynamic(
   () =>
     import('@/components/scenes/SolarSystemScene').then((mod) => mod.default),

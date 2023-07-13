@@ -1,11 +1,11 @@
 import SunEarthMars from '@/simulation/components/SolarSystem/SunEarthMars';
-import CanvasWrapper from './CanvasWrapper';
+import Scene from './Scene';
 
 const EarthMarsScene = () => {
   return (
-    <CanvasWrapper>
+    <Scene>
       <SunEarthMars />
-    </CanvasWrapper>
+    </Scene>
   );
 };
 
