@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import { z } from 'zod';
-import url from './horizonsURL';
+import horizonsURL from './horizonsURL';
 import {
   parseElements,
   parseVectors as parseVectorTable,
@@ -41,7 +41,7 @@ async function fetchEphemerides(
     CSV_FORMAT: 'NO',
   });
   console.log('url search params:', searchParams);
-  const urlQuery = url + '?' + searchParams.toString();
+  const urlQuery = horizonsURL + '?' + searchParams.toString();
   console.log('url:', urlQuery);
   // fetch ephemeris data from Horizons API
   const horizonsResponse = await fetch(urlQuery);
