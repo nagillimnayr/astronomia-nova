@@ -1,9 +1,9 @@
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas, useInstanceHandle, useThree } from '@react-three/fiber';
 import Simulation from '@/simulation/components/Simulation';
 
 import { Perf } from 'r3f-perf';
 import { VRButton, ARButton, XR } from '@react-three/xr';
-import { Suspense } from 'react';
+import { Suspense, useRef } from 'react';
 import { LoadingFallback } from '../LoadingFallback';
 import {
   OrbitControls,
@@ -17,6 +17,7 @@ type SceneProps = {
   children?: React.ReactNode;
 };
 const Scene = (props: SceneProps) => {
+  const controlsRef = useRef<CameraControls>(null!);
   return (
     <Suspense fallback={<LoadingFallback />}>
       <div className="h-min-full relative flex h-full w-full flex-col justify-center">
@@ -40,8 +41,8 @@ const Scene = (props: SceneProps) => {
                 if (!controls) {
                   return;
                 }
-
                 camState.setControls(controls);
+                controlsRef.current = controls;
               }}
             />
 

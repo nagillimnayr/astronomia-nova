@@ -1,11 +1,11 @@
 import SolarSystem from '@/simulation/components/SolarSystem/SolarSystem';
-import Scene from './Scene';
+import CanvasWrapper from './CanvasWrapper';
 
 const SolarSystemScene = () => {
   return (
-    <Scene>
+    <CanvasWrapper>
       <SolarSystem />
-    </Scene>
+    </CanvasWrapper>
   );
 };
 
