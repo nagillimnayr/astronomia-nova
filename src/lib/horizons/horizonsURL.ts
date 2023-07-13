@@ -1,3 +1,4 @@
-const url: Readonly<string> = 'https://ssd.jpl.nasa.gov/api/horizons.api';
+const horizonsURL: Readonly<string> =
+  'https://ssd.jpl.nasa.gov/api/horizons.api';
 
-export default url;
+export default horizonsURL;
