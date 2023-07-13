@@ -82,6 +82,7 @@ const Simulation = (props: SimProps) => {
   });
 
   useKeyPressed(' ', (evt) => {
+    evt.preventDefault();
     const { camera, controls } = getState();
 
     // console.log('selected: ', selectState.selected);
