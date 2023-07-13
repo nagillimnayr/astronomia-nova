@@ -16,6 +16,7 @@ import { selectState } from '../state/SelectState';
 import { SelectionPanel } from './leva/SelectionPanel';
 import { CameraPanel } from './leva/CameraPanel';
 import { Vector3 } from 'three';
+import { useKeyPressed } from '@react-hooks-library/core';
 
 type SimProps = {
   children: React.ReactNode;
@@ -80,16 +81,27 @@ const Simulation = (props: SimProps) => {
     camState.updateControls();
   });
 
-  useEventListener('keypress', (e) => {
-    e.preventDefault();
-    console.log('keydown: ', e.key);
-    if (e.key === ' ') {
-      console.log('selected: ', selectState.selected);
-      console.log('focusTarget: ', camState.focusTarget);
-      console.log('camera: ', camState.controls.camera);
-      console.log('camera state: ', camState);
-    }
+  useKeyPressed(' ', (evt) => {
+    const { camera, controls } = getState();
+
+    // console.log('selected: ', selectState.selected);
+    // console.log('focusTarget: ', camState.focusTarget);
+    // console.log('proxy controls: ', camState.controls);
+    console.log('state controls: ', controls);
+    // console.log('proxy controls camera: ', camState.controls.camera);
+    console.log('state camera: ', camera);
   });
+
+  // useEventListener('keypress', (e) => {
+  //   e.preventDefault();
+  //   console.log('keydown: ', e.key);
+  //   if (e.key === ' ') {
+  //     console.log('selected: ', selectState.selected);
+  //     console.log('focusTarget: ', camState.focusTarget);
+  //     console.log('camera: ', camState.controls.camera);
+  //     console.log('camera state: ', camState);
+  //   }
+  // });
 
   return (
     <>

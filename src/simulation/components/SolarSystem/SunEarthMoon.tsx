@@ -45,14 +45,6 @@ const EarthMoon = () => {
     keplerTreeState.setRoot(body);
   };
 
-  useEventListener('keypress', (e) => {
-    e.preventDefault();
-    if (e.key === ' ') {
-      console.log('root: ', rootRef.current);
-      console.log('state root: ', keplerTreeState.root);
-    }
-  });
-
   const origin: Vector3 = useMemo(() => new Vector3(0, 0, 0), []);
   const zeroVector: Vector3 = useMemo(() => new Vector3(0, 0, 0), []);
   return (
