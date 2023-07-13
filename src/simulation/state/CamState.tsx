@@ -45,24 +45,8 @@ const setFocus = (target: Object3D) => {
   if (!target) return;
 
   camState.focusTarget = target;
-  // attach camera to target
-  // body.add(camState.controls.camera);
-  target.add(camState.controls.camera);
 
   // update controls to follow target
-  if (!camState.focusTarget) return;
-  const worldPos = new Vector3();
-  camState.focusTarget.getWorldPosition(worldPos);
-  const targetPos: Vec3 = worldPos.toArray();
-  // camState.controls
-  //   .setTarget(...targetPos, true)
-  //   .then(() => {
-  //     camState.isTransitioning = false;
-  //   })
-  //   .catch((reason) => {
-  //     console.log('promise rejected: ', reason);
-  //   });
-
   camState.updateControls();
 };
 
