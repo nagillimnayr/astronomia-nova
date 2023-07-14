@@ -2,12 +2,13 @@ import type KeplerBody from '@/simulation/classes/KeplerBody';
 import { makeFixedUpdateFn } from '@/simulation/systems/FixedTimeStep';
 import { traverseKeplerTree } from '@/simulation/systems/keplerTree';
 import { DAY } from '@/simulation/utils/constants';
+import { type MutableRefObject } from 'react';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
 type State = {
   selected: KeplerBody | null;
-  root: KeplerBody;
+  rootRef: MutableRefObject<KeplerBody>;
 };
 
 type Actions = {
@@ -18,7 +19,7 @@ type Actions = {
 
 const initialState: State = {
   selected: null,
-  root: null!,
+  rootRef: null!,
 };
 
 type SimStore = State & Actions;
@@ -28,7 +29,7 @@ export const useSimStore = create<SimStore>()(
       ...initialState,
 
       updateSim: makeFixedUpdateFn((timeStep: number) => {
-        traverseKeplerTree(get().root, timeStep * DAY);
+        traverseKeplerTree(get().rootRef.current, timeStep * DAY);
       }, 60),
 
       select: (newSelection: KeplerBody) => {
