@@ -1,6 +1,6 @@
 import { StateCreator, create } from 'zustand';
 import { clamp } from 'lodash';
-import { subscribeWithSelector } from 'zustand/middleware';
+import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
 // J2000 epoch
 const J2000 = new Date(2000, 0, 1, 12, 0, 0, 0);
@@ -35,38 +35,40 @@ const initialState: State = {
 type TimeStore = State & Actions;
 
 export const useTimeStore = create<TimeStore>()(
-  subscribeWithSelector((set, get) => ({
-    ...initialState,
+  subscribeWithSelector(
+    devtools((set, get) => ({
+      ...initialState,
 
-    incrementTimescale: (val?: number) => {
-      const newTimescale = get().timescale + (val ?? 1);
-      set({ timescale: Math.max(newTimescale, 100) });
-    },
-    decrementTimescale: (val?: number) => {
-      const newTimescale = get().timescale - (val ?? 1);
-      set({ timescale: Math.min(newTimescale, 1) });
-    },
-    setTimescale: (val: number) => {
-      set({ timescale: clamp(val, 0, 100) });
-    },
+      incrementTimescale: (val?: number) => {
+        const newTimescale = get().timescale + (val ?? 1);
+        set({ timescale: Math.max(newTimescale, 100) });
+      },
+      decrementTimescale: (val?: number) => {
+        const newTimescale = get().timescale - (val ?? 1);
+        set({ timescale: Math.min(newTimescale, 1) });
+      },
+      setTimescale: (val: number) => {
+        set({ timescale: clamp(val, 0, 100) });
+      },
 
-    pause: () => {
-      set({ isPaused: true });
-    },
-    unpause: () => {
-      set({ isPaused: false });
-    },
+      pause: () => {
+        set({ isPaused: true });
+      },
+      unpause: () => {
+        set({ isPaused: false });
+      },
 
-    addTimeToClock: (deltaTime: number) => {
-      if (deltaTime < 0) {
-        return;
-      }
-      set({ timeElapsed: get().timeElapsed + deltaTime });
-    },
-    reset: () => {
-      set(initialState);
-    },
-  }))
+      addTimeToClock: (deltaTime: number) => {
+        if (deltaTime < 0) {
+          return;
+        }
+        set({ timeElapsed: get().timeElapsed + deltaTime });
+      },
+      reset: () => {
+        set(initialState);
+      },
+    }))
+  )
 );
 
 const unsubTimescale = useTimeStore.subscribe(
