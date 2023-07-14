@@ -12,29 +12,29 @@ import IconButton from '@/components/IconButton';
 import { timeState } from '@/simulation/state/TimeState';
 import Icon from '@mdi/react';
 import { mdiPlay, mdiPause } from '@mdi/js';
+import { useTimeStore } from '@/simulation/state/zustand/time-store';
 
 const PauseButton = () => {
-  //const { timescaleDisplayRef, timescaleRef } = useContext(TimeContext);
+  // const [isPaused, setPaused] = useState<boolean>(true);
 
-  const [isPaused, setPaused] = useState<boolean>(true);
+  // get isPaused from external store and subscribe to changes
+  const isPaused = useTimeStore((state) => state.isPaused);
+  const pause = useTimeStore((state) => state.pause);
+  const unpause = useTimeStore((state) => state.unpause);
 
-  //const clock = useThree((state) => state.clock);
-
-  const pause = useCallback(() => {
-    timeState.pause();
-    setPaused(true);
-  }, []);
-  const unpause = useCallback(() => {
-    timeState.unpause();
-    setPaused(false);
-  }, []);
+  // const pause = useCallback(() => {
+  //   timeState.pause();
+  //   // setPaused(true);
+  // }, []);
+  // const unpause = useCallback(() => {
+  //   timeState.unpause();
+  //   // setPaused(false);
+  // }, []);
 
   return (
     <button
       className="bg-translucent btn-icon box-content p-1 "
       onClick={(e) => {
-        console.log('pause/play:', isPaused);
-        console.log('timeState:', timeState);
         e.stopPropagation();
         isPaused ? unpause() : pause();
       }}

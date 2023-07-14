@@ -1,9 +1,12 @@
 import { timeState } from '@/simulation/state/TimeState';
+import { useTimeStore } from '@/simulation/state/zustand/time-store';
 import { formatDistance } from 'date-fns';
+import { useEffect, useRef } from 'react';
 import { useSnapshot } from 'valtio';
 
 const TimeDisplay = () => {
-  const snap = useSnapshot(timeState);
+  // const snap = useSnapshot(timeState);
+
   return (
     <div className="w-min-fit h-min-fit  flex h-fit w-fit flex-row self-center border-2 border-blue-500 px-2 text-center text-white">
       {/* Days Elapsed */}

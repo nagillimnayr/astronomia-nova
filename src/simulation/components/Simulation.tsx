@@ -17,6 +17,7 @@ import { SelectionPanel } from './leva/SelectionPanel';
 import { CameraPanel } from './leva/CameraPanel';
 import { Vector3 } from 'three';
 import { useKeyPressed } from '@react-hooks-library/core';
+import { useTimeStore } from '../state/zustand/time-store';
 
 type SimProps = {
   children: React.ReactNode;
@@ -24,17 +25,23 @@ type SimProps = {
 const Simulation = (props: SimProps) => {
   console.log('render Simulation');
   // function for accessing scene state
-  const getState = useThree((state) => state.get);
-  simState.getState = getState;
+  const getThree = useThree((state) => state.get);
+  simState.getState = getThree;
 
   useFrame(({ clock, camera }, delta) => {
     // camState.controls.update(delta);
     // update camera
     camState.updateControls();
-    if (!timeState.isPaused) {
+
+    const timeStore = useTimeStore.getState();
+
+    if (!timeStore.isPaused) {
       // scale delta time
-      const scaledDelta = delta * timeState.timescale;
-      timeState.updateClock(scaledDelta);
+      const scaledDelta = delta * timeStore.timescale;
+
+      // update clock in external state
+      timeStore.addTimeToClock(scaledDelta);
+      // timeState.updateClock(scaledDelta);
 
       simState.updateIteration += 1;
 
@@ -83,7 +90,7 @@ const Simulation = (props: SimProps) => {
 
   useKeyPressed(' ', (evt) => {
     evt.preventDefault();
-    const { camera, controls } = getState();
+    const { camera, controls } = getThree();
 
     // console.log('selected: ', selectState.selected);
     // console.log('focusTarget: ', camState.focusTarget);

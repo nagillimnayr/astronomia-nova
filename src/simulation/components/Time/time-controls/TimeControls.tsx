@@ -8,8 +8,11 @@ import IncreaseButton from './buttons/IncreaseButton';
 import PauseButton from './buttons/PauseButton';
 import Icon from '@mdi/react';
 import { mdiMenuLeft, mdiMenuRight } from '@mdi/js';
+import { useTimeStore } from '@/simulation/state/zustand/time-store';
 
 const TimeControls = () => {
+  // get state without subscribing
+  const { incrementTimescale, decrementTimescale } = useTimeStore.getState();
   return (
     <div className="flex flex-col items-center justify-start border-2">
       <div className="pointer-events-auto mt-2 flex w-40 flex-row justify-center self-center border-2">
@@ -21,7 +24,8 @@ const TimeControls = () => {
           className="translate-x-1"
           onClick={(e) => {
             e.stopPropagation();
-            timeState.decrementTimescale();
+            // timeState.decrementTimescale();
+            decrementTimescale();
           }}
         >
           <Icon path={mdiMenuLeft} size={1} />
@@ -35,7 +39,8 @@ const TimeControls = () => {
           className="translate-x-1"
           onClick={(e) => {
             e.stopPropagation();
-            timeState.incrementTimescale();
+            // timeState.incrementTimescale();
+            incrementTimescale();
           }}
         >
           <Icon path={mdiMenuRight} size={1} />
