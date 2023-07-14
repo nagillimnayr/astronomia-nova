@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 
 import { simState } from '../state/SimState';
@@ -23,9 +23,15 @@ const Simulation = ({ children }: SimProps) => {
   const getThree = useThree((state) => state.get);
   simState.getState = getThree;
 
-  useFrame(({ clock, camera }, delta) => {
-    const timeStore = useTimeStore.getState();
+  useEffect(() => {
+    // reset timers, timescale, etc when the component is mounted
+    console.log('resetting timeStore!');
+    useTimeStore.getState().reset();
+  }, []);
 
+  useFrame(({ clock, camera }, delta) => {
+    // get state without subscribing to it
+    const timeStore = useTimeStore.getState();
     if (!timeStore.isPaused) {
       // scale delta time
       const scaledDelta = delta * timeStore.timescale;
