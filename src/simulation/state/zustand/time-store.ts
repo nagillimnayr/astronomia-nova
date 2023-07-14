@@ -1,4 +1,4 @@
-import { StateCreator, create } from 'zustand';
+import { create } from 'zustand';
 import { clamp } from 'lodash';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 import { addSeconds } from 'date-fns';
