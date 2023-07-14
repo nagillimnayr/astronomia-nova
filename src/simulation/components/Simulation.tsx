@@ -13,6 +13,7 @@ import { SelectionPanel } from './leva/SelectionPanel';
 import { CameraPanel } from './leva/CameraPanel';
 import { useKeyPressed } from '@react-hooks-library/core';
 import { useTimeStore } from '../state/zustand/time-store';
+import { useSimStore } from '../state/zustand/sim-store';
 
 type SimProps = {
   children: React.ReactNode;
@@ -41,8 +42,8 @@ const Simulation = ({ children }: SimProps) => {
 
       simState.updateIteration += 1;
 
-      // update simulation
-      keplerTreeState.fixedUpdate(scaledDelta);
+      // pass rootRef.current to function instead?
+      useSimStore.getState().updateSim(scaledDelta);
 
       retrogradeState.update();
     }
@@ -55,11 +56,7 @@ const Simulation = ({ children }: SimProps) => {
     evt.preventDefault();
     const { camera, controls } = getThree();
 
-    // console.log('selected: ', selectState.selected);
-    // console.log('focusTarget: ', camState.focusTarget);
-    // console.log('proxy controls: ', camState.controls);
     console.log('state controls: ', controls);
-    // console.log('proxy controls camera: ', camState.controls.camera);
     console.log('state camera: ', camera);
   });
 
