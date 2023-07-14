@@ -2,7 +2,7 @@ import { OrbitalElements } from '@/simulation/classes/OrbitalElements';
 import { Trajectory } from './Trajectory/Trajectory';
 import { useCallback, useContext, useMemo, useRef } from 'react';
 import loadBodyPreset, { PresetKey } from '@/simulation/utils/loadBodyPreset';
-import Body, { BodyArgs } from '../Body/Body';
+import Body, { BodyParams } from '../Body/Body';
 import KeplerBody from '@/simulation/classes/KeplerBody';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { CentralMassContext } from '@/simulation/context/CentralMassContext';
@@ -134,7 +134,7 @@ export const Orbit = (props: OrbitProps) => {
       .multiplyScalar(speed)
       .divideScalar(DIST_MULT);
 
-    return [initialPosition, initialVelocity];
+    return [initialPosition.toArray(), initialVelocity.toArray()];
   }, [
     centralMass,
     elements.eccentricity,
@@ -143,8 +143,8 @@ export const Orbit = (props: OrbitProps) => {
     preset.trueAnomaly,
   ]);
 
-  const bodyArgs = useMemo(() => {
-    const bodyArgs: BodyArgs = {
+  const bodyParams = useMemo(() => {
+    const bodyParams: BodyParams = {
       name: preset.name,
       color: preset.color,
       mass: preset.mass,
@@ -152,7 +152,7 @@ export const Orbit = (props: OrbitProps) => {
       initialPosition: initialPosition,
       initialVelocity: initialVelocity,
     };
-    return bodyArgs;
+    return bodyParams;
   }, [
     initialPosition,
     initialVelocity,
@@ -221,7 +221,7 @@ export const Orbit = (props: OrbitProps) => {
       }}
     >
       <KeplerTreeContext.Provider value={addChildToTree}>
-        <Body ref={bodyRef} args={bodyArgs} texture={props.texture}>
+        <Body ref={bodyRef} params={bodyParams} texture={props.texture}>
           {props.children}
         </Body>
       </KeplerTreeContext.Provider>

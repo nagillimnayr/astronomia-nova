@@ -34,9 +34,6 @@ const SunEarthMars = () => {
     keplerTreeState.setRoot(body);
   };
 
-  const origin = useMemo(() => new Vector3(0, 0, 0), []);
-  const zeroVector = useMemo(() => new Vector3(0, 0, 0), []);
-
   return (
     <KeplerTreeContext.Provider value={assignAsRoot}>
       <CelestialSphere>
@@ -52,13 +49,13 @@ const SunEarthMars = () => {
 
           <Body
             ref={rootRef}
-            args={{
+            params={{
               name: 'Sun',
               mass: SOLAR_MASS,
               color: 0xfdee00,
               meanRadius: 1.5,
-              initialPosition: origin,
-              initialVelocity: zeroVector,
+              initialPosition: [0, 0, 0],
+              initialVelocity: [0, 0, 0],
             }}
             texture={sunTexture}
           >

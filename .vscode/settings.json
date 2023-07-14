@@ -1,8 +1,8 @@
 {
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
-    },
-    "python.formatting.provider": "none",
-    "prettier.tabWidth": 2,
-    "editor.tabSize": 2
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "python.formatting.provider": "none",
+  "prettier.tabWidth": 2,
+  "editor.tabSize": 2
 }

@@ -52,13 +52,13 @@ const SunMars = () => {
 
           <Body
             ref={rootRef}
-            args={{
+            params={{
               name: 'Sun',
               mass: SOLAR_MASS,
               color: 0xfdee00,
               meanRadius: 1.5,
-              initialPosition: origin,
-              initialVelocity: zeroVector,
+              initialPosition: [0, 0, 0],
+              initialVelocity: [0, 0, 0],
             }}
             texture={sunTexture}
           >

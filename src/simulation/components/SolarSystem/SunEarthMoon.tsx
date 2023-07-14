@@ -45,8 +45,6 @@ const EarthMoon = () => {
     keplerTreeState.setRoot(body);
   };
 
-  const origin: Vector3 = useMemo(() => new Vector3(0, 0, 0), []);
-  const zeroVector: Vector3 = useMemo(() => new Vector3(0, 0, 0), []);
   return (
     <KeplerTreeContext.Provider value={assignAsRoot}>
       <CelestialSphere>
@@ -62,13 +60,13 @@ const EarthMoon = () => {
 
           <Body
             ref={rootRef}
-            args={{
+            params={{
               name: 'Sun',
               mass: SOLAR_MASS,
               color: 0xfdee00,
               meanRadius: 1.5,
-              initialPosition: origin,
-              initialVelocity: zeroVector,
+              initialPosition: [0, 0, 0],
+              initialVelocity: [0, 0, 0],
             }}
             texture={sunTexture}
           >
