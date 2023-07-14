@@ -10,6 +10,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@colorfy-software/zfy": "^1.0.0",
     "@formkit/auto-animate": "^1.0.0-beta.6",
     "@headlessui/react": "^1.7.15",
     "@headlessui/tailwindcss": "^0.1.3",
