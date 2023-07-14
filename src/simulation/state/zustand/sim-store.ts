@@ -23,6 +23,7 @@ const initialState: State = {
 };
 
 type SimStore = State & Actions;
+
 export const useSimStore = create<SimStore>()(
   subscribeWithSelector(
     devtools((set, get) => ({
@@ -41,7 +42,3 @@ export const useSimStore = create<SimStore>()(
     }))
   )
 );
-
-const updateSim = () => {
-  useSimStore.getState();
-};
