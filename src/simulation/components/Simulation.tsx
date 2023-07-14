@@ -17,7 +17,7 @@ import { useTimeStore } from '../state/zustand/time-store';
 type SimProps = {
   children: React.ReactNode;
 };
-const Simulation = (props: SimProps) => {
+const Simulation = ({ children }: SimProps) => {
   console.log('render Simulation');
   // function for accessing scene state
   const getThree = useThree((state) => state.get);
@@ -61,7 +61,7 @@ const Simulation = (props: SimProps) => {
     <>
       <group>
         {/* <polarGridHelper args={[24, 16, 24, 64]} /> */}
-        {props.children}
+        {children}
       </group>
       {/* <DebugPanel />
       <SelectionPanel />
