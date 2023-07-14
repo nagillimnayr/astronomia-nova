@@ -1,5 +1,9 @@
 import { create } from 'zustand';
 
-const useStore = create();
+type State = {};
+
+const useStore = create((set) => {
+  return {};
+});
 
 // transient updates for frequent state changes
