@@ -8,15 +8,15 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
   return (
     <Accordion.Root
       type="multiple"
-      className="flex h-12 min-h-fit w-28 w-full flex-col items-center justify-start rounded-md border-2 text-center"
+      className="m-0 flex h-12 min-h-fit w-36 flex-col items-center justify-start rounded-none text-center"
     >
-      <Accordion.Item value={body.name} className="h-fit w-full">
-        <Accordion.Header className="prose h-fit w-full hover:bg-muted">
-          <Accordion.Trigger className="flex h-full w-full flex-col items-center justify-center border hover:bg-muted">
-            <h3 className="w-full border-b text-center">{body.name}</h3>
+      <Accordion.Item value={body.name} className="m-0 h-fit w-full p-0">
+        <Accordion.Header className="prose m-0 h-fit w-full p-0 hover:bg-muted">
+          <Accordion.Trigger className="m-0 flex h-full min-h-fit w-full flex-col items-center justify-center overflow-hidden whitespace-nowrap p-0 hover:bg-muted">
+            <h3 className="m-0 h-fit w-fit p-1 text-center">{body.name}</h3>
           </Accordion.Trigger>
         </Accordion.Header>
-        <Accordion.Content className="min-h-fit w-full border data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+        <Accordion.Content className="m-0 min-h-fit w-full data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
           {body.orbitingBodies.map((child, index) => {
             // recursively traverse the tree to construct the outliner
             return <OutlinerItem key={index} body={child} />;
