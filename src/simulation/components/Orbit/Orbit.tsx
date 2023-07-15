@@ -33,10 +33,7 @@ import {
   getPositionFromRadius,
 } from '@/simulation/math/orbital-elements/Position';
 import { useFrame } from '@react-three/fiber';
-import { timeState } from '@/simulation/state/TimeState';
-import { simState } from '@/simulation/state/SimState';
-import { selectState } from '@/simulation/state/SelectState';
-import { camState } from '@/simulation/state/CamState';
+
 import Annotation from '../Annotation';
 
 // Date needed by Orbit but not by Body

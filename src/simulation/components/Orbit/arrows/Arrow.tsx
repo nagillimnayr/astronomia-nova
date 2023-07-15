@@ -5,7 +5,6 @@ type ArrowProps = {
   color: ColorRepresentation;
   direction: Vector3;
   origin: Vector3;
-  length: 
 };
 export const Arrow = forwardRef<ArrowHelper, ArrowProps>(function Arrow(
   props: ArrowProps,
@@ -19,8 +18,6 @@ export const Arrow = forwardRef<ArrowHelper, ArrowProps>(function Arrow(
     },
     [arrowRef]
   );
-
-  
 
   return (
     <>

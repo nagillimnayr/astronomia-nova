@@ -9,7 +9,6 @@ import { useThree } from '@react-three/fiber';
 import { Play, Pause, PlayCircle, PauseCircle } from 'lucide-react';
 import { useCallback, useContext, useState } from 'react';
 import IconButton from '@/components/IconButton';
-import { timeState } from '@/simulation/state/TimeState';
 import Icon from '@mdi/react';
 import { mdiPlay, mdiPause } from '@mdi/js';
 import { useTimeStore } from '@/simulation/state/zustand/time-store';

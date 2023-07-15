@@ -10,7 +10,6 @@ import {
   EffectComposer,
   Outline,
 } from '@react-three/postprocessing';
-import { keplerTreeState } from '../../state/keplerTreeState';
 import { Orbit } from '../Orbit/Orbit';
 import { useSimStore } from '@/simulation/state/zustand/sim-store';
 
@@ -53,7 +52,7 @@ const SolarSystem = () => {
     if (!body) {
       return;
     }
-    keplerTreeState.setRoot(body);
+    // keplerTreeState.setRoot(body);
   };
 
   return (

@@ -8,9 +8,6 @@ import {
 } from 'three';
 import PointMass from '../interfaces/PointMass';
 import Vec3 from '../types/Vec3';
-import { selectState } from '../state/SelectState';
-import { simState } from '../state/SimState';
-import { camState } from '../state/CamState';
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();

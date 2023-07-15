@@ -1,10 +1,6 @@
-import { timeState } from '@/simulation/state/TimeState';
 import { Slider } from '@/components/gui/Slider';
 import { TimescaleSlider } from './TimescaleSlider';
-import BackwardButton from './buttons/BackwardButton';
-import DecreaseButton from './buttons/DecreaseButton';
-import ForwardButton from './buttons/ForwardButton';
-import IncreaseButton from './buttons/IncreaseButton';
+
 import PauseButton from './buttons/PauseButton';
 import Icon from '@mdi/react';
 import { mdiMenuLeft, mdiMenuRight } from '@mdi/js';

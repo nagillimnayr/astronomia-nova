@@ -2,16 +2,17 @@ import * as Accordion from '@radix-ui/react-accordion';
 import OutlinerItem from './OutlinerItem';
 import KeplerBody from '@/simulation/classes/KeplerBody';
 import { useSnapshot } from 'valtio';
-import { keplerTreeState } from '@/simulation/state/keplerTreeState';
+
 import { LoadingFallback } from '../LoadingFallback';
+import { useSimStore } from '@/simulation/state/zustand/sim-store';
 
 const Outliner = () => {
-  const snap = useSnapshot(keplerTreeState);
+  const root = useSimStore((state) => state.root);
 
-  if (!snap.root) {
+  if (!root) {
     return <LoadingFallback />;
   }
-  return <OutlinerItem body={keplerTreeState.root} />;
+  return <OutlinerItem body={root} />;
 };
 
 export default Outliner;

@@ -11,7 +11,6 @@ import {
   Outline,
 } from '@react-three/postprocessing';
 import { useEventListener } from 'usehooks-ts';
-import { keplerTreeState } from '../../state/keplerTreeState';
 import { Orbit } from '../Orbit/Orbit';
 import { RetrogradeContext } from '../Retrograde/RetrogradeContext';
 import { BodyMesh } from '../Body/BodyMesh';
@@ -42,7 +41,7 @@ const EarthMoon = () => {
     if (!body) {
       return;
     }
-    keplerTreeState.setRoot(body);
+    // keplerTreeState.setRoot(body);
   };
 
   return (
