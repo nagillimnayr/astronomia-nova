@@ -32,7 +32,7 @@ async function fetchEphemerides(
   const searchParams = new URLSearchParams({
     format: 'json',
     COMMAND: `'${bodyCode}'`,
-    OBJ_DATA: 'NO',
+    OBJ_DATA: 'YES',
     MAKE_EPHEM: 'YES',
     EPHEM_TYPE: ephemerisType,
     CENTER: centerCode,
