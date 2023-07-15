@@ -2,6 +2,7 @@
 import { type Config } from 'tailwindcss';
 import colors from 'tailwindcss/colors';
 import defaultTheme from 'tailwindcss/defaultTheme';
+import { addDynamicIconSelectors } from '@iconify/tailwind';
 
 export default {
   darkMode: ['class'],
@@ -113,5 +114,6 @@ export default {
     require('@tailwindcss/typography'),
     require('@tailwindcss/container-queries'),
     require('@headlessui/tailwindcss'),
+    addDynamicIconSelectors(),
   ],
 } satisfies Config;
