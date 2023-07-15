@@ -54,10 +54,7 @@ export function getVelocityDirectionAtRadius(
 }
 
 /**
- * the velocity is the derivative of position
- *
  * https://orbital-mechanics.space/classical-orbital-elements/orbital-elements-and-the-state-vector.html#orbital-elements-state-vector
- *
  *
  * */
 
