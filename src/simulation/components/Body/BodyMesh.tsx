@@ -34,9 +34,11 @@ import { camState } from '@/simulation/state/CamState';
 import { debugState } from '@/simulation/state/DebugState';
 import { selectState } from '@/simulation/state/SelectState';
 import { simState } from '@/simulation/state/SimState';
-import { timeState } from '@/simulation/state/TimeState';
+// import { timeState } from '@/simulation/state/TimeState';
 import { useControls } from 'leva';
 import Annotation from '../Annotation';
+import { useSimStore } from '@/simulation/state/zustand/sim-store';
+import { useCameraStore } from '@/simulation/state/zustand/camera-store';
 
 // separate out the Mesh part of the Body to keep visual updates separate from
 // the simulation logic
@@ -91,9 +93,13 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     }
     const body: KeplerBody = props.body.current;
 
-    camState.setFocus(body);
+    // camState.setFocus(body);
     setSelected(true);
-    selectState.select(body);
+    // selectState.select(body);
+
+    // select body
+    useSimStore.getState().select(body);
+    useCameraStore.getState().setFocus(body);
   };
   const handleMiss = (e: MouseEvent) => {
     if (!meshRef.current) return;

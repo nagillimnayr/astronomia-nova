@@ -14,6 +14,8 @@ import { CameraPanel } from './leva/CameraPanel';
 import { useKeyPressed } from '@react-hooks-library/core';
 import { useTimeStore } from '../state/zustand/time-store';
 import { useSimStore } from '../state/zustand/sim-store';
+import { useCameraStore } from '../state/zustand/camera-store';
+import { CameraControls } from '@react-three/drei';
 
 type SimProps = {
   children: React.ReactNode;
@@ -22,7 +24,7 @@ const Simulation = ({ children }: SimProps) => {
   console.log('render Simulation');
   // function for accessing scene state
   const getThree = useThree((state) => state.get);
-  simState.getState = getThree;
+  // simState.getState = getThree;
 
   useEffect(() => {
     // reset timers, timescale, etc when the component is mounted
@@ -49,15 +51,19 @@ const Simulation = ({ children }: SimProps) => {
     }
 
     // update camera
-    camState.updateControls();
+    useCameraStore.getState().updateCameraControls();
   });
 
   useKeyPressed(' ', (evt) => {
     evt.preventDefault();
     const { camera, controls } = getThree();
 
-    console.log('state controls: ', controls);
-    console.log('state camera: ', camera);
+    console.log('three state controls: ', controls);
+    console.log('three state camera: ', camera);
+    console.log(
+      'cameraStore focusTarget:',
+      useCameraStore.getState().focusTarget
+    );
   });
 
   return (

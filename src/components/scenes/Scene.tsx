@@ -12,6 +12,7 @@ import {
 } from '@react-three/drei';
 import { HUD } from '@/simulation/components/HUD/HUD';
 import { camState } from '@/simulation/state/CamState';
+import { useCameraStore } from '@/simulation/state/zustand/camera-store';
 
 type SceneProps = {
   children?: React.ReactNode;
@@ -41,7 +42,7 @@ const Scene = (props: SceneProps) => {
                   return;
                 }
 
-                camState.setControls(controls);
+                useCameraStore.getState().setCameraControls(controls);
               }}
             />
 
