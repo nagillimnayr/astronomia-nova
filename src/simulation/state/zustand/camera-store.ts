@@ -59,7 +59,7 @@ export const useCameraStore = create<CameraStore>()(
           });
       },
       setFocus: (target: Object3D) => {
-        console.log('new focus target:', target);
+        // console.log('new focus target:', target);
         set({ focusTarget: target });
 
         // attach camera to target
