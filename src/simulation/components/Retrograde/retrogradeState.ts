@@ -7,9 +7,9 @@ import {
 } from 'three';
 import { proxy } from 'valtio';
 import KeplerBody from '@/simulation/classes/KeplerBody';
-import { camState } from '@/simulation/state/CamState';
-import { simState } from '@/simulation/state/SimState';
-import { keplerTreeState } from '@/simulation/state/keplerTreeState';
+// import { camState } from '@/simulation/state/CamState';
+// import { simState } from '@/simulation/state/SimState';
+// import { keplerTreeState } from '@/simulation/state/keplerTreeState';
 
 const maxSize = 10000;
 

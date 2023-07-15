@@ -11,7 +11,6 @@ import {
   PerspectiveCamera,
 } from '@react-three/drei';
 import { HUD } from '@/simulation/components/HUD/HUD';
-import { camState } from '@/simulation/state/CamState';
 import { useCameraStore } from '@/simulation/state/zustand/camera-store';
 
 type SceneProps = {

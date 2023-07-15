@@ -1,4 +1,3 @@
-import { timeState } from '@/simulation/state/TimeState';
 import { useTimeStore } from '@/simulation/state/zustand/time-store';
 import { formatDistance } from 'date-fns';
 import { useEffect, useRef } from 'react';
@@ -14,7 +13,7 @@ const TimeDisplay = () => {
         <p className="w-min-fit flex flex-row whitespace-nowrap ">
           Time Elapsed: &nbsp;
           <span className="text-green-300">
-            {formatDistance(snap.date, snap.refDate)}
+            {/* {formatDistance(snap.date, snap.refDate)} */}
           </span>
         </p>
       </div>

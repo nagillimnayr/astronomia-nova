@@ -7,30 +7,31 @@ import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
 type State = {
-  rootRef: MutableRefObject<KeplerBody>;
+  selected: KeplerBody | null;
 };
 
 type Actions = {
-  updateSim: (deltaTime: number) => void;
+  select: (newSelection: KeplerBody) => void;
+  deselect: () => void;
 };
 
 const initialState: State = {
-  rootRef: null!,
+  selected: null,
 };
 
 type SimStore = State & Actions;
 
-const updateSim = makeFixedUpdateFn((timeStep: number) => {
-  traverseKeplerTree(useSimStore.getState().rootRef.current, timeStep * DAY);
-}, 60);
-
-// this store
-export const useSimStore = create<SimStore>()(
+export const useSelectionStore = create<SimStore>()(
   subscribeWithSelector(
     devtools((set, get) => ({
       ...initialState,
 
-      updateSim: updateSim,
+      select: (newSelection: KeplerBody) => {
+        set({ selected: newSelection });
+      },
+      deselect: () => {
+        set({ selected: null });
+      },
     }))
   )
 );

@@ -1,14 +1,9 @@
 import React, { useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 
-import { simState } from '../state/SimState';
-import { timeState } from '../state/TimeState';
-import { camState } from '../state/CamState';
-import { keplerTreeState } from '../state/keplerTreeState';
 import { Leva, useControls } from 'leva';
 import { DebugPanel } from './leva/DebugPanel';
 import { retrogradeState } from './Retrograde/retrogradeState';
-import { selectState } from '../state/SelectState';
 import { SelectionPanel } from './leva/SelectionPanel';
 import { CameraPanel } from './leva/CameraPanel';
 import { useKeyPressed } from '@react-hooks-library/core';
@@ -41,8 +36,6 @@ const Simulation = ({ children }: SimProps) => {
 
       // update clock in external state
       timeStore.addTimeToClock(scaledDelta);
-
-      simState.updateIteration += 1;
 
       // pass rootRef.current to function instead?
       useSimStore.getState().updateSim(scaledDelta);

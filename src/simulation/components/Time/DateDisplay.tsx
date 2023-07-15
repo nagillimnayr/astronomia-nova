@@ -1,6 +1,5 @@
 import { format } from 'date-fns';
 import { useSnapshot } from 'valtio';
-import { timeState } from '@/simulation/state/TimeState';
 import { useEffect, useRef } from 'react';
 import { useTimeStore } from '@/simulation/state/zustand/time-store';
 const DateDisplay = () => {

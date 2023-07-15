@@ -25,6 +25,33 @@ const initialState: State = {
 
 type CameraStore = State & Actions;
 
+// actions
+const setCameraControls = (controls: CameraControls) => {
+  console.log('setting camera controls:', controls);
+  useCameraStore.setState({ controls: controls });
+  controls.mouseButtons.right = 8; // disable pan (set to dolly on right mouse button instead)
+};
+
+const updateCameraControls = () => {
+  const controls = useCameraStore.getState().controls;
+  if (!controls) {
+    console.error('camera controls are null');
+    return;
+  }
+  const focusTarget = useCameraStore.getState().focusTarget;
+  if (!focusTarget) {
+    return;
+  }
+
+  // get world position of focus target
+  focusTarget.getWorldPosition(newTargetWorldPos);
+
+  // update controls to follow target
+  controls.moveTo(...newTargetWorldPos.toArray(), false).catch((reason) => {
+    console.log('promise rejected: ', reason);
+  });
+};
+
 export const useCameraStore = create<CameraStore>()(
   subscribeWithSelector(
     devtools((set, get) => ({
@@ -32,40 +59,14 @@ export const useCameraStore = create<CameraStore>()(
       ...initialState,
 
       // actions
-      setCameraControls: (controls: CameraControls) => {
-        console.log('setting camera controls:', controls);
-        set({ controls: controls });
-        controls.mouseButtons.right = 8; // disable pan (set to dolly on right mouse button instead)
-      },
-      updateCameraControls: () => {
-        const controls = get().controls;
-        if (!controls) {
-          console.error('camera controls are null');
-          return;
-        }
-        const focusTarget = get().focusTarget;
-        if (!focusTarget) {
-          return;
-        }
+      setCameraControls: setCameraControls,
+      updateCameraControls: updateCameraControls,
 
-        // get world position of focus target
-        focusTarget.getWorldPosition(newTargetWorldPos);
-
-        // update controls to follow target
-        controls
-          .moveTo(...newTargetWorldPos.toArray(), false)
-          .catch((reason) => {
-            console.log('promise rejected: ', reason);
-          });
-      },
       setFocus: (target: Object3D) => {
         // console.log('new focus target:', target);
         set({ focusTarget: target });
 
-        // attach camera to target
-        // target.add(get().controls.camera);
-
-        get().updateCameraControls();
+        // get().updateCameraControls();
       },
       reset: () => {
         console.log('resetting cameraStore');

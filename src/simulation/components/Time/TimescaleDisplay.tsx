@@ -1,5 +1,4 @@
 import { useSnapshot } from 'valtio';
-import { timeState } from '@/simulation/state/TimeState';
 import { useTimeStore } from '@/simulation/state/zustand/time-store';
 import { useEffect, useRef } from 'react';
 
