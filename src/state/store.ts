@@ -8,6 +8,7 @@ type State = {
 };
 type Actions = {
   toggleSidebar: () => void;
+  setSidebarOpen: (open: boolean) => void;
 };
 
 const initialState: State = {
@@ -23,6 +24,9 @@ export const useStore = create<Store>()(
 
       toggleSidebar: () => {
         set({ sidebarOpen: !get().sidebarOpen });
+      },
+      setSidebarOpen: (open: boolean) => {
+        set({ sidebarOpen: open });
       },
     }))
   )
