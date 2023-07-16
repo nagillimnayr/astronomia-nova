@@ -4,9 +4,11 @@ import { Html } from '@react-three/drei';
 
 export function BillboardCircle() {
   return (
-    <Html
-      center
-      className="aspect-square w-24 cursor-pointer border-2 border-white bg-transparent"
-    />
+    <object3D>
+      <Html
+        center
+        className="aspect-square w-4 cursor-pointer rounded-full border-2 border-white bg-transparent hover:w-14"
+      />
+    </object3D>
   );
 }
