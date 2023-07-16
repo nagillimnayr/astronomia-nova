@@ -8,7 +8,7 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
   return (
     <Accordion.Root
       type="multiple"
-      className="m-0 flex h-fit min-h-fit w-full flex-col items-center justify-start rounded-none text-center"
+      className="m-0 inline-flex h-fit min-h-fit w-full flex-col items-center justify-start rounded-none text-center"
     >
       <Accordion.Item value={body.name} className="m-0 h-fit w-full p-0">
         <Accordion.Header className="m-0 h-fit w-full p-0">
@@ -18,13 +18,16 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
             </h3>
           </Accordion.Trigger>
         </Accordion.Header>
-        <Accordion.Content className="m-0 flex h-fit max-h-fit min-h-fit w-full flex-col items-start justify-start gap-0 data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-          {/** a bit of left padding to indent each subtree from its parent */}
-          <ul className="w-full pl-2">
+        <Accordion.Content className="m-0 flex h-fit max-h-fit min-h-fit w-full flex-col items-stretch justify-start data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+          {/** add some left margin to indent each subtree from its parent, left padding to line up the left border with the list marker */}
+          <ul className="ml-4 border-l border-gray-600 pl-3 marker:text-gray-600">
             {body.orbitingBodies.map((child, index) => {
               // recursively traverse the tree to construct the tree view
               return (
-                <li key={index} className="">
+                <li
+                  key={index}
+                  className="bg-subtle/50 w-full list-outside list-disc"
+                >
                   <OutlinerItem body={child} />
                 </li>
               );
