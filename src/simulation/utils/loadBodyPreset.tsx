@@ -1,7 +1,6 @@
 import data from '../data/presets/Planets.json';
 import { Color } from 'three';
 import { DIST_MULT, EARTH_RADIUS, KM_TO_M, SOLAR_MASS } from './constants';
-import Vec3 from '../types/Vec3';
 
 export type PresetKey =
   | 'Mercury'
