@@ -1,4 +1,3 @@
-import { OrbitalElements } from '@/simulation/classes/OrbitalElements';
 import { Trajectory } from './Trajectory/Trajectory';
 import { useCallback, useContext, useMemo, useRef } from 'react';
 import loadBodyPreset, { PresetKey } from '@/simulation/utils/loadBodyPreset';
@@ -9,32 +8,17 @@ import { CentralMassContext } from '@/simulation/context/CentralMassContext';
 import { calculateOrbitFromPeriapsis } from '@/simulation/math/orbit/calculateOrbit';
 import { DIST_MULT } from '@/simulation/utils/constants';
 import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
-import {
-  ArrowHelper,
-  ColorRepresentation,
-  Mesh,
-  Object3D,
-  Texture,
-  Vector3,
-  Vector3Tuple,
-} from 'three';
+import { ColorRepresentation, Mesh, Object3D, Texture, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { RetrogradeContext } from '../Retrograde/RetrogradeContext';
 import { retrogradeState } from '../Retrograde/retrogradeState';
-import { BodyMesh } from '../Body/BodyMesh';
 import { getRadiusAtTrueAnomaly } from '@/simulation/math/orbital-elements/OrbitalRadius';
 import {
   getOrbitalSpeedFromRadius,
-  getVelocityDirectionAtRadius,
   getVelocityDirectionFromOrbitalElements,
 } from '@/simulation/math/orbital-elements/Velocity';
-import {
-  getPosition,
-  getPositionFromRadius,
-} from '@/simulation/math/orbital-elements/Position';
+import { getPositionFromRadius } from '@/simulation/math/orbital-elements/Position';
 import { useFrame } from '@react-three/fiber';
-
-import Annotation from '../Annotation';
 
 // Date needed by Orbit but not by Body
 type OrbitData = {
