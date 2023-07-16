@@ -3,6 +3,7 @@ import { cn } from '@/lib/cn';
 import { atomicAge, orbitron, roboto } from '@/lib/fonts';
 import SiteHeader from './SiteHeader';
 import SiteFooter from './SiteFooter';
+import { Sidebar } from '@/components/layout/sidebar/Sidebar';
 
 const fontVariables = [atomicAge.variable, orbitron.variable, roboto.variable];
 
@@ -18,6 +19,8 @@ const SiteLayout = ({ children }: SiteLayoutProps) => {
       )}
     >
       <SiteHeader />
+      <Sidebar />
+
       {children}
       <SiteFooter />
     </div>
