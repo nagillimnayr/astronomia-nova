@@ -20,7 +20,7 @@ const horizonsSchema = z.object({
 });
 
 type ReferencePlane = 'ECLIPTIC' | 'FRAME' | 'BODY' | 'EQUATOR';
-export type EphemerisType = 'ELEMENTS' | 'VECTORS';
+type EphemerisType = 'ELEMENTS' | 'VECTORS';
 
 async function fetchEphemerides(
   bodyCode: string,

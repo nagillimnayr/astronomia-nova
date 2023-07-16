@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
   if (ephemerisType === 'elements') {
     const elementTable = await getElementTable(bodyCode);
     try {
-      const writeRes = await saveEphemeris(elementTable, 'ELEMENTS');
+      const writeRes = await saveEphemeris(elementTable);
       console.log(writeRes.path);
       return NextResponse.json({ ephemeris: elementTable });
     } catch (e) {
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
   } else if (ephemerisType === 'vectors') {
     const vectorTable = await getVectorTable(bodyCode);
     try {
-      const writeRes = await saveEphemeris(vectorTable, 'VECTORS');
+      const writeRes = await saveEphemeris(vectorTable);
       console.log(writeRes.path);
       return NextResponse.json({ ephemeris: vectorTable });
     } catch (e) {
