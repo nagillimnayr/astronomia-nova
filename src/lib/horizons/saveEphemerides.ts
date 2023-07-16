@@ -18,8 +18,9 @@ export function saveVectorTable(vectorTable: VectorTable) {
 export async function saveEphemeris(ephemeris: Ephemeris) {
   const name = ephemeris.name;
   const date = ephemeris.epoch;
+  const type = ephemeris.ephemerisType;
   // create file path
-  const fileName = _.kebabCase(name);
+  const fileName = _.kebabCase(name + type);
   const __filename = fileURLToPath(import.meta.url);
   console.log('__fileName:', __filename);
   const __dirname = path.dirname(__filename);
