@@ -177,16 +177,19 @@ export const Orbit = (props: OrbitProps) => {
       ref={(orbit) => {
         if (!orbit) return;
         orbitRef.current = orbit;
+        // rotate to orient the orbit
         orbit.rotateY(degToRad(preset.longitudeOfAscendingNode));
         orbit.rotateX(degToRad(preset.inclination));
         orbit.rotateY(degToRad(preset.argumentOfPeriapsis));
       }}
     >
+      {/** pass callback function down to orbiting body so that it will add itself to the tree  */}
       <KeplerTreeContext.Provider value={addChildToTree}>
         <Body ref={bodyRef} params={bodyParams} texture={props.texture}>
           {props.children}
         </Body>
       </KeplerTreeContext.Provider>
+
       <Trajectory
         semiMajorAxis={elements.semiMajorAxis}
         semiMinorAxis={elements.semiMinorAxis}
