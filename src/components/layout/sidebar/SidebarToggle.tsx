@@ -13,15 +13,20 @@ export function SidebarToggle() {
       pressed={sidebarOpen}
       onPressedChange={setSidebarOpen}
       className={cn(
-        'inline-flex aspect-square h-full flex-row items-center justify-center rounded-md border-2 bg-background text-foreground hover:bg-muted  hover:text-muted-foreground data-[state=on]:bg-muted'
+        'inline-flex aspect-square h-full flex-row items-center justify-center rounded-md p-0 text-muted-foreground hover:bg-subtle hover:text-subtle-foreground data-[state=on]:bg-subtle'
       )}
     >
       {sidebarOpen ? (
-        <PanelLeftCloseIcon className="aspect-square h-full w-full" />
+        <PanelLeftCloseIcon
+          strokeWidth={0.7}
+          className="aspect-square h-full w-full"
+        />
       ) : (
-        <PanelLeftOpenIcon className="aspect-square h-full w-full" />
+        <PanelLeftOpenIcon
+          strokeWidth={0.7}
+          className="aspect-square h-full w-full "
+        />
       )}
-      {/* <span className="h-full w-full bg-transparent text-[2em] text-white data-[state=off]:icon-[mdi--menu-close] data-[state=on]:icon-[mdi--menu-open]" /> */}
     </RadixToggle.Root>
   );
 }
