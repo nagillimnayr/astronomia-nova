@@ -1,3 +1,4 @@
+import Outliner from '@/components/Outliner/Outliner';
 import { Separator } from '@/components/gui/Separator';
 import { cn } from '@/lib/cn';
 import { useStore } from '@/state/store';
@@ -21,9 +22,11 @@ export function Sidebar() {
         <header className="text-foreground">
           <h3>Sidebar</h3>
         </header>
-        <Separator className="w-full bg-foreground" />
+        <Separator className="h-px w-full border-y bg-border" />
 
-        <section className="h-96 min-h-fit w-full border"></section>
+        <section className="flex h-fit min-h-fit w-full flex-col items-center justify-start border-2 p-2">
+          <Outliner />
+        </section>
       </div>
     </aside>
   );

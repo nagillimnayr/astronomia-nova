@@ -55,10 +55,6 @@ const Home: NextPage = () => {
           >
             <SolarSystemScene />
           </div>
-
-          <div className="flex h-96 min-h-fit w-96 flex-col items-center justify-start">
-            <Outliner />
-          </div>
         </main>
       </div>
     </>

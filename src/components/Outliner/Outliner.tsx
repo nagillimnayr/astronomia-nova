@@ -12,7 +12,7 @@ const Outliner = () => {
     return <LoadingFallback />;
   }
   return (
-    <section className="h-fit min-h-fit w-fit min-w-fit border p-0">
+    <section className="flex h-fit min-h-fit w-fit min-w-fit flex-col items-start justify-start gap-0 border p-0">
       <OutlinerItem body={rootRef.current} />
     </section>
   );
