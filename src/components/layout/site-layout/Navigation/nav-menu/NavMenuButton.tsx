@@ -7,7 +7,12 @@ type Props = {
 };
 const NavMenuButton = ({ children, className }: Props) => {
   return (
-    <Menu.Button className={cn('rounded-md border-2 p-2 font-sans', className)}>
+    <Menu.Button
+      className={cn(
+        'hover:bg-subtle/50 rounded-md border-2 bg-transparent p-2 font-sans transition-colors',
+        className
+      )}
+    >
       {children}
     </Menu.Button>
   );

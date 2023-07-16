@@ -63,6 +63,33 @@ const colors = {
     950: '#46006f',
   },
 
+  'chathams-blue': {
+    '50': '#eef8ff',
+    '100': '#d8eeff',
+    '200': '#bae2ff',
+    '300': '#8bd2ff',
+    '400': '#54b7ff',
+    '500': '#2d96ff',
+    '600': '#1676fa',
+    '700': '#0f5fe6',
+    '800': '#134cba',
+    '900': '#15418c',
+    '950': '#122b59',
+  },
+
+  // blues
+  'medium-slate-blue': '#696EFF',
+  'majorelle-blue': '#574AE2',
+  'marian-blue': '#15418C',
+  'uranian-blue': '#AFDBF5',
+  'celestial-blue': '#4997D0',
+  'electric-indigo': '#6F00FF',
+  'dodger-blue': '#1E90FF',
+
+  // reds
+  'imperial-red': '#ED2939',
+  crimson: '#DC143C',
+
   // end of colors
 };
 

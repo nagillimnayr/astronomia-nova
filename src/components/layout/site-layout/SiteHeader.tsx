@@ -30,7 +30,7 @@ const SiteHeader = () => {
         ref={headerRef}
         data-state="open"
         className={cn(
-          `sticky top-0 z-[99999999] flex h-20 w-screen min-w-full translate-y-[0%] flex-row items-center justify-start border-b-2 border-border bg-background py-4 pl-6 pr-36 text-foreground transition-transform duration-300 ease-in`,
+          `sticky top-0 z-[99999999] flex h-20 w-screen min-w-full translate-y-[0%] flex-row items-center justify-start border-b bg-muted py-4 pl-6 pr-36 text-muted-foreground transition-transform duration-300 ease-in`,
           `data-[state=closed]:-translate-y-[100%]`
         )}
       >
@@ -55,7 +55,10 @@ const SiteHeader = () => {
             <h2
               className={`mx-4 text-center font-display text-3xl font-extrabold tracking-tight`}
             >
-              Astronomia <span className="text-spaceCadet-300">Nova</span>
+              Astronomia{' '}
+              <span className="bg-gradient-to-r from-indigo-500 to-violet-600 bg-clip-text text-transparent">
+                Nova
+              </span>
             </h2>
           </Link>
         </div>

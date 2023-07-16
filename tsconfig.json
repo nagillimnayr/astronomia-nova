@@ -36,7 +36,8 @@
     "**/*.md",
     "**/*.mdx",
     "next.config.mjs",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "tailwind.config.ts.bkup"
   ],
   "exclude": ["node_modules"],
   "ts-node": {

@@ -27,12 +27,12 @@ const otherLinks = [
   { href: '/docs/notes', label: 'Notes' },
 ];
 
-const btnStyle = `rounded-md border-0 py-2 px-4 font-sans h-full hover:bg-foreground/10 ui-open:bg-foreground/10`;
+const btnStyle = `rounded-md border-0 py-2 px-4 font-sans h-full`;
 const NavBar = () => {
   return (
     <nav
       className={
-        'relative ml-auto flex h-fit w-fit flex-row items-center justify-start gap-0 rounded-md border-2 p-1'
+        'relative ml-auto flex h-fit w-fit flex-row items-center justify-start gap-0 rounded-md border p-1'
       }
     >
       {mainLinks.map(({ href, label }) => {

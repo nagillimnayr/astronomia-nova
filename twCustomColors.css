@@ -1,0 +1,23 @@
+:root {
+  --eerie-black: 24 24 27;
+  --existential-angst: 9 9 11;
+
+  --woodsmoke-50: 246 246 247;
+  --woodsmoke-100: 226 227 229;
+  --woodsmoke-200: 196 198 203;
+  --woodsmoke-300: 159 161 169;
+  --woodsmoke-400: 123 124 134;
+  --woodsmoke-500: 96 98 108;
+  --woodsmoke-600: 76 77 85;
+  --woodsmoke-700: 63 63 70;
+  --woodsmoke-800: 53 53 58;
+  --woodsmoke-900: 46 47 51;
+  --woodsmoke-950: 24 24 27;
+}
+
+.alt {
+  --card: 32 32 32;
+  --background: 17 17 17;
+  --muted: 23 23 23;
+  --subtle: 30 30 30;
+}
