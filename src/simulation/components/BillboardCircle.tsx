@@ -7,7 +7,7 @@ export function BillboardCircle() {
     <object3D>
       <Html
         center
-        className="aspect-square w-4 cursor-pointer rounded-full border-2 border-white bg-transparent hover:w-14"
+        className="aspect-square w-4 cursor-pointer rounded-full border-2 border-white bg-transparent hover:w-6"
       />
     </object3D>
   );
