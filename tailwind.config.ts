@@ -48,6 +48,10 @@ export default {
           DEFAULT: 'var(--muted)',
           foreground: 'var(--muted-foreground)',
         },
+        subtle: {
+          DEFAULT: 'var(--subtle)',
+          foreground: 'var(--subtle-foreground)',
+        },
         accent: {
           DEFAULT: 'var(--accent)',
           foreground: 'var(--accent-foreground)',

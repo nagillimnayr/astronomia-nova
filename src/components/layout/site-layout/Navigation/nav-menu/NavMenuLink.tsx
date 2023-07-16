@@ -6,7 +6,7 @@ const NavMenuLink = ({ children, className, href }: LinkProps) => {
   return (
     <button
       className={cn(
-        'hover:bg-subtle ui-open:bg-subtle/50 bg-transparent transition-colors ',
+        'pointer-events-auto transition-colors hover:bg-subtle',
         className
       )}
     >

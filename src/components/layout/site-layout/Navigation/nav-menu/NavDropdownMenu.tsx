@@ -17,7 +17,12 @@ const NavDropdownMenu = ({ children, className, links }: NavDropdownProps) => {
   return (
     <Menu as="div" className={'relative ml-auto flex flex-col'}>
       <div className="relative">
-        <Menu.Button className={cn(className)}>
+        <Menu.Button
+          className={cn(
+            'pointer-events-auto transition-colors hover:bg-subtle',
+            className
+          )}
+        >
           {({ open }) => {
             // render prop to switch chevron direction
             return (
@@ -43,7 +48,7 @@ const NavDropdownMenu = ({ children, className, links }: NavDropdownProps) => {
                 <Link
                   href={href}
                   className={
-                    'min-w-full rounded-md bg-transparent px-2 py-1 font-sans  ui-active:bg-indigo-400 ui-active:text-white'
+                    'min-w-full rounded-md bg-transparent px-2 py-1 font-sans  ui-active:bg-subtle ui-active:text-subtle-foreground'
                   }
                 >
                   {label}

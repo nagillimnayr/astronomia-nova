@@ -32,7 +32,7 @@ const NavBar = () => {
   return (
     <nav
       className={
-        'relative ml-auto flex h-fit w-fit flex-row items-center justify-start gap-0 rounded-md border p-1'
+        'relative ml-auto flex h-fit w-fit flex-row items-center justify-start gap-0 rounded-md border-2 p-1'
       }
     >
       {mainLinks.map(({ href, label }) => {
