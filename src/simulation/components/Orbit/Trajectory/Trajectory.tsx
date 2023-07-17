@@ -1,14 +1,12 @@
-import { CatmullRomLine, Line } from '@react-three/drei';
-import { pi } from 'mathjs';
+import { Line } from '@react-three/drei';
 import { useMemo, useRef } from 'react';
-import { ArrowHelper, EllipseCurve, Euler, Vector3 } from 'three';
+import { type ArrowHelper, EllipseCurve, Euler, Vector3 } from 'three';
 import { getLinearEccentricityFromAxes } from '@/simulation/math/orbital-elements/LinearEccentricity';
 import { DIST_MULT } from '@/simulation/utils/constants';
 import { useSnapshot } from 'valtio';
 import { debugState } from '@/simulation/state/DebugState';
-// import { Arrow } from '../arrows/Arrow';
 
-const XUNITVECTOR = new Vector3(1, 0, 0);
+const X_UNIT_VECTOR = new Vector3(1, 0, 0);
 
 type TrajectoryProps = {
   semiMajorAxis: number;
@@ -32,7 +30,7 @@ export const Trajectory = (props: TrajectoryProps) => {
     ).getSpacedPoints(128);
   }, [props.semiMajorAxis, props.semiMinorAxis, linearEccentricity]);
 
-  const arrowRef = useRef<ArrowHelper>(null!);
+  // const arrowRef = useRef<ArrowHelper>(null!);
 
   const debug = useSnapshot(debugState);
   return debug.trajectories ? (
@@ -47,7 +45,7 @@ export const Trajectory = (props: TrajectoryProps) => {
             arrowRef.current = arrow;
             arrow.setColor('red');
             arrow.position.set(-linearEccentricity / DIST_MULT, 0, 0);
-            arrow.setDirection(XUNITVECTOR);
+            arrow.setDirection(X_UNIT_VECTOR);
             arrow.setLength(props.semiMajorAxis / DIST_MULT, 1, 0.25);
           }}
         /> */}
