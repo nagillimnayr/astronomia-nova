@@ -22,7 +22,7 @@ const Simulation = ({ children }: SimProps) => {
   // simState.getState = getThree;
 
   useEffect(() => {
-    // reset timers, timescale, etc when the component is mounted
+    // Reset timers, timescale, etc when the component is mounted.
     console.log('resetting timeStore!');
     useTimeStore.getState().reset();
   }, []);
@@ -34,16 +34,16 @@ const Simulation = ({ children }: SimProps) => {
       // scale delta time
       const scaledDelta = delta * timeStore.timescale;
 
-      // update clock in external state
+      // Update clock in external store.
       timeStore.addTimeToClock(scaledDelta);
 
-      // pass rootRef.current to function instead?
+      // Pass rootRef.current to function instead?
       useSimStore.getState().updateSim(scaledDelta);
 
       retrogradeState.update();
     }
 
-    // update camera
+    // Update camera.
     useCameraStore.getState().updateCameraControls();
   });
 
