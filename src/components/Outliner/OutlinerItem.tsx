@@ -1,21 +1,21 @@
 import type KeplerBody from '@/simulation/classes/KeplerBody';
-import { useSelectionStore } from '@/simulation/state/zustand/selection-store';
 import * as Collapsible from '@radix-ui/react-collapsible';
 
 import { ChevronRightIcon } from 'lucide-react';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 type OutlinerItemProps = {
   body: KeplerBody;
 };
 const OutlinerItem = ({ body }: OutlinerItemProps) => {
-  const handleClick = useCallback(() => {
-    // Get state without binding to it so the component wont re-render every time it changes.
-    const selected = useSelectionStore.getState().selected;
-    if (body === selected) return; // Already selected, do nothing.
+  const { uiState } = useContext(RootStoreContext);
 
-    useSelectionStore.getState().select(body);
-  }, [body]);
+  const handleClick = useCallback(() => {
+    // Since this component isn't wrapped in 'observer()', it won't be bound to state changes, so it shouldn't re-render on state changes.
+    if (uiState.selected === body) return; // Already selected, do nothing.
+    uiState.select(body);
+  }, [body, uiState]);
   return (
     <Collapsible.Root className="m-0 inline-flex h-fit min-h-fit w-full flex-col items-center justify-start rounded-none text-center">
       <span className="m-0 h-fit w-full p-0">
@@ -58,4 +58,4 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
   );
 };
 
-export default OutlinerItem;
+export { OutlinerItem };

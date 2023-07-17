@@ -1,25 +1,24 @@
 import { makeAutoObservable, observable, toJS } from 'mobx';
 import { type RootStore } from '../root/root-store';
+import type KeplerBody from '@/simulation/classes/KeplerBody';
 
 const initialState = {
   isOutlinerOpen: true,
   isDebugPanelOpen: false,
+  selected: null,
 };
 
-// Type alias for private keys. To pass to makeAutoObservable.
-type PrivateKeys = '_rootStore' | '_isOutlinerOpen' | '_isDebugPanelOpen';
-
 export class UiState {
+  private _rootStore: RootStore;
   private _isOutlinerOpen: boolean = initialState.isOutlinerOpen;
   private _isDebugPanelOpen: boolean = initialState.isDebugPanelOpen;
-  private _rootStore: RootStore;
+
+  private _selected: KeplerBody | null = null; // Will be null if no object is selected.
 
   constructor(rootStore: RootStore) {
     // Set MobX annotations.
-    makeAutoObservable<this, PrivateKeys>(this, {
+    makeAutoObservable<this, '_rootStore'>(this, {
       _rootStore: false,
-      _isOutlinerOpen: observable,
-      _isDebugPanelOpen: observable,
     });
 
     // Set reference to root store.
@@ -32,6 +31,10 @@ export class UiState {
 
   get isDebugPanelOpen() {
     return this._isDebugPanelOpen;
+  }
+
+  get selected() {
+    return this._selected;
   }
 
   openOutliner() {
@@ -49,6 +52,14 @@ export class UiState {
   }
   closeDebugPanel() {
     this._isDebugPanelOpen = false;
+  }
+
+  select(body: KeplerBody) {
+    this._selected = body;
+  }
+
+  deselect() {
+    this._selected = null;
   }
 
   reset() {

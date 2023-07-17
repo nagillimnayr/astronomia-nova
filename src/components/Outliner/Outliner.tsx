@@ -1,5 +1,4 @@
-import * as Accordion from '@radix-ui/react-accordion';
-import OutlinerItem from './OutlinerItem';
+import { OutlinerItem } from './OutlinerItem';
 
 import { LoadingFallback } from '../LoadingFallback';
 import { useSimStore } from '@/simulation/state/zustand/sim-store';

@@ -1,24 +1,25 @@
 import KeplerBody from '@/simulation/classes/KeplerBody';
-import { MutableRefObject, useCallback } from 'react';
-import { useSelectionStore } from '@/simulation/state/zustand/selection-store';
-import { useFloating } from '@floating-ui/react';
+import { MutableRefObject, useCallback, useContext } from 'react';
 import { Separator } from '@/components/gui/Separator';
 import { useCameraStore } from '@/simulation/state/zustand/camera-store';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { observer } from 'mobx-react-lite';
 
-export function DetailsPanel() {
-  const body = useSelectionStore((state) => state.selected);
+const DetailsPanel = observer(() => {
+  const { uiState } = useContext(RootStoreContext);
 
   const handleCloseClick = useCallback(() => {
-    useSelectionStore.getState().deselect();
+    // Deselect selected object.
+    uiState.deselect();
   }, []);
 
   const handleFocusClick = useCallback(() => {
-    if (!body) return;
+    if (!uiState.selected) return;
     // Focus camera on selection.
-    useCameraStore.getState().setFocus(body);
-  }, [body]);
+    useCameraStore.getState().setFocus(uiState.selected);
+  }, [uiState.selected]);
 
-  if (!body) return null; // If nothing selected, display nothing.
+  if (!uiState.selected) return null; // If nothing selected, display nothing.
   return (
     <div className="absolute right-0 top-0 flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border bg-muted p-4 text-muted-foreground">
       {/** Close button. */}
@@ -31,7 +32,7 @@ export function DetailsPanel() {
 
       {/** Name. */}
       <header className="flex w-full flex-row items-center justify-center">
-        <h4 className="text-xl">{body.name}</h4>
+        <h4 className="text-xl">{uiState.selected.name}</h4>
       </header>
       <Separator className="w-full bg-border" />
       {/** Attributes. */}
@@ -60,4 +61,6 @@ export function DetailsPanel() {
       </div>
     </div>
   );
-}
+});
+
+export { DetailsPanel };
