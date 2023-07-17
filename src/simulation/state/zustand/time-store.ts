@@ -39,46 +39,44 @@ const initialState: State = {
 type TimeStore = State & Actions;
 
 export const useTimeStore = create<TimeStore>()(
-  subscribeWithSelector(
-    devtools((set, get) => ({
-      ...initialState,
+  subscribeWithSelector((set, get) => ({
+    ...initialState,
 
-      incrementTimescale: (val = 1) => {
-        const newTimescale = get().timescale + val;
-        set({ timescale: Math.min(newTimescale, 100) });
-      },
-      decrementTimescale: (val = 1) => {
-        const newTimescale = get().timescale - val;
-        set({ timescale: Math.max(newTimescale, 1) });
-      },
-      setTimescale: (val: number) => {
-        set({ timescale: clamp(val, 0, 100) });
-      },
+    incrementTimescale: (val = 1) => {
+      const newTimescale = get().timescale + val;
+      set({ timescale: Math.min(newTimescale, 100) });
+    },
+    decrementTimescale: (val = 1) => {
+      const newTimescale = get().timescale - val;
+      set({ timescale: Math.max(newTimescale, 1) });
+    },
+    setTimescale: (val: number) => {
+      set({ timescale: clamp(val, 0, 100) });
+    },
 
-      pause: () => {
-        set({ isPaused: true });
-      },
-      unpause: () => {
-        set({ isPaused: false });
-      },
+    pause: () => {
+      set({ isPaused: true });
+    },
+    unpause: () => {
+      set({ isPaused: false });
+    },
 
-      addTimeToClock: (deltaTime: number) => {
-        if (deltaTime < 0) {
-          return;
-        }
-        set({ timeElapsed: get().timeElapsed + deltaTime });
-      },
+    addTimeToClock: (deltaTime: number) => {
+      if (deltaTime < 0) {
+        return;
+      }
+      set({ timeElapsed: get().timeElapsed + deltaTime });
+    },
 
-      // computes the current date based on the timeElapsed relative to the start date (refDate)
-      getCurrentDate: () => {
-        return addSeconds(get().refDate, get().timeElapsed * DAY);
-      },
+    // computes the current date based on the timeElapsed relative to the start date (refDate)
+    getCurrentDate: () => {
+      return addSeconds(get().refDate, get().timeElapsed * DAY);
+    },
 
-      reset: () => {
-        set(initialState);
-      },
-    }))
-  )
+    reset: () => {
+      set(initialState);
+    },
+  }))
 );
 
 // log changes to state
