@@ -12,8 +12,6 @@ import TimescaleTooltip from '../TimescaleTooltip';
 import { useTimeStore } from '../../../state/zustand/time-store';
 
 export const TimescaleSlider = () => {
-  // const snap = useSnapshot(timeState);
-
   const timescale = useTimeStore((state) => state.timescale);
   const setTimescale = useTimeStore((state) => state.setTimescale);
 
@@ -55,7 +53,7 @@ export const TimescaleSlider = () => {
         </RadixSlider.Track>
         {/* <TimescaleTooltip show={isHovered}> */}
         <RadixSlider.Thumb
-          className="hover:bg-violet3 pointer-events-auto block aspect-square w-4 cursor-pointer rounded-full bg-white shadow-[0_2px_10px] shadow-black/50 focus:shadow-[0_0_0_6px] focus:shadow-black/50 focus:outline-none"
+          className="pointer-events-auto block aspect-square w-4 cursor-pointer rounded-full bg-white shadow-primary outline-none transition-colors hover:border hover:border-white hover:bg-subtle hover:shadow-[0_2px_10px] focus:border focus:border-white focus:bg-subtle focus:shadow-[0_2px_10px]"
           onPointerEnter={handlePointerEnter}
           onPointerLeave={handlePointerLeave}
         />
