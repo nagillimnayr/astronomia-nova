@@ -9,8 +9,8 @@ export function DetailsPanel() {
   if (!body) return null; // If nothing selected, display nothing.
 
   return (
-    <div className="absolute flex h-96 w-48 flex-col items-center justify-start rounded-sm border bg-card text-card-foreground">
-      <header className="w-full">
+    <div className="absolute right-0 top-0 flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border bg-muted p-2 text-muted-foreground">
+      <header className="flex w-full flex-row items-center justify-center">
         <h4 className="text-xl">{body.name}</h4>
       </header>
       <div className="flex w-full flex-col items-start justify-start">
@@ -19,9 +19,6 @@ export function DetailsPanel() {
         </span>
         <span>
           Mean radius:&nbsp;<span>{}</span>
-        </span>
-        <span>
-          Orbital speed:&nbsp;<span>{}</span>
         </span>
       </div>
     </div>
