@@ -28,6 +28,7 @@ export const useSelectionStore = create<SimStore>()(
 
       select: (newSelection: KeplerBody) => {
         set({ selected: newSelection });
+        console.log('new selection:', newSelection);
       },
       deselect: () => {
         set({ selected: null });
