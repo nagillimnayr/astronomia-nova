@@ -19,7 +19,7 @@ type SceneProps = {
 const Scene = (props: SceneProps) => {
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <div className="h-min-full relative flex h-full w-full flex-col justify-center">
+      <div className="h-min-full relative flex h-full w-full flex-col justify-center border">
         <HUD className="z-10 " />
         <div className="absolute bottom-0 right-1 z-[2] h-24 w-40 select-none whitespace-nowrap">
           <VRButton />
