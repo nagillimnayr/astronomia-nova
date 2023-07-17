@@ -9,6 +9,7 @@ const newTargetWorldPos = new Vector3();
 type State = {
   controls: CameraControls;
   focusTarget: Object3D | null;
+  viewState: 'space' | 'surface';
 };
 
 type Actions = {
@@ -21,6 +22,7 @@ type Actions = {
 const initialState: State = {
   controls: null!,
   focusTarget: null,
+  viewState: 'space',
 };
 
 type CameraStore = State & Actions;
@@ -29,27 +31,29 @@ type CameraStore = State & Actions;
 const setCameraControls = (controls: CameraControls) => {
   console.log('setting camera controls:', controls);
   useCameraStore.setState({ controls: controls });
-  controls.mouseButtons.right = 8; // disable pan (set to dolly on right mouse button instead)
+  controls.mouseButtons.right = 8; // Disable pan. (set to dolly on right mouse button instead)
 };
 
 const updateCameraControls = () => {
-  const controls = useCameraStore.getState().controls;
-  if (!controls) {
-    console.error('camera controls are null');
-    return;
-  }
-  const focusTarget = useCameraStore.getState().focusTarget;
-  if (!focusTarget) {
-    return;
-  }
+  const viewState = useCameraStore.getState().viewState;
 
-  // get world position of focus target
-  focusTarget.getWorldPosition(newTargetWorldPos);
+  switch (viewState) {
+    case 'space': {
+      updateSpaceView();
+      break;
+    }
 
-  // update controls to follow target
-  controls.moveTo(...newTargetWorldPos.toArray(), false).catch((reason) => {
-    console.log('promise rejected: ', reason);
-  });
+    case 'surface': {
+      updateSurfaceView();
+      break;
+    }
+
+    default: {
+      throw new Error(
+        `error: This shouldn't be possible! Something has gone wrong!`
+      );
+    }
+  }
 };
 
 export const useCameraStore = create<CameraStore>()(
@@ -63,7 +67,7 @@ export const useCameraStore = create<CameraStore>()(
       updateCameraControls: updateCameraControls,
 
       setFocus: (target: Object3D) => {
-        // console.log('new focus target:', target);
+        console.log('new focus target:', target);
         set({ focusTarget: target });
 
         // get().updateCameraControls();
@@ -76,3 +80,30 @@ export const useCameraStore = create<CameraStore>()(
     }))
   )
 );
+
+// These functions are kept external to the store object so that they are module scoped and the user can't call them directly. Instead, the updateCameraControls() function should be called on the store, and that function will decide which of these to call depending on the viewState.
+function updateSpaceView() {
+  // Get camera controls.
+  const controls = useCameraStore.getState().controls;
+  if (!controls) {
+    console.error('camera controls are null');
+    return;
+  }
+  // Get focus target.
+  const focusTarget = useCameraStore.getState().focusTarget;
+  if (!focusTarget) {
+    return;
+  }
+
+  // Get world position of focus target.
+  focusTarget.getWorldPosition(newTargetWorldPos);
+
+  // Update controls to follow target.
+  controls.moveTo(...newTargetWorldPos.toArray(), false).catch((reason) => {
+    console.log('promise rejected: ', reason);
+  });
+}
+
+function updateSurfaceView() {
+  // Do something...
+}
