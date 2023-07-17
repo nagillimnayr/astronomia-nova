@@ -1,22 +1,26 @@
 import { cn } from '@/lib/cn';
-import { useStore } from '@/state/store';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import * as RadixToggle from '@radix-ui/react-toggle';
 import { PanelLeftCloseIcon, PanelLeftOpenIcon } from 'lucide-react';
+import { observer } from 'mobx-react-lite';
+import { useContext } from 'react';
 
-export function SidebarToggle() {
-  const sidebarOpen = useStore((state) => state.sidebarOpen);
-  const setSidebarOpen = useStore((state) => state.setSidebarOpen);
+const SidebarToggle = observer(() => {
+  // Get uiState from context.
+  const { uiState } = useContext(RootStoreContext);
 
   return (
     <RadixToggle.Root
       aria-label="Toggle Sidenav"
-      pressed={sidebarOpen}
-      onPressedChange={setSidebarOpen}
+      pressed={uiState.isOutlinerOpen}
+      onPressedChange={() => {
+        uiState.toggleOutliner();
+      }}
       className={cn(
         'inline-flex aspect-square h-full flex-row items-center justify-center rounded-md p-0 text-muted-foreground hover:bg-subtle hover:text-subtle-foreground data-[state=on]:bg-subtle'
       )}
     >
-      {sidebarOpen ? (
+      {uiState.isOutlinerOpen ? (
         <PanelLeftCloseIcon
           strokeWidth={0.7}
           className="aspect-square h-full w-full"
@@ -29,4 +33,6 @@ export function SidebarToggle() {
       )}
     </RadixToggle.Root>
   );
-}
+});
+
+export { SidebarToggle };

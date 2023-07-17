@@ -16,6 +16,7 @@
     "jsx": "preserve",
     "incremental": true,
     "noUncheckedIndexedAccess": true,
+    "useDefineForClassFields": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
@@ -37,7 +38,8 @@
     "**/*.mdx",
     "next.config.mjs",
     ".next/types/**/*.ts",
-    "tailwind.config.ts.bkup"
+    "tailwind.config.ts.bkup",
+    "src/simulation/components/HUD/DetailsPanel"
   ],
   "exclude": ["node_modules"],
   "ts-node": {

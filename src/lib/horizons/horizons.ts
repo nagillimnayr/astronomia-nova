@@ -1,4 +1,5 @@
 import { getEphemerides } from './getEphemerides';
+import { saveEphemerides } from './saveEphemerides';
 
 async function horizons(code: string) {
   const ephemerides = await getEphemerides(code);
@@ -12,7 +13,7 @@ if (process.argv.length >= 3) {
   if (code) {
     try {
       const ephemerides = await horizons(code);
-      ephemerides;
+      await saveEphemerides(ephemerides);
       console.log('elements:', ephemerides.elements);
       console.log('vectors:', ephemerides.vectors);
     } catch (e) {

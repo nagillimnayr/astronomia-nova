@@ -7,6 +7,7 @@ import type { ElementTable } from './types/ElementTable';
 import type { VectorTable } from './types/VectorTable';
 import _ from 'lodash';
 import { Ephemeris } from './types/Ephemeris';
+import { PhysicalData } from './types/PhysicalData';
 
 const KM_TO_M = 1000;
 
@@ -191,4 +192,53 @@ export function parseVectors(text: Readonly<string>): Ephemeris {
   };
 
   return ephemeris;
+}
+
+export function parsePhysicalData(text: Readonly<string>): PhysicalData {
+  // get the substring with physical data
+  const matches = text.match(/PHYSICAL DATA([^]*)\s*PERIHELION/);
+  if (!matches || matches.length < 2) {
+    console.log('error! no match found in:', text);
+    throw new Error('no match found!');
+  }
+
+  // get the substring that contains the ephemeris data
+  const substr = matches[1];
+  if (!substr) {
+    const errorMsg = 'error: no vector data found';
+    throw new Error(errorMsg);
+  }
+
+  const physicalData: PhysicalData = {
+    meanRadius: capturePhysicalProperty(substr, 'mean radius'),
+    mass: capturePhysicalProperty(substr, 'Mass'),
+    siderealRotPeriod: capturePhysicalProperty(substr, 'Sidereal rot. period'),
+    siderealRotRate: capturePhysicalProperty(substr, 'Sid. rot. rate'), // (rad/s)
+    gravParameter: capturePhysicalProperty(substr, 'GM') * KM_TO_M,
+    obliquity: capturePhysicalProperty(substr, 'Obliquity'), // axial tilt (deg)
+  };
+
+  return physicalData;
+}
+
+function capturePhysicalProperty(text: string, property: string) {
+  // skip everything after the property name until an '=', then skip any whitespace after the '=', capture everything from the first non-whitespace character until the next whitespace character or a '+'
+  const regexStr = `${property}[^=]*=\\s*([^\\s]*)[\\s\\+]`;
+  const regexp = new RegExp(regexStr);
+  const matches = text.match(regexp);
+  if (!matches || matches.length < 2 || !matches[1]) {
+    console.error(`property '${property}' was not found`);
+    console.log('text:', text);
+    console.log('matches:', matches);
+    throw new Error('no match found!');
+  }
+
+  const match = matches[1];
+  // parse string into float
+  const data = parseFloat(match);
+  if (data === undefined) {
+    throw new Error(`error: failed to parse value (${match}) into a float`);
+  }
+
+  return data;
 }

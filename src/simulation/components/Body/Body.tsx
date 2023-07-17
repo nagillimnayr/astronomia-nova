@@ -138,7 +138,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         <object3D>
           <Annotation annotation={name} />
         </object3D>
-        <BillboardCircle />
+        <BillboardCircle bodyRef={bodyRef} />
 
         {/** for whatever reason, the same does not work for BodyMesh */}
         {/* <object3D>
@@ -163,7 +163,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         meanRadius={meanRadius}
         color={color}
         texture={props.texture}
-        body={bodyRef}
+        bodyRef={bodyRef}
         ref={meshRef}
       />
 

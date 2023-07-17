@@ -143,69 +143,53 @@ export const Orbit = (props: OrbitProps) => {
     preset.name,
   ]);
 
+  // reference to orbiting body
   const bodyRef = useRef<KeplerBody>(null!);
-  const meshRef = useRef<Mesh>(null!);
-
-  useFrame(() => {
-    // if (
-    //   !timeState.isPaused &&
-    //   selectState.selected &&
-    //   props.name === selectState.selected.name
-    // ) {
-    //   const gazeTarget = new Vector3();
-    //   camState.controls.getTarget(gazeTarget).toArray();
-    //   const gazeTargetLocal = bodyRef.current.worldToLocal(gazeTarget);
-    //   console.log('orbit:', {
-    //     updateIteration: simState.updateIteration,
-    //     name: props.name,
-    //     bodyPosition: bodyRef.current.position.toArray(),
-    //     meshPosition: meshRef.current.position.toArray(),
-    //     meshId: meshRef.current.id,
-    //     bodyId: bodyRef.current.id,
-    //     camTargetPosition: camState.focusTarget?.position.toArray(),
-    //     camLookPosition: camState.controls.getTarget(gazeTargetLocal).toArray(),
-    //   });
-    // }
-  });
 
   // callback function to be passed down to children via context provider
   // the child will call it within a callback ref and pass their reference
   // as the argument, where it will be used to construct the Kepler Tree
-  const addChildToTree = useCallback((body: KeplerBody) => {
-    if (!body) {
-      return;
-    }
+  const addChildToTree = useCallback(
+    (body: KeplerBody) => {
+      if (!body) {
+        return;
+      }
 
-    // setup attachment to central body
-    if (!body.parent) return;
-    // go up by two levels to get to the parent body
-    const parent: KeplerBody = body.parent.parent as KeplerBody;
-    console.assert(parent, 'failed to cast to parent');
-    parent.addOrbitingBody(body);
+      // setup attachment to central body
+      if (!body.parent) return;
+      // go up by two levels to get to the parent body
+      const parent: KeplerBody = body.parent.parent as KeplerBody;
+      console.assert(parent, 'failed to cast to parent');
+      parent.addOrbitingBody(body);
 
-    if (retrogradeContext === 'referenceBody') {
-      retrogradeState.setReferenceBody(body);
-    }
-    if (retrogradeContext === 'otherBody') {
-      retrogradeState.setOtherBody(body);
-    }
-  }, []);
+      if (retrogradeContext === 'referenceBody') {
+        retrogradeState.setReferenceBody(body);
+      }
+      if (retrogradeContext === 'otherBody') {
+        retrogradeState.setOtherBody(body);
+      }
+    },
+    [retrogradeContext]
+  );
 
   return (
     <object3D
       ref={(orbit) => {
         if (!orbit) return;
         orbitRef.current = orbit;
+        // rotate to orient the orbit
         orbit.rotateY(degToRad(preset.longitudeOfAscendingNode));
         orbit.rotateX(degToRad(preset.inclination));
         orbit.rotateY(degToRad(preset.argumentOfPeriapsis));
       }}
     >
+      {/** pass callback function down to orbiting body so that it will add itself to the tree  */}
       <KeplerTreeContext.Provider value={addChildToTree}>
         <Body ref={bodyRef} params={bodyParams} texture={props.texture}>
           {props.children}
         </Body>
       </KeplerTreeContext.Provider>
+
       <Trajectory
         semiMajorAxis={elements.semiMajorAxis}
         semiMinorAxis={elements.semiMinorAxis}

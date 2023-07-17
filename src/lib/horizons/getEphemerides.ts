@@ -3,6 +3,7 @@ import { z } from 'zod';
 import horizonsURL from './horizonsURL';
 import {
   parseElements,
+  parsePhysicalData,
   parseVectors as parseVectorTable,
 } from './parseEphemerides';
 import type { ElementTable } from './types/ElementTable';
@@ -20,22 +21,22 @@ const horizonsSchema = z.object({
 });
 
 type ReferencePlane = 'ECLIPTIC' | 'FRAME' | 'BODY' | 'EQUATOR';
-type EphemerisType = 'ELEMENTS' | 'VECTORS';
+type EphemerisType = 'ELEMENTS' | 'VECTORS' | 'PHYSICAL';
 
 async function fetchEphemerides(
-  bodyCode: string,
-  centerCode: string,
+  id: string,
+  centerId: string,
   referencePlane: ReferencePlane = 'ECLIPTIC',
   ephemerisType: EphemerisType
 ) {
   // get URLSearchParam string
   const searchParams = new URLSearchParams({
     format: 'json',
-    COMMAND: `'${bodyCode}'`,
-    OBJ_DATA: 'YES',
+    COMMAND: `'${id}'`,
+    OBJ_DATA: ephemerisType === 'PHYSICAL' ? 'YES' : 'NO',
     MAKE_EPHEM: 'YES',
-    EPHEM_TYPE: ephemerisType,
-    CENTER: centerCode,
+    EPHEM_TYPE: ephemerisType === 'PHYSICAL' ? 'VECTORS' : ephemerisType,
+    CENTER: centerId,
     REF_PLANE: referencePlane,
     TLIST: J2000,
     CSV_FORMAT: 'NO',
@@ -61,16 +62,11 @@ async function fetchEphemerides(
 
 export async function getElementTable(
   id: string,
-  centerCode = '500@10',
+  centerId = '500@10',
   referencePlane: ReferencePlane = 'ECLIPTIC'
 ) {
   // get the raw text data from the Horizons API
-  const text = await fetchEphemerides(
-    id,
-    centerCode,
-    referencePlane,
-    'ELEMENTS'
-  );
+  const text = await fetchEphemerides(id, centerId, referencePlane, 'ELEMENTS');
 
   // parse the string to extract the element data
   const ephemeris: Ephemeris = parseElements(text);
@@ -79,21 +75,29 @@ export async function getElementTable(
 }
 
 export async function getVectorTable(
-  bodyCode: string,
-  centerCode = '500@10',
+  id: string,
+  centerId = '500@10',
   referencePlane: ReferencePlane = 'ECLIPTIC'
 ) {
   // get the raw text data from Horizons API
-  const text = await fetchEphemerides(
-    bodyCode,
-    centerCode,
-    referencePlane,
-    'VECTORS'
-  );
+  const text = await fetchEphemerides(id, centerId, referencePlane, 'PHYSICAL');
 
   // parse the string to extract the element data
   const ephemeris: Ephemeris = parseVectorTable(text);
   return ephemeris;
+}
+
+export async function getPhysicalData(
+  id: string,
+  centerId = '500@10',
+  referencePlane: ReferencePlane = 'ECLIPTIC'
+) {
+  // get the raw text data from Horizons API
+  const text = await fetchEphemerides(id, centerId, referencePlane, 'VECTORS');
+
+  // parse physical data
+  const physicalData = parsePhysicalData(text);
+  return physicalData;
 }
 
 export async function getEphemerides(

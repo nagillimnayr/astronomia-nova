@@ -1,15 +1,18 @@
 import Outliner from '@/components/Outliner/Outliner';
 import { Separator } from '@/components/gui/Separator';
 import { cn } from '@/lib/cn';
-import { useStore } from '@/state/store';
+import { useContext } from 'react';
+import { observer } from 'mobx-react-lite';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
-export function Sidebar() {
-  const sidebarOpen = useStore((state) => state.sidebarOpen);
+const Sidebar = observer(() => {
+  const { uiState } = useContext(RootStoreContext);
 
   return (
     <aside
       aria-label="Sidenav"
-      data-sidebar={sidebarOpen ? 'open' : 'closed'}
+      // data-sidebar={sidebarOpen ? 'open' : 'closed'}
+      data-sidebar={uiState.isOutlinerOpen ? 'open' : 'closed'}
       className={cn(
         'fixed -bottom-0 left-0 top-[5rem] z-50 h-auto w-64 -translate-x-full bg-muted transition-transform data-[sidebar=open]:translate-x-0'
       )}
@@ -30,4 +33,6 @@ export function Sidebar() {
       </div>
     </aside>
   );
-}
+});
+
+export { Sidebar };

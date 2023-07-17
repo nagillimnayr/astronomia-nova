@@ -42,7 +42,7 @@ import { useSelectionStore } from '@/simulation/state/zustand/selection-store';
 
 type BodyMeshProps = {
   name: string;
-  body: MutableRefObject<KeplerBody>;
+  bodyRef: MutableRefObject<KeplerBody>;
   meanRadius: number;
   texture?: Texture;
   color: ColorRepresentation;
@@ -71,10 +71,10 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   // event handlers
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
-    if (!meshRef.current || !props.body.current) {
+    if (!meshRef.current || !props.bodyRef.current) {
       return;
     }
-    const body: KeplerBody = props.body.current;
+    const body: KeplerBody = props.bodyRef.current;
 
     // setSelected(true);
 
