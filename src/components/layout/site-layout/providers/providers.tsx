@@ -1,17 +1,17 @@
 'use client';
 import { MDXProvider } from '@mdx-js/react';
 import { ThemeProvider } from './theme-provider';
-
-type ProviderProps = {
-  children: React.ReactNode;
-};
+import RootStoreProvider from './root-store-provider';
+import { type PropsWithChildren } from 'react';
 
 const components = {};
 
-const Providers = ({ children }: ProviderProps) => {
+const Providers = ({ children }: PropsWithChildren) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-      <MDXProvider components={components}>{children}</MDXProvider>
+      <RootStoreProvider>
+        <MDXProvider components={components}>{children}</MDXProvider>
+      </RootStoreProvider>
     </ThemeProvider>
   );
 };
