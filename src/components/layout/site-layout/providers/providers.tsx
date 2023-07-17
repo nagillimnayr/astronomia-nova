@@ -1,7 +1,7 @@
 'use client';
 import { MDXProvider } from '@mdx-js/react';
 import { ThemeProvider } from './theme-provider';
-import RootStoreProvider from './root-store-provider';
+import { RootStoreProvider } from './root-store-provider';
 import { type PropsWithChildren } from 'react';
 
 const components = {};

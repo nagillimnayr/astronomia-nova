@@ -6,4 +6,8 @@ export class RootStore {
   constructor() {
     this._uiStateStore = new UiState(this);
   }
+
+  get uiState() {
+    return this._uiStateStore;
+  }
 }

@@ -1,7 +1,6 @@
 import { RootStore } from '@/state/mobx/root/root-store';
-import { type PropsWithChildren, createContext } from 'react';
-
-const RootStoreContext = createContext<RootStore>(null!);
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { type PropsWithChildren } from 'react';
 
 // Context provider to make RootStore consumable anywhere in the component tree.
 const RootStoreProvider = ({ children }: PropsWithChildren) => {
@@ -12,4 +11,4 @@ const RootStoreProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
-export default RootStoreProvider;
+export { RootStoreProvider };
