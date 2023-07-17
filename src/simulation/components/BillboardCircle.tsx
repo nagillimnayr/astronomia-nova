@@ -13,7 +13,7 @@ export function BillboardCircle({ bodyRef }: Props) {
     const body = bodyRef.current;
 
     const selected = useSelectionStore.getState().selected;
-    if (body === selected) return; // already selected? do nothing
+    if (body === selected) return; // Already selected? Do nothing.
 
     useSelectionStore.getState().select(body);
   }, [bodyRef]);
