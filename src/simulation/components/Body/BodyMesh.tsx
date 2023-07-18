@@ -43,9 +43,6 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 
   const [isVisible, setVisible] = useState<boolean>(true);
 
-  const setFocus = useCameraStore((state) => state.setFocus);
-  const select = useSelectionStore((state) => state.select);
-
   const [isSelected, setSelected] = useState<boolean>(false);
   const [isHovered, setHovered] = useState<boolean>(false);
   //const [isTrailVisible, setTrailVisibility] = useState<boolean>(false);
@@ -63,15 +60,10 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         return;
       }
       const body: KeplerBody = props.bodyRef.current;
-
-      // setSelected(true);
-
       // select body
       uiState.select(body);
-      // select(body);
-      setFocus(body);
     },
-    [props.bodyRef, setFocus, uiState]
+    [props.bodyRef, uiState]
   );
   const handleMiss = (e: MouseEvent) => {
     if (!meshRef.current) return;
