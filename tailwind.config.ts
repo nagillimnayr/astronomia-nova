@@ -40,10 +40,6 @@ export default {
           DEFAULT: 'var(--secondary)',
           foreground: 'var(--secondary-foreground)',
         },
-        destructive: {
-          DEFAULT: 'var(--destructive)',
-          foreground: 'var(--destructive-foreground)',
-        },
         muted: {
           DEFAULT: 'var(--muted)',
           foreground: 'var(--muted-foreground)',
@@ -67,6 +63,16 @@ export default {
         border: 'var(--border) ',
         input: 'var(--input)',
         ring: 'var(--ring)',
+
+        destructive: {
+          DEFAULT: 'var(--destructive)',
+          foreground: 'var(--destructive-foreground)',
+        },
+        warning: {
+          DEFAULT: 'var(--destructive)',
+          foreground: 'var(--destructive-foreground)',
+          border: 'var(--destructive-foreground)',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',

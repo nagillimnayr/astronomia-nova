@@ -11,7 +11,7 @@ const DetailsPanel = observer(() => {
   const handleCloseClick = useCallback(() => {
     // Deselect selected object.
     uiState.deselect();
-  }, []);
+  }, [uiState]);
 
   const handleFocusClick = useCallback(() => {
     if (!uiState.selected) return;
@@ -26,7 +26,7 @@ const DetailsPanel = observer(() => {
       <button className="absolute right-0 top-0 h-fit w-fit p-1">
         <span
           onClick={handleCloseClick}
-          className="icon-[mdi--close-box-outline] pointer-events-auto aspect-square text-xl text-muted-foreground transition-opacity hover:cursor-pointer hover:opacity-75"
+          className="icon-[mdi--close-box-outline] pointer-events-auto aspect-square text-xl text-muted-foreground transition-colors hover:cursor-pointer hover:text-yellow-400 "
         />
       </button>
 
