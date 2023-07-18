@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, toJS } from 'mobx';
 import { type RootStore } from '../root/root-store';
 import type KeplerBody from '@/simulation/classes/KeplerBody';
 import { makeLoggable } from 'mobx-log';
@@ -58,6 +58,7 @@ export class UiState {
 
   select(body: KeplerBody) {
     if (this._selected === body) return; // Already selected? Do nothing.
+    console.log('new selection:', toJS(body));
     this._selected = body;
   }
 
