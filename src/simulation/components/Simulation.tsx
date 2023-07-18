@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 
 import { retrogradeState } from './Retrograde/retrogradeState';
@@ -6,11 +6,13 @@ import { useKeyPressed } from '@react-hooks-library/core';
 import { useTimeStore } from '../state/zustand/time-store';
 import { useSimStore } from '../state/zustand/sim-store';
 import { useCameraStore } from '../state/zustand/camera-store';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 type SimProps = {
   children: React.ReactNode;
 };
 const Simulation = ({ children }: SimProps) => {
+  const { cameraState } = useContext(RootStoreContext);
   console.log('render Simulation');
   // function for accessing scene state
   const getThree = useThree((state) => state.get);
@@ -39,7 +41,8 @@ const Simulation = ({ children }: SimProps) => {
     }
 
     // Update camera.
-    useCameraStore.getState().updateCameraControls();
+    cameraState.updateCamera();
+    // useCameraStore.getState().updateCameraControls();
   });
 
   useKeyPressed(' ', (evt) => {
@@ -48,10 +51,10 @@ const Simulation = ({ children }: SimProps) => {
 
     console.log('three state controls: ', controls);
     console.log('three state camera: ', camera);
-    console.log(
-      'cameraStore focusTarget:',
-      useCameraStore.getState().focusTarget
-    );
+    // console.log(
+    //   'cameraStore focusTarget:',
+    //   useCameraStore.getState().focusTarget
+    // );
   });
 
   return (

@@ -1,22 +1,18 @@
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import Simulation from '@/simulation/components/Simulation';
 
 import { Perf } from 'r3f-perf';
-import { VRButton, ARButton, XR } from '@react-three/xr';
-import { Suspense } from 'react';
+import { VRButton, XR } from '@react-three/xr';
+import { type PropsWithChildren, Suspense, useContext } from 'react';
 import { LoadingFallback } from '../LoadingFallback';
-import {
-  OrbitControls,
-  CameraControls,
-  PerspectiveCamera,
-} from '@react-three/drei';
+import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 import { HUD } from '@/simulation/components/HUD/HUD';
 import { useCameraStore } from '@/simulation/state/zustand/camera-store';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
-type SceneProps = {
-  children?: React.ReactNode;
-};
-const Scene = (props: SceneProps) => {
+const Scene = ({ children }: PropsWithChildren) => {
+  const { cameraState } = useContext(RootStoreContext);
+
   return (
     <Suspense fallback={<LoadingFallback />}>
       <div className="h-min-full relative z-0 flex h-full w-full flex-col justify-center border">
@@ -43,12 +39,12 @@ const Scene = (props: SceneProps) => {
                   if (!controls) {
                     return;
                   }
-
-                  useCameraStore.getState().setCameraControls(controls);
+                  cameraState.setControls(controls);
+                  // useCameraStore.getState().setCameraControls(controls);
                 }}
               />
 
-              <Simulation>{props.children}</Simulation>
+              <Simulation>{children}</Simulation>
 
               {/* <Stats /> */}
               {/* <Perf /> */}
