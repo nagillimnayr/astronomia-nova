@@ -16,6 +16,11 @@ const initialState = {
   viewState: 'space' as ViewState,
 };
 
+type PrivateKeys =
+  | '_rootStore'
+  | '_controls'
+  | 'updateSpaceView'
+  | 'updateSurfaceView';
 export class CameraState {
   private _rootStore: RootStore = null!;
   private _controls: CameraControls = initialState.controls;
@@ -24,8 +29,12 @@ export class CameraState {
 
   constructor(rootStore: RootStore) {
     // Set MobX annotations.
-    makeAutoObservable<this, '_rootStore'>(this, {
+    makeAutoObservable<this, PrivateKeys>(this, {
       _rootStore: false,
+      _controls: false, // Don't want to track as it will be updated each frame.
+      updateCamera: false,
+      updateSpaceView: false,
+      updateSurfaceView: false,
     });
     makeLoggable(this);
 
