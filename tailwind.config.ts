@@ -97,6 +97,10 @@ export default {
           from: { height: '100%' },
           to: { height: '0' },
         },
+        'scale-down': {
+          from: { scale: '100% 0%' },
+          tp: { scale: '100% 100%' },
+        },
         slideDownAndFade: {
           from: { opacity: '0', transform: 'translateY(-2px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
@@ -119,6 +123,7 @@ export default {
         'accordion-up': 'accordion-up 0.2s ease-out',
         'collapsible-down': 'collapsible-down 0.4s ease-out',
         'collapsible-up': 'collapsible-up 0.4s ease-out',
+        'scale-down': 'scale-down 0.4s ease-out',
         slideDownAndFade:
           'slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideLeftAndFade:

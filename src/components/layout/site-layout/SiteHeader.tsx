@@ -27,7 +27,7 @@ const SiteHeader = () => {
         ref={headerRef}
         data-state="open"
         className={cn(
-          `sticky top-0 z-[99999999] flex h-20 w-screen min-w-full translate-y-[0%] flex-row items-center justify-start border-b bg-muted py-4 pl-6 pr-36 text-muted-foreground transition-transform duration-300 ease-in`,
+          `sticky top-0 z-40 flex h-20 w-screen min-w-full translate-y-[0%] flex-row items-center justify-start border-b bg-muted py-4 pl-6 pr-36 text-muted-foreground transition-transform duration-300 ease-in`,
           `data-[state=closed]:-translate-y-[100%]`
         )}
       >

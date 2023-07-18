@@ -1,6 +1,7 @@
 import { cn } from '@/lib/cn';
 import NavDropdownMenu from './NavDropdownMenu';
 import NavMenuLink from './NavMenuLink';
+import NavDropdown from './NavDropdown';
 
 type link = {
   href: string;
@@ -42,12 +43,12 @@ const NavBar = () => {
           </NavMenuLink>
         );
       })}
-      <NavDropdownMenu links={systemLinks} className={btnStyle}>
+      <NavDropdown links={systemLinks} className={btnStyle}>
         <div className="inline-flex gap-3">Systems</div>
-      </NavDropdownMenu>
-      <NavDropdownMenu links={otherLinks} className={btnStyle}>
+      </NavDropdown>
+      <NavDropdown links={otherLinks} className={btnStyle}>
         <div className="inline-flex gap-3">Other</div>
-      </NavDropdownMenu>
+      </NavDropdown>
     </nav>
   );
 };
