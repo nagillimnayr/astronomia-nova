@@ -1,11 +1,10 @@
 'use client';
-import { type Metadata } from 'next';
-import { Button } from '@/components/ui/button';
+
 import EphemerisForm from '@/components/forms/EphemerisForm';
 
-export const metadata: Metadata = {
-  title: 'Test Page',
-};
+// export const metadata: Metadata = {
+//   title: 'Test Page',
+// };
 export default function Page() {
   return (
     <section className="container prose mt-8 flex flex-col items-center justify-start">

@@ -28,6 +28,7 @@ export default {
         atomicAge: ['var(--font-atomic-age)'],
       },
       colors: {
+        base: colors.neutral,
         background: {
           DEFAULT: 'var(--background)',
         },
