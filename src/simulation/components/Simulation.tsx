@@ -1,16 +1,11 @@
 import React, { useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 
-import { Leva, useControls } from 'leva';
-import { DebugPanel } from './leva/DebugPanel';
 import { retrogradeState } from './Retrograde/retrogradeState';
-import { SelectionPanel } from './leva/SelectionPanel';
-import { CameraPanel } from './leva/CameraPanel';
 import { useKeyPressed } from '@react-hooks-library/core';
 import { useTimeStore } from '../state/zustand/time-store';
 import { useSimStore } from '../state/zustand/sim-store';
 import { useCameraStore } from '../state/zustand/camera-store';
-import { CameraControls } from '@react-three/drei';
 
 type SimProps = {
   children: React.ReactNode;
