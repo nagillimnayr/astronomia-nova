@@ -17,7 +17,7 @@ const SidebarToggle = observer(() => {
         uiState.toggleOutliner();
       }}
       className={cn(
-        'inline-flex aspect-square h-full flex-row items-center justify-center rounded-md p-0 text-muted-foreground hover:bg-subtle hover:text-subtle-foreground data-[state=on]:bg-subtle'
+        'inline-flex aspect-square h-full flex-row items-center justify-center rounded-md p-0 text-muted-foreground hover:bg-subtle hover:text-subtle-foreground'
       )}
     >
       {uiState.isOutlinerOpen ? (
