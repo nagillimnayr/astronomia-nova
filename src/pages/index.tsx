@@ -25,7 +25,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>R3F</title>
+        <title>Astronomia Nova</title>
         <meta name="description" content="" />
         <link
           rel="icon"
