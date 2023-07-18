@@ -1,42 +1,22 @@
 import React, {
   forwardRef,
-  useCallback,
   useContext,
   useImperativeHandle,
   useRef,
-  useState,
 } from 'react';
-import {
-  extend,
-  type Object3DNode,
-  type ThreeEvent,
-  useLoader,
-  useThree,
-  useFrame,
-} from '@react-three/fiber';
+import { extend, type Object3DNode, useFrame } from '@react-three/fiber';
 
 import {
   type ColorRepresentation,
   type Mesh,
-  Vector3,
   type Texture,
-  BoxHelper,
-  Vector3Tuple,
-  ArrowHelper,
+  type Vector3Tuple,
+  type ArrowHelper,
 } from 'three';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 import KeplerBody from '../../classes/KeplerBody';
-import {
-  MeshLineGeometry,
-  Edges,
-  Trail,
-  useHelper,
-  BBAnchor,
-} from '@react-three/drei';
-import { TextureLoader } from 'three';
 
 import { CentralMassContext } from '@/simulation/context/CentralMassContext';
-import { debugState } from '@/simulation/state/DebugState';
 import { BodyMesh } from './BodyMesh';
 import Annotation from '../Annotation';
 import { BillboardCircle } from '../BillboardCircle';
