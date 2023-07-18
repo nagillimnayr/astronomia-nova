@@ -72,6 +72,7 @@
     "lucide-react": "^0.244.0",
     "mathjs": "^11.8.0",
     "mobx": "^6.9.1",
+    "mobx-log": "^2.2.1",
     "mobx-react-lite": "^4.0.3",
     "mobx-state-tree": "^5.1.8",
     "next": "^13.4.4",
