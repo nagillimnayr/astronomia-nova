@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { type RootStore } from '../root/root-store';
 import type KeplerBody from '@/simulation/classes/KeplerBody';
+import { makeLoggable } from 'mobx-log';
 
 const initialState = {
   isOutlinerOpen: true,
@@ -20,6 +21,7 @@ export class UiState {
     makeAutoObservable<this, '_rootStore'>(this, {
       _rootStore: false,
     });
+    makeLoggable(this);
 
     // Set reference to root store.
     this._rootStore = rootStore;
