@@ -38,7 +38,7 @@ const NavDropdownMenu = ({ children, className, links }: NavDropdownProps) => {
         </Menu.Button>
         <Menu.Items
           className={
-            'dropdown-center flex w-fit min-w-fit  flex-col justify-start whitespace-nowrap rounded-md border-2 bg-popover text-popover-foreground'
+            'dropdown-center flex h-fit w-fit min-w-fit animate-collapsible-up flex-col justify-start overflow-hidden whitespace-nowrap rounded-md border-2 bg-popover text-popover-foreground ui-open:animate-collapsible-down'
           }
         >
           {links.map(({ href, label }) => {
