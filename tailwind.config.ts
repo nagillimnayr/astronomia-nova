@@ -82,10 +82,20 @@ export default {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        'collapsible-down': {
+          from: { height: '0' },
+          to: { height: '100%' },
+        },
+        'collapsible-up': {
+          from: { height: '100%' },
+          to: { height: '0' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'collapsible-down': 'collapsible-down 0.5s ease-out',
+        'collapsible-up': 'collapsible-up 0.5s ease-out',
       },
       typography: {
         DEFAULT: {
