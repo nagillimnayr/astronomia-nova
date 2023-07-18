@@ -27,7 +27,7 @@ const Sidebar = observer(() => {
         </header>
         <Separator className="h-px w-full border-y bg-border" />
 
-        <section className="flex h-fit min-h-fit w-full flex-col items-center justify-start border-2 p-2">
+        <section className="mb-6 flex h-full min-h-fit w-full flex-col items-center justify-start border-2 p-2">
           <Outliner />
         </section>
       </div>
