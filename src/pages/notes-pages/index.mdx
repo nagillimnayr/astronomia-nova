@@ -1,0 +1,25 @@
+import { MDXProvider } from '@mdx-js/react';  
+import Head from 'next/head';
+
+<>
+
+<Head>
+  <title>Notes</title>
+  <meta name="description" content="" />
+  <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
+</Head>
+
+<section className='container border-2 m-6 p-4 flex flex-col items-center justify-start prose bg-card prose-h1:text-center text-card-foreground'>
+<pre className='w-full whitespace-pre-wrap'>
+
+# Notes
+
+## State Management
+---
+For whatever reason, when using Zustand, selecting the sun caused a few seconds of lag. I'm still not sure why, but switching the selection logic over to use MobX instead seems to be working just fine.
+---
+
+</pre>
+</section>
+
+</>
