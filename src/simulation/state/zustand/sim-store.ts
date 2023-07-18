@@ -11,7 +11,7 @@ type State = {
 };
 
 type Actions = {
-  updateSim: (deltaTime: number) => void;
+  updateSim: (root: KeplerBody, deltaTime: number) => void;
 };
 
 const initialState: State = {
@@ -20,9 +20,12 @@ const initialState: State = {
 
 type SimStore = State & Actions;
 
-const updateSim = makeFixedUpdateFn((timeStep: number) => {
-  traverseKeplerTree(useSimStore.getState().rootRef.current, timeStep * DAY);
-}, 60);
+const updateSim = makeFixedUpdateFn<KeplerBody>(
+  (root: KeplerBody, timeStep: number) => {
+    traverseKeplerTree(root, timeStep * DAY);
+  },
+  60
+);
 
 // this store
 export const useSimStore = create<SimStore>()(

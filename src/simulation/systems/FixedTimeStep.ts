@@ -36,42 +36,6 @@ export default class FixedTimeStep {
   }
 }
 
-// /**
-//  * @description Function factory to create update functions which implement
-//  * a fixed time-step.
-//  *
-//  * @author Ryan Milligan
-//  * @date 01/06/2023
-//  * @export
-//  * @param {number} stepsPerSecond
-//  * @param {(timeStep: number) => void} updateFn
-//  * @returns {*}
-//  */
-// export function makeFixedUpdateFn<Type>(
-//   updateFn: (obj: Type, timeStep: number) => void,
-//   stepsPerSecond: number
-// ) {
-//   let remainder = 0; // Will be captured in closure
-//   const timeStep = 1 / stepsPerSecond; // constant time step between updates
-
-//   const update = (obj: Type, deltaTime: number) => {
-//     // determine how many updates we need to do for this frame
-//     const numOfStepsFloat = stepsPerSecond * deltaTime + remainder;
-//     // this value will likely be a floating point number, so
-//     // we must truncate it to an integer
-//     const numOfStepsInt = floor(numOfStepsFloat);
-
-//     // Save the truncated part to add it on during the next update
-//     remainder = numOfStepsFloat - numOfStepsInt;
-
-//     // Call the update function the requisite number of times
-//     for (let i = 0; i < numOfStepsInt; i++) {
-//       updateFn(obj, timeStep);
-//     }
-//   };
-
-//   return update;
-// }
 /**
  * @description Function factory to create update functions which implement
  * a fixed time-step.
@@ -83,14 +47,14 @@ export default class FixedTimeStep {
  * @param {(timeStep: number) => void} updateFn
  * @returns {*}
  */
-export function makeFixedUpdateFn(
-  updateFn: (timeStep: number) => void,
+export function makeFixedUpdateFn<Type>(
+  updateFn: (obj: Type, timeStep: number) => void,
   stepsPerSecond: number
 ) {
   let remainder = 0; // Will be captured in closure
   const timeStep = 1 / stepsPerSecond; // constant time step between updates
 
-  const update = (deltaTime: number) => {
+  const update = (obj: Type, deltaTime: number) => {
     // determine how many updates we need to do for this frame
     const numOfStepsFloat = stepsPerSecond * deltaTime + remainder;
     // this value will likely be a floating point number, so
@@ -102,9 +66,46 @@ export function makeFixedUpdateFn(
 
     // Call the update function the requisite number of times
     for (let i = 0; i < numOfStepsInt; i++) {
-      updateFn(timeStep);
+      updateFn(obj, timeStep);
     }
   };
 
   return update;
 }
+
+/**
+ * @description Function factory to create update functions which implement
+ * a fixed time-step.
+ *
+ * @author Ryan Milligan
+ * @date 01/06/2023
+ * @export
+ * @param {number} stepsPerSecond
+ * @param {(timeStep: number) => void} updateFn
+ * @returns {*}
+ */
+// export function makeFixedUpdateFn(
+//   updateFn: (timeStep: number) => void,
+//   stepsPerSecond: number
+// ) {
+//   let remainder = 0; // Will be captured in closure
+//   const timeStep = 1 / stepsPerSecond; // constant time step between updates
+
+//   const update = (deltaTime: number) => {
+//     // determine how many updates we need to do for this frame
+//     const numOfStepsFloat = stepsPerSecond * deltaTime + remainder;
+//     // this value will likely be a floating point number, so
+//     // we must truncate it to an integer
+//     const numOfStepsInt = floor(numOfStepsFloat);
+
+//     // Save the truncated part to add it on during the next update
+//     remainder = numOfStepsFloat - numOfStepsInt;
+
+//     // Call the update function the requisite number of times
+//     for (let i = 0; i < numOfStepsInt; i++) {
+//       updateFn(timeStep);
+//     }
+//   };
+
+//   return update;
+// }

@@ -35,7 +35,9 @@ const Simulation = ({ children }: SimProps) => {
       timeStore.addTimeToClock(scaledDelta);
 
       // Pass rootRef.current to function instead?
-      useSimStore.getState().updateSim(scaledDelta);
+      useSimStore
+        .getState()
+        .updateSim(useSimStore.getState().rootRef.current, scaledDelta);
 
       retrogradeState.update();
     }
