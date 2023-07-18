@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export class UiState {
-  private _rootStore: RootStore;
+  private _rootStore: RootStore = null!;
   private _isOutlinerOpen: boolean = initialState.isOutlinerOpen;
   private _isDebugPanelOpen: boolean = initialState.isDebugPanelOpen;
 
