@@ -1,6 +1,11 @@
 import { Html } from '@react-three/drei';
 import KeplerBody from '../classes/KeplerBody';
-import { useCallback, MutableRefObject, useContext } from 'react';
+import {
+  useCallback,
+  MutableRefObject,
+  useContext,
+  MouseEventHandler,
+} from 'react';
 import { useSelectionStore } from '../state/zustand/selection-store';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
@@ -11,12 +16,16 @@ type Props = {
 };
 export function BillboardCircle({ bodyRef }: Props) {
   const { uiState } = useContext(RootStoreContext);
-  const handleClick = useCallback(() => {
-    const body = bodyRef.current;
+  const handleClick = useCallback<MouseEventHandler<HTMLDivElement>>(
+    (e) => {
+      e.stopPropagation();
+      const body = bodyRef.current;
 
-    uiState.select(body);
-    // useSelectionStore.getState().select(body);
-  }, [bodyRef, uiState]);
+      uiState.select(body);
+      // useSelectionStore.getState().select(body);
+    },
+    [bodyRef, uiState]
+  );
 
   return (
     <object3D>
