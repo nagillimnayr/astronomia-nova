@@ -9,7 +9,7 @@
  * @param {number} longitudeOfPeriapsis (deg)
  * @returns {*} {number} meanAnomaly
  */
-const getMeanAnomalyFromMeanLongitude = (
+export const getMeanAnomalyFromMeanLongitude = (
   meanLongitude: number,
   longitudeOfPeriapsis: number
 ) => {

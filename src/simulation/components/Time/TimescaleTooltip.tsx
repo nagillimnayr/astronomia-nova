@@ -1,7 +1,6 @@
 import { useTimeStore } from '@/simulation/state/zustand/time-store';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { useCallback } from 'react';
-import { useSnapshot } from 'valtio';
 
 type TooltipProps = {
   children: React.ReactNode;
@@ -10,6 +9,7 @@ type TooltipProps = {
 const TimescaleTooltip = (props: TooltipProps) => {
   const timescale = useTimeStore((state) => state.timescale);
   const handleOpenChange = useCallback((open: boolean) => {
+    open;
     return;
   }, []);
   return (

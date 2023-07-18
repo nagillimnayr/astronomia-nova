@@ -1,6 +1,6 @@
 import { Vector3 } from 'three';
-import { DIST_MULT, GRAV_CONST, SOLAR_MASS } from '../../../utils/constants';
-import PointMass from '../../../interfaces/PointMass';
+import { DIST_MULT, GRAV_CONST } from '../../../utils/constants';
+import type PointMass from '../../../interfaces/PointMass';
 
 /**
  * @description

@@ -1,8 +1,4 @@
 import type KeplerBody from '@/simulation/classes/KeplerBody';
-import { makeFixedUpdateFn } from '@/simulation/systems/FixedTimeStep';
-import { traverseKeplerTree } from '@/simulation/systems/keplerTree';
-import { DAY } from '@/simulation/utils/constants';
-import { type MutableRefObject } from 'react';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 

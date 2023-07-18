@@ -3,7 +3,7 @@
 
 import { degToRad } from 'three/src/math/MathUtils';
 import { GRAV_CONST } from '@/simulation/utils/constants';
-import { Vector3, type Vector3Tuple } from 'three';
+import { Vector3 } from 'three';
 
 /**
  * @summary

@@ -1,4 +1,4 @@
-import { makeAutoObservable, observable, toJS } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import { type RootStore } from '../root/root-store';
 import type KeplerBody from '@/simulation/classes/KeplerBody';
 

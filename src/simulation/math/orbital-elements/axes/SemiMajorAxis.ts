@@ -1,10 +1,5 @@
-import { nthRoot, square } from 'mathjs';
-import {
-  DIST_MULT,
-  GRAV_CONST,
-  PI_SQUARED,
-  SOLAR_MASS,
-} from '@/simulation/utils/constants';
+import { nthRoot } from 'mathjs';
+import { GRAV_CONST, PI_SQUARED } from '@/simulation/utils/constants';
 
 /**
  * @description

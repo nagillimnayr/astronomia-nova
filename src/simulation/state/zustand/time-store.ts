@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { clamp } from 'lodash';
-import { devtools, subscribeWithSelector } from 'zustand/middleware';
+import { subscribeWithSelector } from 'zustand/middleware';
 import { addSeconds } from 'date-fns';
 import { DAY } from '@/simulation/utils/constants';
 

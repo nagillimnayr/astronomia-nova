@@ -1,4 +1,4 @@
-import { MutableRefObject, createContext } from 'react';
+import { type MutableRefObject, createContext } from 'react';
 
 type TimeContextObject = {
   // refs to DOM Elements
