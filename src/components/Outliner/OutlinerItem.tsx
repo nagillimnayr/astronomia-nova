@@ -12,8 +12,7 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
   const { uiState } = useContext(RootStoreContext);
 
   const handleClick = useCallback(() => {
-    // Since this component isn't wrapped in 'observer()', it won't be bound to state changes, so it shouldn't re-render on state changes.
-    if (uiState.selected === body) return; // Already selected, do nothing.
+    // Select the object.
     uiState.select(body);
   }, [body, uiState]);
   return (

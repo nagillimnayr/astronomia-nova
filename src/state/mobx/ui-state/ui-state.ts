@@ -55,6 +55,7 @@ export class UiState {
   }
 
   select(body: KeplerBody) {
+    if (this._selected === body) return; // Already selected? Do nothing.
     this._selected = body;
   }
 
