@@ -1,7 +1,8 @@
 import { Html } from '@react-three/drei';
 import KeplerBody from '../classes/KeplerBody';
-import { useCallback, MutableRefObject } from 'react';
+import { useCallback, MutableRefObject, useContext } from 'react';
 import { useSelectionStore } from '../state/zustand/selection-store';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 /** I don't know what to call this, but its the circle around the bodies to identify their positions when zoomed out really far */
 
@@ -9,14 +10,13 @@ type Props = {
   bodyRef: MutableRefObject<KeplerBody>;
 };
 export function BillboardCircle({ bodyRef }: Props) {
+  const { uiState } = useContext(RootStoreContext);
   const handleClick = useCallback(() => {
     const body = bodyRef.current;
 
-    const selected = useSelectionStore.getState().selected;
-    if (body === selected) return; // Already selected? Do nothing.
-
-    useSelectionStore.getState().select(body);
-  }, [bodyRef]);
+    uiState.select(body);
+    // useSelectionStore.getState().select(body);
+  }, [bodyRef, uiState]);
 
   return (
     <object3D>

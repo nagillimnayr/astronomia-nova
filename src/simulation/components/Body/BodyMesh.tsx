@@ -1,44 +1,29 @@
-import {
-  Line,
-  MeshLineGeometry,
-  Sphere,
-  Trail,
-  Wireframe,
-  useCursor,
-  useHelper,
-  useTexture,
-  useTrail,
-} from '@react-three/drei';
-import { ThreeEvent, useFrame } from '@react-three/fiber';
+import { Sphere, useCursor, useHelper } from '@react-three/drei';
+import { type ThreeEvent } from '@react-three/fiber';
 import { Select } from '@react-three/postprocessing';
 import {
-  MutableRefObject,
+  type MutableRefObject,
   forwardRef,
   useImperativeHandle,
-  useMemo,
   useRef,
   useState,
+  useContext,
+  useCallback,
 } from 'react';
 import {
   BoxHelper,
-  ColorRepresentation,
-  Mesh,
-  Object3D,
-  Texture,
-  Vector3,
+  type ColorRepresentation,
+  type Mesh,
+  type Texture,
 } from 'three';
 import { useSnapshot } from 'valtio';
-import KeplerBody from '@/simulation/classes/KeplerBody';
+import type KeplerBody from '@/simulation/classes/KeplerBody';
 import { debugState } from '@/simulation/state/DebugState';
-// import { timeState } from '@/simulation/state/TimeState';
-import { useControls } from 'leva';
-import Annotation from '../Annotation';
-import { useSimStore } from '@/simulation/state/zustand/sim-store';
 import { useCameraStore } from '@/simulation/state/zustand/camera-store';
 import { useSelectionStore } from '@/simulation/state/zustand/selection-store';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
-// separate out the Mesh part of the Body to keep visual updates separate from
-// the simulation logic
+// Separate out the visual logic from the simulation logic.
 
 type BodyMeshProps = {
   name: string;
@@ -52,6 +37,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   props: BodyMeshProps,
   fwdRef
 ) {
+  const { uiState } = useContext(RootStoreContext);
+
   const meshRef = useRef<Mesh>(null!);
 
   const [isVisible, setVisible] = useState<boolean>(true);
@@ -69,21 +56,23 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   useHelper(debugSnap.boundingBoxes ? meshRef : null, BoxHelper, 'cyan');
 
   // event handlers
-  const handleClick = (e: ThreeEvent<MouseEvent>) => {
-    e.stopPropagation();
-    if (!meshRef.current || !props.bodyRef.current) {
-      return;
-    }
-    const body: KeplerBody = props.bodyRef.current;
+  const handleClick = useCallback(
+    (e: ThreeEvent<MouseEvent>) => {
+      e.stopPropagation();
+      if (!meshRef.current || !props.bodyRef.current) {
+        return;
+      }
+      const body: KeplerBody = props.bodyRef.current;
 
-    // setSelected(true);
+      // setSelected(true);
 
-    // select body
-    // useSimStore.getState().select(body);
-    select(body);
-    // useCameraStore.getState().setFocus(body);
-    setFocus(body);
-  };
+      // select body
+      uiState.select(body);
+      // select(body);
+      setFocus(body);
+    },
+    [props.bodyRef, setFocus, uiState]
+  );
   const handleMiss = (e: MouseEvent) => {
     if (!meshRef.current) return;
     if (isSelected) {
