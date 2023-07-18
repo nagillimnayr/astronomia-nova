@@ -6,7 +6,7 @@ import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
 
 const DetailsPanel = observer(() => {
-  const { uiState } = useContext(RootStoreContext);
+  const { uiState, cameraState } = useContext(RootStoreContext);
 
   const handleCloseClick = useCallback(() => {
     // Deselect selected object.
@@ -16,8 +16,9 @@ const DetailsPanel = observer(() => {
   const handleFocusClick = useCallback(() => {
     if (!uiState.selected) return;
     // Focus camera on selection.
-    useCameraStore.getState().setFocus(uiState.selected);
-  }, [uiState.selected]);
+    cameraState.setFocus(uiState.selected);
+    // useCameraStore.getState().setFocus(uiState.selected);
+  }, [cameraState, uiState.selected]);
 
   if (!uiState.selected) return null; // If nothing selected, display nothing.
   return (
