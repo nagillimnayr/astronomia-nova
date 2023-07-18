@@ -13,7 +13,7 @@ export class RootStore {
   get uiState() {
     return this._uiState;
   }
-  get CameraState() {
+  get cameraState() {
     return this._cameraState;
   }
 }
