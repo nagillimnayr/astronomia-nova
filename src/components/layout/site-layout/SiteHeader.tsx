@@ -1,14 +1,11 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Icon } from '@mdi/react';
-import { mdiMenuUp, mdiMenuDown, mdiChevronUp, mdiChevronDown } from '@mdi/js';
-import { useCallback, useRef, useState, MouseEventHandler } from 'react';
+
+import { useCallback, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
 
 import NavBar from './Navigation/nav-menu/NavBar';
-import { Button } from '@/components/ui/button';
-import { SettingsIcon } from 'lucide-react';
 import { SidebarToggle } from '../sidebar/SidebarToggle';
 
 const SiteHeader = () => {
@@ -70,7 +67,7 @@ const SiteHeader = () => {
         </div>
 
         {/* visibility toggle */}
-        <button
+        {/* <button
           className="absolute left-[50%] top-full flex h-4 w-10 -translate-x-1/2 flex-row items-center justify-center rounded-b-xl  bg-gray-200 bg-opacity-40 p-0"
           onClick={handleClick}
         >
@@ -79,7 +76,7 @@ const SiteHeader = () => {
             path={isOpen ? mdiMenuUp : mdiMenuDown}
             size={2}
           />
-        </button>
+        </button> */}
       </header>
     </>
   );
