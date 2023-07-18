@@ -1,13 +1,19 @@
+import { CameraState } from '../domain-state/camera-store';
 import { UiState } from '../ui-state/ui-state';
 
 export class RootStore {
-  _uiStateStore: UiState;
+  private _uiState: UiState;
+  private _cameraState: CameraState;
 
   constructor() {
-    this._uiStateStore = new UiState(this);
+    this._uiState = new UiState(this);
+    this._cameraState = new CameraState(this);
   }
 
   get uiState() {
-    return this._uiStateStore;
+    return this._uiState;
+  }
+  get CameraState() {
+    return this._cameraState;
   }
 }
