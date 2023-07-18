@@ -5,7 +5,9 @@
 @layer base {
   :root {
     --background: #09090b;
-    --foreground-: #ffffff;
+    --foreground: #ffffff;
+
+    --background-200: 17 17 17;
 
     --muted: #18181b;
     --muted-foreground: #ffffff;
@@ -32,8 +34,11 @@
     --accent: #afdbf5;
     --accent-foreground: #ffffff;
 
-    --destructive: #ed2939;
+    --destructive: 237 41 57;
     --destructive-foreground: #ffffff;
+    --destructive-border: 237 41 57;
+    --destructive-bg: 205 52 56;
+    --destructive-muted: 241 84 97;
 
     --ring: #4997d0;
 
