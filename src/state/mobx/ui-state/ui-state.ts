@@ -66,6 +66,10 @@ export class UiState {
     this._selected = null;
   }
 
+  getSelected() {
+    return this.selected;
+  }
+
   reset() {
     // Reset to initial state.
     this._isOutlinerOpen = initialState.isOutlinerOpen;
