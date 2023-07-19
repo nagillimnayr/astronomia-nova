@@ -7,6 +7,7 @@ import type { VectorTable } from './types/VectorTable';
 import _ from 'lodash';
 import { type Ephemeris } from './types/Ephemeris';
 import { type PhysicalData } from './types/PhysicalData';
+import { radToDeg } from 'three/src/math/MathUtils';
 
 const KM_TO_M = 1000;
 
@@ -216,8 +217,10 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
     meanRadius: capturePhysicalProperty(substr, 'mean radius') * KM_TO_M, // (m)
     mass: capturePhysicalProperty(substr, 'Mass') * 1e23, // (kg)
     siderealRotPeriod: capturePhysicalProperty(substr, 'Sidereal rot. period'), // (hrs)
-    siderealRotRate: capturePhysicalProperty(substr, 'Sid. rot. rate'), // (rad/s)
-    gravParameter: capturePhysicalProperty(substr, 'GM') * KM_TO_M, // (m)
+    siderealRotRate: radToDeg(
+      capturePhysicalProperty(substr, 'Sid. rot. rate')
+    ), // (deg/s)
+    gravParameter: capturePhysicalProperty(substr, 'GM') * KM_TO_M, // (m^3/s^2)
     obliquity: capturePhysicalProperty(substr, 'Obliquity'), // axial tilt (deg)
   };
 
