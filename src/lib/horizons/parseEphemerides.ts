@@ -226,10 +226,10 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
 
 function capturePhysicalProperty(text: string, property: string) {
   // Skip everything after the property name until an '=', then skip any whitespace after the '=', capture everything from the first non-whitespace character until the next whitespace character or a '+'.
-  // NOTE: For whatever reason, the casing of property names is inconsistent between tables for different bodies.
-  // Todo: Make regexp case-insensitive.
+  // NOTE: For whatever reason, the casing of property names is inconsistent between tables for different bodies. Adding the 'i' flag when constructing the RegExp object makes the pattern case-insensitive.
+
   const regexStr = `${property}[^=]*=\\s*([^\\s]*)[\\s\\+]`;
-  const regexp = new RegExp(regexStr);
+  const regexp = new RegExp(regexStr, 'i');
   const matches = text.match(regexp);
   if (!matches || matches.length < 2 || !matches[1]) {
     console.error(`property '${property}' was not found`);
