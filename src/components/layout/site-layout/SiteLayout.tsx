@@ -4,6 +4,7 @@ import { atomicAge, orbitron, roboto } from '@/lib/fonts';
 import SiteHeader from './SiteHeader';
 import SiteFooter from './SiteFooter';
 import { Sidebar } from '@/components/layout/sidebar/Sidebar';
+import { BottomToolbar } from '../BottomToolbar';
 
 const fontVariables = [atomicAge.variable, orbitron.variable, roboto.variable];
 
@@ -15,14 +16,37 @@ const SiteLayout = ({ children }: SiteLayoutProps) => {
     <div
       className={cn(
         ...fontVariables,
-        `min-w-screen relative m-0 flex h-fit min-h-screen w-screen flex-col items-center justify-start bg-background p-0 font-sans text-foreground`
+        `relative left-0 top-0 m-0 h-full max-h-full min-h-screen w-screen bg-background p-0 font-sans text-foreground`,
+        'grid',
+        'grid-cols-[16rem_1fr_16rem]',
+        'grid-rows-[5rem_1fr_5rem]',
+        'items-stretch justify-stretch'
       )}
     >
-      <SiteHeader />
-      <Sidebar />
+      {/** Header */}
+      <div className="col-start-1 col-end-[-1] row-span-1 row-start-1">
+        <SiteHeader />
+      </div>
 
-      {children}
-      <SiteFooter />
+      {/** Outliner */}
+      <div className="col-span-1 col-start-1 row-span-1 row-start-2">
+        <Sidebar />
+      </div>
+
+      {/** Canvas */}
+      <div className="col-span-1 col-start-2 row-span-1 row-start-2">
+        {children}
+      </div>
+
+      {/** Todo: Put something here */}
+      <div className="col-start-[-2] col-end-[-1] row-span-1 row-start-2">
+        <div className="h-full w-full bg-muted" />
+      </div>
+
+      {/** Toolbar (Time controls, toggle buttons, etc) */}
+      <div className="col-start-1 col-end-[-1] row-start-[-2] row-end-[-1]">
+        <BottomToolbar />
+      </div>
     </div>
   );
 };

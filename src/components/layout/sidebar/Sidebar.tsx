@@ -4,8 +4,12 @@ import { cn } from '@/lib/cn';
 import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { type ClassNameValue } from 'tailwind-merge';
 
-const Sidebar = observer(() => {
+type Props = {
+  className?: ClassNameValue;
+};
+const Sidebar = observer(({ className }: Props) => {
   const { uiState } = useContext(RootStoreContext);
 
   return (
@@ -14,7 +18,8 @@ const Sidebar = observer(() => {
       // data-sidebar={sidebarOpen ? 'open' : 'closed'}
       data-sidebar={uiState.isOutlinerOpen ? 'open' : 'closed'}
       className={cn(
-        'fixed -bottom-0 left-0 top-[5rem] z-50 h-auto w-64 -translate-x-full bg-muted transition-transform data-[sidebar=open]:translate-x-0'
+        'top-[5rem] z-50 h-full w-full -translate-x-full bg-muted transition-transform data-[sidebar=open]:translate-x-0',
+        className
       )}
     >
       <div

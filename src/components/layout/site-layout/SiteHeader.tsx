@@ -7,8 +7,12 @@ import { cn } from '@/lib/cn';
 
 import NavBar from './Navigation/nav-menu/NavBar';
 import { SidebarToggle } from '../sidebar/SidebarToggle';
+import { type ClassNameValue } from 'tailwind-merge';
 
-const SiteHeader = () => {
+type Props = {
+  className?: ClassNameValue;
+};
+const SiteHeader = ({ className }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const headerRef = useRef<HTMLElement>(null!);
 
@@ -27,8 +31,9 @@ const SiteHeader = () => {
         ref={headerRef}
         data-state="open"
         className={cn(
-          `sticky top-0 z-40 flex h-20 w-screen min-w-full translate-y-[0%] flex-row items-center justify-start border-b bg-muted py-4 pl-6 pr-36 text-muted-foreground transition-transform duration-300 ease-in`,
-          `data-[state=closed]:-translate-y-[100%]`
+          `relative z-40 flex h-full w-full min-w-full translate-y-[0%] flex-row items-center justify-start border-b bg-muted py-4 pl-6 pr-36 text-muted-foreground transition-transform duration-300 ease-in`,
+          `data-[state=closed]:-translate-y-[100%]`,
+          className
         )}
       >
         <div className="flex-start my-2 mr-auto flex flex-row items-center">

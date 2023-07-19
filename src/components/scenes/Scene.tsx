@@ -7,7 +7,7 @@ import { type PropsWithChildren, Suspense, useContext } from 'react';
 import { LoadingFallback } from '../LoadingFallback';
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 import { HUD } from '@/simulation/components/HUD/HUD';
-import { useCameraStore } from '@/simulation/state/zustand/camera-store';
+// import { useCameraStore } from '@/simulation/state/zustand/camera-store';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 const Scene = ({ children }: PropsWithChildren) => {
@@ -15,7 +15,7 @@ const Scene = ({ children }: PropsWithChildren) => {
 
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <div className="h-min-full relative z-0 flex h-full w-full flex-col justify-center border">
+      <div className="relative z-0 flex h-full w-full flex-col justify-center border">
         <HUD className="z-10" />
 
         <div className="absolute bottom-0 right-1 z-10 h-24 w-40 select-none whitespace-nowrap">
@@ -40,7 +40,6 @@ const Scene = ({ children }: PropsWithChildren) => {
                     return;
                   }
                   cameraState.setControls(controls);
-                  // useCameraStore.getState().setCameraControls(controls);
                 }}
               />
 
