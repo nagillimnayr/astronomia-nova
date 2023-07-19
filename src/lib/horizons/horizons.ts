@@ -16,6 +16,7 @@ if (process.argv.length >= 3) {
       await saveEphemerides(ephemerides);
       console.log('elements:', ephemerides.elements);
       console.log('vectors:', ephemerides.vectors);
+      console.log('physical data:', ephemerides.physicalData);
     } catch (e) {
       console.error(e);
     }

@@ -1,4 +1,3 @@
-import type { Vector3Tuple } from 'three';
 // import { KM_TO_M } from '../utils/constants';
 import type { ElementCode } from './elementCodes';
 import type { VectorCode } from './vectorCodes';
@@ -6,8 +5,8 @@ import type { VectorCode } from './vectorCodes';
 import type { ElementTable } from './types/ElementTable';
 import type { VectorTable } from './types/VectorTable';
 import _ from 'lodash';
-import { Ephemeris } from './types/Ephemeris';
-import { PhysicalData } from './types/PhysicalData';
+import { type Ephemeris } from './types/Ephemeris';
+import { type PhysicalData } from './types/PhysicalData';
 
 const KM_TO_M = 1000;
 
@@ -47,6 +46,7 @@ export function parseEphemerisDate(text: Readonly<string>) {
   const regexp = /A\.D\.\s(.*)\sTDB/;
   const matches = text.match(regexp);
   if (!matches || matches.length < 2 || !matches[1]) {
+    console.log(`error! no match found for { ${regexp.source} } in:`, text);
     console.error('text:', text);
     console.error('matches:', matches);
     throw new Error('no match found!');
@@ -110,9 +110,10 @@ export function parseEphemerisName(text: Readonly<string>) {
 
 export function parseElements(text: Readonly<string>): Ephemeris {
   // get substring with elements data
+  const regexp = /SOE\n([^]*)\$\$EOE/;
   const matches = text.match(/SOE\n([^]*)\$\$EOE/);
   if (!matches || matches.length < 2) {
-    console.log('error! no match found in:', text);
+    console.log(`error! no match found for { ${regexp.source} } in:`, text);
     throw new Error('no match found!');
   }
 
@@ -152,10 +153,10 @@ export function parseElements(text: Readonly<string>): Ephemeris {
 
 export function parseVectors(text: Readonly<string>): Ephemeris {
   // get text with vector data
-
+  const regexp = /SOE\n([^]*)\$\$EOE/;
   const matches = text.match(/SOE\n([^]*)\$\$EOE/);
   if (!matches || matches.length < 2) {
-    console.log('error! no match found in:', text);
+    console.log(`error! no match found for { ${regexp.source} } in:`, text);
     throw new Error('no match found!');
   }
 
@@ -196,25 +197,27 @@ export function parseVectors(text: Readonly<string>): Ephemeris {
 
 export function parsePhysicalData(text: Readonly<string>): PhysicalData {
   // get the substring with physical data
-  const matches = text.match(/PHYSICAL DATA([^]*)\s*PERIHELION/);
+  const regexp = /PHYSICAL DATA([^]*)\s*Perihelion/;
+  const matches = text.match(regexp);
   if (!matches || matches.length < 2) {
-    console.log('error! no match found in:', text);
+    console.log(`error! no match found for { ${regexp.source} } in:`, text);
     throw new Error('no match found!');
   }
 
   // get the substring that contains the ephemeris data
   const substr = matches[1];
+  console.log('substring matched: ', substr);
   if (!substr) {
     const errorMsg = 'error: no vector data found';
     throw new Error(errorMsg);
   }
 
   const physicalData: PhysicalData = {
-    meanRadius: capturePhysicalProperty(substr, 'mean radius'),
-    mass: capturePhysicalProperty(substr, 'Mass'),
-    siderealRotPeriod: capturePhysicalProperty(substr, 'Sidereal rot. period'),
+    meanRadius: capturePhysicalProperty(substr, 'mean radius') * KM_TO_M, // (m)
+    mass: capturePhysicalProperty(substr, 'Mass') * 1e23, // (kg)
+    siderealRotPeriod: capturePhysicalProperty(substr, 'Sidereal rot. period'), // (hrs)
     siderealRotRate: capturePhysicalProperty(substr, 'Sid. rot. rate'), // (rad/s)
-    gravParameter: capturePhysicalProperty(substr, 'GM') * KM_TO_M,
+    gravParameter: capturePhysicalProperty(substr, 'GM') * KM_TO_M, // (m)
     obliquity: capturePhysicalProperty(substr, 'Obliquity'), // axial tilt (deg)
   };
 
@@ -222,7 +225,9 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
 }
 
 function capturePhysicalProperty(text: string, property: string) {
-  // skip everything after the property name until an '=', then skip any whitespace after the '=', capture everything from the first non-whitespace character until the next whitespace character or a '+'
+  // Skip everything after the property name until an '=', then skip any whitespace after the '=', capture everything from the first non-whitespace character until the next whitespace character or a '+'.
+  // NOTE: For whatever reason, the casing of property names is inconsistent between tables for different bodies.
+  // Todo: Make regexp case-insensitive.
   const regexStr = `${property}[^=]*=\\s*([^\\s]*)[\\s\\+]`;
   const regexp = new RegExp(regexStr);
   const matches = text.match(regexp);
