@@ -42,7 +42,7 @@ const NavDropdownMenu = ({ children, className, links }: NavDropdownProps) => {
         <Dropdown.Content
           loop
           className={
-            'dropdown-center z-50 flex h-fit w-fit min-w-fit origin-top animate-collapsible-up flex-col items-stretch justify-start overflow-y-hidden whitespace-nowrap rounded-md border-2 bg-popover p-1 font-sans text-popover-foreground data-[state=open]:animate-scale-down'
+            'dropdown-center z-50 flex h-fit w-fit min-w-fit origin-top flex-col items-stretch justify-start overflow-y-hidden whitespace-nowrap rounded-md border-2 bg-popover p-1 font-sans text-popover-foreground data-[state=closed]:animate-scale-up data-[state=open]:animate-scale-down'
           }
         >
           {links.map(({ href, label }) => {
