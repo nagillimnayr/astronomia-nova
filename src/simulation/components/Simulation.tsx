@@ -7,6 +7,7 @@ import { useTimeStore } from '../state/zustand/time-store';
 import { useSimStore } from '../state/zustand/sim-store';
 import { useCameraStore } from '../state/zustand/camera-store';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { CameraControls } from '@react-three/drei';
 
 type SimProps = {
   children: React.ReactNode;
@@ -51,12 +52,8 @@ const Simulation = ({ children }: SimProps) => {
     evt.preventDefault();
     const { camera, controls } = getThree();
 
-    console.log('three state controls: ', controls);
-    console.log('three state camera: ', camera);
-    // console.log(
-    //   'cameraStore focusTarget:',
-    //   useCameraStore.getState().focusTarget
-    // );
+    const camControls = controls as unknown as CameraControls;
+    console.log('Distance to gaze target:', camControls.distance);
   });
 
   return (
