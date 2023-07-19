@@ -197,7 +197,7 @@ export function parseVectors(text: Readonly<string>): Ephemeris {
 }
 
 export function parsePhysicalData(text: Readonly<string>): PhysicalData {
-  // get the substring with physical data
+  // Get the substring that contains the physical data.
   const regexp = /PHYSICAL DATA([^]*)\s*Perihelion/;
   const matches = text.match(regexp);
   if (!matches || matches.length < 2) {
@@ -205,18 +205,20 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
     throw new Error('no match found!');
   }
 
-  // get the substring that contains the ephemeris data
+  // Get the matched substring.
   const substr = matches[1];
-  console.log('substring matched: ', substr);
   if (!substr) {
     const errorMsg = 'error: no vector data found';
     throw new Error(errorMsg);
   }
 
+  // Unfortunately, there are significant inconsistencies with how the data is presented, depending on the body. (i.e. capitalization, the exponent of the scientific notation, etc.) So we need to match and capture this data separately.
+  const massExponent = getMassExponent(substr);
+
   const physicalData: PhysicalData = {
     meanRadius: capturePhysicalProperty(substr, 'mean radius') * KM_TO_M, // (m)
-    mass: capturePhysicalProperty(substr, 'Mass') * 1e23, // (kg)
-    siderealRotPeriod: capturePhysicalProperty(substr, 'Sidereal rot. period'), // (hrs)
+    mass: capturePhysicalProperty(substr, 'Mass') * massExponent, // (kg)
+    // siderealRotPeriod: capturePhysicalProperty(substr, 'Sidereal rot. period'), // (hrs)
     siderealRotRate: radToDeg(
       capturePhysicalProperty(substr, 'Sid. rot. rate')
     ), // (deg/s)
@@ -249,4 +251,25 @@ function capturePhysicalProperty(text: string, property: string) {
   }
 
   return data;
+}
+
+function getMassExponent(text: string) {
+  // Get the exponent of the scientific notation for the mass. (e.g. The line for the mass of Saturn looks like: `Mass x10^26 (kg)      = 5.6834` and we want to capture the `26`)
+  // NOTE: For some god-forsaken reason, the mass for Jupiter is given in grams, despite Jupiter being the most massive planet.
+  // i.e.: Mass x 10^22 (g)      = 189818722 +- 8817
+  // It's like they want to make this as annoying as possible. I'm seriously considering emailing the author to complain.
+  // Todo: Email Jon.D.Giorgini@jpl.nasa.gov to complain.
+  const regexp = /Mass\s*x10\^([\d]*)\s*\(kg\)/i;
+  const matches = text.match(regexp);
+  if (!matches || matches.length < 2 || !matches[1]) {
+    console.log(`error! no match found for { ${regexp.source} } in:`, text);
+    throw new Error('no match found!');
+  }
+  const match = matches[1];
+  const massExponent = parseFloat('1e+' + match); // (i.e. 1e+26)
+  if (massExponent === undefined) {
+    throw new Error(`error: failed to parse value (${match}) into a float`);
+  }
+
+  return massExponent;
 }

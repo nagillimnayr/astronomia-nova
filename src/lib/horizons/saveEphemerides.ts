@@ -3,9 +3,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import _ from 'lodash';
 
-import { ElementTable } from './types/ElementTable';
-import { VectorTable } from './types/VectorTable';
-import { Ephemeris } from './types/Ephemeris';
+import { type ElementTable } from './types/ElementTable';
+import { type VectorTable } from './types/VectorTable';
+import { type Ephemeris } from './types/Ephemeris';
+import { PhysicalData } from './types/PhysicalData';
 
 export function saveElementTable(elementTable: ElementTable) {
   //
@@ -15,6 +16,7 @@ export function saveVectorTable(vectorTable: VectorTable) {
   //
 }
 
+// Save individual ephemeris table.
 export async function saveEphemeris(ephemeris: Ephemeris) {
   const name = ephemeris.name;
   const date = ephemeris.epoch;
@@ -39,10 +41,13 @@ export async function saveEphemeris(ephemeris: Ephemeris) {
 type Ephemerides = {
   elements: Ephemeris;
   vectors: Ephemeris;
+  physicalData: PhysicalData;
 };
 
+// Save set of ephemerides.
 export async function saveEphemerides(ephemerides: Ephemerides) {
-  const { elements, vectors } = ephemerides;
+  const { elements, vectors, physicalData } = ephemerides;
+  // Check to make sure that tables are for the same body.
   if (
     elements.name !== vectors.name ||
     elements.id !== vectors.id ||
@@ -69,6 +74,7 @@ export async function saveEphemerides(ephemerides: Ephemerides) {
     id,
     name,
     epoch,
+    physicalData,
     elementTable,
     vectorTable: vectors.table,
   };
