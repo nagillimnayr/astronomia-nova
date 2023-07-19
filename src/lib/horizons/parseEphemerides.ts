@@ -290,3 +290,8 @@ function getMassExponent(text: string) {
 
   return massExponent;
 }
+
+function getRotationPeriod(text: string) {
+  const regexp =
+    /(?:rot){1}(?:ation)?.?\s*(?:per){1}(?:iod)?.?\s*.*={1}\s*(?<rotationPeriod>\d*\.?\d*\s?(?:[hmsd])?)/;
+}
