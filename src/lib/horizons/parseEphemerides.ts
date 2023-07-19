@@ -202,9 +202,9 @@ export function parseVectors(text: Readonly<string>): Ephemeris {
 
 export function parsePhysicalData(text: Readonly<string>): PhysicalData {
   // Get the substring that contains the physical data.
-  // NOTE: For the Earth, 'PHYSICAL DATA' is replaced with 'GEOPHYSICAL PROPERTIES'.
+  // NOTE: For the Earth, 'PHYSICAL DATA' is replaced with 'GEOPHYSICAL PROPERTIES'. For the Moon, 'GEOPHYSICAL PROPERTIES' is replaced with 'GEOPHYSICAL DATA'.
   const regexp =
-    /(?:(?:PHYSICAL DATA)|(?:GEOPHYSICAL PROPERTIES))(?<physData>[^]*)\s*(?:Hill)/;
+    /(?:(?:PHYSICAL DATA)|(?:GEOPHYSICAL (?:PROPERTIES|DATA)))(?<physData>[^]*)\s*(?:Hill|Perihelion|(?:\*{5,}))/i;
   const matches = text.match(regexp);
   if (!matches || !matches.groups || matches.length < 2) {
     console.log(`error! no match found for { ${regexp.source} } in:`, text);
@@ -264,8 +264,9 @@ function getMassExponent(text: string) {
   // i.e.: Mass x 10^22 (g)      = 189818722 +- 8817
   // It's like they want to make this as annoying as possible. I'm seriously considering emailing the author to complain.
   // Todo: Email Jon.D.Giorgini@jpl.nasa.gov to complain.
-  // NOTE: There may or may not be a comma after Mass, there may or may not be an x or a space between x and 10.
-  const regexp = /Mass{1},?\s*x?\s*10\^(?<exponent>[\d]*)\s*\((?<unit>kg|g)\)/i;
+  // NOTE: There may or may not be a comma after Mass, there may or may not be an x or a space between x and 10. There may or may not be parentheses around the unit.
+  const regexp =
+    /Mass{1},?\s*x?\s*10\^(?<exponent>[\d]*)\s*\(?(?<unit>kg|g){1}\)?/i;
   const matches = text.match(regexp);
   if (!matches || matches.length < 2 || !matches.groups) {
     console.log(`error! no match found for { ${regexp.source} } in:`, text);
