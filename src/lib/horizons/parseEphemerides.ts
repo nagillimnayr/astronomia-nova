@@ -198,17 +198,20 @@ export function parseVectors(text: Readonly<string>): Ephemeris {
 
 export function parsePhysicalData(text: Readonly<string>): PhysicalData {
   // Get the substring that contains the physical data.
-  const regexp = /PHYSICAL DATA([^]*)\s*Perihelion/;
+  // NOTE: For the Earth, 'PHYSICAL DATA' is replaced with 'GEOPHYSICAL PROPERTIES'.
+  const regexp =
+    /(?:(?:PHYSICAL DATA)|(?:GEOPHYSICAL PROPERTIES))(?<physData>[^]*)\s*(?:Hill)/;
   const matches = text.match(regexp);
-  if (!matches || matches.length < 2) {
+  if (!matches || !matches.groups || matches.length < 2) {
     console.log(`error! no match found for { ${regexp.source} } in:`, text);
     throw new Error('no match found!');
   }
 
   // Get the matched substring.
-  const substr = matches[1];
+  // const substr = matches[1];
+  const substr = matches.groups['physData'];
   if (!substr) {
-    const errorMsg = 'error: no vector data found';
+    const errorMsg = 'error: no physical data found';
     throw new Error(errorMsg);
   }
 
@@ -219,9 +222,7 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
     meanRadius: capturePhysicalProperty(substr, 'mean radius') * KM_TO_M, // (m)
     mass: capturePhysicalProperty(substr, 'Mass') * massExponent, // (kg)
     // siderealRotPeriod: capturePhysicalProperty(substr, 'Sidereal rot. period'), // (hrs)
-    siderealRotRate: radToDeg(
-      capturePhysicalProperty(substr, 'Sid. rot. rate')
-    ), // (deg/s)
+    siderealRotRate: radToDeg(capturePhysicalProperty(substr, 'rot. rate')), // (deg/s)
     gravParameter: capturePhysicalProperty(substr, 'GM') * KM_TO_M, // (m^3/s^2)
     obliquity: capturePhysicalProperty(substr, 'Obliquity'), // axial tilt (deg)
   };
