@@ -24,6 +24,7 @@ export function parseEphemerisTable(
   text: string,
   code: Readonly<ElementCode | VectorCode>
 ) {
+  // Todo: use named capture groups.
   const regexStr = `${code}\\s*=\\s*([^\\s]*)\\s`;
   const regexp = new RegExp(regexStr);
   const matches = text.match(regexp);
@@ -44,6 +45,7 @@ export function parseEphemerisTable(
 }
 
 export function parseEphemerisDate(text: Readonly<string>) {
+  // Todo: use named capture groups.
   const regexp = /A\.D\.\s(.*)\sTDB/;
   const matches = text.match(regexp);
   if (!matches || matches.length < 2 || !matches[1]) {
@@ -61,7 +63,7 @@ export function parseEphemerisDate(text: Readonly<string>) {
   // split the year/month/day on '-'
   const [year, month, day] = _.split(yearMonthDay, /\-/);
 
-  // todo: convert to numbers
+  // Todo: Convert to numbers.
 
   // construct a date object
   const date = new Date();
@@ -110,7 +112,8 @@ export function parseEphemerisName(text: Readonly<string>) {
 }
 
 export function parseElements(text: Readonly<string>): Ephemeris {
-  // get substring with elements data
+  // Get substring with elements data.
+  // Todo: use named capture groups.
   const regexp = /SOE\n([^]*)\$\$EOE/;
   const matches = text.match(/SOE\n([^]*)\$\$EOE/);
   if (!matches || matches.length < 2) {
@@ -153,7 +156,8 @@ export function parseElements(text: Readonly<string>): Ephemeris {
 }
 
 export function parseVectors(text: Readonly<string>): Ephemeris {
-  // get text with vector data
+  // Get text with vector data.
+  // Todo: use named capture groups.
   const regexp = /SOE\n([^]*)\$\$EOE/;
   const matches = text.match(/SOE\n([^]*)\$\$EOE/);
   if (!matches || matches.length < 2) {
