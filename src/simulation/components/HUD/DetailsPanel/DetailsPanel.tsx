@@ -14,11 +14,13 @@ const DetailsPanel = observer(() => {
   }, [uiState]);
 
   const handleFocusClick = useCallback(() => {
-    if (!uiState.selected) return;
-    // Focus camera on selection.
-    cameraState.setFocus(uiState.selected);
-    // useCameraStore.getState().setFocus(uiState.selected);
-  }, [cameraState, uiState.selected]);
+    // Focus camera on selection. We can be certain that its not null because the button won't be clickable if the selection is null.
+    cameraState.setFocus(uiState.getSelected()!);
+  }, [cameraState, uiState]);
+
+  const handleSurfaceClick = useCallback(() => {
+    // Todo
+  }, []);
 
   if (!uiState.selected) return null; // If nothing selected, display nothing.
   return (
@@ -50,7 +52,7 @@ const DetailsPanel = observer(() => {
         </div>
       </div>
 
-      <div className="mt-auto flex w-full flex-row items-start justify-start">
+      <div className="mt-auto flex w-full flex-row items-start  justify-between">
         {/** Camera focus button. */}
         <button
           onClick={handleFocusClick}
@@ -58,6 +60,12 @@ const DetailsPanel = observer(() => {
         >
           Focus&nbsp;
           <span className="icon-[mdi--camera-control]" />
+        </button>
+
+        {/** Surface view button. */}
+        <button className="pointer-events-auto flex flex-row items-center justify-center rounded-md border px-2 py-1 hover:bg-subtle hover:text-subtle-foreground">
+          Surface&nbsp;
+          <span className="icon-[mdi--telescope]" />
         </button>
       </div>
     </div>
