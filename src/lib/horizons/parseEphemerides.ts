@@ -264,16 +264,28 @@ function getMassExponent(text: string) {
   // i.e.: Mass x 10^22 (g)      = 189818722 +- 8817
   // It's like they want to make this as annoying as possible. I'm seriously considering emailing the author to complain.
   // Todo: Email Jon.D.Giorgini@jpl.nasa.gov to complain.
-  const regexp = /Mass\s*x10\^([\d]*)\s*\(kg\)/i;
+  // NOTE: There may or may not be a comma after Mass, there may or may not be an x or a space between x and 10.
+  const regexp = /Mass{1},?\s*x?\s*10\^(?<exponent>[\d]*)\s*\((?<unit>kg|g)\)/i;
   const matches = text.match(regexp);
-  if (!matches || matches.length < 2 || !matches[1]) {
+  if (!matches || matches.length < 2 || !matches.groups) {
     console.log(`error! no match found for { ${regexp.source} } in:`, text);
     throw new Error('no match found!');
   }
-  const match = matches[1];
-  const massExponent = parseFloat('1e+' + match); // (i.e. 1e+26)
+  const exponent = matches.groups['exponent'];
+  if (!exponent) {
+    throw new Error('error: no exponent found');
+  }
+  const unit = matches.groups['unit']; // Check whether in kg or grams
+  if (!unit) {
+    throw new Error('error: no unit found');
+  }
+  let massExponent = 0;
+  if (unit === 'g') {
+    massExponent = parseFloat(`1e+${parseFloat(exponent) - 3}`);
+  }
+  massExponent = parseFloat(`1e+${exponent}`); // (i.e. 1e+26)
   if (massExponent === undefined) {
-    throw new Error(`error: failed to parse value (${match}) into a float`);
+    throw new Error(`error: failed to parse value (${exponent}) into a float`);
   }
 
   return massExponent;
