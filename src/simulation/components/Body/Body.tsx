@@ -68,7 +68,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
       params.initialVelocity[2] / DIST_MULT,
     ];
     return [initialPosition, initialVelocity];
-  }, [params.initialPosition, params.initialVelocity, params.meanRadius]);
+  }, [params.initialPosition, params.initialVelocity]);
 
   // get function from context
   const addSelfToTree = useContext(KeplerTreeContext);
