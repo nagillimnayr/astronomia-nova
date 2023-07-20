@@ -1,6 +1,7 @@
 import { loadEphemerides } from '@/lib/horizons/loadEphemerides';
 import { type NextRequest, NextResponse } from 'next/server';
 
+// !!! Going to replace with a tRPC procedure.
 export async function GET(request: NextRequest) {
   // Get 'name' parameter from query string.
   const name = request.nextUrl.searchParams.get('name');

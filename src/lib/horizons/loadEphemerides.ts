@@ -21,7 +21,7 @@ export async function loadEphemerides(name: string) {
 
   // Read and parse JSON file.
   const result = await EphemeridesSchema.safeParseAsync(
-    await fs.readJSON(pathToFile)
+    (await fs.readJSON(pathToFile)) as unknown
   );
 
   // Throw error if parse was not successful.

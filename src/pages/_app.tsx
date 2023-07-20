@@ -3,6 +3,7 @@ import '@/styles/globals.css';
 
 import Providers from '@/components/layout/site-layout/providers/providers';
 import SiteLayout from '@/components/layout/site-layout/SiteLayout';
+import { trpc } from '@/lib/trpc/trpc';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
@@ -14,4 +15,4 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   );
 };
 
-export default MyApp;
+export default trpc.withTRPC(MyApp);
