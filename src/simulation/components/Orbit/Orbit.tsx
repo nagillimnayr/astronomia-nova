@@ -19,10 +19,16 @@ import {
 } from '@/simulation/math/orbital-elements/Velocity';
 import { getPositionFromRadius } from '@/simulation/math/orbital-elements/Position';
 import { useFrame } from '@react-three/fiber';
-import { BodyKey } from '@/lib/horizons/BodyKey';
+import { type BodyKey } from '@/lib/horizons/BodyKey';
+import { trpc } from '@/lib/trpc/trpc';
 import { useQuery } from '@tanstack/react-query';
+import {
+  getSemiMinorAxisFromApsides,
+  getSemiMinorAxisFromSemiLatusRectum,
+} from '@/simulation/math/orbital-elements/axes/SemiMinorAxis';
+import { getSemiLatusRectumFromEccentricity } from '@/simulation/math/orbital-elements/axes/SemiLatusRectum';
 
-// Date needed by Orbit but not by Body
+// Data needed by Orbit but not by Body
 type OrbitData = {
   periapsis: number;
   maxVelocity: number;
@@ -58,102 +64,6 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
 
   // ref to Object3D
   const orbitRef = useRef<Object3D>(null!);
-
-  const urlParams = useMemo(() => {
-    const urlParams = new URLSearchParams({
-      name: name,
-    });
-    return urlParams;
-  }, [name]);
-  const { isLoading, error, data } = useQuery({
-    queryKey: [''],
-    queryFn: () => {
-      return fetch(`/horizons/load-ephemerides?${urlParams.toString()}`)
-        .then((res) => res.json())
-        .catch((reason) => {
-          console.error(reason);
-        });
-    },
-  });
-
-  // derive the orbital elements from the periapsis and orbital speed at periapsis
-  const elements = useMemo(
-    () =>
-      calculateOrbitFromPeriapsis(
-        preset.periapsis * DIST_MULT,
-        preset.maxVelocity * DIST_MULT,
-        centralMass
-      ),
-    [preset.periapsis, preset.maxVelocity, centralMass]
-  );
-
-  // memoize orbital state vectors at j2000
-  const [initialPosition, initialVelocity] = useMemo(() => {
-    // get orbital radius at true anomaly
-    const radius = getRadiusAtTrueAnomaly(
-      preset.trueAnomaly,
-      elements.semiMajorAxis,
-      elements.eccentricity
-    );
-
-    // get orbital speed at true anomaly
-    const speed = getOrbitalSpeedFromRadius(
-      radius,
-      centralMass,
-      elements.semiMajorAxis
-    );
-
-    // get position at true anomaly
-    const initialPosition: Vector3 = new Vector3(
-      ...getPositionFromRadius(radius, preset.trueAnomaly)
-    ).divideScalar(DIST_MULT);
-
-    const centerRadius = new Vector3(-elements.linearEccentricity, 0, 0);
-    const radiusFromCenter = initialPosition.clone().sub(centerRadius);
-
-    //get velocity direction at true anomaly
-    // const velocityDirection: Vector3 = getVelocityDirectionAtRadius(
-    //   radiusFromCenter.clone().length() * DIST_MULT,
-    //   preset.trueAnomaly,
-    //   elements.semiMajorAxis,
-    //   elements.semiMinorAxis
-    // );
-    const velocityDirection: Vector3 = getVelocityDirectionFromOrbitalElements(
-      preset.trueAnomaly,
-      elements.eccentricity
-    );
-    const initialVelocity: Vector3 = velocityDirection
-      .multiplyScalar(speed)
-      .divideScalar(DIST_MULT);
-
-    return [initialPosition.toArray(), initialVelocity.toArray()];
-  }, [
-    centralMass,
-    elements.eccentricity,
-    elements.linearEccentricity,
-    elements.semiMajorAxis,
-    preset.trueAnomaly,
-  ]);
-
-  const bodyParams = useMemo(() => {
-    const bodyParams: BodyParams = {
-      name: preset.name,
-      color: preset.color,
-      mass: preset.mass,
-      meanRadius: preset.meanRadius,
-      initialPosition: initialPosition,
-      initialVelocity: initialVelocity,
-    };
-    return bodyParams;
-  }, [
-    initialPosition,
-    initialVelocity,
-    preset.color,
-    preset.mass,
-    preset.meanRadius,
-    preset.name,
-  ]);
-
   // reference to orbiting body
   const bodyRef = useRef<KeplerBody>(null!);
 
@@ -183,29 +93,147 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     [retrogradeContext]
   );
 
+  // const urlParams = useMemo(() => {
+  //   const urlParams = new URLSearchParams({
+  //     name: name,
+  //   });
+  //   return urlParams;
+  // }, [name]);
+  // const { isLoading, error, data } = useQuery({
+  //   queryKey: [''],
+  //   queryFn: () => {
+  //     return fetch(`/horizons/load-ephemerides?${urlParams.toString()}`)
+  //       .then((res) => res.json())
+  //       .catch((reason) => {
+  //         console.error(reason);
+  //       });
+  //   },
+  // });
+
+  const ephemeridesQuery = trpc.loadEphemerides.useQuery({ name: name });
+  if (!ephemeridesQuery.data) {
+    return;
+  }
+
+  const { elementTable, vectorTable, physicalData } = ephemeridesQuery.data;
+
+  // derive the orbital elements from the periapsis and orbital speed at periapsis
+  // const elements = useMemo(
+  //   () =>
+  //     calculateOrbitFromPeriapsis(
+  //       preset.periapsis * DIST_MULT,
+  //       preset.maxVelocity * DIST_MULT,
+  //       centralMass
+  //     ),
+  //   [preset.periapsis, preset.maxVelocity, centralMass]
+  // );
+
+  // // memoize orbital state vectors at j2000
+  // const [initialPosition, initialVelocity] = useMemo(() => {
+  //   // get orbital radius at true anomaly
+  //   const radius = getRadiusAtTrueAnomaly(
+  //     preset.trueAnomaly,
+  //     elements.semiMajorAxis,
+  //     elements.eccentricity
+  //   );
+
+  //   // get orbital speed at true anomaly
+  //   const speed = getOrbitalSpeedFromRadius(
+  //     radius,
+  //     centralMass,
+  //     elements.semiMajorAxis
+  //   );
+
+  //   // get position at true anomaly
+  //   const initialPosition: Vector3 = new Vector3(
+  //     ...getPositionFromRadius(radius, preset.trueAnomaly)
+  //   ).divideScalar(DIST_MULT);
+
+  //   const centerRadius = new Vector3(-elements.linearEccentricity, 0, 0);
+  //   const radiusFromCenter = initialPosition.clone().sub(centerRadius);
+
+  //   //get velocity direction at true anomaly
+  //   // const velocityDirection: Vector3 = getVelocityDirectionAtRadius(
+  //   //   radiusFromCenter.clone().length() * DIST_MULT,
+  //   //   preset.trueAnomaly,
+  //   //   elements.semiMajorAxis,
+  //   //   elements.semiMinorAxis
+  //   // );
+  //   const velocityDirection: Vector3 = getVelocityDirectionFromOrbitalElements(
+  //     preset.trueAnomaly,
+  //     elements.eccentricity
+  //   );
+  //   const initialVelocity: Vector3 = velocityDirection
+  //     .multiplyScalar(speed)
+  //     .divideScalar(DIST_MULT);
+
+  //   return [initialPosition.toArray(), initialVelocity.toArray()];
+  // }, [
+  //   centralMass,
+  //   elements.eccentricity,
+  //   elements.linearEccentricity,
+  //   elements.semiMajorAxis,
+  //   preset.trueAnomaly,
+  // ]);
+
+  // const bodyParams = useMemo(() => {
+  //   const bodyParams: BodyParams = {
+  //     name: preset.name,
+  //     color: preset.color,
+  //     mass: preset.mass,
+  //     meanRadius: preset.meanRadius,
+  //     initialPosition: initialPosition,
+  //     initialVelocity: initialVelocity,
+  //   };
+  //   return bodyParams;
+  // }, [
+  //   initialPosition,
+  //   initialVelocity,
+  //   preset.color,
+  //   preset.mass,
+  //   preset.meanRadius,
+  //   preset.name,
+  // ]);
+
+  const { semiMajorAxis, eccentricity } = elementTable;
+  const semiLatusRectum = getSemiLatusRectumFromEccentricity(
+    semiMajorAxis,
+    eccentricity
+  );
+  const semiMinorAxis = getSemiMinorAxisFromSemiLatusRectum(
+    semiMajorAxis,
+    semiLatusRectum
+  );
+
+  const bodyParams: BodyParams = {
+    name: name,
+    color: '#ffffff',
+    mass: physicalData.mass,
+    meanRadius: physicalData.meanRadius,
+    initialPosition: vectorTable.position,
+    initialVelocity: vectorTable.velocity,
+  };
+
   return (
     <object3D
       ref={(orbit) => {
         if (!orbit) return;
         orbitRef.current = orbit;
         // rotate to orient the orbit
-        orbit.rotateY(degToRad(preset.longitudeOfAscendingNode));
-        orbit.rotateX(degToRad(preset.inclination));
-        orbit.rotateY(degToRad(preset.argumentOfPeriapsis));
+        orbit.rotateY(degToRad(elementTable.longitudeOfAscendingNode));
+        orbit.rotateX(degToRad(elementTable.inclination));
+        orbit.rotateY(degToRad(elementTable.argumentOfPeriapsis));
       }}
     >
       {/** pass callback function down to orbiting body so that it will add itself to the tree  */}
       <KeplerTreeContext.Provider value={addChildToTree}>
-        <Body ref={bodyRef} params={bodyParams} texture={props.texture}>
-          {props.children}
+        <Body ref={bodyRef} params={bodyParams} texture={texture}>
+          {children}
         </Body>
       </KeplerTreeContext.Provider>
 
-      <Trajectory
-        semiMajorAxis={elements.semiMajorAxis}
-        semiMinorAxis={elements.semiMinorAxis}
-      />
-      <TrueAnomalyArrow color={preset.color} target={bodyRef} />
+      <Trajectory semiMajorAxis={semiMajorAxis} semiMinorAxis={semiMinorAxis} />
+      <TrueAnomalyArrow color={'#ffffff'} target={bodyRef} />
     </object3D>
   );
 };

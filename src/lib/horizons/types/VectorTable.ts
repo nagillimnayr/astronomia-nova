@@ -1,6 +1,6 @@
 import z from 'zod';
 
-const Vector3Schema = z.array(z.number()).length(3);
+const Vector3Schema = z.tuple([z.number(), z.number(), z.number()]);
 
 export const VectorTableSchema = z.object({
   position: Vector3Schema,
