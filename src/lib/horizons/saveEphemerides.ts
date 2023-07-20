@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { type ElementTable } from './types/ElementTable';
 import { type VectorTable } from './types/VectorTable';
 import { type Ephemeris } from './types/Ephemeris';
-import { PhysicalData } from './types/PhysicalData';
+import { type PhysicalData } from './types/PhysicalData';
 
 export function saveElementTable(elementTable: ElementTable) {
   //
@@ -56,7 +56,7 @@ export async function saveEphemerides(ephemerides: Ephemerides) {
     throw new Error('error: ephemerides do not match');
   }
 
-  const { id, name, epoch, ...elementTable } = elements;
+  const { id, name, epoch } = elements;
 
   // create file path
   const fileName = _.kebabCase(name);
@@ -75,7 +75,7 @@ export async function saveEphemerides(ephemerides: Ephemerides) {
     name,
     epoch,
     physicalData,
-    elementTable,
+    elementTable: elements.table,
     vectorTable: vectors.table,
   };
 
