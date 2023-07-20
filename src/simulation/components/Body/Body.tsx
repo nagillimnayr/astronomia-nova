@@ -2,6 +2,7 @@ import React, {
   forwardRef,
   useContext,
   useImperativeHandle,
+  useMemo,
   useRef,
 } from 'react';
 import { extend, type Object3DNode, useFrame } from '@react-three/fiber';
@@ -12,6 +13,7 @@ import {
   type Texture,
   type Vector3Tuple,
   type ArrowHelper,
+  Vector3,
 } from 'three';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 import KeplerBody from '../../classes/KeplerBody';
@@ -20,6 +22,10 @@ import { CentralMassContext } from '@/simulation/context/CentralMassContext';
 import { BodyMesh } from './BodyMesh';
 import Annotation from '../Annotation';
 import { BillboardCircle } from '../BillboardCircle';
+import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
+
+const _pos = new Vector3();
+const _vel = new Vector3();
 
 // extend KeplerBody so the reconciler is aware of it
 extend({ KeplerBody });
@@ -48,11 +54,21 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   fwdRef
 ) {
   // destructure parameters
-  const { name, color, mass, initialPosition, initialVelocity, meanRadius } =
-    params;
+  const { name, color, mass, meanRadius } = params;
 
-  // load texture
-  // const texture = useLoader(TextureLoader, props.texturePath ?? '');
+  const [initialPosition, initialVelocity] = useMemo(() => {
+    const initialPosition: Vector3Tuple = [
+      params.initialPosition[0] / DIST_MULT,
+      params.initialPosition[1] / DIST_MULT,
+      params.initialPosition[2] / DIST_MULT,
+    ];
+    const initialVelocity: Vector3Tuple = [
+      params.initialVelocity[0] / DIST_MULT,
+      params.initialVelocity[1] / DIST_MULT,
+      params.initialVelocity[2] / DIST_MULT,
+    ];
+    return [initialPosition, initialVelocity];
+  }, [params.initialPosition, params.initialVelocity, params.meanRadius]);
 
   // get function from context
   const addSelfToTree = useContext(KeplerTreeContext);

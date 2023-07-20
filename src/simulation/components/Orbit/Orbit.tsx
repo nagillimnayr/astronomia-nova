@@ -6,7 +6,7 @@ import KeplerBody from '@/simulation/classes/KeplerBody';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { CentralMassContext } from '@/simulation/context/CentralMassContext';
 import { calculateOrbitFromPeriapsis } from '@/simulation/math/orbit/calculateOrbit';
-import { DIST_MULT } from '@/simulation/utils/constants';
+import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
 import { ColorRepresentation, Mesh, Object3D, Texture, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
@@ -209,7 +209,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     name: name,
     color: '#ffffff',
     mass: physicalData.mass,
-    meanRadius: physicalData.meanRadius,
+    meanRadius: physicalData.meanRadius / EARTH_RADIUS,
     initialPosition: vectorTable.position,
     initialVelocity: vectorTable.velocity,
   };
