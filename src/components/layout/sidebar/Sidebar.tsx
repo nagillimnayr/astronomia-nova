@@ -27,11 +27,6 @@ const Sidebar = observer(({ className }: Props) => {
           'flex h-full flex-col items-center justify-start gap-2 overflow-y-auto border-r-2 px-3 py-5'
         )}
       >
-        <header className="text-foreground">
-          <h3>Sidebar</h3>
-        </header>
-        <Separator className="h-px w-full border-y bg-border" />
-
         <section className="mb-6 flex h-full min-h-fit w-full flex-col items-center justify-start border-2 p-2">
           <Outliner />
         </section>
