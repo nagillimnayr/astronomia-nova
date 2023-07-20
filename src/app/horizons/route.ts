@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import z from 'zod';
 import { ValidationError, fromZodError } from 'zod-validation-error';
 import { getElementTable, getVectorTable } from '@/lib/horizons/getEphemerides';
