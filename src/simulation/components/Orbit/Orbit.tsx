@@ -19,6 +19,8 @@ import {
 } from '@/simulation/math/orbital-elements/Velocity';
 import { getPositionFromRadius } from '@/simulation/math/orbital-elements/Position';
 import { useFrame } from '@react-three/fiber';
+import { BodyKey } from '@/lib/horizons/BodyKey';
+import { useQuery } from '@tanstack/react-query';
 
 // Date needed by Orbit but not by Body
 type OrbitData = {
@@ -27,10 +29,8 @@ type OrbitData = {
   eccentricity: number;
   inclination: number;
   longitudeOfAscendingNode: number;
-  // longitudeOfPeriapsis: number;
   argumentOfPeriapsis: number;
   axialTilt: number;
-  // meanLongitude: number;
   trueAnomaly: number;
 };
 
@@ -46,11 +46,11 @@ type PresetData = OrbitData & BodyData;
 
 type OrbitProps = {
   children?: React.ReactNode;
-  name: PresetKey;
+  name: BodyKey;
   texture?: Texture;
 };
 
-export const Orbit = (props: OrbitProps) => {
+export const Orbit = ({ children, name, texture }: OrbitProps) => {
   // get Central mass from parent
   const centralMass = useContext(CentralMassContext);
 
@@ -59,11 +59,22 @@ export const Orbit = (props: OrbitProps) => {
   // ref to Object3D
   const orbitRef = useRef<Object3D>(null!);
 
-  // Note: create usePreset to get memoized preset data
-  const preset = useMemo<PresetData>(
-    () => loadBodyPreset(props.name),
-    [props.name]
-  );
+  const urlParams = useMemo(() => {
+    const urlParams = new URLSearchParams({
+      name: name,
+    });
+    return urlParams;
+  }, [name]);
+  const { isLoading, error, data } = useQuery({
+    queryKey: [''],
+    queryFn: () => {
+      return fetch(`/horizons/load-ephemerides?${urlParams.toString()}`)
+        .then((res) => res.json())
+        .catch((reason) => {
+          console.error(reason);
+        });
+    },
+  });
 
   // derive the orbital elements from the periapsis and orbital speed at periapsis
   const elements = useMemo(
