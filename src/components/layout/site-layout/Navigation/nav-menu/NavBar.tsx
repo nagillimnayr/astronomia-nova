@@ -10,7 +10,6 @@ type link = {
 
 const mainLinks = [
   { href: '/about', label: 'About' },
-  { href: '/info', label: 'Info' },
   { href: '/equations', label: 'Equations' },
 ];
 
@@ -19,13 +18,6 @@ const systemLinks = [
   { href: '/systems/earth-mars', label: 'Stellae Martis' },
   { href: '/systems/earth', label: 'Earth' },
   { href: '/systems/mars', label: 'Mars' },
-];
-
-const otherLinks = [
-  { href: '/test-fs', label: 'Test FS' },
-  { href: '/misc', label: 'Misc' },
-  { href: '/other', label: 'Other' },
-  { href: '/docs/notes', label: 'Notes' },
 ];
 
 const btnStyle = `rounded-md border-0 py-2 px-4 font-sans h-full`;
@@ -45,9 +37,6 @@ const NavBar = () => {
       })}
       <NavDropdown links={systemLinks} className={btnStyle}>
         <div className="inline-flex gap-3">Systems</div>
-      </NavDropdown>
-      <NavDropdown links={otherLinks} className={btnStyle}>
-        <div className="inline-flex gap-3">Other</div>
       </NavDropdown>
     </nav>
   );
