@@ -1,7 +1,7 @@
 export const LoadingFallback = () => {
   return (
-    <div className="flex w-full flex-row items-center justify-center">
-      <span className="loading loading-spinner loading-lg" />
+    <div className="grid h-full w-full place-items-center text-foreground">
+      <span className="icon-[svg-spinners--ring-resize] aspect-square text-5xl" />
     </div>
   );
 };
