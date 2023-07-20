@@ -10,7 +10,7 @@ const Outliner = () => {
     return <LoadingFallback />;
   }
   return (
-    <div className="flex h-full min-h-fit w-full min-w-fit flex-col items-start justify-start gap-0 border p-0">
+    <div className="flex h-full min-h-fit w-full min-w-fit flex-col items-start justify-start gap-0 border p-0 text-xl">
       <OutlinerItem body={rootRef.current} />
     </div>
   );
