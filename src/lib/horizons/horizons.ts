@@ -22,5 +22,10 @@ if (process.argv.length >= 3) {
     }
   }
 } else {
-  console.log('not enough arguments');
+  // console.log('not enough arguments');
+  for (let i = 1; i <= 8; i++) {
+    const code = `${99 + i * 100}`;
+    const ephemerides = await horizons(code);
+    await saveEphemerides(ephemerides);
+  }
 }
