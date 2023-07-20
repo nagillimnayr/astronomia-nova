@@ -25,7 +25,7 @@ export function parseEphemerisTable(
   code: Readonly<ElementCode | VectorCode>
 ) {
   // Todo: use named capture groups.
-  const regexStr = `${code}\\s*=\\s*([^\\s]*)\\s`;
+  const regexStr = `\\s${code}\\s*=\\s*([^\\s]*)\\s`;
   const regexp = new RegExp(regexStr);
   const matches = text.match(regexp);
   if (!matches || matches.length < 2 || !matches[1]) {
@@ -36,11 +36,13 @@ export function parseEphemerisTable(
   }
 
   const match = matches[1];
+  console.log(`match (${code}):`, match);
   // parse string into float
   const ephemeris = parseFloat(match);
   if (ephemeris === undefined) {
     throw new Error(`error: failed to parse value (${match}) into a float`);
   }
+  console.log(`parsed (${code}):`, ephemeris);
   return ephemeris;
 }
 
@@ -132,7 +134,7 @@ export function parseElements(text: Readonly<string>): Ephemeris {
   const date = parseEphemerisDate(substr);
   const elementTable: ElementTable = {
     eccentricity: parseEphemerisTable(substr, 'EC'),
-    periapsis: parseEphemerisTable(substr, 'QR'),
+    periapsis: parseEphemerisTable(substr, 'QR') * KM_TO_M,
     inclination: parseEphemerisTable(substr, 'IN'),
     longitudeOfAscendingNode: parseEphemerisTable(substr, 'OM'),
     argumentOfPeriapsis: parseEphemerisTable(substr, 'W'),
@@ -140,8 +142,8 @@ export function parseElements(text: Readonly<string>): Ephemeris {
     meanMotion: parseEphemerisTable(substr, 'N'),
     meanAnomaly: parseEphemerisTable(substr, 'MA'),
     trueAnomaly: parseEphemerisTable(substr, 'TA'),
-    semiMajorAxis: parseEphemerisTable(substr, 'A'),
-    apoapsis: parseEphemerisTable(substr, 'AD'),
+    semiMajorAxis: parseEphemerisTable(substr, 'A') * KM_TO_M,
+    apoapsis: parseEphemerisTable(substr, 'AD') * KM_TO_M,
     siderealOrbitPeriod: parseEphemerisTable(substr, 'PR'),
   };
 
