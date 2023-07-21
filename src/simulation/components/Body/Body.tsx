@@ -23,6 +23,10 @@ import { BodyMesh } from './BodyMesh';
 import Annotation from '../Annotation';
 import { BillboardCircle } from '../BillboardCircle';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { CameraControls } from '@react-three/drei';
+import { useTimeStore } from '@/simulation/state/zustand/time-store';
+import { useSimStore } from '@/simulation/state/zustand/sim-store';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
@@ -53,7 +57,9 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   { params, ...props }: BodyProps,
   fwdRef
 ) {
-  // destructure parameters
+  const { cameraState } = useContext(RootStoreContext);
+
+  // Destructure parameters.
   const { name, color, mass, meanRadius } = params;
 
   const [initialPosition, initialVelocity] = useMemo(() => {
@@ -88,7 +94,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     [bodyRef]
   );
 
-  useFrame(() => {
+  useFrame(({ controls }) => {
     if (!bodyRef.current || !meshRef.current) return;
 
     // update mesh position to be in sync with body
@@ -100,11 +106,25 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     const direction = bodyRef.current.velocity.clone().normalize();
     velocityArrowRef.current.setDirection(direction);
     velocityArrowRef.current.position.set(...position);
-  });
+
+    // if (
+    //   !useTimeStore.getState().isPaused &&
+    //   cameraState.focusTarget === bodyRef.current
+    // ) {
+    //   const camControls = controls as unknown as CameraControls;
+    //   console.log('body position:', position);
+    //   console.log(
+    //     'camera target position:',
+    //     camControls.getTarget(_pos).toArray()
+    //   );
+    //   // cameraState.updateCamera();
+    // }
+  }, -1);
 
   return (
     <>
       <keplerBody
+        renderOrder={-1}
         ref={(body: KeplerBody) => {
           if (!body) {
             console.log(`removing ${bodyRef.current?.name} node from tree`);
@@ -132,18 +152,19 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
       >
         {/** for some reason, wrapping the Annotation in an object3D stops it from stuttering */}
         <object3D>
-          <Annotation annotation={name} />
+          {/* <Annotation annotation={name} /> */}
+          {/* <BillboardCircle bodyRef={bodyRef} /> */}
         </object3D>
-        <BillboardCircle bodyRef={bodyRef} />
+        {/* <Annotation annotation={name} /> */}
 
         {/** for whatever reason, the same does not work for BodyMesh */}
         {/* <object3D>
           <BodyMesh
-            name={props.args.name}
-            meanRadius={props.args.meanRadius}
-            color={props.args.color}
+            name={name}
+            meanRadius={meanRadius}
+            color={color}
             texture={props.texture}
-            body={bodyRef}
+            bodyRef={bodyRef}
           />
         </object3D> */}
 
