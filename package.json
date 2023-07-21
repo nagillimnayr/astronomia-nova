@@ -92,6 +92,7 @@
     "rehype-slug": "^5.1.0",
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
+    "serializr": "^3.0.2",
     "superjson": "^1.13.1",
     "swr": "^2.2.0",
     "tailwind-merge": "^1.13.2",
