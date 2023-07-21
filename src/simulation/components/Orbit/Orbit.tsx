@@ -124,84 +124,6 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
 
   const { elementTable, vectorTable, physicalData } = ephemeridesQuery.data;
 
-  // derive the orbital elements from the periapsis and orbital speed at periapsis
-  // const elements = useMemo(
-  //   () =>
-  //     calculateOrbitFromPeriapsis(
-  //       preset.periapsis * DIST_MULT,
-  //       preset.maxVelocity * DIST_MULT,
-  //       centralMass
-  //     ),
-  //   [preset.periapsis, preset.maxVelocity, centralMass]
-  // );
-
-  // // memoize orbital state vectors at j2000
-  // const [initialPosition, initialVelocity] = useMemo(() => {
-  //   // get orbital radius at true anomaly
-  //   const radius = getRadiusAtTrueAnomaly(
-  //     preset.trueAnomaly,
-  //     elements.semiMajorAxis,
-  //     elements.eccentricity
-  //   );
-
-  //   // get orbital speed at true anomaly
-  //   const speed = getOrbitalSpeedFromRadius(
-  //     radius,
-  //     centralMass,
-  //     elements.semiMajorAxis
-  //   );
-
-  //   // get position at true anomaly
-  //   const initialPosition: Vector3 = new Vector3(
-  //     ...getPositionFromRadius(radius, preset.trueAnomaly)
-  //   ).divideScalar(DIST_MULT);
-
-  //   const centerRadius = new Vector3(-elements.linearEccentricity, 0, 0);
-  //   const radiusFromCenter = initialPosition.clone().sub(centerRadius);
-
-  //   //get velocity direction at true anomaly
-  //   // const velocityDirection: Vector3 = getVelocityDirectionAtRadius(
-  //   //   radiusFromCenter.clone().length() * DIST_MULT,
-  //   //   preset.trueAnomaly,
-  //   //   elements.semiMajorAxis,
-  //   //   elements.semiMinorAxis
-  //   // );
-  //   const velocityDirection: Vector3 = getVelocityDirectionFromOrbitalElements(
-  //     preset.trueAnomaly,
-  //     elements.eccentricity
-  //   );
-  //   const initialVelocity: Vector3 = velocityDirection
-  //     .multiplyScalar(speed)
-  //     .divideScalar(DIST_MULT);
-
-  //   return [initialPosition.toArray(), initialVelocity.toArray()];
-  // }, [
-  //   centralMass,
-  //   elements.eccentricity,
-  //   elements.linearEccentricity,
-  //   elements.semiMajorAxis,
-  //   preset.trueAnomaly,
-  // ]);
-
-  // const bodyParams = useMemo(() => {
-  //   const bodyParams: BodyParams = {
-  //     name: preset.name,
-  //     color: preset.color,
-  //     mass: preset.mass,
-  //     meanRadius: preset.meanRadius,
-  //     initialPosition: initialPosition,
-  //     initialVelocity: initialVelocity,
-  //   };
-  //   return bodyParams;
-  // }, [
-  //   initialPosition,
-  //   initialVelocity,
-  //   preset.color,
-  //   preset.mass,
-  //   preset.meanRadius,
-  //   preset.name,
-  // ]);
-
   const semiLatusRectum = getSemiLatusRectumFromEccentricity(
     elementTable.semiMajorAxis,
     elementTable.eccentricity
@@ -218,6 +140,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     color: '#ffffff',
     mass: physicalData.mass,
     meanRadius: physicalData.meanRadius / EARTH_RADIUS,
+    // Reorder the components so that the the orbit lies in the XZ plane.
     initialPosition: vectorTable.position,
     initialVelocity: vectorTable.velocity,
   };

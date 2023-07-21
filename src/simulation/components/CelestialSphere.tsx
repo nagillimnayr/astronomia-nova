@@ -2,6 +2,7 @@ import { useLoader } from '@react-three/fiber';
 import { BackSide, DoubleSide, FrontSide } from 'three';
 
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
+import { degToRad } from 'three/src/math/MathUtils';
 
 type CelestialSphereProps = {
   children: React.ReactNode;
@@ -13,7 +14,7 @@ export const CelestialSphere = (props: CelestialSphereProps) => {
   );
   return (
     <group>
-      <mesh>
+      <mesh rotation={[-degToRad(90), 0, 0]}>
         <sphereGeometry args={[100000]} />
         <meshBasicMaterial
           args={[
@@ -25,15 +26,6 @@ export const CelestialSphere = (props: CelestialSphereProps) => {
         />
         {props.children}
       </mesh>
-      {/* <Stars
-        radius={240}
-        depth={1}
-        count={5000}
-        factor={10}
-        saturation={0}
-        fade
-        speed={1}
-      /> */}
     </group>
   );
 };

@@ -24,6 +24,7 @@ import { useSelectionStore } from '@/simulation/state/zustand/selection-store';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import Annotation from '../Annotation';
 import { BillboardCircle } from '../BillboardCircle';
+import { degToRad } from 'three/src/math/MathUtils';
 
 // Separate out the visual logic from the simulation logic.
 
@@ -88,6 +89,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     <>
       <Select enabled={isSelected}>
         <Sphere
+          rotation={[degToRad(90), 0, 0]}
           visible={isVisible}
           ref={(meshObj) => {
             if (!meshObj) return;

@@ -168,6 +168,14 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
           />
         </object3D> */}
 
+        {/* <BodyMesh
+          name={name}
+          meanRadius={meanRadius}
+          color={color}
+          texture={props.texture}
+          bodyRef={bodyRef}
+        /> */}
+
         {/* child orbits need to know the mass of their central body */}
         <CentralMassContext.Provider value={mass}>
           {props.children}
