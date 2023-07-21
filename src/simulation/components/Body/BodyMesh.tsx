@@ -1,4 +1,4 @@
-import { Sphere, useCursor, useHelper } from '@react-three/drei';
+import { BBAnchor, Sphere, useCursor, useHelper } from '@react-three/drei';
 import { type ThreeEvent } from '@react-three/fiber';
 import { Select } from '@react-three/postprocessing';
 import {
@@ -22,6 +22,8 @@ import { debugState } from '@/simulation/state/DebugState';
 import { useCameraStore } from '@/simulation/state/zustand/camera-store';
 import { useSelectionStore } from '@/simulation/state/zustand/selection-store';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import Annotation from '../Annotation';
+import { BillboardCircle } from '../BillboardCircle';
 
 // Separate out the visual logic from the simulation logic.
 
@@ -100,8 +102,18 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         >
           <meshBasicMaterial
             map={props.texture}
-            color={!props.texture ? props.color : undefined}
+            // color={!props.texture ? props.color : undefined}
           />
+
+          {/* <Annotation annotation={props.name} /> */}
+          {/* <object3D position={[0, -props.meanRadius, 0]}>
+            <Annotation annotation={props.name} />
+          </object3D> */}
+          <BillboardCircle bodyRef={props.bodyRef} />
+
+          <object3D position={[0, -props.meanRadius, 0]}>
+            <Annotation annotation={props.name} />
+          </object3D>
         </Sphere>
       </Select>
     </>
