@@ -16,7 +16,7 @@ const Home: NextPage = () => {
       <Head>
         <title>Astronomia Nova</title>
         <meta name="description" content="" />
-        <link
+        {/* <link
           rel="icon"
           type="image/svg+xml"
           href="/favicon/lightmode/favicon.svg"
@@ -25,7 +25,7 @@ const Home: NextPage = () => {
           rel="icon"
           type="image/png"
           href="/favicon/lightmode/favicon.png"
-        />
+        /> */}
       </Head>
 
       <main className="h-full w-full">
