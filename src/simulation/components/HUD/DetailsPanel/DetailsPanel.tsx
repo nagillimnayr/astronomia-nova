@@ -4,6 +4,7 @@ import { Separator } from '@/components/gui/Separator';
 import { useCameraStore } from '@/simulation/state/zustand/camera-store';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
+import { SurfaceViewButton } from './SurfaceViewButton';
 
 const DetailsPanel = observer(() => {
   const { uiState, cameraState } = useContext(RootStoreContext);
@@ -22,7 +23,7 @@ const DetailsPanel = observer(() => {
     // Todo
   }, []);
 
-  if (!uiState.selected) return null; // If nothing selected, display nothing.
+  if (!uiState.selected) return null; // If nothing is selected, display nothing.
   return (
     <div className="absolute right-0 top-0 flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border bg-muted p-4 text-muted-foreground">
       {/** Close button. */}
@@ -56,17 +57,13 @@ const DetailsPanel = observer(() => {
         {/** Camera focus button. */}
         <button
           onClick={handleFocusClick}
-          className="pointer-events-auto flex flex-row items-center justify-center rounded-md border px-2 py-1 hover:bg-subtle hover:text-subtle-foreground"
+          className="pointer-events-auto flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground"
         >
           Focus&nbsp;
           <span className="icon-[mdi--camera-control]" />
         </button>
 
-        {/** Surface view button. */}
-        <button className="pointer-events-auto flex flex-row items-center justify-center rounded-md border px-2 py-1 hover:bg-subtle hover:text-subtle-foreground">
-          Surface&nbsp;
-          <span className="icon-[mdi--telescope]" />
-        </button>
+        <SurfaceViewButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
       </div>
     </div>
   );
