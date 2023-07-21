@@ -8,7 +8,14 @@ import { CentralMassContext } from '@/simulation/context/CentralMassContext';
 import { calculateOrbitFromPeriapsis } from '@/simulation/math/orbit/calculateOrbit';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
-import { ColorRepresentation, Mesh, Object3D, Texture, Vector3 } from 'three';
+import {
+  ColorRepresentation,
+  Matrix4,
+  Mesh,
+  Object3D,
+  Texture,
+  Vector3,
+} from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { RetrogradeContext } from '../Retrograde/RetrogradeContext';
 import { retrogradeState } from '../Retrograde/retrogradeState';
@@ -195,15 +202,16 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   //   preset.name,
   // ]);
 
-  const { semiMajorAxis, eccentricity } = elementTable;
   const semiLatusRectum = getSemiLatusRectumFromEccentricity(
-    semiMajorAxis,
-    eccentricity
+    elementTable.semiMajorAxis,
+    elementTable.eccentricity
   );
-  const semiMinorAxis = getSemiMinorAxisFromSemiLatusRectum(
-    semiMajorAxis,
-    semiLatusRectum
-  );
+  const semiMinorAxis =
+    getSemiMinorAxisFromSemiLatusRectum(
+      elementTable.semiMajorAxis,
+      semiLatusRectum
+    ) / DIST_MULT;
+  const semiMajorAxis = elementTable.semiMajorAxis / DIST_MULT;
 
   const bodyParams: BodyParams = {
     name: name,
@@ -214,15 +222,19 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     initialVelocity: vectorTable.velocity,
   };
 
+  // Destructure the orientation elements.
+  const { longitudeOfAscendingNode, argumentOfPeriapsis, inclination } =
+    elementTable;
+
   return (
     <object3D
       ref={(orbit) => {
         if (!orbit) return;
         orbitRef.current = orbit;
         // rotate to orient the orbit
-        orbit.rotateY(degToRad(elementTable.longitudeOfAscendingNode));
-        orbit.rotateX(degToRad(elementTable.inclination));
-        orbit.rotateY(degToRad(elementTable.argumentOfPeriapsis));
+        // orbit.rotateY(degToRad(elementTable.longitudeOfAscendingNode));
+        // orbit.rotateX(degToRad(elementTable.inclination));
+        // orbit.rotateY(degToRad(elementTable.argumentOfPeriapsis));
       }}
     >
       {/** pass callback function down to orbiting body so that it will add itself to the tree  */}
@@ -232,7 +244,15 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
         </Body>
       </KeplerTreeContext.Provider>
 
-      <Trajectory semiMajorAxis={semiMajorAxis} semiMinorAxis={semiMinorAxis} />
+      <Trajectory
+        semiMajorAxis={semiMajorAxis}
+        semiMinorAxis={semiMinorAxis}
+        orientation={{
+          longitudeOfAscendingNode,
+          argumentOfPeriapsis,
+          inclination,
+        }}
+      />
       <TrueAnomalyArrow color={'#ffffff'} target={bodyRef} />
     </object3D>
   );
