@@ -2,9 +2,10 @@ import type KeplerBody from '@/simulation/classes/KeplerBody';
 import * as Collapsible from '@radix-ui/react-collapsible';
 
 import { ChevronRightIcon } from 'lucide-react';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
+import { cn } from '@/lib/cn';
 
 type OutlinerItemProps = {
   body: KeplerBody;
@@ -12,17 +13,38 @@ type OutlinerItemProps = {
 const OutlinerItem = observer(({ body }: OutlinerItemProps) => {
   const { uiState } = useContext(RootStoreContext);
 
+  const [isOpen, setOpen] = useState<boolean>(false);
+
+  const handleOpenChanged = useCallback(
+    (open: boolean) => {
+      if (!body.orbitingBodies.length) {
+        setOpen(false);
+      } else {
+        setOpen(open);
+      }
+    },
+    [body.orbitingBodies.length]
+  );
+
   const handleClick = useCallback(() => {
     // Select the object.
     uiState.select(body);
   }, [body, uiState]);
   return (
-    <Collapsible.Root className="m-0 inline-flex h-fit min-h-fit w-full flex-col items-center justify-start rounded-none text-center">
+    <Collapsible.Root
+      open={isOpen}
+      onOpenChange={handleOpenChanged}
+      className="m-0 inline-flex h-fit min-h-fit w-full flex-col items-center justify-start rounded-none text-center"
+    >
       <span className="m-0 h-fit w-full p-0">
         <span className="m-0 inline-flex h-fit w-full items-center justify-start p-0">
           {/** Trigger to toggle collapsible content open/closed. */}
-          <Collapsible.Trigger className="m-0 flex aspect-square h-full min-h-fit flex-col items-start justify-center overflow-hidden whitespace-nowrap rounded-full p-0 transition-all hover:bg-subtle data-[state=open]:rotate-90">
-            <span className="icon-[mdi--chevron-right]" />
+          <Collapsible.Trigger
+            className={cn(
+              'm-0 flex aspect-square h-full min-h-fit flex-col items-start justify-center overflow-hidden whitespace-nowrap rounded-full p-0 transition-all hover:bg-subtle data-[state=open]:rotate-90'
+            )}
+          >
+            <span className={cn('icon-[mdi--chevron-right]')} />{' '}
           </Collapsible.Trigger>
 
           {/** Button to select body. */}
