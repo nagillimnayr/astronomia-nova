@@ -24,11 +24,12 @@ export async function saveEphemeris(ephemeris: Ephemeris) {
   // create file path
   const fileName = _.kebabCase(name + type);
   const __filename = fileURLToPath(import.meta.url);
-  console.log('__fileName:', __filename);
-  const __dirname = path.dirname(__filename);
-  console.log('__dirname:', __dirname);
+  // console.log('__fileName:', __filename);
+  // const __dirname = path.dirname(__filename);
+  // console.log('__dirname:', __dirname);
+
   const pathToNewFile = path.resolve(
-    __dirname,
+    'json',
     path.join('ephemerides', `${fileName}.json`)
   );
   console.log('pathToNewFile:', pathToNewFile);
@@ -60,12 +61,10 @@ export async function saveEphemerides(ephemerides: Ephemerides) {
 
   // create file path
   const fileName = _.kebabCase(name);
-  const __filename = fileURLToPath(import.meta.url);
-  console.log('__fileName:', __filename);
-  const __dirname = path.dirname(__filename);
-  console.log('__dirname:', __dirname);
+
+  const jsonDirectory = path.join(process.cwd(), 'json');
   const pathToNewFile = path.resolve(
-    __dirname,
+    jsonDirectory,
     path.join('ephemerides', `${fileName}.json`)
   );
   console.log('pathToNewFile:', pathToNewFile);

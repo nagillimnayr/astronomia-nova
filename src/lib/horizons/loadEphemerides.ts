@@ -10,12 +10,11 @@ import { type Ephemerides, EphemeridesSchema } from './types/Ephemeris';
 export async function loadEphemerides(name: string) {
   // create file path
   const fileName = _.kebabCase(name);
-  const __filename = fileURLToPath(import.meta.url);
-  console.log('__fileName:', __filename);
-  const __dirname = path.dirname(__filename);
-  console.log('__dirname:', __dirname);
+
+  const jsonDirectory = path.join(process.cwd(), 'json');
+
   const pathToFile = path.resolve(
-    __dirname,
+    jsonDirectory,
     path.join('ephemerides', `${fileName}.json`)
   );
 
