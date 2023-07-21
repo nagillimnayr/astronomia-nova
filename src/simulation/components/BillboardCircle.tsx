@@ -58,7 +58,7 @@ export function BillboardCircle({ bodyRef }: Props) {
 
   return (
     <object3D>
-      <Html center className="h-fit w-fit bg-transparent">
+      <Html occlude="blending" center className="h-fit w-fit bg-transparent">
         <div
           ref={ref}
           onClick={handleClick}
