@@ -50,6 +50,7 @@ export class CameraState {
   }
 
   setControls(controls: CameraControls) {
+    if (controls === this._controls) return;
     console.log('setting controls!');
     this._controls = controls;
     this._controls.mouseButtons.right = 8;
