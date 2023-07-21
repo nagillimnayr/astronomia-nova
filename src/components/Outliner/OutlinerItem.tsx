@@ -4,11 +4,12 @@ import * as Collapsible from '@radix-ui/react-collapsible';
 import { ChevronRightIcon } from 'lucide-react';
 import { useCallback, useContext } from 'react';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { observer } from 'mobx-react-lite';
 
 type OutlinerItemProps = {
   body: KeplerBody;
 };
-const OutlinerItem = ({ body }: OutlinerItemProps) => {
+const OutlinerItem = observer(({ body }: OutlinerItemProps) => {
   const { uiState } = useContext(RootStoreContext);
 
   const handleClick = useCallback(() => {
@@ -20,7 +21,7 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
       <span className="m-0 h-fit w-full p-0">
         <span className="m-0 inline-flex h-fit w-full items-center justify-start p-0">
           {/** Trigger to toggle collapsible content open/closed. */}
-          <Collapsible.Trigger className="m-0 flex aspect-square h-full min-h-fit flex-col items-start justify-center overflow-hidden whitespace-nowrap rounded-full p-0 transition-all hover:bg-subtle  data-[state=open]:rotate-90">
+          <Collapsible.Trigger className="m-0 flex aspect-square h-full min-h-fit flex-col items-start justify-center overflow-hidden whitespace-nowrap rounded-full p-0 transition-all hover:bg-subtle data-[state=open]:rotate-90">
             <span className="icon-[mdi--chevron-right]" />
           </Collapsible.Trigger>
 
@@ -52,6 +53,6 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
       </span>
     </Collapsible.Root>
   );
-};
+});
 
 export { OutlinerItem };

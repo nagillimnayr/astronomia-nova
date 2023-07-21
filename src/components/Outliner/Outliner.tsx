@@ -2,8 +2,9 @@ import { OutlinerItem } from './OutlinerItem';
 
 import { LoadingFallback } from '../LoadingFallback';
 import { useSimStore } from '@/simulation/state/zustand/sim-store';
+import { observer } from 'mobx-react-lite';
 
-const Outliner = () => {
+const Outliner = observer(() => {
   const rootRef = useSimStore((state) => state.rootRef);
 
   if (!rootRef || !rootRef.current) {
@@ -14,6 +15,6 @@ const Outliner = () => {
       <OutlinerItem body={rootRef.current} />
     </div>
   );
-};
+});
 
 export default Outliner;
