@@ -75,4 +75,8 @@ export class UiState {
     this._isOutlinerOpen = initialState.isOutlinerOpen;
     this._isDebugPanelOpen = initialState.isDebugPanelOpen;
   }
+
+  toJSON() {
+    return toJS(this);
+  }
 }
