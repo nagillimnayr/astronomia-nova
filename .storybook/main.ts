@@ -8,7 +8,11 @@ const config: StorybookConfig = {
     '@storybook/addon-interactions',
     {
       name: '@storybook/addon-styling',
-      options: {},
+      options: {
+        postCss: {
+          implementation: require.resolve('postcss'),
+        },
+      },
     },
   ],
   framework: {
