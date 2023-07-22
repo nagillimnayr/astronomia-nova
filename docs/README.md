@@ -1,6 +1,6 @@
 # Astronomia Nova
 
-![astronomia-nova](https://github.com/nagillimnayr/astronomia-nova/assets/118490362/9d9f6a3a-fb3d-4e96-842d-fe330b15f13f)
+![astronomia-nova](https://github.com/nagillimnayr/astronomia-nova/assets/118490362/0e5dd902-e7fc-4b11-a5dd-d9c5f13415d5)
 
 Astronomia Nova is a VR Solar System simulation created for the Douglas College Physics and Astronomy Department to be used as an educational tool. The web application allows users to view the positions of planets in the sky from the perspective of the surface of any planet in the Solar System. Its main purpose is to visualize the apparent retrograde motion of planets from the perspective of planets other than the Earth.
 
