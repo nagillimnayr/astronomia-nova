@@ -32,9 +32,7 @@ const SurfaceViewButton = ({ children, className }: Props) => {
             </AlertDialog.Cancel>
             {/** Confirm button. */}
             <AlertDialog.Action asChild>
-              <button className="col-span-1 col-end-[-2] w-16 border-2 border-white">
-                Confirm
-              </button>
+              <button className="col-span-1 col-end-[-2] w-16 ">Confirm</button>
             </AlertDialog.Action>
           </AlertDialog.Content>
         </AlertDialog.Overlay>

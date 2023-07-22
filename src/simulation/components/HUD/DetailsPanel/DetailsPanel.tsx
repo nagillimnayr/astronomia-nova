@@ -4,7 +4,7 @@ import { Separator } from '@/components/gui/Separator';
 import { useCameraStore } from '@/simulation/state/zustand/camera-store';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
-import { SurfaceViewButton } from './SurfaceViewButton';
+import { SurfaceViewButton } from './surface-view-dialog/SurfaceViewButton';
 
 const DetailsPanel = observer(() => {
   const { uiState, cameraState } = useContext(RootStoreContext);
