@@ -12,7 +12,7 @@ const SurfaceViewButton = ({ children, className }: Props) => {
       {/** Button to trigger dialog box popup. */}
       <AlertDialog.Trigger asChild>
         {/** Surface view button. */}
-        <button className={cn('pointer-events-auto', className)}>
+        <button className={cn('pointer-events-auto font-sans', className)}>
           Surface&nbsp;
           <span className="icon-[mdi--telescope]" />
         </button>

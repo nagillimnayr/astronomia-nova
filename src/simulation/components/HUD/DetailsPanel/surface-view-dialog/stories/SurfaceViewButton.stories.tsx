@@ -9,5 +9,11 @@ export default meta;
 type Story = StoryObj<typeof SurfaceViewButton>;
 
 export const Primary: Story = {
-  render: () => <SurfaceViewButton />,
+  render: () => {
+    return (
+      <div className="font-sans">
+        <SurfaceViewButton />
+      </div>
+    );
+  },
 };
