@@ -6,6 +6,7 @@ import { makeLoggable } from 'mobx-log';
 const initialState = {
   isOutlinerOpen: true,
   isDebugPanelOpen: false,
+  screenPortal: null,
   selected: null,
 };
 
@@ -13,6 +14,8 @@ export class UiState {
   private _rootStore: RootStore = null!;
   private _isOutlinerOpen: boolean = initialState.isOutlinerOpen;
   private _isDebugPanelOpen: boolean = initialState.isDebugPanelOpen;
+  private _screenPortal: HTMLElement | null | undefined =
+    initialState.screenPortal;
 
   private _selected: KeplerBody | null = null; // Will be null if no object is selected.
 
@@ -37,6 +40,13 @@ export class UiState {
 
   get selected() {
     return this._selected;
+  }
+  get screenPortal() {
+    return this._screenPortal;
+  }
+
+  setScreenPortal(portal: HTMLElement | null | undefined) {
+    this._screenPortal = portal;
   }
 
   openOutliner() {
