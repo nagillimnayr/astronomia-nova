@@ -1,7 +1,5 @@
-import KeplerBody from '@/simulation/classes/KeplerBody';
-import { MutableRefObject, useCallback, useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { Separator } from '@/components/gui/Separator';
-import { useCameraStore } from '@/simulation/state/zustand/camera-store';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
 import { SurfaceViewButton } from './surface-view-dialog/SurfaceViewButton';
@@ -18,10 +16,6 @@ const DetailsPanel = observer(() => {
     // Focus camera on selection. We can be certain that its not null because the button won't be clickable if the selection is null.
     cameraState.setFocus(uiState.getSelected()!);
   }, [cameraState, uiState]);
-
-  const handleSurfaceClick = useCallback(() => {
-    // Todo
-  }, []);
 
   if (!uiState.selected) return null; // If nothing is selected, display nothing.
   return (
