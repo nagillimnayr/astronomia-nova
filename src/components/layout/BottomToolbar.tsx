@@ -1,5 +1,5 @@
 import { cn } from '@/lib/cn';
-import { Toolbar } from '@/simulation/components/HUD/Toolbar/Toolbar';
+import { ToggleBar } from '@/simulation/components/HUD/Toolbar/ToggleBar';
 
 const BottomToolbar = () => {
   return (
@@ -9,7 +9,7 @@ const BottomToolbar = () => {
       )}
     >
       <div className="col-span-1 col-end-[-2] flex h-full w-full items-center justify-center">
-        <Toolbar />
+        <ToggleBar />
       </div>
     </div>
   );
