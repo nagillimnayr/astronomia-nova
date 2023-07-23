@@ -12,7 +12,12 @@ const SurfaceViewButton = ({ children, className }: Props) => {
       {/** Button to trigger dialog box popup. */}
       <AlertDialog.Trigger asChild>
         {/** Surface view button. */}
-        <button className={cn('pointer-events-auto font-sans', className)}>
+        <button
+          className={cn(
+            'pointer-events-auto flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 font-sans hover:bg-subtle hover:text-subtle-foreground',
+            className
+          )}
+        >
           Surface&nbsp;
           <span className="icon-[mdi--telescope]" />
         </button>
@@ -21,7 +26,7 @@ const SurfaceViewButton = ({ children, className }: Props) => {
       {/** Portal to display the dialog popup outside of the parent component. */}
       <AlertDialog.Portal>
         <AlertDialog.Overlay className="fixed left-1/2 top-1/2 grid h-60 w-96 max-w-[50vw] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-card">
-          <AlertDialog.Title></AlertDialog.Title>
+          <AlertDialog.Title>Surface</AlertDialog.Title>
           <AlertDialog.Description></AlertDialog.Description>
           <AlertDialog.Content className="grid grid-cols-5">
             {/** Cancel button. */}
