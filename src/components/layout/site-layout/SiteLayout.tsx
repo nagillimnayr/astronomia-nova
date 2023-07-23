@@ -5,6 +5,8 @@ import SiteHeader from './SiteHeader';
 import SiteFooter from './SiteFooter';
 import { Sidebar } from '@/components/layout/sidebar/Sidebar';
 import { BottomToolbar } from '../BottomToolbar';
+import { useContext } from 'react';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 const fontVariables = [atomicAge.variable, orbitron.variable, roboto.variable];
 
@@ -12,8 +14,12 @@ type SiteLayoutProps = {
   children: React.ReactNode;
 };
 const SiteLayout = ({ children }: SiteLayoutProps) => {
+  const { uiState } = useContext(RootStoreContext);
   return (
     <div
+      ref={(div) => {
+        uiState.setScreenPortal(div);
+      }}
       className={cn(
         ...fontVariables,
         `relative left-0 top-0 m-0 h-full max-h-full min-h-screen w-screen bg-background p-0 font-sans text-foreground`,
