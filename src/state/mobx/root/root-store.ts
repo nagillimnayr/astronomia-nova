@@ -1,4 +1,4 @@
-import { CameraState } from '../domain-state/camera-store';
+import { CameraState } from '../domain-state/camera-state';
 import { UiState } from '../ui-state/ui-state';
 
 export class RootStore {
