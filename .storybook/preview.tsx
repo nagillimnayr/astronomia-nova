@@ -5,6 +5,8 @@ import * as fonts from '../src/lib/fonts';
 
 import '../src/styles/globals.css';
 import { cn } from '../src/lib/cn';
+import { Storybook } from './storybook';
+import Providers from '@/components/layout/site-layout/providers/providers';
 
 const fontVariables = [
   fonts.atomicAge.variable,
@@ -35,9 +37,11 @@ const preview: Preview = {
     }),
     (Story) => {
       return (
-        <div className={cn(...fontVariables)}>
-          <Story />
-        </div>
+        <Providers>
+          <Storybook>
+            <Story />
+          </Storybook>
+        </Providers>
       );
     },
   ],
