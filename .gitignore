@@ -40,3 +40,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# XState typegen generated files
+*.typegen.ts
