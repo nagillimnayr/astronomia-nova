@@ -150,13 +150,13 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         name={name ?? ''}
         args={[mass, initialPosition, initialVelocity]}
       >
-        {/* child orbits need to know the mass of their central body */}
+        {/* Child orbits need to know the mass of their central body. */}
         <CentralMassContext.Provider value={mass}>
           {props.children}
         </CentralMassContext.Provider>
       </keplerBody>
 
-      {/** putting BodyMesh outside of KeplerBody and updating its position manually does however */}
+      {/** Putting BodyMesh outside of KeplerBody and updating its position manually seems to work. */}
       <BodyMesh
         name={name}
         meanRadius={meanRadius}

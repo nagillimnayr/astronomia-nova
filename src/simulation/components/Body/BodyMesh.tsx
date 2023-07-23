@@ -101,7 +101,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         onPointerOver={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
       >
-        <meshBasicMaterial map={props.texture} />
+        <meshBasicMaterial map={props.texture} color={'#999999'} />
 
         {/* <Annotation annotation={props.name} /> */}
         {/* <object3D position={[0, -props.meanRadius, 0]}>
