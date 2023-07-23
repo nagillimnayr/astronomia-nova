@@ -38,8 +38,7 @@
     "**/*.mdx",
     "next.config.mjs",
     ".next/types/**/*.ts",
-    "tailwind.config.ts.bkup",
-    "src/simulation/components/HUD/DetailsPanel"
+    ".storybook/**/*"
   ],
   "exclude": ["node_modules"],
   "ts-node": {

@@ -1,9 +1,16 @@
 import type { Preview } from '@storybook/react';
-
 import { withThemeByClassName } from '@storybook/addon-styling';
+import * as React from 'react';
+import * as fonts from '../src/lib/fonts';
 
-/* TODO: update import to your tailwind styles file. If you're using Angular, inject this through your angular.json config instead */
 import '../src/styles/globals.css';
+import { cn } from '../src/lib/cn';
+
+const fontVariables = [
+  fonts.atomicAge.variable,
+  fonts.orbitron.variable,
+  fonts.roboto.variable,
+];
 
 const preview: Preview = {
   parameters: {
@@ -26,6 +33,13 @@ const preview: Preview = {
       },
       defaultTheme: 'light',
     }),
+    (Story) => {
+      return (
+        <div className={cn(...fontVariables)}>
+          <Story />
+        </div>
+      );
+    },
   ],
 };
 
