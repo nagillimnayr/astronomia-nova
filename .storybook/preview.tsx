@@ -8,12 +8,6 @@ import { cn } from '../src/lib/cn';
 import { Storybook } from './storybook';
 import Providers from '@/components/layout/site-layout/providers/providers';
 
-const fontVariables = [
-  fonts.atomicAge.variable,
-  fonts.orbitron.variable,
-  fonts.roboto.variable,
-];
-
 const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
