@@ -52,44 +52,43 @@ const SolarSystem = () => {
     if (!body) {
       return;
     }
-    // keplerTreeState.setRoot(body);
   };
 
   return (
     <KeplerTreeContext.Provider value={assignAsRoot}>
       <CelestialSphere>
-        <Selection>
-          <EffectComposer autoClear={false} multisampling={8}>
+        {/* <Selection> */}
+        {/* <EffectComposer autoClear={false} multisampling={8}>
             <Outline
               blur
               edgeStrength={100}
               visibleEdgeColor={0xffffff}
               width={1000}
             />
-          </EffectComposer>
+          </EffectComposer> */}
 
-          <Body
-            ref={rootRef}
-            params={{
-              name: 'Sun',
-              mass: SOLAR_MASS,
-              color: 0xfdee00,
-              meanRadius: 1.5,
-              initialPosition: [0, 0, 0],
-              initialVelocity: [0, 0, 0],
-            }}
-            texture={sunTexture}
-          >
-            <Orbit name={'Mercury'} texture={mercuryTexture}></Orbit>
-            <Orbit name={'Venus'} texture={venusTexture}></Orbit>
-            <Orbit name={'Earth'} texture={earthTexture}></Orbit>
-            <Orbit name={'Mars'} texture={marsTexture}></Orbit>
-            <Orbit name={'Jupiter'} texture={jupiterTexture}></Orbit>
-            <Orbit name={'Saturn'} texture={saturnTexture}></Orbit>
-            <Orbit name={'Uranus'} texture={uranusTexture}></Orbit>
-            <Orbit name={'Neptune'} texture={neptuneTexture}></Orbit>
-          </Body>
-        </Selection>
+        <Body
+          ref={rootRef}
+          params={{
+            name: 'Sun',
+            mass: SOLAR_MASS,
+            color: 0xfdee00,
+            meanRadius: 1.5,
+            initialPosition: [0, 0, 0],
+            initialVelocity: [0, 0, 0],
+          }}
+          texture={sunTexture}
+        >
+          <Orbit name={'Mercury'} texture={mercuryTexture}></Orbit>
+          <Orbit name={'Venus'} texture={venusTexture}></Orbit>
+          <Orbit name={'Earth'} texture={earthTexture}></Orbit>
+          <Orbit name={'Mars'} texture={marsTexture}></Orbit>
+          <Orbit name={'Jupiter'} texture={jupiterTexture}></Orbit>
+          <Orbit name={'Saturn'} texture={saturnTexture}></Orbit>
+          <Orbit name={'Uranus'} texture={uranusTexture}></Orbit>
+          <Orbit name={'Neptune'} texture={neptuneTexture}></Orbit>
+        </Body>
+        {/* </Selection> */}
       </CelestialSphere>
     </KeplerTreeContext.Provider>
   );
