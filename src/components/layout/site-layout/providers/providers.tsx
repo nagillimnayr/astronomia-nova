@@ -8,6 +8,7 @@ import {
   QueryClientProvider,
   useQuery,
 } from '@tanstack/react-query';
+import { MachineProviders } from '@/state/xstate/MachineProviders';
 
 const components = {};
 
@@ -18,9 +19,11 @@ const Providers = ({ children }: PropsWithChildren) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <RootStoreProvider>
-        <QueryClientProvider client={queryClient}>
-          <MDXProvider components={components}>{children}</MDXProvider>
-        </QueryClientProvider>
+        <MachineProviders>
+          <QueryClientProvider client={queryClient}>
+            <MDXProvider components={components}>{children}</MDXProvider>
+          </QueryClientProvider>
+        </MachineProviders>
       </RootStoreProvider>
     </ThemeProvider>
   );
