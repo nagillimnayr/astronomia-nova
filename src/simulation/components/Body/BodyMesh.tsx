@@ -19,8 +19,6 @@ import {
 import { useSnapshot } from 'valtio';
 import type KeplerBody from '@/simulation/classes/KeplerBody';
 import { debugState } from '@/simulation/state/DebugState';
-import { useCameraStore } from '@/simulation/state/zustand/camera-store';
-import { useSelectionStore } from '@/simulation/state/zustand/selection-store';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import Annotation from '../Annotation';
 import { BillboardCircle } from '../BillboardCircle';
@@ -87,37 +85,34 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 
   return (
     <>
-      <Select enabled={isSelected}>
-        <Sphere
-          rotation={[degToRad(90), 0, 0]}
-          visible={isVisible}
-          ref={(meshObj) => {
-            if (!meshObj) return;
-            meshRef.current = meshObj;
-            //setMesh(meshObj);
-          }}
-          args={[props.meanRadius]}
-          onClick={handleClick}
-          onPointerMissed={handleMiss}
-          onPointerOver={() => setHovered(true)}
-          onPointerLeave={() => setHovered(false)}
-        >
-          <meshBasicMaterial
-            map={props.texture}
-            // color={!props.texture ? props.color : undefined}
-          />
+      {/* <Select enabled={isSelected}> */}
+      <Sphere
+        rotation={[degToRad(90), 0, 0]}
+        visible={isVisible}
+        ref={(meshObj) => {
+          if (!meshObj) return;
+          meshRef.current = meshObj;
+          //setMesh(meshObj);
+        }}
+        args={[props.meanRadius]}
+        onClick={handleClick}
+        onPointerMissed={handleMiss}
+        onPointerOver={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
+      >
+        <meshBasicMaterial map={props.texture} />
 
-          {/* <Annotation annotation={props.name} /> */}
-          {/* <object3D position={[0, -props.meanRadius, 0]}>
+        {/* <Annotation annotation={props.name} /> */}
+        {/* <object3D position={[0, -props.meanRadius, 0]}>
             <Annotation annotation={props.name} />
           </object3D> */}
-          <BillboardCircle bodyRef={props.bodyRef} />
+        <BillboardCircle bodyRef={props.bodyRef} />
 
-          <object3D position={[0, -props.meanRadius, 0]}>
-            <Annotation annotation={props.name} />
-          </object3D>
-        </Sphere>
-      </Select>
+        <object3D position={[0, -props.meanRadius, 0]}>
+          <Annotation annotation={props.name} />
+        </object3D>
+      </Sphere>
+      {/* </Select> */}
     </>
   );
 });
