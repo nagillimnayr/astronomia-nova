@@ -9,31 +9,30 @@ import { observer } from 'mobx-react-lite';
 type Props = {
   children?: React.ReactNode;
   className?: ClassNameValue;
+  defaultOpen?: boolean;
 };
-const SurfaceViewButton = observer(({ children, className }: Props) => {
-  const { uiState } = useContext(RootStoreContext);
-  return (
-    <AlertDialog.Root>
-      {/** Button to trigger dialog box popup. */}
-      <AlertDialog.Trigger asChild>
-        {/** Surface view button. */}
-        <button
-          className={cn(
-            'pointer-events-auto flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 font-sans hover:bg-subtle hover:text-subtle-foreground',
-            className
-          )}
-        >
-          Surface&nbsp;
-          <span className="icon-[mdi--telescope]" />
-        </button>
-      </AlertDialog.Trigger>
+const SurfaceViewButton = observer(
+  ({ children, className, defaultOpen }: Props) => {
+    return (
+      <AlertDialog.Root defaultOpen={defaultOpen ?? false}>
+        {/** Button to trigger dialog box popup. */}
+        <AlertDialog.Trigger asChild>
+          {/** Surface view button. */}
+          <button
+            className={cn(
+              'pointer-events-auto flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 font-sans hover:bg-subtle hover:text-subtle-foreground',
+              className
+            )}
+          >
+            Surface&nbsp;
+            <span className="icon-[mdi--telescope]" />
+          </button>
+        </AlertDialog.Trigger>
 
-      {/** Portal to display the dialog popup outside of the parent component. */}
-      <AlertDialog.Portal container={uiState.screenPortal}>
         <SurfaceViewDialog />
-      </AlertDialog.Portal>
-    </AlertDialog.Root>
-  );
-});
+      </AlertDialog.Root>
+    );
+  }
+);
 
 export { SurfaceViewButton };
