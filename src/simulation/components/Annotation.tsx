@@ -1,24 +1,30 @@
-import { Html, BBAnchor } from '@react-three/drei';
-import { useSnapshot } from 'valtio';
-import { debugState } from '../state/DebugState';
-import { DoubleSide } from 'three';
+import { cn } from '@/lib/cn';
+import { AnnotationVisContext } from '@/state/xstate/toggle-machine/ToggleMachineProviders';
+import { Html } from '@react-three/drei';
+import { useActor } from '@xstate/react';
+import { useContext } from 'react';
 
 type AnnotationProps = {
   annotation: string;
 };
 const Annotation = (props: AnnotationProps) => {
-  const debugSnap = useSnapshot(debugState);
+  // Check if annotation visibility is on.
+  const [state] = useActor(useContext(AnnotationVisContext));
+  const isVisible = state.matches('active');
 
-  return debugSnap.annotations ? (
+  return (
     <>
       <Html center className="pointer-events-none min-h-fit min-w-fit">
-        <div className="flex min-h-fit min-w-fit translate-y-1/2 select-none flex-row  rounded-lg px-2 text-white">
+        <div
+          className={cn(
+            'flex min-h-fit min-w-fit translate-y-1/2 select-none flex-row rounded-lg px-2 text-white transition-all',
+            isVisible ? 'text-white' : 'text-transparent'
+          )}
+        >
           {props.annotation}
         </div>
       </Html>
     </>
-  ) : (
-    <></>
   );
 };
 
