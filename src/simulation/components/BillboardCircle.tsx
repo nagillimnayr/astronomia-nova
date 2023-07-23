@@ -10,6 +10,9 @@ import {
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Vector3 } from 'three';
+import { MarkerVisContext } from '@/state/xstate/toggle-machine/ToggleMachineProviders';
+import { useActor } from '@xstate/react';
+import { cn } from '@/lib/cn';
 
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
@@ -22,8 +25,11 @@ type Props = {
 export function BillboardCircle({ bodyRef }: Props) {
   const { uiState } = useContext(RootStoreContext);
 
+  // Check if marker visibility is on.
+  const [state] = useActor(useContext(MarkerVisContext));
+  const isVisible = state.matches('active');
+
   const ref = useRef<HTMLDivElement>(null!);
-  // const getThree = useThree((state) => state.get);
 
   const handleClick = useCallback<MouseEventHandler<HTMLDivElement>>(
     (e) => {
@@ -57,12 +63,15 @@ export function BillboardCircle({ bodyRef }: Props) {
   });
 
   return (
-    <object3D>
+    <object3D visible={isVisible}>
       <Html occlude="blending" center className="h-fit w-fit bg-transparent">
         <div
           ref={ref}
           onClick={handleClick}
-          className="aspect-square w-[30px] origin-center cursor-pointer rounded-full border-[3px] border-white bg-transparent transition-all hover:scale-150 "
+          className={cn(
+            'aspect-square w-[30px] origin-center cursor-pointer rounded-full border-[3px] border-white bg-transparent transition-all hover:scale-150 ',
+            isVisible ? 'border-white' : 'border-transparent'
+          )}
         />
       </Html>
     </object3D>
