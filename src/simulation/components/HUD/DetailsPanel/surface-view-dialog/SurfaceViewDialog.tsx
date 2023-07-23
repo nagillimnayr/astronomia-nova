@@ -10,18 +10,19 @@ const SurfaceViewDialog = observer(() => {
 
   return (
     <AlertDialog.Portal container={uiState.screenPortal}>
-      <AlertDialog.Overlay className="prose fixed left-1/2 top-1/2 flex h-60 w-96 max-w-[50vw] -translate-x-1/2 -translate-y-1/2 flex-col items-center rounded-lg bg-card p-4 font-sans prose-headings:m-0">
-        <AlertDialog.Title className="text-center text-3xl">
+      <AlertDialog.Overlay className="nv-0 prose fixed left-1/2 top-1/2 flex h-48 w-96 max-w-[50vw] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-start overflow-hidden rounded-lg bg-card p-3 font-sans prose-headings:m-0">
+        <AlertDialog.Title className="m-0 text-center text-3xl">
           Surface View
         </AlertDialog.Title>
-        <AlertDialog.Description></AlertDialog.Description>
+        <AlertDialog.Description className="my-1"></AlertDialog.Description>
 
-        <AlertDialog.Content className=" flex h-full w-full flex-col items-center justify-center gap-2 font-sans">
-          <div className="pointer-events-auto my-auto flex min-h-fit min-w-fit flex-row items-center justify-center gap-6 border border-black p-2">
-            {/** Inputs for latitude and longitude. */}
-            <Label>
+        <AlertDialog.Content className=" mt-0 grid h-full w-full grid-cols-[1fr_2fr_2fr_1fr] grid-rows-2 place-items-stretch gap-x-6 gap-y-4 font-sans">
+          {/** Inputs for latitude and longitude. */}
+          <div className="col-span-1 col-start-2 row-span-1 row-start-1">
+            <Label className="mb-2">
               Latitude
               <Input
+                className="w-full"
                 type="number"
                 value={surfaceState.latitude}
                 min={0}
@@ -33,10 +34,12 @@ const SurfaceViewDialog = observer(() => {
                 }}
               />
             </Label>
-            <Label>
+          </div>
+          <div className="col-span-1 col-start-3 row-span-1 row-start-1">
+            <Label className="mb-2">
               Longitude
               <Input
-                className="select-user pointer-events-auto"
+                className="w-full"
                 type="number"
                 value={surfaceState.longitude}
                 min={0}
@@ -49,20 +52,25 @@ const SurfaceViewDialog = observer(() => {
               />
             </Label>
           </div>
-          <div className="mt-auto flex w-full flex-row items-center justify-center gap-8">
-            {/** Cancel button. */}
-            <AlertDialog.Cancel asChild>
-              <button className="col-span-1 col-start-2 h-fit w-16 min-w-fit  place-items-center rounded-md border border-muted px-2 py-1 text-xl hover:bg-muted ">
-                Cancel
-              </button>
-            </AlertDialog.Cancel>
-            {/** Confirm button. */}
-            <AlertDialog.Action asChild>
-              <button className="col-span-1 col-end-[-2] h-fit  w-16 min-w-fit place-items-center rounded-md  border border-muted  px-2 py-1 text-xl hover:bg-muted">
-                Confirm
-              </button>
-            </AlertDialog.Action>
-          </div>
+
+          {/** Cancel button. */}
+          <AlertDialog.Cancel
+            asChild
+            className="col-span-1 col-start-2 row-span-1 row-start-2"
+          >
+            <button className="col-span-1 col-start-2 h-fit w-full min-w-fit  place-items-center rounded-md border border-muted px-2 py-1 text-xl hover:bg-muted ">
+              Cancel
+            </button>
+          </AlertDialog.Cancel>
+          {/** Confirm button. */}
+          <AlertDialog.Action
+            asChild
+            className="col-span-1 col-start-3 row-span-1 row-start-2"
+          >
+            <button className="col-span-1 col-end-[-2] h-fit  w-full min-w-fit place-items-center rounded-md  border border-muted  px-2 py-1 text-xl hover:bg-muted">
+              Confirm
+            </button>
+          </AlertDialog.Action>
         </AlertDialog.Content>
       </AlertDialog.Overlay>
     </AlertDialog.Portal>
