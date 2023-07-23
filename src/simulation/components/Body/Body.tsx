@@ -150,32 +150,6 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         name={name ?? ''}
         args={[mass, initialPosition, initialVelocity]}
       >
-        {/** for some reason, wrapping the Annotation in an object3D stops it from stuttering */}
-        <object3D>
-          {/* <Annotation annotation={name} /> */}
-          {/* <BillboardCircle bodyRef={bodyRef} /> */}
-        </object3D>
-        {/* <Annotation annotation={name} /> */}
-
-        {/** for whatever reason, the same does not work for BodyMesh */}
-        {/* <object3D>
-          <BodyMesh
-            name={name}
-            meanRadius={meanRadius}
-            color={color}
-            texture={props.texture}
-            bodyRef={bodyRef}
-          />
-        </object3D> */}
-
-        {/* <BodyMesh
-          name={name}
-          meanRadius={meanRadius}
-          color={color}
-          texture={props.texture}
-          bodyRef={bodyRef}
-        /> */}
-
         {/* child orbits need to know the mass of their central body */}
         <CentralMassContext.Provider value={mass}>
           {props.children}

@@ -12,6 +12,7 @@ import {
 } from 'react';
 import {
   BoxHelper,
+  SRGBColorSpace,
   type ColorRepresentation,
   type Mesh,
   type Texture,
