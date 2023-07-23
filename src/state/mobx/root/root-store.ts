@@ -19,4 +19,7 @@ export class RootStore {
   get cameraState() {
     return this._cameraState;
   }
+  get surfaceState() {
+    return this._surfaceState;
+  }
 }

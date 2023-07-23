@@ -2,12 +2,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
+import { observer } from 'mobx-react-lite';
 import { useContext, useState } from 'react';
 
-const SurfaceViewDialog = () => {
-  const { uiState } = useContext(RootStoreContext);
-  const [longitude, setLongitude] = useState<number>(0);
-  const [latitude, setLatitude] = useState<number>(0);
+const SurfaceViewDialog = observer(() => {
+  const { uiState, surfaceState } = useContext(RootStoreContext);
+
   return (
     <AlertDialog.Portal container={uiState.screenPortal}>
       <AlertDialog.Overlay className="prose fixed left-1/2 top-1/2 flex h-60 w-96 max-w-[50vw] -translate-x-1/2 -translate-y-1/2 flex-col items-center rounded-lg bg-card p-4 font-sans prose-headings:m-0">
@@ -23,13 +23,12 @@ const SurfaceViewDialog = () => {
               Latitude
               <Input
                 type="number"
-                defaultValue={latitude}
+                value={surfaceState.latitude}
                 min={0}
                 max={360}
-                step={0.1}
                 onChange={(event) => {
                   const value = parseFloat(event.target.value);
-                  setLatitude(value);
+                  surfaceState.setLatitude(value);
                   console.log(value);
                 }}
               />
@@ -39,13 +38,12 @@ const SurfaceViewDialog = () => {
               <Input
                 className="select-user pointer-events-auto"
                 type="number"
-                value={longitude}
+                value={surfaceState.longitude}
                 min={0}
                 max={360}
-                step={0.1}
                 onChange={(event) => {
                   const value = parseFloat(event.target.value);
-                  setLongitude(value);
+                  surfaceState.setLongitude(value);
                   console.log(value);
                 }}
               />
@@ -69,6 +67,6 @@ const SurfaceViewDialog = () => {
       </AlertDialog.Overlay>
     </AlertDialog.Portal>
   );
-};
+});
 
 export { SurfaceViewDialog };
