@@ -17,7 +17,7 @@ export const CoordinateSphere = observer(({ radius, bodyRef }: Props) => {
     return new Spherical(
       radius,
       degToRad(90 - surfaceState.latitude),
-      degToRad(90 - surfaceState.longitude)
+      degToRad(90 + surfaceState.longitude)
     );
   }, [radius, surfaceState.latitude, surfaceState.longitude]);
 
