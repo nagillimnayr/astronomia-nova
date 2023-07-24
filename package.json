@@ -65,6 +65,7 @@
     "@types/mdx": "^2.0.5",
     "@udecode/zustood": "^2.0.0",
     "@use-gesture/react": "^10.2.27",
+    "@xstate/cli": "^0.5.2",
     "@xstate/inspect": "^0.8.0",
     "@xstate/react": "^3.2.2",
     "class-variance-authority": "^0.6.1",
