@@ -15,10 +15,10 @@ const mainLinks = [
 ];
 
 const systemLinks = [
-  { href: '/systems/solar-system', label: 'Solar System' },
-  { href: '/systems/earth-mars', label: 'Stellae Martis' },
-  { href: '/systems/earth', label: 'Earth' },
-  { href: '/systems/mars', label: 'Mars' },
+  { href: '/', label: 'Solar System' },
+  // { href: '/systems/earth-mars', label: 'Stellae Martis' },
+  // { href: '/systems/earth', label: 'Earth' },
+  // { href: '/systems/mars', label: 'Mars' },
 ];
 
 const btnStyle = `rounded-md border-0 py-2 px-4 font-sans h-full`;
@@ -40,9 +40,12 @@ const NavBar = ({ className }: Props) => {
           </NavMenuLink>
         );
       })}
-      <NavDropdown links={systemLinks} className={btnStyle}>
-        <div className="inline-flex gap-3">Systems</div>
-      </NavDropdown>
+
+      <div>
+        <NavDropdown links={systemLinks} className={btnStyle}>
+          <span className="inline-flex gap-3">Systems</span>
+        </NavDropdown>
+      </div>
     </nav>
   );
 };

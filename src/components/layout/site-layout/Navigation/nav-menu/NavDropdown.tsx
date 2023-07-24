@@ -1,23 +1,36 @@
 import { Menu } from '@headlessui/react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { Fragment } from 'react';
+import {
+  Fragment,
+  MutableRefObject,
+  PropsWithChildren,
+  useContext,
+  useRef,
+} from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
-import { ChevronDownIcon } from 'lucide-react';
-import type { CommonProps } from '@/components/props/Props';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { ClassNameValue } from 'tailwind-merge';
 
 type link = {
   href: string;
   label: string;
 };
 
-type NavDropdownProps = CommonProps & {
+type Props = PropsWithChildren & {
   links: link[];
+  className?: ClassNameValue;
 };
-const NavDropdownMenu = ({ children, className, links }: NavDropdownProps) => {
+const NavDropdownMenu = ({ children, className, links }: Props) => {
+  const containerRef = useRef<HTMLElement | null>(null);
   return (
     <Dropdown.Root>
       <Dropdown.Trigger
+        ref={(button) => {
+          if (!button) return;
+          const parent = button.parentElement;
+          containerRef.current = parent;
+        }}
         asChild
         className="pointer-events-auto h-fit w-full hover:bg-subtle "
       >
@@ -38,7 +51,7 @@ const NavDropdownMenu = ({ children, className, links }: NavDropdownProps) => {
         </button>
       </Dropdown.Trigger>
 
-      <Dropdown.Portal>
+      <Dropdown.Portal container={containerRef.current}>
         <Dropdown.Content
           loop
           className={
@@ -57,7 +70,7 @@ const NavDropdownMenu = ({ children, className, links }: NavDropdownProps) => {
                     'w-full min-w-full rounded-md bg-transparent px-2 py-1 font-sans hover:bg-subtle hover:text-subtle-foreground'
                   }
                 >
-                  {label}
+                  <span className="font-sans">{label}</span>
                 </Link>
               </Dropdown.Item>
             );
