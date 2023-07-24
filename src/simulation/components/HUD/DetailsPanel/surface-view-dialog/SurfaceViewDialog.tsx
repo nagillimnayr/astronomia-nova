@@ -10,7 +10,7 @@ const SurfaceViewDialog = observer(() => {
 
   return (
     <AlertDialog.Portal container={uiState.screenPortal}>
-      <AlertDialog.Overlay className="prose fixed left-1/2 top-1/2 flex h-48 w-96 max-w-[50vw] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-start overflow-hidden rounded-lg bg-card px-14 py-3 font-sans prose-headings:m-0">
+      <AlertDialog.Overlay className="prose fixed left-1/2 top-1/2 flex h-48 w-96 max-w-[50vw] -translate-x-1/2 translate-y-1/2 flex-col items-center justify-start overflow-hidden rounded-lg bg-card px-14 py-3 font-sans prose-headings:m-0">
         <AlertDialog.Title className="m-0 text-center text-3xl ">
           Surface View
         </AlertDialog.Title>
