@@ -48,7 +48,7 @@ export const TimescaleSlider = () => {
         step={1}
         onValueChange={handleChange}
       >
-        <RadixSlider.Track className="relative h-[3px] grow rounded-full bg-gray-500  ">
+        <RadixSlider.Track className="relative h-[3px] grow rounded-full bg-gray-500">
           <RadixSlider.Range className="absolute h-full  rounded-full bg-white" />
         </RadixSlider.Track>
         {/* <TimescaleTooltip show={isHovered}> */}
