@@ -65,11 +65,11 @@ const SiteHeader = ({ className }: Props) => {
           </Link>
         </div>
 
-        <NavBar />
+        <NavBar className="mr-auto" />
 
-        <div className="ml-auto aspect-square h-full">
+        {/* <div className="ml-auto aspect-square h-full">
           <SidebarToggle />
-        </div>
+        </div> */}
 
         {/* visibility toggle */}
         {/* <button

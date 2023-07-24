@@ -2,6 +2,7 @@ import { cn } from '@/lib/cn';
 import NavDropdownMenu from './NavDropdownMenu';
 import NavMenuLink from './NavMenuLink';
 import NavDropdown from './NavDropdown';
+import { ClassNameValue } from 'tailwind-merge';
 
 type link = {
   href: string;
@@ -21,12 +22,16 @@ const systemLinks = [
 ];
 
 const btnStyle = `rounded-md border-0 py-2 px-4 font-sans h-full`;
-const NavBar = () => {
+type Props = {
+  className?: ClassNameValue;
+};
+const NavBar = ({ className }: Props) => {
   return (
     <nav
-      className={
-        'relative ml-auto flex h-fit w-fit flex-row items-center justify-start gap-0 rounded-md border-2 p-1'
-      }
+      className={cn(
+        'relative ml-auto flex h-fit w-fit flex-row items-center justify-start gap-0 rounded-md border-2 p-1',
+        className
+      )}
     >
       {mainLinks.map(({ href, label }) => {
         return (
