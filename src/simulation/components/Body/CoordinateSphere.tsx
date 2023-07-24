@@ -4,6 +4,7 @@ import { Sphere, Wireframe } from '@react-three/drei';
 import { observer } from 'mobx-react-lite';
 import { MutableRefObject, useContext, useMemo, useRef } from 'react';
 import { type Mesh, Spherical } from 'three';
+import { degToRad } from 'three/src/math/MathUtils';
 
 type Props = {
   radius: number;
@@ -13,7 +14,11 @@ export const CoordinateSphere = observer(({ radius, bodyRef }: Props) => {
   const { surfaceState, uiState } = useContext(RootStoreContext);
 
   const sphericalCoords = useMemo(() => {
-    return new Spherical(radius, surfaceState.latitude, surfaceState.longitude);
+    return new Spherical(
+      radius,
+      degToRad(90 - surfaceState.latitude),
+      degToRad(surfaceState.longitude)
+    );
   }, [radius, surfaceState.latitude, surfaceState.longitude]);
 
   const coordRef = useRef<Mesh>(null!);
@@ -28,18 +33,17 @@ export const CoordinateSphere = observer(({ radius, bodyRef }: Props) => {
 
   return (
     <>
-      <Sphere args={[radius]}>
-        <Wireframe />
-        <Sphere
-          args={[radius / 20]}
-          ref={(sphere) => {
-            if (!sphere || sphere === coordRef.current) return;
+      <Sphere
+        args={[radius / 20]}
+        ref={(sphere) => {
+          if (!sphere) return;
+          if (coordRef.current !== sphere) {
             coordRef.current = sphere;
-            sphere.position.setFromSpherical(sphericalCoords);
-          }}
-        >
-          <meshBasicMaterial color={'red'} />
-        </Sphere>
+          }
+          sphere.position.setFromSpherical(sphericalCoords);
+        }}
+      >
+        <meshBasicMaterial color={'red'} />
       </Sphere>
     </>
   );
