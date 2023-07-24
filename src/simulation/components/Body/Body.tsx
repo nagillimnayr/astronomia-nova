@@ -20,13 +20,8 @@ import KeplerBody from '../../classes/KeplerBody';
 
 import { CentralMassContext } from '@/simulation/context/CentralMassContext';
 import { BodyMesh } from './BodyMesh';
-import Annotation from '../Annotation';
-import { BillboardCircle } from '../BillboardCircle';
-import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
+import { DIST_MULT } from '@/simulation/utils/constants';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { CameraControls } from '@react-three/drei';
-import { useTimeStore } from '@/simulation/state/zustand/time-store';
-import { useSimStore } from '@/simulation/state/zustand/sim-store';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
