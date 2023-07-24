@@ -1,7 +1,6 @@
 import type { Preview } from '@storybook/react';
 import { withThemeByClassName } from '@storybook/addon-styling';
 import * as React from 'react';
-import * as fonts from '../src/lib/fonts';
 
 import '../src/styles/globals.css';
 import { cn } from '../src/lib/cn';
