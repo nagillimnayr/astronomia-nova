@@ -1,8 +1,7 @@
 import { Trajectory } from './Trajectory/Trajectory';
 import { useCallback, useContext, useMemo, useRef } from 'react';
-import loadBodyPreset, { PresetKey } from '@/simulation/utils/loadBodyPreset';
-import Body, { BodyParams } from '../Body/Body';
-import KeplerBody from '@/simulation/classes/KeplerBody';
+import Body, { type BodyParams } from '../Body/Body';
+import type KeplerBody from '@/simulation/classes/KeplerBody';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { CentralMassContext } from '@/simulation/context/CentralMassContext';
 import { calculateOrbitFromPeriapsis } from '@/simulation/math/orbit/calculateOrbit';
@@ -12,8 +11,8 @@ import {
   ColorRepresentation,
   Matrix4,
   Mesh,
-  Object3D,
-  Texture,
+  type Object3D,
+  type Texture,
   Vector3,
 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
@@ -34,28 +33,6 @@ import {
   getSemiMinorAxisFromSemiLatusRectum,
 } from '@/simulation/math/orbital-elements/axes/SemiMinorAxis';
 import { getSemiLatusRectumFromEccentricity } from '@/simulation/math/orbital-elements/axes/SemiLatusRectum';
-
-// Data needed by Orbit but not by Body
-type OrbitData = {
-  periapsis: number;
-  maxVelocity: number;
-  eccentricity: number;
-  inclination: number;
-  longitudeOfAscendingNode: number;
-  argumentOfPeriapsis: number;
-  axialTilt: number;
-  trueAnomaly: number;
-};
-
-type BodyData = {
-  name: string;
-  color: ColorRepresentation;
-  mass: number;
-  meanRadius: number;
-};
-
-// intersection type to combine the data needed by Orbit and the data needed by Body
-type PresetData = OrbitData & BodyData;
 
 type OrbitProps = {
   children?: React.ReactNode;
@@ -100,23 +77,6 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     [retrogradeContext]
   );
 
-  // const urlParams = useMemo(() => {
-  //   const urlParams = new URLSearchParams({
-  //     name: name,
-  //   });
-  //   return urlParams;
-  // }, [name]);
-  // const { isLoading, error, data } = useQuery({
-  //   queryKey: [''],
-  //   queryFn: () => {
-  //     return fetch(`/horizons/load-ephemerides?${urlParams.toString()}`)
-  //       .then((res) => res.json())
-  //       .catch((reason) => {
-  //         console.error(reason);
-  //       });
-  //   },
-  // });
-
   const ephemeridesQuery = trpc.loadEphemerides.useQuery({ name: name });
   if (!ephemeridesQuery.data) {
     return;
@@ -137,7 +97,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
 
   const bodyParams: BodyParams = {
     name: name,
-    color: '#ffffff',
+    color: 'white',
     mass: physicalData.mass,
     meanRadius: physicalData.meanRadius / EARTH_RADIUS,
     // Reorder the components so that the the orbit lies in the XZ plane.
@@ -150,17 +110,8 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     elementTable;
 
   return (
-    <object3D
-      ref={(orbit) => {
-        if (!orbit) return;
-        orbitRef.current = orbit;
-        // rotate to orient the orbit
-        // orbit.rotateY(degToRad(elementTable.longitudeOfAscendingNode));
-        // orbit.rotateX(degToRad(elementTable.inclination));
-        // orbit.rotateY(degToRad(elementTable.argumentOfPeriapsis));
-      }}
-    >
-      {/** pass callback function down to orbiting body so that it will add itself to the tree  */}
+    <object3D ref={orbitRef}>
+      {/** Pass callback function down to orbiting body so that it will add itself to the tree.  */}
       <KeplerTreeContext.Provider value={addChildToTree}>
         <Body ref={bodyRef} params={bodyParams} texture={texture}>
           {children}
