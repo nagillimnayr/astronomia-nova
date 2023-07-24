@@ -11,7 +11,10 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs',
     options: {},
   },
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    '../src/**/*.stories.mdx',
+    '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+  ],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
@@ -50,10 +53,7 @@ const config: StorybookConfig = {
         '@': path.resolve(__dirname, '../src'),
       };
     }
-    // config.module?.rules?.push({
-    //   test: '/.ts$/',
-    //   use: 'ts-loader',
-    // });
+
     return config;
   },
 };
