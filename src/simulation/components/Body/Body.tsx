@@ -101,11 +101,11 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     const position = bodyRef.current.position.toArray();
     meshRef.current.position.set(...position);
 
-    if (!velocityArrowRef.current) return;
-    // update direction of velocity arrow
-    const direction = bodyRef.current.velocity.clone().normalize();
-    velocityArrowRef.current.setDirection(direction);
-    velocityArrowRef.current.position.set(...position);
+    // if (!velocityArrowRef.current) return;
+    // // update direction of velocity arrow
+    // const direction = bodyRef.current.velocity.clone().normalize();
+    // velocityArrowRef.current.setDirection(direction);
+    // velocityArrowRef.current.position.set(...position);
 
     // if (
     //   !useTimeStore.getState().isPaused &&
@@ -166,14 +166,14 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         ref={meshRef}
       />
 
-      <arrowHelper
+      {/* <arrowHelper
         ref={(arrow) => {
           if (!arrow) return;
           velocityArrowRef.current = arrow;
           arrow.setColor('green');
           arrow.setLength(1, 0.2, 0.05);
         }}
-      />
+      /> */}
     </>
   );
 });
