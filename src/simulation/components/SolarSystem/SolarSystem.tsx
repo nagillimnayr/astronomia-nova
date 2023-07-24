@@ -21,6 +21,7 @@ const SolarSystem = () => {
     mercuryTexture,
     venusTexture,
     earthTexture,
+    moonTexture,
     marsTexture,
     jupiterTexture,
     saturnTexture,
@@ -31,6 +32,7 @@ const SolarSystem = () => {
     'assets/textures/2k_mercury.jpg',
     'assets/textures/2k_venus_atmosphere.jpg',
     'assets/textures/2k_earth_daymap.jpg',
+    'assets/textures/2k_moon.jpg',
     'assets/textures/2k_mars.jpg',
     'assets/textures/2k_jupiter.jpg',
     'assets/textures/2k_saturn.jpg',
@@ -73,7 +75,7 @@ const SolarSystem = () => {
             name: 'Sun',
             mass: SOLAR_MASS,
             color: 0xfdee00,
-            meanRadius: 1.5,
+            meanRadius: 5,
             initialPosition: [0, 0, 0],
             initialVelocity: [0, 0, 0],
           }}
@@ -81,7 +83,9 @@ const SolarSystem = () => {
         >
           <Orbit name={'Mercury'} texture={mercuryTexture}></Orbit>
           <Orbit name={'Venus'} texture={venusTexture}></Orbit>
-          <Orbit name={'Earth'} texture={earthTexture}></Orbit>
+          <Orbit name={'Earth'} texture={earthTexture}>
+            <Orbit name={'Moon'} texture={moonTexture}></Orbit>
+          </Orbit>
           <Orbit name={'Mars'} texture={marsTexture}></Orbit>
           <Orbit name={'Jupiter'} texture={jupiterTexture}></Orbit>
           <Orbit name={'Saturn'} texture={saturnTexture}></Orbit>
