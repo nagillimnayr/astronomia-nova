@@ -27,10 +27,10 @@ const SurfaceViewDialog = observer(() => {
                 value={surfaceState.longitude}
                 min={0}
                 max={360}
+                step={0.5}
                 onChange={(event) => {
                   const value = parseFloat(event.target.value);
                   surfaceState.setLongitude(value);
-                  console.log(value);
                 }}
               />
             </Label>
@@ -42,12 +42,12 @@ const SurfaceViewDialog = observer(() => {
                 className="w-full"
                 type="number"
                 value={surfaceState.latitude}
-                min={-180}
-                max={180}
+                min={-90}
+                max={90}
+                step={0.5}
                 onChange={(event) => {
                   const value = parseFloat(event.target.value);
                   surfaceState.setLatitude(value);
-                  console.log(value);
                 }}
               />
             </Label>
