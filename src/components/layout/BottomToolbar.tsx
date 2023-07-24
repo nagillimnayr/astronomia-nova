@@ -1,5 +1,5 @@
 import { cn } from '@/lib/cn';
-import { ToggleBar } from '@/simulation/components/HUD/Toolbar/ToggleBar';
+import { ToggleBar } from '@/simulation/components/HUD/ToggleBar/ToggleBar';
 
 const BottomToolbar = () => {
   return (

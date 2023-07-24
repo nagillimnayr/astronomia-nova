@@ -9,7 +9,7 @@ import { type ClassNameValue } from 'tailwind-merge';
 import { cn } from '@/lib/cn';
 
 type Props = {
-  className: ClassNameValue;
+  className?: ClassNameValue;
 };
 export const ToggleBar = ({ className }: Props) => {
   return (
