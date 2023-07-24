@@ -18,24 +18,8 @@ const SurfaceViewDialog = observer(() => {
 
         <AlertDialog.Content className="mt-0 grid h-full w-full grid-cols-2 grid-rows-2 place-items-stretch gap-x-6 gap-y-4 font-sans">
           {/** Inputs for latitude and longitude. */}
+
           <div className="col-span-1 col-start-1 row-span-1 row-start-1">
-            <Label className="mb-2">
-              Latitude
-              <Input
-                className="w-full"
-                type="number"
-                value={surfaceState.latitude}
-                min={0}
-                max={360}
-                onChange={(event) => {
-                  const value = parseFloat(event.target.value);
-                  surfaceState.setLatitude(value);
-                  console.log(value);
-                }}
-              />
-            </Label>
-          </div>
-          <div className="col-span-1 col-start-2 row-span-1 row-start-1">
             <Label className="mb-2">
               Longitude
               <Input
@@ -47,6 +31,23 @@ const SurfaceViewDialog = observer(() => {
                 onChange={(event) => {
                   const value = parseFloat(event.target.value);
                   surfaceState.setLongitude(value);
+                  console.log(value);
+                }}
+              />
+            </Label>
+          </div>
+          <div className="col-span-1 col-start-2 row-span-1 row-start-1">
+            <Label className="mb-2">
+              Latitude
+              <Input
+                className="w-full"
+                type="number"
+                value={surfaceState.latitude}
+                min={0}
+                max={360}
+                onChange={(event) => {
+                  const value = parseFloat(event.target.value);
+                  surfaceState.setLatitude(value);
                   console.log(value);
                 }}
               />
