@@ -1,18 +1,16 @@
 import { Line } from '@react-three/drei';
-import { useMemo, useRef } from 'react';
+import { useContext, useMemo, useRef } from 'react';
 import {
   type ArrowHelper,
   EllipseCurve,
   Euler,
   Vector3,
-  Object3D,
-  Matrix4,
+  type Object3D,
 } from 'three';
 import { getLinearEccentricityFromAxes } from '@/simulation/math/orbital-elements/LinearEccentricity';
-import { DIST_MULT } from '@/simulation/utils/constants';
-import { useSnapshot } from 'valtio';
-import { debugState } from '@/simulation/state/DebugState';
 import { degToRad } from 'three/src/math/MathUtils';
+import { TrajectoryVisContext } from '@/state/xstate/toggle-machine/ToggleMachineProviders';
+import { useActor } from '@xstate/react';
 
 const X_UNIT_VECTOR = new Vector3(1, 0, 0);
 const rotation = new Euler(Math.PI / 2, 0, 0);
@@ -33,6 +31,10 @@ export const Trajectory = ({
   semiMinorAxis,
   orientation,
 }: TrajectoryProps) => {
+  // Check if trajectory visibility is on.
+  const [state] = useActor(useContext(TrajectoryVisContext));
+  const isVisible = state.matches('active');
+
   const linearEccentricity = useMemo(() => {
     return getLinearEccentricityFromAxes(semiMajorAxis, semiMinorAxis);
   }, [semiMajorAxis, semiMinorAxis]);
@@ -50,13 +52,13 @@ export const Trajectory = ({
 
   const ref = useRef<Object3D>(null!);
 
-  const debug = useSnapshot(debugState);
-
-  return debug.trajectories ? (
+  return (
     <>
       <object3D
+        visible={isVisible}
         ref={(obj) => {
           if (!obj) return;
+          if (ref.current === obj) return;
           ref.current = obj;
           // obj.rotateX(degToRad(90));
           // To orient the orbit correctly, we need to perform three intrinsic rotations. (Intrinsic meaning that the rotations are performed in the local coordinate space, such that when we rotate around the axes in the order z-x-z, the last z-axis rotation is around a different world-space axis than the first one, as the x-axis rotation changes the orientation of the object's local z-axis. For clarity, the rotations will be in the order z-x'-z'', where x' is the new local x-axis after the first rotation and z'' is the object's new local z-axis after the second rotation.)
@@ -80,7 +82,5 @@ export const Trajectory = ({
         /> */}
       </object3D>
     </>
-  ) : (
-    <></>
   );
 };
