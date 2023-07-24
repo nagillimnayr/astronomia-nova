@@ -1,3 +1,4 @@
+import { Slider } from '@/components/gui/Slider';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
@@ -10,7 +11,7 @@ const SurfaceViewDialog = observer(() => {
 
   return (
     <AlertDialog.Portal container={uiState.screenPortal}>
-      <AlertDialog.Overlay className="prose fixed left-1/2 top-1/2 flex h-48 w-96 max-w-[50vw] -translate-x-1/2 translate-y-1/2 flex-col items-center justify-start overflow-hidden rounded-lg bg-card px-14 py-3 font-sans prose-headings:m-0">
+      <AlertDialog.Overlay className="prose fixed left-1/2 top-1/2 flex h-48 w-96 max-w-[50vw] -translate-x-1/2 translate-y-1/2 flex-col items-center justify-start overflow-hidden rounded-lg bg-card px-10 py-3 font-sans prose-headings:m-0">
         <AlertDialog.Title className="m-0 text-center text-3xl ">
           Surface View
         </AlertDialog.Title>
@@ -18,11 +19,11 @@ const SurfaceViewDialog = observer(() => {
 
         <AlertDialog.Content className="mt-0 grid h-full w-full grid-cols-2 grid-rows-2 place-items-stretch gap-x-6 gap-y-4 font-sans">
           {/** Inputs for latitude and longitude. */}
-          <div className="col-span-1 col-start-1 row-span-1 row-start-1">
-            <Label className="mb-2">
+          <div className="col-span-1 col-start-1 row-span-1 row-start-1 flex flex-col items-start justify-center">
+            <Label className="mb-2 inline-flex items-center justify-center ">
               Longitude
               <Input
-                className="w-full"
+                className="h-6  w-full"
                 type="number"
                 value={surfaceState.longitude}
                 min={-180}
@@ -35,12 +36,25 @@ const SurfaceViewDialog = observer(() => {
                 }}
               />
             </Label>
+            <Slider
+              name="longitude-slider"
+              value={[surfaceState.longitude]}
+              min={-180}
+              max={180}
+              step={0.1}
+              className="w-full"
+              onValueChange={(values) => {
+                const value = values[0];
+                if (!value) return;
+                surfaceState.setLongitude(value);
+              }}
+            />
           </div>
-          <div className="col-span-1 col-start-2 row-span-1 row-start-1">
-            <Label className="mb-2">
+          <div className="col-span-1 col-start-2 row-span-1 row-start-1 flex flex-col items-start justify-center">
+            <Label className="mb-2 inline-flex items-center justify-center">
               Latitude
               <Input
-                className="w-full"
+                className="h-6 w-full"
                 type="number"
                 value={surfaceState.latitude}
                 min={-90}
@@ -53,6 +67,19 @@ const SurfaceViewDialog = observer(() => {
                 }}
               />
             </Label>
+            <Slider
+              name="latitude-slider"
+              value={[surfaceState.latitude]}
+              min={-90}
+              max={90}
+              step={0.1}
+              className="w-full"
+              onValueChange={(values) => {
+                const value = values[0];
+                if (!value) return;
+                surfaceState.setLatitude(value);
+              }}
+            />
           </div>
 
           {/** Cancel button. */}
