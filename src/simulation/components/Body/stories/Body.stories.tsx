@@ -16,17 +16,19 @@ type Story = StoryObj<typeof Body>;
 export const NoTexture = () => {
   return (
     <>
-      <Body
-        params={{
-          name: 'body',
-          color: 'white',
-          mass: 0,
-          meanRadius: 0.5,
-          initialPosition: [0, 0.5 * DIST_MULT, 0],
-          initialVelocity: [0, 0, 0],
-        }}
-      />
-      <Grid infiniteGrid />
+      <object3D rotation={[degToRad(-90), 0, 0]}>
+        <Body
+          params={{
+            name: 'body',
+            color: 'white',
+            mass: 0,
+            meanRadius: 0.5,
+            initialPosition: [0, 0.5 * DIST_MULT, 0],
+            initialVelocity: [0, 0, 0],
+          }}
+        />
+      </object3D>
+      <Grid infiniteGrid position={[0, -0.5, 0]} />
     </>
   );
 };
@@ -35,10 +37,10 @@ const EarthStory = () => {
   const earthTexture = useTexture('assets/textures/2k_earth_daymap.jpg');
   return (
     <>
-      <object3D rotation={[degToRad(-90), 0, 0]} position={[0, 0.5, 0]}>
+      <object3D rotation={[degToRad(-90), 0, 0]}>
         <Body
           params={{
-            name: 'body',
+            name: 'Earth',
             color: 'white',
             mass: 0,
             meanRadius: 0.5,
@@ -48,7 +50,7 @@ const EarthStory = () => {
           texture={earthTexture}
         />
       </object3D>
-      <Grid infiniteGrid />
+      <Grid infiniteGrid position={[0, -0.5, 0]} />
     </>
   );
 };
