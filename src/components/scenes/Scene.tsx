@@ -9,6 +9,7 @@ import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 import { HUD } from '@/simulation/components/HUD/HUD';
 // import { useCameraStore } from '@/simulation/state/zustand/camera-store';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { degToRad } from 'three/src/math/MathUtils';
 
 const Scene = ({ children }: PropsWithChildren) => {
   const { cameraState } = useContext(RootStoreContext);
@@ -24,7 +25,7 @@ const Scene = ({ children }: PropsWithChildren) => {
 
         {/** Wrap the canvas in a div to create a separate stacking context. This is necessary because the <Html> components from Drei and portalled out of the canvas and become sibling elements of the canvas. They have an absurdly large z-index, so they will be renderer over top of any of their siblings. Wrapping the canvas in this way ensures that they share a stacking context only with each other and the canvas, and prevents them from clipping through the HUD or the rest of the UI. */}
         <div className="relative z-0 h-full w-full">
-          <Canvas gl={{ logarithmicDepthBuffer: true }}>
+          <Canvas gl={{ logarithmicDepthBuffer: true }} linear flat>
             <XR>
               <PerspectiveCamera
                 makeDefault
@@ -39,7 +40,13 @@ const Scene = ({ children }: PropsWithChildren) => {
                   if (!controls) {
                     return;
                   }
+                  if (controls === cameraState.controls) return;
                   cameraState.setControls(controls);
+                  controls
+                    .rotatePolarTo(degToRad(15), false)
+                    .catch((reason) => {
+                      console.error(reason);
+                    });
                 }}
               />
 

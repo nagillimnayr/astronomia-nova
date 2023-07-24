@@ -62,10 +62,8 @@ const Simulation = ({ children }: SimProps) => {
         {/* <polarGridHelper args={[24, 16, 24, 64]} /> */}
         {children}
       </group>
-      {/* <DebugPanel />
-      <SelectionPanel />
-      <CameraPanel /> */}
-      <ambientLight intensity={0.2} />
+
+      <ambientLight intensity={0.9} />
     </>
   );
 };

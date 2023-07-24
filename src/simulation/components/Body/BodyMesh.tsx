@@ -1,4 +1,4 @@
-import { BBAnchor, Sphere, useCursor, useHelper } from '@react-three/drei';
+import { Sphere, useCursor, useHelper } from '@react-three/drei';
 import { type ThreeEvent } from '@react-three/fiber';
 import { Select } from '@react-three/postprocessing';
 import {
@@ -12,14 +12,11 @@ import {
 } from 'react';
 import {
   BoxHelper,
-  SRGBColorSpace,
   type ColorRepresentation,
   type Mesh,
   type Texture,
 } from 'three';
-import { useSnapshot } from 'valtio';
 import type KeplerBody from '@/simulation/classes/KeplerBody';
-import { debugState } from '@/simulation/state/DebugState';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import Annotation from '../Annotation';
 import { BillboardCircle } from '../BillboardCircle';
@@ -36,7 +33,7 @@ type BodyMeshProps = {
 };
 
 export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
-  props: BodyMeshProps,
+  { name, bodyRef, meanRadius, texture, color }: BodyMeshProps,
   fwdRef
 ) {
   const { uiState } = useContext(RootStoreContext);
@@ -51,21 +48,20 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   useCursor(isHovered, 'pointer');
 
   // check if we should show bounding boxes
-  const debugSnap = useSnapshot(debugState);
-  useHelper(debugSnap.boundingBoxes ? meshRef : null, BoxHelper, 'cyan');
+  // useHelper(debugSnap.boundingBoxes ? meshRef : null, BoxHelper, 'cyan');
 
   // event handlers
   const handleClick = useCallback(
     (e: ThreeEvent<MouseEvent>) => {
       e.stopPropagation();
-      if (!meshRef.current || !props.bodyRef.current) {
+      if (!meshRef.current || !bodyRef.current) {
         return;
       }
-      const body: KeplerBody = props.bodyRef.current;
+      const body: KeplerBody = bodyRef.current;
       // select body
       uiState.select(body);
     },
-    [props.bodyRef, uiState]
+    [bodyRef, uiState]
   );
   const handleMiss = (e: MouseEvent) => {
     if (!meshRef.current) return;
@@ -90,27 +86,24 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       <Sphere
         rotation={[degToRad(90), 0, 0]}
         visible={isVisible}
-        ref={(meshObj) => {
-          if (!meshObj) return;
-          meshRef.current = meshObj;
-          //setMesh(meshObj);
-        }}
-        args={[props.meanRadius]}
+        ref={meshRef}
+        args={[meanRadius]}
         onClick={handleClick}
         onPointerMissed={handleMiss}
         onPointerOver={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
       >
-        <meshBasicMaterial map={props.texture} color={'#999999'} />
+        <meshBasicMaterial map={texture} color={color} />
+        {/* <meshLambertMaterial map={texture} color={color} /> */}
 
         {/* <Annotation annotation={props.name} /> */}
         {/* <object3D position={[0, -props.meanRadius, 0]}>
             <Annotation annotation={props.name} />
           </object3D> */}
-        <BillboardCircle bodyRef={props.bodyRef} />
+        <BillboardCircle bodyRef={bodyRef} />
 
-        <object3D position={[0, -props.meanRadius, 0]}>
-          <Annotation annotation={props.name} />
+        <object3D position={[0, -meanRadius, 0]}>
+          <Annotation annotation={name} />
         </object3D>
       </Sphere>
       {/* </Select> */}
