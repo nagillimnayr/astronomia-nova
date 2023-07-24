@@ -29,24 +29,20 @@ const Scene = ({ children }: PropsWithChildren) => {
             <XR>
               <PerspectiveCamera
                 makeDefault
-                position={[0, 0, 20]}
+                position={[0, 0, 40]}
                 near={0.01}
                 far={1000000}
               />
               <CameraControls
                 makeDefault
                 minDistance={0.1}
+                polarAngle={degToRad(60)}
                 ref={(controls) => {
                   if (!controls) {
                     return;
                   }
                   if (controls === cameraState.controls) return;
                   cameraState.setControls(controls);
-                  controls
-                    .rotatePolarTo(degToRad(15), false)
-                    .catch((reason) => {
-                      console.error(reason);
-                    });
                 }}
               />
 
