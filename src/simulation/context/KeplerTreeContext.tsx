@@ -1,9 +1,8 @@
-import { createContext } from 'react';
+import { type MutableRefObject, createContext } from 'react';
 import type KeplerBody from '../classes/KeplerBody';
 
-type childRefFn = (body: KeplerBody) => void;
-const KeplerTreeContext = createContext<childRefFn>((body: KeplerBody) => {
-  return;
-});
+const KeplerTreeContext = createContext<MutableRefObject<KeplerBody> | null>(
+  null
+);
 
 export default KeplerTreeContext;

@@ -33,6 +33,7 @@ import {
   getSemiMinorAxisFromSemiLatusRectum,
 } from '@/simulation/math/orbital-elements/axes/SemiMinorAxis';
 import { getSemiLatusRectumFromEccentricity } from '@/simulation/math/orbital-elements/axes/SemiLatusRectum';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 type OrbitProps = {
   children?: React.ReactNode;
@@ -41,41 +42,49 @@ type OrbitProps = {
 };
 
 export const Orbit = ({ children, name, texture }: OrbitProps) => {
+  const { cameraState } = useContext(RootStoreContext);
   // get Central mass from parent
-  const centralMass = useContext(CentralMassContext);
+  // const centralMass = useContext(CentralMassContext);
 
-  const retrogradeContext = useContext(RetrogradeContext);
+  // const retrogradeContext = useContext(RetrogradeContext);
 
   // ref to Object3D
   const orbitRef = useRef<Object3D>(null!);
   // reference to orbiting body
   const bodyRef = useRef<KeplerBody>(null!);
 
-  // callback function to be passed down to children via context provider
-  // the child will call it within a callback ref and pass their reference
-  // as the argument, where it will be used to construct the Kepler Tree
-  const addChildToTree = useCallback(
-    (body: KeplerBody) => {
-      if (!body) {
-        return;
-      }
+  const centralBodyRef = useContext(KeplerTreeContext);
+  useFrame(() => {
+    if (!centralBodyRef || !centralBodyRef.current || !orbitRef.current) return;
+    orbitRef.current.position.copy(centralBodyRef.current.position);
+    cameraState.updateCamera();
+  }, -1);
 
-      // setup attachment to central body
-      if (!body.parent) return;
-      // go up by two levels to get to the parent body
-      const parent: KeplerBody = body.parent.parent as KeplerBody;
-      console.assert(parent, 'failed to cast to parent');
-      parent.addOrbitingBody(body);
+  // // callback function to be passed down to children via context provider
+  // // the child will call it within a callback ref and pass their reference
+  // // as the argument, where it will be used to construct the Kepler Tree
+  // const addChildToTree = useCallback(
+  //   (body: KeplerBody) => {
+  //     if (!body) {
+  //       return;
+  //     }
 
-      if (retrogradeContext === 'referenceBody') {
-        retrogradeState.setReferenceBody(body);
-      }
-      if (retrogradeContext === 'otherBody') {
-        retrogradeState.setOtherBody(body);
-      }
-    },
-    [retrogradeContext]
-  );
+  //     // setup attachment to central body
+  //     if (!body.parent) return;
+  //     // go up by two levels to get to the parent body
+  //     const parent: KeplerBody = body.parent.parent as KeplerBody;
+  //     console.assert(parent, 'failed to cast to parent');
+  //     parent.addOrbitingBody(body);
+
+  //     if (retrogradeContext === 'referenceBody') {
+  //       retrogradeState.setReferenceBody(body);
+  //     }
+  //     if (retrogradeContext === 'otherBody') {
+  //       retrogradeState.setOtherBody(body);
+  //     }
+  //   },
+  //   [retrogradeContext]
+  // );
 
   const ephemeridesQuery = trpc.loadEphemerides.useQuery({ name: name });
   if (!ephemeridesQuery.data) {
@@ -112,11 +121,11 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   return (
     <object3D ref={orbitRef}>
       {/** Pass callback function down to orbiting body so that it will add itself to the tree.  */}
-      <KeplerTreeContext.Provider value={addChildToTree}>
-        <Body ref={bodyRef} params={bodyParams} texture={texture}>
-          {children}
-        </Body>
-      </KeplerTreeContext.Provider>
+      {/* <KeplerTreeContext.Provider value={addChildToTree}> */}
+      <Body ref={bodyRef} params={bodyParams} texture={texture}>
+        {children}
+      </Body>
+      {/* </KeplerTreeContext.Provider> */}
 
       <Trajectory
         semiMajorAxis={semiMajorAxis}

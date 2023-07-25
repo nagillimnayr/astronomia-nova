@@ -50,14 +50,8 @@ const SolarSystem = () => {
     useSimStore.setState({ rootRef: rootRef });
   }, []);
 
-  const assignAsRoot = (body: KeplerBody) => {
-    if (!body) {
-      return;
-    }
-  };
-
   return (
-    <KeplerTreeContext.Provider value={assignAsRoot}>
+    <KeplerTreeContext.Provider value={null}>
       <CelestialSphere>
         {/* <Selection> */}
         {/* <EffectComposer autoClear={false} multisampling={8}>

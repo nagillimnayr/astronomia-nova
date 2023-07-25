@@ -72,7 +72,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
   }, [params.initialPosition, params.initialVelocity]);
 
   // get function from context
-  const addSelfToTree = useContext(KeplerTreeContext);
+  const centralBodyRef = useContext(KeplerTreeContext);
 
   // get refs
   const bodyRef = useRef<KeplerBody>(null!);
@@ -93,14 +93,13 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     if (!bodyRef.current || !meshRef.current) return;
 
     // update mesh position to be in sync with body
-    const position = bodyRef.current.position.toArray();
-    meshRef.current.position.set(...position);
+    meshRef.current.position.copy(bodyRef.current.position);
 
     if (!velocityArrowRef.current) return;
     // update direction of velocity arrow
     const direction = bodyRef.current.velocity.clone().normalize();
     velocityArrowRef.current.setDirection(direction);
-    velocityArrowRef.current.position.set(...position);
+    velocityArrowRef.current.position.copy(bodyRef.current.position);
   }, -1);
 
   return (
@@ -110,14 +109,14 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         ref={(body: KeplerBody) => {
           if (!body) {
             console.log(`removing ${bodyRef.current?.name} node from tree`);
-            if (!bodyRef.current) {
-              return;
-            }
+            // if (!bodyRef.current) {
+            //   return;
+            // }
 
-            const parent = bodyRef.current.parent as KeplerBody;
-            if (!parent) {
-              return;
-            }
+            // const parent = centralBodyRef?.current;
+            // if (!parent) {
+            //   return;
+            // }
             //parent?.removeOrbitingBody(bodyRef.current);
 
             return;
@@ -128,35 +127,45 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
           console.log(`adding ${body?.name} node to tree`);
 
           // pass ref to parent to add it to the tree
-          addSelfToTree(body);
+          // addSelfToTree(body);
+
+          if (!centralBodyRef) return;
+          const centralBody = centralBodyRef.current;
+          if (!centralBody) return;
+          centralBody.addOrbitingBody(body);
         }}
         name={name ?? ''}
         args={[mass, initialPosition, initialVelocity]}
       >
         {/* Child orbits need to know the mass of their central body. */}
-        <CentralMassContext.Provider value={mass}>
+        {/* <CentralMassContext.Provider value={mass}> */}
+        {/* <KeplerTreeContext.Provider value={bodyRef}>
           {children}
-        </CentralMassContext.Provider>
+        </KeplerTreeContext.Provider> */}
+        {/* </CentralMassContext.Provider> */}
       </keplerBody>
 
-      {/** Putting BodyMesh outside of KeplerBody and updating its position manually seems to work. */}
-      <BodyMesh
-        name={name}
-        meanRadius={meanRadius}
-        color={color}
-        texture={texture}
-        bodyRef={bodyRef}
-        ref={meshRef}
-      />
+      <KeplerTreeContext.Provider value={bodyRef}>
+        {children}
+        {/** Putting BodyMesh outside of KeplerBody and updating its position manually seems to work. */}
+        <BodyMesh
+          name={name}
+          meanRadius={meanRadius}
+          color={color}
+          texture={texture}
+          bodyRef={bodyRef}
+          ref={meshRef}
+        />
 
-      <arrowHelper
-        ref={(arrow) => {
-          if (!arrow) return;
-          velocityArrowRef.current = arrow;
-          arrow.setColor('green');
-          arrow.setLength(2 * meanRadius, 0.2, 0.05);
-        }}
-      />
+        <arrowHelper
+          ref={(arrow) => {
+            if (!arrow) return;
+            velocityArrowRef.current = arrow;
+            arrow.setColor('green');
+            arrow.setLength(2 * meanRadius, 0.2, 0.05);
+          }}
+        />
+      </KeplerTreeContext.Provider>
     </>
   );
 });
