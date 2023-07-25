@@ -2,6 +2,7 @@ import {
   Object3D,
   Quaternion,
   Vector3,
+  Vector3Tuple,
   Mesh,
   SphereGeometry,
   MeshBasicMaterial,
@@ -31,12 +32,12 @@ class KinematicBody extends Object3D {
   get velocity(): Vector3 {
     return this._velocity;
   }
-  set velocity(newVelocity: Vec3) {
+  set velocity(newVelocity: Vector3Tuple) {
     this._velocity.set(...newVelocity);
   }
 
   // acceleration
-  set acceleration(newAcceleration: Vec3) {
+  set acceleration(newAcceleration: Vector3Tuple) {
     this._acceleration.set(...newAcceleration);
   }
   get acceleration(): Vector3 {
@@ -45,31 +46,7 @@ class KinematicBody extends Object3D {
 
   // update
   private updatePosition(deltaTime: number) {
-    // log position before and after update
-    // if (selectState.selected && this.id === selectState.selected.id) {
-    //   console.log('position pre-update:', this.position.toArray());
-    //   console.log('matrix pre-update:', this.matrix.toArray());
-
-    //   this.position.addScaledVector(this.velocity, deltaTime);
-
-    //   console.log('position post-update:', this.position.toArray());
-    //   console.log('matrix post-update:', this.matrix.toArray());
-    // } else {
-    //   this.position.addScaledVector(this.velocity, deltaTime);
-    // }
-
     this.position.addScaledVector(this.velocity, deltaTime);
-
-    // if (selectState.selected && this.id === selectState.selected.id) {
-    //   camState.updateControls();
-    //   // check that id of camera focus target is same as this object
-
-    //   this.getWorldPosition(_v1);
-    //   camState.controls.getTarget(_v2);
-    //   console.log(performance.now());
-    //   console.log('obj position:', _v1.toArray());
-    //   console.log('cam gaze position:', _v2.toArray());
-    // }
   }
   private updateVelocity(deltaTime: number) {
     this.velocity.addScaledVector(this.acceleration, deltaTime);
@@ -87,7 +64,11 @@ class KinematicBody extends Object3D {
 class DynamicBody extends KinematicBody implements PointMass {
   private _mass: number;
 
-  constructor(mass?: number, initialPosition?: Vec3, initialVelocity?: Vec3) {
+  constructor(
+    mass?: number,
+    initialPosition?: Vector3Tuple,
+    initialVelocity?: Vector3Tuple
+  ) {
     super(initialPosition, initialVelocity);
     this._mass = mass ?? 0;
   }
