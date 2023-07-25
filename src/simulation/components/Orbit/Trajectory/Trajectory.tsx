@@ -45,7 +45,7 @@ export const Trajectory = ({
       0,
       semiMajorAxis,
       semiMinorAxis
-    ).getSpacedPoints(128);
+    ).getSpacedPoints(1024);
   }, [semiMajorAxis, semiMinorAxis, linearEccentricity]);
 
   // const arrowRef = useRef<ArrowHelper>(null!);
