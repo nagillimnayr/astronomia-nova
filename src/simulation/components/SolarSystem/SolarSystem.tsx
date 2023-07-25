@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Body from '../Body/Body';
 import type KeplerBody from '../../classes/KeplerBody';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
-import { SOLAR_MASS } from '../../utils/constants';
+import { DIST_MULT, SOLAR_MASS, SUN_RADIUS } from '../../utils/constants';
 import { useTexture } from '@react-three/drei';
 import { CelestialSphere } from '../CelestialSphere';
 import {
@@ -75,7 +75,7 @@ const SolarSystem = () => {
             name: 'Sun',
             mass: SOLAR_MASS,
             color: 0xfdee00,
-            meanRadius: 5,
+            meanRadius: SUN_RADIUS,
             initialPosition: [0, 0, 0],
             initialVelocity: [0, 0, 0],
           }}
