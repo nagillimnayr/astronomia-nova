@@ -2,8 +2,6 @@ import { Line } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef, MutableRefObject } from 'react';
 import { ArrowHelper, ColorRepresentation, Object3D, Vector3 } from 'three';
-import { useSnapshot } from 'valtio';
-import { debugState } from '@/simulation/state/DebugState';
 
 type ArrowProps = {
   color: ColorRepresentation;
@@ -12,7 +10,6 @@ type ArrowProps = {
 
 export const TrueAnomalyArrow = (props: ArrowProps) => {
   const arrowRef = useRef<ArrowHelper>(null!);
-  const debugSnap = useSnapshot(debugState);
 
   useFrame(() => {
     if (!arrowRef.current || !props.target.current) return;
@@ -30,7 +27,7 @@ export const TrueAnomalyArrow = (props: ArrowProps) => {
   return (
     <>
       <arrowHelper
-        visible={debugSnap.arrows}
+        visible={false}
         ref={(arrow) => {
           if (!arrow) return;
           arrowRef.current = arrow;
