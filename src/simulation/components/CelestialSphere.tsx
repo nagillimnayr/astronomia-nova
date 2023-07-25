@@ -15,7 +15,7 @@ export const CelestialSphere = (props: CelestialSphereProps) => {
   return (
     <group>
       <mesh rotation={[-degToRad(90), 0, 0]}>
-        <sphereGeometry args={[100000]} />
+        <sphereGeometry args={[1e14]} />
         <meshBasicMaterial
           args={[
             {
