@@ -35,8 +35,8 @@ const DetailsPanel = observer(() => {
       <Separator className="w-full bg-border" />
       {/** Attributes. */}
       <div className="h-full max-h-full w-full overflow-auto whitespace-nowrap border p-1">
-        {/** Mass. */}
         <div className="flex w-full flex-col items-start justify-start">
+          {/** Mass. */}
           <span>
             Mass:&nbsp;<span>{}</span>
           </span>
@@ -44,6 +44,32 @@ const DetailsPanel = observer(() => {
           <span>
             Mean radius:&nbsp;<span>{}</span>
           </span>
+        </div>
+        <div className="flex w-full flex-col items-start justify-start">
+          {/** Velocity. */}
+          {/* <span>Velocity:&nbsp;</span>
+          {uiState
+            .getSelected()
+            ?.velocity.toArray()
+            .map((val) => {
+              return (
+                <>
+                  <span>{val}</span>
+                </>
+              );
+            })} */}
+          {/** Position. */}
+          {/* <span>Position:&nbsp;</span>
+          {uiState
+            .getSelected()
+            ?.position.toArray()
+            .map((val) => {
+              return (
+                <>
+                  <span>{val.toFixed(2)}</span>
+                </>
+              );
+            })} */}
         </div>
       </div>
 
