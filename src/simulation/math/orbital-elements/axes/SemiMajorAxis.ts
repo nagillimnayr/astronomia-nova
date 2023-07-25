@@ -91,3 +91,21 @@ export function getSemiMajorAxisFromApsides(
 ) {
   return (periapsis + apoapsis) / 2.0;
 }
+
+/**
+ * @description
+ *
+ *
+ * @author Ryan Milligan
+ * @date 25/07/2023
+ * @export
+ * @param {number} semiLatusRectum
+ * @param {number} eccentricity
+ * @returns {*}
+ */
+export function getSemiMajorAxisFromSemiLatusRectum(
+  semiLatusRectum: number,
+  eccentricity: number
+) {
+  return semiLatusRectum / (1 - eccentricity ** 2);
+}
