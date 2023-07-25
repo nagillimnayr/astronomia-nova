@@ -5,6 +5,8 @@ import { getLinearEccentricityFromApsis } from '../orbital-elements/LinearEccent
 import { getEccentricityFromLinearEccentricity } from '../orbital-elements/Eccentricity';
 import { getSemiLatusRectumFromEccentricity } from '../orbital-elements/axes/SemiLatusRectum';
 import { getSemiMinorAxisFromSemiLatusRectum } from '../orbital-elements/axes/SemiMinorAxis';
+import { Vector3 } from 'three';
+import { calculateSpecificAngularMomentum } from '../orbital-elements/specificAngularMomentum';
 
 export const calculateOrbitFromPeriapsis = (
   periapsis: number,
@@ -72,15 +74,26 @@ export const calculateOrbitFromPeriapsis = (
   };
 };
 
+const _pos = new Vector3();
+const _vel = new Vector3();
+const _specificAngularMomentum = new Vector3();
 export const calculateOrbitFromStateVectors = (
-  distance: number,
-  orbitalSpeed: number,
+  position: Vector3,
+  velocity: Vector3,
   centralMass: number
 ) => {
+  const orbitalDistance = position.length();
+  const orbitalSpeed = velocity.length();
+
+  const _specificAngularMomentum = calculateSpecificAngularMomentum(
+    position,
+    velocity
+  );
+
   // Calculate specific orbital energy
   const specificOrbitalEnergy = getSpecificOrbitalEnergy(
     orbitalSpeed,
     centralMass,
-    distance
+    orbitalDistance
   );
 };
