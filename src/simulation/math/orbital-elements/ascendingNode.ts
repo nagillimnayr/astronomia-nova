@@ -26,12 +26,11 @@ export function calculateLongitudeOfAscendingNode(
   ascendingNode: Vector3,
   xAxis: Vector3 // X-Axis of the reference frame.
 ) {
-  const ascNodeMag = ascendingNode.length();
   const longitudeOfAscendingNode = radToDeg(
-    Math.acos(ascendingNode.dot(xAxis) / ascNodeMag)
+    Math.acos(ascendingNode.dot(xAxis) / ascendingNode.length())
   );
 
-  if (ascNodeMag < 0) {
+  if (ascendingNode.y < 0) {
     return 360 - longitudeOfAscendingNode;
   }
   return longitudeOfAscendingNode;
