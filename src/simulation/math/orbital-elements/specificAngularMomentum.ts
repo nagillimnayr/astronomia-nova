@@ -5,5 +5,5 @@ export function calculateSpecificAngularMomentum(
   position: Vector3,
   velocity: Vector3
 ) {
-  return _vec.crossVectors(position, velocity);
+  return _vec.crossVectors(position, velocity).toArray();
 }
