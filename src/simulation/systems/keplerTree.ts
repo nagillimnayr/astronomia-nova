@@ -1,3 +1,4 @@
+import { Vector3 } from 'three';
 import type KeplerBody from '../classes/KeplerBody';
 import calculateGravitation from '../math/motion/gravitation';
 
@@ -46,15 +47,16 @@ export function makePreOrderTreeTraversalFn(
   };
 }
 
+// The central body will always be at the zero vector of the local coordinate space of the orbiting body, so we can simply use a zero vector.
+const _centralPos = new Vector3();
 export const traverseKeplerTree = makePreOrderTreeTraversalFn(
   (body: KeplerBody, deltaTime: number) => {
     for (const orbitingBody of body.orbitingBodies) {
-      const acceleration = calculateGravitation(
+      orbitingBody.acceleration = calculateGravitation(
         orbitingBody.position,
-        body.position,
+        _centralPos,
         body.mass
       );
-      orbitingBody.acceleration = acceleration;
       orbitingBody.update(deltaTime);
     }
   }
