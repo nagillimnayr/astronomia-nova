@@ -1,11 +1,15 @@
-import { Vector3 } from 'three';
+import { Vector3Tuple } from 'three';
+
 import { DynamicBody } from './Dynamics';
 import calculateGravitation from '../systems/physics/forces/calculateGravitation';
-import Vec3 from '../types/Vec3';
 
 class KeplerBody extends DynamicBody {
   private _orbitingBodies: KeplerBody[];
-  constructor(mass?: number, initialPosition?: Vec3, initialVelocity?: Vec3) {
+  constructor(
+    mass?: number,
+    initialPosition?: Vector3Tuple,
+    initialVelocity?: Vector3Tuple
+  ) {
     super(mass, initialPosition, initialVelocity);
     this._orbitingBodies = [];
   }
@@ -30,24 +34,24 @@ class KeplerBody extends DynamicBody {
 }
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-export const traverseTree = (node: KeplerBody, deltaTime: number) => {
-  console.assert(node, 'null node');
+// export const traverseTree = (node: KeplerBody, deltaTime: number) => {
+//   console.assert(node, 'null node');
 
-  for (const orbitingBody of node.orbitingBodies) {
-    // convert the vector returned into an array and spread it so that we can use the .set()
-    // method so as to avoid unnecessary garbage collection
-    orbitingBody.acceleration.set(
-      ...calculateGravitation(orbitingBody, node).toArray()
-    );
+//   for (const orbitingBody of node.orbitingBodies) {
+//     // convert the vector returned into an array and spread it so that we can use the .set()
+//     // method so as to avoid unnecessary garbage collection
+//     orbitingBody.acceleration.set(
+//       ...calculateGravitation(orbitingBody, node).toArray()
+//     );
 
-    // update velocity and position
-    orbitingBody.update(deltaTime);
+//     // update velocity and position
+//     orbitingBody.update(deltaTime);
 
-    // traverse deeper into the tree
-    if (orbitingBody.orbitingBodies.length > 0) {
-      traverseTree(orbitingBody, deltaTime);
-    }
-  }
-};
+//     // traverse deeper into the tree
+//     if (orbitingBody.orbitingBodies.length > 0) {
+//       traverseTree(orbitingBody, deltaTime);
+//     }
+//   }
+// };
 
 export default KeplerBody;
