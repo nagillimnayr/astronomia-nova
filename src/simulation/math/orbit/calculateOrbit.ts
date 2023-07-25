@@ -71,3 +71,16 @@ export const calculateOrbitFromPeriapsis = (
     linearEccentricity,
   };
 };
+
+export const calculateOrbitFromStateVectors = (
+  distance: number,
+  orbitalSpeed: number,
+  centralMass: number
+) => {
+  // Calculate specific orbital energy
+  const specificOrbitalEnergy = getSpecificOrbitalEnergy(
+    orbitalSpeed,
+    centralMass,
+    distance
+  );
+};
