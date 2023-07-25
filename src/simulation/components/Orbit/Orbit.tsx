@@ -44,7 +44,7 @@ type OrbitProps = {
 export const Orbit = ({ children, name, texture }: OrbitProps) => {
   const { cameraState } = useContext(RootStoreContext);
   // get Central mass from parent
-  // const centralMass = useContext(CentralMassContext);
+  const centralMass = useContext(CentralMassContext);
 
   // const retrogradeContext = useContext(RetrogradeContext);
 
@@ -60,34 +60,26 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     cameraState.updateCamera();
   }, -1);
 
-  // // callback function to be passed down to children via context provider
-  // // the child will call it within a callback ref and pass their reference
-  // // as the argument, where it will be used to construct the Kepler Tree
-  // const addChildToTree = useCallback(
-  //   (body: KeplerBody) => {
-  //     if (!body) {
-  //       return;
-  //     }
-
-  //     // setup attachment to central body
-  //     if (!body.parent) return;
-  //     // go up by two levels to get to the parent body
-  //     const parent: KeplerBody = body.parent.parent as KeplerBody;
-  //     console.assert(parent, 'failed to cast to parent');
-  //     parent.addOrbitingBody(body);
-
-  //     if (retrogradeContext === 'referenceBody') {
-  //       retrogradeState.setReferenceBody(body);
-  //     }
-  //     if (retrogradeContext === 'otherBody') {
-  //       retrogradeState.setOtherBody(body);
-  //     }
-  //   },
-  //   [retrogradeContext]
-  // );
-
   const ephemeridesQuery = trpc.loadEphemerides.useQuery({ name: name });
-  if (!ephemeridesQuery.data) {
+
+  const elements = useMemo(() => {
+    if (!ephemeridesQuery.data) return null;
+    const { elementTable, vectorTable, physicalData } = ephemeridesQuery.data;
+    const { eccentricity, semiMajorAxis } = elementTable;
+
+    const semiLatusRectum = getSemiLatusRectumFromEccentricity(
+      semiMajorAxis,
+      eccentricity
+    );
+    const semiMinorAxis = getSemiMinorAxisFromSemiLatusRectum(
+      semiMajorAxis,
+      semiLatusRectum
+    );
+
+    //
+  }, [ephemeridesQuery.data]);
+
+  if (!ephemeridesQuery.data || !elements) {
     return;
   }
 
