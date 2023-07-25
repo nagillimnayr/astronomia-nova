@@ -10,6 +10,11 @@ import { HUD } from '@/simulation/components/HUD/HUD';
 // import { useCameraStore } from '@/simulation/state/zustand/camera-store';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { degToRad } from 'three/src/math/MathUtils';
+import {
+  DIST_MULT,
+  EARTH_RADIUS,
+  SUN_RADIUS,
+} from '@/simulation/utils/constants';
 
 const Scene = ({ children }: PropsWithChildren) => {
   const { cameraState } = useContext(RootStoreContext);
@@ -29,13 +34,13 @@ const Scene = ({ children }: PropsWithChildren) => {
             <XR>
               <PerspectiveCamera
                 makeDefault
-                position={[0, 0, 40]}
-                near={0.01}
-                far={1000000}
+                position={[0, 0, SUN_RADIUS + 1000]}
+                near={1e-5}
+                far={1e14}
               />
               <CameraControls
                 makeDefault
-                minDistance={0.1}
+                minDistance={1e-3}
                 polarAngle={degToRad(60)}
                 ref={(controls) => {
                   if (!controls) {
