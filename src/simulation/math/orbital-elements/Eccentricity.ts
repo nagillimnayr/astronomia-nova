@@ -1,4 +1,4 @@
-import { type Vector3 } from 'three';
+import { Vector3 } from 'three';
 import { GRAV_CONST } from '@/simulation/utils/constants';
 
 export function getEccentricityFromLinearEccentricity(
@@ -32,4 +32,21 @@ export function getEccentricityFromApsides(
   periapsis: number
 ) {
   return (apoapsis - periapsis) / (apoapsis + periapsis);
+}
+
+const _eccentricityVector = new Vector3();
+const _posNormalized = new Vector3();
+export function calculateEccentricityVector(
+  position: Vector3,
+  velocity: Vector3,
+  gravitationalParameter: number,
+  specificAngularMomentum: Vector3
+) {
+  _posNormalized.copy(position).normalize();
+  _eccentricityVector
+    .crossVectors(velocity, specificAngularMomentum)
+    .multiplyScalar(1 / gravitationalParameter)
+    .sub(_posNormalized);
+
+  return _eccentricityVector.toArray();
 }
