@@ -4,7 +4,10 @@ import Body, { type BodyParams } from '../Body/Body';
 import type KeplerBody from '@/simulation/classes/KeplerBody';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { CentralMassContext } from '@/simulation/context/CentralMassContext';
-import { calculateOrbitFromPeriapsis } from '@/simulation/math/orbit/calculateOrbit';
+import {
+  calculateOrbitFromPeriapsis,
+  calculateOrbitFromStateVectors,
+} from '@/simulation/math/orbit/calculateOrbit';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
 import {
@@ -14,6 +17,7 @@ import {
   type Object3D,
   type Texture,
   Vector3,
+  Vector3Tuple,
 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { RetrogradeContext } from '../Retrograde/RetrogradeContext';
@@ -35,6 +39,9 @@ import {
 import { getSemiLatusRectumFromEccentricity } from '@/simulation/math/orbital-elements/axes/SemiLatusRectum';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
+const _pos = new Vector3();
+const _vel = new Vector3();
+
 type OrbitProps = {
   children?: React.ReactNode;
   name: BodyKey;
@@ -54,32 +61,54 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   const bodyRef = useRef<KeplerBody>(null!);
 
   const centralBodyRef = useContext(KeplerTreeContext);
-  useFrame(() => {
-    if (!centralBodyRef || !centralBodyRef.current || !orbitRef.current) return;
-    orbitRef.current.position.copy(centralBodyRef.current.position);
-    cameraState.updateCamera();
-  }, -1);
+  // useFrame(() => {
+  //   if (!centralBodyRef || !centralBodyRef.current || !orbitRef.current) return;
+  //   orbitRef.current.position.copy(centralBodyRef.current.position);
+  //   cameraState.updateCamera();
+  // }, -1);
 
   const ephemeridesQuery = trpc.loadEphemerides.useQuery({ name: name });
 
-  const elements = useMemo(() => {
-    if (!ephemeridesQuery.data) return null;
-    const { elementTable, vectorTable, physicalData } = ephemeridesQuery.data;
-    const { eccentricity, semiMajorAxis } = elementTable;
+  // const elements = useMemo(() => {
+  //   if (!ephemeridesQuery.data) return null;
+  //   const { elementTable, vectorTable, physicalData } = ephemeridesQuery.data;
+  //   const { eccentricity, semiMajorAxis } = elementTable;
 
-    const semiLatusRectum = getSemiLatusRectumFromEccentricity(
-      semiMajorAxis,
-      eccentricity
-    );
-    const semiMinorAxis = getSemiMinorAxisFromSemiLatusRectum(
-      semiMajorAxis,
-      semiLatusRectum
-    );
+  //   const position = new Vector3(...vectorTable.position);
+  //   const velocity = new Vector3(...vectorTable.velocity);
 
-    //
-  }, [ephemeridesQuery.data]);
+  //   const elements = calculateOrbitFromStateVectors(
+  //     position,
+  //     velocity,
+  //     centralMass,
+  //     physicalData.mass
+  //   );
 
-  if (!ephemeridesQuery.data || !elements) {
+  //   _pos.set(...elements.position).divideScalar(DIST_MULT);
+  //   _vel.set(...elements.velocity).divideScalar(DIST_MULT);
+  //   console.log('pos scaled:', _pos.toArray());
+  //   console.log('vel scaled:', _vel.toArray());
+  //   return {
+  //     position: _pos.toArray(),
+  //     velocity: _vel.toArray(),
+
+  //     semiMajorAxis: elements.semiMajorAxis / DIST_MULT,
+  //     semiMinorAxis: elements.semiMinorAxis / DIST_MULT,
+  //     semiLatusRectum: elements.semiLatusRectum / DIST_MULT,
+  //     periapsis: elements.periapsis / DIST_MULT,
+  //     apoapsis: elements.apoapsis / DIST_MULT,
+
+  //     eccentricity: elements.eccentricity,
+
+  //     inclination: elements.inclination,
+  //     longitudeOfAscendingNode: elements.longitudeOfAscendingNode,
+  //     argumentOfPeriapsis: elements.argumentOfPeriapsis,
+
+  //     trueAnomaly: elements.trueAnomaly,
+  //   };
+  // }, [centralMass, ephemeridesQuery.data]);
+
+  if (!ephemeridesQuery.data) {
     return;
   }
 
@@ -101,9 +130,12 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     color: 'white',
     mass: physicalData.mass,
     meanRadius: physicalData.meanRadius / EARTH_RADIUS,
-    // Reorder the components so that the the orbit lies in the XZ plane.
-    initialPosition: vectorTable.position,
-    initialVelocity: vectorTable.velocity,
+    initialPosition: vectorTable.position.map(
+      (val) => val / DIST_MULT
+    ) as Vector3Tuple,
+    initialVelocity: vectorTable.velocity.map(
+      (val) => val / DIST_MULT
+    ) as Vector3Tuple,
   };
 
   // Destructure the orientation elements.
@@ -111,13 +143,21 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     elementTable;
 
   return (
-    <object3D ref={orbitRef}>
-      {/** Pass callback function down to orbiting body so that it will add itself to the tree.  */}
-      {/* <KeplerTreeContext.Provider value={addChildToTree}> */}
+    <object3D
+      ref={(obj) => {
+        if (!obj) return;
+        if (orbitRef.current === obj) return;
+        orbitRef.current = obj;
+
+        // To orient the orbit correctly, we need to perform three intrinsic rotations. (Intrinsic meaning that the rotations are performed in the local coordinate space, such that when we rotate around the axes in the order z-x-z, the last z-axis rotation is around a different world-space axis than the first one, as the x-axis rotation changes the orientation of the object's local z-axis. For clarity, the rotations will be in the order z-x'-z'', where x' is the new local x-axis after the first rotation and z'' is the object's new local z-axis after the second rotation.)
+        // obj.rotateZ(degToRad(longitudeOfAscendingNode));
+        // obj.rotateX(degToRad(inclination));
+        // obj.rotateZ(degToRad(argumentOfPeriapsis));
+      }}
+    >
       <Body ref={bodyRef} params={bodyParams} texture={texture}>
         {children}
       </Body>
-      {/* </KeplerTreeContext.Provider> */}
 
       <Trajectory
         semiMajorAxis={semiMajorAxis}
