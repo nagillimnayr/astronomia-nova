@@ -2,7 +2,7 @@ import { getSpecificOrbitalEnergy } from '../orbital-elements/SpecificOrbitalEne
 import {
   getApoapsisFromEccentricity,
   getApoapsisFromPeriapsis,
-} from '../orbital-elements/axes/apsides/Apoapsis';
+} from '../orbital-elements/apsides/Apoapsis';
 import {
   getSemiMajorAxisFromSemiLatusRectum,
   getSemiMajorAxisFromSpecificOrbitalEnergy,
@@ -29,7 +29,7 @@ import { calculateArgumentOfPeriapsis } from '../orbital-elements/argumentOfPeri
 import { calculateTrueAnomaly } from '../orbital-elements/anomalies/TrueAnomaly';
 import { getPosition } from '../orbital-elements/Position';
 import { getVelocityVector } from '../orbital-state-vectors/velocityVector';
-import { getPeriapsisFromEccentricity } from '../orbital-elements/axes/apsides/Periapsis';
+import { getPeriapsisFromEccentricity } from '../orbital-elements/apsides/Periapsis';
 
 export const calculateOrbitFromPeriapsis = (
   periapsis: number,
