@@ -11,6 +11,17 @@ export function calculateAscendingNode(
   return _ascendingNode.crossVectors(_orbitPlaneNormal, zAxis).toArray();
 }
 
+/**
+ * @description
+ * $$ \displaystyle \Omega = \arccos{\left(\frac{\vec{n}\cdot\vec{X}}{n}  \right)} $$
+ *
+ * @author Ryan Milligan
+ * @date 25/07/2023
+ * @export
+ * @param {Vector3} ascendingNode
+ * @param {Vector3} xAxis
+ * @returns {*}
+ */
 export function calculateLongitudeOfAscendingNode(
   ascendingNode: Vector3,
   xAxis: Vector3 // X-Axis of the reference frame.
