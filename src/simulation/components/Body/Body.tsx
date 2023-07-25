@@ -146,7 +146,11 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
       </keplerBody>
 
       <KeplerTreeContext.Provider value={bodyRef}>
-        {children}
+        {/* Child orbits need to know the mass of their central body. */}
+        <CentralMassContext.Provider value={mass}>
+          {children}
+        </CentralMassContext.Provider>
+
         {/** Putting BodyMesh outside of KeplerBody and updating its position manually seems to work. */}
         <BodyMesh
           name={name}
