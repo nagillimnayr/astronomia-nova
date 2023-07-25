@@ -7,16 +7,16 @@ import { GRAV_CONST } from '@/simulation/utils/constants';
  *
  * @param {number} orbitalSpeed (meters/sec)
  * @param {number} centralMass (kg)
- * @param {number} periapsis (meters)
+ * @param {number} distance (meters)
  *
  * @returns {number} {number} specificOrbitalEnergy
  */
 export function getSpecificOrbitalEnergy(
   orbitalSpeed: number,
   centralMass: number,
-  periapsis: number
+  distance: number
 ) {
   const specificOrbitalEnergy =
-    orbitalSpeed ** 2 / 2.0 - (GRAV_CONST * centralMass) / periapsis;
+    orbitalSpeed ** 2 / 2.0 - (GRAV_CONST * centralMass) / distance;
   return specificOrbitalEnergy;
 }
