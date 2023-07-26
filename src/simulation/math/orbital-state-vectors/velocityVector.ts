@@ -32,10 +32,11 @@ export function getVelocityVector(
   const vx = -Math.sin(trueAnomalyRadians);
   const vy = eccentricity + Math.cos(trueAnomalyRadians);
 
-  const gravitationalParameter = centralMass * orbitingMass * GRAV_CONST;
+  // const gravitationalParameter = centralMass * orbitingMass * GRAV_CONST;
+  const gravitationalParameter = centralMass * GRAV_CONST;
 
   _velocity
-    .set(vx, 0, -vy)
+    .set(vx, vy, 0)
     .multiplyScalar(gravitationalParameter / angularMomentumMagnitude);
 
   return _velocity.toArray();
