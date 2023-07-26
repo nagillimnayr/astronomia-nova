@@ -111,7 +111,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
           centralBody.addOrbitingBody(body);
         }}
         name={name ?? ''}
-        args={[mass, initialPosition, initialVelocity]}
+        args={[mass, initialPosition, initialVelocity, meanRadius]}
       >
         {/* Child orbits need to know the mass of their central body. */}
         <CentralMassContext.Provider value={mass}>

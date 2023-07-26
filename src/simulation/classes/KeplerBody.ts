@@ -2,20 +2,33 @@ import { Vector3Tuple } from 'three';
 
 import { DynamicBody } from './Dynamics';
 import calculateGravitation from '../systems/physics/forces/calculateGravitation';
+import { EARTH_RADIUS } from '../utils/constants';
+
+type PhysicalData = {
+  meanRadius: number;
+};
 
 class KeplerBody extends DynamicBody {
   private _orbitingBodies: KeplerBody[];
+  private _meanRadius: number = EARTH_RADIUS;
+
   constructor(
     mass?: number,
     initialPosition?: Vector3Tuple,
-    initialVelocity?: Vector3Tuple
+    initialVelocity?: Vector3Tuple,
+    meanRadius?: number
   ) {
     super(mass, initialPosition, initialVelocity);
     this._orbitingBodies = [];
+
+    if (meanRadius) this._meanRadius = meanRadius;
   }
 
   get orbitingBodies() {
     return this._orbitingBodies;
+  }
+  get meanRadius() {
+    return this._meanRadius;
   }
 
   addOrbitingBody(body: KeplerBody) {
