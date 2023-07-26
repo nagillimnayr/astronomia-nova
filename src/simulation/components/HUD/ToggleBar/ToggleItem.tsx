@@ -2,15 +2,14 @@ import { cn } from '@/lib/cn';
 import { type toggleMachine } from '@/state/xstate/toggle-machine/toggle-machine';
 import * as Toolbar from '@radix-ui/react-toolbar';
 import { useActor } from '@xstate/react';
-import { type Context, useContext, PropsWithChildren } from 'react';
+import { type PropsWithChildren } from 'react';
 import { type InterpreterFrom } from 'xstate';
 
 type Props = PropsWithChildren & {
-  context: Context<InterpreterFrom<typeof toggleMachine>>;
+  service: InterpreterFrom<typeof toggleMachine>;
 };
-export const ToggleItem = ({ children, context }: Props) => {
-  const actor = useContext(context);
-  const [state, send] = useActor(actor);
+export const ToggleItem = ({ children, service }: Props) => {
+  const [state, send] = useActor(service);
   const isActive = state.matches('active');
   return (
     <Toolbar.ToggleGroup

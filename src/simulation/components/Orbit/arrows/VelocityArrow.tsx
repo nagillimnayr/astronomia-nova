@@ -1,14 +1,15 @@
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
-import { VelArrowContext } from '@/state/xstate/toggle-machine/ToggleMachineProviders';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+
 import { useFrame } from '@react-three/fiber';
 import { useActor } from '@xstate/react';
 import { useContext, useRef } from 'react';
 import { type ArrowHelper } from 'three';
 
 const VelocityArrow = () => {
-  const actor = useContext(VelArrowContext);
-  const [state] = useActor(actor);
+  const { velArrowVis } = useContext(GlobalStateContext);
+  const [state] = useActor(velArrowVis);
   const isActive = state.matches('active');
 
   // Get reference to body from context.

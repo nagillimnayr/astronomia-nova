@@ -1,5 +1,5 @@
 import { cn } from '@/lib/cn';
-import { AnnotationVisContext } from '@/state/xstate/toggle-machine/ToggleMachineProviders';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { Html } from '@react-three/drei';
 import { useActor } from '@xstate/react';
 import { useContext } from 'react';
@@ -9,7 +9,8 @@ type AnnotationProps = {
 };
 const Annotation = (props: AnnotationProps) => {
   // Check if annotation visibility is on.
-  const [state] = useActor(useContext(AnnotationVisContext));
+  const { annotationVis } = useContext(GlobalStateContext);
+  const [state] = useActor(annotationVis);
   const isVisible = state.matches('active');
 
   return (

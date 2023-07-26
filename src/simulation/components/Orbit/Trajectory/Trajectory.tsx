@@ -9,11 +9,9 @@ import {
 } from 'three';
 import { getLinearEccentricityFromAxes } from '@/simulation/math/orbital-elements/LinearEccentricity';
 import { degToRad } from 'three/src/math/MathUtils';
-import { TrajectoryVisContext } from '@/state/xstate/toggle-machine/ToggleMachineProviders';
-import { useActor } from '@xstate/react';
 
-const X_UNIT_VECTOR = new Vector3(1, 0, 0);
-const rotation = new Euler(Math.PI / 2, 0, 0);
+import { useActor } from '@xstate/react';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 
 type TrajectoryProps = {
   semiMajorAxis: number;
@@ -32,7 +30,8 @@ export const Trajectory = ({
   orientation,
 }: TrajectoryProps) => {
   // Check if trajectory visibility is on.
-  const [state] = useActor(useContext(TrajectoryVisContext));
+  const { trajectoryVis } = useContext(GlobalStateContext);
+  const [state] = useActor(trajectoryVis);
   const isVisible = state.matches('active');
 
   const linearEccentricity = useMemo(() => {

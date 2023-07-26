@@ -10,9 +10,10 @@ import {
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Vector3 } from 'three';
-import { MarkerVisContext } from '@/state/xstate/toggle-machine/ToggleMachineProviders';
+
 import { useActor } from '@xstate/react';
 import { cn } from '@/lib/cn';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
@@ -26,7 +27,8 @@ export function BillboardCircle({ bodyRef }: Props) {
   const { uiState } = useContext(RootStoreContext);
 
   // Check if marker visibility is on.
-  const [state] = useActor(useContext(MarkerVisContext));
+  const { markerVis } = useContext(GlobalStateContext);
+  const [state] = useActor(markerVis);
   const isVisible = state.matches('active');
 
   const ref = useRef<HTMLDivElement>(null!);
