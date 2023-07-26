@@ -22,6 +22,7 @@ import { CentralMassContext } from '@/simulation/context/CentralMassContext';
 import { BodyMesh } from './BodyMesh';
 import { DIST_MULT } from '@/simulation/utils/constants';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { VelocityArrow } from '../Orbit/arrows/VelocityArrow';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
@@ -76,18 +77,14 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     [bodyRef]
   );
 
-  useFrame(({ controls }) => {
-    if (!bodyRef.current || !meshRef.current) return;
+  // useFrame(({ controls }) => {
+  //   if (!bodyRef.current || !meshRef.current) return;
 
-    // update mesh position to be in sync with body
-    // meshRef.current.position.copy(bodyRef.current.position);
+  //   // update mesh position to be in sync with body
+  //   // meshRef.current.position.copy(bodyRef.current.position);
 
-    if (!velocityArrowRef.current) return;
-    // update direction of velocity arrow
-    const direction = bodyRef.current.velocity.clone().normalize();
-    velocityArrowRef.current.setDirection(direction);
-    // velocityArrowRef.current.position.copy(bodyRef.current.position);
-  }, -1);
+  //   // velocityArrowRef.current.position.copy(bodyRef.current.position);
+  // }, -1);
 
   return (
     <>
@@ -126,14 +123,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
               ref={meshRef}
             />
 
-            <arrowHelper
-              ref={(arrow) => {
-                if (!arrow) return;
-                velocityArrowRef.current = arrow;
-                arrow.setColor('green');
-                arrow.setLength(2 * meanRadius, 0.2, 0.05);
-              }}
-            />
+            <VelocityArrow />
           </KeplerTreeContext.Provider>
         </CentralMassContext.Provider>
       </keplerBody>
