@@ -8,9 +8,6 @@ import Head from 'next/head';
 
 # Equations  
 
----
-### Kinematics  
-$$  \displaystyle v_{n+1} = v_n + a_n\Delta t $$
 
 ---
 ### Universal Gravitation
@@ -19,6 +16,43 @@ $$ \displaystyle F_g = \frac{GMm}{r^2} $$
 $$ \displaystyle a = \frac{GM}{r^2} = \frac{F_g}{m} $$
 
 ---  
+
+## Integration Methods
+
+---
+
+### Euler Method
+
+$$ \displaystyle \vec{v}_{n+1} = \vec{v}_n + \vec{a}_n\Delta t $$  
+$$ \displaystyle \vec{r}_{n+1} = \vec{r}_n + \vec{v}_n\Delta t $$
+
+---
+
+### Euler-Cromer Method 
+
+$$ \displaystyle \vec{v}_{n+1} = \vec{v}_n + \vec{a}_n\Delta t $$  
+$$ \displaystyle \vec{r}_{n+1} = \vec{r}_n + \vec{v}_{n+1}\Delta t $$
+
+---
+
+### Euler-Richardson Method
+
+$$ \displaystyle \vec{a}_{n} = \frac{F\left(\vec{r}_n\right)}{m} $$  
+
+$$ \displaystyle \vec{v}_{n+\frac{1}{2}} = \vec{v}_{n} + \frac{1}{2}\vec{a}_n\Delta t $$  
+
+$$ \displaystyle \vec{r}_{n+\frac{1}{2}} = \vec{r}_{n} + \frac{1}{2}\vec{v}_{n}\Delta t $$
+
+$$ \displaystyle \vec{a}_{n+\frac{1}{2}} = \frac{F\left( \vec{r}_{n+\frac{1}{2}}\right)}{m} $$ 
+
+
+$$ \displaystyle \vec{v}_{n+1} = \vec{v}_n + \vec{a}_{\frac{1}{2}}\Delta t $$  
+
+$$ \displaystyle \vec{r}_{n+1} = \vec{r}_n + \vec{v}_{\frac{1}{2}}\Delta t $$
+
+---
+
+---
 ### Vis-Viva
 
 $$ \displaystyle |\vec{v}| = \sqrt{ GM \left( \frac{2}{r} - \frac{1}{a} \right) } $$
@@ -60,5 +94,7 @@ $$ \displaystyle a = \frac{p}{1 - e^2} $$
 $$ \displaystyle i = \arccos{\left( \frac{ \vec{Z} \cdot \vec{h} }{h} \right)} $$
 
 ---
+
+
 
 </div>
