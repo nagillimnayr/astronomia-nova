@@ -37,43 +37,25 @@ const EarthMoon = () => {
   // use ref to store root of tree
   const rootRef = useRef<KeplerBody>(null!);
 
-  const assignAsRoot = (body: KeplerBody) => {
-    if (!body) {
-      return;
-    }
-    // keplerTreeState.setRoot(body);
-  };
-
   return (
-    <KeplerTreeContext.Provider value={assignAsRoot}>
+    <KeplerTreeContext.Provider value={null}>
       <CelestialSphere>
-        <Selection>
-          <EffectComposer autoClear={false} multisampling={8}>
-            <Outline
-              blur
-              edgeStrength={100}
-              visibleEdgeColor={0xffffff}
-              width={1000}
-            />
-          </EffectComposer>
-
-          <Body
-            ref={rootRef}
-            params={{
-              name: 'Sun',
-              mass: SOLAR_MASS,
-              color: 0xfdee00,
-              meanRadius: 1.5,
-              initialPosition: [0, 0, 0],
-              initialVelocity: [0, 0, 0],
-            }}
-            texture={sunTexture}
-          >
-            <Orbit name={'Earth'} texture={earthTexture}>
-              <Orbit name={'Moon'} texture={moonTexture}></Orbit>
-            </Orbit>
-          </Body>
-        </Selection>
+        <Body
+          ref={rootRef}
+          params={{
+            name: 'Sun',
+            mass: SOLAR_MASS,
+            color: 0xfdee00,
+            meanRadius: 1.5,
+            initialPosition: [0, 0, 0],
+            initialVelocity: [0, 0, 0],
+          }}
+          texture={sunTexture}
+        >
+          <Orbit name={'Earth'} texture={earthTexture}>
+            <Orbit name={'Moon'} texture={moonTexture}></Orbit>
+          </Orbit>
+        </Body>
       </CelestialSphere>
     </KeplerTreeContext.Provider>
   );
