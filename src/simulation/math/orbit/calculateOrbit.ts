@@ -30,6 +30,10 @@ import { calculateTrueAnomaly } from '../orbital-elements/anomalies/TrueAnomaly'
 import { getPosition } from '../orbital-elements/Position';
 import { getVelocityVector } from '../orbital-state-vectors/velocityVector';
 import { getPeriapsisFromEccentricity } from '../orbital-elements/apsides/Periapsis';
+import {
+  getOrbitalSpeedFromRadius,
+  getVelocityDirectionFromOrbitalElements,
+} from '../orbital-elements/Velocity';
 
 export const calculateOrbitFromPeriapsis = (
   periapsis: number,
@@ -182,15 +186,21 @@ export const calculateOrbitFromStateVectors = (
   );
 
   _pos.set(...getPosition(trueAnomaly, semiMajorAxis, eccentricity));
-  _vel.set(
-    ...getVelocityVector(
-      centralMass,
-      orbitingMass,
-      _specificAngularMomentum.length(),
-      trueAnomaly,
-      eccentricity
-    )
-  );
+
+  _vel
+    .copy(getVelocityDirectionFromOrbitalElements(trueAnomaly, eccentricity))
+    .multiplyScalar(
+      getOrbitalSpeedFromRadius(_pos.length(), centralMass, semiMajorAxis)
+    );
+  // _vel.set(
+  //   ...getVelocityVector(
+  //     centralMass,
+  //     orbitingMass,
+  //     _specificAngularMomentum.length(),
+  //     trueAnomaly,
+  //     eccentricity
+  //   )
+  // );
 
   console.log('position_0:', position.toArray());
   console.log('position_1:', _pos.toArray());
