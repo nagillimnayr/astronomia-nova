@@ -104,7 +104,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
           </object3D> */}
         <BillboardCircle bodyRef={bodyRef} />
 
-        <object3D position={[0, -meanRadius, 0]}>
+        <object3D position={[0, -meanRadius * 1.5, 0]}>
           <Annotation annotation={name} />
         </object3D>
         <CoordinateSphere bodyRef={bodyRef} radius={meanRadius} />
