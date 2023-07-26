@@ -2,11 +2,12 @@ import { makeAutoObservable } from 'mobx';
 import { type RootStore } from '../root/root-store';
 import type KeplerBody from '@/simulation/classes/KeplerBody';
 import { makeLoggable } from 'mobx-log';
-import { type Object3D, Vector3 } from 'three';
+import { type Object3D, Vector3, Spherical, Sphere } from 'three';
 import { CameraControls } from '@react-three/drei';
 
 // global vector to be reused instead of creating new vector inside of update loop
 const targetWorldPos = new Vector3();
+const _sphere = new Sphere();
 
 type ViewState = 'space' | 'surface';
 
@@ -62,6 +63,24 @@ export class CameraState {
 
   setFocus(target: Object3D) {
     this._focusTarget = target;
+    // this._focusTarget.add(this._controls.camera);
+    // this._controls.updateCameraUp();
+    // this._controls.applyCameraUp();
+
+    // Get world position of focus target.
+    // this._focusTarget.getWorldPosition(targetWorldPos);
+
+    // Update controls to follow target.
+    // this._controls
+    //   .moveTo(...targetWorldPos.toArray(), false)
+    //   .catch((reason) => {
+    //     console.log('error updating camera controls: ', reason);
+    //   });
+
+    // _sphere.set(targetWorldPos, 100);
+    // this._controls.fitToSphere(_sphere, false).catch((reason) => {
+    //   console.log('error updating camera controls: ', reason);
+    // });
   }
 
   get viewState() {
@@ -72,20 +91,20 @@ export class CameraState {
     this._viewState = viewState;
   }
 
-  updateCamera() {
+  updateCamera(deltaTime: number) {
     switch (this._viewState) {
       case 'space': {
-        this.updateSpaceView();
+        this.updateSpaceView(deltaTime);
         break;
       }
 
       case 'surface': {
-        this.updateSurfaceView();
+        this.updateSurfaceView(deltaTime);
         break;
       }
     }
   }
-  private updateSpaceView() {
+  private updateSpaceView(deltaTime: number) {
     if (!this._controls) {
       console.error('camera controls are null');
       return;
@@ -97,14 +116,27 @@ export class CameraState {
     // Get world position of focus target.
     this._focusTarget.getWorldPosition(targetWorldPos);
 
-    // Update controls to follow target.
+    // // Update controls to follow target.
     this._controls
       .moveTo(...targetWorldPos.toArray(), false)
       .catch((reason) => {
         console.log('error updating camera controls: ', reason);
       });
+
+    // this._controls
+    //   .setTarget(...targetWorldPos.toArray(), false)
+    //   .catch((reason) => {
+    //     console.log('error updating camera controls: ', reason);
+    //   });
+
+    // _sphere.set(targetWorldPos, 100);
+    // this._controls.fitToSphere(_sphere, false).catch((reason) => {
+    //   console.log('error updating camera controls: ', reason);
+    // });
+
+    this._controls.update(deltaTime);
   }
-  private updateSurfaceView() {
+  private updateSurfaceView(deltaTime: number) {
     // Do something...}
   }
 }

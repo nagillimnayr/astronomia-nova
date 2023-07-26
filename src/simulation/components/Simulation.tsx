@@ -44,7 +44,7 @@ const Simulation = ({ children }: SimProps) => {
     }
 
     // Update camera.
-    cameraState.updateCamera();
+    cameraState.updateCamera(delta);
     // useCameraStore.getState().updateCameraControls();
   });
 
