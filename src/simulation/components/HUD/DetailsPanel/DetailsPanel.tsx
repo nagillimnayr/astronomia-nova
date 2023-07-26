@@ -3,9 +3,11 @@ import { Separator } from '@/components/gui/Separator';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
 import { SurfaceViewButton } from './surface-view-dialog/SurfaceViewButton';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 
 const DetailsPanel = observer(() => {
   const { uiState, cameraState } = useContext(RootStoreContext);
+  const { cameraService } = useContext(GlobalStateContext);
 
   const handleCloseClick = useCallback(() => {
     // Deselect selected object.
@@ -14,8 +16,9 @@ const DetailsPanel = observer(() => {
 
   const handleFocusClick = useCallback(() => {
     // Focus camera on selection. We can be certain that its not null because the button won't be clickable if the selection is null.
-    cameraState.setFocus(uiState.getSelected()!);
-  }, [cameraState, uiState]);
+    // cameraState.setFocus(uiState.getSelected()!);
+    cameraService.send({ type: 'FOCUS', focus: uiState.getSelected()! });
+  }, [cameraService, uiState]);
 
   if (!uiState.selected) return null; // If nothing is selected, display nothing.
   return (

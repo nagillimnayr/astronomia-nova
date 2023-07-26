@@ -8,12 +8,15 @@ import { useSimStore } from '../state/zustand/sim-store';
 import { useCameraStore } from '../state/zustand/camera-store';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { CameraControls } from '@react-three/drei';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 
 type SimProps = {
   children: React.ReactNode;
 };
 const Simulation = ({ children }: SimProps) => {
   const { cameraState } = useContext(RootStoreContext);
+  const { cameraService } = useContext(GlobalStateContext);
+
   console.log('render Simulation');
   // function for accessing scene state
   const getThree = useThree((state) => state.get);
@@ -44,8 +47,8 @@ const Simulation = ({ children }: SimProps) => {
     }
 
     // Update camera.
-    cameraState.updateCamera(delta);
-    // useCameraStore.getState().updateCameraControls();
+    // cameraState.updateCamera(delta);
+    cameraService.send({ type: 'UPDATE', deltaTime: delta });
   });
 
   useKeyPressed(' ', (evt) => {
