@@ -1,4 +1,4 @@
-import { Sphere, useCursor, useHelper } from '@react-three/drei';
+import { Sphere, Trail, useCursor, useHelper } from '@react-three/drei';
 import { type ThreeEvent } from '@react-three/fiber';
 import { Select } from '@react-three/postprocessing';
 import {
@@ -108,6 +108,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
           <Annotation annotation={name} />
         </object3D>
         <CoordinateSphere bodyRef={bodyRef} radius={meanRadius} />
+
+        {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
       </Sphere>
       {/* </Select> */}
     </>
