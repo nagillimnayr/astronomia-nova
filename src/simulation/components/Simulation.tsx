@@ -50,10 +50,10 @@ const Simulation = ({ children }: SimProps) => {
 
   useKeyPressed(' ', (evt) => {
     evt.preventDefault();
-    const { camera, controls } = getThree();
+    // const { camera, controls } = getThree();
 
-    const camControls = controls as unknown as CameraControls;
-    console.log('Distance to gaze target:', camControls.distance);
+    // const camControls = controls as unknown as CameraControls;
+    // console.log('Distance to gaze target:', camControls.distance);
   });
 
   return (
