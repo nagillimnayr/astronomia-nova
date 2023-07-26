@@ -80,13 +80,13 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     if (!bodyRef.current || !meshRef.current) return;
 
     // update mesh position to be in sync with body
-    meshRef.current.position.copy(bodyRef.current.position);
+    // meshRef.current.position.copy(bodyRef.current.position);
 
     if (!velocityArrowRef.current) return;
     // update direction of velocity arrow
     const direction = bodyRef.current.velocity.clone().normalize();
     velocityArrowRef.current.setDirection(direction);
-    velocityArrowRef.current.position.copy(bodyRef.current.position);
+    // velocityArrowRef.current.position.copy(bodyRef.current.position);
   }, -1);
 
   return (
@@ -117,6 +117,23 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         <CentralMassContext.Provider value={mass}>
           <KeplerTreeContext.Provider value={bodyRef}>
             {children}
+            <BodyMesh
+              name={name}
+              meanRadius={meanRadius}
+              color={color}
+              texture={texture}
+              bodyRef={bodyRef}
+              ref={meshRef}
+            />
+
+            <arrowHelper
+              ref={(arrow) => {
+                if (!arrow) return;
+                velocityArrowRef.current = arrow;
+                arrow.setColor('green');
+                arrow.setLength(2 * meanRadius, 0.2, 0.05);
+              }}
+            />
           </KeplerTreeContext.Provider>
         </CentralMassContext.Provider>
       </keplerBody>
@@ -128,7 +145,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         </CentralMassContext.Provider> */}
 
         {/** Putting BodyMesh outside of KeplerBody and updating its position manually seems to work. */}
-        <BodyMesh
+        {/* <BodyMesh
           name={name}
           meanRadius={meanRadius}
           color={color}
@@ -144,7 +161,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
             arrow.setColor('green');
             arrow.setLength(2 * meanRadius, 0.2, 0.05);
           }}
-        />
+        /> */}
       </KeplerTreeContext.Provider>
     </>
   );
