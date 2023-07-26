@@ -84,5 +84,5 @@ export function getVelocityDirectionFromOrbitalElements(
   const vx = -Math.sin(trueAnomalyRadians);
   const vy = eccentricity + Math.cos(trueAnomalyRadians);
 
-  return new Vector3(vx, 0, -vy).normalize();
+  return new Vector3(vx, vy, 0).normalize();
 }
