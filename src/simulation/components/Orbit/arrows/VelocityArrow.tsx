@@ -23,6 +23,7 @@ const VelocityArrow = () => {
     // Update direction of velocity arrow.
     const direction = bodyRef.current.velocity.clone().normalize();
     arrowRef.current.setDirection(direction);
+    arrowRef.current.setLength(2 * bodyRef.current.meanRadius, 0.1, 0.05);
   });
   return (
     <arrowHelper
@@ -32,7 +33,7 @@ const VelocityArrow = () => {
         arrowRef.current = arrow;
         arrow.setColor('green');
         if (!bodyRef || !bodyRef.current) return;
-        arrow.setLength(1.5 * bodyRef.current.meanRadius, 0.2, 0.05);
+        arrow.setLength(2 * bodyRef.current.meanRadius, 0.1, 0.05);
       }}
     />
   );

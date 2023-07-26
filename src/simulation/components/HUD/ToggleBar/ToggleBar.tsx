@@ -4,6 +4,7 @@ import {
   AnnotationVisContext,
   MarkerVisContext,
   TrajectoryVisContext,
+  VelArrowContext,
 } from '@/state/xstate/toggle-machine/ToggleMachineProviders';
 import { type ClassNameValue } from 'tailwind-merge';
 import { cn } from '@/lib/cn';
@@ -30,6 +31,10 @@ export const ToggleBar = ({ className }: Props) => {
       {/** Marker Visibility Toggle. */}
       <ToggleItem context={MarkerVisContext}>
         <span className="icon-[mdi--target] text-xl" />
+      </ToggleItem>
+      {/** Velocity Arrow Visibility Toggle. */}
+      <ToggleItem context={VelArrowContext}>
+        <span className="icon-[mdi--arrow-top-right-thin] text-xl" />
       </ToggleItem>
     </RadixToolbar.Root>
   );
