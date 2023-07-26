@@ -71,7 +71,7 @@ export function BillboardCircle({ bodyRef }: Props) {
           ref={ref}
           onClick={handleClick}
           className={cn(
-            'aspect-square w-[30px] origin-center cursor-pointer rounded-full border-[3px] border-white bg-transparent transition-all hover:scale-150 ',
+            'aspect-square w-[24px] origin-center cursor-pointer rounded-full border-[3px] border-white bg-transparent transition-all hover:scale-150 ',
             isVisible ? 'border-white' : 'border-transparent'
           )}
         />
