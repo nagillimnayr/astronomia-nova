@@ -16,6 +16,9 @@ $$ \displaystyle F_g = \frac{GMm}{r^2} $$
 $$ \displaystyle a = \frac{GM}{r^2} = \frac{F_g}{m} $$
 
 ---  
+---  
+---  
+
 
 ## Integration Methods
 
@@ -37,7 +40,7 @@ $$ \displaystyle \vec{r}_{n+1} = \vec{r}_n + \vec{v}_{n+1}\Delta t $$
 
 ### Euler-Richardson Method
 
-$$ \displaystyle \vec{a}_{n} = \frac{F\left(\vec{r}_n\right)}{m} $$  
+$$ \displaystyle \vec{a}_{n} = \frac{F\left(\vec{r}_{n}\right)}{m} $$  
 
 $$ \displaystyle \vec{v}_{n+\frac{1}{2}} = \vec{v}_{n} + \frac{1}{2}\vec{a}_n\Delta t $$  
 
@@ -52,6 +55,19 @@ $$ \displaystyle \vec{r}_{n+1} = \vec{r}_n + \vec{v}_{\frac{1}{2}}\Delta t $$
 
 ---
 
+## Velocity Verlet
+
+$$ \displaystyle \vec{a}_{n} = \frac{F\left(\vec{r}_{n}\right)}{m} $$  
+
+$$ \displaystyle \vec{r}_{n+1} = \vec{r}_{n} + \vec{v}_{n}\Delta t + \frac{1}{2}\vec{a}_{n}\Delta t $$
+
+$$ \displaystyle \vec{a}_{n+1} = \frac{F\left(\vec{r}_{n+1}\right)}{m} $$  
+
+$$ \displaystyle \vec{v}_{n+1} = \vec{v}_{n} + \frac{1}{2}\left( \vec{a}_{n} + \vec{a}_{n+1} \right)\Delta t $$  
+
+
+---
+---
 ---
 ### Vis-Viva
 
