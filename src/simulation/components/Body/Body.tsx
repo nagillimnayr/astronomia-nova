@@ -127,32 +127,6 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
           </KeplerTreeContext.Provider>
         </CentralMassContext.Provider>
       </keplerBody>
-
-      <KeplerTreeContext.Provider value={bodyRef}>
-        {/* Child orbits need to know the mass of their central body. */}
-        {/* <CentralMassContext.Provider value={mass}>
-          {children}
-        </CentralMassContext.Provider> */}
-
-        {/** Putting BodyMesh outside of KeplerBody and updating its position manually seems to work. */}
-        {/* <BodyMesh
-          name={name}
-          meanRadius={meanRadius}
-          color={color}
-          texture={texture}
-          bodyRef={bodyRef}
-          ref={meshRef}
-        />
-
-        <arrowHelper
-          ref={(arrow) => {
-            if (!arrow) return;
-            velocityArrowRef.current = arrow;
-            arrow.setColor('green');
-            arrow.setLength(2 * meanRadius, 0.2, 0.05);
-          }}
-        /> */}
-      </KeplerTreeContext.Provider>
     </>
   );
 });

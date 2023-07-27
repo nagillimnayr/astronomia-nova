@@ -96,18 +96,16 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         onPointerLeave={() => setHovered(false)}
       >
         <meshBasicMaterial map={texture} color={color} />
-        {/* <meshLambertMaterial map={texture} color={color} /> */}
 
-        {/* <Annotation annotation={props.name} /> */}
-        {/* <object3D position={[0, -props.meanRadius, 0]}>
-            <Annotation annotation={props.name} />
-          </object3D> */}
         <BillboardCircle bodyRef={bodyRef} />
 
-        <object3D position={[0, -(meanRadius / DIST_MULT) * 1.5, 0]}>
+        <object3D position={[0, -(meanRadius / EARTH_RADIUS) * 1.5, 0]}>
           <Annotation annotation={name} />
         </object3D>
-        <CoordinateSphere bodyRef={bodyRef} radius={meanRadius / DIST_MULT} />
+        <CoordinateSphere
+          bodyRef={bodyRef}
+          radius={meanRadius / EARTH_RADIUS}
+        />
 
         {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
       </Sphere>
