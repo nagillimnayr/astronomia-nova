@@ -9,6 +9,9 @@ import {
 import { type Ephemeris } from './types/Ephemeris';
 
 const J2000 = `'2000-Jan-01 12:00:00'`;
+const SUN_CENTER = '500@10';
+const SOLAR_SYSTEM_BARYCENTER = '500@0';
+const DEFAULT_CENTER = SUN_CENTER;
 
 const horizonsSchema = z.object({
   result: z.string(),
@@ -60,7 +63,7 @@ async function fetchEphemerides(
 
 export async function getElementTable(
   id: string,
-  centerId = '500@10',
+  centerId = DEFAULT_CENTER,
   referencePlane: ReferencePlane = 'ECLIPTIC'
 ) {
   // Get the raw text data from the Horizons API.
@@ -74,7 +77,7 @@ export async function getElementTable(
 
 export async function getVectorTable(
   id: string, // Horizons' id for body.
-  centerId = '500@10', // Horizons' id for central body.
+  centerId = DEFAULT_CENTER, // Horizons' id for central body.
   referencePlane: ReferencePlane = 'ECLIPTIC'
 ) {
   // Get the raw text data from Horizons API.
@@ -87,7 +90,7 @@ export async function getVectorTable(
 
 export async function getPhysicalData(
   id: string, // Horizons' id for body.
-  centerId = '500@10', // Horizons' id for central body.
+  centerId = DEFAULT_CENTER, // Horizons' id for central body.
   referencePlane: ReferencePlane = 'ECLIPTIC'
 ) {
   // Get the raw text data from Horizons API.
@@ -100,7 +103,7 @@ export async function getPhysicalData(
 
 export async function getEphemerides(
   id: string, // Horizons' id for body.
-  centerId = '500@10', // Horizons' id for central body.
+  centerId = DEFAULT_CENTER, // Horizons' id for central body.
   referencePlane: ReferencePlane = 'ECLIPTIC'
 ) {
   // Get ephemeris data from Horizons.

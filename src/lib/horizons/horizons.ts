@@ -1,16 +1,20 @@
 import { getEphemerides } from './getEphemerides';
 import { saveEphemerides } from './saveEphemerides';
 
+const SUN_CENTER = '500@10';
+const SOLAR_SYSTEM_BARYCENTER = '500@0';
+const DEFAULT_CENTER = SUN_CENTER;
+
 const idSets = [
-  { id: '199', centerId: '500@10' },
-  { id: '299', centerId: '500@10' },
-  { id: '399', centerId: '500@10' },
+  { id: '199', centerId: DEFAULT_CENTER },
+  { id: '299', centerId: DEFAULT_CENTER },
+  { id: '399', centerId: DEFAULT_CENTER },
   { id: '301', centerId: '500@399' },
-  { id: '499', centerId: '500@10' },
-  { id: '599', centerId: '500@10' },
-  { id: '699', centerId: '500@10' },
-  { id: '799', centerId: '500@10' },
-  { id: '899', centerId: '500@10' },
+  { id: '499', centerId: DEFAULT_CENTER },
+  { id: '599', centerId: DEFAULT_CENTER },
+  { id: '699', centerId: DEFAULT_CENTER },
+  { id: '799', centerId: DEFAULT_CENTER },
+  { id: '899', centerId: DEFAULT_CENTER },
 ];
 
 if (process.argv.length >= 3) {
