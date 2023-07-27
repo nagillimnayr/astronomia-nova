@@ -69,7 +69,7 @@ const SolarSystem = () => {
             name: 'Sun',
             mass: SOLAR_MASS,
             color: 0xfdee00,
-            meanRadius: SUN_RADIUS,
+            meanRadius: SUN_RADIUS * 10,
             initialPosition: [0, 0, 0],
             initialVelocity: [0, 0, 0],
           }}
