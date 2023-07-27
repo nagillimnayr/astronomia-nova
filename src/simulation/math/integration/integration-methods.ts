@@ -3,9 +3,8 @@ import calculateGravitation from '../motion/gravitation';
 import { Vector3 } from 'three';
 
 // The central body will always be at the zero vector of the local coordinate space of the orbiting body, so we can simply use a zero vector.
-const _centralPos = new Vector3();
+const _origin = Object.freeze(new Vector3());
 
-const _origin = new Vector3();
 const _pos0 = new Vector3();
 const _pos1 = new Vector3();
 const _posMid = new Vector3();
