@@ -4,6 +4,7 @@ import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
 import { SurfaceViewButton } from './surface-view-dialog/SurfaceViewButton';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { DIST_MULT } from '@/simulation/utils/constants';
 
 const DetailsPanel = observer(() => {
   const { uiState, cameraState } = useContext(RootStoreContext);
@@ -41,12 +42,17 @@ const DetailsPanel = observer(() => {
         <div className="flex w-full flex-col items-start justify-start">
           {/** Mass. */}
           <span>
-            Mass:&nbsp;<span>{}</span>
+            Mass:
+            <br />
+            <span>{uiState.selected.mass.toExponential(3)}</span>&nbsp;kg
           </span>
           {/** Radius. */}
-          <span>
-            Mean radius:&nbsp;<span>{}</span>
-          </span>
+          {/* <span>
+            Mean radius:
+            <br />
+            <span>{uiState.selected.meanRadius.toExponential(3)}</span>
+            &nbsp;m
+          </span> */}
         </div>
         <div className="flex w-full flex-col items-start justify-start">
           {/** Velocity. */}
