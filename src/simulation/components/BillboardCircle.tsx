@@ -59,7 +59,7 @@ export function BillboardCircle({ bodyRef }: Props) {
     // Get distance to camera.
     const sqDistance = _bodyWorldPos.distanceToSquared(_camWorldPos);
 
-    const opacity = Math.min(sqDistance / 1e4, 1);
+    const opacity = Math.min(sqDistance / 1e5, 1);
 
     ref.current.style.opacity = `${opacity ** 2}`;
   });
