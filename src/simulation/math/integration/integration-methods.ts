@@ -114,8 +114,8 @@ export function eulerRichardsonMethod(
   body.velocity.copy(_vel1);
 }
 
-// Verlet Integration
-export function verletIntegration(
+// Velocity Verlet Integration
+export function velocityVerletIntegration(
   body: KeplerBody,
   centralMass: number,
   deltaTime: number
