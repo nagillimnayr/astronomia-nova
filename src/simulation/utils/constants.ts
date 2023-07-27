@@ -1,6 +1,7 @@
 export const GRAV_CONST = 6.674e-11; // Gravitational Constant m^3/kg/s^2;
 export const AU = 1.495978707e11; // Astronomical Unit in m
-export const SOLAR_MASS = 1.989e30; // Solar Mass in kg
+// export const SOLAR_MASS = 1.989e30; // Solar Mass in kg
+export const SOLAR_MASS = 1988500e24; // Solar Mass in kg
 export const DAY = 86400; // Day in seconds
 export const YEAR = 360.25; // Year in Days
 // export const DIST_MULT = 1e10; // Distance multiplier (10 unit = 1x10^11m = 100,000,000km)
