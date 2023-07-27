@@ -14,6 +14,7 @@ import { Vector3 } from 'three';
 import { useActor } from '@xstate/react';
 import { cn } from '@/lib/cn';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { EARTH_RADIUS } from '../utils/constants';
 
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
@@ -59,7 +60,10 @@ export function BillboardCircle({ bodyRef }: Props) {
     // Get distance to camera.
     const sqDistance = _bodyWorldPos.distanceToSquared(_camWorldPos);
 
-    const opacity = Math.min(sqDistance / 1e4, 1);
+    const opacity = Math.min(
+      sqDistance / (1e4 * (bodyRef.current.meanRadius / EARTH_RADIUS)),
+      1
+    );
 
     ref.current.style.opacity = `${opacity ** 2}`;
   });
