@@ -131,7 +131,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     name: name,
     color: 'white',
     mass: physicalData.mass,
-    meanRadius: physicalData.meanRadius / EARTH_RADIUS,
+    meanRadius: physicalData.meanRadius,
     initialPosition: vectorTable.position.map(
       (val) => val / DIST_MULT
     ) as Vector3Tuple,
