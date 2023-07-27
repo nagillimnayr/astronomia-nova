@@ -5,7 +5,9 @@ import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useFrame } from '@react-three/fiber';
 import { useActor } from '@xstate/react';
 import { useContext, useRef } from 'react';
-import { type ArrowHelper } from 'three';
+import { Vector3, type ArrowHelper } from 'three';
+
+const _vel = new Vector3();
 
 const VelocityArrow = () => {
   const { velArrowVis } = useContext(GlobalStateContext);
@@ -21,8 +23,15 @@ const VelocityArrow = () => {
     if (!bodyRef || !bodyRef.current) return;
 
     if (!arrowRef.current) return;
+
     // Update direction of velocity arrow.
-    const direction = bodyRef.current.velocity.clone().normalize();
+    _vel.copy(bodyRef.current.velocity);
+    if (_vel.lengthSq() < 1e-10) {
+      arrowRef.current = null;
+      return;
+    }
+
+    const direction = _vel.normalize();
     arrowRef.current.setDirection(direction);
     arrowRef.current.setLength(2 * bodyRef.current.meanRadius, 0.1, 0.05);
   });
