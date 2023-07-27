@@ -10,6 +10,6 @@ export const DIST_MULT = 1e9; // Distance multiplier
 export const KM_TO_M = 1000; // User enters value in km and this converts it to m
 export const MASS_MULT = 1e24;
 export const EARTH_RADIUS = 6371.0084e3;
-export const SUN_RADIUS = 696340e3 / DIST_MULT;
+export const SUN_RADIUS = 696340e3;
 
 export const PI_SQUARED = Math.pow(Math.PI, 2);

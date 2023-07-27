@@ -33,7 +33,11 @@ const VelocityArrow = () => {
 
     const direction = _vel.normalize();
     arrowRef.current.setDirection(direction);
-    arrowRef.current.setLength(2 * bodyRef.current.meanRadius, 0.1, 0.05);
+    arrowRef.current.setLength(
+      2 * (bodyRef.current.meanRadius / EARTH_RADIUS),
+      0.1,
+      0.05
+    );
   });
   return (
     <arrowHelper

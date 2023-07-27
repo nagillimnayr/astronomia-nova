@@ -45,7 +45,7 @@ const Scene = ({ children }: PropsWithChildren) => {
             <XR>
               <PerspectiveCamera
                 makeDefault
-                position={[0, 0, SUN_RADIUS + 1000]}
+                position={[0, 0, SUN_RADIUS / 10 / DIST_MULT + 1000]}
                 near={1e-5}
                 far={1e14}
               />

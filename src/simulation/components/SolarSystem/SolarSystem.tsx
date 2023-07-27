@@ -62,14 +62,13 @@ const SolarSystem = () => {
               width={1000}
             />
           </EffectComposer> */}
-
         <Body
           ref={rootRef}
           params={{
             name: 'Sun',
             mass: SOLAR_MASS,
             color: 0xfdee00,
-            meanRadius: SUN_RADIUS * 10,
+            meanRadius: SUN_RADIUS / 10,
             initialPosition: [0, 0, 0],
             initialVelocity: [0, 0, 0],
           }}

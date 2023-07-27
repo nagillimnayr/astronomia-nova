@@ -22,7 +22,7 @@ import Annotation from '../Annotation';
 import { BillboardCircle } from '../BillboardCircle';
 import { degToRad } from 'three/src/math/MathUtils';
 import { CoordinateSphere } from './CoordinateSphere';
-import { EARTH_RADIUS } from '@/simulation/utils/constants';
+import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 
 // Separate out the visual logic from the simulation logic.
 
@@ -89,7 +89,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         rotation={[degToRad(90), 0, 0]}
         visible={isVisible}
         ref={meshRef}
-        args={[meanRadius]}
+        args={[meanRadius / EARTH_RADIUS]}
         onClick={handleClick}
         onPointerMissed={handleMiss}
         onPointerOver={() => setHovered(true)}
@@ -104,10 +104,10 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
           </object3D> */}
         <BillboardCircle bodyRef={bodyRef} />
 
-        <object3D position={[0, -meanRadius * 1.5, 0]}>
+        <object3D position={[0, -(meanRadius / DIST_MULT) * 1.5, 0]}>
           <Annotation annotation={name} />
         </object3D>
-        <CoordinateSphere bodyRef={bodyRef} radius={meanRadius} />
+        <CoordinateSphere bodyRef={bodyRef} radius={meanRadius / DIST_MULT} />
 
         {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
       </Sphere>
