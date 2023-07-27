@@ -14,6 +14,7 @@ import { useActor } from '@xstate/react';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { cn } from '@/lib/cn';
+import { DIST_MULT } from '@/simulation/utils/constants';
 
 const _xAxis = new Vector3(1, 0, 0);
 
@@ -48,10 +49,10 @@ export const Trajectory = ({
 
   const points = useMemo(() => {
     return new EllipseCurve(
-      -linearEccentricity,
+      -linearEccentricity / DIST_MULT,
       0,
-      semiMajorAxis,
-      semiMinorAxis
+      semiMajorAxis / DIST_MULT,
+      semiMinorAxis / DIST_MULT
     ).getSpacedPoints(1024);
   }, [semiMajorAxis, semiMinorAxis, linearEccentricity]);
 
@@ -81,10 +82,10 @@ export const Trajectory = ({
             if (!arrow) return;
             arrowRef.current = arrow;
             arrow.setColor('red');
-            // arrow.position.set(-linearEccentricity, 0, 0);
+            // arrow.position.set(-linearEccentricity  / DIST_MULT, 0, 0);
             arrow.setDirection(_xAxis);
-            // arrow.setLength(semiMajorAxis, 1, 0.25);
-            arrow.setLength(periapsis, 1, 0.25);
+            // arrow.setLength(semiMajorAxis  / DIST_MULT, 1, 0.25);
+            arrow.setLength(periapsis  / DIST_MULT, 1, 0.25);
           }}
         /> */}
       </object3D>
