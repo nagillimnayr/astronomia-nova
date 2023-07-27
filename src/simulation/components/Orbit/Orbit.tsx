@@ -125,6 +125,8 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     ) / DIST_MULT;
   const semiMajorAxis = elementTable.semiMajorAxis / DIST_MULT;
 
+  const periapsis = elementTable.periapsis / DIST_MULT;
+
   const bodyParams: BodyParams = {
     name: name,
     color: 'white',
@@ -162,6 +164,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
       <Trajectory
         semiMajorAxis={semiMajorAxis}
         semiMinorAxis={semiMinorAxis}
+        periapsis={periapsis}
         orientation={{
           longitudeOfAscendingNode,
           argumentOfPeriapsis,

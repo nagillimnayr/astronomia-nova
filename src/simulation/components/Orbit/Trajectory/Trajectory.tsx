@@ -12,10 +12,15 @@ import { degToRad } from 'three/src/math/MathUtils';
 
 import { useActor } from '@xstate/react';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
+import { cn } from '@/lib/cn';
+
+const _xAxis = new Vector3(1, 0, 0);
 
 type TrajectoryProps = {
   semiMajorAxis: number;
   semiMinorAxis: number;
+  periapsis: number;
   // linearEccentricity?: number;
   orientation: {
     longitudeOfAscendingNode: number;
@@ -27,12 +32,15 @@ type TrajectoryProps = {
 export const Trajectory = ({
   semiMajorAxis,
   semiMinorAxis,
+  periapsis,
   orientation,
 }: TrajectoryProps) => {
   // Check if trajectory visibility is on.
   const { trajectoryVis } = useContext(GlobalStateContext);
   const [state] = useActor(trajectoryVis);
   const isVisible = state.matches('active');
+
+  const bodyRef = useContext(KeplerTreeContext);
 
   const linearEccentricity = useMemo(() => {
     return getLinearEccentricityFromAxes(semiMajorAxis, semiMinorAxis);
@@ -47,10 +55,9 @@ export const Trajectory = ({
     ).getSpacedPoints(1024);
   }, [semiMajorAxis, semiMinorAxis, linearEccentricity]);
 
-  // const arrowRef = useRef<ArrowHelper>(null!);
+  const arrowRef = useRef<ArrowHelper>(null!);
 
   const ref = useRef<Object3D>(null!);
-
   return (
     <>
       <object3D
@@ -74,9 +81,10 @@ export const Trajectory = ({
             if (!arrow) return;
             arrowRef.current = arrow;
             arrow.setColor('red');
-            arrow.position.set(-linearEccentricity, 0, 0);
-            arrow.setDirection(X_UNIT_VECTOR);
-            arrow.setLength(semiMajorAxis, 1, 0.25);
+            // arrow.position.set(-linearEccentricity, 0, 0);
+            arrow.setDirection(_xAxis);
+            // arrow.setLength(semiMajorAxis, 1, 0.25);
+            arrow.setLength(periapsis, 1, 0.25);
           }}
         /> */}
       </object3D>
