@@ -1,5 +1,5 @@
+import { Vector3Tuple } from 'three';
 import { calculateOrbitFromPeriapsis } from '../math/orbit/calculateOrbit';
-import Vec3 from '../types/Vec3';
 
 type OrbitElements = {
   semiMajorAxis: number;
@@ -34,8 +34,8 @@ type InitialParameters = {
 };
 
 type StateVectors = {
-  position?: Vec3;
-  velocity?: Vec3;
+  position?: Vector3Tuple;
+  velocity?: Vector3Tuple;
 };
 
 export class OrbitalElements {
