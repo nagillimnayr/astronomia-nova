@@ -8,7 +8,6 @@ import {
   MeshBasicMaterial,
 } from 'three';
 import PointMass from '../interfaces/PointMass';
-import Vec3 from '../types/Vec3';
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();
@@ -17,7 +16,7 @@ class KinematicBody extends Object3D {
   private _velocity: Vector3;
   private _acceleration: Vector3;
 
-  constructor(initialPosition?: Vec3, initialVelocity?: Vec3) {
+  constructor(initialPosition?: Vector3Tuple, initialVelocity?: Vector3Tuple) {
     super();
     if (initialPosition) {
       this.position.set(...initialPosition);
