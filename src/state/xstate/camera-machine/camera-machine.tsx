@@ -90,7 +90,12 @@ export const cameraMachine = createMachine(
           return event.canvas;
         },
       }),
-      assignControls: assign({ controls: (_, event) => event.controls }),
+      assignControls: assign({
+        controls: (_, event) => {
+          event.controls.mouseButtons.right = 8; // Zoom on right mouse button
+          return event.controls;
+        },
+      }),
       assignFocus: assign({
         // Set new focus target.
         focus: (_, event) => event.focus,
