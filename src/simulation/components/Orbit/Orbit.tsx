@@ -27,7 +27,10 @@ import {
   getOrbitalSpeedFromRadius,
   getVelocityDirectionFromOrbitalElements,
 } from '@/simulation/math/orbital-elements/Velocity';
-import { getPositionFromRadius } from '@/simulation/math/orbital-elements/Position';
+import {
+  getPosition,
+  getPositionFromRadius,
+} from '@/simulation/math/orbital-elements/Position';
 import { useFrame } from '@react-three/fiber';
 import { type BodyKey } from '@/lib/horizons/BodyKey';
 import { trpc } from '@/lib/trpc/trpc';
@@ -118,14 +121,24 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     elementTable.semiMajorAxis,
     elementTable.eccentricity
   );
-  const semiMinorAxis =
-    getSemiMinorAxisFromSemiLatusRectum(
-      elementTable.semiMajorAxis,
-      semiLatusRectum
-    ) / DIST_MULT;
-  const semiMajorAxis = elementTable.semiMajorAxis / DIST_MULT;
+  const semiMinorAxis = getSemiMinorAxisFromSemiLatusRectum(
+    elementTable.semiMajorAxis,
+    semiLatusRectum
+  );
+  const semiMajorAxis = elementTable.semiMajorAxis;
 
-  const periapsis = elementTable.periapsis / DIST_MULT;
+  const periapsis = elementTable.periapsis;
+
+  // The Horizons ephemeris data for Jupiter seems to result in it wobbling a bit on its orbit. Using the Vis-Viva equation to re-calculate the velocity seems to fix it though. It also appears to have fixed some wobble with the moon.
+  _pos.set(...vectorTable.position);
+  const orbitalSpeed = getOrbitalSpeedFromRadius(
+    _pos.length(),
+    centralMass,
+    semiMajorAxis
+  );
+  _vel.set(...vectorTable.velocity);
+  _vel.normalize();
+  _vel.multiplyScalar(orbitalSpeed);
 
   const bodyParams: BodyParams = {
     name: name,
@@ -135,9 +148,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     initialPosition: vectorTable.position.map(
       (val) => val / DIST_MULT
     ) as Vector3Tuple,
-    initialVelocity: vectorTable.velocity.map(
-      (val) => val / DIST_MULT
-    ) as Vector3Tuple,
+    initialVelocity: _vel.divideScalar(DIST_MULT).toArray(),
   };
 
   // Destructure the orientation elements.

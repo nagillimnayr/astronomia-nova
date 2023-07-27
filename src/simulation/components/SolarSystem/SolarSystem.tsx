@@ -77,7 +77,7 @@ const SolarSystem = () => {
           <Orbit name={'Mercury'} texture={mercuryTexture}></Orbit>
           <Orbit name={'Venus'} texture={venusTexture}></Orbit>
           <Orbit name={'Earth'} texture={earthTexture}>
-            {/* <Orbit name={'Moon'} texture={moonTexture}></Orbit> */}
+            <Orbit name={'Moon'} texture={moonTexture}></Orbit>
           </Orbit>
           <Orbit name={'Mars'} texture={marsTexture}></Orbit>
           <Orbit name={'Jupiter'} texture={jupiterTexture}></Orbit>
