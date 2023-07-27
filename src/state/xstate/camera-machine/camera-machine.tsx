@@ -2,6 +2,8 @@ import { assign, createMachine } from 'xstate';
 import { type Object3D, Vector3 } from 'three';
 import { type CameraControls } from '@react-three/drei';
 import { type MutableRefObject } from 'react';
+import KeplerBody from '@/simulation/classes/KeplerBody';
+import { EARTH_RADIUS } from '@/simulation/utils/constants';
 
 type Context = {
   canvas: HTMLCanvasElement; // Reference to the canvas element.
@@ -98,7 +100,11 @@ export const cameraMachine = createMachine(
       }),
       assignFocus: assign({
         // Set new focus target.
-        focus: (_, event) => event.focus,
+        focus: (context, event) => {
+          const body = event.focus as KeplerBody;
+          context.controls.minDistance = 0.01 + body.meanRadius / EARTH_RADIUS;
+          return event.focus;
+        },
       }),
       updateSpaceView: (context, event) => {
         const controls = context.controls;
