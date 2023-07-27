@@ -1,7 +1,6 @@
 import { Vector3Tuple } from 'three';
 
 import { DynamicBody } from './Dynamics';
-import calculateGravitation from '../systems/physics/forces/calculateGravitation';
 import { EARTH_RADIUS } from '../utils/constants';
 
 type PhysicalData = {
