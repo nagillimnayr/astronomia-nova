@@ -19,7 +19,7 @@ export const TimescaleSlider = () => {
 
   const handleChange = useCallback(
     (values: number[]) => {
-      if (values.length > 0 && values[0] !== undefined) {
+      if (values.length >= 0 && values[0] !== undefined) {
         // setValue(values[0]);
         const value = values[0];
         if (value !== timescale) {
@@ -41,9 +41,9 @@ export const TimescaleSlider = () => {
     <form>
       <RadixSlider.Root
         className="relative flex h-5 w-[200px] touch-none select-none items-center rounded-full"
-        defaultValue={[1]}
+        // defaultValue={[1]}
         value={[timescale]}
-        min={1}
+        min={-100}
         max={100}
         step={1}
         onValueChange={handleChange}

@@ -51,22 +51,32 @@ export function makeFixedUpdateFn<Type>(
   updateFn: (obj: Type, timeStep: number) => void,
   stepsPerSecond: number
 ) {
-  let remainder = 0; // Will be captured in closure
-  const timeStep = 1 / stepsPerSecond; // constant time step between updates
+  let remainder = 0; // Will be captured in closure.
+  const timeStep = 1 / stepsPerSecond; // constant time step between updates.
 
   const update = (obj: Type, deltaTime: number) => {
     // determine how many updates we need to do for this frame
-    const numOfStepsFloat = stepsPerSecond * deltaTime + remainder;
-    // this value will likely be a floating point number, so
-    // we must truncate it to an integer
+    const numOfStepsFloat = stepsPerSecond * Math.abs(deltaTime) + remainder;
+    // This value will likely be a floating point number, so we must truncate it to an integer.
     const numOfStepsInt = floor(numOfStepsFloat);
 
-    // Save the truncated part to add it on during the next update
+    // Save the truncated part to add it on during the next update.
     remainder = numOfStepsFloat - numOfStepsInt;
 
-    // Call the update function the requisite number of times
-    for (let i = 0; i < numOfStepsInt; i++) {
-      updateFn(obj, timeStep);
+    if (deltaTime >= 0) {
+      // Call the update function the requisite number of times.
+      for (let i = 0; i < numOfStepsInt; i++) {
+        updateFn(obj, timeStep);
+      }
+    }
+    // If time reversed:
+    else {
+      // NOTE: The remainder being added on shouldn't be an issue, as the size of the time-steps are constant in either direction.
+
+      // Call the update function the requisite number of times.
+      for (let i = 0; i < numOfStepsInt; i++) {
+        updateFn(obj, -timeStep);
+      }
     }
   };
 

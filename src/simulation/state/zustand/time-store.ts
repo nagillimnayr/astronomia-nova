@@ -6,6 +6,8 @@ import { DAY } from '@/simulation/utils/constants';
 
 // J2000 epoch
 export const J2000 = new Date(2000, 0, 1, 12, 0, 0, 0);
+const MIN_TIMESCALE = -100;
+const MAX_TIMESCALE = 100;
 
 // import { create } from 'zustand';
 type State = {
@@ -44,14 +46,14 @@ export const useTimeStore = create<TimeStore>()(
 
     incrementTimescale: (val = 1) => {
       const newTimescale = get().timescale + val;
-      set({ timescale: Math.min(newTimescale, 100) });
+      set({ timescale: Math.min(newTimescale, MAX_TIMESCALE) });
     },
     decrementTimescale: (val = 1) => {
       const newTimescale = get().timescale - val;
-      set({ timescale: Math.max(newTimescale, 1) });
+      set({ timescale: Math.max(newTimescale, MIN_TIMESCALE) });
     },
     setTimescale: (val: number) => {
-      set({ timescale: clamp(val, 0, 100) });
+      set({ timescale: clamp(val, MIN_TIMESCALE, MAX_TIMESCALE) });
     },
 
     pause: () => {
@@ -62,13 +64,13 @@ export const useTimeStore = create<TimeStore>()(
     },
 
     addTimeToClock: (deltaTime: number) => {
-      if (deltaTime < 0) {
-        return;
-      }
+      // if (deltaTime < 0) {
+      //   return;
+      // }
       set({ timeElapsed: get().timeElapsed + deltaTime });
     },
 
-    // computes the current date based on the timeElapsed relative to the start date (refDate)
+    // Computes the current date based on the timeElapsed relative to the start date (refDate).
     getCurrentDate: () => {
       return addSeconds(get().refDate, get().timeElapsed * DAY);
     },
