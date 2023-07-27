@@ -7,6 +7,7 @@ import {
   eulerMethod,
   eulerRichardsonMethod,
   midpointMethod,
+  verletIntegration,
 } from '../math/integration/integration-methods';
 
 /**
@@ -67,7 +68,8 @@ export const traverseKeplerTree = makePreOrderTreeTraversalFn(
       // Integrate.
 
       // endpointMethod(orbitingBody, body.mass, deltaTime);
-      eulerRichardsonMethod(orbitingBody, body.mass, deltaTime);
+      // eulerRichardsonMethod(orbitingBody, body.mass, deltaTime);
+      verletIntegration(orbitingBody, body.mass, deltaTime);
     }
   }
 );
