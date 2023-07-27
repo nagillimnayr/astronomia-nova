@@ -2,15 +2,23 @@ import { cn } from '@/lib/cn';
 import { type toggleMachine } from '@/state/xstate/toggle-machine/toggle-machine';
 import * as Toolbar from '@radix-ui/react-toolbar';
 import { useActor } from '@xstate/react';
-import { type PropsWithChildren } from 'react';
+import { useEffect, type PropsWithChildren } from 'react';
 import { type InterpreterFrom } from 'xstate';
 
 type Props = PropsWithChildren & {
   service: InterpreterFrom<typeof toggleMachine>;
+  defaultOff?: boolean;
 };
-export const ToggleItem = ({ children, service }: Props) => {
+export const ToggleItem = ({ children, service, defaultOff }: Props) => {
   const [state, send] = useActor(service);
   const isActive = state.matches('active');
+
+  useEffect(() => {
+    if (defaultOff) {
+      send('TOGGLE');
+    }
+  }, [defaultOff, send]);
+
   return (
     <Toolbar.ToggleGroup
       className="inline-flex w-fit items-center justify-center "

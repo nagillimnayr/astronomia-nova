@@ -26,8 +26,9 @@ const VelocityArrow = () => {
 
     // Update direction of velocity arrow.
     _vel.copy(bodyRef.current.velocity);
-    if (_vel.lengthSq() < 1e-10) {
-      arrowRef.current = null;
+    const lenSq = _vel.lengthSq();
+    if (lenSq < 1e-12) {
+      arrowRef.current.setLength(lenSq, 0.1, 0.05);
       return;
     }
 

@@ -32,7 +32,7 @@ export const ToggleBar = ({ className }: Props) => {
         <span className="icon-[mdi--target] text-xl" />
       </ToggleItem>
       {/** Velocity Arrow Visibility Toggle. */}
-      <ToggleItem service={velArrowVis}>
+      <ToggleItem service={velArrowVis} defaultOff>
         <span className="icon-[mdi--arrow-top-right-thin] text-xl" />
       </ToggleItem>
     </RadixToolbar.Root>
