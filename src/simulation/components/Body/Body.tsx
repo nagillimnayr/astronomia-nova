@@ -125,6 +125,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
           <BodyMesh
             name={name}
             meanRadius={meanRadius}
+            obliquity={obliquity ?? 0}
             color={color}
             texture={texture}
             bodyRef={bodyRef}

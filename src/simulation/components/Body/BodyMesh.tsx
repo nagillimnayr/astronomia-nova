@@ -22,8 +22,10 @@ import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import Annotation from '../Annotation';
 import { Marker } from '../Marker';
 import { degToRad } from 'three/src/math/MathUtils';
-import { CoordinateSphere } from '../surface-view/CoordinateSphere';
+// import { CoordinateSphere } from '../surface-view/CoordinateSphere';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { useSelector } from '@xstate/react';
 
 // Separate out the visual logic from the simulation logic.
 
@@ -31,27 +33,25 @@ type BodyMeshProps = {
   name: string;
   bodyRef: MutableRefObject<KeplerBody>;
   meanRadius: number;
+  obliquity: number;
   texture?: Texture;
-  color: ColorRepresentation;
+  color?: ColorRepresentation;
 };
 
 export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
-  { name, bodyRef, meanRadius, texture, color }: BodyMeshProps,
+  { name, bodyRef, meanRadius, obliquity, texture, color }: BodyMeshProps,
   fwdRef
 ) {
-  const { uiState } = useContext(RootStoreContext);
+  const { selectionService } = useContext(GlobalStateContext);
 
   const meshRef = useRef<Mesh>(null!);
 
-  const [isVisible, setVisible] = useState<boolean>(true);
+  // const [isVisible, setVisible] = useState<boolean>(true);
 
-  const [isSelected, setSelected] = useState<boolean>(false);
+  // const [isSelected, setSelected] = useState<boolean>(false);
   const [isHovered, setHovered] = useState<boolean>(false);
   //const [isTrailVisible, setTrailVisibility] = useState<boolean>(false);
   useCursor(isHovered, 'pointer');
-
-  // check if we should show bounding boxes
-  // useHelper(debugSnap.boundingBoxes ? meshRef : null, BoxHelper, 'cyan');
 
   // event handlers
   const handleClick = useCallback(
@@ -61,17 +61,17 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         return;
       }
       const body: KeplerBody = bodyRef.current;
-      // select body
-      uiState.select(body);
+      // Select body.
+      selectionService.send({ type: 'SELECT', selection: body });
     },
-    [bodyRef, uiState]
+    [bodyRef, selectionService]
   );
-  const handleMiss = (e: MouseEvent) => {
-    if (!meshRef.current) return;
-    if (isSelected) {
-      setSelected(false);
-    }
-  };
+  // const handleMiss = (e: MouseEvent) => {
+  //   if (!meshRef.current) return;
+  //   // if (isSelected) {
+  //   //   // setSelected(false);
+  //   // }
+  // };
 
   // Set forwarded ref
   // the return value of the callback function will be assigned to fwdRef
@@ -87,16 +87,16 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     <>
       {/* <Select enabled={isSelected}> */}
       <Sphere
-        rotation={[degToRad(90), 0, 0]}
-        visible={isVisible}
+        rotation={[degToRad(90), 0, degToRad(obliquity)]}
+        // visible={isVisible}
         ref={meshRef}
         args={[meanRadius / EARTH_RADIUS]}
         onClick={handleClick}
-        onPointerMissed={handleMiss}
+        // onPointerMissed={handleMiss}
         onPointerOver={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
       >
-        <meshBasicMaterial map={texture} color={color} />
+        <meshBasicMaterial map={texture} color={color ?? 'white'} />
 
         <axesHelper args={[2 * (meanRadius / EARTH_RADIUS)]} />
 

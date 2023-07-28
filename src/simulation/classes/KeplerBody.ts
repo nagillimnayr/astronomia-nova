@@ -50,11 +50,6 @@ class KeplerBody extends DynamicBody {
       return;
     }
     this._meshRef = meshRef;
-    if (!this._meshRef.current) return;
-    // Rotate by obliquity.
-    // this._meshRef.current.rotation.set(0, 0, degToRad(this._obliquity));
-    this._meshRef.current.rotateX(degToRad(this._obliquity));
-    console.log('rotating mesh');
   }
 
   addOrbitingBody(body: KeplerBody) {
