@@ -9,10 +9,10 @@ const Observer = () => {
   return (
     <>
       <object3D>
-        <object3D rotation={[degToRad(90), 0, degToRad(90)]}>
+        <object3D rotation={[degToRad(0), 0, degToRad(90)]}>
           <PerspectiveCamera ref={cameraRef} near={1e-8} fov={5} />
         </object3D>
-        {/* <axesHelper args={[3e-2]} /> */}
+        <axesHelper args={[3e-2]} />
       </object3D>
     </>
   );

@@ -25,10 +25,14 @@ type Props = {
   children?: ReactNode;
 };
 const ObservationPoint = ({ children }: Props) => {
-  const { cameraService } = useContext(GlobalStateContext);
+  const { cameraService, selectionService } = useContext(GlobalStateContext);
   const focusTarget = useSelector(
     cameraService,
-    (state) => state.context.focus
+    ({ context }) => context.focus
+  );
+  const selected = useSelector(
+    selectionService,
+    ({ context }) => context.selected
   );
 
   const centerRef = useRef<Object3D>(null!);
@@ -38,8 +42,11 @@ const ObservationPoint = ({ children }: Props) => {
 
   useEffect(() => {
     if (!centerRef.current || !focusTarget) return;
-    console.log('focusTarg:', focusTarget);
-    focusTarget.add(centerRef.current);
+    const body = focusTarget as KeplerBody;
+    if (!body || !body.meshRef || !body.meshRef.current) return;
+    const mesh = body.meshRef.current;
+    // Attach to mesh.
+    mesh.add(centerRef.current);
   }, [focusTarget]);
 
   useEffect(() => {
@@ -49,10 +56,10 @@ const ObservationPoint = ({ children }: Props) => {
       // Reset rotation.
       centerRef.current.rotation.set(0, 0, 0);
 
-      // We rotate around the local Z-axis first, as it will initially be the same as the parent's local Z-axis.
+      // We rotate around the local Y-axis first, as it will initially be the same as the parent's local Z-axis.
+      centerRef.current.rotateY(degToRad(surfaceState.latitude));
+      // We then rotate around the new local Z-axis after the first rotation.
       centerRef.current.rotateZ(degToRad(surfaceState.longitude));
-      // We then rotate around the new local Y-axis after the first rotation.
-      centerRef.current.rotateY(-degToRad(surfaceState.latitude));
     });
 
     // Cleanup.
@@ -60,18 +67,23 @@ const ObservationPoint = ({ children }: Props) => {
       // Unsubscribe.
       unsubCoord();
     };
-  }, [surfaceState.latitude, surfaceState.longitude, uiState.selected]);
+  }, [surfaceState.latitude, surfaceState.longitude]);
 
-  useKeyPressed(' ', (event) => {
-    event.preventDefault();
-    console.log('focusTarget:', focusTarget);
-    if (!centerRef.current) return;
-    console.log('parent:', centerRef.current.parent);
-  });
+  // useKeyPressed(' ', (event) => {
+  //   event.preventDefault();
+  //   console.log('focusTarget:', focusTarget);
+  //   if (!centerRef.current) return;
+  //   console.log('parent:', centerRef.current.parent);
+  // });
+
   const body = focusTarget as KeplerBody;
+  if (!body) return;
+  const meshRef = body.meshRef;
+  if (!meshRef || !meshRef.current) return;
+  const mesh = meshRef.current;
   return (
     <>
-      {body ? (
+      {body && mesh ? (
         <object3D ref={centerRef}>
           {/* <axesHelper args={[1.5 * (body.meanRadius / EARTH_RADIUS)]} /> */}
           <group position={[body.meanRadius / EARTH_RADIUS, 0, 0]}>
@@ -79,7 +91,7 @@ const ObservationPoint = ({ children }: Props) => {
               // visible={false}
               ref={sphereRef}
               args={[1e-2]}
-              rotation={[0, 0, degToRad(90)]}
+              rotation={[0, 0, degToRad(90)]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
             >
               <Wireframe
                 simplify
