@@ -31,7 +31,7 @@ import {
   getPosition,
   getPositionFromRadius,
 } from '@/simulation/math/orbital-elements/Position';
-import { useFrame } from '@react-three/fiber';
+import { Object3DNode, extend, useFrame } from '@react-three/fiber';
 import { type BodyKey } from '@/lib/horizons/BodyKey';
 import { trpc } from '@/lib/trpc/trpc';
 import { useQuery } from '@tanstack/react-query';
@@ -43,9 +43,18 @@ import { getSemiLatusRectumFromEccentricity } from '@/simulation/math/orbital-el
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { getLinearEccentricityFromEccentricity } from '@/simulation/math/orbital-elements/LinearEccentricity';
 import { getLinearEccentricityFromAxes } from '../../math/orbital-elements/LinearEccentricity';
+import { KeplerOrbit } from '@/simulation/classes/KeplerOrbit';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
+
+// Extend KeplerOrbit so the reconciler is aware of it.
+extend({ KeplerOrbit });
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    keplerOrbit: Object3DNode<KeplerOrbit, typeof KeplerOrbit>;
+  }
+}
 
 type OrbitProps = {
   children?: React.ReactNode;
@@ -54,23 +63,14 @@ type OrbitProps = {
 };
 
 export const Orbit = ({ children, name, texture }: OrbitProps) => {
-  const { cameraState } = useContext(RootStoreContext);
-  // get Central mass from parent
-  const centralMass = useContext(CentralMassContext);
-
   // const retrogradeContext = useContext(RetrogradeContext);
 
-  // ref to Object3D
-  const orbitRef = useRef<Object3D>(null!);
-  // reference to orbiting body
-  const bodyRef = useRef<KeplerBody>(null!);
+  // Ref to KeplerOrbit.
+  const orbitRef = useRef<KeplerOrbit | null>(null);
+  // Reference to orbiting body.
+  const orbitingBodyRef = useRef<KeplerBody | null>(null);
 
   const centralBodyRef = useContext(KeplerTreeContext);
-  // useFrame(() => {
-  //   if (!centralBodyRef || !centralBodyRef.current || !orbitRef.current) return;
-  //   orbitRef.current.position.copy(centralBodyRef.current.position);
-  //   cameraState.updateCamera();
-  // }, -1);
 
   const ephemeridesQuery = trpc.loadEphemerides.useQuery({ name: name });
 
@@ -117,6 +117,13 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     return;
   }
 
+  // Get Central mass from parent.
+  if (!centralBodyRef?.current) {
+    console.log('centralBodyRef.current is null');
+    return;
+  }
+  const centralMass = centralBodyRef.current.mass;
+
   const { elementTable, vectorTable, physicalData } = ephemeridesQuery.data;
 
   const semiLatusRectum = getSemiLatusRectumFromEccentricity(
@@ -134,16 +141,25 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     semiMinorAxis
   );
 
-  const periapsis = elementTable.periapsis;
+  const { eccentricity, trueAnomaly, periapsis } = elementTable;
 
+  _pos.set(...getPosition(trueAnomaly, semiMajorAxis, eccentricity));
+  const radius = getRadiusAtTrueAnomaly(
+    trueAnomaly,
+    semiMajorAxis,
+    eccentricity
+  );
+  // Todo: Memoize all of these computations externally.
   // The Horizons ephemeris data for Jupiter seems to result in it wobbling a bit on its orbit. Using the Vis-Viva equation to re-calculate the velocity seems to fix it though. It also appears to have fixed some wobble with the moon.
-  _pos.set(...vectorTable.position);
+  // _pos.set(...vectorTable.position);
+
   const orbitalSpeed = getOrbitalSpeedFromRadius(
-    _pos.length(),
+    radius,
     centralMass,
     semiMajorAxis
   );
-  _vel.set(...vectorTable.velocity);
+  // _vel.set(...vectorTable.velocity);
+  _vel.copy(getVelocityDirectionFromOrbitalElements(trueAnomaly, eccentricity));
   _vel.normalize();
   _vel.multiplyScalar(orbitalSpeed);
 
@@ -152,9 +168,10 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     color: 'white',
     mass: physicalData.mass,
     meanRadius: physicalData.meanRadius,
-    initialPosition: vectorTable.position.map(
-      (val) => val / DIST_MULT
-    ) as Vector3Tuple,
+    // initialPosition: vectorTable.position.map(
+    //   (val) => val / DIST_MULT
+    // ) as Vector3Tuple,
+    initialPosition: _pos.divideScalar(DIST_MULT).toArray(),
     initialVelocity: _vel.divideScalar(DIST_MULT).toArray(),
   };
 
@@ -163,34 +180,50 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     elementTable;
 
   return (
-    <object3D
-      ref={(obj) => {
-        if (!obj) return;
-        if (orbitRef.current === obj) return;
-        orbitRef.current = obj;
+    <keplerOrbit
+      ref={(orbit) => {
+        if (!orbit) return;
+        if (orbitRef.current === orbit) return;
+        orbitRef.current = orbit;
 
         // To orient the orbit correctly, we need to perform three intrinsic rotations. (Intrinsic meaning that the rotations are performed in the local coordinate space, such that when we rotate around the axes in the order z-x-z, the last z-axis rotation is around a different world-space axis than the first one, as the x-axis rotation changes the orientation of the object's local z-axis. For clarity, the rotations will be in the order z-x'-z'', where x' is the new local x-axis after the first rotation and z'' is the object's new local z-axis after the second rotation.)
-        // obj.rotateZ(degToRad(longitudeOfAscendingNode));
-        // obj.rotateX(degToRad(inclination));
-        // obj.rotateZ(degToRad(argumentOfPeriapsis));
+        // orbit.rotateZ(degToRad(longitudeOfAscendingNode));
+        // orbit.rotateX(degToRad(inclination));
+        // orbit.rotateZ(degToRad(argumentOfPeriapsis));
       }}
-    >
-      <Body ref={bodyRef} params={bodyParams} texture={texture}>
-        {children}
-      </Body>
-
-      <Trajectory
-        semiMajorAxis={semiMajorAxis}
-        semiMinorAxis={semiMinorAxis}
-        linearEccentricity={linearEccentricity}
-        periapsis={periapsis}
-        orientation={{
+      orbitingBodyRef={orbitingBodyRef}
+      centralBodyRef={centralBodyRef}
+      args={[
+        {
+          semiMajorAxis,
+          semiMinorAxis,
+          semiLatusRectum,
+          linearEccentricity,
+          eccentricity,
           longitudeOfAscendingNode,
           argumentOfPeriapsis,
           inclination,
-        }}
-      />
-      <TrueAnomalyArrow color={'#ffffff'} target={bodyRef} />
-    </object3D>
+        },
+      ]}
+    >
+      <object3D>
+        <Body ref={orbitingBodyRef} params={bodyParams} texture={texture}>
+          {children}
+        </Body>
+
+        <Trajectory
+          semiMajorAxis={semiMajorAxis}
+          semiMinorAxis={semiMinorAxis}
+          linearEccentricity={linearEccentricity}
+          periapsis={periapsis}
+          orientation={{
+            longitudeOfAscendingNode,
+            argumentOfPeriapsis,
+            inclination,
+          }}
+        />
+        <TrueAnomalyArrow color={'#ffffff'} target={orbitingBodyRef} />
+      </object3D>
+    </keplerOrbit>
   );
 };
