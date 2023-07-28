@@ -1,4 +1,5 @@
-import KeplerBody from './KeplerBody';
+import type KeplerBody from './KeplerBody';
+import { MutableRefObject } from 'react';
 
 type OrbitalElements = {
   semiMajorAxis: number;
@@ -12,8 +13,8 @@ type OrbitalElements = {
   argumentOfPeriapsis: number;
 };
 export class KeplerOrbit {
-  private _centralBody: KeplerBody = null!;
-  private _orbitingBody: KeplerBody = null!;
+  private _centralBodyRef: MutableRefObject<KeplerBody | null> = null!;
+  private _orbitingBodyRef: MutableRefObject<KeplerBody | null> = null!;
 
   private _semiMajorAxis: number;
   private _semiMinorAxis: number;
@@ -67,5 +68,32 @@ export class KeplerOrbit {
 
   get argumentOfPeriapsis() {
     return this._argumentOfPeriapsis;
+  }
+
+  get orbitingBodyRef() {
+    return this._orbitingBodyRef;
+  }
+  set orbitingBodyRef(ref: MutableRefObject<KeplerBody | null>) {
+    if (this._orbitingBodyRef) {
+      if (this._orbitingBodyRef === ref) {
+        return;
+      }
+      console.log('orbiting body ref is already assigned');
+      return;
+    }
+    this._orbitingBodyRef = ref;
+  }
+  get centralBodyRef() {
+    return this._centralBodyRef;
+  }
+  set centralBodyRef(ref: MutableRefObject<KeplerBody | null>) {
+    if (this._centralBodyRef) {
+      if (this._centralBodyRef === ref) {
+        return;
+      }
+      console.log('central body ref is already assigned');
+      return;
+    }
+    this._centralBodyRef = ref;
   }
 }
