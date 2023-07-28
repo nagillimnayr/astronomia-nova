@@ -19,7 +19,7 @@ import {
 import type KeplerBody from '@/simulation/classes/KeplerBody';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import Annotation from '../Annotation';
-import { BillboardCircle } from '../BillboardCircle';
+import { Marker } from '../Marker';
 import { degToRad } from 'three/src/math/MathUtils';
 import { CoordinateSphere } from './CoordinateSphere';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
@@ -97,7 +97,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       >
         <meshBasicMaterial map={texture} color={color} />
 
-        <BillboardCircle bodyRef={bodyRef} />
+        <Marker bodyRef={bodyRef} />
 
         <object3D position={[0, -(meanRadius / EARTH_RADIUS) * 1.5, 0]}>
           <Annotation annotation={name} />

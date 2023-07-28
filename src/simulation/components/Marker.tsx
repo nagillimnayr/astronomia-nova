@@ -19,12 +19,10 @@ import { EARTH_RADIUS } from '../utils/constants';
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
 
-/** I don't know what to call this, but its the circle around the bodies to identify their positions when zoomed out really far */
-
 type Props = {
   bodyRef: MutableRefObject<KeplerBody>;
 };
-export function BillboardCircle({ bodyRef }: Props) {
+export function Marker({ bodyRef }: Props) {
   const { uiState } = useContext(RootStoreContext);
 
   // Check if marker visibility is on.
