@@ -27,7 +27,7 @@ import { VelocityArrow } from '../Orbit/arrows/VelocityArrow';
 const _pos = new Vector3();
 const _vel = new Vector3();
 
-// extend KeplerBody so the reconciler is aware of it
+// Extend KeplerBody so the reconciler is aware of it.
 extend({ KeplerBody });
 declare module '@react-three/fiber' {
   interface ThreeElements {
@@ -49,7 +49,7 @@ type BodyProps = {
   texture?: Texture;
 };
 
-const Body = forwardRef<KeplerBody, BodyProps>(function Body(
+const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
   { params, children, texture }: BodyProps,
   fwdRef
 ) {
@@ -90,6 +90,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
     <>
       <keplerBody
         renderOrder={-1}
+        // meshRef={meshRef}
         ref={(body: KeplerBody) => {
           if (!body) {
             console.log(`removing ${bodyRef.current?.name}`);
@@ -111,22 +112,20 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
         args={[mass, initialPosition, initialVelocity, meanRadius]}
       >
         {/* Child orbits need to know the mass of their central body. */}
-        <CentralMassContext.Provider value={mass}>
-          <KeplerTreeContext.Provider value={bodyRef}>
-            {children}
-            <BodyMesh
-              name={name}
-              meanRadius={meanRadius}
-              color={color}
-              texture={texture}
-              bodyRef={bodyRef}
-              ref={meshRef}
-            />
+        <KeplerTreeContext.Provider value={bodyRef}>
+          {children}
+          <BodyMesh
+            name={name}
+            meanRadius={meanRadius}
+            color={color}
+            texture={texture}
+            bodyRef={bodyRef}
+            ref={meshRef}
+          />
 
-            <axesHelper args={[1.5 * (meanRadius / EARTH_RADIUS)]} />
-            <VelocityArrow />
-          </KeplerTreeContext.Provider>
-        </CentralMassContext.Provider>
+          <axesHelper args={[1.5 * (meanRadius / EARTH_RADIUS)]} />
+          <VelocityArrow />
+        </KeplerTreeContext.Provider>
       </keplerBody>
     </>
   );
