@@ -11,7 +11,7 @@ export function getPositionFromRadius(
   const x = radius * Math.cos(radians);
   const y = radius * Math.sin(radians);
 
-  return [x, -y, 0]; // -y so that it is rotated around counter-clockwise around the z-axis
+  return [x, y, 0]; // -y so that it is rotated around counter-clockwise around the z-axis
 }
 
 export function getPosition(

@@ -40,6 +40,7 @@ export type BodyParams = {
   color: ColorRepresentation;
   mass: number;
   meanRadius: number;
+  obliquity?: number;
   initialPosition: Vector3Tuple;
   initialVelocity: Vector3Tuple;
 };
@@ -56,8 +57,15 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
   const { cameraState } = useContext(RootStoreContext);
 
   // Destructure parameters.
-  const { name, color, mass, meanRadius, initialPosition, initialVelocity } =
-    params;
+  const {
+    name,
+    color,
+    mass,
+    meanRadius,
+    obliquity,
+    initialPosition,
+    initialVelocity,
+  } = params;
 
   // get function from context
   const centralBodyRef = useContext(KeplerTreeContext);
@@ -90,7 +98,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
     <>
       <keplerBody
         renderOrder={-1}
-        // meshRef={meshRef}
+        meshRef={meshRef}
         ref={(body: KeplerBody) => {
           if (!body) {
             console.log(`removing ${bodyRef.current?.name}`);
@@ -109,7 +117,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
           centralBody.addOrbitingBody(body);
         }}
         name={name ?? ''}
-        args={[mass, initialPosition, initialVelocity, meanRadius]}
+        args={[mass, initialPosition, initialVelocity, meanRadius, obliquity]}
       >
         {/* Child orbits need to know the mass of their central body. */}
         <KeplerTreeContext.Provider value={bodyRef}>

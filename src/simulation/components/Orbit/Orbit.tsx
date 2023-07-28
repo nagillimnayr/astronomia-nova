@@ -168,6 +168,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     color: 'white',
     mass: physicalData.mass,
     meanRadius: physicalData.meanRadius,
+    obliquity: physicalData.obliquity,
     // initialPosition: vectorTable.position.map(
     //   (val) => val / DIST_MULT
     // ) as Vector3Tuple,
@@ -178,7 +179,6 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   // Destructure the orientation elements.
   const { longitudeOfAscendingNode, argumentOfPeriapsis, inclination } =
     elementTable;
-
   return (
     <keplerOrbit
       ref={(orbit) => {
@@ -187,9 +187,9 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
         orbitRef.current = orbit;
 
         // To orient the orbit correctly, we need to perform three intrinsic rotations. (Intrinsic meaning that the rotations are performed in the local coordinate space, such that when we rotate around the axes in the order z-x-z, the last z-axis rotation is around a different world-space axis than the first one, as the x-axis rotation changes the orientation of the object's local z-axis. For clarity, the rotations will be in the order z-x'-z'', where x' is the new local x-axis after the first rotation and z'' is the object's new local z-axis after the second rotation.)
-        // orbit.rotateZ(degToRad(longitudeOfAscendingNode));
-        // orbit.rotateX(degToRad(inclination));
-        // orbit.rotateZ(degToRad(argumentOfPeriapsis));
+        orbit.rotateZ(degToRad(longitudeOfAscendingNode));
+        orbit.rotateX(degToRad(inclination));
+        orbit.rotateZ(degToRad(argumentOfPeriapsis));
       }}
       orbitingBodyRef={orbitingBodyRef}
       centralBodyRef={centralBodyRef}

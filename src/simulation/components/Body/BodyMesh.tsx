@@ -87,7 +87,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     <>
       {/* <Select enabled={isSelected}> */}
       <Sphere
-        // rotation={[degToRad(90), 0, 0]}
+        rotation={[degToRad(90), 0, 0]}
         visible={isVisible}
         ref={meshRef}
         args={[meanRadius / EARTH_RADIUS]}
