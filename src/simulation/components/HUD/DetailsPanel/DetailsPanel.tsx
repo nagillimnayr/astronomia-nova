@@ -47,12 +47,12 @@ const DetailsPanel = observer(() => {
             <span>{uiState.selected.mass.toExponential(3)}</span>&nbsp;kg
           </span>
           {/** Radius. */}
-          {/* <span>
+          <span>
             Mean radius:
             <br />
             <span>{uiState.selected.meanRadius.toExponential(3)}</span>
             &nbsp;m
-          </span> */}
+          </span>
         </div>
         <div className="flex w-full flex-col items-start justify-start">
           {/** Velocity. */}
