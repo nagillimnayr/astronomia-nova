@@ -102,10 +102,10 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         <object3D position={[0, -(meanRadius / EARTH_RADIUS) * 1.5, 0]}>
           <Annotation annotation={name} />
         </object3D>
-        <CoordinateSphere
+        {/* <CoordinateSphere
           bodyRef={bodyRef}
           radius={meanRadius / EARTH_RADIUS}
-        />
+        /> */}
 
         {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
       </Sphere>
