@@ -37,7 +37,7 @@ export const cameraMachine = createMachine(
       focus: null,
     }),
 
-    // Context assignment events.
+    // Context assignment events:
     on: {
       ASSIGN_CANVAS: {
         actions: 'assignCanvas',
