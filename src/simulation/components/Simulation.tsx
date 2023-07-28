@@ -9,6 +9,7 @@ import { useCameraStore } from '../state/zustand/camera-store';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { CameraControls } from '@react-three/drei';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { ObservationPoint } from './surface-view/observation-point/ObservationPoint';
 
 type SimProps = {
   children: React.ReactNode;
@@ -67,6 +68,7 @@ const Simulation = ({ children }: SimProps) => {
       </group>
 
       <ambientLight intensity={0.9} />
+      <ObservationPoint />
     </>
   );
 };
