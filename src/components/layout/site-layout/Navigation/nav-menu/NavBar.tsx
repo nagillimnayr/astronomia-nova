@@ -1,7 +1,7 @@
 import { cn } from '@/lib/cn';
 import NavDropdownMenu from './NavDropdownMenu';
 import NavMenuLink from './NavMenuLink';
-import NavDropdown from './NavDropdown';
+import { NavDropdown } from './NavDropdown';
 import { ClassNameValue } from 'tailwind-merge';
 
 type link = {

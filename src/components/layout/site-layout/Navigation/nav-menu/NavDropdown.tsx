@@ -21,7 +21,7 @@ type Props = PropsWithChildren & {
   links: link[];
   className?: ClassNameValue;
 };
-const NavDropdownMenu = ({ children, className, links }: Props) => {
+const NavDropdown = ({ children, className, links }: Props) => {
   const containerRef = useRef<HTMLElement | null>(null);
   return (
     <Dropdown.Root>
@@ -81,4 +81,4 @@ const NavDropdownMenu = ({ children, className, links }: Props) => {
   );
 };
 
-export default NavDropdownMenu;
+export { NavDropdown };
