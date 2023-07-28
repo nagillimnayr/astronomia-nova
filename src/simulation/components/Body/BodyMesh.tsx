@@ -17,7 +17,7 @@ import {
   type Mesh,
   type Texture,
 } from 'three';
-import type KeplerBody from '@/simulation/classes/KeplerBody';
+import type KeplerBody from '@/simulation/classes/kepler-body';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import Annotation from '../Annotation';
 import { Marker } from '../Marker';

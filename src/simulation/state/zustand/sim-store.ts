@@ -1,4 +1,4 @@
-import type KeplerBody from '@/simulation/classes/KeplerBody';
+import type KeplerBody from '@/simulation/classes/kepler-body';
 import { makeFixedUpdateFn } from '@/simulation/systems/FixedTimeStep';
 import { traverseKeplerTree } from '@/simulation/systems/keplerTree';
 import { DAY } from '@/simulation/utils/constants';

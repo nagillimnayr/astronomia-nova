@@ -1,5 +1,5 @@
 import { Html } from '@react-three/drei';
-import type KeplerBody from '../classes/KeplerBody';
+import type KeplerBody from '../classes/kepler-body';
 import {
   useCallback,
   type MutableRefObject,

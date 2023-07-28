@@ -1,4 +1,4 @@
-import type KeplerBody from '@/simulation/classes/KeplerBody';
+import type KeplerBody from '@/simulation/classes/kepler-body';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 

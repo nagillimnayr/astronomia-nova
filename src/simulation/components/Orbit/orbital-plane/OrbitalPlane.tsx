@@ -1,4 +1,4 @@
-import KeplerBody from '@/simulation/classes/KeplerBody';
+import KeplerBody from '@/simulation/classes/kepler-body';
 import { DIST_MULT } from '@/simulation/utils/constants';
 import { Circle } from '@react-three/drei';
 import { MutableRefObject } from 'react';

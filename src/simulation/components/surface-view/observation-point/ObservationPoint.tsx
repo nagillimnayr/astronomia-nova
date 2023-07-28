@@ -16,7 +16,7 @@ import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useActor, useSelector } from '@xstate/react';
 import { useKeyPressed } from '@react-hooks-library/core';
-import KeplerBody from '@/simulation/classes/KeplerBody';
+import KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
 
 const _up = new Vector3();

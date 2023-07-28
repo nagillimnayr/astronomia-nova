@@ -1,4 +1,4 @@
-import type KeplerBody from '@/simulation/classes/KeplerBody';
+import type KeplerBody from '@/simulation/classes/kepler-body';
 import * as Collapsible from '@radix-ui/react-collapsible';
 
 import { ChevronRightIcon } from 'lucide-react';

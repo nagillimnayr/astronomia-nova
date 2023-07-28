@@ -1,5 +1,5 @@
 import { Vector3 } from 'three';
-import type KeplerBody from '../classes/KeplerBody';
+import type KeplerBody from '../classes/kepler-body';
 import calculateGravitation from '../math/motion/gravitation';
 import { KinematicBody } from '../classes/Dynamics';
 import {

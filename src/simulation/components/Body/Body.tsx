@@ -16,7 +16,7 @@ import {
   Vector3,
 } from 'three';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
-import KeplerBody from '../../classes/KeplerBody';
+import KeplerBody from '../../classes/kepler-body';
 
 import { CentralMassContext } from '@/simulation/context/CentralMassContext';
 import { BodyMesh } from './BodyMesh';

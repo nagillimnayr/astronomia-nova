@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { type RootStore } from '../root/root-store';
-import type KeplerBody from '@/simulation/classes/KeplerBody';
+import type KeplerBody from '@/simulation/classes/kepler-body';
 import { makeLoggable } from 'mobx-log';
 import { type Object3D, Vector3, Spherical, Sphere } from 'three';
 import { CameraControls } from '@react-three/drei';

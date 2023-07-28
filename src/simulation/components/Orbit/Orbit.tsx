@@ -1,7 +1,7 @@
 import { Trajectory } from './Trajectory/Trajectory';
 import { useCallback, useContext, useMemo, useRef } from 'react';
 import Body, { type BodyParams } from '../Body/Body';
-import type KeplerBody from '@/simulation/classes/KeplerBody';
+import type KeplerBody from '@/simulation/classes/kepler-body';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { CentralMassContext } from '@/simulation/context/CentralMassContext';
 import {
@@ -43,7 +43,7 @@ import { getSemiLatusRectumFromEccentricity } from '@/simulation/math/orbital-el
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { getLinearEccentricityFromEccentricity } from '@/simulation/math/orbital-elements/LinearEccentricity';
 import { getLinearEccentricityFromAxes } from '../../math/orbital-elements/LinearEccentricity';
-import { KeplerOrbit } from '@/simulation/classes/KeplerOrbit';
+import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 
 const _pos = new Vector3();
 const _vel = new Vector3();

@@ -6,7 +6,7 @@ import {
   Vector3,
 } from 'three';
 import { proxy } from 'valtio';
-import KeplerBody from '@/simulation/classes/KeplerBody';
+import KeplerBody from '@/simulation/classes/kepler-body';
 import { useCameraStore } from '@/simulation/state/zustand/camera-store';
 // import { camState } from '@/simulation/state/CamState';
 // import { simState } from '@/simulation/state/SimState';

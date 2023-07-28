@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Body from '../Body/Body';
-import type KeplerBody from '../../classes/KeplerBody';
+import type KeplerBody from '../../classes/kepler-body';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 import { DIST_MULT, SOLAR_MASS, SUN_RADIUS } from '../../utils/constants';
 import { useTexture } from '@react-three/drei';

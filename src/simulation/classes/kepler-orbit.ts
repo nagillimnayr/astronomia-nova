@@ -1,5 +1,5 @@
 import { Object3D } from 'three';
-import type KeplerBody from './KeplerBody';
+import type KeplerBody from './kepler-body';
 import { type MutableRefObject } from 'react';
 
 type OrbitalElements = {

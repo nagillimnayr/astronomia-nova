@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from 'react';
 import Body from '../Body/Body';
-import type KeplerBody from '../../classes/KeplerBody';
+import type KeplerBody from '../../classes/kepler-body';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 import { SOLAR_MASS } from '../../utils/constants';
 import { useTexture } from '@react-three/drei';

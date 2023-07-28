@@ -1,4 +1,4 @@
-import type KeplerBody from '@/simulation/classes/KeplerBody';
+import type KeplerBody from '@/simulation/classes/kepler-body';
 import calculateGravitation from '../motion/gravitation';
 import { Vector3 } from 'three';
 

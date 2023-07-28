@@ -1,4 +1,4 @@
-import KeplerBody from '@/simulation/classes/KeplerBody';
+import KeplerBody from '@/simulation/classes/kepler-body';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { Sphere, Wireframe } from '@react-three/drei';
 import { observer } from 'mobx-react-lite';
