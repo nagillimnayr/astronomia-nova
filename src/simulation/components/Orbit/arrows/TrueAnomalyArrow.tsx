@@ -1,15 +1,20 @@
 import { Line } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useMemo, useRef, MutableRefObject } from 'react';
-import { ArrowHelper, ColorRepresentation, Object3D, Vector3 } from 'three';
+import { useMemo, useRef, type MutableRefObject } from 'react';
+import {
+  type ArrowHelper,
+  type ColorRepresentation,
+  type Object3D,
+  Vector3,
+} from 'three';
 
 type ArrowProps = {
   color: ColorRepresentation;
-  target: MutableRefObject<Object3D>;
+  target: MutableRefObject<Object3D | null>;
 };
 
 export const TrueAnomalyArrow = (props: ArrowProps) => {
-  const arrowRef = useRef<ArrowHelper>(null!);
+  const arrowRef = useRef<ArrowHelper | null>(null);
 
   useFrame(() => {
     if (!arrowRef.current || !props.target.current) return;
