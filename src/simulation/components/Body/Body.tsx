@@ -23,6 +23,8 @@ import { BodyMesh } from './BodyMesh';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { VelocityArrow } from '../Orbit/arrows/VelocityArrow';
+import Annotation from '../Annotation';
+import { degToRad } from 'three/src/math/MathUtils';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
@@ -97,6 +99,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
   return (
     <>
       <keplerBody
+        // rotation={[degToRad(90), 0, 0]}
         renderOrder={-1}
         meshRef={meshRef}
         ref={(body: KeplerBody) => {
@@ -132,7 +135,11 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
             ref={meshRef}
           />
 
-          <axesHelper args={[1.5 * (meanRadius / EARTH_RADIUS)]} />
+          <object3D position={[0, 0, -(meanRadius / EARTH_RADIUS) * 1.5]}>
+            <Annotation annotation={name} />
+          </object3D>
+
+          {/* <axesHelper args={[1.5 * (meanRadius / EARTH_RADIUS)]} /> */}
           <VelocityArrow />
         </KeplerTreeContext.Provider>
       </keplerBody>

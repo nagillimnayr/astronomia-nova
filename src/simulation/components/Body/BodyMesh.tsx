@@ -101,10 +101,10 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         <axesHelper args={[2 * (meanRadius / EARTH_RADIUS)]} />
 
         <Marker bodyRef={bodyRef} />
-
+        {/* 
         <object3D position={[0, -(meanRadius / EARTH_RADIUS) * 1.5, 0]}>
           <Annotation annotation={name} />
-        </object3D>
+        </object3D> */}
         {/* <CoordinateSphere
           bodyRef={bodyRef}
           radius={meanRadius / EARTH_RADIUS}
