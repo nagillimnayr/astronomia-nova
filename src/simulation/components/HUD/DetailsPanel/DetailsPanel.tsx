@@ -5,23 +5,31 @@ import { observer } from 'mobx-react-lite';
 import { SurfaceViewButton } from './surface-view-dialog/SurfaceViewButton';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { DIST_MULT } from '@/simulation/utils/constants';
+import { useActor } from '@xstate/react';
 
 const DetailsPanel = observer(() => {
   const { uiState, cameraState } = useContext(RootStoreContext);
-  const { cameraService } = useContext(GlobalStateContext);
+  const { cameraService, selectionService } = useContext(GlobalStateContext);
+  const [selectionState] = useActor(selectionService);
+  const { selected } = selectionState.context;
 
   const handleCloseClick = useCallback(() => {
     // Deselect selected object.
-    uiState.deselect();
-  }, [uiState]);
+    // uiState.deselect();
+    selectionService.send('DESELECT');
+  }, [selectionService]);
 
   const handleFocusClick = useCallback(() => {
     // Focus camera on selection. We can be certain that its not null because the button won't be clickable if the selection is null.
-    // cameraState.setFocus(uiState.getSelected()!);
-    cameraService.send({ type: 'FOCUS', focus: uiState.getSelected()! });
-  }, [cameraService, uiState]);
+    // cameraService.send({ type: 'FOCUS', focus: uiState.getSelected()! });
+    cameraService.send({
+      type: 'FOCUS',
+      focus: selected!,
+    });
+  }, [cameraService, selected]);
 
-  if (!uiState.selected) return null; // If nothing is selected, display nothing.
+  //// if (!uiState.selected) return null; // If nothing is selected, display nothing.
+  if (!selected) return null; // If nothing is selected, display nothing.
   return (
     <div className="absolute right-0 top-0 flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border bg-muted p-4 text-muted-foreground">
       {/** Close button. */}
@@ -34,7 +42,7 @@ const DetailsPanel = observer(() => {
 
       {/** Name. */}
       <header className="flex w-full flex-row items-center justify-center">
-        <h4 className="text-xl">{uiState.selected.name}</h4>
+        <h4 className="text-xl">{selected.name}</h4>
       </header>
       <Separator className="w-full bg-border" />
       {/** Attributes. */}
@@ -44,42 +52,17 @@ const DetailsPanel = observer(() => {
           <span>
             Mass:
             <br />
-            <span>{uiState.selected.mass.toExponential(3)}</span>&nbsp;kg
+            <span>{selected.mass.toExponential(3)}</span>&nbsp;kg
           </span>
           {/** Radius. */}
           <span>
             Mean radius:
             <br />
-            <span>{uiState.selected.meanRadius.toExponential(3)}</span>
+            <span>{selected.meanRadius.toExponential(3)}</span>
             &nbsp;m
           </span>
         </div>
-        <div className="flex w-full flex-col items-start justify-start">
-          {/** Velocity. */}
-          {/* <span>Velocity:&nbsp;</span>
-          {uiState
-            .getSelected()
-            ?.velocity.toArray()
-            .map((val) => {
-              return (
-                <>
-                  <span>{val}</span>
-                </>
-              );
-            })} */}
-          {/** Position. */}
-          {/* <span>Position:&nbsp;</span>
-          {uiState
-            .getSelected()
-            ?.position.toArray()
-            .map((val) => {
-              return (
-                <>
-                  <span>{val.toFixed(2)}</span>
-                </>
-              );
-            })} */}
-        </div>
+        <div className="flex w-full flex-col items-start justify-start"></div>
       </div>
 
       <div className="mt-auto flex w-full flex-row items-start  justify-between">
