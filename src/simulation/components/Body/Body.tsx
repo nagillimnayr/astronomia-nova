@@ -20,7 +20,7 @@ import KeplerBody from '../../classes/KeplerBody';
 
 import { CentralMassContext } from '@/simulation/context/CentralMassContext';
 import { BodyMesh } from './BodyMesh';
-import { DIST_MULT } from '@/simulation/utils/constants';
+import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { VelocityArrow } from '../Orbit/arrows/VelocityArrow';
 
@@ -123,6 +123,7 @@ const Body = forwardRef<KeplerBody, BodyProps>(function Body(
               ref={meshRef}
             />
 
+            <axesHelper args={[1.5 * (meanRadius / EARTH_RADIUS)]} />
             <VelocityArrow />
           </KeplerTreeContext.Provider>
         </CentralMassContext.Provider>
