@@ -12,7 +12,7 @@ const Observer = () => {
         <object3D rotation={[degToRad(90), 0, degToRad(90)]}>
           <PerspectiveCamera ref={cameraRef} near={1e-8} fov={5} />
         </object3D>
-        <axesHelper args={[1e-1]} />
+        {/* <axesHelper args={[3e-2]} /> */}
       </object3D>
     </>
   );
