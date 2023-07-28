@@ -1,5 +1,5 @@
 import { assign, createMachine } from 'xstate';
-import { type Object3D, Vector3 } from 'three';
+import { type Object3D, Vector3, type PerspectiveCamera } from 'three';
 import { type CameraControls } from '@react-three/drei';
 import type KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
@@ -7,6 +7,8 @@ import { EARTH_RADIUS } from '@/simulation/utils/constants';
 type Context = {
   canvas: HTMLCanvasElement; // Reference to the canvas element.
   controls: CameraControls;
+  spaceCamera: PerspectiveCamera | null;
+  surfaceCamera: PerspectiveCamera | null;
   focus: Object3D | null;
 };
 
@@ -16,6 +18,8 @@ type Events =
   | { type: 'UPDATE'; deltaTime: number }
   | { type: 'ASSIGN_CANVAS'; canvas: HTMLCanvasElement }
   | { type: 'ASSIGN_CONTROLS'; controls: CameraControls }
+  | { type: 'ASSIGN_SPACE_CAMERA'; camera: PerspectiveCamera }
+  | { type: 'ASSIGN_SURFACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'FOCUS'; focus: Object3D | null };
 
 // Capture the vector in a closure.
@@ -34,6 +38,8 @@ export const cameraMachine = createMachine(
     context: () => ({
       canvas: null!,
       controls: null!,
+      spaceCamera: null,
+      surfaceCamera: null,
       focus: null,
     }),
 
@@ -44,6 +50,18 @@ export const cameraMachine = createMachine(
       },
       ASSIGN_CONTROLS: {
         actions: 'assignControls',
+      },
+      ASSIGN_SPACE_CAMERA: {
+        actions: [
+          assign({ spaceCamera: (_, event) => event.camera }),
+          () => console.log('Assigning space camera!'),
+        ],
+      },
+      ASSIGN_SURFACE_CAMERA: {
+        actions: [
+          assign({ surfaceCamera: (_, event) => event.camera }),
+          () => console.log('Assigning surface camera!'),
+        ],
       },
       FOCUS: {
         actions: 'assignFocus',
