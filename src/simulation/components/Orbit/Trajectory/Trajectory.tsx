@@ -15,6 +15,7 @@ import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { cn } from '@/lib/cn';
 import { DIST_MULT } from '@/simulation/utils/constants';
+import { OrbitalPlane } from '../orbital-plane/OrbitalPlane';
 
 const _xAxis = new Vector3(1, 0, 0);
 
@@ -22,7 +23,7 @@ type TrajectoryProps = {
   semiMajorAxis: number;
   semiMinorAxis: number;
   periapsis: number;
-  // linearEccentricity?: number;
+  linearEccentricity: number;
   orientation: {
     longitudeOfAscendingNode: number;
     argumentOfPeriapsis: number;
@@ -33,6 +34,7 @@ type TrajectoryProps = {
 export const Trajectory = ({
   semiMajorAxis,
   semiMinorAxis,
+  linearEccentricity,
   periapsis,
   orientation,
 }: TrajectoryProps) => {
@@ -43,9 +45,9 @@ export const Trajectory = ({
 
   const bodyRef = useContext(KeplerTreeContext);
 
-  const linearEccentricity = useMemo(() => {
-    return getLinearEccentricityFromAxes(semiMajorAxis, semiMinorAxis);
-  }, [semiMajorAxis, semiMinorAxis]);
+  // const linearEccentricity = useMemo(() => {
+  //   return getLinearEccentricityFromAxes(semiMajorAxis, semiMinorAxis);
+  // }, [semiMajorAxis, semiMinorAxis]);
 
   const points = useMemo(() => {
     return new EllipseCurve(
@@ -75,7 +77,14 @@ export const Trajectory = ({
         }}
       >
         <Line points={points} color={'white'} lineWidth={1} />
-
+        {/* {bodyRef ? (
+          <OrbitalPlane
+            semiMajorAxis={semiMajorAxis}
+            semiMinorAxis={semiMinorAxis}
+            linearEccentricity={linearEccentricity}
+            bodyRef={bodyRef}
+          />
+        ) : null} */}
         {/* Semi-major Axis / Periapsis */}
         {/* <arrowHelper
           ref={(arrow) => {

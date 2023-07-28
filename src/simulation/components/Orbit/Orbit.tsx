@@ -41,6 +41,8 @@ import {
 } from '@/simulation/math/orbital-elements/axes/SemiMinorAxis';
 import { getSemiLatusRectumFromEccentricity } from '@/simulation/math/orbital-elements/axes/SemiLatusRectum';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { getLinearEccentricityFromEccentricity } from '@/simulation/math/orbital-elements/LinearEccentricity';
+import { getLinearEccentricityFromAxes } from '../../math/orbital-elements/LinearEccentricity';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
@@ -127,6 +129,11 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   );
   const semiMajorAxis = elementTable.semiMajorAxis;
 
+  const linearEccentricity = getLinearEccentricityFromAxes(
+    semiMajorAxis,
+    semiMinorAxis
+  );
+
   const periapsis = elementTable.periapsis;
 
   // The Horizons ephemeris data for Jupiter seems to result in it wobbling a bit on its orbit. Using the Vis-Viva equation to re-calculate the velocity seems to fix it though. It also appears to have fixed some wobble with the moon.
@@ -175,6 +182,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
       <Trajectory
         semiMajorAxis={semiMajorAxis}
         semiMinorAxis={semiMinorAxis}
+        linearEccentricity={linearEccentricity}
         periapsis={periapsis}
         orientation={{
           longitudeOfAscendingNode,
