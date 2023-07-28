@@ -6,35 +6,43 @@ import { cameraMachine } from './camera-machine/camera-machine';
 import { selectionMachine } from './selection-machine/selection-machine';
 
 export const GlobalStateContext = createContext({
-  // Toggle machines.
+  // Toggle machines:
   trajectoryVis: {} as InterpreterFrom<typeof toggleMachine>,
   annotationVis: {} as InterpreterFrom<typeof toggleMachine>,
   markerVis: {} as InterpreterFrom<typeof toggleMachine>,
   velArrowVis: {} as InterpreterFrom<typeof toggleMachine>,
+
+  // Camera machine:
   cameraService: {} as InterpreterFrom<typeof cameraMachine>,
+
+  // Selection machine:
   selectionService: {} as InterpreterFrom<typeof selectionMachine>,
 });
 
 export const MachineProviders = ({ children }: PropsWithChildren) => {
-  // Toggle machines.
+  // Toggle machines:
   const trajectoryVis = useInterpret(toggleMachine);
   const annotationVis = useInterpret(toggleMachine);
   const markerVis = useInterpret(toggleMachine);
   const velArrowVis = useInterpret(toggleMachine);
 
-  // Camera machine.
+  // Camera machine:
   const cameraService = useInterpret(cameraMachine);
 
-  // Selection machine.
+  // Selection machine:
   const selectionService = useInterpret(selectionMachine);
 
   const globalServices = {
-    // Toggle machines.
+    // Toggle machines:
     trajectoryVis,
     annotationVis,
     markerVis,
     velArrowVis,
+
+    // Camera machine:
     cameraService,
+
+    // Selection machine:
     selectionService,
   };
   return (
