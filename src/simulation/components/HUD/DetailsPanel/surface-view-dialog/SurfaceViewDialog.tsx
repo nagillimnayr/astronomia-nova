@@ -19,46 +19,16 @@ const SurfaceViewDialog = observer(() => {
 
         <AlertDialog.Content className="mt-0 grid h-full w-full grid-cols-2 grid-rows-2 place-items-stretch gap-x-6 gap-y-4 font-sans">
           {/** Inputs for latitude and longitude. */}
+
           <div className="col-span-1 col-start-1 row-span-1 row-start-1 flex flex-col items-start justify-center">
-            <Label className="mb-2 inline-flex items-center justify-center ">
-              Longitude
-              <Input
-                className="h-6  w-full"
-                type="number"
-                value={surfaceState.longitude}
-                min={-180}
-                max={180}
-                step={0.5}
-                onChange={(event) => {
-                  const value = parseFloat(event.target.value);
-                  if (!value && value !== 0) return;
-                  surfaceState.setLongitude(value);
-                }}
-              />
-            </Label>
-            <Slider
-              name="longitude-slider"
-              value={[surfaceState.longitude]}
-              min={-180}
-              max={180}
-              step={0.1}
-              className="w-full"
-              onValueChange={(values) => {
-                const value = values[0];
-                if (!value) return;
-                surfaceState.setLongitude(value);
-              }}
-            />
-          </div>
-          <div className="col-span-1 col-start-2 row-span-1 row-start-1 flex flex-col items-start justify-center">
             <Label className="mb-2 inline-flex items-center justify-center">
               Latitude
               <Input
                 className="h-6 w-full"
                 type="number"
                 value={surfaceState.latitude}
-                min={-90}
-                max={90}
+                min={-180}
+                max={180}
                 step={0.5}
                 onChange={(event) => {
                   const value = parseFloat(event.target.value);
@@ -70,8 +40,8 @@ const SurfaceViewDialog = observer(() => {
             <Slider
               name="latitude-slider"
               value={[surfaceState.latitude]}
-              min={-90}
-              max={90}
+              min={-180}
+              max={180}
               step={0.1}
               className="w-full"
               onValueChange={(values) => {
@@ -81,7 +51,37 @@ const SurfaceViewDialog = observer(() => {
               }}
             />
           </div>
-
+          <div className="col-span-1 col-start-2 row-span-1 row-start-1 flex flex-col items-start justify-center">
+            <Label className="mb-2 inline-flex items-center justify-center ">
+              Longitude
+              <Input
+                className="h-6  w-full"
+                type="number"
+                value={surfaceState.longitude}
+                min={-90}
+                max={90}
+                step={0.5}
+                onChange={(event) => {
+                  const value = parseFloat(event.target.value);
+                  if (!value && value !== 0) return;
+                  surfaceState.setLongitude(value);
+                }}
+              />
+            </Label>
+            <Slider
+              name="longitude-slider"
+              value={[surfaceState.longitude]}
+              min={-90}
+              max={90}
+              step={0.1}
+              className="w-full"
+              onValueChange={(values) => {
+                const value = values[0];
+                if (!value) return;
+                surfaceState.setLongitude(value);
+              }}
+            />
+          </div>
           {/** Cancel button. */}
           <AlertDialog.Cancel
             asChild
