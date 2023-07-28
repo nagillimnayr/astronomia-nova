@@ -3,6 +3,7 @@ import { useInterpret } from '@xstate/react';
 import { toggleMachine } from './toggle-machine/toggle-machine';
 import { type InterpreterFrom } from 'xstate';
 import { cameraMachine } from './camera-machine/camera-machine';
+import { selectionMachine } from './selection-machine/selection-machine';
 
 export const GlobalStateContext = createContext({
   // Toggle machines.
@@ -11,6 +12,7 @@ export const GlobalStateContext = createContext({
   markerVis: {} as InterpreterFrom<typeof toggleMachine>,
   velArrowVis: {} as InterpreterFrom<typeof toggleMachine>,
   cameraService: {} as InterpreterFrom<typeof cameraMachine>,
+  selectionService: {} as InterpreterFrom<typeof selectionMachine>,
 });
 
 export const MachineProviders = ({ children }: PropsWithChildren) => {
@@ -23,6 +25,9 @@ export const MachineProviders = ({ children }: PropsWithChildren) => {
   // Camera machine.
   const cameraService = useInterpret(cameraMachine);
 
+  // Selection machine.
+  const selectionService = useInterpret(selectionMachine);
+
   const globalServices = {
     // Toggle machines.
     trajectoryVis,
@@ -30,6 +35,7 @@ export const MachineProviders = ({ children }: PropsWithChildren) => {
     markerVis,
     velArrowVis,
     cameraService,
+    selectionService,
   };
   return (
     <GlobalStateContext.Provider value={globalServices}>
