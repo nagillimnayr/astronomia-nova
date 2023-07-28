@@ -1,8 +1,7 @@
 import { assign, createMachine } from 'xstate';
 import { type Object3D, Vector3 } from 'three';
 import { type CameraControls } from '@react-three/drei';
-import { type MutableRefObject } from 'react';
-import KeplerBody from '@/simulation/classes/KeplerBody';
+import type KeplerBody from '@/simulation/classes/KeplerBody';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
 
 type Context = {
