@@ -8,20 +8,17 @@ import { DIST_MULT } from '@/simulation/utils/constants';
 import { useActor } from '@xstate/react';
 
 const DetailsPanel = observer(() => {
-  const { uiState, cameraState } = useContext(RootStoreContext);
   const { cameraService, selectionService } = useContext(GlobalStateContext);
   const [selectionState] = useActor(selectionService);
   const { selected } = selectionState.context;
 
   const handleCloseClick = useCallback(() => {
     // Deselect selected object.
-    // uiState.deselect();
     selectionService.send('DESELECT');
   }, [selectionService]);
 
   const handleFocusClick = useCallback(() => {
     // Focus camera on selection. We can be certain that its not null because the button won't be clickable if the selection is null.
-    // cameraService.send({ type: 'FOCUS', focus: uiState.getSelected()! });
     cameraService.send({
       type: 'FOCUS',
       focus: selected!,
