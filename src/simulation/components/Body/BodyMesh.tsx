@@ -89,14 +89,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       <Sphere
         // rotation={[degToRad(90), 0, 0]}
         visible={isVisible}
-        ref={(mesh) => {
-          meshRef.current = mesh!;
-          if (!mesh) return;
-          const body = mesh.parent as KeplerBody;
-          if (!body) return;
-          console.log('setting mesh');
-          body.setBodyMesh(mesh);
-        }}
+        ref={meshRef}
         args={[meanRadius / EARTH_RADIUS]}
         onClick={handleClick}
         onPointerMissed={handleMiss}
