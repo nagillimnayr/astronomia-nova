@@ -1,5 +1,5 @@
 import { Line } from '@react-three/drei';
-import { useContext, useMemo, useRef } from 'react';
+import { useContext, useMemo, useRef, useState } from 'react';
 import {
   type ArrowHelper,
   EllipseCurve,
@@ -42,6 +42,9 @@ export const Trajectory = ({
   const { trajectoryVis } = useContext(GlobalStateContext);
   const [state] = useActor(trajectoryVis);
   const isVisible = state.matches('active');
+
+  const [showPeriapsis, setShowPeriapsis] = useState<boolean>(false);
+
   const points = useMemo(() => {
     return new EllipseCurve(
       -linearEccentricity / DIST_MULT,
@@ -79,17 +82,19 @@ export const Trajectory = ({
           />
         ) : null} */}
         {/* Semi-major Axis / Periapsis */}
-        {/* <arrowHelper
-          ref={(arrow) => {
-            if (!arrow) return;
-            arrowRef.current = arrow;
-            arrow.setColor('red');
-            // arrow.position.set(-linearEccentricity  / DIST_MULT, 0, 0);
-            arrow.setDirection(_xAxis);
-            // arrow.setLength(semiMajorAxis  / DIST_MULT, 1, 0.25);
-            arrow.setLength(periapsis  / DIST_MULT, 1, 0.25);
-          }}
-        /> */}
+        {showPeriapsis ? (
+          <arrowHelper
+            ref={(arrow) => {
+              if (!arrow) return;
+              arrowRef.current = arrow;
+              arrow.setColor('red');
+              // arrow.position.set(-linearEccentricity  / DIST_MULT, 0, 0);
+              arrow.setDirection(_xAxis);
+              // arrow.setLength(semiMajorAxis  / DIST_MULT, 1, 0.25);
+              arrow.setLength(periapsis / DIST_MULT, 1, 0.25);
+            }}
+          />
+        ) : null}
       </object3D>
     </>
   );
