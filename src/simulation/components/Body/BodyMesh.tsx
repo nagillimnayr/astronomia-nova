@@ -9,6 +9,7 @@ import {
   useState,
   useContext,
   useCallback,
+  useEffect,
 } from 'react';
 import {
   BoxHelper,
@@ -21,7 +22,7 @@ import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import Annotation from '../Annotation';
 import { Marker } from '../Marker';
 import { degToRad } from 'three/src/math/MathUtils';
-import { CoordinateSphere } from './CoordinateSphere';
+import { CoordinateSphere } from '../surface-view/CoordinateSphere';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 
 // Separate out the visual logic from the simulation logic.
@@ -86,9 +87,16 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     <>
       {/* <Select enabled={isSelected}> */}
       <Sphere
-        rotation={[degToRad(90), 0, 0]}
+        // rotation={[degToRad(90), 0, 0]}
         visible={isVisible}
-        ref={meshRef}
+        ref={(mesh) => {
+          meshRef.current = mesh!;
+          if (!mesh) return;
+          const body = mesh.parent as KeplerBody;
+          if (!body) return;
+          console.log('setting mesh');
+          body.setBodyMesh(mesh);
+        }}
         args={[meanRadius / EARTH_RADIUS]}
         onClick={handleClick}
         onPointerMissed={handleMiss}
@@ -96,6 +104,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         onPointerLeave={() => setHovered(false)}
       >
         <meshBasicMaterial map={texture} color={color} />
+
+        <axesHelper args={[2 * (meanRadius / EARTH_RADIUS)]} />
 
         <Marker bodyRef={bodyRef} />
 
