@@ -30,7 +30,7 @@ export const cameraMachine = createMachine(
       events: {} as Events,
     },
 
-    // Initial context (Initialized dynamically by the parameters of the factory function).
+    // Initial context.
     context: () => ({
       canvas: null!,
       controls: null!,
