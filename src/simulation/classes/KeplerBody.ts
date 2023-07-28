@@ -1,26 +1,28 @@
-import { Vector3Tuple } from 'three';
+import { Mesh, Vector3Tuple } from 'three';
 
 import { DynamicBody } from './Dynamics';
 import { EARTH_RADIUS } from '../utils/constants';
-
-type PhysicalData = {
-  meanRadius: number;
-};
+import { degToRad } from 'three/src/math/MathUtils';
 
 class KeplerBody extends DynamicBody {
   private _orbitingBodies: KeplerBody[];
-  private _meanRadius: number = EARTH_RADIUS;
+  private _meanRadius: number;
+  private _obliquity: number;
+
+  private _bodyMesh: Mesh | null = null;
 
   constructor(
     mass?: number,
     initialPosition?: Vector3Tuple,
     initialVelocity?: Vector3Tuple,
-    meanRadius?: number
+    meanRadius?: number,
+    obliquity?: number
   ) {
     super(mass, initialPosition, initialVelocity);
     this._orbitingBodies = [];
 
-    if (meanRadius) this._meanRadius = meanRadius;
+    this._meanRadius = meanRadius ?? EARTH_RADIUS;
+    this._obliquity = obliquity ?? 0;
   }
 
   get orbitingBodies() {
@@ -28,6 +30,28 @@ class KeplerBody extends DynamicBody {
   }
   get meanRadius() {
     return this._meanRadius;
+  }
+  get obliquity() {
+    return this._obliquity;
+  }
+
+  get bodyMesh(): Mesh | null {
+    return this._bodyMesh;
+  }
+  set bodyMesh(bodyMesh: Mesh) {
+    this.setBodyMesh(bodyMesh);
+  }
+  setBodyMesh(bodyMesh: Mesh) {
+    // If mesh has already been assigned, do nothing.
+    if (this._bodyMesh) {
+      if (this._bodyMesh === bodyMesh) return;
+      console.log('bodyMesh is already assigned');
+      return;
+    }
+    this._bodyMesh = bodyMesh;
+    // Rotate by obliquity.
+    this._bodyMesh.rotation.set(0, 0, degToRad(this._obliquity));
+    console.log('rotating mesh');
   }
 
   addOrbitingBody(body: KeplerBody) {
