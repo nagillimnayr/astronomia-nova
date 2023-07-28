@@ -1,5 +1,6 @@
+import { Object3D } from 'three';
 import type KeplerBody from './KeplerBody';
-import { MutableRefObject } from 'react';
+import { type MutableRefObject } from 'react';
 
 type OrbitalElements = {
   semiMajorAxis: number;
@@ -12,7 +13,7 @@ type OrbitalElements = {
   longitudeOfAscendingNode: number;
   argumentOfPeriapsis: number;
 };
-export class KeplerOrbit {
+export class KeplerOrbit extends Object3D {
   private _centralBodyRef: MutableRefObject<KeplerBody | null> = null!;
   private _orbitingBodyRef: MutableRefObject<KeplerBody | null> = null!;
 
@@ -27,6 +28,7 @@ export class KeplerOrbit {
   private _argumentOfPeriapsis: number;
 
   constructor(elements: OrbitalElements) {
+    super();
     this._semiMajorAxis = elements.semiMajorAxis;
     this._semiMinorAxis = elements.semiMinorAxis;
     this._semiLatusRectum = elements.semiLatusRectum;
