@@ -6,12 +6,15 @@ import { useCallback, useContext, useState } from 'react';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
 import { cn } from '@/lib/cn';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { useActor } from '@xstate/react';
 
 type OutlinerItemProps = {
   body: KeplerBody;
 };
 const OutlinerItem = observer(({ body }: OutlinerItemProps) => {
-  const { uiState } = useContext(RootStoreContext);
+  // const { uiState } = useContext(RootStoreContext);
+  const { selectionService } = useContext(GlobalStateContext);
 
   const [isOpen, setOpen] = useState<boolean>(false);
 
@@ -28,8 +31,9 @@ const OutlinerItem = observer(({ body }: OutlinerItemProps) => {
 
   const handleClick = useCallback(() => {
     // Select the object.
-    uiState.select(body);
-  }, [body, uiState]);
+    // uiState.select(body);
+    selectionService.send({ type: 'SELECT', selection: body });
+  }, [body, selectionService]);
   return (
     <Collapsible.Root
       open={isOpen}
