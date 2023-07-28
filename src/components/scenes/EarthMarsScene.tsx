@@ -1,5 +1,5 @@
 import SunEarthMars from '@/simulation/components/SolarSystem/SunEarthMars';
-import Scene from './Scene';
+import Scene from '../canvas/Scene';
 
 const EarthMarsScene = () => {
   return (

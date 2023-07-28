@@ -8,7 +8,7 @@ import { FullscreenLayout } from '@/components/layout/FullscreenLayout';
 //import Scene from '~/components/Scene';
 
 const Scene = dynamic(
-  () => import('@/components/scenes/Scene').then((mod) => mod.default),
+  () => import('@/components/canvas/Scene').then((mod) => mod.default),
   {
     ssr: false,
   }
