@@ -7,8 +7,8 @@ import {
   type MouseEventHandler,
   useRef,
 } from 'react';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { useFrame, useThree } from '@react-three/fiber';
+// import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { useFrame } from '@react-three/fiber';
 import { Vector3 } from 'three';
 
 import { useActor } from '@xstate/react';
@@ -23,7 +23,8 @@ type Props = {
   bodyRef: MutableRefObject<KeplerBody>;
 };
 export function Marker({ bodyRef }: Props) {
-  const { uiState } = useContext(RootStoreContext);
+  // const { uiState } = useContext(RootStoreContext);
+  const { selectionService } = useContext(GlobalStateContext);
 
   // Check if marker visibility is on.
   const { markerVis } = useContext(GlobalStateContext);
@@ -36,14 +37,14 @@ export function Marker({ bodyRef }: Props) {
     (e) => {
       e.stopPropagation();
       const body = bodyRef.current;
-
-      uiState.select(body);
+      //// uiState.select(body);
+      selectionService.send({ type: 'SELECT', selection: body });
       // useSelectionStore.getState().select(body);
     },
-    [bodyRef, uiState]
+    [bodyRef, selectionService]
   );
 
-  useFrame(({ camera, controls }) => {
+  useFrame(({ camera }) => {
     // Reduce the opacity when close enough to the camera.
 
     if (!bodyRef.current || !ref.current) return;
