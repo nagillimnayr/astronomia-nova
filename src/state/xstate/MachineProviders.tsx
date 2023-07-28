@@ -4,6 +4,7 @@ import { toggleMachine } from './toggle-machine/toggle-machine';
 import { type InterpreterFrom } from 'xstate';
 import { cameraMachine } from './camera-machine/camera-machine';
 import { selectionMachine } from './selection-machine/selection-machine';
+import { uiMachine } from './ui-machine/ui-machine';
 
 export const GlobalStateContext = createContext({
   // Toggle machines:
@@ -11,6 +12,9 @@ export const GlobalStateContext = createContext({
   annotationVis: {} as InterpreterFrom<typeof toggleMachine>,
   markerVis: {} as InterpreterFrom<typeof toggleMachine>,
   velArrowVis: {} as InterpreterFrom<typeof toggleMachine>,
+
+  // UI machine:
+  uiService: {} as InterpreterFrom<typeof uiMachine>,
 
   // Camera machine:
   cameraService: {} as InterpreterFrom<typeof cameraMachine>,
@@ -26,6 +30,9 @@ export const MachineProviders = ({ children }: PropsWithChildren) => {
   const markerVis = useInterpret(toggleMachine);
   const velArrowVis = useInterpret(toggleMachine);
 
+  // UI machine:
+  const uiService = useInterpret(uiMachine);
+
   // Camera machine:
   const cameraService = useInterpret(cameraMachine);
 
@@ -38,6 +45,9 @@ export const MachineProviders = ({ children }: PropsWithChildren) => {
     annotationVis,
     markerVis,
     velArrowVis,
+
+    // UI machine:
+    uiService,
 
     // Camera machine:
     cameraService,
