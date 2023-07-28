@@ -1,12 +1,23 @@
-import { createMachine } from 'xstate';
+import { assign, createMachine } from 'xstate';
+import { type MutableRefObject } from 'react';
+
 type Context = {
-  screenPortal: HTMLElement;
+  screenPortalRef: MutableRefObject<HTMLElement>;
+  camViewPortalRef: MutableRefObject<HTMLElement>;
 };
 
 type Events =
-  | { type: 'ASSIGN_SCREEN_PORTAL'; screenPortal: HTMLElement }
-  | { type: 'TOGGLE' };
+  | { type: 'TOGGLE' }
+  | {
+      type: 'ASSIGN_SCREEN_PORTAL';
+      screenPortalRef: MutableRefObject<HTMLElement>;
+    }
+  | {
+      type: 'ASSIGN_CAM_VIEW_PORTAL';
+      camViewPortalRef: MutableRefObject<HTMLElement>;
+    };
 
+// Reusable sub-state.
 const toggleStates = {
   initial: 'active',
   states: {
@@ -22,30 +33,44 @@ const toggleStates = {
 export const uiMachine = createMachine(
   {
     predictableActionArguments: true,
+    tsTypes: {} as import('./ui-machine.typegen').Typegen0,
     schema: {
       context: {} as Context,
       events: {} as Events,
     },
 
+    // Initial context.
     context: () => ({
-      screenPortal: null!,
+      screenPortalRef: null!,
+      camViewPortalRef: null!,
     }),
     // Context assignment events.
     on: {
       ASSIGN_SCREEN_PORTAL: {
-        actions: 'assignScreenPortal',
+        actions: 'assignScreenPortalRef',
+      },
+      ASSIGN_CAM_VIEW_PORTAL: {
+        actions: 'assignCamViewPortalRef',
       },
     },
 
     type: 'parallel',
     // Parallel states:
     states: {
-      outliner: {
-        ...toggleStates,
-      },
+      idle: {},
+      // outliner: {
+      //   ...toggleStates,
+      // },
     },
   },
   {
-    actions: {},
+    actions: {
+      assignScreenPortalRef: assign({
+        screenPortalRef: (_, event) => event.screenPortalRef,
+      }),
+      assignCamViewPortalRef: assign({
+        camViewPortalRef: (_, event) => event.camViewPortalRef,
+      }),
+    },
   }
 );
