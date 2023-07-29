@@ -32,17 +32,17 @@ const ObservationPoint = observer(({ children }: Props) => {
     cameraService,
     ({ context }) => context.focus
   );
-  const selected = useSelector(
-    selectionService,
-    ({ context }) => context.selected
-  );
+  // const selected = useSelector(
+  //   selectionService,
+  //   ({ context }) => context.selected
+  // );
 
   const centerRef = useRef<Object3D>(null!);
   const sphereRef = useRef<Mesh>(null!);
 
   const [sphereVisible, setSphereVisibile] = useState<boolean>(false);
 
-  const { surfaceState, uiState } = useContext(RootStoreContext);
+  const { surfaceState } = useContext(RootStoreContext);
 
   useEffect(() => {
     if (!centerRef.current || !focusTarget) return;

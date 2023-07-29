@@ -54,42 +54,6 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
             >
               <Hud renderPriority={1}>
                 <XR>
-                  <PerspectiveCam
-                    makeDefault
-                    ref={(cam) => {
-                      const camera = cam as PerspectiveCamera;
-                      // Assign camera to state context.
-                      cameraService.send({
-                        type: 'ASSIGN_SPACE_CAMERA',
-                        camera,
-                      });
-                    }}
-                    position={[0, 0, SUN_RADIUS / 10 / DIST_MULT + 1000]}
-                    near={1e-5}
-                    far={1e14}
-                  />
-                  <CameraControls
-                    makeDefault
-                    minDistance={1e-3}
-                    polarAngle={degToRad(60)}
-                    ref={(controls) => {
-                      if (!controls) {
-                        return;
-                      }
-                      // if (controls === cameraState.controls) return;
-                      if (
-                        controls === cameraService.machine.context.spaceControls
-                      ) {
-                        return;
-                      }
-                      // Assign controls context in camera state machine.
-                      cameraService.send({
-                        type: 'ASSIGN_SPACE_CONTROLS',
-                        controls,
-                      });
-                    }}
-                  />
-
                   <Scene>{children}</Scene>
                   {/* <Stats /> */}
                   {/* <Perf /> */}
