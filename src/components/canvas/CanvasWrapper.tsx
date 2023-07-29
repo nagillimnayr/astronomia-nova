@@ -33,7 +33,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
             <Canvas
               className="z-[0]"
               // eventSource={container}
-              gl={{ logarithmicDepthBuffer: true }}
+              gl={{ logarithmicDepthBuffer: true, alpha: true }}
               linear
               flat
               ref={(canvas) => {
