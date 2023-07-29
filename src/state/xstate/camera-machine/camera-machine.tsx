@@ -1,18 +1,16 @@
 import { assign, createMachine, log } from 'xstate';
-import {
-  type Object3D,
-  Vector3,
-  type PerspectiveCamera,
-  type Scene,
-} from 'three';
+import { Object3D, Vector3, type PerspectiveCamera, type Scene } from 'three';
 import { type CameraControls } from '@react-three/drei';
 import type KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import { type RootState } from '@react-three/fiber';
+import { degToRad } from 'three/src/math/MathUtils';
 
-const targetWorldPos = new Vector3();
-const observerWorldPos = new Vector3();
-const observerUp = new Vector3();
+const _targetWorldPos = new Vector3();
+const _observerWorldPos = new Vector3();
+const _observerFwd = new Vector3();
+const _observerUp = new Vector3();
+const _obj = new Object3D();
 
 type Context = {
   canvas: HTMLCanvasElement; // Reference to the canvas element.
@@ -91,7 +89,9 @@ export const cameraMachine = createMachine(
         },
         actions: [
           assign({ spaceCamera: (_, event) => event.camera }),
-          log('Assigning space camera!'),
+          log((context, event) => {
+            return event.camera;
+          }, 'Assign space camera'),
         ],
       },
       ASSIGN_SURFACE_CAMERA: {
@@ -123,10 +123,7 @@ export const cameraMachine = createMachine(
 
     states: {
       space: {
-        entry: (context) => {
-          const { spaceCamera, observer } = context;
-          if (!spaceCamera || !observer) return;
-        },
+        entry: ['applySpaceCamUp'],
         // Cleanup on exit:
         exit: (context) => {
           const { spaceCamera, observer } = context;
@@ -147,17 +144,33 @@ export const cameraMachine = createMachine(
         },
       },
       surface: {
-        entry: (context) => {
-          const { surfaceCamera, observer } = context;
-          if (!surfaceCamera || !observer) return;
-        },
+        entry: [
+          'applySurfaceCamUp',
+          (context) => {
+            const { controls } = context;
+            // console.log('polar angle:', controls?.polarAngle);
+            // console.log('azimuthal angle:', controls?.azimuthAngle);
+            // controls?.rotatePolarTo(0, false).catch((reason) => {
+            //   console.error(reason);
+            // });
+            // controls?.rotateAzimuthTo(0, false).catch((reason) => {
+            //   console.error(reason);
+            // });
+            // console.log('polar angle:', controls?.polarAngle);
+            // console.log('azimuthal angle:', controls?.azimuthAngle);
+            // controls?.update(1);
+          },
+        ],
         // Cleanup on exit:
         exit: 'cleanupSurfaceCam',
         on: {
           // UPDATE event:
           UPDATE: {
             // Run action on self-transition.
-            actions: 'updateSurfaceView',
+            actions: [
+              'updateSurfaceView',
+              // 'applySurfaceCamUp'
+            ],
           },
           TO_SPACE: {
             // Transition to 'space' view-mode:
@@ -200,10 +213,10 @@ export const cameraMachine = createMachine(
         if (!focus) return;
 
         // Get world position of focus target.
-        focus.getWorldPosition(targetWorldPos);
+        focus.getWorldPosition(_targetWorldPos);
 
         // Update controls to follow target.
-        controls.moveTo(...targetWorldPos.toArray(), false).catch((reason) => {
+        controls.moveTo(..._targetWorldPos.toArray(), false).catch((reason) => {
           console.log('error updating camera controls: ', reason);
         });
 
@@ -215,10 +228,10 @@ export const cameraMachine = createMachine(
         const controls = context.controls;
         const observer = context.observer;
         if (!controls || !observer) return;
-        observer.getWorldPosition(observerWorldPos);
+        observer.getWorldPosition(_observerWorldPos);
         // Update controls to follow target.
         controls
-          .moveTo(...observerWorldPos.toArray(), false)
+          .moveTo(..._observerWorldPos.toArray(), false)
           .catch((reason) => {
             console.log('error updating camera controls: ', reason);
           });
@@ -234,6 +247,29 @@ export const cameraMachine = createMachine(
         surfaceCamera.position.set(0, 0, -1e-3);
         surfaceCamera.rotation.set(0, 0, 0);
         surfaceCamera.updateProjectionMatrix();
+      },
+      applySurfaceCamUp: (context) => {
+        const { controls, surfaceCamera, observer, focus } = context;
+        if (!controls || !surfaceCamera || !observer || !focus) return;
+
+        // !!!
+        // NOTE: This works!
+        observer.getWorldPosition(_observerWorldPos);
+        focus.getWorldPosition(_targetWorldPos);
+        // Get direction from target center to observer in world coordinates.
+        _observerUp.subVectors(_observerWorldPos, _targetWorldPos);
+        _observerUp.normalize(); // Normalize the direction vector.
+        // !!!
+
+        surfaceCamera.up.copy(_observerUp);
+        controls.applyCameraUp();
+      },
+      applySpaceCamUp: (context) => {
+        // Reset up vector of camera.
+        const { controls, spaceCamera } = context;
+        if (!controls || !spaceCamera) return;
+        spaceCamera.up.set(0, 1, 0);
+        controls.applyCameraUp();
       },
     },
   }
