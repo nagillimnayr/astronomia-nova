@@ -7,6 +7,7 @@ export const toggleMachine = createMachine({
     context: {},
     events: {} as { type: 'TOGGLE' },
   },
+  id: 'toggle',
   initial: 'active',
   states: {
     active: {

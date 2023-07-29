@@ -40,7 +40,7 @@ export const uiMachine = createMachine(
       context: {} as Context,
       events: {} as Events,
     },
-
+    id: 'ui',
     // Initial context.
     context: () => ({
       screenPortalRef: null!,
