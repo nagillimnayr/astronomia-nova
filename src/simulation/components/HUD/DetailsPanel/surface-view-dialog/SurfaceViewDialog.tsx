@@ -102,7 +102,12 @@ const SurfaceViewDialog = observer(() => {
             asChild
             className="col-span-1 col-start-2 row-span-1 row-start-2"
           >
-            <button className="h-fit  w-full min-w-fit place-items-center rounded-md  border border-muted  px-2 py-1 text-xl hover:bg-muted">
+            <button
+              className="h-fit  w-full min-w-fit place-items-center rounded-md  border border-muted  px-2 py-1 text-xl hover:bg-muted"
+              onClick={() => {
+                cameraService.send('TO_SURFACE');
+              }}
+            >
               Confirm
             </button>
           </AlertDialog.Action>
