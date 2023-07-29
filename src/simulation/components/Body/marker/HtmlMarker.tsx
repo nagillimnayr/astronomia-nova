@@ -1,5 +1,5 @@
 import { Html } from '@react-three/drei';
-import type KeplerBody from '../classes/kepler-body';
+import type KeplerBody from '@/simulation/classes/kepler-body';
 import {
   useCallback,
   type MutableRefObject,
@@ -14,7 +14,7 @@ import { Vector3 } from 'three';
 import { useActor } from '@xstate/react';
 import { cn } from '@/lib/cn';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
-import { EARTH_RADIUS } from '../utils/constants';
+import { EARTH_RADIUS } from '@/simulation/utils/constants';
 
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
@@ -22,7 +22,7 @@ const _camWorldPos = new Vector3();
 type Props = {
   bodyRef: MutableRefObject<KeplerBody>;
 };
-export function Marker({ bodyRef }: Props) {
+export function HtmlMarker({ bodyRef }: Props) {
   // const { uiState } = useContext(RootStoreContext);
   const { selectionService } = useContext(GlobalStateContext);
 
