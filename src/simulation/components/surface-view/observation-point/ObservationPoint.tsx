@@ -6,6 +6,7 @@ import {
   useEffect,
   useImperativeHandle,
   useRef,
+  useState,
 } from 'react';
 import { Vector3, type Mesh, type Object3D } from 'three';
 import { Observer } from '../observer/Observer';
@@ -18,13 +19,14 @@ import { useActor, useSelector } from '@xstate/react';
 import { useKeyPressed } from '@react-hooks-library/core';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
+import { observer } from 'mobx-react-lite';
 
 const _up = new Vector3();
 
 type Props = {
   children?: ReactNode;
 };
-const ObservationPoint = ({ children }: Props) => {
+const ObservationPoint = observer(({ children }: Props) => {
   const { cameraService, selectionService } = useContext(GlobalStateContext);
   const focusTarget = useSelector(
     cameraService,
@@ -37,6 +39,8 @@ const ObservationPoint = ({ children }: Props) => {
 
   const centerRef = useRef<Object3D>(null!);
   const sphereRef = useRef<Mesh>(null!);
+
+  const [sphereVisible, setSphereVisibile] = useState<boolean>(false);
 
   const { surfaceState, uiState } = useContext(RootStoreContext);
 
@@ -88,7 +92,7 @@ const ObservationPoint = ({ children }: Props) => {
           {/* <axesHelper args={[1.5 * (body.meanRadius / EARTH_RADIUS)]} /> */}
           <group position={[body.meanRadius / EARTH_RADIUS, 0, 0]}>
             <Sphere
-              // visible={false}
+              visible={sphereVisible}
               ref={sphereRef}
               args={[1e-2]}
               rotation={[0, 0, degToRad(90)]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
@@ -108,6 +112,6 @@ const ObservationPoint = ({ children }: Props) => {
       ) : null}
     </>
   );
-};
+});
 
 export { ObservationPoint };
