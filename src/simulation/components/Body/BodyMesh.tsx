@@ -19,7 +19,7 @@ import {
 } from 'three';
 import type KeplerBody from '@/simulation/classes/kepler-body';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import Annotation from '../Annotation';
+import { HtmlAnnotation } from '@/simulation/components/Body/annotation/HtmlAnnotation';
 import { HtmlMarker } from '@/simulation/components/Body/marker/HtmlMarker';
 import { degToRad } from 'three/src/math/MathUtils';
 // import { CoordinateSphere } from '../surface-view/CoordinateSphere';
@@ -102,16 +102,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         <axesHelper args={[2 * (meanRadius / EARTH_RADIUS)]} />
 
         {/* <HtmlMarker bodyRef={bodyRef} /> */}
-        <Marker bodyRef={bodyRef} meanRadius={meanRadius} />
-        {/* <Marker bodyRef={bodyRef} /> */}
-        {/* 
-        <object3D position={[0, -(meanRadius / EARTH_RADIUS) * 1.5, 0]}>
-          <Annotation annotation={name} />
-        </object3D> */}
-        {/* <CoordinateSphere
-          bodyRef={bodyRef}
-          radius={meanRadius / EARTH_RADIUS}
-        /> */}
+        {/* <Marker bodyRef={bodyRef} meanRadius={meanRadius} /> */}
 
         {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
       </Sphere>

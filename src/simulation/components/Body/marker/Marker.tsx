@@ -1,4 +1,4 @@
-import { Billboard, Circle, Html, Ring } from '@react-three/drei';
+import { Billboard, Circle, Html, Ring, useCursor } from '@react-three/drei';
 import type KeplerBody from '@/simulation/classes/kepler-body';
 import {
   useCallback,
@@ -6,6 +6,8 @@ import {
   useContext,
   type MouseEventHandler,
   useRef,
+  PropsWithChildren,
+  useState,
 } from 'react';
 import { ThreeEvent, useFrame } from '@react-three/fiber';
 import {
@@ -20,16 +22,17 @@ import { useActor } from '@xstate/react';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { degToRad } from 'three/src/math/MathUtils';
+import { Annotation } from '../annotation/Annotation';
 
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
 const _camPos = new Vector3();
 
-type Props = {
+type Props = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
   meanRadius: number;
 };
-export function Marker({ bodyRef, meanRadius }: Props) {
+export function Marker({ children, bodyRef, meanRadius }: Props) {
   // const { uiState } = useContext(RootStoreContext);
   const { selectionService } = useContext(GlobalStateContext);
 
@@ -40,6 +43,9 @@ export function Marker({ bodyRef, meanRadius }: Props) {
 
   const circleRef = useRef<Mesh>(null!);
   const materialRef = useRef<MeshBasicMaterial>(null!);
+
+  const [isHovered, setHovered] = useState<boolean>(false);
+  useCursor(isHovered, 'pointer');
 
   const handleClick = useCallback(
     (event: ThreeEvent<MouseEvent>) => {
@@ -80,7 +86,13 @@ export function Marker({ bodyRef, meanRadius }: Props) {
 
   return (
     <>
-      <Circle ref={circleRef} args={[1]} onClick={handleClick}>
+      <Circle
+        ref={circleRef}
+        args={[1]}
+        onClick={handleClick}
+        onPointerOver={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
+      >
         {/** Transparent material so that the circle will catch clicks but not be visible. */}
         <meshBasicMaterial side={DoubleSide} opacity={0} transparent />
         <Ring visible={isVisible} args={[1, 1.25]}>
@@ -91,6 +103,7 @@ export function Marker({ bodyRef, meanRadius }: Props) {
             transparent
           />
           {/* <axesHelper args={[radius * 2]} /> */}
+          {children}
         </Ring>
       </Circle>
     </>

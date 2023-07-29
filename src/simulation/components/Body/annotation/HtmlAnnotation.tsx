@@ -7,7 +7,7 @@ import { useContext } from 'react';
 type AnnotationProps = {
   annotation: string;
 };
-const Annotation = (props: AnnotationProps) => {
+const HtmlAnnotation = (props: AnnotationProps) => {
   // Check if annotation visibility is on.
   const { annotationVis } = useContext(GlobalStateContext);
   const [state] = useActor(annotationVis);
@@ -29,4 +29,4 @@ const Annotation = (props: AnnotationProps) => {
   );
 };
 
-export default Annotation;
+export { HtmlAnnotation };

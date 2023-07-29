@@ -23,8 +23,10 @@ import { BodyMesh } from './BodyMesh';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { VelocityArrow } from '../Orbit/arrows/VelocityArrow';
-import Annotation from '../Annotation';
+import { HtmlAnnotation } from '@/simulation/components/Body/annotation/HtmlAnnotation';
 import { degToRad } from 'three/src/math/MathUtils';
+import { Annotation } from './annotation/Annotation';
+import { Marker } from './marker/Marker';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
@@ -135,9 +137,12 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
             ref={meshRef}
           />
 
-          <object3D position={[0, 0, -(meanRadius / EARTH_RADIUS) * 1.5]}>
-            <Annotation annotation={name} />
-          </object3D>
+          {/* <object3D position={[0, 0, -(meanRadius / EARTH_RADIUS) * 1.5]}>
+            <HtmlAnnotation annotation={name} />
+          </object3D> */}
+
+          <Marker bodyRef={bodyRef} meanRadius={meanRadius} />
+          <Annotation annotation={name} meanRadius={meanRadius} />
 
           {/* <axesHelper args={[1.5 * (meanRadius / EARTH_RADIUS)]} /> */}
           <VelocityArrow />
