@@ -26,6 +26,7 @@ import { degToRad } from 'three/src/math/MathUtils';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
+import { Marker } from './marker/Marker';
 
 // Separate out the visual logic from the simulation logic.
 
@@ -100,7 +101,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 
         <axesHelper args={[2 * (meanRadius / EARTH_RADIUS)]} />
 
-        <HtmlMarker bodyRef={bodyRef} />
+        {/* <HtmlMarker bodyRef={bodyRef} /> */}
+        <Marker bodyRef={bodyRef} meanRadius={meanRadius} />
         {/* <Marker bodyRef={bodyRef} /> */}
         {/* 
         <object3D position={[0, -(meanRadius / EARTH_RADIUS) * 1.5, 0]}>
