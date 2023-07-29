@@ -90,7 +90,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         rotation={[degToRad(90), 0, degToRad(obliquity)]}
         // visible={isVisible}
         ref={meshRef}
-        args={[meanRadius / EARTH_RADIUS]}
+        args={[meanRadius / EARTH_RADIUS, 128, 64]}
         onClick={handleClick}
         // onPointerMissed={handleMiss}
         onPointerOver={() => setHovered(true)}
