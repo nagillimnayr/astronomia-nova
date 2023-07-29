@@ -1,7 +1,5 @@
 import {
-  CameraControls,
   PerspectiveCamera as PerspectiveCam,
-  PointerLockControls,
   useHelper,
 } from '@react-three/drei';
 import { useSelector } from '@xstate/react';
@@ -9,14 +7,14 @@ import { useContext, useRef } from 'react';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { CameraHelper, type PerspectiveCamera } from 'three';
 
-const SurfaceControls = () => {
+const SurfaceCamera = () => {
   const { cameraService } = useContext(GlobalStateContext);
   const surfaceView = useSelector(cameraService, (state) =>
     state.matches('surface')
   );
-  const spaceView = useSelector(cameraService, (state) =>
-    state.matches('space')
-  );
+  // const spaceView = useSelector(cameraService, (state) =>
+  //   state.matches('space')
+  // );
   const cameraRef = useRef<PerspectiveCamera>(null!);
   useHelper(cameraRef, CameraHelper);
   return (
@@ -41,4 +39,4 @@ const SurfaceControls = () => {
   );
 };
 
-export { SurfaceControls };
+export { SurfaceCamera };

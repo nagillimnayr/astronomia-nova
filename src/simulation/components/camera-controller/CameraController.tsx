@@ -1,6 +1,6 @@
 import { degToRad } from 'three/src/math/MathUtils';
-import { SpaceControls } from './SpaceCamera';
-import { SurfaceControls } from './SurfaceCamera';
+import { SpaceCamera } from './SpaceCamera';
+import { SurfaceCamera } from './SurfaceCamera';
 import { CameraControls } from '@react-three/drei';
 import { useContext } from 'react';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
@@ -25,8 +25,8 @@ const CameraController = () => {
           });
         }}
       />
-      <SpaceControls />
-      <SurfaceControls />
+      <SpaceCamera />
+      <SurfaceCamera />
     </>
   );
 };

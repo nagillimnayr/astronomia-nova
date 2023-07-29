@@ -9,14 +9,14 @@ import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { type PerspectiveCamera } from 'three';
 import { DIST_MULT, SUN_RADIUS } from '@/simulation/utils/constants';
 
-const SpaceControls = () => {
+const SpaceCamera = () => {
   const { cameraService } = useContext(GlobalStateContext);
   const spaceView = useSelector(cameraService, (state) =>
     state.matches('space')
   );
-  const surfaceView = useSelector(cameraService, (state) =>
-    state.matches('surface')
-  );
+  // const surfaceView = useSelector(cameraService, (state) =>
+  //   state.matches('surface')
+  // );
   const cameraRef = useRef<PerspectiveCamera>(null!);
 
   return (
@@ -42,4 +42,4 @@ const SpaceControls = () => {
   );
 };
 
-export { SpaceControls };
+export { SpaceCamera };
