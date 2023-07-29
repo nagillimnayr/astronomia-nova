@@ -17,7 +17,10 @@ const CamViewRenderTarget = () => {
     cameraService,
     (state) => state.context.surfaceCamera
   );
-  const scene = useSelector(cameraService, (state) => state.context.scene);
+  const getThree = useSelector(
+    cameraService,
+    (state) => state.context.getThree
+  );
 
   const renderTarget = useFBO(window.innerWidth / 4, window.innerHeight / 4);
 
@@ -27,7 +30,8 @@ const CamViewRenderTarget = () => {
   // }, []);
 
   useFrame(({ gl }) => {
-    if (!surfaceCamera || !scene) return;
+    if (!surfaceCamera || !getThree) return;
+    const scene = getThree().scene;
     gl.setRenderTarget(renderTarget);
     gl.render(scene, surfaceCamera);
     gl.setRenderTarget(null);
