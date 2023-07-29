@@ -1,12 +1,20 @@
 import { assign, createMachine } from 'xstate';
-import { type Object3D, Vector3, type PerspectiveCamera } from 'three';
+import {
+  type Object3D,
+  Vector3,
+  type PerspectiveCamera,
+  type Scene,
+} from 'three';
 import { type CameraControls } from '@react-three/drei';
 import type KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
+import { type PointerLockControls } from 'three-stdlib';
 
 type Context = {
   canvas: HTMLCanvasElement; // Reference to the canvas element.
-  controls: CameraControls;
+  scene: Scene | null;
+  spaceControls: CameraControls;
+  surfaceControls: PointerLockControls | null;
   spaceCamera: PerspectiveCamera | null;
   surfaceCamera: PerspectiveCamera | null;
   focus: Object3D | null;
@@ -17,7 +25,9 @@ type Events =
   | { type: 'TO_SPACE' }
   | { type: 'UPDATE'; deltaTime: number }
   | { type: 'ASSIGN_CANVAS'; canvas: HTMLCanvasElement }
-  | { type: 'ASSIGN_CONTROLS'; controls: CameraControls }
+  | { type: 'ASSIGN_SCENE'; scene: Scene }
+  | { type: 'ASSIGN_SPACE_CONTROLS'; controls: CameraControls }
+  | { type: 'ASSIGN_SURFACE_CONTROLS'; controls: PointerLockControls }
   | { type: 'ASSIGN_SPACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_SURFACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'FOCUS'; focus: Object3D | null };
@@ -37,7 +47,9 @@ export const cameraMachine = createMachine(
     // Initial context.
     context: () => ({
       canvas: null!,
-      controls: null!,
+      spaceControls: null!,
+      surfaceControls: null,
+      scene: null,
       spaceCamera: null,
       surfaceCamera: null,
       focus: null,
@@ -48,8 +60,30 @@ export const cameraMachine = createMachine(
       ASSIGN_CANVAS: {
         actions: 'assignCanvas',
       },
-      ASSIGN_CONTROLS: {
-        actions: 'assignControls',
+      ASSIGN_SPACE_CONTROLS: {
+        actions: [
+          assign({
+            spaceControls: (_, event) => {
+              event.controls.mouseButtons.right = 8; // Zoom on right mouse button
+              return event.controls;
+            },
+          }),
+          () => console.log('Assigning spaceControls!'),
+        ],
+      },
+      ASSIGN_SURFACE_CONTROLS: {
+        actions: [
+          assign({
+            surfaceControls: (_, event) => event.controls,
+          }),
+          () => console.log('Assigning surfaceControls!'),
+        ],
+      },
+      ASSIGN_SCENE: {
+        actions: [
+          assign({ scene: (_, event) => event.scene }),
+          () => console.log('Assigning scene!'),
+        ],
       },
       ASSIGN_SPACE_CAMERA: {
         actions: [
@@ -109,22 +143,17 @@ export const cameraMachine = createMachine(
           return event.canvas;
         },
       }),
-      assignControls: assign({
-        controls: (_, event) => {
-          event.controls.mouseButtons.right = 8; // Zoom on right mouse button
-          return event.controls;
-        },
-      }),
       assignFocus: assign({
         // Set new focus target.
         focus: (context, event) => {
           const body = event.focus as KeplerBody;
-          context.controls.minDistance = 0.01 + body.meanRadius / EARTH_RADIUS;
+          context.spaceControls.minDistance =
+            0.01 + body.meanRadius / EARTH_RADIUS;
           return event.focus;
         },
       }),
       updateSpaceView: (context, event) => {
-        const controls = context.controls;
+        const controls = context.spaceControls;
         if (!controls) {
           console.error('camera controls are null');
           return;
