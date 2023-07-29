@@ -32,7 +32,7 @@ const SurfaceCamera = () => {
           cameraService.send({ type: 'ASSIGN_SURFACE_CAMERA', camera });
         }}
         near={1e-5}
-        far={1e5}
+        far={1e9}
         fov={20}
       />
     </>
