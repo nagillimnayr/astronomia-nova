@@ -23,7 +23,7 @@ const CamViewPortal = () => {
             camViewPortal: portal,
           });
         }}
-        className="absolute left-0 top-0 z-10 flex h-60 w-80 flex-col items-center justify-start gap-2 rounded-sm  border-2 border-white bg-transparent p-4 text-muted-foreground opacity-50 "
+        className="absolute left-0 top-0 z-10 flex h-60 w-80 flex-col items-center justify-start gap-2 rounded-sm  border-2 border-transparent bg-transparent p-4 text-muted-foreground opacity-50 "
       >
         <></>
       </div>

@@ -24,11 +24,6 @@ const CamViewRenderTarget = () => {
 
   const renderTarget = useFBO(window.innerWidth / 4, window.innerHeight / 4);
 
-  // const scene = useMemo(() => {
-  //   const scene = new Scene();
-  //   return scene;
-  // }, []);
-
   useFrame(({ gl }) => {
     if (!surfaceCamera || !getThree) return;
     const scene = getThree().scene;
@@ -38,25 +33,14 @@ const CamViewRenderTarget = () => {
   });
 
   const aspect = window.innerWidth / window.innerHeight;
-  const size = 12;
+  const size = 14;
 
   // if (!surfaceCamera) return;
   return (
     <>
-      <Plane args={[size, size / aspect, 1]} position={[-14, 10, 0]}>
+      <Plane args={[size, size / aspect, 1]} position={[-20, 10, 0]}>
         <meshBasicMaterial map={renderTarget.texture} />
       </Plane>
-      {/* {createPortal(
-        <>
-          <Box args={[small, small, small]}>
-            <meshBasicMaterial color={'blue'} />
-          </Box>
-        </>,
-        scene
-      )} */}
-      {/* <Box args={[size, size, size]}>
-        <meshBasicMaterial map={renderTarget.texture} color={'red'} />
-      </Box> */}
     </>
   );
 };

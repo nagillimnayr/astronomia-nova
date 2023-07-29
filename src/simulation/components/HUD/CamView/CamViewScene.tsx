@@ -1,9 +1,7 @@
 import {
   Billboard,
-  Box,
   CameraControls,
   PerspectiveCamera,
-  useFBO,
 } from '@react-three/drei';
 import { CamViewRenderTarget } from './CamViewRenderTarget';
 import { useFrame } from '@react-three/fiber';
@@ -14,8 +12,6 @@ const CamViewScene = () => {
   });
   return (
     <>
-      {/* <color attach="background" args={['#d6edf3']} /> */}
-      {/* <perspectiveCamera position={[0, 0, -30]} near={1e-4} far={1e5} /> */}
       <PerspectiveCamera
         makeDefault
         position={[0, 0, -30]}
@@ -35,9 +31,7 @@ const CamViewScene = () => {
       <Billboard>
         <CamViewRenderTarget />
       </Billboard>
-      {/* <Box args={[10, 10, 10]}>
-        <meshBasicMaterial color={'red'} />
-      </Box> */}
+
       <ambientLight intensity={1} />
     </>
   );

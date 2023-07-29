@@ -16,11 +16,6 @@ const CamView = () => {
   const { uiService } = useContext(GlobalStateContext);
   const [uiState] = useActor(uiService); // Bind
 
-  // const portalScene = useMemo(() => {
-  //   const scene = new Scene();
-  //   return scene;
-  // }, []);
-
   if (
     !uiState.context.camViewPortalRef ||
     !uiState.context.camViewPortalRef.current

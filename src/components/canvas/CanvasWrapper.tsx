@@ -9,20 +9,10 @@ import {
   CameraControls,
   Hud,
   PerspectiveCamera as PerspectiveCam,
-  View,
 } from '@react-three/drei';
 import { HUD } from '@/simulation/components/HUD/HUD';
-// import { useCameraStore } from '@/simulation/state/zustand/camera-store';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { degToRad } from 'three/src/math/MathUtils';
-import {
-  DIST_MULT,
-  EARTH_RADIUS,
-  SUN_RADIUS,
-} from '@/simulation/utils/constants';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { CamView } from '@/simulation/components/HUD/CamView/CamView';
-import { PerspectiveCamera } from 'three';
 import Scene from './Scene';
 
 const CanvasWrapper = ({ children }: PropsWithChildren) => {

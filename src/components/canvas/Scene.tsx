@@ -11,7 +11,6 @@ import { LoadingFallback } from '../LoadingFallback';
 
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useFrame, useThree } from '@react-three/fiber';
-import { PointerLockControls } from '@react-three/drei';
 import { CameraController } from '@/simulation/components/camera-controller/CameraController';
 import { useKeyPressed } from '@react-hooks-library/core';
 
