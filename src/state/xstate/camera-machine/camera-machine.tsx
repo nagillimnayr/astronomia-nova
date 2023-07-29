@@ -1,4 +1,4 @@
-import { assign, createMachine } from 'xstate';
+import { assign, createMachine, log } from 'xstate';
 import {
   type Object3D,
   Vector3,
@@ -72,7 +72,7 @@ export const cameraMachine = createMachine(
               return event.controls;
             },
           }),
-          () => console.log('Assigning camera controls!'),
+          log('Assigning camera controls!'),
         ],
       },
 
@@ -82,7 +82,7 @@ export const cameraMachine = createMachine(
         },
         actions: [
           assign({ getThree: (_, event) => event.get }),
-          () => console.log('Assigning getThree!'),
+          log('Assigning getThree!'),
         ],
       },
       ASSIGN_SPACE_CAMERA: {
@@ -91,7 +91,7 @@ export const cameraMachine = createMachine(
         },
         actions: [
           assign({ spaceCamera: (_, event) => event.camera }),
-          () => console.log('Assigning space camera!'),
+          log('Assigning space camera!'),
         ],
       },
       ASSIGN_SURFACE_CAMERA: {
@@ -100,7 +100,7 @@ export const cameraMachine = createMachine(
         },
         actions: [
           assign({ surfaceCamera: (_, event) => event.camera }),
-          () => console.log('Assigning surface camera!'),
+          log('Assigning surface camera!'),
         ],
       },
       ASSIGN_OBSERVER: {
@@ -111,21 +111,11 @@ export const cameraMachine = createMachine(
         actions: [
           assign({ observer: (_, event) => event.observer }),
           () => console.log('Assigning observer!'),
-          (context, event) => {
-            const camera = context.surfaceCamera;
-            const observer = context.observer;
-            if (!camera || !observer) return;
-            observer.add(camera);
-          },
+          'cleanupSurfaceCam',
         ],
       },
       FOCUS: {
-        actions: [
-          'assignFocus',
-          (_, event) => {
-            console.log('FOCUS:', event.focus);
-          },
-        ],
+        actions: ['assignFocus', log('FOCUS:')],
       },
     },
 
@@ -133,6 +123,15 @@ export const cameraMachine = createMachine(
 
     states: {
       space: {
+        entry: (context) => {
+          const { spaceCamera, observer } = context;
+          if (!spaceCamera || !observer) return;
+        },
+        // Cleanup on exit:
+        exit: (context) => {
+          const { spaceCamera, observer } = context;
+          if (!spaceCamera || !observer) return;
+        },
         on: {
           // UPDATE event.
           UPDATE: {
@@ -140,52 +139,37 @@ export const cameraMachine = createMachine(
             actions: 'updateSpaceView',
           },
           TO_SURFACE: {
-            // Transition to 'surface' view-mode.
-            target: ['surface'],
+            // Transition to 'surface' view-mode:
+            target: 'surface',
 
-            actions: [
-              (context) => {
-                const { controls, surfaceCamera, observer } = context;
-                if (!controls || !surfaceCamera || !observer) {
-                  return;
-                }
-              },
-              () => console.log('TO_SURFACE'),
-            ],
+            actions: [log('TO_SURFACE')],
           },
         },
       },
       surface: {
+        entry: (context) => {
+          const { surfaceCamera, observer } = context;
+          if (!surfaceCamera || !observer) return;
+        },
+        // Cleanup on exit:
+        exit: 'cleanupSurfaceCam',
         on: {
-          // UPDATE event.
+          // UPDATE event:
           UPDATE: {
             // Run action on self-transition.
             actions: 'updateSurfaceView',
           },
           TO_SPACE: {
-            // Transition to 'space' view-mode.
+            // Transition to 'space' view-mode:
             target: 'space',
-            actions: [
-              (context) => {
-                const { controls, surfaceCamera, spaceCamera, observer } =
-                  context;
-                // if (!controls || !spaceCamera) return;
-                if (!surfaceCamera || !observer) return;
-                // Reset surface camera.
-                observer.add(surfaceCamera);
-                surfaceCamera.position.set(0, 0, -1e-3);
-                surfaceCamera.rotation.set(0, 0, 0);
-                surfaceCamera.updateProjectionMatrix();
-              },
-              () => console.log('TO_SPACE'),
-            ],
+            actions: [log('TO_SPACE')],
           },
         },
       },
     },
   },
   {
-    // Action implementations.
+    // Action implementations:
     actions: {
       assignCanvas: assign({
         canvas: (context, event) => {
@@ -199,6 +183,7 @@ export const cameraMachine = createMachine(
         focus: (context, event) => {
           const body = event.focus as KeplerBody;
           if (body && context.controls) {
+            // Set min distance relative to focus targets radius.
             context.controls.minDistance =
               0.01 + body.meanRadius / EARTH_RADIUS;
           }
@@ -240,12 +225,16 @@ export const cameraMachine = createMachine(
         // Force the controls to update the camera.
         controls.update(event.deltaTime);
       },
-      // toSurface: (context, event) => {
-      //   if (!context.getThree) return;
-      //   const state = context.getThree();
+      cleanupSurfaceCam: (context) => {
+        const { surfaceCamera, observer } = context;
+        if (!surfaceCamera || !observer) return;
 
-      // },
-      // toSpace: (context, event) => {},
+        // Reset surface camera.
+        observer.add(surfaceCamera);
+        surfaceCamera.position.set(0, 0, -1e-3);
+        surfaceCamera.rotation.set(0, 0, 0);
+        surfaceCamera.updateProjectionMatrix();
+      },
     },
   }
 );
