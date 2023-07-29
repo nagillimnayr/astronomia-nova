@@ -115,7 +115,7 @@ export const cameraMachine = createMachine(
         ],
       },
       FOCUS: {
-        actions: ['assignFocus', log('FOCUS:')],
+        actions: ['assignFocus', log('FOCUS')],
       },
     },
 
@@ -162,7 +162,7 @@ export const cameraMachine = createMachine(
           },
         ],
         // Cleanup on exit:
-        exit: 'cleanupSurfaceCam',
+        exit: ['cleanupSurfaceCam', log('exiting surface view')],
         on: {
           // UPDATE event:
           UPDATE: {
@@ -239,14 +239,15 @@ export const cameraMachine = createMachine(
         controls.update(event.deltaTime);
       },
       cleanupSurfaceCam: (context) => {
-        const { surfaceCamera, observer } = context;
-        if (!surfaceCamera || !observer) return;
+        const { controls, surfaceCamera, observer } = context;
+        if (!controls || !surfaceCamera || !observer) return;
 
         // Reset surface camera.
         observer.add(surfaceCamera);
-        surfaceCamera.position.set(0, 0, -1e-3);
+        surfaceCamera.position.set(0, 0, 1e-3);
         surfaceCamera.rotation.set(0, 0, 0);
         surfaceCamera.updateProjectionMatrix();
+        controls.dollyTo(1e-3, false).catch((reason) => console.error(reason));
       },
       applySurfaceCamUp: (context) => {
         const { controls, surfaceCamera, observer, focus } = context;
