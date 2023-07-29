@@ -32,7 +32,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
           <div className="relative z-0 h-full w-full">
             <Canvas
               className="z-[0]"
-              eventSource={container}
+              // eventSource={container}
               gl={{ logarithmicDepthBuffer: true }}
               linear
               flat
