@@ -11,11 +11,14 @@ import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import { type PointerLockControls } from 'three-stdlib';
 import { type RootState } from '@react-three/fiber';
 
+const targetWorldPos = new Vector3();
+const observerWorldPos = new Vector3();
+
 type Context = {
   canvas: HTMLCanvasElement; // Reference to the canvas element.
   getThree: (() => RootState) | null;
   spaceControls: CameraControls;
-  surfaceControls: PointerLockControls | null;
+  surfaceControls: CameraControls | null;
   spaceCamera: PerspectiveCamera | null;
   surfaceCamera: PerspectiveCamera | null;
   focus: Object3D | null;
@@ -29,14 +32,11 @@ type Events =
   | { type: 'ASSIGN_CANVAS'; canvas: HTMLCanvasElement }
   | { type: 'ASSIGN_THREE'; get: () => RootState }
   | { type: 'ASSIGN_SPACE_CONTROLS'; controls: CameraControls }
-  | { type: 'ASSIGN_SURFACE_CONTROLS'; controls: PointerLockControls }
+  | { type: 'ASSIGN_SURFACE_CONTROLS'; controls: CameraControls }
   | { type: 'ASSIGN_SPACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_SURFACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_OBSERVER'; observer: Object3D | null }
   | { type: 'FOCUS'; focus: Object3D | null };
-
-// Capture the vector in a closure.
-const targetWorldPos = new Vector3();
 
 export const cameraMachine = createMachine(
   {
@@ -124,12 +124,12 @@ export const cameraMachine = createMachine(
         actions: [
           assign({ observer: (_, event) => event.observer }),
           () => console.log('Assigning observer!'),
-          (context, event) => {
-            const camera = context.surfaceCamera;
-            const observer = context.observer;
-            if (!camera || !observer) return;
-            observer.add(camera);
-          },
+          // (context, event) => {
+          //   const camera = context.surfaceCamera;
+          //   const observer = context.observer;
+          //   if (!camera || !observer) return;
+          //   observer.add(camera);
+          // },
         ],
       },
       FOCUS: {
@@ -212,7 +212,17 @@ export const cameraMachine = createMachine(
       updateSurfaceView: (context, event) => {
         // Todo
         const controls = context.surfaceControls;
-        if (!controls) return;
+        const observer = context.observer;
+        if (!controls || !observer) return;
+        observer.getWorldPosition(observerWorldPos);
+        // Update controls to follow target.
+        controls
+          .moveTo(...observerWorldPos.toArray(), false)
+          .catch((reason) => {
+            console.log('error updating camera controls: ', reason);
+          });
+        // Force the controls to update the camera.
+        controls.update(event.deltaTime);
       },
       // toSurface: (context, event) => {
       //   if (!context.getThree) return;

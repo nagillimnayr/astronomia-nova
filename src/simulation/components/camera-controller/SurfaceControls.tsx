@@ -47,19 +47,18 @@ const SurfaceControls = () => {
         enabled={surfaceView}
         camera={cameraRef.current}
         minDistance={1e-3}
+        maxDistance={1e-3}
         // polarAngle={degToRad(60)}
         ref={(controls) => {
           if (!controls) {
             return;
           }
-          // if (controls === cameraService.machine.context.spaceControls) {
-          //   return;
-          // }
+
           // Assign controls context in camera state machine.
-          //   cameraService.send({
-          //     type: 'ASSIGN_SPACE_CONTROLS',
-          //     controls,
-          //   });
+          cameraService.send({
+            type: 'ASSIGN_SPACE_CONTROLS',
+            controls,
+          });
         }}
       />
     </>
