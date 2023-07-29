@@ -49,7 +49,7 @@ const SurfaceControls = () => {
         // enabled={surfaceView }
         camera={cameraRef.current}
         minDistance={1e-3}
-        maxDistance={1e10}
+        maxDistance={1e1}
         // polarAngle={degToRad(60)}
         ref={(controls) => {
           if (!controls) {

@@ -40,7 +40,7 @@ const ObservationPoint = observer(({ children }: Props) => {
   const centerRef = useRef<Object3D>(null!);
   const sphereRef = useRef<Mesh>(null!);
 
-  const [sphereVisible, setSphereVisibile] = useState<boolean>(false);
+  const [sphereVisible, setSphereVisibile] = useState<boolean>(true);
 
   const { surfaceState } = useContext(RootStoreContext);
 

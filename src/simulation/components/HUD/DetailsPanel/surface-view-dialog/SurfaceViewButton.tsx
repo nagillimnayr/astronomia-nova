@@ -15,7 +15,6 @@ type Props = {
 };
 const SurfaceViewButton = observer(
   ({ children, className, defaultOpen }: Props) => {
-    // const { uiState, cameraState, surfaceState } = useContext(RootStoreContext);
     const { uiService, cameraService, selectionService } =
       useContext(GlobalStateContext);
 
