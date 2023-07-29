@@ -15,6 +15,7 @@ const Observer = () => {
       <object3D>
         <object3D rotation={[0, 0, -degToRad(90)]}>
           <object3D
+            name="Observer"
             ref={(observer) => {
               if (!observer) return;
               // if (observer === cameraService.machine.context.observer) return;

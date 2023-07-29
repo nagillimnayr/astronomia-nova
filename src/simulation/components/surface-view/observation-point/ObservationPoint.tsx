@@ -90,8 +90,12 @@ const ObservationPoint = observer(({ children }: Props) => {
       {body && mesh ? (
         <object3D ref={centerRef}>
           {/* <axesHelper args={[1.5 * (body.meanRadius / EARTH_RADIUS)]} /> */}
-          <group position={[body.meanRadius / EARTH_RADIUS, 0, 0]}>
+          <group
+            name="Observation-Point"
+            position={[body.meanRadius / EARTH_RADIUS + 1, 0, 0]}
+          >
             <Sphere
+              name="Observation-Sphere"
               visible={sphereVisible}
               ref={sphereRef}
               args={[1e-2]}
