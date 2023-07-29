@@ -7,6 +7,7 @@ import { type PropsWithChildren, Suspense, useContext, useRef } from 'react';
 import { LoadingFallback } from '../LoadingFallback';
 import {
   CameraControls,
+  Hud,
   PerspectiveCamera as PerspectiveCam,
   View,
 } from '@react-three/drei';
@@ -38,54 +39,67 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
 
         {/** Wrap the canvas in a div to create a separate stacking context. This is necessary because the <Html> components from Drei and portalled out of the canvas and become sibling elements of the canvas. They have an absurdly large z-index, so they will be rendered over top of any of their siblings. Wrapping the canvas in this way ensures that they share a stacking context only with each other and the canvas, and prevents them from clipping through the HUD or the rest of the UI. */}
         <div ref={container} className="relative z-0 h-full w-full">
-          <Canvas
-            eventSource={container}
-            gl={{ logarithmicDepthBuffer: true }}
-            linear
-            flat
-            ref={(canvas) => {
-              if (!canvas) return;
-              // Assign canvas context in camera state machine.
-              cameraService.send({ type: 'ASSIGN_CANVAS', canvas });
-            }}
-          >
-            <XR>
-              <CamView />
-              <PerspectiveCam
-                makeDefault
-                ref={(cam) => {
-                  const camera = cam as PerspectiveCamera;
-                  // Assign camera to state context.
-                  cameraService.send({ type: 'ASSIGN_SPACE_CAMERA', camera });
-                }}
-                position={[0, 0, SUN_RADIUS / 10 / DIST_MULT + 1000]}
-                near={1e-5}
-                far={1e14}
-              />
-              <CameraControls
-                makeDefault
-                minDistance={1e-3}
-                polarAngle={degToRad(60)}
-                ref={(controls) => {
-                  if (!controls) {
-                    return;
-                  }
-                  // if (controls === cameraState.controls) return;
-                  if (controls === cameraService.machine.context.controls)
-                    return;
+          <div className="relative z-0 h-full w-full">
+            <Canvas
+              className="z-[0]"
+              eventSource={container}
+              gl={{ logarithmicDepthBuffer: true }}
+              linear
+              flat
+              ref={(canvas) => {
+                if (!canvas) return;
+                // Assign canvas context in camera state machine.
+                cameraService.send({ type: 'ASSIGN_CANVAS', canvas });
+              }}
+            >
+              <Hud renderPriority={1}>
+                <XR>
+                  <PerspectiveCam
+                    makeDefault
+                    ref={(cam) => {
+                      const camera = cam as PerspectiveCamera;
+                      // Assign camera to state context.
+                      cameraService.send({
+                        type: 'ASSIGN_SPACE_CAMERA',
+                        camera,
+                      });
+                    }}
+                    position={[0, 0, SUN_RADIUS / 10 / DIST_MULT + 1000]}
+                    near={1e-5}
+                    far={1e14}
+                  />
+                  <CameraControls
+                    makeDefault
+                    minDistance={1e-3}
+                    polarAngle={degToRad(60)}
+                    ref={(controls) => {
+                      if (!controls) {
+                        return;
+                      }
+                      // if (controls === cameraState.controls) return;
+                      if (
+                        controls === cameraService.machine.context.spaceControls
+                      ) {
+                        return;
+                      }
+                      // Assign controls context in camera state machine.
+                      cameraService.send({
+                        type: 'ASSIGN_SPACE_CONTROLS',
+                        controls,
+                      });
+                    }}
+                  />
 
-                  // cameraState.setControls(controls);
-                  // Assign controls context in camera state machine.
-                  cameraService.send({ type: 'ASSIGN_CONTROLS', controls });
-                }}
-              />
-
-              <Scene>{children}</Scene>
-
-              {/* <Stats /> */}
-              {/* <Perf /> */}
-            </XR>
-          </Canvas>
+                  <Scene>{children}</Scene>
+                  {/* <Stats /> */}
+                  {/* <Perf /> */}
+                </XR>
+              </Hud>
+              <Hud renderPriority={2}>
+                <CamView />
+              </Hud>
+            </Canvas>
+          </div>
         </div>
       </div>
     </Suspense>
