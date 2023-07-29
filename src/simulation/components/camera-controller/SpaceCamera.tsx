@@ -36,25 +36,7 @@ const SpaceControls = () => {
         }}
         position={[0, 0, SUN_RADIUS / 10 / DIST_MULT + 1000]}
         near={1e-5}
-        far={1e14}
-      />
-      <CameraControls
-        makeDefault={spaceView}
-        // enabled={spaceView }
-        camera={cameraRef.current}
-        minDistance={1e-3}
-        polarAngle={degToRad(60)}
-        ref={(controls) => {
-          if (!controls) {
-            return;
-          }
-
-          // Assign controls context in camera state machine.
-          cameraService.send({
-            type: 'ASSIGN_SPACE_CONTROLS',
-            controls,
-          });
-        }}
+        far={1e5}
       />
     </>
   );

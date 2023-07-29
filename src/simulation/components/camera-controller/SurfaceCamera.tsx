@@ -24,6 +24,8 @@ const SurfaceControls = () => {
       <PerspectiveCam
         makeDefault={surfaceView}
         name="Surface-Camera"
+        position={[0, 0, -1e-3]}
+        rotation={[0, 0, 0]}
         ref={(cam) => {
           if (!cam) return;
           const camera = cam as PerspectiveCamera;
@@ -31,37 +33,9 @@ const SurfaceControls = () => {
           // Assign camera to state context.
           cameraService.send({ type: 'ASSIGN_SURFACE_CAMERA', camera });
         }}
-        near={1e-6}
+        near={1e-5}
         far={1e5}
         fov={20}
-      />
-      {/* <PointerLockControls
-        makeDefault={surfaceView}
-        enabled={surfaceView}
-        camera={cameraRef.current}
-        ref={(controls) => {
-          if (!controls) return;
-          cameraService.send({ type: 'ASSIGN_SURFACE_CONTROLS', controls });
-        }}
-      /> */}
-      <CameraControls
-        makeDefault={surfaceView}
-        // enabled={surfaceView }
-        camera={cameraRef.current}
-        minDistance={1e-3}
-        maxDistance={1e1}
-        // polarAngle={degToRad(60)}
-        ref={(controls) => {
-          if (!controls) {
-            return;
-          }
-
-          // Assign controls context in camera state machine.
-          cameraService.send({
-            type: 'ASSIGN_SPACE_CONTROLS',
-            controls,
-          });
-        }}
       />
     </>
   );

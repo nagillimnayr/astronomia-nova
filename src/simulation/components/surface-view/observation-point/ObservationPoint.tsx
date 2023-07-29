@@ -40,7 +40,7 @@ const ObservationPoint = observer(({ children }: Props) => {
   const centerRef = useRef<Object3D>(null!);
   const sphereRef = useRef<Mesh>(null!);
 
-  const [sphereVisible, setSphereVisibile] = useState<boolean>(true);
+  const [sphereVisible, setSphereVisibile] = useState<boolean>(false);
 
   const { surfaceState } = useContext(RootStoreContext);
 
@@ -99,7 +99,7 @@ const ObservationPoint = observer(({ children }: Props) => {
               visible={sphereVisible}
               ref={sphereRef}
               args={[1e-2]}
-              rotation={[0, 0, degToRad(90)]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
+              rotation={[0, 0, degToRad(-90)]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
             >
               <Wireframe
                 simplify
@@ -108,6 +108,7 @@ const ObservationPoint = observer(({ children }: Props) => {
                 fillMix={1}
                 fillOpacity={0.1}
               />
+              {/* <axesHelper args={[1e-1]} /> */}
             </Sphere>
             <Observer />
             {children}
