@@ -6,13 +6,16 @@ import { degToRad } from 'three/src/math/MathUtils';
 import { useSelector } from '@xstate/react';
 import { useContext, useRef } from 'react';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
-import { PerspectiveCamera } from 'three';
+import { type PerspectiveCamera } from 'three';
 import { DIST_MULT, SUN_RADIUS } from '@/simulation/utils/constants';
 
 const SpaceControls = () => {
   const { cameraService } = useContext(GlobalStateContext);
   const spaceView = useSelector(cameraService, (state) =>
     state.matches('space')
+  );
+  const surfaceView = useSelector(cameraService, (state) =>
+    state.matches('surface')
   );
   const cameraRef = useRef<PerspectiveCamera>(null!);
 
@@ -25,7 +28,6 @@ const SpaceControls = () => {
           const camera = cam as PerspectiveCamera;
           cameraRef.current = camera;
 
-          if (camera === cameraService.machine.context.spaceCamera) return;
           // Assign camera to state context.
           cameraService.send({
             type: 'ASSIGN_SPACE_CAMERA',
@@ -38,7 +40,7 @@ const SpaceControls = () => {
       />
       <CameraControls
         makeDefault={spaceView}
-        enabled={spaceView}
+        // enabled={spaceView }
         camera={cameraRef.current}
         minDistance={1e-3}
         polarAngle={degToRad(60)}

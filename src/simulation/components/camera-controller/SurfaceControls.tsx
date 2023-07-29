@@ -14,6 +14,9 @@ const SurfaceControls = () => {
   const surfaceView = useSelector(cameraService, (state) =>
     state.matches('surface')
   );
+  const spaceView = useSelector(cameraService, (state) =>
+    state.matches('space')
+  );
   const cameraRef = useRef<PerspectiveCamera>(null!);
   useHelper(cameraRef, CameraHelper);
   return (
@@ -26,7 +29,6 @@ const SurfaceControls = () => {
           const camera = cam as PerspectiveCamera;
           cameraRef.current = camera;
           // Assign camera to state context.
-          if (camera === cameraService.machine.context.surfaceCamera) return;
           cameraService.send({ type: 'ASSIGN_SURFACE_CAMERA', camera });
         }}
         near={1e-6}
@@ -44,10 +46,10 @@ const SurfaceControls = () => {
       /> */}
       <CameraControls
         makeDefault={surfaceView}
-        enabled={surfaceView}
+        // enabled={surfaceView }
         camera={cameraRef.current}
         minDistance={1e-3}
-        maxDistance={1e-2}
+        maxDistance={1e10}
         // polarAngle={degToRad(60)}
         ref={(controls) => {
           if (!controls) {

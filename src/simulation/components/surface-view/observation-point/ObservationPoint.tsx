@@ -92,7 +92,7 @@ const ObservationPoint = observer(({ children }: Props) => {
           {/* <axesHelper args={[1.5 * (body.meanRadius / EARTH_RADIUS)]} /> */}
           <group
             name="Observation-Point"
-            position={[body.meanRadius / EARTH_RADIUS + 1, 0, 0]}
+            position={[body.meanRadius / EARTH_RADIUS + 0.001, 0, 0]}
           >
             <Sphere
               name="Observation-Sphere"

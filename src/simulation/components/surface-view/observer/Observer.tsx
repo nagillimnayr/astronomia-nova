@@ -1,10 +1,6 @@
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
-import {
-  PerspectiveCamera as PerspectiveCam,
-  useHelper,
-} from '@react-three/drei';
+
 import { useContext, useRef } from 'react';
-import { CameraHelper, type Object3D, type PerspectiveCamera } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 
 const Observer = () => {

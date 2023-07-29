@@ -5,12 +5,14 @@ import { observer } from 'mobx-react-lite';
 import { SurfaceViewButton } from './surface-view-dialog/SurfaceViewButton';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { DIST_MULT } from '@/simulation/utils/constants';
-import { useActor } from '@xstate/react';
+import { useActor, useSelector } from '@xstate/react';
 
 const DetailsPanel = observer(() => {
   const { cameraService, selectionService } = useContext(GlobalStateContext);
-  const [selectionState] = useActor(selectionService);
-  const { selected } = selectionState.context;
+  const selected = useSelector(
+    selectionService,
+    ({ context }) => context.selected
+  );
 
   const handleCloseClick = useCallback(() => {
     // Deselect selected object.
@@ -18,10 +20,10 @@ const DetailsPanel = observer(() => {
   }, [selectionService]);
 
   const handleFocusClick = useCallback(() => {
-    // Focus camera on selection. We can be certain that its not null because the button won't be clickable if the selection is null.
+    // Focus camera on selection.
     cameraService.send({
       type: 'FOCUS',
-      focus: selected!,
+      focus: selected,
     });
   }, [cameraService, selected]);
 

@@ -84,7 +84,10 @@ export const cameraMachine = createMachine(
         },
         actions: [
           assign({
-            surfaceControls: (_, event) => event.controls,
+            surfaceControls: (_, event) => {
+              event.controls.mouseButtons.right = 8; // Zoom on right mouse button
+              return event.controls;
+            },
           }),
           () => console.log('Assigning surfaceControls!'),
         ],
@@ -124,16 +127,21 @@ export const cameraMachine = createMachine(
         actions: [
           assign({ observer: (_, event) => event.observer }),
           () => console.log('Assigning observer!'),
-          // (context, event) => {
-          //   const camera = context.surfaceCamera;
-          //   const observer = context.observer;
-          //   if (!camera || !observer) return;
-          //   observer.add(camera);
-          // },
+          (context, event) => {
+            const camera = context.surfaceCamera;
+            const observer = context.observer;
+            if (!camera || !observer) return;
+            observer.add(camera);
+          },
         ],
       },
       FOCUS: {
-        actions: 'assignFocus',
+        actions: [
+          'assignFocus',
+          (_, event) => {
+            console.log('FOCUS:', event.focus);
+          },
+        ],
       },
     },
 
@@ -149,8 +157,9 @@ export const cameraMachine = createMachine(
           },
           TO_SURFACE: {
             // Transition to 'surface' view-mode.
-            target: 'surface',
-            // actions: ['toSurface'],
+            target: ['surface'],
+
+            actions: [() => console.log('TO_SURFACE')],
           },
         },
       },
@@ -164,7 +173,7 @@ export const cameraMachine = createMachine(
           TO_SPACE: {
             // Transition to 'space' view-mode.
             target: 'space',
-            // actions: ['toSpace'],
+            actions: [() => console.log('TO_SPACE')],
           },
         },
       },

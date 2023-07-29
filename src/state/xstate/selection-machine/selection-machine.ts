@@ -7,39 +7,44 @@ type Context = {
 
 type Events = { type: 'SELECT'; selection: KeplerBody } | { type: 'DESELECT' };
 
-export const selectionMachine = createMachine(
-  {
-    predictableActionArguments: true,
-    tsTypes: {} as import('./selection-machine.typegen').Typegen0,
-    schema: {
-      context: {} as Context,
-      events: {} as Events,
-    },
-    id: 'selection',
-    // Initial context:
-    context: () => ({
-      selected: null,
-    }),
+export const selectionMachine = createMachine({
+  predictableActionArguments: true,
+  tsTypes: {} as import('./selection-machine.typegen').Typegen0,
+  schema: {
+    context: {} as Context,
+    events: {} as Events,
+  },
+  id: 'selection',
+  // Initial context:
+  context: () => ({
+    selected: null,
+  }),
 
-    // Context assignment events:
-    on: {
-      SELECT: {
-        actions: 'select',
+  // Context assignment events:
+  on: {
+    SELECT: {
+      cond: (context, event) => {
+        return context.selected !== event.selection;
       },
-      DESELECT: {
-        actions: 'deselect',
-      },
+      actions: [
+        assign({ selected: (_, event) => event.selection }),
+        (context) => {
+          console.log('new selection:', context.selected);
+        },
+      ],
     },
-
-    initial: 'idle',
-    states: {
-      idle: {},
+    DESELECT: {
+      actions: [
+        assign({ selected: () => null }),
+        (context) => {
+          console.log('deselect!:', context.selected);
+        },
+      ],
     },
   },
-  {
-    actions: {
-      select: assign({ selected: (_, event) => event.selection }),
-      deselect: assign({ selected: () => null }),
-    },
-  }
-);
+
+  initial: 'idle',
+  states: {
+    idle: {},
+  },
+});
