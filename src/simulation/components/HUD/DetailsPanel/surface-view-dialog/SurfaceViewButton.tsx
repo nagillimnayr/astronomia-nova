@@ -5,6 +5,8 @@ import { SurfaceViewDialog } from './SurfaceViewDialog';
 import { useCallback, useContext } from 'react';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { useSelector } from '@xstate/react';
 
 type Props = {
   children?: React.ReactNode;
@@ -13,10 +15,22 @@ type Props = {
 };
 const SurfaceViewButton = observer(
   ({ children, className, defaultOpen }: Props) => {
-    const { uiState, cameraState, surfaceState } = useContext(RootStoreContext);
+    // const { uiState, cameraState, surfaceState } = useContext(RootStoreContext);
+    const { uiService, cameraService, selectionService } =
+      useContext(GlobalStateContext);
+
+    const selected = useSelector(
+      selectionService,
+      ({ context }) => context.selected
+    );
+
     const handleClick = useCallback(() => {
-      cameraState.setFocus(uiState.getSelected()!);
-    }, [cameraState, uiState]);
+      // cameraState.setFocus(uiState.getSelected()!);
+      cameraService.send({
+        type: 'FOCUS',
+        focus: selected,
+      });
+    }, [cameraService, selected]);
 
     return (
       <AlertDialog.Root defaultOpen={defaultOpen ?? false}>
