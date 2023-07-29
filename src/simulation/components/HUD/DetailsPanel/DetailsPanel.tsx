@@ -22,8 +22,8 @@ const DetailsPanel = observer(() => {
   const handleFocusClick = useCallback(() => {
     // Focus camera on selection.
     cameraService.send({
-      type: 'FOCUS',
-      focus: selected,
+      type: 'SET_TARGET',
+      target: selected,
     });
   }, [cameraService, selected]);
 

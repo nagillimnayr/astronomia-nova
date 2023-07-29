@@ -18,7 +18,7 @@ type Context = {
   controls: CameraControls | null;
   spaceCamera: PerspectiveCamera | null;
   surfaceCamera: PerspectiveCamera | null;
-  focus: Object3D | null;
+  target: Object3D | null;
   observer: Object3D | null;
 };
 
@@ -32,7 +32,7 @@ type Events =
   | { type: 'ASSIGN_SPACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_SURFACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_OBSERVER'; observer: Object3D | null }
-  | { type: 'FOCUS'; focus: Object3D | null };
+  | { type: 'SET_TARGET'; target: Object3D | null };
 
 export const cameraMachine = createMachine(
   {
@@ -51,7 +51,7 @@ export const cameraMachine = createMachine(
       spaceCamera: null,
       surfaceCamera: null,
       observer: null,
-      focus: null,
+      target: null,
     }),
 
     // Context assignment events:
@@ -114,8 +114,8 @@ export const cameraMachine = createMachine(
           'cleanupSurfaceCam',
         ],
       },
-      FOCUS: {
-        actions: ['assignFocus', log('FOCUS')],
+      SET_TARGET: {
+        actions: ['assignTarget', log('FOCUS')],
       },
     },
 
@@ -191,16 +191,16 @@ export const cameraMachine = createMachine(
           return event.canvas;
         },
       }),
-      assignFocus: assign({
+      assignTarget: assign({
         // Set new focus target.
-        focus: (context, event) => {
-          const body = event.focus as KeplerBody;
+        target: (context, event) => {
+          const body = event.target as KeplerBody;
           if (body && context.controls) {
             // Set min distance relative to focus targets radius.
             context.controls.minDistance =
               0.01 + body.meanRadius / EARTH_RADIUS;
           }
-          return event.focus;
+          return event.target;
         },
       }),
       updateSpaceView: (context, event) => {
@@ -209,11 +209,11 @@ export const cameraMachine = createMachine(
           console.error('camera controls are null');
           return;
         }
-        const focus = context.focus;
-        if (!focus) return;
+        const target = context.target;
+        if (!target) return;
 
         // Get world position of focus target.
-        focus.getWorldPosition(_targetWorldPos);
+        target.getWorldPosition(_targetWorldPos);
 
         // Update controls to follow target.
         controls.moveTo(..._targetWorldPos.toArray(), false).catch((reason) => {
@@ -250,13 +250,13 @@ export const cameraMachine = createMachine(
         controls.dollyTo(1e-3, false).catch((reason) => console.error(reason));
       },
       applySurfaceCamUp: (context) => {
-        const { controls, surfaceCamera, observer, focus } = context;
-        if (!controls || !surfaceCamera || !observer || !focus) return;
+        const { controls, surfaceCamera, observer, target } = context;
+        if (!controls || !surfaceCamera || !observer || !target) return;
 
         // !!!
         // NOTE: This works!
         observer.getWorldPosition(_observerWorldPos);
-        focus.getWorldPosition(_targetWorldPos);
+        target.getWorldPosition(_targetWorldPos);
         // Get direction from target center to observer in world coordinates.
         _observerUp.subVectors(_observerWorldPos, _targetWorldPos);
         _observerUp.normalize(); // Normalize the direction vector.

@@ -30,7 +30,7 @@ const ObservationPoint = observer(({ children }: Props) => {
   const { cameraService, selectionService } = useContext(GlobalStateContext);
   const focusTarget = useSelector(
     cameraService,
-    ({ context }) => context.focus
+    ({ context }) => context.target
   );
   // const selected = useSelector(
   //   selectionService,
