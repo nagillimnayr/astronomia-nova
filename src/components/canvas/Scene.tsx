@@ -1,16 +1,9 @@
 import Simulation from '@/simulation/components/Simulation';
 
-import {
-  type PropsWithChildren,
-  Suspense,
-  useContext,
-  useRef,
-  useEffect,
-} from 'react';
-import { LoadingFallback } from '../LoadingFallback';
+import { type PropsWithChildren, useContext, useEffect } from 'react';
 
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
 import { CameraController } from '@/simulation/components/camera-controller/CameraController';
 import { useKeyPressed } from '@react-hooks-library/core';
 
