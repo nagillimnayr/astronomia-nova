@@ -45,8 +45,8 @@ export type BodyParams = {
   mass: number;
   meanRadius: number;
   obliquity?: number;
-  initialPosition: Vector3Tuple;
-  initialVelocity: Vector3Tuple;
+  initialPosition?: Vector3Tuple;
+  initialVelocity?: Vector3Tuple;
 };
 type BodyProps = {
   children?: React.ReactNode;
