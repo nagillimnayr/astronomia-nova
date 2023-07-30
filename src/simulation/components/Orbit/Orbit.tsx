@@ -12,9 +12,6 @@ import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
 import {
   ColorRepresentation,
-  Matrix4,
-  Mesh,
-  type Object3D,
   type Texture,
   Vector3,
   Vector3Tuple,
@@ -27,21 +24,16 @@ import {
   getOrbitalSpeedFromRadius,
   getVelocityDirectionFromOrbitalElements,
 } from '@/simulation/math/orbital-elements/Velocity';
-import {
-  getPosition,
-  getPositionFromRadius,
-} from '@/simulation/math/orbital-elements/Position';
+import { getPosition } from '@/simulation/math/orbital-elements/Position';
 import { Object3DNode, extend, useFrame } from '@react-three/fiber';
 import { type BodyKey } from '@/lib/horizons/BodyKey';
 import { trpc } from '@/lib/trpc/trpc';
-import { useQuery } from '@tanstack/react-query';
 import {
   getSemiMinorAxisFromApsides,
   getSemiMinorAxisFromSemiLatusRectum,
 } from '@/simulation/math/orbital-elements/axes/SemiMinorAxis';
 import { getSemiLatusRectumFromEccentricity } from '@/simulation/math/orbital-elements/axes/SemiLatusRectum';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { getLinearEccentricityFromEccentricity } from '@/simulation/math/orbital-elements/LinearEccentricity';
+
 import { getLinearEccentricityFromAxes } from '../../math/orbital-elements/LinearEccentricity';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 
@@ -73,46 +65,10 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   const centralBodyRef = useContext(KeplerTreeContext);
 
   const ephemeridesQuery = trpc.loadEphemerides.useQuery({ name: name });
-
-  // const elements = useMemo(() => {
-  //   if (!ephemeridesQuery.data) return null;
-  //   const { elementTable, vectorTable, physicalData } = ephemeridesQuery.data;
-  //   const { eccentricity, semiMajorAxis } = elementTable;
-
-  //   const position = new Vector3(...vectorTable.position);
-  //   const velocity = new Vector3(...vectorTable.velocity);
-
-  //   const elements = calculateOrbitFromStateVectors(
-  //     position,
-  //     velocity,
-  //     centralMass,
-  //     physicalData.mass
-  //   );
-
-  //   _pos.set(...elements.position).divideScalar(DIST_MULT);
-  //   _vel.set(...elements.velocity).divideScalar(DIST_MULT);
-  //   console.log('pos scaled:', _pos.toArray());
-  //   console.log('vel scaled:', _vel.toArray());
-  //   return {
-  //     position: _pos.toArray(),
-  //     velocity: _vel.toArray(),
-
-  //     semiMajorAxis: elements.semiMajorAxis / DIST_MULT,
-  //     semiMinorAxis: elements.semiMinorAxis / DIST_MULT,
-  //     semiLatusRectum: elements.semiLatusRectum / DIST_MULT,
-  //     periapsis: elements.periapsis / DIST_MULT,
-  //     apoapsis: elements.apoapsis / DIST_MULT,
-
-  //     eccentricity: elements.eccentricity,
-
-  //     inclination: elements.inclination,
-  //     longitudeOfAscendingNode: elements.longitudeOfAscendingNode,
-  //     argumentOfPeriapsis: elements.argumentOfPeriapsis,
-
-  //     trueAnomaly: elements.trueAnomaly,
-  //   };
-  // }, [centralMass, ephemeridesQuery.data]);
-
+  // const [ephemeridesData, ephemeridesQuery] =
+  //   trpc.loadEphemerides.useSuspenseQuery({ name: name });
+  // ephemeridesQuery.;
+  // If data hasn't loaded yet, return and wait until it has.
   if (!ephemeridesQuery.data) {
     return;
   }
@@ -158,7 +114,6 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     centralMass,
     semiMajorAxis
   );
-  // _vel.set(...vectorTable.velocity);
   _vel.copy(getVelocityDirectionFromOrbitalElements(trueAnomaly, eccentricity));
   _vel.normalize();
   _vel.multiplyScalar(orbitalSpeed);
@@ -166,12 +121,9 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   const bodyParams: BodyParams = {
     name: name,
     color: 'white',
-    mass: physicalData.mass,
-    meanRadius: physicalData.meanRadius,
-    obliquity: physicalData.obliquity,
-    // initialPosition: vectorTable.position.map(
-    //   (val) => val / DIST_MULT
-    // ) as Vector3Tuple,
+    mass: physicalData.table.mass,
+    meanRadius: physicalData.table.meanRadius,
+    obliquity: physicalData.table.obliquity,
     initialPosition: _pos.divideScalar(DIST_MULT).toArray(),
     initialVelocity: _vel.divideScalar(DIST_MULT).toArray(),
   };
