@@ -17,17 +17,9 @@ export async function saveEphemeris(ephemeris: Ephemeris) {
   const fileName = _.kebabCase(name + type);
   const __filename = fileURLToPath(import.meta.url);
 
-  let directory = '';
-  if (type === 'ELEMENTS') {
-    directory = 'element-tables';
-  } else if (type === 'VECTORS') {
-    directory = 'vector-tables';
-  } else {
-    throw new Error('invalid type');
-  }
   const pathToNewFile = path.resolve(
     'json',
-    path.join('horizons', directory, `${fileName}.json`)
+    path.join('horizons', _.toLower(type), `${fileName}.json`)
   );
   console.log('pathToNewFile:', pathToNewFile);
 
