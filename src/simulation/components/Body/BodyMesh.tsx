@@ -97,7 +97,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         onPointerOver={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
       >
-        <meshBasicMaterial map={texture} color={color ?? 'white'} />
+        <meshBasicMaterial map={texture} />
 
         <axesHelper args={[2 * (meanRadius / EARTH_RADIUS)]} />
 
