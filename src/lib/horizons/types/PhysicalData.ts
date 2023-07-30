@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const PhysicalDataSchema = z.object({
+export const PhysicalDataTableSchema = z.object({
   meanRadius: z.number(),
   mass: z.number(),
   // siderealRotPeriod: z.number(),
@@ -9,5 +9,12 @@ export const PhysicalDataSchema = z.object({
   obliquity: z.number(), // axial tilt (deg)
 });
 
+export const PhysicalDataSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  table: PhysicalDataTableSchema,
+});
+
 // infer type from schema
+export type PhysicalDataTable = z.infer<typeof PhysicalDataTableSchema>;
 export type PhysicalData = z.infer<typeof PhysicalDataSchema>;

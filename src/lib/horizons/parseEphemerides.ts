@@ -6,7 +6,7 @@ import type { ElementTable } from './types/ElementTable';
 import type { VectorTable } from './types/VectorTable';
 import _ from 'lodash';
 import { type Ephemeris } from './types/Ephemeris';
-import { type PhysicalData } from './types/PhysicalData';
+import { PhysicalDataTable, type PhysicalData } from './types/PhysicalData';
 import { radToDeg } from 'three/src/math/MathUtils';
 
 const KM_TO_M = 1000;
@@ -72,7 +72,11 @@ export function parseEphemerisDate(text: Readonly<string>) {
 
   return dateStr;
 }
-export function parseEphemerisName(text: Readonly<string>) {
+
+export function parseEphemerisName(
+  text: Readonly<string>,
+  target: 'Target' | 'Center'
+) {
   // extracts the substring that contains name and id of the body
   // takes the form:
   /**
@@ -97,7 +101,9 @@ export function parseEphemerisName(text: Readonly<string>) {
    * the \((.+)\) pattern will capture a substring between parentheses
    * '/Target body name:\s*(.+)\s*\((.+)\)/' will capture the substring in-between 'Target body name: ' and ' (' and then capture the substring between the parentheses.
    * */
-  const regexp = /Target body name:\s*(.+)\s*\((.+)\)/;
+  const regexStr = `${target} body name:\\s*(.+)\\s*\\((.+)\\)`;
+  // const regexp = /Target body name:\s*(.+)\s*\((.+)\)/;
+  const regexp = new RegExp(regexStr);
   const matches = text.match(regexp);
 
   // the captured substrings start at index 1, so the length of the array should be 3
@@ -110,7 +116,7 @@ export function parseEphemerisName(text: Readonly<string>) {
   const name = matches[1];
   const id = matches[2];
 
-  return { name, id };
+  return [name, id];
 }
 
 export function parseElements(text: Readonly<string>): Ephemeris {
@@ -130,7 +136,12 @@ export function parseElements(text: Readonly<string>): Ephemeris {
     throw new Error(errorMsg);
   }
 
-  const { name, id } = parseEphemerisName(text);
+  const [name, id] = parseEphemerisName(text, 'Target');
+  const [centerName, centerId] = parseEphemerisName(text, 'Center');
+  if (!name || !id || !centerName || !centerId) {
+    throw new Error('invalid id/name');
+  }
+
   const date = parseEphemerisDate(substr);
   const elementTable: ElementTable = {
     eccentricity: parseEphemerisTable(substr, 'EC'),
@@ -150,6 +161,8 @@ export function parseElements(text: Readonly<string>): Ephemeris {
   const ephemeris: Ephemeris = {
     id,
     name,
+    centerId,
+    centerName,
     epoch: parseEphemerisDate(substr),
     ephemerisType: 'ELEMENTS',
     table: elementTable,
@@ -183,7 +196,12 @@ export function parseVectors(text: Readonly<string>): Ephemeris {
   const range = parseEphemerisTable(substr, 'RG') * KM_TO_M; // (m)
   const rangeRate = parseEphemerisTable(substr, 'RR') * KM_TO_M; // (m/s)
 
-  const { name, id } = parseEphemerisName(text);
+  const [name, id] = parseEphemerisName(text, 'Target');
+  const [centerName, centerId] = parseEphemerisName(text, 'Center');
+  if (!name || !id || !centerName || !centerId) {
+    throw new Error('invalid id/name');
+  }
+
   const vectorTable: VectorTable = {
     position: [x, y, z],
     velocity: [vx, vy, vz],
@@ -194,6 +212,8 @@ export function parseVectors(text: Readonly<string>): Ephemeris {
   const ephemeris: Ephemeris = {
     id,
     name,
+    centerId,
+    centerName,
     epoch: parseEphemerisDate(substr),
     ephemerisType: 'VECTORS',
     table: vectorTable,
@@ -224,13 +244,24 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
   // Unfortunately, there are significant inconsistencies with how the data is presented, depending on the body. (i.e. capitalization, the exponent of the scientific notation, etc.) So we need to match and capture this data separately.
   const massExponent = getMassExponent(substr);
 
-  const physicalData: PhysicalData = {
+  const table: PhysicalDataTable = {
     meanRadius: capturePhysicalProperty(substr, 'mean radius') * KM_TO_M, // (m)
     mass: capturePhysicalProperty(substr, 'Mass') * massExponent, // (kg)
     // siderealRotPeriod: capturePhysicalProperty(substr, 'Sidereal rot. period'), // (hrs)
     siderealRotRate: radToDeg(capturePhysicalProperty(substr, 'rot. rate')), // (deg/s)
     gravParameter: capturePhysicalProperty(substr, 'GM') * KM_TO_M, // (m^3/s^2)
     obliquity: capturePhysicalProperty(substr, 'Obliquity'), // axial tilt (deg)
+  };
+
+  const [name, id] = parseEphemerisName(text, 'Target');
+  if (!name || !id) {
+    throw new Error('invalid id/name');
+  }
+
+  const physicalData = {
+    id,
+    name,
+    table,
   };
 
   return physicalData;

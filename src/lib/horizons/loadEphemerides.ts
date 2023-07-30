@@ -15,7 +15,7 @@ export async function loadEphemerides(name: string) {
 
   const pathToFile = path.resolve(
     jsonDirectory,
-    path.join('ephemerides', `${fileName}.json`)
+    path.join('horizons', 'ephemerides', `${fileName}.json`)
   );
 
   // Read and parse JSON file.

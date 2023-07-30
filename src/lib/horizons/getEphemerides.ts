@@ -7,6 +7,7 @@ import {
 } from './parseEphemerides';
 
 import { type Ephemeris } from './types/Ephemeris';
+import { PhysicalData } from './types/PhysicalData';
 
 const J2000 = `'2000-Jan-01 12:00:00'`;
 const SUN_CENTER = '500@10';

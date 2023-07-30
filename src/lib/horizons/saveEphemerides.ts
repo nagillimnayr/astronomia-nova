@@ -8,14 +8,6 @@ import { type VectorTable } from './types/VectorTable';
 import { type Ephemeris } from './types/Ephemeris';
 import { type PhysicalData } from './types/PhysicalData';
 
-export function saveElementTable(elementTable: ElementTable) {
-  //
-}
-
-export function saveVectorTable(vectorTable: VectorTable) {
-  //
-}
-
 // Save individual ephemeris table.
 export async function saveEphemeris(ephemeris: Ephemeris) {
   const name = ephemeris.name;
@@ -24,17 +16,38 @@ export async function saveEphemeris(ephemeris: Ephemeris) {
   // create file path
   const fileName = _.kebabCase(name + type);
   const __filename = fileURLToPath(import.meta.url);
-  // console.log('__fileName:', __filename);
-  // const __dirname = path.dirname(__filename);
-  // console.log('__dirname:', __dirname);
 
+  let directory = '';
+  if (type === 'ELEMENTS') {
+    directory = 'element-tables';
+  } else if (type === 'VECTORS') {
+    directory = 'vector-tables';
+  } else {
+    throw new Error('invalid type');
+  }
   const pathToNewFile = path.resolve(
     'json',
-    path.join('ephemerides', `${fileName}.json`)
+    path.join('horizons', directory, `${fileName}.json`)
   );
   console.log('pathToNewFile:', pathToNewFile);
 
+  // const { id, centerId, centerName, epoch } = ephemeris;
+
   await fs.writeJSON(pathToNewFile, ephemeris);
+
+  return { path: pathToNewFile };
+}
+
+export async function savePhysicalData(data: PhysicalData) {
+  const name = data.name;
+
+  const fileName = _.kebabCase(name + 'physical');
+  const pathToNewFile = path.resolve(
+    'json',
+    path.join('horizons', 'physical-data', `${fileName}.json`)
+  );
+
+  await fs.writeJSON(pathToNewFile, data);
 
   return { path: pathToNewFile };
 }
@@ -57,7 +70,11 @@ export async function saveEphemerides(ephemerides: Ephemerides) {
     throw new Error('error: ephemerides do not match');
   }
 
-  const { id, name, epoch } = elements;
+  console.log(saveEphemeris(elements));
+  console.log(saveEphemeris(vectors));
+  console.log(savePhysicalData(physicalData));
+
+  const { id, name, centerId, centerName, epoch } = elements;
 
   // create file path
   const fileName = _.kebabCase(name);
@@ -65,13 +82,15 @@ export async function saveEphemerides(ephemerides: Ephemerides) {
   const jsonDirectory = path.join(process.cwd(), 'json');
   const pathToNewFile = path.resolve(
     jsonDirectory,
-    path.join('ephemerides', `${fileName}.json`)
+    path.join('horizons', 'ephemerides', `${fileName}.json`)
   );
   console.log('pathToNewFile:', pathToNewFile);
 
   const data = {
     id,
     name,
+    centerId,
+    centerName,
     epoch,
     physicalData,
     elementTable: elements.table,
