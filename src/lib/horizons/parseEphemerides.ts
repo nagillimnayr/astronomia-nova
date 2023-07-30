@@ -6,8 +6,12 @@ import type { ElementTable } from './types/ElementTable';
 import type { VectorTable } from './types/VectorTable';
 import _ from 'lodash';
 import { type Ephemeris } from './types/Ephemeris';
-import { PhysicalDataTable, type PhysicalData } from './types/PhysicalData';
+import {
+  type PhysicalDataTable,
+  type PhysicalData,
+} from './types/PhysicalData';
 import { radToDeg } from 'three/src/math/MathUtils';
+import { DAY } from '../utils/constants';
 
 const KM_TO_M = 1000;
 
@@ -226,7 +230,7 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
   // Get the substring that contains the physical data.
   // NOTE: For the Earth, 'PHYSICAL DATA' is replaced with 'GEOPHYSICAL PROPERTIES'. For the Moon, 'GEOPHYSICAL PROPERTIES' is replaced with 'GEOPHYSICAL DATA'.
   const regexp =
-    /(?:(?:PHYSICAL DATA)|(?:GEOPHYSICAL (?:PROPERTIES|DATA)))(?<physData>[^]*)\s*(?:Hill|Perihelion|(?:\*{5,}))/i;
+    /(?:(?:PHYSICAL|GEOPHYSICAL)\s*(?:PROPERTIES|DATA))(?<physData>[^]*)\s*(?:Hill|Perihelion|(?:\*{5,}))/i;
   const matches = text.match(regexp);
   if (!matches || !matches.groups || matches.length < 2) {
     console.log(`error! no match found for { ${regexp.source} } in:`, text);
@@ -234,8 +238,8 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
   }
 
   // Get the matched substring.
-  // const substr = matches[1];
-  const substr = matches.groups['physData'];
+  const substr = matches[1];
+  // const substr = matches.groups['physData'];
   if (!substr) {
     const errorMsg = 'error: no physical data found';
     throw new Error(errorMsg);
@@ -248,7 +252,7 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
     meanRadius: capturePhysicalProperty(substr, 'mean radius') * KM_TO_M, // (m)
     mass: capturePhysicalProperty(substr, 'Mass') * massExponent, // (kg)
     // siderealRotPeriod: capturePhysicalProperty(substr, 'Sidereal rot. period'), // (hrs)
-    siderealRotRate: radToDeg(capturePhysicalProperty(substr, 'rot. rate')), // (deg/s)
+    siderealRotRate: radToDeg(getRotationRate(substr)), // (deg/s)
     gravParameter: capturePhysicalProperty(substr, 'GM') * KM_TO_M, // (m^3/s^2)
     obliquity: capturePhysicalProperty(substr, 'Obliquity'), // axial tilt (deg)
   };
@@ -296,7 +300,7 @@ function getMassExponent(text: string) {
   // NOTE: For some god-forsaken reason, the mass for Jupiter is given in grams, despite Jupiter being the most massive planet.
   // i.e.: Mass x 10^22 (g)      = 189818722 +- 8817
   // It's like they want to make this as annoying as possible. I'm seriously considering emailing the author to complain.
-  // Todo: Email Jon.D.Giorgini@jpl.nasa.gov to complain.
+
   // NOTE: There may or may not be a comma after Mass, there may or may not be an x or a space between x and 10. There may or may not be parentheses around the unit.
   const regexp =
     /Mass{1},?\s*x?\s*10\^(?<exponent>[\d]*)\s*\(?(?<unit>kg|g){1}\)?/i;
@@ -325,7 +329,50 @@ function getMassExponent(text: string) {
   return massExponent;
 }
 
-function getRotationPeriod(text: string) {
-  const regexp =
+function getRotationRate(text: string) {
+  // NOTE: The physical data for the Sun does not include rotation rate, but it does include rotation period.
+
+  // Attempt to get the rotation rate.
+  const property = 'rot. rate';
+  const regexStr = `${property}[^=]*=\\s*([^\\s]*)[\\s\\+]`;
+  const regexpRate = new RegExp(regexStr, 'i');
+  const matches = text.match(regexpRate);
+
+  if (matches && matches.length >= 2 && matches[1]) {
+    const match = matches[1];
+    // parse string into float
+    const data = parseFloat(match);
+    if (data === undefined) {
+      throw new Error(`error: failed to parse value (${match}) into a float`);
+    }
+
+    return data;
+  }
+
+  // If rotation rate couldn't be found, try rotation period
+  const regexpPeriod =
     /(?:rot){1}(?:ation)?.?\s*(?:per){1}(?:iod)?.?\s*.*={1}\s*(?<rotationPeriod>\d*\.?\d*\s?(?:[hmsd])?)/;
+
+  const periodMatches = text.match(regexpPeriod);
+
+  if (!periodMatches || periodMatches.length < 2 || !periodMatches[1]) {
+    console.error(`rotation period was not found`);
+    console.log('text:', text);
+    console.log('matches:', periodMatches);
+    throw new Error('no match found!');
+  }
+  const match = periodMatches[1];
+
+  // Parse float.
+  const rotationPeriod = parseFloat(match);
+  if (rotationPeriod === undefined) {
+    throw new Error(`error: failed to parse value (${match}) into a float`);
+  }
+
+  // Convert period in days into rate (rad/s).
+  const twoPi = Math.PI * 2;
+  const periodInSeconds = rotationPeriod * DAY;
+  const rate = twoPi / periodInSeconds;
+
+  return rate;
 }

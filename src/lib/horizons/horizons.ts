@@ -1,5 +1,5 @@
-import { getEphemerides } from './getEphemerides';
-import { saveEphemerides } from './saveEphemerides';
+import { getEphemerides, getPhysicalData } from './getEphemerides';
+import { saveEphemerides, savePhysicalData } from './saveEphemerides';
 
 const SUN_CENTER = '500@10';
 const SOLAR_SYSTEM_BARYCENTER = '500@0';
@@ -17,25 +17,43 @@ const idSets = [
   { id: '899', centerId: DEFAULT_CENTER },
 ];
 
-if (process.argv.length >= 3) {
-  const id = process.argv[2];
-  // const outputFile = process.argv[3];
+// if (process.argv.length >= 3) {
+//   const id = process.argv[2];
+//   // const outputFile = process.argv[3];
 
-  if (id) {
-    try {
-      const ephemerides = await getEphemerides(id);
-      await saveEphemerides(ephemerides);
-      console.log('elements:', ephemerides.elements);
-      console.log('vectors:', ephemerides.vectors);
-      console.log('physical data:', ephemerides.physicalData);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-} else {
-  // console.log('not enough arguments');
+//   if (id) {
+//     try {
+//       const ephemerides = await getEphemerides(id);
+//       await saveEphemerides(ephemerides);
+//       console.log('elements:', ephemerides.elements);
+//       console.log('vectors:', ephemerides.vectors);
+//       console.log('physical data:', ephemerides.physicalData);
+//     } catch (e) {
+//       console.error(e);
+//     }
+//   }
+// } else {
+//   try {
+//     for (const { id, centerId } of idSets) {
+//       const ephemerides = await getEphemerides(id, centerId);
+//       await saveEphemerides(ephemerides);
+//     }
+//     // Sun physical data
+//     const physicalData = await getPhysicalData('10', '500@0');
+//     await savePhysicalData(physicalData);
+//   } catch (e) {
+//     console.error(e);
+//   }
+// }
+
+try {
+  // Sun physical data
+  const physicalData = await getPhysicalData('10', '500@0');
+  await savePhysicalData(physicalData);
   for (const { id, centerId } of idSets) {
     const ephemerides = await getEphemerides(id, centerId);
     await saveEphemerides(ephemerides);
   }
+} catch (e) {
+  console.error(e);
 }
