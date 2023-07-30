@@ -26,7 +26,7 @@ import { VelocityArrow } from '../Orbit/arrows/VelocityArrow';
 import { HtmlAnnotation } from '@/simulation/components/Body/annotation/HtmlAnnotation';
 import { degToRad } from 'three/src/math/MathUtils';
 import { Annotation } from './annotation/Annotation';
-import { Marker } from './marker/Marker';
+import { Marker } from './marker/RingMarker';
 
 const _pos = new Vector3();
 const _vel = new Vector3();

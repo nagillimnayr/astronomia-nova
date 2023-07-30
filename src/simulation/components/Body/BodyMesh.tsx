@@ -26,7 +26,7 @@ import { degToRad } from 'three/src/math/MathUtils';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { Marker } from './marker/Marker';
+import { Marker } from './marker/RingMarker';
 
 // Separate out the visual logic from the simulation logic.
 
