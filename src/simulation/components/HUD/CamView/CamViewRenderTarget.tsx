@@ -26,6 +26,7 @@ const CamViewRenderTarget = () => {
 
   useFrame(({ gl }) => {
     if (!surfaceCamera || !getThree) return;
+    gl.autoClear = true;
     const scene = getThree().scene;
     gl.setRenderTarget(renderTarget);
     gl.render(scene, surfaceCamera);

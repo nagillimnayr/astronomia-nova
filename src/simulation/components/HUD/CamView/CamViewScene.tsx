@@ -7,9 +7,9 @@ import { CamViewRenderTarget } from './CamViewRenderTarget';
 import { useFrame } from '@react-three/fiber';
 
 const CamViewScene = () => {
-  useFrame(({ gl, camera, scene }) => {
-    gl.render(scene, camera);
-  });
+  // useFrame(({ gl, camera, scene }) => {
+  //   gl.render(scene, camera);
+  // });
   return (
     <>
       <PerspectiveCamera
