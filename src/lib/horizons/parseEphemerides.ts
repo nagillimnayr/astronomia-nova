@@ -36,13 +36,13 @@ export function parseEphemerisTable(
   }
 
   const match = matches[1];
-  console.log(`match (${code}):`, match);
+  // console.log(`match (${code}):`, match);
   // parse string into float
   const ephemeris = parseFloat(match);
   if (ephemeris === undefined) {
     throw new Error(`error: failed to parse value (${match}) into a float`);
   }
-  console.log(`parsed (${code}):`, ephemeris);
+  // console.log(`parsed (${code}):`, ephemeris);
   return ephemeris;
 }
 
