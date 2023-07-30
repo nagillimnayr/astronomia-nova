@@ -36,6 +36,7 @@ import { getSemiLatusRectumFromEccentricity } from '@/simulation/math/orbital-el
 
 import { getLinearEccentricityFromAxes } from '../../math/orbital-elements/LinearEccentricity';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
+import { colorMap } from '@/simulation/utils/color-map';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
@@ -118,9 +119,10 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   _vel.normalize();
   _vel.multiplyScalar(orbitalSpeed);
 
+  const color = colorMap.get(name) ?? 'white';
   const bodyParams: BodyParams = {
     name: name,
-    color: 'white',
+    color,
     mass: physicalData.table.mass,
     meanRadius: physicalData.table.meanRadius,
     obliquity: physicalData.table.obliquity,
