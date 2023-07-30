@@ -1,6 +1,11 @@
-import { loadEphemerides } from '../loadEphemerides';
+import {
+  loadEphemerides,
+  loadEphemeris,
+  loadPhysicalData,
+} from '../loadEphemerides';
 
-export async function computeOrbit(name: string, centralBodyName: string) {
+export async function computeOrbit(name: string) {
   // Load ephemeris data.
-  const ephemerides = await loadEphemerides(name);
+  const elements = await loadEphemeris(name, 'ELEMENTS');
+  const physicalData = await loadPhysicalData(name);
 }
