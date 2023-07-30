@@ -9,9 +9,9 @@ import {
   type Ephemerides,
   EphemeridesSchema,
   EphemerisSchema,
-  Ephemeris,
+  type Ephemeris,
 } from './types/Ephemeris';
-import { PhysicalData, PhysicalDataSchema } from './types/PhysicalData';
+import { type PhysicalData, PhysicalDataSchema } from './types/PhysicalData';
 
 export async function loadEphemerides(name: string) {
   // create file path

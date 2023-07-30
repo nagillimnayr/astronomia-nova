@@ -66,31 +66,30 @@ export async function saveEphemerides(ephemerides: Ephemerides) {
   await saveEphemeris(vectors);
   await savePhysicalData(physicalData);
 
-  // const { id, name, centerId, centerName, epoch } = elements;
+  const { id, name, centerId, centerName, epoch } = elements;
 
-  // // create file path
-  // const fileName = _.kebabCase(name);
+  // create file path
+  const fileName = _.kebabCase(name);
 
-  // const jsonDirectory = path.join(process.cwd(), 'json');
-  // const pathToNewFile = path.resolve(
-  //   jsonDirectory,
-  //   path.join('horizons', 'ephemerides', `${fileName}.json`)
-  // );
-  // console.log('pathToNewFile:', pathToNewFile);
+  const jsonDirectory = path.join(process.cwd(), 'json');
+  const pathToNewFile = path.resolve(
+    jsonDirectory,
+    path.join('horizons', 'ephemerides', `${fileName}.json`)
+  );
+  console.log('pathToNewFile:', pathToNewFile);
 
-  // const data = {
-  //   id,
-  //   name,
-  //   centerId,
-  //   centerName,
-  //   epoch,
-  //   physicalData,
-  //   elementTable: elements.table,
-  //   vectorTable: vectors.table,
-  // };
+  const data = {
+    id,
+    name,
+    centerId,
+    centerName,
+    epoch,
+    physicalData,
+    elementTable: elements.table,
+    vectorTable: vectors.table,
+  };
 
-  // await fs.writeJSON(pathToNewFile, data);
+  await fs.writeJSON(pathToNewFile, data);
 
-  // return { path: pathToNewFile };
-  return;
+  return { path: pathToNewFile };
 }
