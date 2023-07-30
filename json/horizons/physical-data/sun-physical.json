@@ -1,0 +1,11 @@
+{
+  "id": "10",
+  "name": "Sun ",
+  "table": {
+    "meanRadius": 695700000,
+    "mass": null,
+    "siderealRotRate": 0.00016417126346204361,
+    "gravParameter": 132712440041939.38,
+    "obliquity": 7.25
+  }
+}
