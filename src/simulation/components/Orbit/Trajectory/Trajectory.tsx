@@ -65,11 +65,7 @@ export const Trajectory = ({
           if (!obj) return;
           if (ref.current === obj) return;
           ref.current = obj;
-          // obj.rotateX(degToRad(90));
-          // To orient the orbit correctly, we need to perform three intrinsic rotations. (Intrinsic meaning that the rotations are performed in the local coordinate space, such that when we rotate around the axes in the order z-x-z, the last z-axis rotation is around a different world-space axis than the first one, as the x-axis rotation changes the orientation of the object's local z-axis. For clarity, the rotations will be in the order z-x'-z'', where x' is the new local x-axis after the first rotation and z'' is the object's new local z-axis after the second rotation.)
-          // obj.rotateZ(degToRad(orientation.longitudeOfAscendingNode));
-          // obj.rotateX(degToRad(orientation.inclination));
-          // obj.rotateZ(degToRad(orientation.argumentOfPeriapsis));
+          
         }}
       >
         <Line points={points} color={'white'} lineWidth={1} />
