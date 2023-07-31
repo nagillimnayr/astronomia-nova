@@ -1,10 +1,5 @@
 import { shaderMaterial } from '@react-three/drei';
-import { useTexture } from '@react-three/drei';
-import { extend, useLoader } from '@react-three/fiber';
-import { BackSide, DoubleSide, FrontSide, Texture, TextureLoader } from 'three';
-
-import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
-import { degToRad } from 'three/src/math/MathUtils';
+import { Texture } from 'three';
 
 const vertexShader = /*glsl*/ `
 // uniform mat4 modelViewMatrix;
@@ -40,7 +35,7 @@ void main() {
 
 `;
 
-export const CelestialSphereShaderMaterial = shaderMaterial(
+export const CelestialSphereMaterial = shaderMaterial(
   {
     starMap: new Texture(),
     gridMap: new Texture(),

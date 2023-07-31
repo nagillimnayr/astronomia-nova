@@ -1,30 +1,23 @@
 import { Sphere, useTexture } from '@react-three/drei';
 import { MaterialNode, extend, useFrame, useLoader } from '@react-three/fiber';
-import {
-  BackSide,
-  DoubleSide,
-  FrontSide,
-  ShaderMaterial,
-  Texture,
-  TextureLoader,
-} from 'three';
+import { BackSide, ShaderMaterial } from 'three';
 
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
 import { degToRad } from 'three/src/math/MathUtils';
 import {
   CelestialSphereMaterialImpl,
-  CelestialSphereShaderMaterial,
+  CelestialSphereMaterial,
 } from './celestial-sphere-material';
 import { useRef } from 'react';
 
 // Extend the shader material.
-extend({ CelestialSphereShaderMaterial });
+extend({ CelestialSphereMaterial });
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     interface IntrinsicElements {
-      celestialSphereShaderMaterial: CelestialSphereMaterialImpl;
+      celestialSphereMaterial: CelestialSphereMaterialImpl;
     }
   }
 }
@@ -48,10 +41,11 @@ export const CelestialSphere = (props: CelestialSphereProps) => {
 
   return (
     <group>
-      {/** Scale x by -1 to flip uvs */}
+      {/** Scale x by -1 to flip uvs. */}
       <Sphere args={[1e14, 128, 128]} scale={[-1, 1, 1]}>
         {starmap && celestialGrid && figures ? (
-          <celestialSphereShaderMaterial
+          <celestialSphereMaterial
+            key={CelestialSphereMaterial.key}
             ref={materialRef}
             name="celestial-sphere-material"
             starMap={starmap}
@@ -59,7 +53,7 @@ export const CelestialSphere = (props: CelestialSphereProps) => {
             figureMap={figures}
             gridOpacity={0.05}
             figureOpacity={0.25}
-            side={DoubleSide}
+            side={BackSide}
           />
         ) : null}
       </Sphere>
