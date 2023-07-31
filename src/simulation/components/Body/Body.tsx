@@ -26,7 +26,8 @@ import { VelocityArrow } from '../Orbit/arrows/VelocityArrow';
 import { HtmlAnnotation } from '@/simulation/components/Body/annotation/HtmlAnnotation';
 import { degToRad } from 'three/src/math/MathUtils';
 import { Annotation } from './annotation/Annotation';
-import { Marker } from './marker/RingMarker';
+import { RingMarker } from './marker/RingMarker';
+import { CircleMarker } from './marker/CircleMarker';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
@@ -89,15 +90,6 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
     [bodyRef]
   );
 
-  // useFrame(({ controls }) => {
-  //   if (!bodyRef.current || !meshRef.current) return;
-
-  //   // update mesh position to be in sync with body
-  //   // meshRef.current.position.copy(bodyRef.current.position);
-
-  //   // velocityArrowRef.current.position.copy(bodyRef.current.position);
-  // }, -1);
-
   return (
     <>
       <keplerBody
@@ -141,7 +133,8 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
             <HtmlAnnotation annotation={name} />
           </object3D> */}
 
-          <Marker bodyRef={bodyRef} meanRadius={meanRadius} />
+          <RingMarker bodyRef={bodyRef} />
+          <CircleMarker bodyRef={bodyRef} color={color} />
           <Annotation annotation={name} meanRadius={meanRadius} />
 
           {/* <axesHelper args={[1.5 * (meanRadius / EARTH_RADIUS)]} /> */}

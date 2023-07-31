@@ -22,7 +22,7 @@ const _camWorldPos = new Vector3();
 type Props = {
   bodyRef: MutableRefObject<KeplerBody>;
 };
-export function HtmlMarker({ bodyRef }: Props) {
+export function HtmlRingMarker({ bodyRef }: Props) {
   // const { uiState } = useContext(RootStoreContext);
   const { selectionService } = useContext(GlobalStateContext);
 

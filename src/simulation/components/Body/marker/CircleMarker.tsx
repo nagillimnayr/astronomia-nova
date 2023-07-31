@@ -16,6 +16,7 @@ import {
   Vector3,
   DoubleSide,
   PerspectiveCamera,
+  ColorRepresentation,
 } from 'three';
 
 import { useActor } from '@xstate/react';
@@ -30,8 +31,9 @@ const _camPos = new Vector3();
 
 type Props = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
+  color: ColorRepresentation;
 };
-export function RingMarker({ children, bodyRef }: Props) {
+export function CircleMarker({ bodyRef, color }: Props) {
   // const { uiState } = useContext(RootStoreContext);
   const { selectionService } = useContext(GlobalStateContext);
 
@@ -73,37 +75,26 @@ export function RingMarker({ children, bodyRef }: Props) {
     const sqDistance = _bodyWorldPos.distanceToSquared(_camWorldPos);
     const distance = _bodyWorldPos.distanceTo(_camWorldPos);
 
-    const n = distance / 100;
+    const n = distance / 150;
 
     const factor = Math.max(1e-5, n);
     // Scale relative to distance from camera.
     circleRef.current.scale.setScalar(factor);
 
-    const opacity = Math.min(sqDistance / 1e2, 1);
-    materialRef.current.opacity = opacity ** 2;
+    // const opacity = Math.min(sqDistance / 1e2, 1);
+    // materialRef.current.opacity = opacity ** 2;
   });
 
   return (
     <>
-      <Circle
-        ref={circleRef}
-        args={[1]}
-        onClick={handleClick}
-        onPointerOver={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
-      >
-        {/** Transparent material so that the circle will catch clicks but not be visible. */}
-        <meshBasicMaterial side={DoubleSide} opacity={0} transparent />
-        <Ring visible={isVisible} args={[1, 1.25]}>
-          <meshBasicMaterial
-            ref={materialRef}
-            color={'white'}
-            side={DoubleSide}
-            transparent
-          />
-          {/* <axesHelper args={[radius * 2]} /> */}
-          {children}
-        </Ring>
+      <Circle ref={circleRef} args={[1]} visible={isVisible}>
+        <meshBasicMaterial
+          ref={materialRef}
+          side={DoubleSide}
+          // opacity={1}
+          // transparent
+          color={color}
+        />
       </Circle>
     </>
   );
