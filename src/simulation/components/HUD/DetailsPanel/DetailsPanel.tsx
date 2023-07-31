@@ -23,7 +23,7 @@ const DetailsPanel = observer(() => {
     // Focus camera on selection.
     cameraService.send({
       type: 'SET_TARGET',
-      target: selected,
+      focusTarget: selected,
     });
   }, [cameraService, selected]);
 
