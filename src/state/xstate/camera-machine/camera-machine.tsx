@@ -18,7 +18,7 @@ type Context = {
   controls: CameraControls | null;
   spaceCamera: PerspectiveCamera | null;
   surfaceCamera: PerspectiveCamera | null;
-  target: Object3D | null;
+  focusTarget: Object3D | null;
   observer: Object3D | null;
 };
 
@@ -32,7 +32,7 @@ type Events =
   | { type: 'ASSIGN_SPACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_SURFACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_OBSERVER'; observer: Object3D | null }
-  | { type: 'SET_TARGET'; target: Object3D | null };
+  | { type: 'SET_TARGET'; focusTarget: Object3D | null };
 
 export const cameraMachine = createMachine(
   {
@@ -51,7 +51,7 @@ export const cameraMachine = createMachine(
       spaceCamera: null,
       surfaceCamera: null,
       observer: null,
-      target: null,
+      focusTarget: null,
     }),
 
     // Context assignment events:
@@ -144,23 +144,7 @@ export const cameraMachine = createMachine(
         },
       },
       surface: {
-        entry: [
-          'applySurfaceCamUp',
-          (context) => {
-            const { controls } = context;
-            // console.log('polar angle:', controls?.polarAngle);
-            // console.log('azimuthal angle:', controls?.azimuthAngle);
-            // controls?.rotatePolarTo(0, false).catch((reason) => {
-            //   console.error(reason);
-            // });
-            // controls?.rotateAzimuthTo(0, false).catch((reason) => {
-            //   console.error(reason);
-            // });
-            // console.log('polar angle:', controls?.polarAngle);
-            // console.log('azimuthal angle:', controls?.azimuthAngle);
-            // controls?.update(1);
-          },
-        ],
+        entry: ['applySurfaceCamUp'],
         // Cleanup on exit:
         exit: ['cleanupSurfaceCam', log('exiting surface view')],
         on: {
@@ -193,14 +177,17 @@ export const cameraMachine = createMachine(
       }),
       assignTarget: assign({
         // Set new focus target.
-        target: (context, event) => {
-          const body = event.target as KeplerBody;
-          if (body && context.controls) {
+        focusTarget: (context, event) => {
+          const body = event.focusTarget as KeplerBody;
+          const { controls } = context;
+          if (body && controls) {
+            const radius = body.meanRadius / EARTH_RADIUS;
+            const minDistance = 0.01 + radius;
+
             // Set min distance relative to focus targets radius.
-            context.controls.minDistance =
-              0.01 + body.meanRadius / EARTH_RADIUS;
+            controls.minDistance = minDistance;
           }
-          return event.target;
+          return event.focusTarget;
         },
       }),
       updateSpaceView: (context, event) => {
@@ -209,11 +196,11 @@ export const cameraMachine = createMachine(
           console.error('camera controls are null');
           return;
         }
-        const target = context.target;
-        if (!target) return;
+        const focusTarget = context.focusTarget;
+        if (!focusTarget) return;
 
         // Get world position of focus target.
-        target.getWorldPosition(_targetWorldPos);
+        focusTarget.getWorldPosition(_targetWorldPos);
 
         // Update controls to follow target.
         controls.moveTo(..._targetWorldPos.toArray(), false).catch((reason) => {
@@ -224,7 +211,6 @@ export const cameraMachine = createMachine(
         controls.update(event.deltaTime);
       },
       updateSurfaceView: (context, event) => {
-        // Todo
         const controls = context.controls;
         const observer = context.observer;
         if (!controls || !observer) return;
@@ -247,16 +233,15 @@ export const cameraMachine = createMachine(
         surfaceCamera.position.set(0, 0, 1e-3);
         surfaceCamera.rotation.set(0, 0, 0);
         surfaceCamera.updateProjectionMatrix();
-        controls.dollyTo(1e-3, false).catch((reason) => console.error(reason));
       },
       applySurfaceCamUp: (context) => {
-        const { controls, surfaceCamera, observer, target } = context;
-        if (!controls || !surfaceCamera || !observer || !target) return;
+        const { controls, surfaceCamera, observer, focusTarget } = context;
+        if (!controls || !surfaceCamera || !observer || !focusTarget) return;
 
         // !!!
         // NOTE: This works!
         observer.getWorldPosition(_observerWorldPos);
-        target.getWorldPosition(_targetWorldPos);
+        focusTarget.getWorldPosition(_targetWorldPos);
         // Get direction from target center to observer in world coordinates.
         _observerUp.subVectors(_observerWorldPos, _targetWorldPos);
         _observerUp.normalize(); // Normalize the direction vector.
