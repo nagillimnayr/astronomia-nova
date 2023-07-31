@@ -16,11 +16,11 @@ const Scene = ({ children }: PropsWithChildren) => {
     cameraService.send({ type: 'ASSIGN_THREE', get: getThree });
   }, [cameraService, getThree]);
 
-  useKeyPressed(' ', () => {
-    const { camera, controls } = getThree();
-    console.log('camera:', camera);
-    console.log('controls:', controls);
-  });
+  // useKeyPressed(' ', () => {
+  //   const { camera, controls } = getThree();
+  //   console.log('camera:', camera);
+  //   console.log('controls:', controls);
+  // });
   return (
     <>
       <CameraController />
