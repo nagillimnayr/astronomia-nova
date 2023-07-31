@@ -1,17 +1,14 @@
 import { assign, createMachine, log } from 'xstate';
-import { Object3D, Vector3, type PerspectiveCamera, type Scene } from 'three';
+import { type Object3D, Vector3, type PerspectiveCamera } from 'three';
 import { type CameraControls } from '@react-three/drei';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import { type RootState } from '@react-three/fiber';
-import { degToRad } from 'three/src/math/MathUtils';
 import { SUN_RADIUS } from '@/lib/utils/constants';
 
 const _targetWorldPos = new Vector3();
 const _observerWorldPos = new Vector3();
-const _observerFwd = new Vector3();
 const _observerUp = new Vector3();
-const _obj = new Object3D();
 
 type Context = {
   canvas: HTMLCanvasElement; // Reference to the canvas element.
