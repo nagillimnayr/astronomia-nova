@@ -9,12 +9,11 @@ const Observer = () => {
   return (
     <>
       <object3D>
-        <object3D rotation={[0, 0, -degToRad(90)]}>
+        <object3D>
           <object3D
             name="Observer"
             ref={(observer) => {
               if (!observer) return;
-              // if (observer === cameraService.machine.context.observer) return;
               cameraService.send({ type: 'ASSIGN_OBSERVER', observer });
             }}
           />

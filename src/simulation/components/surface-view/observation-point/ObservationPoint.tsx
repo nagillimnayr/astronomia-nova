@@ -93,13 +93,13 @@ const ObservationPoint = observer(({ children }: Props) => {
           <group
             name="Observation-Point"
             position={[body.meanRadius / EARTH_RADIUS + 0.001, 0, 0]}
+            rotation={[0, 0, degToRad(-90)]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
           >
             <Sphere
               name="Observation-Sphere"
               visible={sphereVisible}
               ref={sphereRef}
               args={[1e-2]}
-              rotation={[0, 0, degToRad(-90)]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
             >
               <Wireframe
                 simplify
