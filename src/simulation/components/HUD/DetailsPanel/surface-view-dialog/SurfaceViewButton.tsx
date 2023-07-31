@@ -27,7 +27,7 @@ const SurfaceViewButton = observer(
       // cameraState.setFocus(uiState.getSelected()!);
       cameraService.send({
         type: 'SET_TARGET',
-        target: selected,
+        focusTarget: selected,
       });
     }, [cameraService, selected]);
 
