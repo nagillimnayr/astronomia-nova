@@ -1,10 +1,11 @@
 import { assign, createMachine, log } from 'xstate';
 import { Object3D, Vector3, type PerspectiveCamera, type Scene } from 'three';
 import { type CameraControls } from '@react-three/drei';
-import type KeplerBody from '@/simulation/classes/kepler-body';
+import KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import { type RootState } from '@react-three/fiber';
 import { degToRad } from 'three/src/math/MathUtils';
+import { SUN_RADIUS } from '@/lib/utils/constants';
 
 const _targetWorldPos = new Vector3();
 const _observerWorldPos = new Vector3();
@@ -63,15 +64,7 @@ export const cameraMachine = createMachine(
         cond: (context, event) => {
           return context.controls !== event.controls;
         },
-        actions: [
-          assign({
-            controls: (_, event) => {
-              event.controls.mouseButtons.right = 8; // Zoom on right mouse button
-              return event.controls;
-            },
-          }),
-          log('Assigning camera controls!'),
-        ],
+        actions: ['assignControls', log('Assigning camera controls!')],
       },
 
       ASSIGN_THREE: {
@@ -114,16 +107,13 @@ export const cameraMachine = createMachine(
           'cleanupSurfaceCam',
         ],
       },
-      SET_TARGET: {
-        actions: ['assignTarget', log('FOCUS')],
-      },
     },
 
     initial: 'space', // Start in 'space' view-mode.
 
     states: {
       space: {
-        entry: ['applySpaceCamUp'],
+        entry: ['applySpaceCamUp', 'setSpaceCamDistance'],
         // Cleanup on exit:
         exit: (context) => {
           const { spaceCamera, observer } = context;
@@ -138,20 +128,7 @@ export const cameraMachine = createMachine(
           },
           SET_TARGET: {
             internal: true,
-            actions: [
-              'assignTarget',
-              (context, event) => {
-                const body = event.focusTarget as KeplerBody;
-                const { controls } = context;
-                if (body && controls) {
-                  const radius = body.meanRadius / EARTH_RADIUS;
-                  const minDistance = 0.01 + radius;
-
-                  // Set min distance relative to focus targets radius.
-                  controls.minDistance = minDistance;
-                }
-              },
-            ],
+            actions: ['assignTarget', 'setSpaceCamDistance'],
           },
           TO_SURFACE: {
             // Transition to 'surface' view-mode:
@@ -159,10 +136,20 @@ export const cameraMachine = createMachine(
 
             actions: [log('TO_SURFACE')],
           },
+          ASSIGN_CONTROLS: {
+            cond: (context, event) => {
+              return context.controls !== event.controls;
+            },
+            actions: [
+              'assignControls',
+              log('Assigning camera controls!'),
+              'setSpaceCamDistance',
+            ],
+          },
         },
       },
       surface: {
-        entry: ['applySurfaceCamUp'],
+        entry: ['applySurfaceCamUp', 'setSurfaceCamDistance'],
         // Cleanup on exit:
         exit: ['cleanupSurfaceCam', log('exiting surface view')],
         on: {
@@ -177,12 +164,26 @@ export const cameraMachine = createMachine(
           },
           SET_TARGET: {
             internal: true,
-            actions: ['assignTarget', 'applySurfaceCamUp'],
+            actions: [
+              'assignTarget',
+              'applySurfaceCamUp',
+              'setSurfaceCamDistance',
+            ],
           },
           TO_SPACE: {
             // Transition to 'space' view-mode:
             target: 'space',
             actions: [log('TO_SPACE')],
+          },
+          ASSIGN_CONTROLS: {
+            cond: (context, event) => {
+              return context.controls !== event.controls;
+            },
+            actions: [
+              'assignControls',
+              log('Assigning camera controls!'),
+              'setSurfaceCamDistance',
+            ],
           },
         },
       },
@@ -196,6 +197,12 @@ export const cameraMachine = createMachine(
           // Only assign the canvas if the one in context is uninitialized.
           if (context.canvas) return context.canvas;
           return event.canvas;
+        },
+      }),
+      assignControls: assign({
+        controls: (_, event) => {
+          event.controls.mouseButtons.right = 8; // Zoom on right mouse button
+          return event.controls;
         },
       }),
       assignTarget: assign({
@@ -270,6 +277,35 @@ export const cameraMachine = createMachine(
         if (!controls || !spaceCamera) return;
         spaceCamera.up.set(0, 1, 0);
         controls.applyCameraUp();
+      },
+      setSpaceCamDistance: (context) => {
+        const { controls, focusTarget } = context;
+        if (!controls) return;
+
+        controls.maxDistance = 1e12;
+        if (!focusTarget) {
+          controls.minDistance = SUN_RADIUS / (10 * EARTH_RADIUS);
+          return;
+        }
+        // Type guard.
+        if (!(focusTarget instanceof KeplerBody)) {
+          console.error('error! focusTarget is not a KeplerBody');
+          return;
+        }
+        const body = context.focusTarget as KeplerBody; // Cast to KeplerBody.
+        if (body && controls) {
+          const radius = body.meanRadius / EARTH_RADIUS;
+          const minDistance = 0.01 + radius;
+
+          // Set min distance relative to focus targets radius.
+          controls.minDistance = minDistance;
+        }
+      },
+      setSurfaceCamDistance: (context) => {
+        const { controls } = context;
+        if (!controls) return;
+        controls.minDistance = 1e-5;
+        controls.maxDistance = 2e-5;
       },
     },
   }
