@@ -16,7 +16,7 @@ const OutlinerItem = observer(({ body }: OutlinerItemProps) => {
   // const { uiState } = useContext(RootStoreContext);
   const { selectionService } = useContext(GlobalStateContext);
 
-  const [isOpen, setOpen] = useState<boolean>(false);
+  const [isOpen, setOpen] = useState<boolean>(true);
 
   const handleOpenChanged = useCallback(
     (open: boolean) => {
