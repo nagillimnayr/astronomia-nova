@@ -132,8 +132,26 @@ export const cameraMachine = createMachine(
         on: {
           // UPDATE event.
           UPDATE: {
+            internal: true,
             // Run action on self-transition.
             actions: 'updateSpaceView',
+          },
+          SET_TARGET: {
+            internal: true,
+            actions: [
+              'assignTarget',
+              (context, event) => {
+                const body = event.focusTarget as KeplerBody;
+                const { controls } = context;
+                if (body && controls) {
+                  const radius = body.meanRadius / EARTH_RADIUS;
+                  const minDistance = 0.01 + radius;
+
+                  // Set min distance relative to focus targets radius.
+                  controls.minDistance = minDistance;
+                }
+              },
+            ],
           },
           TO_SURFACE: {
             // Transition to 'surface' view-mode:
@@ -150,11 +168,16 @@ export const cameraMachine = createMachine(
         on: {
           // UPDATE event:
           UPDATE: {
+            internal: true,
             // Run action on self-transition.
             actions: [
               'updateSurfaceView',
               // 'applySurfaceCamUp'
             ],
+          },
+          SET_TARGET: {
+            internal: true,
+            actions: ['assignTarget', 'applySurfaceCamUp'],
           },
           TO_SPACE: {
             // Transition to 'space' view-mode:
@@ -177,16 +200,7 @@ export const cameraMachine = createMachine(
       }),
       assignTarget: assign({
         // Set new focus target.
-        focusTarget: (context, event) => {
-          const body = event.focusTarget as KeplerBody;
-          const { controls } = context;
-          if (body && controls) {
-            const radius = body.meanRadius / EARTH_RADIUS;
-            const minDistance = 0.01 + radius;
-
-            // Set min distance relative to focus targets radius.
-            controls.minDistance = minDistance;
-          }
+        focusTarget: (_, event) => {
           return event.focusTarget;
         },
       }),
