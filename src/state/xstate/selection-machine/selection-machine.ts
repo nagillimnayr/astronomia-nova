@@ -14,7 +14,7 @@ export const selectionMachine = createMachine({
     context: {} as Context,
     events: {} as Events,
   },
-  id: 'selection',
+  id: 'selection-machine',
   // Initial context:
   context: () => ({
     selected: null,

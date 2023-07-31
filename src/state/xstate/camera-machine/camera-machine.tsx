@@ -40,7 +40,7 @@ export const cameraMachine = createMachine(
       context: {} as Context,
       events: {} as Events,
     },
-    id: 'camera',
+    id: 'camera-machine',
     // Initial context.
     context: () => ({
       canvas: null!,
