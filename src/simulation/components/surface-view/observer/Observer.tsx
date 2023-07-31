@@ -1,7 +1,6 @@
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 
-import { useContext, useRef } from 'react';
-import { degToRad } from 'three/src/math/MathUtils';
+import { useContext } from 'react';
 
 const Observer = () => {
   const { cameraService } = useContext(GlobalStateContext);
