@@ -92,25 +92,24 @@ const ObservationPoint = observer(({ children }: Props) => {
           {/* <axesHelper args={[1.5 * (body.meanRadius / EARTH_RADIUS)]} /> */}
           <group
             name="observation-point"
-            position={[body.meanRadius / EARTH_RADIUS + 0.001, 0, 0]}
+            position={[body.meanRadius / EARTH_RADIUS + 1e-4, 0, 0]}
             rotation={[0, 0, degToRad(-90)]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
           >
-            <mesh
+            <Sphere
               name="observation-sphere"
               visible={sphereVisible}
               ref={sphereRef}
-              // args={[1e-2]}
+              args={[1e-2]}
             >
-              <sphereBufferGeometry args={[1e-2]} />
               <Wireframe
                 simplify
                 stroke="white"
                 // squeeze
                 fillMix={1}
-                fillOpacity={0.1}
+                fillOpacity={0.01}
               />
               {/* <axesHelper args={[1e-1]} /> */}
-            </mesh>
+            </Sphere>
             <Observer />
             {children}
           </group>

@@ -11,7 +11,7 @@ const Observer = () => {
       <object3D>
         <object3D>
           <object3D
-            name="Observer"
+            name="observer"
             ref={(observer) => {
               if (!observer) return;
               cameraService.send({ type: 'ASSIGN_OBSERVER', observer });
