@@ -6,6 +6,8 @@ import { useTexture } from '@react-three/drei';
 
 import { Orbit } from '../Orbit/Orbit';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { EARTH_RADIUS } from '@/lib/utils/constants';
 
 const FullSolarSystem = () => {
   const [

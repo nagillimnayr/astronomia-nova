@@ -16,13 +16,11 @@ type SimProps = {
   children: React.ReactNode;
 };
 const Simulation = ({ children }: SimProps) => {
-  const { cameraState } = useContext(RootStoreContext);
   const { cameraService } = useContext(GlobalStateContext);
 
   console.log('render Simulation');
   // function for accessing scene state
   const getThree = useThree((state) => state.get);
-  // simState.getState = getThree;
 
   useEffect(() => {
     // Reset timers, timescale, etc when the component is mounted.
@@ -31,7 +29,7 @@ const Simulation = ({ children }: SimProps) => {
   }, []);
 
   useFrame(({ clock, camera }, delta) => {
-    // get state without subscribing to it
+    // Get state without subscribing to it.
     const timeStore = useTimeStore.getState();
     if (!timeStore.isPaused) {
       // scale delta time
@@ -49,16 +47,15 @@ const Simulation = ({ children }: SimProps) => {
     }
 
     // Update camera.
-    // cameraState.updateCamera(delta);
     cameraService.send({ type: 'UPDATE', deltaTime: delta });
   });
 
   useKeyPressed(' ', (evt) => {
     evt.preventDefault();
-    // const { camera, controls } = getThree();
+    const { camera, controls } = getThree();
 
-    // const camControls = controls as unknown as CameraControls;
-    // console.log('Distance to gaze target:', camControls.distance);
+    const camControls = controls as unknown as CameraControls;
+    console.log('Distance to gaze target:', camControls.distance);
   });
 
   return (
