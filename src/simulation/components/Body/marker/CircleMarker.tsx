@@ -6,28 +6,24 @@ import {
   useContext,
   type MouseEventHandler,
   useRef,
-  PropsWithChildren,
+  type PropsWithChildren,
   useState,
 } from 'react';
-import { ThreeEvent, useFrame } from '@react-three/fiber';
+import { type ThreeEvent, useFrame } from '@react-three/fiber';
 import {
-  Mesh,
-  MeshBasicMaterial,
+  type Mesh,
+  type MeshBasicMaterial,
   Vector3,
   DoubleSide,
   PerspectiveCamera,
-  ColorRepresentation,
+  type ColorRepresentation,
 } from 'three';
 
-import { useActor } from '@xstate/react';
+import { useActor, useSelector } from '@xstate/react';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
-import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
-import { degToRad } from 'three/src/math/MathUtils';
-import { Annotation } from '../annotation/Annotation';
 
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
-const _camPos = new Vector3();
 
 type Props = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
@@ -35,12 +31,12 @@ type Props = PropsWithChildren & {
 };
 export function CircleMarker({ bodyRef, color }: Props) {
   // const { uiState } = useContext(RootStoreContext);
-  const { selectionService } = useContext(GlobalStateContext);
+  const { selectionService, cameraService } = useContext(GlobalStateContext);
 
   // Check if marker visibility is on.
-  const { markerVis } = useContext(GlobalStateContext);
-  const [state] = useActor(markerVis);
-  const isVisible = state.matches('active');
+  const isVisible = useSelector(cameraService, (state) =>
+    state.matches('surface')
+  );
 
   const circleRef = useRef<Mesh>(null!);
   const materialRef = useRef<MeshBasicMaterial>(null!);
