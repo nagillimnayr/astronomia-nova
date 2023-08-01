@@ -1,48 +1,30 @@
-import React, { useRef } from 'react';
+import React, { useContext } from 'react';
 import Body from '../Body/Body';
-import type KeplerBody from '../../classes/kepler-body';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 import { SOLAR_MASS } from '../../utils/constants';
 import { useTexture } from '@react-three/drei';
-import { CelestialSphere } from '../celestial-sphere/CelestialSphere';
-import {
-  Selection,
-  EffectComposer,
-  Outline,
-} from '@react-three/postprocessing';
-// import { keplerTreeState } from '../../state/keplerTreeState';
 import { Orbit } from '../Orbit/Orbit';
+import { SUN_RADIUS } from '@/lib/utils/constants';
 
-export type UpdateFn = (deltaTime: number) => void;
-const SunEarth = () => {
-  const [sunTexture, earthTexture, marsTexture] = useTexture([
+export const SunEarth = () => {
+  const [sunTexture, earthTexture] = useTexture([
     'assets/textures/2k_sun.jpg',
     'assets/textures/2k_earth_daymap.jpg',
-    'assets/textures/2k_mars.jpg',
   ]);
-  // use ref to store root of tree
-  const rootRef = useRef<KeplerBody>(null!);
 
+  const rootRef = useContext(KeplerTreeContext);
   return (
-    <KeplerTreeContext.Provider value={null}>
-      <CelestialSphere>
-        <Body
-          ref={rootRef}
-          params={{
-            name: 'Sun',
-            mass: SOLAR_MASS,
-            color: 0xfdee00,
-            meanRadius: 1.5,
-            initialPosition: [0, 0, 0],
-            initialVelocity: [0, 0, 0],
-          }}
-          texture={sunTexture}
-        >
-          <Orbit name={'Earth'} texture={earthTexture}></Orbit>
-        </Body>
-      </CelestialSphere>
-    </KeplerTreeContext.Provider>
+    <Body
+      ref={rootRef}
+      params={{
+        name: 'Sun',
+        mass: SOLAR_MASS,
+        color: 0xfdee00,
+        meanRadius: SUN_RADIUS,
+      }}
+      texture={sunTexture}
+    >
+      <Orbit name={'Earth'} texture={earthTexture}></Orbit>
+    </Body>
   );
 };
-
-export default SunEarth;
