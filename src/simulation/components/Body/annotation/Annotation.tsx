@@ -1,15 +1,19 @@
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
-import { BBAnchor, Billboard, Html, Text } from '@react-three/drei';
+import { CameraControls, Text } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useActor } from '@xstate/react';
 import { clamp } from 'lodash';
 import { useContext, useRef } from 'react';
-import { Object3D, Vector3 } from 'three';
+import { type Object3D, Vector3 } from 'three';
 
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
+const _up = new Vector3();
+const _target = new Vector3();
+const _direction = new Vector3();
+const _lookPos = new Vector3();
 
 type Props = {
   annotation: string;
@@ -17,7 +21,7 @@ type Props = {
 };
 const Annotation = ({ annotation, meanRadius }: Props) => {
   // Check if annotation visibility is on.
-  const { annotationVis } = useContext(GlobalStateContext);
+  const { annotationVis, cameraService } = useContext(GlobalStateContext);
   const [state] = useActor(annotationVis);
   const isVisible = state.matches('active');
 
@@ -26,7 +30,7 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
   const centerRef = useRef<Object3D>(null!);
   const textRef = useRef<Object3D>(null!);
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera, controls }) => {
     if (!bodyRef) return;
     const body = bodyRef.current;
     const center = centerRef.current;
@@ -38,8 +42,19 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
     // Get world position of camera.
     camera.getWorldPosition(_camWorldPos);
 
+    if (!controls) return;
+    // Get position of camera's gaze target.
+    (controls as unknown as CameraControls).getTarget(_target);
+    // Get the direction from the target to the camera
+    _direction.subVectors(_camWorldPos, _target);
+    // Add the direction to the position of the body.
+    _lookPos.addVectors(_bodyWorldPos, _direction);
+
+    // Set the up vector so that it will be oriented correctly when lookAt() is called.
+    center.up.copy(camera.up);
     // Rotate to face camera.
-    center.lookAt(_camWorldPos);
+    center.lookAt(_lookPos);
+
     // text.lookAt(_camWorldPos);
 
     // Get distance to camera.
