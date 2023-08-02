@@ -1,7 +1,7 @@
 import { Slider } from '@/components/gui/Slider';
 import { TimescaleSlider } from './TimescaleSlider';
 
-import PauseButton from './buttons/PauseButton';
+import PauseButton from './PauseButton';
 import Icon from '@mdi/react';
 import { mdiMenuLeft, mdiMenuRight } from '@mdi/js';
 import { useTimeStore } from '@/simulation/state/zustand/time-store';
@@ -20,7 +20,6 @@ const TimeControls = () => {
           className="translate-x-1"
           onClick={(e) => {
             e.stopPropagation();
-            // timeState.decrementTimescale();
             decrementTimescale();
           }}
         >
@@ -35,7 +34,6 @@ const TimeControls = () => {
           className="translate-x-1"
           onClick={(e) => {
             e.stopPropagation();
-            // timeState.incrementTimescale();
             incrementTimescale();
           }}
         >
