@@ -61,7 +61,16 @@ export const cameraMachine = createMachine(
         cond: (context, event) => {
           return context.controls !== event.controls;
         },
-        actions: ['assignControls', log('Assigning camera controls!')],
+        actions: [
+          'assignControls',
+          (context, event) => {
+            console.log(
+              'Assigning camera controls!',
+              context.controls,
+              event.controls
+            );
+          },
+        ],
       },
 
       ASSIGN_THREE: {
@@ -140,6 +149,8 @@ export const cameraMachine = createMachine(
             actions: [
               'assignControls',
               log('Assigning camera controls!'),
+              // log((context) => context.controls),
+              // log((_, event) => event.controls),
               'setSpaceCamDistance',
             ],
           },
