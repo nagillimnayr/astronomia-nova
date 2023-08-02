@@ -39,17 +39,16 @@ export const GlobalStateContext = createContext({
 
 export const MachineProviders = ({ children }: PropsWithChildren) => {
   // Visibility machine:
-  const visibilityService = useInterpret(visibilityMachine);
-  // visibilityService.start();
+  const visibilityService = useInterpret(visibilityMachine, { devTools: true });
 
   // UI machine:
-  const uiService = useInterpret(uiMachine);
+  const uiService = useInterpret(uiMachine, { devTools: true });
 
   // Camera machine:
-  const cameraService = useInterpret(cameraMachine);
+  const cameraService = useInterpret(cameraMachine, { devTools: true });
 
   // Selection machine:
-  const selectionService = useInterpret(selectionMachine);
+  const selectionService = useInterpret(selectionMachine, { devTools: true });
 
   const globalServices = {
     // Visibility machine:
