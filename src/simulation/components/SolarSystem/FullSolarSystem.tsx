@@ -34,9 +34,17 @@ const FullSolarSystem = () => {
     'assets/textures/2k_neptune.jpg',
   ]);
   const rootRef = useContext(KeplerTreeContext);
+  const { rootActor } = useContext(GlobalStateContext);
   return (
     <Body
-      ref={rootRef}
+      ref={(root) => {
+        if (!root) return;
+        if (rootRef) {
+          rootRef.current = root;
+        }
+        const { keplerTreeActor } = rootActor.getSnapshot().context;
+        keplerTreeActor.send({ type: 'ASSIGN_ROOT', root });
+      }}
       params={{
         name: 'Sun',
         mass: SOLAR_MASS,
