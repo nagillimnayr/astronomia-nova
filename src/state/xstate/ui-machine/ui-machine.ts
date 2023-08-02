@@ -1,4 +1,4 @@
-import { assign, createMachine } from 'xstate';
+import { assign, createMachine, log } from 'xstate';
 import { type MutableRefObject } from 'react';
 
 type Context = {
@@ -49,10 +49,7 @@ export const uiMachine = createMachine(
     // Context assignment events.
     on: {
       ASSIGN_SCREEN_PORTAL_REF: {
-        actions: [
-          'assignScreenPortalRef',
-          () => console.log('Assigning screen portal ref'),
-        ],
+        actions: ['assignScreenPortalRef', log('Assigning screen portal ref')],
       },
       SET_SCREEN_PORTAL: {
         actions: [
@@ -64,7 +61,7 @@ export const uiMachine = createMachine(
       ASSIGN_CAM_VIEW_PORTAL_REF: {
         actions: [
           'assignCamViewPortalRef',
-          () => console.log('Assigning cam view portal ref'),
+          log('Assigning cam view portal ref'),
         ],
       },
       SET_CAM_VIEW_PORTAL: {
@@ -91,9 +88,6 @@ export const uiMachine = createMachine(
           assigned: {},
         },
       },
-      // outliner: {
-      //   ...toggleStates,
-      // },
     },
   },
   {

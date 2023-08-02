@@ -1,9 +1,12 @@
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import {
+  GlobalStateContext,
+  // RootMachineContext,
+} from '@/state/xstate/MachineProviders';
 import { CameraControls, Text } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useActor } from '@xstate/react';
+import { useActor, useSelector } from '@xstate/react';
 import { clamp } from 'lodash';
 import { useContext, useRef } from 'react';
 import { type Object3D, Vector3 } from 'three';
@@ -20,10 +23,14 @@ type Props = {
   meanRadius: number;
 };
 const Annotation = ({ annotation, meanRadius }: Props) => {
-  // Check if annotation visibility is on.
-  const { annotationVis, cameraService } = useContext(GlobalStateContext);
-  const [state] = useActor(annotationVis);
-  const isVisible = state.matches('active');
+  const { visibilityService } = useContext(GlobalStateContext);
+  const annotations = useSelector(
+    visibilityService,
+    ({ context }) => context.annotations
+  );
+  const isVisible = useSelector(annotations, (state) =>
+    state.matches('active')
+  );
 
   const bodyRef = useContext(KeplerTreeContext);
 

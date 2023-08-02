@@ -3,16 +3,21 @@ import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 
 import { useFrame } from '@react-three/fiber';
-import { useActor } from '@xstate/react';
+import { useSelector } from '@xstate/react';
 import { useContext, useRef } from 'react';
 import { Vector3, type ArrowHelper } from 'three';
 
 const _vel = new Vector3();
 
 const VelocityArrow = () => {
-  const { velArrowVis } = useContext(GlobalStateContext);
-  const [state] = useActor(velArrowVis);
-  const isActive = state.matches('active');
+  const { visibilityService } = useContext(GlobalStateContext);
+  const velocityArrows = useSelector(
+    visibilityService,
+    ({ context }) => context.velocityArrows
+  );
+  const isVisible = useSelector(velocityArrows, (state) =>
+    state.matches('active')
+  );
 
   // Get reference to body from context.
   const bodyRef = useContext(KeplerTreeContext);
@@ -42,7 +47,7 @@ const VelocityArrow = () => {
   });
   return (
     <arrowHelper
-      visible={isActive}
+      visible={isVisible}
       ref={(arrow) => {
         if (!arrow) return;
         arrowRef.current = arrow;

@@ -18,7 +18,7 @@ import {
   PerspectiveCamera,
 } from 'three';
 
-import { useActor } from '@xstate/react';
+import { useActor, useSelector } from '@xstate/react';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { degToRad } from 'three/src/math/MathUtils';
@@ -32,13 +32,13 @@ type Props = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
 };
 export function RingMarker({ children, bodyRef }: Props) {
-  // const { uiState } = useContext(RootStoreContext);
-  const { selectionService } = useContext(GlobalStateContext);
-
-  // Check if marker visibility is on.
-  const { markerVis } = useContext(GlobalStateContext);
-  const [state] = useActor(markerVis);
-  const isVisible = state.matches('active');
+  const { selectionService, visibilityService } =
+    useContext(GlobalStateContext);
+  const markers = useSelector(
+    visibilityService,
+    ({ context }) => context.markers
+  );
+  const isVisible = useSelector(markers, (state) => state.matches('active'));
 
   const circleRef = useRef<Mesh>(null!);
   const materialRef = useRef<MeshBasicMaterial>(null!);

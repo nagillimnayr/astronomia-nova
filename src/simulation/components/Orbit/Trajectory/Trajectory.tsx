@@ -10,7 +10,7 @@ import {
 import { getLinearEccentricityFromAxes } from '@/simulation/math/orbital-elements/LinearEccentricity';
 import { degToRad } from 'three/src/math/MathUtils';
 
-import { useActor } from '@xstate/react';
+import { useActor, useSelector } from '@xstate/react';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { cn } from '@/lib/cn';
@@ -39,9 +39,14 @@ export const Trajectory = ({
   orientation,
 }: TrajectoryProps) => {
   // Check if trajectory visibility is on.
-  const { trajectoryVis } = useContext(GlobalStateContext);
-  const [state] = useActor(trajectoryVis);
-  const isVisible = state.matches('active');
+  const { visibilityService } = useContext(GlobalStateContext);
+  const trajectories = useSelector(
+    visibilityService,
+    ({ context }) => context.trajectories
+  );
+  const isVisible = useSelector(trajectories, (state) =>
+    state.matches('active')
+  );
 
   const [showPeriapsis, setShowPeriapsis] = useState<boolean>(false);
 
@@ -65,7 +70,6 @@ export const Trajectory = ({
           if (!obj) return;
           if (ref.current === obj) return;
           ref.current = obj;
-          
         }}
       >
         <Line points={points} color={'white'} lineWidth={1} />

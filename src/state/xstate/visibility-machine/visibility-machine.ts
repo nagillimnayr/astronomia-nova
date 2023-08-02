@@ -1,7 +1,20 @@
-import { assign, createMachine, log, send, sendTo } from 'xstate';
+import {
+  type ActorRefFrom,
+  assign,
+  createMachine,
+  log,
+  send,
+  sendTo,
+  spawn,
+} from 'xstate';
 import { toggleMachine } from '../toggle-machine/toggle-machine';
 
-type Context = {};
+type Context = {
+  trajectories: ActorRefFrom<typeof toggleMachine>;
+  annotations: ActorRefFrom<typeof toggleMachine>;
+  markers: ActorRefFrom<typeof toggleMachine>;
+  velocityArrows: ActorRefFrom<typeof toggleMachine>;
+};
 
 type Events =
   | { type: 'TOGGLE'; target: string }
@@ -9,35 +22,49 @@ type Events =
   | { type: 'DISABLE'; target: string };
 
 export const visibilityMachine = createMachine({
+  predictableActionArguments: true,
+  tsTypes: {} as import('./visibility-machine.typegen').Typegen0,
   schema: {
     context: {} as Context,
     events: {} as Events,
   },
   id: 'visibility',
 
+  context: {
+    trajectories: null!,
+    annotations: null!,
+    markers: null!,
+    velocityArrows: null!,
+  },
+
+  entry: [
+    log('visibilityMachine entry'),
+    // Spawn child actors.
+    assign({
+      trajectories: () =>
+        spawn(toggleMachine, { name: 'trajectories', sync: true }),
+      annotations: () =>
+        spawn(toggleMachine, { name: 'annotations', sync: true }),
+      markers: () => spawn(toggleMachine, { name: 'markers', sync: true }),
+      velocityArrows: () =>
+        spawn(toggleMachine, { name: 'velocityArrows', sync: true }),
+    }),
+    () => {
+      console.log('disabling velocityArrows');
+      sendTo('velocityArrows', { type: 'DISABLE' });
+    },
+  ],
+
   on: {
     // Forward the event to target state.
     TOGGLE: {
-      actions: [(context, event) => sendTo(event.target, { type: event.type })],
+      actions: [(_, event) => sendTo(event.target, { type: event.type })],
+    },
+    ENABLE: {
+      actions: [(_, event) => sendTo(event.target, { type: event.type })],
+    },
+    DISABLE: {
+      actions: [(_, event) => sendTo(event.target, { type: event.type })],
     },
   },
-
-  invoke: [
-    {
-      id: 'trajectories',
-      src: toggleMachine,
-    },
-    {
-      id: 'annotations',
-      src: toggleMachine,
-    },
-    {
-      id: 'markers',
-      src: toggleMachine,
-    },
-    {
-      id: 'velocity-arrows',
-      src: toggleMachine,
-    },
-  ],
 });

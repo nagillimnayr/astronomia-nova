@@ -1,7 +1,7 @@
 import { cn } from '@/lib/cn';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { Html } from '@react-three/drei';
-import { useActor } from '@xstate/react';
+import { useActor, useSelector } from '@xstate/react';
 import { useContext } from 'react';
 
 type AnnotationProps = {
@@ -9,9 +9,15 @@ type AnnotationProps = {
 };
 const HtmlAnnotation = (props: AnnotationProps) => {
   // Check if annotation visibility is on.
-  const { annotationVis } = useContext(GlobalStateContext);
-  const [state] = useActor(annotationVis);
-  const isVisible = state.matches('active');
+
+  const { visibilityService } = useContext(GlobalStateContext);
+  const annotations = useSelector(
+    visibilityService,
+    ({ context }) => context.annotations
+  );
+  const isVisible = useSelector(annotations, (state) =>
+    state.matches('active')
+  );
 
   return (
     <>

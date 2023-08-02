@@ -11,7 +11,7 @@ import {
 import { useFrame } from '@react-three/fiber';
 import { Vector3 } from 'three';
 
-import { useActor } from '@xstate/react';
+import { useActor, useSelector } from '@xstate/react';
 import { cn } from '@/lib/cn';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
@@ -23,13 +23,14 @@ type Props = {
   bodyRef: MutableRefObject<KeplerBody>;
 };
 export function HtmlRingMarker({ bodyRef }: Props) {
-  // const { uiState } = useContext(RootStoreContext);
-  const { selectionService } = useContext(GlobalStateContext);
-
+  const { selectionService, visibilityService } =
+    useContext(GlobalStateContext);
   // Check if marker visibility is on.
-  const { markerVis } = useContext(GlobalStateContext);
-  const [state] = useActor(markerVis);
-  const isVisible = state.matches('active');
+  const markers = useSelector(
+    visibilityService,
+    ({ context }) => context.markers
+  );
+  const isVisible = useSelector(markers, (state) => state.matches('active'));
 
   const ref = useRef<HTMLDivElement>(null!);
 

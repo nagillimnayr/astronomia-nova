@@ -30,7 +30,6 @@ type Props = PropsWithChildren & {
   color: ColorRepresentation;
 };
 export function CircleMarker({ bodyRef, color }: Props) {
-  // const { uiState } = useContext(RootStoreContext);
   const { selectionService, cameraService } = useContext(GlobalStateContext);
 
   // Check if marker visibility is on.

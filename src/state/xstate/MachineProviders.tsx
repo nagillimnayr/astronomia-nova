@@ -1,17 +1,31 @@
 import { createContext, type PropsWithChildren } from 'react';
-import { useInterpret } from '@xstate/react';
+import {
+  createActorContext,
+  useInterpret,
+  useActor,
+  useSelector,
+} from '@xstate/react';
 import { toggleMachine } from './toggle-machine/toggle-machine';
 import { type InterpreterFrom } from 'xstate';
 import { cameraMachine } from './camera-machine/camera-machine';
 import { selectionMachine } from './selection-machine/selection-machine';
 import { uiMachine } from './ui-machine/ui-machine';
 
+import { inspect } from '@xstate/inspect';
+import { visibilityMachine } from './visibility-machine/visibility-machine';
+if (typeof window !== 'undefined') {
+  inspect({
+    iframe: false,
+  });
+}
+
+// export const RootMachineContext = createActorContext(rootMachine, {
+//   devTools: true,
+// });
+
 export const GlobalStateContext = createContext({
-  // Toggle machines:
-  trajectoryVis: {} as InterpreterFrom<typeof toggleMachine>,
-  annotationVis: {} as InterpreterFrom<typeof toggleMachine>,
-  markerVis: {} as InterpreterFrom<typeof toggleMachine>,
-  velArrowVis: {} as InterpreterFrom<typeof toggleMachine>,
+  // Visibility machine:
+  visibilityService: {} as InterpreterFrom<typeof visibilityMachine>,
 
   // UI machine:
   uiService: {} as InterpreterFrom<typeof uiMachine>,
@@ -24,11 +38,9 @@ export const GlobalStateContext = createContext({
 });
 
 export const MachineProviders = ({ children }: PropsWithChildren) => {
-  // Toggle machines:
-  const trajectoryVis = useInterpret(toggleMachine);
-  const annotationVis = useInterpret(toggleMachine);
-  const markerVis = useInterpret(toggleMachine);
-  const velArrowVis = useInterpret(toggleMachine);
+  // Visibility machine:
+  const visibilityService = useInterpret(visibilityMachine);
+  // visibilityService.start();
 
   // UI machine:
   const uiService = useInterpret(uiMachine);
@@ -40,11 +52,8 @@ export const MachineProviders = ({ children }: PropsWithChildren) => {
   const selectionService = useInterpret(selectionMachine);
 
   const globalServices = {
-    // Toggle machines:
-    trajectoryVis,
-    annotationVis,
-    markerVis,
-    velArrowVis,
+    // Visibility machine:
+    visibilityService,
 
     // UI machine:
     uiService,

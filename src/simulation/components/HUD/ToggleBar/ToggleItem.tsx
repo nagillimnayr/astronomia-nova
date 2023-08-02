@@ -1,23 +1,45 @@
 import { cn } from '@/lib/cn';
+import {
+  GlobalStateContext,
+  // RootMachineContext,
+} from '@/state/xstate/MachineProviders';
+import { rootMachine } from '@/state/xstate/root-machine/root-machine';
 import { type toggleMachine } from '@/state/xstate/toggle-machine/toggle-machine';
+import { type visibilityMachine } from '@/state/xstate/visibility-machine/visibility-machine';
 import * as Toolbar from '@radix-ui/react-toolbar';
-import { useActor } from '@xstate/react';
-import { useEffect, type PropsWithChildren } from 'react';
-import { type InterpreterFrom } from 'xstate';
+import { useSelector, useActor } from '@xstate/react';
+import { useEffect, type PropsWithChildren, useContext } from 'react';
+import { StateFrom, type ContextFrom, sendTo } from 'xstate';
 
 type Props = PropsWithChildren & {
-  service: InterpreterFrom<typeof toggleMachine>;
+  // service: InterpreterFrom<typeof toggleMachine>;
+  // selector: (state: StateFrom<typeof visibilityMachine>) => boolean;
+  target: keyof ContextFrom<typeof visibilityMachine>;
   defaultOff?: boolean;
 };
-export const ToggleItem = ({ children, service, defaultOff }: Props) => {
-  const [state, send] = useActor(service);
+export const ToggleItem = ({
+  children,
+  // selector,
+  target,
+  defaultOff,
+}: Props) => {
+  const { visibilityService } = useContext(GlobalStateContext);
+  const actor = useSelector(
+    visibilityService,
+    (state) => state.context[target]
+  );
+  const [state, send] = useActor(actor);
   const isActive = state.matches('active');
 
   useEffect(() => {
     if (defaultOff) {
-      send('TOGGLE');
+      console.log('defaultOff', actor);
+      // send({ type: 'DISABLE' });
+      actor.send({ type: 'DISABLE' });
     }
-  }, [defaultOff, send]);
+  }, [actor, defaultOff, send, target]);
+
+  console.log('toggle actor:', actor);
 
   return (
     <Toolbar.ToggleGroup
@@ -25,7 +47,7 @@ export const ToggleItem = ({ children, service, defaultOff }: Props) => {
       type="single"
       value={isActive ? 'toggle' : ''}
       onValueChange={() => {
-        send('TOGGLE');
+        actor.send({ type: 'TOGGLE' });
       }}
     >
       <Toolbar.ToggleItem

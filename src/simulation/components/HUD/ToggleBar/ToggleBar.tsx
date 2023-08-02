@@ -4,14 +4,13 @@ import { ToggleItem } from './ToggleItem';
 import { type ClassNameValue } from 'tailwind-merge';
 import { cn } from '@/lib/cn';
 import { useContext } from 'react';
+import { useSelector } from '@xstate/react';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 
 type Props = {
   className?: ClassNameValue;
 };
 export const ToggleBar = ({ className }: Props) => {
-  const { trajectoryVis, annotationVis, markerVis, velArrowVis } =
-    useContext(GlobalStateContext);
   return (
     <RadixToolbar.Root
       className={cn(
@@ -20,19 +19,19 @@ export const ToggleBar = ({ className }: Props) => {
       )}
     >
       {/** Trajectory Visibility Toggle. */}
-      <ToggleItem service={trajectoryVis}>
+      <ToggleItem target={'trajectories'}>
         <span className="icon-[mdi--orbit] text-xl" />
       </ToggleItem>
       {/** Annotation Visibility Toggle. */}
-      <ToggleItem service={annotationVis}>
+      <ToggleItem target={'annotations'}>
         <span className="icon-[mdi--tag-text] text-xl" />
       </ToggleItem>
       {/** Marker Visibility Toggle. */}
-      <ToggleItem service={markerVis}>
+      <ToggleItem target={'markers'}>
         <span className="icon-[mdi--target] text-xl" />
       </ToggleItem>
       {/** Velocity Arrow Visibility Toggle. */}
-      <ToggleItem service={velArrowVis} defaultOff>
+      <ToggleItem target={'velocityArrows'} defaultOff>
         <span className="icon-[mdi--arrow-top-right-thin] text-xl" />
       </ToggleItem>
     </RadixToolbar.Root>
