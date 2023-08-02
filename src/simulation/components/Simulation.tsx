@@ -16,7 +16,7 @@ type SimProps = {
   children: React.ReactNode;
 };
 const Simulation = ({ children }: SimProps) => {
-  const { cameraService } = useContext(GlobalStateContext);
+  const { rootActor, cameraService } = useContext(GlobalStateContext);
 
   console.log('render Simulation');
   // function for accessing scene state
@@ -29,22 +29,24 @@ const Simulation = ({ children }: SimProps) => {
   }, []);
 
   useFrame(({ clock, camera }, delta) => {
+    const { timeActor } = rootActor.getSnapshot().context;
+    timeActor.send({ type: 'UPDATE', deltaTime: delta });
     // Get state without subscribing to it.
-    const timeStore = useTimeStore.getState();
-    if (!timeStore.isPaused) {
-      // scale delta time
-      const scaledDelta = delta * timeStore.timescale;
+    // const timeStore = useTimeStore.getState();
+    // if (!timeStore.isPaused) {
+    //   // scale delta time
+    //   const scaledDelta = delta * timeStore.timescale;
 
-      // Update clock in external store.
-      timeStore.addTimeToClock(scaledDelta);
+    //   // Update clock in external store.
+    //   timeStore.addTimeToClock(scaledDelta);
 
-      // Pass rootRef.current to function instead?
-      useSimStore
-        .getState()
-        .updateSim(useSimStore.getState().rootRef.current, scaledDelta);
+    //   // Pass rootRef.current to function instead?
+    //   useSimStore
+    //     .getState()
+    //     .updateSim(useSimStore.getState().rootRef.current, scaledDelta);
 
-      retrogradeState.update();
-    }
+    //   retrogradeState.update();
+    // }
 
     // Update camera.
     cameraService.send({ type: 'UPDATE', deltaTime: delta });
