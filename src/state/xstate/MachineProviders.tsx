@@ -1,27 +1,11 @@
 import { createContext, type PropsWithChildren } from 'react';
-import {
-  createActorContext,
-  useInterpret,
-  useActor,
-  useSelector,
-} from '@xstate/react';
-import { toggleMachine } from './toggle-machine/toggle-machine';
+import { useInterpret } from '@xstate/react';
 import { type InterpreterFrom } from 'xstate';
 import { cameraMachine } from './camera-machine/camera-machine';
 import { selectionMachine } from './selection-machine/selection-machine';
 import { uiMachine } from './ui-machine/ui-machine';
 
-import { inspect } from '@xstate/inspect';
 import { visibilityMachine } from './visibility-machine/visibility-machine';
-if (typeof window !== 'undefined') {
-  inspect({
-    iframe: false,
-  });
-}
-
-// export const RootMachineContext = createActorContext(rootMachine, {
-//   devTools: true,
-// });
 
 export const GlobalStateContext = createContext({
   // Visibility machine:
@@ -39,16 +23,18 @@ export const GlobalStateContext = createContext({
 
 export const MachineProviders = ({ children }: PropsWithChildren) => {
   // Visibility machine:
-  const visibilityService = useInterpret(visibilityMachine, { devTools: true });
+  const visibilityService = useInterpret(visibilityMachine, {
+    devTools: false,
+  });
 
   // UI machine:
-  const uiService = useInterpret(uiMachine, { devTools: true });
+  const uiService = useInterpret(uiMachine);
 
   // Camera machine:
-  const cameraService = useInterpret(cameraMachine, { devTools: true });
+  const cameraService = useInterpret(cameraMachine);
 
   // Selection machine:
-  const selectionService = useInterpret(selectionMachine, { devTools: true });
+  const selectionService = useInterpret(selectionMachine);
 
   const globalServices = {
     // Visibility machine:
