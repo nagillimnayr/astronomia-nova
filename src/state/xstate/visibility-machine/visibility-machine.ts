@@ -49,10 +49,6 @@ export const visibilityMachine = createMachine({
       velocityArrows: () =>
         spawn(toggleMachine, { name: 'velocityArrows', sync: true }),
     }),
-    () => {
-      console.log('disabling velocityArrows');
-      sendTo('velocityArrows', { type: 'DISABLE' });
-    },
   ],
 
   on: {
