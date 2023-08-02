@@ -42,16 +42,16 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                 cameraService.send({ type: 'ASSIGN_CANVAS', canvas });
               }}
             >
-              <Hud renderPriority={1}>
-                <XR>
-                  <Scene>{children}</Scene>
-                  {/* <Stats /> */}
-                  {/* <Perf /> */}
-                </XR>
-              </Hud>
-              <Hud renderPriority={2}>
+              {/* <Hud renderPriority={1}> */}
+              <XR>
+                <Scene>{children}</Scene>
+                {/* <Stats /> */}
+                {/* <Perf /> */}
+              </XR>
+              {/* </Hud> */}
+              {/* <Hud renderPriority={2}>
                 <CamView />
-              </Hud>
+              </Hud> */}
             </Canvas>
           </div>
         </div>
