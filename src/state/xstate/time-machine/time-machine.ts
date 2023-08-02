@@ -1,6 +1,6 @@
 import { DAY } from '@/lib/utils/constants';
 import { addSeconds } from 'date-fns';
-import { assign, createMachine, log } from 'xstate';
+import { assign, createMachine, log, sendTo } from 'xstate';
 
 // J2000 epoch
 export const J2000 = new Date(2000, 0, 1, 12, 0, 0, 0);
@@ -86,9 +86,17 @@ export const timeMachine = createMachine(
 
       updateTime: assign({
         timeElapsed: ({ timeElapsed, timescale }, { deltaTime }) => {
-          return timeElapsed + deltaTime * timescale;
+          const scaledDelta = deltaTime * timescale;
+          // Update simulation.
+          sendTo('.keplerTreeActor', {
+            type: 'UPDATE',
+            deltaTime: scaledDelta,
+          });
+          return timeElapsed + scaledDelta;
         },
       }),
+
+      // Computes the current date based on the timeElapsed relative to the start date (refDate).
       updateDate: assign({
         date: ({ refDate, timeElapsed }) => {
           return addSeconds(refDate, timeElapsed * DAY);

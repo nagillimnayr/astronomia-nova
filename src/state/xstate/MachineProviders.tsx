@@ -6,8 +6,13 @@ import { selectionMachine } from './selection-machine/selection-machine';
 import { uiMachine } from './ui-machine/ui-machine';
 
 import { visibilityMachine } from './visibility-machine/visibility-machine';
+import { timeMachine } from './time-machine/time-machine';
+import { rootMachine } from './root-machine/root-machine';
 
 export const GlobalStateContext = createContext({
+  // Root machine:
+  rootActor: {} as InterpreterFrom<typeof rootMachine>,
+
   // Visibility machine:
   visibilityService: {} as InterpreterFrom<typeof visibilityMachine>,
 
@@ -22,10 +27,11 @@ export const GlobalStateContext = createContext({
 });
 
 export const MachineProviders = ({ children }: PropsWithChildren) => {
+  // Root machine:
+  const rootActor = useInterpret(rootMachine, { id: 'rootActor' });
+
   // Visibility machine:
-  const visibilityService = useInterpret(visibilityMachine, {
-    devTools: false,
-  });
+  const visibilityService = useInterpret(visibilityMachine);
 
   // UI machine:
   const uiService = useInterpret(uiMachine);
@@ -37,6 +43,9 @@ export const MachineProviders = ({ children }: PropsWithChildren) => {
   const selectionService = useInterpret(selectionMachine);
 
   const globalServices = {
+    // Root machine:
+    rootActor,
+
     // Visibility machine:
     visibilityService,
 
