@@ -67,7 +67,6 @@ export function CircleMarker({ bodyRef, color }: Props) {
     circleRef.current.lookAt(_camWorldPos);
 
     // Get distance to camera.
-    const sqDistance = _bodyWorldPos.distanceToSquared(_camWorldPos);
     const distance = _bodyWorldPos.distanceTo(_camWorldPos);
 
     const n = distance / 150;
@@ -75,9 +74,6 @@ export function CircleMarker({ bodyRef, color }: Props) {
     const factor = Math.max(1e-5, n);
     // Scale relative to distance from camera.
     circleRef.current.scale.setScalar(factor);
-
-    // const opacity = Math.min(sqDistance / 1e2, 1);
-    // materialRef.current.opacity = opacity ** 2;
   });
 
   return (

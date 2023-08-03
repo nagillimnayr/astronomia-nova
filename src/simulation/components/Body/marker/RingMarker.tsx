@@ -16,6 +16,7 @@ import {
   Vector3,
   DoubleSide,
   PerspectiveCamera,
+  FrontSide,
 } from 'three';
 
 import { useActor, useSelector } from '@xstate/react';
@@ -26,7 +27,6 @@ import { Annotation } from '../annotation/Annotation';
 
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
-const _camPos = new Vector3();
 
 type Props = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
@@ -70,7 +70,6 @@ export function RingMarker({ children, bodyRef }: Props) {
     circleRef.current.lookAt(_camWorldPos);
 
     // Get distance to camera.
-    const sqDistance = _bodyWorldPos.distanceToSquared(_camWorldPos);
     const distance = _bodyWorldPos.distanceTo(_camWorldPos);
 
     const n = distance / 100;
@@ -78,9 +77,6 @@ export function RingMarker({ children, bodyRef }: Props) {
     const factor = Math.max(1e-5, n);
     // Scale relative to distance from camera.
     circleRef.current.scale.setScalar(factor);
-
-    const opacity = Math.min(sqDistance / 1e2, 1);
-    materialRef.current.opacity = opacity ** 2;
   });
 
   return (
@@ -93,13 +89,12 @@ export function RingMarker({ children, bodyRef }: Props) {
         onPointerLeave={() => setHovered(false)}
       >
         {/** Transparent material so that the circle will catch clicks but not be visible. */}
-        <meshBasicMaterial side={DoubleSide} opacity={0} transparent />
+        <meshBasicMaterial side={FrontSide} opacity={0} transparent />
         <Ring visible={isVisible} args={[1, 1.25]}>
           <meshBasicMaterial
             ref={materialRef}
             color={'white'}
-            side={DoubleSide}
-            transparent
+            side={FrontSide}
           />
           {/* <axesHelper args={[radius * 2]} /> */}
           {children}
