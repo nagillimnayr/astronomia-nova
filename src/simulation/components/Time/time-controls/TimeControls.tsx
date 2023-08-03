@@ -5,12 +5,16 @@ import PauseButton from './PauseButton';
 import Icon from '@mdi/react';
 import { mdiMenuLeft, mdiMenuRight } from '@mdi/js';
 import { useTimeStore } from '@/simulation/state/zustand/time-store';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import {
+  GlobalStateContext,
+  RootActorContext,
+} from '@/state/xstate/MachineProviders';
 import { useContext } from 'react';
 import { useSelector } from '@xstate/react';
 
 const TimeControls = () => {
-  const { rootActor } = useContext(GlobalStateContext);
+  // const { rootActor } = useContext(GlobalStateContext);
+  const rootActor = RootActorContext.useActorRef();
   const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
   // get state without subscribing
   // const { incrementTimescale, decrementTimescale } = useTimeStore.getState();

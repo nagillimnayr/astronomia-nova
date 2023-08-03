@@ -3,9 +3,13 @@ import { useSnapshot } from 'valtio';
 import { useContext, useEffect, useRef } from 'react';
 import { useTimeStore } from '@/simulation/state/zustand/time-store';
 import { useSelector } from '@xstate/react';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import {
+  GlobalStateContext,
+  RootActorContext,
+} from '@/state/xstate/MachineProviders';
 const DateDisplay = () => {
-  const { rootActor } = useContext(GlobalStateContext);
+  // const { rootActor } = useContext(GlobalStateContext);
+  const rootActor = RootActorContext.useActorRef();
   const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
 
   const { refDate } = timeActor.getSnapshot()!.context;

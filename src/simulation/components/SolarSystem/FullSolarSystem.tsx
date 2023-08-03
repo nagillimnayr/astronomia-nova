@@ -6,7 +6,10 @@ import { useTexture } from '@react-three/drei';
 
 import { Orbit } from '../Orbit/Orbit';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import {
+  GlobalStateContext,
+  RootActorContext,
+} from '@/state/xstate/MachineProviders';
 import { EARTH_RADIUS } from '@/lib/utils/constants';
 
 const FullSolarSystem = () => {
@@ -34,7 +37,8 @@ const FullSolarSystem = () => {
     'assets/textures/2k_neptune.jpg',
   ]);
   const rootRef = useContext(KeplerTreeContext);
-  const { rootActor } = useContext(GlobalStateContext);
+  // const { rootActor } = useContext(GlobalStateContext);
+  const rootActor = RootActorContext.useActorRef();
   return (
     <Body
       ref={(root) => {
@@ -42,7 +46,7 @@ const FullSolarSystem = () => {
         if (rootRef) {
           rootRef.current = root;
         }
-        const { keplerTreeActor } = rootActor.getSnapshot().context;
+        const { keplerTreeActor } = rootActor.getSnapshot()!.context;
         keplerTreeActor.send({ type: 'ASSIGN_ROOT', root });
       }}
       params={{

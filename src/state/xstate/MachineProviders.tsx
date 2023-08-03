@@ -1,5 +1,5 @@
 import { createContext, type PropsWithChildren } from 'react';
-import { useInterpret } from '@xstate/react';
+import { createActorContext, useInterpret } from '@xstate/react';
 import { type InterpreterFrom } from 'xstate';
 import { cameraMachine } from './camera-machine/camera-machine';
 import { selectionMachine } from './selection-machine/selection-machine';
@@ -9,9 +9,11 @@ import { visibilityMachine } from './visibility-machine/visibility-machine';
 import { timeMachine } from './time-machine/time-machine';
 import { rootMachine } from './root-machine/root-machine';
 
+export const RootActorContext = createActorContext(rootMachine);
+
 export const GlobalStateContext = createContext({
   // Root machine:
-  rootActor: {} as InterpreterFrom<typeof rootMachine>,
+  // rootActor: {} as InterpreterFrom<typeof rootMachine>,
 
   // Visibility machine:
   visibilityService: {} as InterpreterFrom<typeof visibilityMachine>,
@@ -28,7 +30,7 @@ export const GlobalStateContext = createContext({
 
 export const MachineProviders = ({ children }: PropsWithChildren) => {
   // Root machine:
-  const rootActor = useInterpret(rootMachine, { id: 'rootActor' });
+  // const rootActor = useInterpret(rootMachine, { id: 'rootActor' });
 
   // Visibility machine:
   const visibilityService = useInterpret(visibilityMachine);
@@ -44,7 +46,7 @@ export const MachineProviders = ({ children }: PropsWithChildren) => {
 
   const globalServices = {
     // Root machine:
-    rootActor,
+    // rootActor,
 
     // Visibility machine:
     visibilityService,
@@ -60,7 +62,7 @@ export const MachineProviders = ({ children }: PropsWithChildren) => {
   };
   return (
     <GlobalStateContext.Provider value={globalServices}>
-      {children}
+      <RootActorContext.Provider>{children}</RootActorContext.Provider>
     </GlobalStateContext.Provider>
   );
 };

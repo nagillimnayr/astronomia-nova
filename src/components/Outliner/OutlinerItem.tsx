@@ -6,7 +6,10 @@ import { useCallback, useContext, useState } from 'react';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
 import { cn } from '@/lib/cn';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import {
+  GlobalStateContext,
+  RootActorContext,
+} from '@/state/xstate/MachineProviders';
 import { useActor, useSelector } from '@xstate/react';
 
 type OutlinerItemProps = {
@@ -14,7 +17,8 @@ type OutlinerItemProps = {
 };
 const OutlinerItem = observer(({ body }: OutlinerItemProps) => {
   // const { uiState } = useContext(RootStoreContext);
-  const { rootActor, selectionService } = useContext(GlobalStateContext);
+  const { selectionService } = useContext(GlobalStateContext);
+  const rootActor = RootActorContext.useActorRef();
 
   const keplerTreeActor = useSelector(
     rootActor,

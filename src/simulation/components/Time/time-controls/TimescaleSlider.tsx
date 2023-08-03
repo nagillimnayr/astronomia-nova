@@ -11,11 +11,15 @@ import {
 import { useSnapshot } from 'valtio';
 import TimescaleTooltip from '../TimescaleTooltip';
 import { useTimeStore } from '../../../state/zustand/time-store';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import {
+  GlobalStateContext,
+  RootActorContext,
+} from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 
 export const TimescaleSlider = () => {
-  const { rootActor } = useContext(GlobalStateContext);
+  // const { rootActor } = useContext(GlobalStateContext);
+  const rootActor = RootActorContext.useActorRef();
   const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
   const timescale = useSelector(timeActor, ({ context }) => context.timescale);
   // const timescale = useTimeStore((state) => state.timescale);
