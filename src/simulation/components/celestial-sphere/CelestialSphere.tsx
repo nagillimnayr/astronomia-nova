@@ -25,7 +25,7 @@ declare global {
 }
 
 type CelestialSphereProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 export const CelestialSphere = (props: CelestialSphereProps) => {
   const [starmap, hiptyc, milkyway] = useLoader(EXRLoader, [
