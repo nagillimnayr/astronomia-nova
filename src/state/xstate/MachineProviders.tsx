@@ -6,7 +6,6 @@ import { selectionMachine } from './selection-machine/selection-machine';
 import { uiMachine } from './ui-machine/ui-machine';
 
 import { visibilityMachine } from './visibility-machine/visibility-machine';
-import { timeMachine } from './time-machine/time-machine';
 import { rootMachine } from './root-machine/root-machine';
 
 export const RootActorContext = createActorContext(rootMachine);
