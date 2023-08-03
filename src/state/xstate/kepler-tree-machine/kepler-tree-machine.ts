@@ -47,6 +47,25 @@ export const keplerTreeMachine = createMachine(
         actions: ['updateSimulation'],
       },
     },
+
+    initial: 'idle',
+    states: {
+      idle: {
+        on: {
+          UPDATE_TREE: {
+            target: 'updatingTree',
+          },
+        },
+      },
+      updatingTree: {
+        // This is just so that components can subscribe to the event.
+        on: {
+          UPDATE_TREE: {
+            target: 'idle',
+          },
+        },
+      },
+    },
   },
   {
     actions: {

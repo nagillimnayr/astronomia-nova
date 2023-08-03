@@ -28,6 +28,8 @@ import { degToRad } from 'three/src/math/MathUtils';
 import { Annotation } from './annotation/Annotation';
 import { RingMarker } from './marker/RingMarker';
 import { CircleMarker } from './marker/CircleMarker';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { useSelector } from '@xstate/react';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
@@ -59,7 +61,11 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
   { params, children, texture }: BodyProps,
   fwdRef
 ) {
-  const { cameraState } = useContext(RootStoreContext);
+  const { rootActor } = useContext(GlobalStateContext);
+  const keplerTreeActor = useSelector(
+    rootActor,
+    ({ context }) => context.keplerTreeActor
+  );
 
   // Destructure parameters.
   const {
@@ -78,10 +84,8 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
   // get refs
   const bodyRef = useRef<KeplerBody>(null!);
   const meshRef = useRef<Mesh>(null!);
-  const velocityArrowRef = useRef<ArrowHelper>(null!);
 
-  // Set forwarded ref
-  // the return value of the callback function will be assigned to fwdRef
+  // Set forwarded ref. The return value of the callback function will be assigned to fwdRef.
   useImperativeHandle(
     fwdRef,
     () => {
@@ -93,7 +97,6 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
   return (
     <>
       <keplerBody
-        // rotation={[degToRad(90), 0, 0]}
         renderOrder={-1}
         meshRef={meshRef}
         ref={(body: KeplerBody) => {
@@ -112,6 +115,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
           const centralBody = centralBodyRef.current;
           if (!centralBody) return;
           centralBody.addOrbitingBody(body);
+          keplerTreeActor.send({ type: 'UPDATE_TREE' });
         }}
         name={name ?? ''}
         args={[mass, initialPosition, initialVelocity, meanRadius, obliquity]}

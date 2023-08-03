@@ -7,14 +7,21 @@ import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
 import { cn } from '@/lib/cn';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
-import { useActor } from '@xstate/react';
+import { useActor, useSelector } from '@xstate/react';
 
 type OutlinerItemProps = {
   body: KeplerBody;
 };
 const OutlinerItem = observer(({ body }: OutlinerItemProps) => {
   // const { uiState } = useContext(RootStoreContext);
-  const { selectionService } = useContext(GlobalStateContext);
+  const { rootActor, selectionService } = useContext(GlobalStateContext);
+
+  const keplerTreeActor = useSelector(
+    rootActor,
+    ({ context }) => context.keplerTreeActor
+  );
+  // Subscribe to state changes so that the outliner will update whenever a new node is added to the tree.
+  useSelector(keplerTreeActor, (state) => state.matches('updatingTree'));
 
   const [isOpen, setOpen] = useState<boolean>(true);
 
