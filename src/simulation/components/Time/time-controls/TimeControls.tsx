@@ -33,7 +33,7 @@ const TimeControls = () => {
           />
         </button>
 
-        <div className="mx-2">
+        <div className="mx-2 max-w-fit">
           <TimescaleSlider />
         </div>
 
