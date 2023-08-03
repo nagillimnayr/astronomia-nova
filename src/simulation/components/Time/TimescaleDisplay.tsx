@@ -1,26 +1,32 @@
 import { useSnapshot } from 'valtio';
 import { useTimeStore } from '@/simulation/state/zustand/time-store';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { useSelector } from '@xstate/react';
 
 const TimescaleDisplay = () => {
-  // const snap = useSnapshot(timeState);
-
-  const timescale = useTimeStore.getState().timescale;
-
+  const { rootActor } = useContext(GlobalStateContext);
+  const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
+  // const timescale = useSelector(timeActor, ({ context }) => context.timescale);
+  const timescale = timeActor.getSnapshot()!.context.timescale;
   const spanRef = useRef<HTMLSpanElement>(null!);
 
-  // subscribe to state changes in useEffect so that the component wont rerender on state change, but we can update the view directly
+  // Subscribe to state changes in useEffect so that the component wont rerender on state change, but we can update the view directly
   useEffect(() => {
-    const unsubscribe = useTimeStore.subscribe(
-      (state) => state.timescale,
-      (timescale) => {
-        if (!spanRef.current) return;
-        spanRef.current.textContent = timescale.toString();
-      }
-    );
+    const subscription = timeActor.subscribe(({ context }) => {
+      if (!spanRef.current) return;
+      spanRef.current.textContent = context.timescale.toString();
+    });
+    // const unsubscribe = useTimeStore.subscribe(
+    //   (state) => state.timescale,
+    //   (timescale) => {
+    //     if (!spanRef.current) return;
+    //     spanRef.current.textContent = timescale.toString();
+    //   }
+    // );
 
     // unsubscribe on dismount
-    return () => unsubscribe();
+    return () => subscription.unsubscribe();
   }, []);
 
   return (
