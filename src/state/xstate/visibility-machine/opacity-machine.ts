@@ -23,7 +23,7 @@ export const opacityMachine = createMachine({
 
   on: {
     SET_OPACITY: {
-      cond: (_, { opacity }) => opacity >= 0 && opacity <= 100,
+      cond: (_, { opacity }) => opacity >= 0 && opacity <= 1,
       actions: [
         assign({
           opacity: (_, { opacity }) => opacity,

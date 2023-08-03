@@ -1,5 +1,6 @@
 import { cn } from '@/lib/cn';
 import { ToggleBar } from '@/simulation/components/HUD/ToggleBar/ToggleBar';
+import { OpacitySliders } from '@/simulation/components/HUD/opacity/OpacitySliders';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useContext } from 'react';
 
@@ -23,6 +24,11 @@ const BottomToolbar = () => {
           Space
         </button>
       </div>
+
+      <div className="col-span-1 col-start-3 flex h-full w-full items-center justify-center">
+        <OpacitySliders />
+      </div>
+
       <div className="col-span-1 col-end-[-2] flex h-full w-full items-center justify-center">
         <ToggleBar />
       </div>

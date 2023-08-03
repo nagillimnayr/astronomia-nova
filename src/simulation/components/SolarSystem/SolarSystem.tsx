@@ -9,6 +9,7 @@ import {
   Outline,
 } from '@react-three/postprocessing';
 import { useSimStore } from '@/simulation/state/zustand/sim-store';
+import { degToRad } from 'three/src/math/MathUtils';
 
 export type UpdateFn = (deltaTime: number) => void;
 
@@ -35,7 +36,9 @@ const SolarSystem = ({ children }: Props) => {
             width={1000}
           />
         </EffectComposer>
-        <CelestialSphere>{children}</CelestialSphere>
+        <CelestialSphere />
+
+        <group rotation={[-degToRad(90), 0, 0]}>{children}</group>
       </Selection>
     </KeplerTreeContext.Provider>
   );
