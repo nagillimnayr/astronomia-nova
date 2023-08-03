@@ -19,19 +19,6 @@ type Events =
     }
   | { type: 'SET_CAM_VIEW_PORTAL'; camViewPortal: HTMLDivElement };
 
-// Reusable sub-state.
-const toggleStates = {
-  initial: 'active',
-  states: {
-    active: {
-      on: { TOGGLE: 'inactive' },
-    },
-    inactive: {
-      on: { TOGGLE: 'active' },
-    },
-  },
-};
-
 export const uiMachine = createMachine(
   {
     predictableActionArguments: true,
