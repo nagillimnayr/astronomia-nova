@@ -15,6 +15,7 @@ import { useTimeStore } from '@/simulation/state/zustand/time-store';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { timeMachine } from '../../../../state/xstate/time-machine/time-machine';
 import { useSelector } from '@xstate/react';
+import { cn } from '@/lib/cn';
 
 const PauseButton = () => {
   const { rootActor } = useContext(GlobalStateContext);
@@ -24,14 +25,19 @@ const PauseButton = () => {
 
   return (
     <button
-      className="bg-translucent btn-icon box-content p-1 "
+      className="inline-flex aspect-square w-8 items-center justify-center rounded-full border-2 border-white p-1"
       onClick={(e) => {
         e.stopPropagation();
 
         timeActor.send(isPaused ? 'UNPAUSE' : 'PAUSE');
       }}
     >
-      <Icon path={isPaused ? mdiPlay : mdiPause} size={1.5} />
+      <span
+        className={cn(
+          'h-full w-full rounded-full',
+          isPaused ? 'icon-[mdi--play]' : 'icon-[mdi--pause]'
+        )}
+      />
     </button>
   );
 };

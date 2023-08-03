@@ -22,13 +22,15 @@ const TimeControls = () => {
 
       <div className="pointer-events-auto my-2 box-content flex w-48 min-w-fit flex-row items-center justify-center self-center rounded-full  bg-gray-400/20  px-1 py-1">
         <button
-          className="translate-x-1"
+          className="m-0 inline-flex aspect-square w-6 items-center justify-center rounded-full p-0"
           onClick={(e) => {
             e.stopPropagation();
             timeActor.send({ type: 'DECREMENT_TIMESCALE' });
           }}
         >
-          <Icon path={mdiMenuLeft} size={1} />
+          <span
+            className={'icon-[mdi--menu-left] h-full w-full rounded-full'}
+          />
         </button>
 
         <div className="mx-2">
@@ -36,13 +38,15 @@ const TimeControls = () => {
         </div>
 
         <button
-          className="translate-x-1"
+          className="m-0 inline-flex aspect-square w-6 items-center justify-center rounded-full p-0"
           onClick={(e) => {
             e.stopPropagation();
             timeActor.send({ type: 'INCREMENT_TIMESCALE' });
           }}
         >
-          <Icon path={mdiMenuRight} size={1} />
+          <span
+            className={'icon-[mdi--menu-right] h-full w-full rounded-full'}
+          />
         </button>
       </div>
     </div>
