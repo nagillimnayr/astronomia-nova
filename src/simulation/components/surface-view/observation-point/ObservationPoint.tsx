@@ -20,6 +20,7 @@ import { useKeyPressed } from '@react-hooks-library/core';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import { observer } from 'mobx-react-lite';
+import { ObservationSphere } from './ObservationSphere';
 
 const _up = new Vector3();
 
@@ -38,9 +39,6 @@ const ObservationPoint = observer(({ children }: Props) => {
   // );
 
   const centerRef = useRef<Object3D>(null!);
-  const sphereRef = useRef<Mesh>(null!);
-
-  const [sphereVisible, setSphereVisibile] = useState<boolean>(false);
 
   const { surfaceState } = useContext(RootStoreContext);
 
@@ -95,21 +93,7 @@ const ObservationPoint = observer(({ children }: Props) => {
             position={[body.meanRadius / EARTH_RADIUS + 1e-4, 0, 0]}
             rotation={[0, 0, degToRad(-90)]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
           >
-            <Sphere
-              name="observation-sphere"
-              visible={sphereVisible}
-              ref={sphereRef}
-              args={[1e-2]}
-            >
-              <Wireframe
-                simplify
-                stroke="white"
-                // squeeze
-                fillMix={1}
-                fillOpacity={0.01}
-              />
-              {/* <axesHelper args={[1e-1]} /> */}
-            </Sphere>
+            <ObservationSphere />
             <Observer />
             {children}
           </group>
