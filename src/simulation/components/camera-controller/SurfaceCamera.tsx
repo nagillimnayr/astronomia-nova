@@ -16,7 +16,7 @@ const SurfaceCamera = () => {
   //   state.matches('space')
   // );
   const cameraRef = useRef<PerspectiveCamera>(null!);
-  useHelper(cameraRef, CameraHelper);
+  // useHelper(cameraRef, CameraHelper);
   return (
     <>
       <PerspectiveCam
