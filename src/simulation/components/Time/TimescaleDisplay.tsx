@@ -7,7 +7,6 @@ import { useSelector } from '@xstate/react';
 const TimescaleDisplay = () => {
   const { rootActor } = useContext(GlobalStateContext);
   const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
-  // const timescale = useSelector(timeActor, ({ context }) => context.timescale);
   const timescale = timeActor.getSnapshot()!.context.timescale;
   const spanRef = useRef<HTMLSpanElement>(null!);
 
@@ -17,15 +16,8 @@ const TimescaleDisplay = () => {
       if (!spanRef.current) return;
       spanRef.current.textContent = context.timescale.toString();
     });
-    // const unsubscribe = useTimeStore.subscribe(
-    //   (state) => state.timescale,
-    //   (timescale) => {
-    //     if (!spanRef.current) return;
-    //     spanRef.current.textContent = timescale.toString();
-    //   }
-    // );
 
-    // unsubscribe on dismount
+    // Unsubscribe on dismount.
     return () => subscription.unsubscribe();
   }, []);
 

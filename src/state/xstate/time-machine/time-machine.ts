@@ -57,7 +57,7 @@ export const timeMachine = createMachine(
         on: {
           UNPAUSE: {
             target: 'unpaused',
-            actions: ['logEvent', 'logTimer'],
+            actions: ['logEvent'],
           },
         },
       },
@@ -68,7 +68,7 @@ export const timeMachine = createMachine(
           },
           PAUSE: {
             target: 'paused',
-            actions: ['logEvent', 'logTimer'],
+            actions: ['logEvent'],
           },
         },
       },
@@ -101,7 +101,7 @@ export const timeMachine = createMachine(
       }),
 
       logEvent: log((_, event) => event),
-      logTimer: log((context) => context.timeElapsed),
+      // logTimer: log((context) => context.timeElapsed),
     },
     guards: {
       validateTimescale: (context, { timescale }) => {

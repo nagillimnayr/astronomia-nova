@@ -1,33 +1,34 @@
 import { format } from 'date-fns';
 import { useSnapshot } from 'valtio';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useTimeStore } from '@/simulation/state/zustand/time-store';
+import { useSelector } from '@xstate/react';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 const DateDisplay = () => {
-  // const snap = useSnapshot(timeState);
+  const { rootActor } = useContext(GlobalStateContext);
+  const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
 
-  const startDate = useTimeStore((state) => state.refDate);
+  const { refDate } = timeActor.getSnapshot()!.context;
   const hoursRef = useRef<HTMLSpanElement>(null!);
   const dateRef = useRef<HTMLSpanElement>(null!);
 
-  // subscribe to changes to timeElapsed in useEffect so that the component wont rerender on state change, but we can update the view directly.
+  // Subscribe to changes in useEffect so that the component wont re-render on state change, but we can update the view directly.
   useEffect(() => {
-    const unsubscribe = useTimeStore.subscribe(
-      (state) => state.timeElapsed,
-      (timeElapsed) => {
-        if (!hoursRef.current || !dateRef.current) return;
-        const date = useTimeStore.getState().getCurrentDate();
-        hoursRef.current.textContent = format(date, 'hh:mm:ss a');
-        dateRef.current.textContent = format(date, 'PPP');
-      }
-    );
-    return () => unsubscribe();
-  }, []);
+    const subscription = timeActor.subscribe(({ context }) => {
+      if (!hoursRef.current || !dateRef.current) return;
+      const { date } = context;
+      hoursRef.current.textContent = format(date, 'hh:mm:ss a');
+      dateRef.current.textContent = format(date, 'PPP');
+    });
+
+    return () => subscription.unsubscribe();
+  }, [timeActor]);
   return (
     <div className="flex flex-col items-center text-white">
       {/* hours */}
-      <span ref={hoursRef}>{format(startDate, 'hh:mm:ss a')}</span>
+      <span ref={hoursRef}>{format(refDate, 'hh:mm:ss a')}</span>
       {/* date */}
-      <span ref={dateRef}>{format(startDate, 'PPP')}</span>
+      <span ref={dateRef}>{format(refDate, 'PPP')}</span>
     </div>
   );
 };
