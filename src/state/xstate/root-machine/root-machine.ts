@@ -14,10 +14,12 @@ import { selectionMachine } from '../selection-machine/selection-machine';
 import { visibilityMachine } from '../visibility-machine/visibility-machine';
 import { timeMachine } from '../time-machine/time-machine';
 import { keplerTreeMachine } from '../kepler-tree-machine/kepler-tree-machine';
+import { celestialSphereMachine } from '../visibility-machine/celestial-sphere-machine';
 
 type Context = {
   timeActor: ActorRefFrom<typeof timeMachine>;
   keplerTreeActor: ActorRefFrom<typeof keplerTreeMachine>;
+  celestialSphereActor: ActorRefFrom<typeof celestialSphereMachine>;
 };
 
 type Events = { type: 'UPDATE'; deltaTime: number } | { type: 'LOG_CHILDREN' };
@@ -35,6 +37,7 @@ export const rootMachine = createMachine(
     context: {
       timeActor: null!,
       keplerTreeActor: null!,
+      celestialSphereActor: null!,
     },
 
     entry: [
@@ -47,6 +50,11 @@ export const rootMachine = createMachine(
         keplerTreeActor: () =>
           spawn(keplerTreeMachine, {
             name: 'keplerTree',
+            sync: true,
+          }),
+        celestialSphereActor: () =>
+          spawn(celestialSphereMachine, {
+            name: 'celestialSphereActor',
             sync: true,
           }),
       }),

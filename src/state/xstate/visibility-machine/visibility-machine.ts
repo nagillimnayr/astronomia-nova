@@ -28,7 +28,7 @@ export const visibilityMachine = createMachine({
     context: {} as Context,
     events: {} as Events,
   },
-  id: 'visibility',
+  id: 'visibility-machine',
 
   context: {
     trajectories: null!,
