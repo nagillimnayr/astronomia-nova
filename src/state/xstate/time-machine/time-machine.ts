@@ -1,6 +1,6 @@
 import { DAY } from '@/lib/utils/constants';
 import { addSeconds } from 'date-fns';
-import { assign, createMachine, log, sendTo } from 'xstate';
+import { assign, createMachine, log, sendParent, sendTo } from 'xstate';
 
 // J2000 epoch
 export const J2000 = new Date(2000, 0, 1, 12, 0, 0, 0);
@@ -57,6 +57,7 @@ export const timeMachine = createMachine(
         on: {
           UNPAUSE: {
             target: 'unpaused',
+            actions: ['logEvent', 'logTimer'],
           },
         },
       },
@@ -67,6 +68,7 @@ export const timeMachine = createMachine(
           },
           PAUSE: {
             target: 'paused',
+            actions: ['logEvent', 'logTimer'],
           },
         },
       },
@@ -87,11 +89,6 @@ export const timeMachine = createMachine(
       updateTime: assign({
         timeElapsed: ({ timeElapsed, timescale }, { deltaTime }) => {
           const scaledDelta = deltaTime * timescale;
-          // Update simulation.
-          sendTo('.keplerTreeActor', {
-            type: 'UPDATE',
-            deltaTime: scaledDelta,
-          });
           return timeElapsed + scaledDelta;
         },
       }),
@@ -102,6 +99,9 @@ export const timeMachine = createMachine(
           return addSeconds(refDate, timeElapsed * DAY);
         },
       }),
+
+      logEvent: log((_, event) => event),
+      logTimer: log((context) => context.timeElapsed),
     },
     guards: {
       validateTimescale: (_, { timescale }) => {

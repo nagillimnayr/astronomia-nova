@@ -29,8 +29,8 @@ const Simulation = ({ children }: SimProps) => {
   }, []);
 
   useFrame(({ clock, camera }, delta) => {
-    const { timeActor } = rootActor.getSnapshot().context;
-    timeActor.send({ type: 'UPDATE', deltaTime: delta });
+    // const { timeActor } = rootActor.getSnapshot().context;
+    rootActor.send({ type: 'UPDATE', deltaTime: delta });
     // Get state without subscribing to it.
     // const timeStore = useTimeStore.getState();
     // if (!timeStore.isPaused) {
@@ -54,10 +54,11 @@ const Simulation = ({ children }: SimProps) => {
 
   useKeyPressed(' ', (evt) => {
     evt.preventDefault();
-    const { camera, controls } = getThree();
+    // const { camera, controls } = getThree();
 
-    const camControls = controls as unknown as CameraControls;
-    console.log('Distance to gaze target:', camControls.distance);
+    // const camControls = controls as unknown as CameraControls;
+    // console.log('Distance to gaze target:', camControls.distance);
+    rootActor.send({ type: 'LOG_CHILDREN' });
   });
 
   return (
