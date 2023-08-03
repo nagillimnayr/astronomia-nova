@@ -16,7 +16,7 @@ const Observer = () => {
               cameraService.send({ type: 'ASSIGN_OBSERVER', observer });
             }}
           />
-          <axesHelper args={[3e-2]} />
+          {/* <axesHelper args={[3e-2]} /> */}
         </object3D>
       </object3D>
     </>
