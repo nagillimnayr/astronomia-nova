@@ -9,6 +9,7 @@ const MAX_TIMESCALE = 100;
 
 type Context = {
   timeElapsed: number;
+  previousTime: number;
   timescale: number;
   refDate: Date; // Reference date.
   date: Date;
@@ -37,6 +38,7 @@ export const timeMachine = createMachine(
 
     context: {
       timeElapsed: 0,
+      previousTime: 0,
       timescale: 1,
       refDate: J2000,
       date: J2000,
@@ -91,6 +93,7 @@ export const timeMachine = createMachine(
           const scaledDelta = deltaTime * timescale;
           return timeElapsed + scaledDelta;
         },
+        previousTime: ({ timeElapsed }) => timeElapsed, // Update previous time.
       }),
 
       // Computes the current date based on the timeElapsed relative to the start date (refDate).
