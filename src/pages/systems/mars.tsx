@@ -16,7 +16,7 @@ const Scene = dynamic(
 const SunMars = dynamic(
   () =>
     import('@/simulation/components/SolarSystem/SunMars').then(
-      (mod) => mod.default
+      (mod) => mod.SunMars
     ),
   {
     ssr: false,

@@ -6,6 +6,7 @@ import { Suspense, useRef } from 'react';
 import { LoadingFallback } from '@/components/LoadingFallback';
 import { FullscreenLayout } from '@/components/layout/FullscreenLayout';
 //import Scene from '~/components/Scene';
+import { Earth } from '../../simulation/components/Body/stories/Body.stories';
 
 const Scene = dynamic(
   () => import('@/components/canvas/Scene').then((mod) => mod.default),
@@ -16,7 +17,7 @@ const Scene = dynamic(
 const SunEarth = dynamic(
   () =>
     import('@/simulation/components/SolarSystem/SunEarth').then(
-      (mod) => mod.default
+      (mod) => mod.SunEarth
     ),
   {
     ssr: false,
