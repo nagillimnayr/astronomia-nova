@@ -104,8 +104,12 @@ export const timeMachine = createMachine(
       logTimer: log((context) => context.timeElapsed),
     },
     guards: {
-      validateTimescale: (_, { timescale }) => {
-        return timescale >= MIN_TIMESCALE && timescale <= MAX_TIMESCALE;
+      validateTimescale: (context, { timescale }) => {
+        return (
+          context.timescale !== timescale &&
+          timescale >= MIN_TIMESCALE &&
+          timescale <= MAX_TIMESCALE
+        );
       },
     },
   }

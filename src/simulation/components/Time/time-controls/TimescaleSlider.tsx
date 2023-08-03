@@ -3,6 +3,7 @@ import {
   FormEvent,
   FormEventHandler,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -10,24 +11,27 @@ import {
 import { useSnapshot } from 'valtio';
 import TimescaleTooltip from '../TimescaleTooltip';
 import { useTimeStore } from '../../../state/zustand/time-store';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { useSelector } from '@xstate/react';
 
 export const TimescaleSlider = () => {
-  const timescale = useTimeStore((state) => state.timescale);
-  const setTimescale = useTimeStore((state) => state.setTimescale);
+  const { rootActor } = useContext(GlobalStateContext);
+  const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
+  const timescale = useSelector(timeActor, ({ context }) => context.timescale);
+  // const timescale = useTimeStore((state) => state.timescale);
+  // const setTimescale = useTimeStore((state) => state.setTimescale);
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   const handleChange = useCallback(
     (values: number[]) => {
       if (values.length >= 0 && values[0] !== undefined) {
-        // setValue(values[0]);
         const value = values[0];
-        if (value !== timescale) {
-          setTimescale(values[0]);
-        }
+
+        timeActor.send({ type: 'SET_TIMESCALE', timescale: value });
       }
     },
-    [setTimescale, timescale]
+    [timeActor]
   );
 
   const handlePointerEnter = useCallback(() => {

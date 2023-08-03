@@ -5,10 +5,15 @@ import PauseButton from './PauseButton';
 import Icon from '@mdi/react';
 import { mdiMenuLeft, mdiMenuRight } from '@mdi/js';
 import { useTimeStore } from '@/simulation/state/zustand/time-store';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { useContext } from 'react';
+import { useSelector } from '@xstate/react';
 
 const TimeControls = () => {
+  const { rootActor } = useContext(GlobalStateContext);
+  const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
   // get state without subscribing
-  const { incrementTimescale, decrementTimescale } = useTimeStore.getState();
+  // const { incrementTimescale, decrementTimescale } = useTimeStore.getState();
   return (
     <div className="flex flex-col items-center justify-start">
       <div className="pointer-events-auto mt-2 flex aspect-square w-fit flex-row justify-center self-center rounded-full border-none bg-gray-400/20 transition-colors hover:bg-gray-400/30">
@@ -20,7 +25,7 @@ const TimeControls = () => {
           className="translate-x-1"
           onClick={(e) => {
             e.stopPropagation();
-            decrementTimescale();
+            timeActor.send({ type: 'DECREMENT_TIMESCALE' });
           }}
         >
           <Icon path={mdiMenuLeft} size={1} />
@@ -34,7 +39,7 @@ const TimeControls = () => {
           className="translate-x-1"
           onClick={(e) => {
             e.stopPropagation();
-            incrementTimescale();
+            timeActor.send({ type: 'INCREMENT_TIMESCALE' });
           }}
         >
           <Icon path={mdiMenuRight} size={1} />
