@@ -36,7 +36,7 @@ const ObservationPoint = observer(({ children }: Props) => {
 
   const centerRef = useRef<Object3D>(null!);
 
-  const { surfaceState } = useContext(RootStoreContext);
+  const { surfaceCoords } = useContext(RootStoreContext);
 
   useEffect(() => {
     if (!centerRef.current || !focusTarget) return;
@@ -55,9 +55,9 @@ const ObservationPoint = observer(({ children }: Props) => {
       centerRef.current.rotation.set(0, 0, 0);
 
       // We rotate around the local Y-axis first, as it will initially be the same as the parent's local Z-axis.
-      centerRef.current.rotateY(degToRad(surfaceState.latitude));
+      centerRef.current.rotateY(degToRad(surfaceCoords.latitude));
       // We then rotate around the new local Z-axis after the first rotation.
-      centerRef.current.rotateZ(degToRad(surfaceState.longitude));
+      centerRef.current.rotateZ(degToRad(surfaceCoords.longitude));
     });
 
     // Cleanup.
@@ -65,14 +65,7 @@ const ObservationPoint = observer(({ children }: Props) => {
       // Unsubscribe.
       unsubCoord();
     };
-  }, [surfaceState.latitude, surfaceState.longitude]);
-
-  // useKeyPressed(' ', (event) => {
-  //   event.preventDefault();
-  //   console.log('focusTarget:', focusTarget);
-  //   if (!centerRef.current) return;
-  //   console.log('parent:', centerRef.current.parent);
-  // });
+  }, [surfaceCoords.latitude, surfaceCoords.longitude]);
 
   const body = focusTarget as KeplerBody;
   if (!body) return;

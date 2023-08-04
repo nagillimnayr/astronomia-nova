@@ -140,6 +140,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     elementTable;
   return (
     <keplerOrbit
+      name={name}
       ref={(orbit) => {
         if (!orbit) return;
         if (orbitRef.current === orbit) return;

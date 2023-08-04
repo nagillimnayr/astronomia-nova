@@ -1,25 +1,26 @@
-import { CameraState } from '../domain-state/camera-state';
+import { rootMachine } from '@/state/xstate/root-machine/root-machine';
+import { MapState } from '../domain-state/map-state';
 import { SurfaceState } from '../domain-state/surface-state';
-import { UiState } from '../ui-state/ui-state';
+import { interpret, type InterpreterFrom } from 'xstate';
 
 export class RootStore {
-  private _uiState: UiState;
-  private _cameraState: CameraState;
-  private _surfaceState: SurfaceState;
+  private _rootMachine: InterpreterFrom<typeof rootMachine>;
+  private _mapState: MapState;
+  private _surfaceCoords: SurfaceState;
 
   constructor() {
-    this._uiState = new UiState(this);
-    this._cameraState = new CameraState(this);
-    this._surfaceState = new SurfaceState(this);
+    this._rootMachine = interpret(rootMachine);
+    this._mapState = new MapState(this);
+    this._surfaceCoords = new SurfaceState(this);
   }
 
-  get uiState() {
-    return this._uiState;
+  get rootMachine() {
+    return this._rootMachine;
   }
-  get cameraState() {
-    return this._cameraState;
+  get mapState() {
+    return this._mapState;
   }
-  get surfaceState() {
-    return this._surfaceState;
+  get surfaceCoords() {
+    return this._surfaceCoords;
   }
 }
