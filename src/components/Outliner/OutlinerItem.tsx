@@ -12,10 +12,12 @@ import { useActor, useSelector } from '@xstate/react';
 type OutlinerItemProps = {
   body: KeplerBody;
 };
-const OutlinerItem = observer(({ body }: OutlinerItemProps) => {
-  const { selectionService } = useContext(GlobalStateContext);
+const OutlinerItem = ({ body }: OutlinerItemProps) => {
+  const { rootActor, selectionService } = useContext(GlobalStateContext);
 
-  const { mapState } = useContext(RootStoreContext);
+  // Bind to state changes so that the component will re-render whenever bodyMap is modified.
+  const mapActor = useSelector(rootActor, ({ context }) => context.mapActor);
+  useSelector(mapActor, ({ context }) => context.bodyMap.size);
 
   const [isOpen, setOpen] = useState<boolean>(true);
 
@@ -35,10 +37,10 @@ const OutlinerItem = observer(({ body }: OutlinerItemProps) => {
     selectionService.send({ type: 'SELECT', selection: body });
   }, [body, selectionService]);
 
-  if (!mapState.contains(body.name)) return;
+  // console.log(body.name, mapState.bodyMap.has(body.name));
   return (
     <Collapsible.Root
-      open={isOpen}
+      open={body.orbitingBodies.length > 0 && isOpen}
       onOpenChange={handleOpenChanged}
       className="m-0 inline-flex h-fit min-h-fit w-full flex-col items-center justify-start rounded-none text-center"
     >
@@ -81,6 +83,6 @@ const OutlinerItem = observer(({ body }: OutlinerItemProps) => {
       </span>
     </Collapsible.Root>
   );
-});
+};
 
 export { OutlinerItem };

@@ -62,7 +62,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
   fwdRef
 ) {
   const { rootActor } = useContext(GlobalStateContext);
-  const { mapState } = useContext(RootStoreContext);
+  const mapActor = useSelector(rootActor, ({ context }) => context.mapActor);
 
   // Destructure parameters.
   const {
@@ -101,13 +101,14 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
             if (bodyRef.current) {
               const name = bodyRef.current.name;
               console.log(`removing ${bodyRef.current.name}`);
-              mapState.remove(name);
+              mapActor.send({ type: 'REMOVE', name: bodyRef.current.name });
             }
 
             return;
           }
 
           bodyRef.current = body;
+          mapActor.send({ type: 'ADD_BODY', body: body });
 
           // Add self to tree.
           if (!centralBodyRef) return;
@@ -115,7 +116,6 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
           if (!centralBody) return;
           centralBody.addOrbitingBody(body);
           console.log(`adding ${body?.name} node to tree`);
-          mapState.addBody(body);
         }}
         name={name ?? ''}
         args={[mass, initialPosition, initialVelocity, meanRadius, obliquity]}

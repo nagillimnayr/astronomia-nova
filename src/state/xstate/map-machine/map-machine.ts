@@ -29,26 +29,28 @@ export const mapMachine = createMachine(
       orbitMap: new Map<string, KeplerOrbit>(),
     }),
 
+    entry: log('map-machine entry'),
+
     on: {
       ADD_BODY: {
         cond: 'validateAddBody',
-        actions: ['addBody'],
+        actions: ['addBody', log((_, event) => event)],
       },
       ADD_ORBIT: {
         cond: 'validateAddOrbit',
-        actions: ['addOrbit'],
+        actions: ['addOrbit', log((_, event) => event)],
       },
       REMOVE_BODY: {
         cond: 'validateRemoveBody',
-        actions: ['removeBody'],
+        actions: ['removeBody', log((_, event) => event)],
       },
       REMOVE_ORBIT: {
         cond: 'validateRemoveOrbit',
-        actions: ['removeOrbit'],
+        actions: ['removeOrbit', log((_, event) => event)],
       },
       REMOVE: {
         cond: 'validateRemoveBody',
-        actions: ['removeBody', 'removeOrbit'],
+        actions: ['removeBody', 'removeOrbit', log((_, event) => event)],
       },
     },
   },
@@ -74,9 +76,10 @@ export const mapMachine = createMachine(
       }),
     },
     guards: {
-      validateAddBody: (context, event) => context.bodyMap.has(event.body.name),
+      validateAddBody: (context, event) =>
+        !context.bodyMap.has(event.body.name),
       validateAddOrbit: (context, event) =>
-        context.orbitMap.has(event.orbit.name),
+        !context.orbitMap.has(event.orbit.name),
       validateRemoveBody: (context, event) => context.bodyMap.has(event.name),
       validateRemoveOrbit: (context, event) => context.orbitMap.has(event.name),
     },

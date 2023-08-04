@@ -2,6 +2,7 @@ import type KeplerBody from '@/simulation/classes/kepler-body';
 import { type KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import { makeAutoObservable } from 'mobx';
 import { type RootStore } from '../root/root-store';
+import { makeLoggable } from 'mobx-log';
 
 type PrivateKeys = '_rootStore';
 
@@ -16,6 +17,7 @@ export class MapState {
     });
 
     this._rootStore = rootStore;
+    makeLoggable(this);
   }
 
   getBody(name: string) {

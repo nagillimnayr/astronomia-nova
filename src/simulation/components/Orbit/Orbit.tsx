@@ -42,6 +42,8 @@ import { BodyTrail } from '../Body/trail/BodyTrail';
 import { calculateOrbitalPeriod } from '@/simulation/math/orbital-elements/OrbitalPeriod';
 import { DAY } from '@/lib/utils/constants';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { useSelector } from '@xstate/react';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
@@ -61,8 +63,8 @@ type OrbitProps = {
 };
 
 export const Orbit = ({ children, name, texture }: OrbitProps) => {
-  // const retrogradeContext = useContext(RetrogradeContext);
-  const { mapState } = useContext(RootStoreContext);
+  const { rootActor } = useContext(GlobalStateContext);
+  const mapActor = useSelector(rootActor, ({ context }) => context.mapActor);
 
   // Ref to KeplerOrbit.
   const orbitRef = useRef<KeplerOrbit | null>(null);
@@ -145,11 +147,17 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
       name={name}
       ref={(orbit) => {
         if (!orbit) {
+          if (orbitRef.current) {
+            mapActor.send({
+              type: 'REMOVE_ORBIT',
+              name: orbitRef.current.name,
+            }); // Remove from map.
+          }
           return;
         }
         if (orbitRef.current === orbit) return;
         orbitRef.current = orbit;
-        mapState.addOrbit(orbit); // Add to map.
+        mapActor.send({ type: 'ADD_ORBIT', orbit }); // Add to map.
 
         // To orient the orbit correctly, we need to perform three intrinsic rotations. (Intrinsic meaning that the rotations are performed in the local coordinate space, such that when we rotate around the axes in the order z-x-z, the last z-axis rotation is around a different world-space axis than the first one, as the x-axis rotation changes the orientation of the object's local z-axis. For clarity, the rotations will be in the order z-x'-z'', where x' is the new local x-axis after the first rotation and z'' is the object's new local z-axis after the second rotation.)
         orbit.rotateZ(degToRad(longitudeOfAscendingNode));
