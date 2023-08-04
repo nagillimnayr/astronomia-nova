@@ -11,3 +11,5 @@ export const EARTH_RADIUS = 6371.0084e3;
 export const SUN_RADIUS = 696340e3;
 
 export const PI_SQUARED = Math.pow(Math.PI, 2);
+
+export const UPDATES_PER_DAY = 60;

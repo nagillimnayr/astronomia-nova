@@ -12,6 +12,8 @@ type OrbitalElements = {
   inclination: number;
   longitudeOfAscendingNode: number;
   argumentOfPeriapsis: number;
+
+  orbitalPeriod: number;
 };
 export class KeplerOrbit extends Object3D {
   private _centralBodyRef: MutableRefObject<KeplerBody | null> = null!;
@@ -27,6 +29,8 @@ export class KeplerOrbit extends Object3D {
   private _longitudeOfAscendingNode: number;
   private _argumentOfPeriapsis: number;
 
+  private _orbitalPeriod: number;
+
   constructor(elements: OrbitalElements) {
     super();
     this._semiMajorAxis = elements.semiMajorAxis;
@@ -38,6 +42,8 @@ export class KeplerOrbit extends Object3D {
     this._inclination = elements.inclination;
     this._longitudeOfAscendingNode = elements.longitudeOfAscendingNode;
     this._argumentOfPeriapsis = elements.argumentOfPeriapsis;
+
+    this._orbitalPeriod = elements.orbitalPeriod;
   }
 
   get semiMajorAxis() {
@@ -97,5 +103,9 @@ export class KeplerOrbit extends Object3D {
       return;
     }
     this._centralBodyRef = ref;
+  }
+
+  get orbitalPeriod() {
+    return this._orbitalPeriod;
   }
 }

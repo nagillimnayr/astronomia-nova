@@ -61,15 +61,8 @@ export const traverseKeplerTree = makePreOrderTreeTraversalFn(
   (body: KeplerBody, deltaTime: number) => {
     // Iterate through orbiting bodies and update each of them.
     for (const orbitingBody of body.orbitingBodies) {
-      // // Calculate acceleration via universal gravitation.
-      // orbitingBody.acceleration.set(
-      //   ...calculateGravitation(orbitingBody.position, _centralPos, body.mass)
-      // );
-      // Integrate.
-
-      // endpointMethod(orbitingBody, body.mass, deltaTime);
-      // eulerRichardsonMethod(orbitingBody, body.mass, deltaTime);
       velocityVerletIntegration(orbitingBody, body.mass, deltaTime);
+      orbitingBody.dispatchEvent({ type: 'updated' });
     }
   }
 );

@@ -3,12 +3,13 @@ import type KeplerBody from '@/simulation/classes/kepler-body';
 import { makeFixedUpdateFn } from '@/simulation/systems/FixedTimeStep';
 import { traverseKeplerTree } from '@/simulation/systems/keplerTree';
 import { DAY } from '@/simulation/utils/constants';
+import { UPDATES_PER_DAY } from '@/lib/utils/constants';
 
 const updateSimulation = makeFixedUpdateFn<KeplerBody>(
   (root: KeplerBody, timeStep: number) => {
     traverseKeplerTree(root, timeStep * DAY);
   },
-  60
+  UPDATES_PER_DAY
 );
 
 type Context = {

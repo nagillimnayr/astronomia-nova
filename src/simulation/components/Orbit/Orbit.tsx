@@ -37,6 +37,10 @@ import { getSemiLatusRectumFromEccentricity } from '@/simulation/math/orbital-el
 import { getLinearEccentricityFromAxes } from '../../math/orbital-elements/LinearEccentricity';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import { colorMap } from '@/simulation/utils/color-map';
+import { Trail } from '../Body/trail/Trail';
+import { BodyTrail } from '../Body/trail/BodyTrail';
+import { calculateOrbitalPeriod } from '@/simulation/math/orbital-elements/OrbitalPeriod';
+import { DAY } from '@/lib/utils/constants';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
@@ -83,22 +87,20 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
 
   const { elementTable, vectorTable, physicalData } = ephemeridesQuery.data;
 
+  const { semiMajorAxis, eccentricity, trueAnomaly, periapsis } = elementTable;
   const semiLatusRectum = getSemiLatusRectumFromEccentricity(
-    elementTable.semiMajorAxis,
-    elementTable.eccentricity
+    semiMajorAxis,
+    eccentricity
   );
   const semiMinorAxis = getSemiMinorAxisFromSemiLatusRectum(
-    elementTable.semiMajorAxis,
+    semiMajorAxis,
     semiLatusRectum
   );
-  const semiMajorAxis = elementTable.semiMajorAxis;
 
   const linearEccentricity = getLinearEccentricityFromAxes(
     semiMajorAxis,
     semiMinorAxis
   );
-
-  const { eccentricity, trueAnomaly, periapsis } = elementTable;
 
   _pos.set(...getPosition(trueAnomaly, semiMajorAxis, eccentricity));
   const radius = getRadiusAtTrueAnomaly(
@@ -118,6 +120,9 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   _vel.copy(getVelocityDirectionFromOrbitalElements(trueAnomaly, eccentricity));
   _vel.normalize();
   _vel.multiplyScalar(orbitalSpeed);
+
+  const orbitalPeriod =
+    calculateOrbitalPeriod(semiMajorAxis, centralMass) / DAY;
 
   const color = colorMap.get(name) ?? 'white';
   const bodyParams: BodyParams = {
@@ -157,27 +162,27 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
           longitudeOfAscendingNode,
           argumentOfPeriapsis,
           inclination,
+          orbitalPeriod,
         },
       ]}
     >
-      <object3D>
-        <Body ref={orbitingBodyRef} params={bodyParams} texture={texture}>
-          {children}
-        </Body>
+      <Body ref={orbitingBodyRef} params={bodyParams} texture={texture}>
+        {children}
+      </Body>
+      <BodyTrail bodyRef={orbitingBodyRef} orbitalPeriod={orbitalPeriod} />
 
-        <Trajectory
-          semiMajorAxis={semiMajorAxis}
-          semiMinorAxis={semiMinorAxis}
-          linearEccentricity={linearEccentricity}
-          periapsis={periapsis}
-          orientation={{
-            longitudeOfAscendingNode,
-            argumentOfPeriapsis,
-            inclination,
-          }}
-        />
-        <TrueAnomalyArrow color={'#ffffff'} target={orbitingBodyRef} />
-      </object3D>
+      <Trajectory
+        semiMajorAxis={semiMajorAxis}
+        semiMinorAxis={semiMinorAxis}
+        linearEccentricity={linearEccentricity}
+        periapsis={periapsis}
+        orientation={{
+          longitudeOfAscendingNode,
+          argumentOfPeriapsis,
+          inclination,
+        }}
+      />
+      <TrueAnomalyArrow color={'#ffffff'} target={orbitingBodyRef} />
     </keplerOrbit>
   );
 };
