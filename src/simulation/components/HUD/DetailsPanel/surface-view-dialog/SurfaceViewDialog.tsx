@@ -9,11 +9,12 @@ import { useContext } from 'react';
 import { useActor } from '@xstate/react';
 
 const SurfaceViewDialog = observer(() => {
-  const { surfaceState } = useContext(RootStoreContext);
+  const { surfaceCoords } = useContext(RootStoreContext);
 
   const { uiService, cameraService, selectionService } =
     useContext(GlobalStateContext);
   const [uiState] = useActor(uiService);
+
   const { screenPortalRef } = uiState.context;
   return (
     <AlertDialog.Portal container={screenPortalRef.current}>
@@ -32,20 +33,20 @@ const SurfaceViewDialog = observer(() => {
               <Input
                 className="h-6 w-full"
                 type="number"
-                value={surfaceState.latitude}
+                value={surfaceCoords.latitude}
                 min={-180}
                 max={180}
                 step={0.5}
                 onChange={(event) => {
                   const value = parseFloat(event.target.value);
                   if (!value && value !== 0) return;
-                  surfaceState.setLatitude(value);
+                  surfaceCoords.setLatitude(value);
                 }}
               />
             </Label>
             <Slider
               name="latitude-slider"
-              value={[surfaceState.latitude]}
+              value={[surfaceCoords.latitude]}
               min={-180}
               max={180}
               step={0.1}
@@ -53,7 +54,7 @@ const SurfaceViewDialog = observer(() => {
               onValueChange={(values) => {
                 const value = values[0];
                 if (!value) return;
-                surfaceState.setLatitude(value);
+                surfaceCoords.setLatitude(value);
               }}
             />
           </div>
@@ -63,20 +64,20 @@ const SurfaceViewDialog = observer(() => {
               <Input
                 className="h-6  w-full"
                 type="number"
-                value={surfaceState.longitude}
+                value={surfaceCoords.longitude}
                 min={-90}
                 max={90}
                 step={0.5}
                 onChange={(event) => {
                   const value = parseFloat(event.target.value);
                   if (!value && value !== 0) return;
-                  surfaceState.setLongitude(value);
+                  surfaceCoords.setLongitude(value);
                 }}
               />
             </Label>
             <Slider
               name="longitude-slider"
-              value={[surfaceState.longitude]}
+              value={[surfaceCoords.longitude]}
               min={-90}
               max={90}
               step={0.1}
@@ -84,7 +85,7 @@ const SurfaceViewDialog = observer(() => {
               onValueChange={(values) => {
                 const value = values[0];
                 if (!value) return;
-                surfaceState.setLongitude(value);
+                surfaceCoords.setLongitude(value);
               }}
             />
           </div>

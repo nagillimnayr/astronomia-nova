@@ -10,13 +10,13 @@ type Props = {
   className?: ClassNameValue;
 };
 const Sidebar = observer(({ className }: Props) => {
-  const { uiState } = useContext(RootStoreContext);
-
+  // const { uiState } = useContext(RootStoreContext);
+  const isOpen = true;
   return (
     <aside
       aria-label="Sidenav"
       // data-sidebar={sidebarOpen ? 'open' : 'closed'}
-      data-sidebar={uiState.isOutlinerOpen ? 'open' : 'closed'}
+      data-sidebar={isOpen ? 'open' : 'closed'}
       className={cn(
         'top-[5rem] z-50 h-full w-full -translate-x-full bg-muted transition-transform data-[sidebar=open]:translate-x-0',
         className
