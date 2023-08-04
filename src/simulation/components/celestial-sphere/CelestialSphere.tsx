@@ -9,11 +9,9 @@ import {
   CelestialSphereMaterial,
 } from './celestial-sphere-material';
 import { useContext, useEffect, useRef } from 'react';
-import {
-  GlobalStateContext,
-  RootActorContext,
-} from '@/state/xstate/MachineProviders';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 // Extend the shader material.
 extend({ CelestialSphereMaterial });
@@ -45,8 +43,8 @@ export const CelestialSphere = (props: CelestialSphereProps) => {
 
   const materialRef = useRef<ShaderMaterial | null>(null);
 
-  // const { rootActor } = useContext(GlobalStateContext);
-  const rootActor = RootActorContext.useActorRef();
+  const rootStore = useContext(RootStoreContext);
+  const rootActor = rootStore.rootMachine;
   const celestialSphereActor = useSelector(
     rootActor,
     ({ context }) => context.celestialSphereActor

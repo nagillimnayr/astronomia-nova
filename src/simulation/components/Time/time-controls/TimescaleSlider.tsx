@@ -11,19 +11,16 @@ import {
 import { useSnapshot } from 'valtio';
 import TimescaleTooltip from '../TimescaleTooltip';
 import { useTimeStore } from '../../../state/zustand/time-store';
-import {
-  GlobalStateContext,
-  RootActorContext,
-} from '@/state/xstate/MachineProviders';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 export const TimescaleSlider = () => {
-  // const { rootActor } = useContext(GlobalStateContext);
-  const rootActor = RootActorContext.useActorRef();
+  const rootStore = useContext(RootStoreContext);
+  const rootActor = rootStore.rootMachine;
+
   const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
   const timescale = useSelector(timeActor, ({ context }) => context.timescale);
-  // const timescale = useTimeStore((state) => state.timescale);
-  // const setTimescale = useTimeStore((state) => state.setTimescale);
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
 

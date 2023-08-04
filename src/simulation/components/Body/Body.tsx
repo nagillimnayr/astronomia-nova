@@ -28,10 +28,7 @@ import { degToRad } from 'three/src/math/MathUtils';
 import { Annotation } from './annotation/Annotation';
 import { RingMarker } from './marker/RingMarker';
 import { CircleMarker } from './marker/CircleMarker';
-import {
-  GlobalStateContext,
-  RootActorContext,
-} from '@/state/xstate/MachineProviders';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 
 const _pos = new Vector3();
@@ -64,8 +61,8 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
   { params, children, texture }: BodyProps,
   fwdRef
 ) {
-  // const { rootActor } = useContext(GlobalStateContext);
-  const rootActor = RootActorContext.useActorRef();
+  const rootStore = useContext(RootStoreContext);
+  const rootActor = rootStore.rootMachine;
   const keplerTreeActor = useSelector(
     rootActor,
     ({ context }) => context.keplerTreeActor

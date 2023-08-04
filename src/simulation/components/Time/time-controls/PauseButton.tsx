@@ -12,17 +12,16 @@ import IconButton from '@/components/IconButton';
 import Icon from '@mdi/react';
 import { mdiPlay, mdiPause } from '@mdi/js';
 import { useTimeStore } from '@/simulation/state/zustand/time-store';
-import {
-  GlobalStateContext,
-  RootActorContext,
-} from '@/state/xstate/MachineProviders';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { timeMachine } from '../../../../state/xstate/time-machine/time-machine';
 import { useSelector } from '@xstate/react';
 import { cn } from '@/lib/cn';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 const PauseButton = () => {
-  // const { rootActor } = useContext(GlobalStateContext);
-  const rootActor = RootActorContext.useActorRef();
+  const rootStore = useContext(RootStoreContext);
+  const rootActor = rootStore.rootMachine;
+
   const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
   // Check whether paused or not.
   const isPaused = useSelector(timeActor, (state) => state.matches('paused'));

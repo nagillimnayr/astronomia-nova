@@ -10,7 +10,7 @@ import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { CameraControls } from '@react-three/drei';
 import {
   GlobalStateContext,
-  RootActorContext,
+  // RootActorContext,
 } from '@/state/xstate/MachineProviders';
 import { ObservationPoint } from './surface-view/observation-point/ObservationPoint';
 import SolarSystem from './SolarSystem/SolarSystem';
@@ -21,7 +21,9 @@ type SimProps = {
 };
 const Simulation = ({ children }: SimProps) => {
   const { cameraService } = useContext(GlobalStateContext);
-  const rootActor = RootActorContext.useActorRef();
+  // const rootActor = RootActorContext.useActorRef();
+  const rootStore = useContext(RootStoreContext);
+  const rootActor = rootStore.rootMachine;
 
   console.log('render Simulation');
   // function for accessing scene state

@@ -10,6 +10,7 @@ export class RootStore {
 
   constructor() {
     this._rootMachine = interpret(rootMachine);
+    this._rootMachine.start();
     this._mapState = new MapState(this);
     this._surfaceCoords = new SurfaceState(this);
   }

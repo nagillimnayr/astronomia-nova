@@ -5,13 +5,15 @@ import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import {
   GlobalStateContext,
-  RootActorContext,
+  // RootActorContext,
 } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 const Outliner = observer(() => {
-  // const { rootActor } = useContext(GlobalStateContext);
-  const rootActor = RootActorContext.useActorRef();
+  const rootStore = useContext(RootStoreContext);
+  const rootActor = rootStore.rootMachine;
+  // const rootActor = RootActorContext.useActorRef();
   const keplerTreeActor = useSelector(
     rootActor,
     ({ context }) => context.keplerTreeActor

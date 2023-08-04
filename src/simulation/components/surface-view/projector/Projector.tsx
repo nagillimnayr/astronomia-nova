@@ -1,7 +1,7 @@
 import { makePreOrderTreeTraversalFn } from '@/simulation/systems/keplerTree';
 import {
   GlobalStateContext,
-  RootActorContext,
+  // RootActorContext,
 } from '@/state/xstate/MachineProviders';
 import { Sphere } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
@@ -11,12 +11,17 @@ import { Object3D, Vector3 } from 'three';
 import { ProjectedSphere } from './ProjectedSphere';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS } from '@/lib/utils/constants';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 const _pos = new Vector3();
 const _otherPos = new Vector3();
 
 export const Projector = () => {
-  const keplerTreeActor = RootActorContext.useSelector(
+  const rootStore = useContext(RootStoreContext);
+  const rootActor = rootStore.rootMachine;
+
+  const keplerTreeActor = useSelector(
+    rootActor,
     ({ context }) => context.keplerTreeActor
   );
   const root = useSelector(keplerTreeActor, ({ context }) => context.root);

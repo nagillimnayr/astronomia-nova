@@ -2,15 +2,14 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/gui/Slider';
 import { Input } from '@/components/ui/input';
 import { useContext } from 'react';
-import {
-  GlobalStateContext,
-  RootActorContext,
-} from '@/state/xstate/MachineProviders';
+import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
+import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 export const OpacitySliders = () => {
-  // const { rootActor } = useContext(GlobalStateContext);
-  const rootActor = RootActorContext.useActorRef();
+  const rootStore = useContext(RootStoreContext);
+  const rootActor = rootStore.rootMachine;
+
   const celestialSphereActor = useSelector(
     rootActor,
     ({ context }) => context.celestialSphereActor

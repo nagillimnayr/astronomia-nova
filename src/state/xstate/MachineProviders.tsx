@@ -8,7 +8,7 @@ import { uiMachine } from './ui-machine/ui-machine';
 import { visibilityMachine } from './visibility-machine/visibility-machine';
 import { rootMachine } from './root-machine/root-machine';
 
-export const RootActorContext = createActorContext(rootMachine);
+// export const RootActorContext = createActorContext(rootMachine);
 
 export const GlobalStateContext = createContext({
   // Root machine:
@@ -61,7 +61,9 @@ export const MachineProviders = ({ children }: PropsWithChildren) => {
   };
   return (
     <GlobalStateContext.Provider value={globalServices}>
-      <RootActorContext.Provider>{children}</RootActorContext.Provider>
+      {/* <RootActorContext.Provider> */}
+      {children}
+      {/* </RootActorContext.Provider> */}
     </GlobalStateContext.Provider>
   );
 };
