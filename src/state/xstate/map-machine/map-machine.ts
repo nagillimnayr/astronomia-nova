@@ -55,23 +55,26 @@ export const mapMachine = createMachine(
     },
   },
   {
+    // Construct a new map each time so that the changes will trigger re-renders.
     actions: {
       addBody: assign({
-        bodyMap: ({ bodyMap }, { body }) => bodyMap.set(body.name, body),
+        bodyMap: ({ bodyMap }, { body }) =>
+          new Map(bodyMap.set(body.name, body)),
       }),
       addOrbit: assign({
-        orbitMap: ({ orbitMap }, { orbit }) => orbitMap.set(orbit.name, orbit),
+        orbitMap: ({ orbitMap }, { orbit }) =>
+          new Map(orbitMap.set(orbit.name, orbit)),
       }),
       removeBody: assign({
         bodyMap: ({ bodyMap }, { name }) => {
           bodyMap.delete(name);
-          return bodyMap;
+          return new Map(bodyMap);
         },
       }),
       removeOrbit: assign({
         orbitMap: ({ orbitMap }, { name }) => {
           orbitMap.delete(name);
-          return orbitMap;
+          return new Map(orbitMap);
         },
       }),
     },

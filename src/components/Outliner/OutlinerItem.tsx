@@ -17,7 +17,7 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
 
   // Bind to state changes so that the component will re-render whenever bodyMap is modified.
   const mapActor = useSelector(rootActor, ({ context }) => context.mapActor);
-  useSelector(mapActor, ({ context }) => context.bodyMap.size);
+  useSelector(mapActor, ({ context }) => context.bodyMap);
 
   const [isOpen, setOpen] = useState<boolean>(true);
 
