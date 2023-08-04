@@ -169,7 +169,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
       <Body ref={orbitingBodyRef} params={bodyParams} texture={texture}>
         {children}
       </Body>
-      <BodyTrail bodyRef={orbitingBodyRef} orbitalPeriod={orbitalPeriod} />
+      {/* <BodyTrail bodyRef={orbitingBodyRef} orbitalPeriod={orbitalPeriod} /> */}
 
       <Trajectory
         semiMajorAxis={semiMajorAxis}
