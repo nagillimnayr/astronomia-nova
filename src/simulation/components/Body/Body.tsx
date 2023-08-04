@@ -61,11 +61,8 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
   { params, children, texture }: BodyProps,
   fwdRef
 ) {
-  const { rootActor } = useContext(RootStoreContext);
-  const keplerTreeActor = useSelector(
-    rootActor,
-    ({ context }) => context.keplerTreeActor
-  );
+  const { rootActor } = useContext(GlobalStateContext);
+  const { mapState } = useContext(RootStoreContext);
 
   // Destructure parameters.
   const {
@@ -101,21 +98,24 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
         meshRef={meshRef}
         ref={(body: KeplerBody) => {
           if (!body) {
-            console.log(`removing ${bodyRef.current?.name}`);
+            if (bodyRef.current) {
+              const name = bodyRef.current.name;
+              console.log(`removing ${bodyRef.current.name}`);
+              mapState.remove(name);
+            }
 
             return;
           }
 
           bodyRef.current = body;
 
-          console.log(`adding ${body?.name} node to tree`);
-
           // Add self to tree.
           if (!centralBodyRef) return;
           const centralBody = centralBodyRef.current;
           if (!centralBody) return;
           centralBody.addOrbitingBody(body);
-          keplerTreeActor.send({ type: 'UPDATE_TREE' });
+          console.log(`adding ${body?.name} node to tree`);
+          mapState.addBody(body);
         }}
         name={name ?? ''}
         args={[mass, initialPosition, initialVelocity, meanRadius, obliquity]}
@@ -132,10 +132,6 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
             bodyRef={bodyRef}
             ref={meshRef}
           />
-
-          {/* <object3D position={[0, 0, -(meanRadius / EARTH_RADIUS) * 1.5]}>
-            <HtmlAnnotation annotation={name} />
-          </object3D> */}
 
           <RingMarker bodyRef={bodyRef} />
           <CircleMarker bodyRef={bodyRef} color={color} />

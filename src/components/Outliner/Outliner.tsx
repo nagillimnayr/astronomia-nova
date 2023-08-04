@@ -8,10 +8,9 @@ import {
   // RootActorContext,
 } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 const Outliner = observer(() => {
-  const { rootActor } = useContext(RootStoreContext);
+  const { rootActor } = useContext(GlobalStateContext);
   const keplerTreeActor = useSelector(
     rootActor,
     ({ context }) => context.keplerTreeActor

@@ -20,6 +20,7 @@ export const opacityMachine = createMachine({
   },
 
   entry: log('opacity machine entry'),
+  exit: log('opacity machine exit'),
 
   on: {
     SET_OPACITY: {

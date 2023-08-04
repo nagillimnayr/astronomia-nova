@@ -6,7 +6,7 @@ import { useSelector } from '@xstate/react';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 const TimescaleDisplay = () => {
-  const { rootActor } = useContext(RootStoreContext);
+  const { rootActor } = useContext(GlobalStateContext);
 
   const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
   const timescale = timeActor.getSnapshot()!.context.timescale;

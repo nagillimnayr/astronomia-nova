@@ -36,4 +36,8 @@ export class MapState {
     this._bodyMap.delete(name);
     this._orbitMap.delete(name);
   }
+
+  contains(name: string) {
+    return this._bodyMap.has(name);
+  }
 }

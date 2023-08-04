@@ -15,14 +15,7 @@ type OutlinerItemProps = {
 const OutlinerItem = observer(({ body }: OutlinerItemProps) => {
   const { selectionService } = useContext(GlobalStateContext);
 
-  const { rootActor } = useContext(RootStoreContext);
-
-  const keplerTreeActor = useSelector(
-    rootActor,
-    ({ context }) => context.keplerTreeActor
-  );
-  // Subscribe to state changes so that the outliner will update whenever a new node is added to the tree.
-  useSelector(keplerTreeActor, (state) => state.matches('updatingTree'));
+  const { mapState } = useContext(RootStoreContext);
 
   const [isOpen, setOpen] = useState<boolean>(true);
 
@@ -39,9 +32,10 @@ const OutlinerItem = observer(({ body }: OutlinerItemProps) => {
 
   const handleClick = useCallback(() => {
     // Select the object.
-    // uiState.select(body);
     selectionService.send({ type: 'SELECT', selection: body });
   }, [body, selectionService]);
+
+  if (!mapState.contains(body.name)) return;
   return (
     <Collapsible.Root
       open={isOpen}

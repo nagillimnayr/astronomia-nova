@@ -16,7 +16,7 @@ import { useSelector } from '@xstate/react';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 export const TimescaleSlider = () => {
-  const { rootActor } = useContext(RootStoreContext);
+  const { rootActor } = useContext(GlobalStateContext);
 
   const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
   const timescale = useSelector(timeActor, ({ context }) => context.timescale);

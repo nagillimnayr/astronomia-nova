@@ -12,7 +12,7 @@ import { rootMachine } from './root-machine/root-machine';
 
 export const GlobalStateContext = createContext({
   // Root machine:
-  // rootActor: {} as InterpreterFrom<typeof rootMachine>,
+  rootActor: {} as InterpreterFrom<typeof rootMachine>,
 
   // Visibility machine:
   visibilityService: {} as InterpreterFrom<typeof visibilityMachine>,
@@ -29,7 +29,7 @@ export const GlobalStateContext = createContext({
 
 export const MachineProviders = ({ children }: PropsWithChildren) => {
   // Root machine:
-  // const rootActor = useInterpret(rootMachine, { id: 'rootActor' });
+  const rootActor = useInterpret(rootMachine, { id: 'rootActor' });
 
   // Visibility machine:
   const visibilityService = useInterpret(visibilityMachine);
@@ -45,7 +45,7 @@ export const MachineProviders = ({ children }: PropsWithChildren) => {
 
   const globalServices = {
     // Root machine:
-    // rootActor,
+    rootActor,
 
     // Visibility machine:
     visibilityService,

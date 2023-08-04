@@ -36,7 +36,7 @@ const FullSolarSystem = () => {
   ]);
   const rootRef = useContext(KeplerTreeContext);
 
-  const { rootActor } = useContext(RootStoreContext);
+  const { rootActor } = useContext(GlobalStateContext);
 
   return (
     <Body

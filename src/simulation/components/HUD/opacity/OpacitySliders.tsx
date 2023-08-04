@@ -7,7 +7,7 @@ import { useSelector } from '@xstate/react';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 export const OpacitySliders = () => {
-  const { rootActor } = useContext(RootStoreContext);
+  const { rootActor } = useContext(GlobalStateContext);
 
   const celestialSphereActor = useSelector(
     rootActor,

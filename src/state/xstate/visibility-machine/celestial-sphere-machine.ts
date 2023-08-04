@@ -35,4 +35,6 @@ export const celestialSphereMachine = createMachine({
         spawn(opacityMachine, { name: 'celestialGrid', sync: true }),
     }),
   ],
+
+  exit: log('celestialSphereMachine exit'),
 });
