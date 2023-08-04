@@ -16,12 +16,14 @@ import { timeMachine } from '../time-machine/time-machine';
 import { keplerTreeMachine } from '../kepler-tree-machine/kepler-tree-machine';
 import { celestialSphereMachine } from '../visibility-machine/celestial-sphere-machine';
 import { mapMachine } from '../map-machine/map-machine';
+import { surfaceMachine } from '../surface-machine/surface-machine';
 
 type Context = {
   timeActor: ActorRefFrom<typeof timeMachine>;
   keplerTreeActor: ActorRefFrom<typeof keplerTreeMachine>;
   celestialSphereActor: ActorRefFrom<typeof celestialSphereMachine>;
   mapActor: ActorRefFrom<typeof mapMachine>;
+  surfaceActor: ActorRefFrom<typeof surfaceMachine>;
 };
 
 type Events = { type: 'UPDATE'; deltaTime: number } | { type: 'LOG_CHILDREN' };
@@ -41,6 +43,7 @@ export const rootMachine = createMachine(
       keplerTreeActor: null!,
       celestialSphereActor: null!,
       mapActor: null!,
+      surfaceActor: null!,
     },
 
     entry: [
@@ -63,6 +66,11 @@ export const rootMachine = createMachine(
         mapActor: () =>
           spawn(mapMachine, {
             name: 'mapActor',
+            sync: true,
+          }),
+        surfaceActor: () =>
+          spawn(surfaceMachine, {
+            name: 'surfaceActor',
             sync: true,
           }),
       }),

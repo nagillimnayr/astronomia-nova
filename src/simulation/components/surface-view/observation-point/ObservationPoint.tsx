@@ -16,7 +16,7 @@ import { degToRad } from 'three/src/math/MathUtils';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useActor, useSelector } from '@xstate/react';
 import { useKeyPressed } from '@react-hooks-library/core';
-import type KeplerBody from '@/simulation/classes/kepler-body';
+import KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import { observer } from 'mobx-react-lite';
 import { ObservationSphere } from './ObservationSphere';
@@ -28,19 +28,29 @@ type Props = {
   children?: ReactNode;
 };
 const ObservationPoint = observer(({ children }: Props) => {
-  const { cameraService, selectionService } = useContext(GlobalStateContext);
+  const { cameraService, selectionService, rootActor } =
+    useContext(GlobalStateContext);
   const focusTarget = useSelector(
     cameraService,
     ({ context }) => context.focusTarget
   );
 
+  const surfaceActor = useSelector(
+    rootActor,
+    ({ context }) => context.surfaceActor
+  );
+
   const centerRef = useRef<Object3D>(null!);
 
-  const { surfaceCoords } = useContext(RootStoreContext);
-
+  // Attach the observation point to the mesh of the focused body.
   useEffect(() => {
-    if (!centerRef.current || !focusTarget) return;
-    const body = focusTarget as KeplerBody;
+    if (
+      !centerRef.current ||
+      !focusTarget ||
+      !(focusTarget instanceof KeplerBody)
+    )
+      return;
+    const body = focusTarget;
     if (!body || !body.meshRef || !body.meshRef.current) return;
     const mesh = body.meshRef.current;
     // Attach to mesh.
@@ -49,23 +59,24 @@ const ObservationPoint = observer(({ children }: Props) => {
 
   useEffect(() => {
     // Subscribe to changes to latitude/longitude.
-    const unsubCoord = autorun(() => {
+    const subscription = surfaceActor.subscribe(({ context }) => {
       if (!centerRef.current) return;
+      const { latitude, longitude } = context;
       // Reset rotation.
       centerRef.current.rotation.set(0, 0, 0);
 
       // We rotate around the local Y-axis first, as it will initially be the same as the parent's local Z-axis.
-      centerRef.current.rotateY(degToRad(surfaceCoords.latitude));
+      centerRef.current.rotateY(degToRad(latitude));
       // We then rotate around the new local Z-axis after the first rotation.
-      centerRef.current.rotateZ(degToRad(surfaceCoords.longitude));
+      centerRef.current.rotateZ(degToRad(longitude));
     });
 
     // Cleanup.
     return () => {
       // Unsubscribe.
-      unsubCoord();
+      subscription.unsubscribe();
     };
-  }, [surfaceCoords.latitude, surfaceCoords.longitude]);
+  }, [surfaceActor]);
 
   const body = focusTarget as KeplerBody;
   if (!body) return;

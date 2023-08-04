@@ -41,7 +41,7 @@ export const cameraMachine = createMachine(
       events: {} as Events,
     },
     id: 'camera-machine',
-    // Initial context.
+    // Initial context:
     context: () => ({
       canvas: null!,
       controls: null,
@@ -104,12 +104,10 @@ export const cameraMachine = createMachine(
       },
       ASSIGN_OBSERVER: {
         cond: (context, event) => {
-          // console.log(context.observer?.uuid, event.observer?.uuid);
           return context.observer !== event.observer;
         },
         actions: [
           assign({ observer: (_, event) => event.observer }),
-          () => console.log('Assigning observer!'),
           'cleanupSurfaceCam',
         ],
       },
