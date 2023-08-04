@@ -6,6 +6,7 @@ import { SurfaceViewButton } from './surface-view-dialog/SurfaceViewButton';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { DIST_MULT } from '@/simulation/utils/constants';
 import { useActor, useSelector } from '@xstate/react';
+import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 
 const DetailsPanel = observer(() => {
   const { cameraService, selectionService } = useContext(GlobalStateContext);
@@ -29,6 +30,11 @@ const DetailsPanel = observer(() => {
 
   //// if (!uiState.selected) return null; // If nothing is selected, display nothing.
   if (!selected) return null; // If nothing is selected, display nothing.
+  let orbit: KeplerOrbit | null = null;
+  if (selected.parent instanceof KeplerOrbit) {
+    orbit = selected.parent;
+  }
+
   return (
     <div className="absolute right-0 top-0 flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border bg-muted p-4 text-muted-foreground">
       {/** Close button. */}
@@ -59,6 +65,13 @@ const DetailsPanel = observer(() => {
             <br />
             <span>{selected.meanRadius.toExponential(3)}</span>
             &nbsp;m
+          </span>
+          {/** Orbital Period */}
+          <span>
+            Orbital Period:
+            <br />
+            <span>{orbit ? orbit.orbitalPeriod : null}</span>
+            &nbsp;Days
           </span>
         </div>
         <div className="flex w-full flex-col items-start justify-start"></div>
