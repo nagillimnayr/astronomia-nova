@@ -1,6 +1,5 @@
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { colorMap } from '@/simulation/utils/color-map';
-import { RootActorContext } from '@/state/xstate/MachineProviders';
 import { Sphere } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { MutableRefObject, useRef } from 'react';

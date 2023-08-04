@@ -61,8 +61,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
   { params, children, texture }: BodyProps,
   fwdRef
 ) {
-  const rootStore = useContext(RootStoreContext);
-  const rootActor = rootStore.rootMachine;
+  const { rootActor } = useContext(RootStoreContext);
   const keplerTreeActor = useSelector(
     rootActor,
     ({ context }) => context.keplerTreeActor

@@ -6,8 +6,7 @@ import { useSelector } from '@xstate/react';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 const DateDisplay = () => {
-  const rootStore = useContext(RootStoreContext);
-  const rootActor = rootStore.rootMachine;
+  const { rootActor } = useContext(RootStoreContext);
 
   const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
 

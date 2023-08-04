@@ -43,8 +43,7 @@ export const CelestialSphere = (props: CelestialSphereProps) => {
 
   const materialRef = useRef<ShaderMaterial | null>(null);
 
-  const rootStore = useContext(RootStoreContext);
-  const rootActor = rootStore.rootMachine;
+  const { rootActor } = useContext(RootStoreContext);
   const celestialSphereActor = useSelector(
     rootActor,
     ({ context }) => context.celestialSphereActor

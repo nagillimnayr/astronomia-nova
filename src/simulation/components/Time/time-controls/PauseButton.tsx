@@ -19,8 +19,7 @@ import { cn } from '@/lib/cn';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 const PauseButton = () => {
-  const rootStore = useContext(RootStoreContext);
-  const rootActor = rootStore.rootMachine;
+  const { rootActor } = useContext(RootStoreContext);
 
   const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
   // Check whether paused or not.

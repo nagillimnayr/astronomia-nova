@@ -11,8 +11,7 @@ import { useSelector } from '@xstate/react';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 const TimeControls = () => {
-  const rootStore = useContext(RootStoreContext);
-  const rootActor = rootStore.rootMachine;
+  const { rootActor } = useContext(RootStoreContext);
   const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
   // get state without subscribing
   // const { incrementTimescale, decrementTimescale } = useTimeStore.getState();

@@ -4,19 +4,19 @@ import { SurfaceState } from '../domain-state/surface-state';
 import { interpret, type InterpreterFrom } from 'xstate';
 
 export class RootStore {
-  private _rootMachine: InterpreterFrom<typeof rootMachine>;
+  private _rootActor: InterpreterFrom<typeof rootMachine>;
   private _mapState: MapState;
   private _surfaceCoords: SurfaceState;
 
   constructor() {
-    this._rootMachine = interpret(rootMachine);
-    this._rootMachine.start();
+    this._rootActor = interpret(rootMachine);
+    this._rootActor.start();
     this._mapState = new MapState(this);
     this._surfaceCoords = new SurfaceState(this);
   }
 
-  get rootMachine() {
-    return this._rootMachine;
+  get rootActor() {
+    return this._rootActor;
   }
   get mapState() {
     return this._mapState;

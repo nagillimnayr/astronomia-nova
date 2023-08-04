@@ -13,11 +13,9 @@ type OutlinerItemProps = {
   body: KeplerBody;
 };
 const OutlinerItem = observer(({ body }: OutlinerItemProps) => {
-  // const { uiState } = useContext(RootStoreContext);
   const { selectionService } = useContext(GlobalStateContext);
 
-  const rootStore = useContext(RootStoreContext);
-  const rootActor = rootStore.rootMachine;
+  const { rootActor } = useContext(RootStoreContext);
 
   const keplerTreeActor = useSelector(
     rootActor,

@@ -17,8 +17,7 @@ const _pos = new Vector3();
 const _otherPos = new Vector3();
 
 export const Projector = () => {
-  const rootStore = useContext(RootStoreContext);
-  const rootActor = rootStore.rootMachine;
+  const { rootActor } = useContext(RootStoreContext);
 
   const keplerTreeActor = useSelector(
     rootActor,

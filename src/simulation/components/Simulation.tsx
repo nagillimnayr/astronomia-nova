@@ -21,9 +21,8 @@ type SimProps = {
 };
 const Simulation = ({ children }: SimProps) => {
   const { cameraService } = useContext(GlobalStateContext);
-  // const rootActor = RootActorContext.useActorRef();
-  const rootStore = useContext(RootStoreContext);
-  const rootActor = rootStore.rootMachine;
+
+  const { rootActor } = useContext(RootStoreContext);
 
   console.log('render Simulation');
   // function for accessing scene state
