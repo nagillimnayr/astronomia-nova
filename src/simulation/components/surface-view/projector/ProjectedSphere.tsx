@@ -39,24 +39,23 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
     // Set position of projected sphere.
     center.lookAt(_projectedPos);
 
-    const arrow = arrowRef.current;
-    arrow.setDirection(_direction);
-    // arrow.lookAt(_otherPosLocal);
-    arrow.setLength(_diff.length());
+    // const arrow = arrowRef.current;
+    // arrow.setDirection(_direction);
+    // arrow.setLength(_diff.length());
   });
 
   if (!body) return;
   const color = colorMap.get(body.name);
   return (
     <>
-      <arrowHelper
+      {/* <arrowHelper
         ref={(arrow) => {
           if (!arrow) return;
           arrowRef.current = arrow;
           if (!color) return;
           arrow.setColor(color);
         }}
-      />
+      /> */}
       <object3D ref={centerRef}>
         <Sphere ref={ref} args={[1e-1]} position={[0, 0, radius]}>
           <meshBasicMaterial color={color} />
