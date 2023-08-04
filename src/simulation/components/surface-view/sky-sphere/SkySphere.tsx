@@ -1,6 +1,6 @@
 import { EARTH_RADIUS } from '@/lib/utils/constants';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Sphere, Wireframe } from '@react-three/drei';
 import { useSelector } from '@xstate/react';
 import { useContext, useEffect, useRef, useState } from 'react';
@@ -8,13 +8,9 @@ import { Mesh, Object3D } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 
 export const SkySphere = () => {
-  const { selectionService, cameraService } = useContext(GlobalStateContext);
-  // const selected = useSelector(
-  //   selectionService,
-  //   ({ context }) => context.selected
-  // );
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const focusTarget = useSelector(
-    cameraService,
+    cameraActor,
     ({ context }) => context.focusTarget
   );
   const [isVisible, setVisible] = useState(false);

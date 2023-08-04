@@ -3,9 +3,6 @@ import { ToggleItem } from './ToggleItem';
 
 import { type ClassNameValue } from 'tailwind-merge';
 import { cn } from '@/lib/cn';
-import { useContext } from 'react';
-import { useSelector } from '@xstate/react';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 
 type Props = {
   className?: ClassNameValue;

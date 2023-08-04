@@ -11,12 +11,14 @@ import {
   PerspectiveCamera as PerspectiveCam,
 } from '@react-three/drei';
 import { HUD } from '@/simulation/components/HUD/HUD';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CamView } from '@/simulation/components/HUD/CamView/CamView';
 import Scene from './Scene';
 
 const CanvasWrapper = ({ children }: PropsWithChildren) => {
-  const { cameraService, uiService } = useContext(GlobalStateContext);
+  const { cameraActor, uiActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const container = useRef<HTMLDivElement>(null!);
   return (
     <Suspense fallback={<LoadingFallback />}>
@@ -39,7 +41,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
               ref={(canvas) => {
                 if (!canvas) return;
                 // Assign canvas context in camera state machine.
-                cameraService.send({ type: 'ASSIGN_CANVAS', canvas });
+                cameraActor.send({ type: 'ASSIGN_CANVAS', canvas });
               }}
             >
               {/* <Hud renderPriority={1}> */}

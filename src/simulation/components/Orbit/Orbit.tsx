@@ -42,7 +42,7 @@ import { BodyTrail } from '../Body/trail/BodyTrail';
 import { calculateOrbitalPeriod } from '@/simulation/math/orbital-elements/OrbitalPeriod';
 import { DAY } from '@/lib/utils/constants';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 
 const _pos = new Vector3();
@@ -63,8 +63,7 @@ type OrbitProps = {
 };
 
 export const Orbit = ({ children, name, texture }: OrbitProps) => {
-  const { rootActor } = useContext(GlobalStateContext);
-  const mapActor = useSelector(rootActor, ({ context }) => context.mapActor);
+  const { mapActor } = MachineContext.useSelector(({ context }) => context);
 
   // Ref to KeplerOrbit.
   const orbitRef = useRef<KeplerOrbit | null>(null);

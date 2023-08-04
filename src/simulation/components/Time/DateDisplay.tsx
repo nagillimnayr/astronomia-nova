@@ -1,14 +1,10 @@
 import { format } from 'date-fns';
-import { useSnapshot } from 'valtio';
 import { useContext, useEffect, useRef } from 'react';
-import { useTimeStore } from '@/simulation/state/zustand/time-store';
 import { useSelector } from '@xstate/react';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 const DateDisplay = () => {
-  const { rootActor } = useContext(GlobalStateContext);
-
-  const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
+  const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
   const { refDate } = timeActor.getSnapshot()!.context;
   const hoursRef = useRef<HTMLSpanElement>(null!);

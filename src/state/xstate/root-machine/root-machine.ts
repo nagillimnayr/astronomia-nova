@@ -17,10 +17,15 @@ import { keplerTreeMachine } from '../kepler-tree-machine/kepler-tree-machine';
 import { celestialSphereMachine } from '../visibility-machine/celestial-sphere-machine';
 import { mapMachine } from '../map-machine/map-machine';
 import { surfaceMachine } from '../surface-machine/surface-machine';
+import { uiMachine } from '../ui-machine/ui-machine';
 
 type Context = {
   timeActor: ActorRefFrom<typeof timeMachine>;
   keplerTreeActor: ActorRefFrom<typeof keplerTreeMachine>;
+  selectionActor: ActorRefFrom<typeof selectionMachine>;
+  cameraActor: ActorRefFrom<typeof cameraMachine>;
+  uiActor: ActorRefFrom<typeof uiMachine>;
+  visibilityActor: ActorRefFrom<typeof visibilityMachine>;
   celestialSphereActor: ActorRefFrom<typeof celestialSphereMachine>;
   mapActor: ActorRefFrom<typeof mapMachine>;
   surfaceActor: ActorRefFrom<typeof surfaceMachine>;
@@ -41,6 +46,10 @@ export const rootMachine = createMachine(
     context: {
       timeActor: null!,
       keplerTreeActor: null!,
+      selectionActor: null!,
+      cameraActor: null!,
+      uiActor: null!,
+      visibilityActor: null!,
       celestialSphereActor: null!,
       mapActor: null!,
       surfaceActor: null!,
@@ -58,6 +67,28 @@ export const rootMachine = createMachine(
             name: 'keplerTreeActor',
             sync: true,
           }),
+
+        selectionActor: () =>
+          spawn(selectionMachine, {
+            name: 'selectionActor',
+            sync: true,
+          }),
+        cameraActor: () =>
+          spawn(cameraMachine, {
+            name: 'cameraActor',
+            sync: true,
+          }),
+        uiActor: () =>
+          spawn(uiMachine, {
+            name: 'uiActor',
+            sync: true,
+          }),
+        visibilityActor: () =>
+          spawn(visibilityMachine, {
+            name: 'visibilityActor',
+            sync: true,
+          }),
+
         celestialSphereActor: () =>
           spawn(celestialSphereMachine, {
             name: 'celestialSphereActor',

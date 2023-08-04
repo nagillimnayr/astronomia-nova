@@ -1,16 +1,16 @@
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useContext, useEffect, useRef } from 'react';
 
 const CamViewPortal = () => {
-  const { uiService } = useContext(GlobalStateContext);
+  const { uiActor } = MachineContext.useSelector(({ context }) => context);
   const camViewRef = useRef<HTMLDivElement>(null!);
 
   useEffect(() => {
-    uiService.send({
+    uiActor.send({
       type: 'ASSIGN_CAM_VIEW_PORTAL_REF',
       camViewPortalRef: camViewRef,
     });
-  }, [uiService]);
+  }, [uiActor]);
 
   return (
     <>
@@ -18,7 +18,7 @@ const CamViewPortal = () => {
         ref={(portal) => {
           if (!portal) return;
           camViewRef.current = portal;
-          uiService.send({
+          uiActor.send({
             type: 'SET_CAM_VIEW_PORTAL',
             camViewPortal: portal,
           });

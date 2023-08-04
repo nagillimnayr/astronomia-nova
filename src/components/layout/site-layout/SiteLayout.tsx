@@ -7,7 +7,7 @@ import { Sidebar } from '@/components/layout/sidebar/Sidebar';
 import { BottomToolbar } from '../BottomToolbar';
 import { useContext, useEffect, useRef } from 'react';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 
 const fontVariables = [atomicAge.variable, orbitron.variable, roboto.variable];
 
@@ -15,16 +15,16 @@ type SiteLayoutProps = {
   children: React.ReactNode;
 };
 const SiteLayout = ({ children }: SiteLayoutProps) => {
-  const { uiService } = useContext(GlobalStateContext);
+  const { uiActor } = MachineContext.useSelector(({ context }) => context);
 
   const screenPortalRef = useRef<HTMLDivElement>(null!);
 
   useEffect(() => {
-    uiService.send({
+    uiActor.send({
       type: 'ASSIGN_SCREEN_PORTAL_REF',
       screenPortalRef: screenPortalRef,
     });
-  }, [uiService]);
+  }, [uiActor]);
 
   return (
     <div

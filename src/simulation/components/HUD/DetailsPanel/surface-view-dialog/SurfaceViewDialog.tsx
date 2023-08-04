@@ -2,21 +2,18 @@ import { Slider } from '@/components/gui/Slider';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import { useActor, useSelector } from '@xstate/react';
 
 const SurfaceViewDialog = observer(() => {
-  const { uiService, cameraService, rootActor } =
-    useContext(GlobalStateContext);
-  const [uiState] = useActor(uiService);
-
-  const surfaceActor = useSelector(
-    rootActor,
-    ({ context }) => context.surfaceActor
+  const { uiActor, cameraActor, surfaceActor } = MachineContext.useSelector(
+    ({ context }) => context
   );
+  const [uiState] = useActor(uiActor);
+
   const { latitude, longitude } = useSelector(
     surfaceActor,
     ({ context }) => context
@@ -113,7 +110,7 @@ const SurfaceViewDialog = observer(() => {
             <button
               className="h-fit  w-full min-w-fit place-items-center rounded-md  border border-muted  px-2 py-1 text-xl hover:bg-muted"
               onClick={() => {
-                cameraService.send('TO_SURFACE');
+                cameraActor.send('TO_SURFACE');
               }}
             >
               Confirm

@@ -1,14 +1,13 @@
 import { useSnapshot } from 'valtio';
 import { useTimeStore } from '@/simulation/state/zustand/time-store';
 import { useContext, useEffect, useRef } from 'react';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 const TimescaleDisplay = () => {
-  const { rootActor } = useContext(GlobalStateContext);
+  const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
-  const timeActor = useSelector(rootActor, ({ context }) => context.timeActor);
   const timescale = timeActor.getSnapshot()!.context.timescale;
   const spanRef = useRef<HTMLSpanElement>(null!);
 

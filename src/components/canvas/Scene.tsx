@@ -2,19 +2,21 @@ import Simulation from '@/simulation/components/Simulation';
 
 import { type PropsWithChildren, useContext, useEffect } from 'react';
 
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useThree } from '@react-three/fiber';
 import { CameraController } from '@/simulation/components/camera-controller/CameraController';
 import { useKeyPressed } from '@react-hooks-library/core';
 
 const Scene = ({ children }: PropsWithChildren) => {
-  const { cameraService, uiService } = useContext(GlobalStateContext);
+  const { cameraActor, uiActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const getThree = useThree(({ get }) => get);
 
   useEffect(() => {
     // const scene = getThree().scene;
-    cameraService.send({ type: 'ASSIGN_THREE', get: getThree });
-  }, [cameraService, getThree]);
+    cameraActor.send({ type: 'ASSIGN_THREE', get: getThree });
+  }, [cameraActor, getThree]);
 
   // useKeyPressed(' ', () => {
   //   const { camera, controls } = getThree();

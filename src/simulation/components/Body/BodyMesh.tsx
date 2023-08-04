@@ -24,7 +24,7 @@ import { HtmlRingMarker } from '@/simulation/components/Body/marker/HtmlRingMark
 import { degToRad } from 'three/src/math/MathUtils';
 // import { CoordinateSphere } from '../surface-view/CoordinateSphere';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { RingMarker } from './marker/RingMarker';
 
@@ -43,7 +43,9 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   { name, bodyRef, meanRadius, obliquity, texture, color }: BodyMeshProps,
   fwdRef
 ) {
-  const { selectionService } = useContext(GlobalStateContext);
+  const { selectionActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
 
   const meshRef = useRef<Mesh>(null!);
 
@@ -63,9 +65,9 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       }
       const body: KeplerBody = bodyRef.current;
       // Select body.
-      selectionService.send({ type: 'SELECT', selection: body });
+      selectionActor.send({ type: 'SELECT', selection: body });
     },
-    [bodyRef, selectionService]
+    [bodyRef, selectionActor]
   );
   // const handleMiss = (e: MouseEvent) => {
   //   if (!meshRef.current) return;

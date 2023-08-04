@@ -4,15 +4,15 @@ import {
 } from '@react-three/drei';
 import { useSelector } from '@xstate/react';
 import { useContext, useRef } from 'react';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CameraHelper, type PerspectiveCamera } from 'three';
 
 const SurfaceCamera = () => {
-  const { cameraService } = useContext(GlobalStateContext);
-  const surfaceView = useSelector(cameraService, (state) =>
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const surfaceView = useSelector(cameraActor, (state) =>
     state.matches('surface')
   );
-  // const spaceView = useSelector(cameraService, (state) =>
+  // const spaceView = useSelector(cameraActor, (state) =>
   //   state.matches('space')
   // );
   const cameraRef = useRef<PerspectiveCamera>(null!);
@@ -29,7 +29,7 @@ const SurfaceCamera = () => {
           const camera = cam as PerspectiveCamera;
           cameraRef.current = camera;
           // Assign camera to state context.
-          cameraService.send({ type: 'ASSIGN_SURFACE_CAMERA', camera });
+          cameraActor.send({ type: 'ASSIGN_SURFACE_CAMERA', camera });
         }}
         near={1e-5}
         far={1e9}

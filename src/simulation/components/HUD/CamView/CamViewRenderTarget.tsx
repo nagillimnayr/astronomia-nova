@@ -1,4 +1,4 @@
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import {
   Billboard,
   Box,
@@ -12,15 +12,12 @@ import { useContext, useMemo } from 'react';
 import { Scene } from 'three';
 
 const CamViewRenderTarget = () => {
-  const { cameraService } = useContext(GlobalStateContext);
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const surfaceCamera = useSelector(
-    cameraService,
+    cameraActor,
     (state) => state.context.surfaceCamera
   );
-  const getThree = useSelector(
-    cameraService,
-    (state) => state.context.getThree
-  );
+  const getThree = useSelector(cameraActor, (state) => state.context.getThree);
 
   const renderTarget = useFBO(window.innerWidth / 4, window.innerHeight / 4);
 

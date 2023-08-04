@@ -1,12 +1,13 @@
 import { cn } from '@/lib/cn';
 import { ToggleBar } from '@/simulation/components/HUD/ToggleBar/ToggleBar';
 import { OpacitySliders } from '@/simulation/components/HUD/opacity/OpacitySliders';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useContext } from 'react';
 
 const BottomToolbar = () => {
-  const { uiService, cameraService, selectionService } =
-    useContext(GlobalStateContext);
+  const { uiActor, cameraActor, selectionActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
 
   return (
     <div
@@ -18,7 +19,7 @@ const BottomToolbar = () => {
         <button
           className="rounded-md border px-2 py-1 text-lg transition-colors hover:bg-subtle"
           onClick={() => {
-            cameraService.send('TO_SPACE');
+            cameraActor.send('TO_SPACE');
           }}
         >
           Space

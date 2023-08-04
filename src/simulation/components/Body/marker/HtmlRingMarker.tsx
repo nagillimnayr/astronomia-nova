@@ -13,7 +13,7 @@ import { Vector3 } from 'three';
 
 import { useActor, useSelector } from '@xstate/react';
 import { cn } from '@/lib/cn';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
 
 const _bodyWorldPos = new Vector3();
@@ -23,11 +23,12 @@ type Props = {
   bodyRef: MutableRefObject<KeplerBody>;
 };
 export function HtmlRingMarker({ bodyRef }: Props) {
-  const { selectionService, visibilityService } =
-    useContext(GlobalStateContext);
+  const { selectionActor, visibilityActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   // Check if marker visibility is on.
   const markers = useSelector(
-    visibilityService,
+    visibilityActor,
     ({ context }) => context.markers
   );
   const isVisible = useSelector(markers, (state) => state.matches('active'));
@@ -39,10 +40,10 @@ export function HtmlRingMarker({ bodyRef }: Props) {
       e.stopPropagation();
       const body = bodyRef.current;
       //// uiState.select(body);
-      selectionService.send({ type: 'SELECT', selection: body });
+      selectionActor.send({ type: 'SELECT', selection: body });
       // useSelectionStore.getState().select(body);
     },
-    [bodyRef, selectionService]
+    [bodyRef, selectionActor]
   );
 
   useFrame(({ camera }) => {

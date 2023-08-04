@@ -1,22 +1,20 @@
 import type KeplerBody from '@/simulation/classes/kepler-body';
 import * as Collapsible from '@radix-ui/react-collapsible';
 
-import { ChevronRightIcon } from 'lucide-react';
-import { useCallback, useContext, useState } from 'react';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { observer } from 'mobx-react-lite';
+import { useCallback, useState } from 'react';
 import { cn } from '@/lib/cn';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
-import { useActor, useSelector } from '@xstate/react';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { useSelector } from '@xstate/react';
 
 type OutlinerItemProps = {
   body: KeplerBody;
 };
 const OutlinerItem = ({ body }: OutlinerItemProps) => {
-  const { rootActor, selectionService } = useContext(GlobalStateContext);
+  const { mapActor, selectionActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
 
   // Bind to state changes so that the component will re-render whenever bodyMap is modified.
-  const mapActor = useSelector(rootActor, ({ context }) => context.mapActor);
   useSelector(mapActor, ({ context }) => context.bodyMap);
 
   const [isOpen, setOpen] = useState<boolean>(true);
@@ -34,8 +32,8 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
 
   const handleClick = useCallback(() => {
     // Select the object.
-    selectionService.send({ type: 'SELECT', selection: body });
-  }, [body, selectionService]);
+    selectionActor.send({ type: 'SELECT', selection: body });
+  }, [body, selectionActor]);
 
   // console.log(body.name, mapState.bodyMap.has(body.name));
   return (

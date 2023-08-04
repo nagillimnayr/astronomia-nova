@@ -1,5 +1,5 @@
 import { cn } from '@/lib/cn';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type visibilityMachine } from '@/state/xstate/visibility-machine/visibility-machine';
 import * as Toolbar from '@radix-ui/react-toolbar';
 import { useSelector } from '@xstate/react';
@@ -13,11 +13,10 @@ type Props = PropsWithChildren & {
   defaultOff?: boolean;
 };
 export const ToggleItem = ({ children, target, defaultOff }: Props) => {
-  const { visibilityService } = useContext(GlobalStateContext);
-  const actor = useSelector(
-    visibilityService,
-    (state) => state.context[target]
+  const { visibilityActor } = MachineContext.useSelector(
+    ({ context }) => context
   );
+  const actor = useSelector(visibilityActor, (state) => state.context[target]);
   const isActive = useSelector(actor, (state) => state.matches('active'));
 
   useEffect(() => {

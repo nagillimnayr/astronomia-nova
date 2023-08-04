@@ -11,7 +11,7 @@ import { getLinearEccentricityFromAxes } from '@/simulation/math/orbital-element
 import { degToRad } from 'three/src/math/MathUtils';
 
 import { useActor, useSelector } from '@xstate/react';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { cn } from '@/lib/cn';
 import { DIST_MULT } from '@/simulation/utils/constants';
@@ -39,9 +39,11 @@ export const Trajectory = ({
   orientation,
 }: TrajectoryProps) => {
   // Check if trajectory visibility is on.
-  const { visibilityService } = useContext(GlobalStateContext);
+  const { visibilityActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const trajectories = useSelector(
-    visibilityService,
+    visibilityActor,
     ({ context }) => context.trajectories
   );
   const isVisible = useSelector(trajectories, (state) =>

@@ -13,7 +13,7 @@ import { Observer } from '../observer/Observer';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { autorun, reaction } from 'mobx';
 import { degToRad } from 'three/src/math/MathUtils';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+// import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useActor, useSelector } from '@xstate/react';
 import { useKeyPressed } from '@react-hooks-library/core';
 import KeplerBody from '@/simulation/classes/kepler-body';
@@ -21,6 +21,7 @@ import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import { observer } from 'mobx-react-lite';
 import { ObservationSphere } from './ObservationSphere';
 import { SkySphere } from '../sky-sphere/SkySphere';
+import { MachineContext } from '../../../../state/xstate/MachineProviders';
 
 const _up = new Vector3();
 
@@ -28,16 +29,12 @@ type Props = {
   children?: ReactNode;
 };
 const ObservationPoint = observer(({ children }: Props) => {
-  const { cameraService, selectionService, rootActor } =
-    useContext(GlobalStateContext);
-  const focusTarget = useSelector(
-    cameraService,
-    ({ context }) => context.focusTarget
+  const { cameraActor, surfaceActor } = MachineContext.useSelector(
+    ({ context }) => context
   );
-
-  const surfaceActor = useSelector(
-    rootActor,
-    ({ context }) => context.surfaceActor
+  const focusTarget = useSelector(
+    cameraActor,
+    ({ context }) => context.focusTarget
   );
 
   const centerRef = useRef<Object3D>(null!);

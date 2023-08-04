@@ -1,8 +1,5 @@
 import { makePreOrderTreeTraversalFn } from '@/simulation/systems/keplerTree';
-import {
-  GlobalStateContext,
-  // RootActorContext,
-} from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Sphere } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
@@ -17,18 +14,15 @@ const _pos = new Vector3();
 const _otherPos = new Vector3();
 
 export const Projector = () => {
-  const { rootActor } = useContext(GlobalStateContext);
-
-  const keplerTreeActor = useSelector(
-    rootActor,
-    ({ context }) => context.keplerTreeActor
+  const { keplerTreeActor, cameraActor } = MachineContext.useSelector(
+    ({ context }) => context
   );
+
   const root = useSelector(keplerTreeActor, ({ context }) => context.root);
   useSelector(keplerTreeActor, (state) => state.matches('updatingTree'));
 
-  const { cameraService } = useContext(GlobalStateContext);
   const focusTarget = useSelector(
-    cameraService,
+    cameraActor,
     ({ context }) => context.focusTarget
   );
 

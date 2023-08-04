@@ -20,7 +20,7 @@ import {
 } from 'three';
 
 import { useActor, useSelector } from '@xstate/react';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
@@ -30,10 +30,12 @@ type Props = PropsWithChildren & {
   color: ColorRepresentation;
 };
 export function CircleMarker({ bodyRef, color }: Props) {
-  const { selectionService, cameraService } = useContext(GlobalStateContext);
+  const { selectionActor, cameraActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
 
   // Check if marker visibility is on.
-  const isVisible = useSelector(cameraService, (state) =>
+  const isVisible = useSelector(cameraActor, (state) =>
     state.matches('surface')
   );
 
@@ -47,9 +49,9 @@ export function CircleMarker({ bodyRef, color }: Props) {
     (event: ThreeEvent<MouseEvent>) => {
       event.stopPropagation();
       const body = bodyRef.current;
-      selectionService.send({ type: 'SELECT', selection: body });
+      selectionActor.send({ type: 'SELECT', selection: body });
     },
-    [bodyRef, selectionService]
+    [bodyRef, selectionActor]
   );
 
   useFrame(({ camera }) => {

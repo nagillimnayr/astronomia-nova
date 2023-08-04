@@ -20,7 +20,7 @@ import {
 } from 'three';
 
 import { useActor, useSelector } from '@xstate/react';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { degToRad } from 'three/src/math/MathUtils';
 import { Annotation } from '../annotation/Annotation';
@@ -32,10 +32,11 @@ type Props = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
 };
 export function RingMarker({ children, bodyRef }: Props) {
-  const { selectionService, visibilityService } =
-    useContext(GlobalStateContext);
+  const { selectionActor, visibilityActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const markers = useSelector(
-    visibilityService,
+    visibilityActor,
     ({ context }) => context.markers
   );
   const isVisible = useSelector(markers, (state) => state.matches('active'));
@@ -50,9 +51,9 @@ export function RingMarker({ children, bodyRef }: Props) {
     (event: ThreeEvent<MouseEvent>) => {
       event.stopPropagation();
       const body = bodyRef.current;
-      selectionService.send({ type: 'SELECT', selection: body });
+      selectionActor.send({ type: 'SELECT', selection: body });
     },
-    [bodyRef, selectionService]
+    [bodyRef, selectionActor]
   );
 
   useFrame(({ camera }) => {

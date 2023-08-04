@@ -1,4 +1,4 @@
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import {
   Box,
   CameraControls,
@@ -13,8 +13,8 @@ import { Scene } from 'three';
 import { CamViewScene } from './CamViewScene';
 
 const CamView = () => {
-  const { uiService } = useContext(GlobalStateContext);
-  const [uiState] = useActor(uiService); // Bind
+  const { uiActor } = MachineContext.useSelector(({ context }) => context);
+  const [uiState] = useActor(uiActor); // Bind
 
   if (
     !uiState.context.camViewPortalRef ||

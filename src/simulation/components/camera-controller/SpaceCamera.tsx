@@ -5,16 +5,14 @@ import {
 import { degToRad } from 'three/src/math/MathUtils';
 import { useSelector } from '@xstate/react';
 import { useContext, useRef } from 'react';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type PerspectiveCamera } from 'three';
 import { DIST_MULT, SUN_RADIUS } from '@/simulation/utils/constants';
 
 const SpaceCamera = () => {
-  const { cameraService } = useContext(GlobalStateContext);
-  const spaceView = useSelector(cameraService, (state) =>
-    state.matches('space')
-  );
-  // const surfaceView = useSelector(cameraService, (state) =>
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const spaceView = useSelector(cameraActor, (state) => state.matches('space'));
+  // const surfaceView = useSelector(cameraActor, (state) =>
   //   state.matches('surface')
   // );
   const cameraRef = useRef<PerspectiveCamera>(null!);
@@ -30,7 +28,7 @@ const SpaceCamera = () => {
           cameraRef.current = camera;
 
           // Assign camera to state context.
-          cameraService.send({
+          cameraActor.send({
             type: 'ASSIGN_SPACE_CAMERA',
             camera,
           });

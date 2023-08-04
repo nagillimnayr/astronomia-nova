@@ -3,10 +3,10 @@ import { SpaceCamera } from './SpaceCamera';
 import { SurfaceCamera } from './SurfaceCamera';
 import { CameraControls } from '@react-three/drei';
 import { useContext } from 'react';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 
 const CameraController = () => {
-  const { cameraService } = useContext(GlobalStateContext);
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   return (
     <>
       <CameraControls
@@ -19,7 +19,7 @@ const CameraController = () => {
           }
 
           // Assign controls context in camera state machine.
-          cameraService.send({
+          cameraActor.send({
             type: 'ASSIGN_CONTROLS',
             controls,
           });

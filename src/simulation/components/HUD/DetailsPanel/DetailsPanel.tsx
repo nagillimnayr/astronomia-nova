@@ -3,30 +3,33 @@ import { Separator } from '@/components/gui/Separator';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
 import { SurfaceViewButton } from './surface-view-dialog/SurfaceViewButton';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { DIST_MULT } from '@/simulation/utils/constants';
-import { useActor, useSelector } from '@xstate/react';
+import { useSelector } from '@xstate/react';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 
 const DetailsPanel = observer(() => {
-  const { cameraService, selectionService } = useContext(GlobalStateContext);
+  const { cameraActor, selectionActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+
   const selected = useSelector(
-    selectionService,
+    selectionActor,
     ({ context }) => context.selected
   );
 
   const handleCloseClick = useCallback(() => {
     // Deselect selected object.
-    selectionService.send('DESELECT');
-  }, [selectionService]);
+    selectionActor.send('DESELECT');
+  }, [selectionActor]);
 
   const handleFocusClick = useCallback(() => {
     // Focus camera on selection.
-    cameraService.send({
+    cameraActor.send({
       type: 'SET_TARGET',
       focusTarget: selected,
     });
-  }, [cameraService, selected]);
+  }, [cameraActor, selected]);
 
   //// if (!uiState.selected) return null; // If nothing is selected, display nothing.
   if (!selected) return null; // If nothing is selected, display nothing.

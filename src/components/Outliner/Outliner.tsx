@@ -4,16 +4,14 @@ import { LoadingFallback } from '../LoadingFallback';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import {
-  GlobalStateContext,
+  MachineContext,
   // RootActorContext,
 } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 
 const Outliner = observer(() => {
-  const { rootActor } = useContext(GlobalStateContext);
-  const keplerTreeActor = useSelector(
-    rootActor,
-    ({ context }) => context.keplerTreeActor
+  const { keplerTreeActor } = MachineContext.useSelector(
+    ({ context }) => context
   );
   const root = useSelector(keplerTreeActor, ({ context }) => context.root);
 

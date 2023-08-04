@@ -1,6 +1,6 @@
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 
 import { useFrame } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
@@ -10,9 +10,11 @@ import { Vector3, type ArrowHelper } from 'three';
 const _vel = new Vector3();
 
 const VelocityArrow = () => {
-  const { visibilityService } = useContext(GlobalStateContext);
+  const { visibilityActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const velocityArrows = useSelector(
-    visibilityService,
+    visibilityActor,
     ({ context }) => context.velocityArrows
   );
   const isVisible = useSelector(velocityArrows, (state) =>

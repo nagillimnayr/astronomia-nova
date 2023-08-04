@@ -13,7 +13,7 @@ import {
 } from 'three';
 import { Trail } from './Trail';
 import { Object3DNode, extend } from '@react-three/fiber';
-import { RootActorContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { Line } from '@react-three/drei';
@@ -32,7 +32,7 @@ type Props = {
   orbitalPeriod: number;
 };
 export const BodyTrail = ({ bodyRef, orbitalPeriod }: Props) => {
-  const timeActor = RootActorContext.useSelector(
+  const timeActor = MachineContext.useSelector(
     ({ context }) => context.timeActor
   );
 

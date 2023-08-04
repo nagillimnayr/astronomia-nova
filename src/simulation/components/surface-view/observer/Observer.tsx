@@ -1,9 +1,9 @@
-import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 
 import { useContext } from 'react';
 
 const Observer = () => {
-  const { cameraService } = useContext(GlobalStateContext);
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
   return (
     <>
@@ -13,7 +13,7 @@ const Observer = () => {
             name="observer"
             ref={(observer) => {
               if (!observer) return;
-              cameraService.send({ type: 'ASSIGN_OBSERVER', observer });
+              cameraActor.send({ type: 'ASSIGN_OBSERVER', observer });
             }}
           />
           {/* <axesHelper args={[3e-2]} /> */}

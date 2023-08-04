@@ -1,7 +1,7 @@
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import {
-  GlobalStateContext,
+  MachineContext,
   // RootMachineContext,
 } from '@/state/xstate/MachineProviders';
 import { CameraControls, Text } from '@react-three/drei';
@@ -23,9 +23,11 @@ type Props = {
   meanRadius: number;
 };
 const Annotation = ({ annotation, meanRadius }: Props) => {
-  const { visibilityService } = useContext(GlobalStateContext);
+  const { visibilityActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const annotations = useSelector(
-    visibilityService,
+    visibilityActor,
     ({ context }) => context.annotations
   );
   const isVisible = useSelector(annotations, (state) =>
