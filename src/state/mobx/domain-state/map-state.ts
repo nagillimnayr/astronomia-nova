@@ -40,4 +40,11 @@ export class MapState {
   contains(name: string) {
     return this._bodyMap.has(name);
   }
+
+  get bodyMap() {
+    return this._bodyMap;
+  }
+  get orbitMap() {
+    return this._bodyMap;
+  }
 }
