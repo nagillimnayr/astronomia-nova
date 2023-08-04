@@ -13,14 +13,14 @@ import { Observer } from '../observer/Observer';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { autorun, reaction } from 'mobx';
 import { degToRad } from 'three/src/math/MathUtils';
-import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useActor, useSelector } from '@xstate/react';
 import { useKeyPressed } from '@react-hooks-library/core';
-import KeplerBody from '@/simulation/classes/kepler-body';
+import type KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import { observer } from 'mobx-react-lite';
 import { ObservationSphere } from './ObservationSphere';
+import { SkySphere } from '../sky-sphere/SkySphere';
 
 const _up = new Vector3();
 
@@ -33,10 +33,6 @@ const ObservationPoint = observer(({ children }: Props) => {
     cameraService,
     ({ context }) => context.focusTarget
   );
-  // const selected = useSelector(
-  //   selectionService,
-  //   ({ context }) => context.selected
-  // );
 
   const centerRef = useRef<Object3D>(null!);
 
@@ -86,18 +82,22 @@ const ObservationPoint = observer(({ children }: Props) => {
   return (
     <>
       {body && mesh ? (
-        <object3D ref={centerRef}>
-          {/* <axesHelper args={[1.5 * (body.meanRadius / EARTH_RADIUS)]} /> */}
-          <group
-            name="observation-point"
-            position={[body.meanRadius / EARTH_RADIUS + 1e-4, 0, 0]}
-            rotation={[0, 0, degToRad(-90)]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
-          >
-            <ObservationSphere />
-            <Observer />
-            {children}
-          </group>
-        </object3D>
+        <>
+          <object3D ref={centerRef}>
+            {/* <axesHelper args={[1.5 * (body.meanRadius / EARTH_RADIUS)]} /> */}
+            <group
+              name="observation-point"
+              position={[body.meanRadius / EARTH_RADIUS + 1e-4, 0, 0]}
+              rotation={[0, 0, degToRad(-90)]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
+            >
+              <ObservationSphere />
+              <Observer />
+              {children}
+            </group>
+          </object3D>
+
+          <SkySphere />
+        </>
       ) : null}
     </>
   );

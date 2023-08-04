@@ -14,6 +14,7 @@ import {
 } from '@/state/xstate/MachineProviders';
 import { ObservationPoint } from './surface-view/observation-point/ObservationPoint';
 import SolarSystem from './SolarSystem/SolarSystem';
+import { Projector } from './surface-view/projector/Projector';
 
 type SimProps = {
   children: React.ReactNode;
@@ -37,7 +38,7 @@ const Simulation = ({ children }: SimProps) => {
 
     // Update camera.
     cameraService.send({ type: 'UPDATE', deltaTime: delta });
-  });
+  }, -10);
 
   useKeyPressed(' ', (evt) => {
     evt.preventDefault();
@@ -54,6 +55,7 @@ const Simulation = ({ children }: SimProps) => {
 
       <ambientLight intensity={0.9} />
       <ObservationPoint />
+      <Projector />
     </>
   );
 };
