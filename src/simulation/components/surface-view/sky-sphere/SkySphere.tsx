@@ -5,20 +5,19 @@ import { Sphere, Wireframe } from '@react-three/drei';
 import { useSelector } from '@xstate/react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Mesh, Object3D } from 'three';
-import { Projector } from '../projector/Projector';
 import { degToRad } from 'three/src/math/MathUtils';
 
 export const SkySphere = () => {
   const { selectionService, cameraService } = useContext(GlobalStateContext);
-  const selected = useSelector(
-    selectionService,
-    ({ context }) => context.selected
-  );
+  // const selected = useSelector(
+  //   selectionService,
+  //   ({ context }) => context.selected
+  // );
   const focusTarget = useSelector(
     cameraService,
     ({ context }) => context.focusTarget
   );
-  const [isVisible, setVisible] = useState(true);
+  const [isVisible, setVisible] = useState(false);
   const sphereRef = useRef<Mesh | null>(null);
   const centerRef = useRef<Object3D | null>(null);
 
