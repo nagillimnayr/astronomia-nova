@@ -1,10 +1,12 @@
-import KeplerBody from '@/simulation/classes/kepler-body';
+import type KeplerBody from '@/simulation/classes/kepler-body';
 import { colorMap } from '@/simulation/utils/color-map';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Sphere } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { MutableRefObject, useRef } from 'react';
-import { ArrowHelper, Mesh, Object3D, Vector3 } from 'three';
+import { type ArrowHelper, type Mesh, type Object3D, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
+import { useSelector } from '@xstate/react';
 
 const _pos = new Vector3();
 const _otherPos = new Vector3();
@@ -18,11 +20,17 @@ type Props = {
 };
 
 export const ProjectedSphere = ({ body, radius }: Props) => {
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const surfaceView = useSelector(cameraActor, (state) =>
+    state.matches('surface')
+  );
+
   const ref = useRef<Mesh | null>(null);
   const centerRef = useRef<Object3D | null>(null);
   const arrowRef = useRef<ArrowHelper>(null!);
 
   useFrame(() => {
+    if (!surfaceView) return; // Only update if in surface view.
     if (!ref.current || !centerRef.current || !body) return;
     const center = centerRef.current;
     center.getWorldPosition(_pos);
@@ -56,7 +64,12 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
         }}
       /> */}
       <object3D ref={centerRef}>
-        <Sphere ref={ref} args={[1e-1]} position={[0, 0, radius]}>
+        <Sphere
+          visible={surfaceView} // Should only be visible in surface view.
+          ref={ref}
+          args={[1e-1]}
+          position={[0, 0, radius]}
+        >
           <meshBasicMaterial color={color} />
         </Sphere>
       </object3D>
