@@ -53,7 +53,7 @@ const FullSolarSystem = () => {
         name: 'Sun',
         mass: SOLAR_MASS,
         color: 0xfdee00,
-        meanRadius: SUN_RADIUS / 10,
+        meanRadius: SUN_RADIUS,
       }}
       texture={sunTexture}
     >

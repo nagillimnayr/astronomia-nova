@@ -17,13 +17,11 @@ import { degToRad } from 'three/src/math/MathUtils';
 import { useActor, useSelector } from '@xstate/react';
 import { useKeyPressed } from '@react-hooks-library/core';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { EARTH_RADIUS } from '@/simulation/utils/constants';
+import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { observer } from 'mobx-react-lite';
 import { ObservationSphere } from './ObservationSphere';
 import { SkySphere } from '../sky-sphere/SkySphere';
 import { MachineContext } from '../../../../state/xstate/MachineProviders';
-
-const _up = new Vector3();
 
 type Props = {
   children?: ReactNode;
@@ -88,7 +86,7 @@ const ObservationPoint = observer(({ children }: Props) => {
             {/* <axesHelper args={[1.5 * (body.meanRadius / EARTH_RADIUS)]} /> */}
             <group
               name="observation-point"
-              position={[body.meanRadius / EARTH_RADIUS + 1e-4, 0, 0]}
+              position={[body.meanRadius / DIST_MULT + 1e-4, 0, 0]}
               rotation={[0, 0, degToRad(-90)]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
             >
               <ObservationSphere />

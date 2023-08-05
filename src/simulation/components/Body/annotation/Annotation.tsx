@@ -1,6 +1,6 @@
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
-import { EARTH_RADIUS } from '@/simulation/utils/constants';
+import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import {
   MachineContext,
   // RootMachineContext,
@@ -83,7 +83,7 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
     text.scale.setScalar(factor);
 
     // Clamp the y-position so that the annotation doesn't go inside of the body.
-    const yPos = clamp(-1.25 * factor, -(meanRadius / EARTH_RADIUS) * 1.5);
+    const yPos = clamp(-1.25 * factor, -(meanRadius / DIST_MULT) * 1.5);
     // Set position so that the annotation always appears below the body and outside of the marker.
     text.position.set(0, yPos, 0);
   });
@@ -93,7 +93,7 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
       <object3D ref={centerRef}>
         <object3D
           ref={textRef}
-          position={[0, -(meanRadius / EARTH_RADIUS), 0]}
+          position={[0, -(meanRadius / DIST_MULT), 0]}
           // position={[0, -10, 0]}
         >
           <Text

@@ -1,5 +1,5 @@
-import { EARTH_RADIUS } from '@/lib/utils/constants';
 import KeplerBody from '@/simulation/classes/kepler-body';
+import { DIST_MULT } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Sphere, Wireframe } from '@react-three/drei';
 import { useSelector } from '@xstate/react';
@@ -32,7 +32,7 @@ export const SkySphere = () => {
 
   const body = focusTarget instanceof KeplerBody ? focusTarget : null;
   if (!body) return;
-  const radius = (5 * body.meanRadius) / EARTH_RADIUS;
+  const radius = (5 * body.meanRadius) / DIST_MULT;
   return (
     <>
       <object3D ref={centerRef} rotation={[degToRad(90), 0, 0]}>

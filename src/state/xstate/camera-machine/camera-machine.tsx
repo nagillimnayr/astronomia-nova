@@ -2,9 +2,9 @@ import { assign, createMachine, log } from 'xstate';
 import { type Object3D, Vector3, type PerspectiveCamera } from 'three';
 import { type CameraControls } from '@react-three/drei';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import { type RootState } from '@react-three/fiber';
 import { SUN_RADIUS } from '@/lib/utils/constants';
+import { DIST_MULT } from '@/simulation/utils/constants';
 
 const _targetWorldPos = new Vector3();
 const _observerWorldPos = new Vector3();
@@ -290,7 +290,7 @@ export const cameraMachine = createMachine(
 
         controls.maxDistance = 1e12;
         if (!focusTarget) {
-          controls.minDistance = SUN_RADIUS / (10 * EARTH_RADIUS);
+          controls.minDistance = 0.01 + SUN_RADIUS / DIST_MULT;
           return;
         }
         // Type guard.
@@ -300,7 +300,7 @@ export const cameraMachine = createMachine(
         }
         const body = context.focusTarget as KeplerBody; // Cast to KeplerBody.
         if (body && controls) {
-          const radius = body.meanRadius / EARTH_RADIUS;
+          const radius = body.meanRadius / DIST_MULT;
           const minDistance = 0.01 + radius;
 
           // Set min distance relative to focus targets radius.

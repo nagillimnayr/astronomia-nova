@@ -85,7 +85,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     },
     [meshRef]
   );
-
+  const radius = meanRadius / DIST_MULT;
   return (
     <>
       {/* <Select enabled={isSelected}> */}
@@ -93,7 +93,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         rotation={[degToRad(90), 0, degToRad(obliquity)]}
         // visible={isVisible}
         ref={meshRef}
-        args={[meanRadius / EARTH_RADIUS, 128, 64]}
+        args={[radius, 128, 64]}
         onClick={handleClick}
         // onPointerMissed={handleMiss}
         onPointerOver={() => setHovered(true)}

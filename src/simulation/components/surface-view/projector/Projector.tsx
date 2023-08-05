@@ -9,6 +9,7 @@ import { ProjectedSphere } from './ProjectedSphere';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS } from '@/lib/utils/constants';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { DIST_MULT } from '@/simulation/utils/constants';
 
 const _pos = new Vector3();
 const _otherPos = new Vector3();
@@ -36,7 +37,9 @@ export const Projector = () => {
   });
 
   const body = focusTarget instanceof KeplerBody ? focusTarget : null;
-  const radius = body ? (5 * body.meanRadius) / EARTH_RADIUS : 5 * EARTH_RADIUS;
+  const radius = body
+    ? (5 * body.meanRadius) / DIST_MULT
+    : (5 * EARTH_RADIUS) / DIST_MULT;
   return (
     <>
       <object3D ref={centerRef}>

@@ -1,7 +1,5 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
 
-import { useContext } from 'react';
-
 const Observer = () => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
