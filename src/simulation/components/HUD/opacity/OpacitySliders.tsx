@@ -37,7 +37,7 @@ export const OpacitySliders = () => {
                 step={0.01}
                 onValueChange={(values) => {
                   const value = values[0];
-                  if (!value) return;
+                  if (!value && value !== 0) return;
                   constellations.send({ type: 'SET_OPACITY', opacity: value });
                 }}
               />
@@ -69,7 +69,7 @@ export const OpacitySliders = () => {
                 step={0.01}
                 onValueChange={(values) => {
                   const value = values[0];
-                  if (!value) return;
+                  if (!value && value !== 0) return;
                   celestialGrid.send({ type: 'SET_OPACITY', opacity: value });
                 }}
               />
