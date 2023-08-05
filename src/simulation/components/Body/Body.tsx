@@ -12,27 +12,18 @@ import {
   type Mesh,
   type Texture,
   type Vector3Tuple,
-  type ArrowHelper,
-  Vector3,
 } from 'three';
 import KeplerTreeContext from '../../context/KeplerTreeContext';
 import KeplerBody from '../../classes/kepler-body';
 
-import { CentralMassContext } from '@/simulation/context/CentralMassContext';
 import { BodyMesh } from './BodyMesh';
-import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { VelocityArrow } from '../Orbit/arrows/VelocityArrow';
-import { HtmlAnnotation } from '@/simulation/components/Body/annotation/HtmlAnnotation';
 import { degToRad } from 'three/src/math/MathUtils';
 import { Annotation } from './annotation/Annotation';
 import { RingMarker } from './marker/RingMarker';
 import { CircleMarker } from './marker/CircleMarker';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-
-const _pos = new Vector3();
-const _vel = new Vector3();
 
 // Extend KeplerBody so the reconciler is aware of it.
 extend({ KeplerBody });
@@ -74,10 +65,10 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
     initialVelocity,
   } = params;
 
-  // get function from context
+  // Get central body from context.
   const centralBodyRef = useContext(KeplerTreeContext);
 
-  // get refs
+  // Get refs.
   const bodyRef = useRef<KeplerBody>(null!);
   const meshRef = useRef<Mesh>(null!);
 
@@ -99,8 +90,8 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
           if (!body) {
             if (bodyRef.current) {
               const name = bodyRef.current.name;
-              console.log(`removing ${bodyRef.current.name}`);
-              mapActor.send({ type: 'REMOVE', name: bodyRef.current.name });
+              console.log(`removing ${name}`);
+              mapActor.send({ type: 'REMOVE', name });
             }
 
             return;
@@ -119,7 +110,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
         name={name ?? ''}
         args={[mass, initialPosition, initialVelocity, meanRadius, obliquity]}
       >
-        {/* Child orbits need to know the mass of their central body. */}
+        {/* Make self available to children through context. */}
         <KeplerTreeContext.Provider value={bodyRef}>
           {children}
           <BodyMesh

@@ -41,12 +41,6 @@ export const surfaceMachine = createMachine(
     }),
 
     on: {
-      // ASSIGN_OBSERVER: {
-      //   cond: (context, event) => {
-      //     return context.observer !== event.observer;
-      //   },
-      //   actions: ['assignObserver', 'logEvent'],
-      // },
       SET_LATITUDE: {
         cond: 'validateLatitude',
         actions: ['setLatitude'],

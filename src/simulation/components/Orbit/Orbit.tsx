@@ -88,7 +88,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   }
   const centralMass = centralBodyRef.current.mass;
 
-  const { elementTable, vectorTable, physicalData } = ephemeridesQuery.data;
+  const { elementTable, physicalData } = ephemeridesQuery.data;
 
   const { semiMajorAxis, eccentricity, trueAnomaly, periapsis } = elementTable;
   const semiLatusRectum = getSemiLatusRectumFromEccentricity(
