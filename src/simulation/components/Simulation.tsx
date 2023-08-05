@@ -12,6 +12,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { ObservationPoint } from './surface-view/observation-point/ObservationPoint';
 import SolarSystem from './SolarSystem/SolarSystem';
 import { Projector } from './surface-view/projector/Projector';
+import { KeyPressControl } from './KeyPressControl';
 
 type SimProps = {
   children: React.ReactNode;
@@ -36,15 +37,6 @@ const Simulation = ({ children }: SimProps) => {
     cameraActor.send({ type: 'UPDATE', deltaTime: delta });
   }, -10);
 
-  useKeyPressed(' ', (evt) => {
-    evt.preventDefault();
-    // const { camera, controls } = getThree();
-
-    // const camControls = controls as unknown as CameraControls;
-    // console.log('Distance to gaze target:', camControls.distance);
-    rootActor.send({ type: 'LOG_CHILDREN' });
-  });
-
   return (
     <>
       <SolarSystem>{children}</SolarSystem>
@@ -52,6 +44,7 @@ const Simulation = ({ children }: SimProps) => {
       <ambientLight intensity={0.9} />
       <ObservationPoint />
       <Projector />
+      <KeyPressControl />
     </>
   );
 };

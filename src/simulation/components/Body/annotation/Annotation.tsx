@@ -1,3 +1,4 @@
+import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import {
@@ -17,6 +18,8 @@ const _up = new Vector3();
 const _target = new Vector3();
 const _direction = new Vector3();
 const _lookPos = new Vector3();
+
+const threshold = 0.02;
 
 type Props = {
   annotation: string;
@@ -67,8 +70,15 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
     // text.lookAt(_camWorldPos);
 
     // Get distance to camera.
-    const distance = _bodyWorldPos.distanceTo(_camWorldPos);
-    const factor = distance / 75;
+    const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
+
+    // Since the local coordinates will have the parent at the origin, we can use the body's local coords to get the distance to the parent.
+    const distanceToParent = body.position.length();
+    const ratio = distanceToParent / distanceToCamera;
+    const n = distanceToCamera / 75;
+    const isOrbiter = body.parent instanceof KeplerOrbit;
+    const factor = ratio > threshold || !isOrbiter ? Math.max(1e-5, n) : 1e-5;
+
     // Scale relative to distance from camera.
     text.scale.setScalar(factor);
 

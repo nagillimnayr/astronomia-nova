@@ -1,5 +1,5 @@
 import { Billboard, Circle, Html, Ring, useCursor } from '@react-three/drei';
-import type KeplerBody from '@/simulation/classes/kepler-body';
+import KeplerBody from '@/simulation/classes/kepler-body';
 import {
   useCallback,
   type MutableRefObject,
@@ -24,21 +24,25 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { degToRad } from 'three/src/math/MathUtils';
 import { Annotation } from '../annotation/Annotation';
+import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 
 const _bodyWorldPos = new Vector3();
+const _bodyLocalPos = new Vector3();
 const _camWorldPos = new Vector3();
+
+const threshold = 0.02;
 
 type Props = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
 };
 export function RingMarker({ children, bodyRef }: Props) {
-  const { selectionActor, visibilityActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
+  const { selectionActor, visibilityActor, mapActor } =
+    MachineContext.useSelector(({ context }) => context);
   const markers = useSelector(
     visibilityActor,
     ({ context }) => context.markers
   );
+
   const isVisible = useSelector(markers, (state) => state.matches('active'));
 
   const circleRef = useRef<Mesh>(null!);
@@ -57,8 +61,6 @@ export function RingMarker({ children, bodyRef }: Props) {
   );
 
   useFrame(({ camera }) => {
-    // Reduce the opacity when close enough to the camera.
-
     if (!bodyRef.current || !circleRef.current) return;
 
     const body = bodyRef.current;
@@ -71,13 +73,19 @@ export function RingMarker({ children, bodyRef }: Props) {
     circleRef.current.lookAt(_camWorldPos);
 
     // Get distance to camera.
-    const distance = _bodyWorldPos.distanceTo(_camWorldPos);
+    const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
 
-    const n = distance / 100;
+    // If too close to parent, minimize scale.
+    const n = distanceToCamera / 100;
 
-    const factor = Math.max(1e-5, n);
+    // Since the local coordinates will have the parent at the origin, we can use the body's local coords to get the distance to the parent.
+    const distanceToParent = body.position.length();
+    const ratio = distanceToParent / distanceToCamera;
+
+    const factor = ratio > threshold ? Math.max(1e-5, n) : 1e-5;
     // Scale relative to distance from camera.
-    circleRef.current.scale.setScalar(factor);
+    const isOrbiter = body.parent instanceof KeplerOrbit;
+    circleRef.current.scale.setScalar(isOrbiter ? factor : Math.max(1e-5, n));
   });
 
   return (
