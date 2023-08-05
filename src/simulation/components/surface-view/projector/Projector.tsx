@@ -29,16 +29,14 @@ export const Projector = () => {
   const centerRef = useRef<Object3D | null>(null);
 
   useFrame(() => {
-    if (!centerRef.current || !focusTarget) return;
-    focusTarget.getWorldPosition(_pos);
+    const { observer } = cameraActor.getSnapshot()!.context;
+    if (!observer || !centerRef.current || !focusTarget) return;
+    observer.getWorldPosition(_pos);
     centerRef.current.position.copy(_pos);
   });
 
-  if (!focusTarget) return;
-
   const body = focusTarget instanceof KeplerBody ? focusTarget : null;
-  if (!body) return;
-  const radius = (5 * body.meanRadius) / EARTH_RADIUS;
+  const radius = body ? (5 * body.meanRadius) / EARTH_RADIUS : 5 * EARTH_RADIUS;
   return (
     <>
       <object3D ref={centerRef}>
