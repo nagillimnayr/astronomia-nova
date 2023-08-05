@@ -67,19 +67,27 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
     // Rotate to face camera.
     center.lookAt(_lookPos);
 
-    // text.lookAt(_camWorldPos);
-
     // Get distance to camera.
     const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
 
     // Since the local coordinates will have the parent at the origin, we can use the body's local coords to get the distance to the parent.
     const distanceToParent = body.position.length();
+    // Check the ratio of the distances to the parent and the camera.
     const ratio = distanceToParent / distanceToCamera;
-    const n = distanceToCamera / 75;
+
+    // The primary body of the system won't be parented to a KeplerOrbit object.
     const isOrbiter = body.parent instanceof KeplerOrbit;
-    const factor = ratio > threshold || !isOrbiter ? Math.max(1e-5, n) : 1e-5;
+    // If the ratio of distances is less than the threshold, set to be invisible.
+    if (isOrbiter && ratio < threshold) {
+      text.visible = false;
+      return; // No point doing any further computations.
+    }
+    // Otherwise, enable visibility.
+    text.visible = true;
 
     // Scale relative to distance from camera.
+    const n = distanceToCamera / 75;
+    const factor = Math.max(1e-5, n);
     text.scale.setScalar(factor);
 
     // Clamp the y-position so that the annotation doesn't go inside of the body.

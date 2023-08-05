@@ -19,9 +19,9 @@ import KeplerBody from '../../classes/kepler-body';
 import { BodyMesh } from './BodyMesh';
 import { VelocityArrow } from '../Orbit/arrows/VelocityArrow';
 import { degToRad } from 'three/src/math/MathUtils';
-import { Annotation } from './annotation/Annotation';
-import { RingMarker } from './marker/RingMarker';
-import { CircleMarker } from './marker/CircleMarker';
+import { Annotation } from '@/simulation/components/Body/tags/annotation/Annotation';
+import { RingMarker } from '@/simulation/components/Body/tags/marker/RingMarker';
+import { CircleMarker } from '@/simulation/components/Body/tags/marker/CircleMarker';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 

@@ -19,14 +19,13 @@ import {
 } from 'three';
 import type KeplerBody from '@/simulation/classes/kepler-body';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { HtmlAnnotation } from '@/simulation/components/Body/annotation/HtmlAnnotation';
-import { HtmlRingMarker } from '@/simulation/components/Body/marker/HtmlRingMarker';
+import { HtmlAnnotation } from '@/simulation/components/Body/tags/annotation/HtmlAnnotation';
 import { degToRad } from 'three/src/math/MathUtils';
 // import { CoordinateSphere } from '../surface-view/CoordinateSphere';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { RingMarker } from './marker/RingMarker';
+import { RingMarker } from './tags/marker/RingMarker';
 
 // Separate out the visual logic from the simulation logic.
 
