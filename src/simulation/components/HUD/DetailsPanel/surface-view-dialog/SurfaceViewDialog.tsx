@@ -5,7 +5,7 @@ import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import { observer } from 'mobx-react-lite';
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { useActor, useSelector } from '@xstate/react';
 
 const SurfaceViewDialog = observer(() => {
@@ -22,6 +22,9 @@ const SurfaceViewDialog = observer(() => {
     ({ context }) => context
   );
 
+  const close = useCallback(() => {
+    surfaceDialogActor.send({ type: 'CLOSE' });
+  }, [surfaceDialogActor]);
   return (
     <AlertDialog.Portal container={screenPortalRef.current}>
       <AlertDialog.Overlay className="prose fixed left-1/2 top-1/2 flex h-48 w-96 max-w-[50vw] -translate-x-1/2 translate-y-1/2 flex-col items-center justify-start overflow-hidden rounded-lg bg-card px-10 py-3 font-sans prose-headings:m-0">
@@ -100,7 +103,10 @@ const SurfaceViewDialog = observer(() => {
             asChild
             className="col-span-1 col-start-1 row-span-1 row-start-2"
           >
-            <button className=" h-fit w-full min-w-fit  place-items-center rounded-md border border-muted px-2 py-1 text-xl hover:bg-muted ">
+            <button
+              className=" h-fit w-full min-w-fit  place-items-center rounded-md border border-muted px-2 py-1 text-xl hover:bg-muted"
+              onClick={close}
+            >
               Cancel
             </button>
           </AlertDialog.Cancel>
@@ -113,6 +119,7 @@ const SurfaceViewDialog = observer(() => {
               className="h-fit  w-full min-w-fit place-items-center rounded-md  border border-muted  px-2 py-1 text-xl hover:bg-muted"
               onClick={() => {
                 cameraActor.send('TO_SURFACE');
+                close();
               }}
             >
               Confirm
