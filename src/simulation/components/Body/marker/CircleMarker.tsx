@@ -57,7 +57,7 @@ export function CircleMarker({ bodyRef, color }: Props) {
   useFrame(({ camera }) => {
     // Reduce the opacity when close enough to the camera.
 
-    if (!bodyRef.current || !circleRef.current) return;
+    if (!isVisible || !bodyRef.current || !circleRef.current) return;
 
     const body = bodyRef.current;
 
@@ -80,7 +80,7 @@ export function CircleMarker({ bodyRef, color }: Props) {
 
   return (
     <>
-      <Circle ref={circleRef} args={[1]} visible={isVisible}>
+      <Circle ref={circleRef} args={[1]} visible={false && isVisible}>
         <meshBasicMaterial
           ref={materialRef}
           side={DoubleSide}

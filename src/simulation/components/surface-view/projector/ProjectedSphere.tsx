@@ -1,7 +1,7 @@
 import type KeplerBody from '@/simulation/classes/kepler-body';
 import { colorMap } from '@/simulation/utils/color-map';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Sphere } from '@react-three/drei';
+import { Circle, Sphere } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { MutableRefObject, useRef } from 'react';
 import { type ArrowHelper, type Mesh, type Object3D, Vector3 } from 'three';
@@ -13,6 +13,7 @@ const _otherPos = new Vector3();
 const _diff = new Vector3();
 const _direction = new Vector3();
 const _projectedPos = new Vector3();
+const _cameraPos = new Vector3();
 
 type Props = {
   body: KeplerBody;
@@ -29,7 +30,7 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
   const centerRef = useRef<Object3D | null>(null);
   const arrowRef = useRef<ArrowHelper>(null!);
 
-  useFrame(() => {
+  useFrame(({ camera }) => {
     if (!surfaceView) return; // Only update if in surface view.
     if (!ref.current || !centerRef.current || !body) return;
     const center = centerRef.current;
@@ -49,6 +50,10 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
     // const arrow = arrowRef.current;
     // arrow.setDirection(_direction);
     // arrow.setLength(_diff.length());
+
+    // Rotate to face camera.
+    camera.getWorldPosition(_cameraPos);
+    ref.current.lookAt(_cameraPos);
   });
 
   if (!body) return;
@@ -64,14 +69,14 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
         }}
       /> */}
       <object3D ref={centerRef}>
-        <Sphere
+        <Circle
           visible={surfaceView} // Should only be visible in surface view.
           ref={ref}
-          args={[1e-1]}
-          position={[0, 0, radius]}
+          args={[1e-2]}
+          position={[0, 0, radius]} // Distance from center point.
         >
           <meshBasicMaterial color={color} />
-        </Sphere>
+        </Circle>
       </object3D>
     </>
   );
