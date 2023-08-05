@@ -27,7 +27,6 @@ import { Annotation } from '../annotation/Annotation';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 
 const _bodyWorldPos = new Vector3();
-const _bodyLocalPos = new Vector3();
 const _camWorldPos = new Vector3();
 
 const threshold = 0.02;
@@ -61,9 +60,8 @@ export function RingMarker({ children, bodyRef }: Props) {
   );
 
   useFrame(({ camera }) => {
-    if (!bodyRef.current || !circleRef.current) return;
-
     const body = bodyRef.current;
+    if (!body || !circleRef.current) return;
 
     // Get world position of body.
     body.getWorldPosition(_bodyWorldPos);

@@ -56,10 +56,8 @@ export function CircleMarker({ bodyRef, color }: Props) {
 
   useFrame(({ camera }) => {
     // Reduce the opacity when close enough to the camera.
-
-    if (!isVisible || !bodyRef.current || !circleRef.current) return;
-
     const body = bodyRef.current;
+    if (!isVisible || !body || !circleRef.current) return;
 
     // Get world position of body.
     body.getWorldPosition(_bodyWorldPos);

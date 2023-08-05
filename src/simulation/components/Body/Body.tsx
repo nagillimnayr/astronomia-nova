@@ -24,6 +24,7 @@ import { RingMarker } from '@/simulation/components/Body/tags/marker/RingMarker'
 import { CircleMarker } from '@/simulation/components/Body/tags/marker/CircleMarker';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
+import { Tags } from './tags/Tags';
 
 // Extend KeplerBody so the reconciler is aware of it.
 extend({ KeplerBody });
@@ -123,9 +124,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
             ref={meshRef}
           />
 
-          <RingMarker bodyRef={bodyRef} />
-          <CircleMarker bodyRef={bodyRef} color={color} />
-          <Annotation annotation={name} meanRadius={meanRadius} />
+          <Tags name={name} bodyRef={bodyRef} meanRadius={meanRadius} />
 
           {/* <axesHelper args={[1.5 * (meanRadius / EARTH_RADIUS)]} /> */}
           <VelocityArrow />

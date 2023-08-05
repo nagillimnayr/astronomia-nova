@@ -19,8 +19,6 @@ const _target = new Vector3();
 const _direction = new Vector3();
 const _lookPos = new Vector3();
 
-const threshold = 0.02;
-
 type Props = {
   annotation: string;
   meanRadius: number;
@@ -69,21 +67,6 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
 
     // Get distance to camera.
     const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
-
-    // Since the local coordinates will have the parent at the origin, we can use the body's local coords to get the distance to the parent.
-    const distanceToParent = body.position.length();
-    // Check the ratio of the distances to the parent and the camera.
-    const ratio = distanceToParent / distanceToCamera;
-
-    // The primary body of the system won't be parented to a KeplerOrbit object.
-    const isOrbiter = body.parent instanceof KeplerOrbit;
-    // If the ratio of distances is less than the threshold, set to be invisible.
-    if (isOrbiter && ratio < threshold) {
-      text.visible = false;
-      return; // No point doing any further computations.
-    }
-    // Otherwise, enable visibility.
-    text.visible = true;
 
     // Scale relative to distance from camera.
     const n = distanceToCamera / 75;
