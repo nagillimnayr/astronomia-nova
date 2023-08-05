@@ -7,6 +7,8 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { DIST_MULT } from '@/simulation/utils/constants';
 import { useSelector } from '@xstate/react';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
+import { SpaceViewButton } from './surface-view-dialog/SpaceViewButton';
+import { cn } from '@/lib/cn';
 
 const DetailsPanel = observer(() => {
   const { cameraActor, selectionActor } = MachineContext.useSelector(
@@ -31,15 +33,19 @@ const DetailsPanel = observer(() => {
     });
   }, [cameraActor, selected]);
 
-  //// if (!uiState.selected) return null; // If nothing is selected, display nothing.
-  if (!selected) return null; // If nothing is selected, display nothing.
+  // if (!selected) return null; // If nothing is selected, display nothing.
   let orbit: KeplerOrbit | null = null;
-  if (selected.parent instanceof KeplerOrbit) {
+  if (selected?.parent instanceof KeplerOrbit) {
     orbit = selected.parent;
   }
 
   return (
-    <div className="absolute right-0 top-0 flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border bg-muted p-4 text-muted-foreground">
+    <div
+      className={cn(
+        'absolute right-0 top-0 flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border bg-muted p-4 text-muted-foreground',
+        !selected ? 'scale-0' : 'scale-100'
+      )}
+    >
       {/** Close button. */}
       <button className="absolute right-0 top-0 h-fit w-fit p-1">
         <span
@@ -50,7 +56,7 @@ const DetailsPanel = observer(() => {
 
       {/** Name. */}
       <header className="flex w-full flex-row items-center justify-center">
-        <h4 className="text-xl">{selected.name}</h4>
+        <h4 className="text-xl">{selected?.name}</h4>
       </header>
       <Separator className="w-full bg-border" />
       {/** Attributes. */}
@@ -60,22 +66,24 @@ const DetailsPanel = observer(() => {
           <span>
             Mass:
             <br />
-            <span>{selected.mass.toExponential(3)}</span>&nbsp;kg
+            <span>{selected?.mass.toExponential(3)}</span>&nbsp;kg
           </span>
           {/** Radius. */}
           <span>
             Mean radius:
             <br />
-            <span>{selected.meanRadius.toExponential(3)}</span>
+            <span>{selected?.meanRadius.toExponential(3)}</span>
             &nbsp;m
           </span>
           {/** Orbital Period */}
-          <span>
-            Orbital Period:
-            <br />
-            <span>{orbit ? orbit.orbitalPeriod : null}</span>
-            &nbsp;Days
-          </span>
+          {orbit ? (
+            <span>
+              Orbital Period:
+              <br />
+              <span>{orbit.orbitalPeriod.toFixed(2)}</span>
+              &nbsp;Days
+            </span>
+          ) : null}
         </div>
         <div className="flex w-full flex-col items-start justify-start"></div>
       </div>
@@ -91,6 +99,8 @@ const DetailsPanel = observer(() => {
         </button>
 
         <SurfaceViewButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
+
+        <SpaceViewButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
       </div>
     </div>
   );

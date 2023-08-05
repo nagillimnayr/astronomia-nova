@@ -3,8 +3,6 @@ import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import { cn } from '@/lib/cn';
 import { SurfaceViewDialog } from './SurfaceViewDialog';
 import { useCallback, useContext } from 'react';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { observer } from 'mobx-react-lite';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 
@@ -13,28 +11,41 @@ type Props = {
   className?: ClassNameValue;
   defaultOpen?: boolean;
 };
-const SurfaceViewButton = observer(
-  ({ children, className, defaultOpen }: Props) => {
-    const { uiActor, cameraActor, selectionActor } = MachineContext.useSelector(
-      ({ context }) => context
-    );
+export const SurfaceViewButton = ({
+  children,
+  className,
+  defaultOpen,
+}: Props) => {
+  const { uiActor, cameraActor, selectionActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
 
-    const selected = useSelector(
-      selectionActor,
-      ({ context }) => context.selected
-    );
+  const { surfaceDialogActor } = useSelector(uiActor, ({ context }) => context);
 
-    const handleClick = useCallback(() => {
-      // cameraState.setFocus(uiState.getSelected()!);
-      cameraActor.send({
-        type: 'SET_TARGET',
-        focusTarget: selected,
-      });
-    }, [cameraActor, selected]);
+  // Get selection.
+  const selected = useSelector(
+    selectionActor,
+    ({ context }) => context.selected
+  );
 
-    return (
-      <AlertDialog.Root defaultOpen={defaultOpen ?? false}>
-        {/** Button to trigger dialog box popup. */}
+  // Only show button when in space view.
+  const inSpaceView = useSelector(cameraActor, (state) =>
+    state.matches('space')
+  );
+
+  const handleClick = useCallback(() => {
+    // cameraState.setFocus(uiState.getSelected()!);
+    cameraActor.send({
+      type: 'SET_TARGET',
+      focusTarget: selected,
+    });
+    surfaceDialogActor.send({ type: 'TOGGLE' });
+  }, [cameraActor, selected, surfaceDialogActor]);
+
+  return (
+    <AlertDialog.Root defaultOpen={defaultOpen ?? false}>
+      {/** Button to trigger dialog box popup. */}
+      {inSpaceView ? (
         <AlertDialog.Trigger asChild>
           {/** Surface view button. */}
           <button
@@ -48,11 +59,9 @@ const SurfaceViewButton = observer(
             <span className="icon-[mdi--telescope]" />
           </button>
         </AlertDialog.Trigger>
+      ) : null}
 
-        <SurfaceViewDialog />
-      </AlertDialog.Root>
-    );
-  }
-);
-
-export { SurfaceViewButton };
+      <SurfaceViewDialog />
+    </AlertDialog.Root>
+  );
+};

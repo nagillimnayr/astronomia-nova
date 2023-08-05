@@ -12,14 +12,16 @@ const SurfaceViewDialog = observer(() => {
   const { uiActor, cameraActor, surfaceActor } = MachineContext.useSelector(
     ({ context }) => context
   );
-  const [uiState] = useActor(uiActor);
+  const { surfaceDialogActor, screenPortalRef } = useSelector(
+    uiActor,
+    ({ context }) => context
+  );
 
   const { latitude, longitude } = useSelector(
     surfaceActor,
     ({ context }) => context
   );
 
-  const { screenPortalRef } = uiState.context;
   return (
     <AlertDialog.Portal container={screenPortalRef.current}>
       <AlertDialog.Overlay className="prose fixed left-1/2 top-1/2 flex h-48 w-96 max-w-[50vw] -translate-x-1/2 translate-y-1/2 flex-col items-center justify-start overflow-hidden rounded-lg bg-card px-10 py-3 font-sans prose-headings:m-0">

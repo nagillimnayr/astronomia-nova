@@ -16,7 +16,7 @@ export const HUD = ({ className }: Props) => {
           className
         )}
       >
-        <CamViewPortal />
+        {/* <CamViewPortal /> */}
         <DetailsPanel />
         <TimePanel />
 
