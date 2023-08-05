@@ -1,7 +1,9 @@
-import { assign, createMachine, log } from 'xstate';
+import { ActorRefFrom, assign, createMachine, log, spawn } from 'xstate';
 import { type MutableRefObject } from 'react';
+import { dialogMachine } from './dialog-machine/dialog-machine';
 
 type Context = {
+  surfaceDialogActor: ActorRefFrom<typeof dialogMachine>;
   screenPortalRef: MutableRefObject<HTMLDivElement>;
   camViewPortalRef: MutableRefObject<HTMLDivElement>;
 };
@@ -27,13 +29,25 @@ export const uiMachine = createMachine(
       context: {} as Context,
       events: {} as Events,
     },
-    id: 'ui',
-    // Initial context.
+    id: 'ui-machine',
+
+    // Initial context:
     context: () => ({
+      surfaceDialogActor: null!,
       screenPortalRef: null!,
       camViewPortalRef: null!,
     }),
-    // Context assignment events.
+
+    // Spawn child actor:
+    entry: assign({
+      surfaceDialogActor: () =>
+        spawn(dialogMachine, {
+          name: 'surfaceDialogActor',
+          sync: true,
+        }),
+    }),
+
+    // Context assignment events:
     on: {
       ASSIGN_SCREEN_PORTAL_REF: {
         actions: ['assignScreenPortalRef', log('Assigning screen portal ref')],
@@ -57,23 +71,6 @@ export const uiMachine = createMachine(
             context.camViewPortalRef.current = event.camViewPortal;
           },
         ],
-      },
-    },
-
-    type: 'parallel',
-    // Parallel states:
-    states: {
-      idle: {},
-      camView: {
-        initial: 'pending',
-        states: {
-          pending: {
-            on: {
-              SET_CAM_VIEW_PORTAL: { target: 'assigned' },
-            },
-          },
-          assigned: {},
-        },
       },
     },
   },
