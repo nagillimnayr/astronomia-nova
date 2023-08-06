@@ -1,29 +1,28 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Sphere, Wireframe } from '@react-three/drei';
+import { Edges, Sphere, Wireframe } from '@react-three/drei';
 import { useSelector } from '@xstate/react';
 import { useContext, useRef } from 'react';
 import { type Mesh } from 'three';
 
 export const ObservationSphere = () => {
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
-  const isVisible = useSelector(cameraActor, (state) => state.matches('space'));
+  const { uiActor } = MachineContext.useSelector(({ context }) => context);
+  const dialogActor = useSelector(
+    uiActor,
+    ({ context }) => context.surfaceDialogActor
+  );
+  const dialogOpen = useSelector(dialogActor, (state) => state.matches('open'));
 
   const sphereRef = useRef<Mesh>(null!);
   return (
     <>
       <Sphere
         name="observation-sphere"
-        visible={isVisible}
+        visible={dialogOpen}
         ref={sphereRef}
-        args={[1e-2]}
+        args={[1e-3, 16, 16]}
       >
-        <Wireframe
-          simplify
-          stroke="white"
-          squeeze
-          fillMix={1}
-          fillOpacity={0.01}
-        />
+        <meshBasicMaterial transparent opacity={0} />
+        <Edges scale={1} color={'white'} threshold={5.5} />
         {/* <axesHelper args={[1e-1]} /> */}
       </Sphere>
     </>
