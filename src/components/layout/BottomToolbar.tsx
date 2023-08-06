@@ -15,17 +15,6 @@ const BottomToolbar = () => {
         'grid h-full w-full grid-cols-[100px_minmax(300px,_1fr)_minmax(300px,_1fr)_minmax(300px,_1fr)_100px] grid-rows-1 place-items-center border bg-muted'
       )}
     >
-      <div className="col-span-1 col-start-2 flex h-full w-full items-center justify-center">
-        <button
-          className="rounded-md border px-2 py-1 text-lg transition-colors hover:bg-subtle"
-          onClick={() => {
-            cameraActor.send('TO_SPACE');
-          }}
-        >
-          Space
-        </button>
-      </div>
-
       <div className="col-span-1 col-start-3 flex h-full w-full items-center justify-center">
         <OpacitySliders />
       </div>
