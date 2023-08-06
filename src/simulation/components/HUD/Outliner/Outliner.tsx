@@ -1,6 +1,6 @@
 import { OutlinerItem } from './OutlinerItem';
 
-import { LoadingFallback } from '../LoadingFallback';
+import { LoadingFallback } from '../../../../components/LoadingFallback';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import {

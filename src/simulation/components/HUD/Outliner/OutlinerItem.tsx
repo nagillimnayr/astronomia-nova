@@ -38,7 +38,7 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
   // console.log(body.name, mapState.bodyMap.has(body.name));
   return (
     <Collapsible.Root
-      open={body.orbitingBodies.length > 0 && isOpen}
+      // open={body.orbitingBodies.length > 0 && isOpen}
       onOpenChange={handleOpenChanged}
       className="m-0 inline-flex h-fit min-h-fit w-full flex-col items-center justify-start rounded-none text-center"
     >
