@@ -265,14 +265,12 @@ export const cameraMachine = createMachine(
         const { controls, surfaceCamera, observer, focusTarget } = context;
         if (!controls || !surfaceCamera || !observer || !focusTarget) return;
 
-        // !!!
         // NOTE: This works!
         observer.getWorldPosition(_observerWorldPos);
         focusTarget.getWorldPosition(_targetWorldPos);
         // Get direction from target center to observer in world coordinates.
         _observerUp.subVectors(_observerWorldPos, _targetWorldPos);
         _observerUp.normalize(); // Normalize the direction vector.
-        // !!!
 
         surfaceCamera.up.copy(_observerUp);
         controls.applyCameraUp();
@@ -305,6 +303,11 @@ export const cameraMachine = createMachine(
 
           // Set min distance relative to focus targets radius.
           controls.minDistance = minDistance;
+          if (controls.distance < minDistance) {
+            controls
+              .dollyTo(minDistance, false)
+              .catch((reason) => console.log(reason));
+          }
         }
       },
       setSurfaceCamDistance: (context) => {
