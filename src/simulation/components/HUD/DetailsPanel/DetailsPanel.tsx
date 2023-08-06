@@ -9,6 +9,8 @@ import { useSelector } from '@xstate/react';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import { SpaceViewButton } from './surface-view-dialog/SpaceViewButton';
 import { cn } from '@/lib/cn';
+import { FocusButton } from './FocusButton';
+import { TracePathButton } from './TracePathButton';
 
 const DetailsPanel = observer(() => {
   const { cameraActor, selectionActor } = MachineContext.useSelector(
@@ -90,13 +92,9 @@ const DetailsPanel = observer(() => {
 
       <div className="mt-auto flex w-full flex-row items-start  justify-between">
         {/** Camera focus button. */}
-        <button
-          onClick={handleFocusClick}
-          className="pointer-events-auto flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground"
-        >
-          Focus&nbsp;
-          <span className="icon-[mdi--camera-control]" />
-        </button>
+        <FocusButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
+
+        <TracePathButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
 
         <SurfaceViewButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
 
