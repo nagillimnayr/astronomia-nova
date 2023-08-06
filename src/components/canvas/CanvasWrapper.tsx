@@ -25,9 +25,9 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
       <div className="relative z-0 flex h-full w-full flex-col justify-center border">
         <HUD className="z-10" />
 
-        <div className="absolute bottom-0 right-1 z-10 h-24 w-40 select-none whitespace-nowrap">
+        {/* <div className="absolute bottom-0 right-1 z-10 h-24 w-40 select-none whitespace-nowrap">
           <VRButton />
-        </div>
+        </div> */}
 
         {/** Wrap the canvas in a div to create a separate stacking context. This is necessary because the <Html> components from Drei and portalled out of the canvas and become sibling elements of the canvas. They have an absurdly large z-index, so they will be rendered over top of any of their siblings. Wrapping the canvas in this way ensures that they share a stacking context only with each other and the canvas, and prevents them from clipping through the HUD or the rest of the UI. */}
         <div ref={container} className="relative z-0 h-full w-full">
