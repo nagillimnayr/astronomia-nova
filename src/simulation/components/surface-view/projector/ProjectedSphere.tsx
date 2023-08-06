@@ -72,7 +72,7 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
         <Circle
           visible={surfaceView} // Should only be visible in surface view.
           ref={ref}
-          args={[1e-2]}
+          args={[1e-3]}
           position={[0, 0, radius]} // Distance from center point.
         >
           <meshBasicMaterial color={color} />
