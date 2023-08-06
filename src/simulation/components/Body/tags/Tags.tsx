@@ -42,6 +42,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     const group = groupRef.current;
     if (!group) return;
 
+    body.getWorldPosition(_bodyWorldPos);
     // Get distance to camera.
     camera.getWorldPosition(_camWorldPos);
     const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
