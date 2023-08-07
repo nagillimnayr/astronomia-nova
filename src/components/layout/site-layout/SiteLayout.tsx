@@ -5,6 +5,7 @@ import SiteHeader from './header/SiteHeader';
 import { BottomToolbar } from '../BottomToolbar';
 import { useEffect, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { useSelector } from '@xstate/react';
 
 const fontVariables = [atomicAge.variable, orbitron.variable, roboto.variable];
 
@@ -14,14 +15,10 @@ type SiteLayoutProps = {
 const SiteLayout = ({ children }: SiteLayoutProps) => {
   const { uiActor } = MachineContext.useSelector(({ context }) => context);
 
-  const screenPortalRef = useRef<HTMLDivElement>(null!);
-
-  useEffect(() => {
-    uiActor.send({
-      type: 'ASSIGN_SCREEN_PORTAL_REF',
-      screenPortalRef: screenPortalRef,
-    });
-  }, [uiActor]);
+  const screenPortalRef = useSelector(
+    uiActor,
+    ({ context }) => context.screenPortalRef
+  );
 
   return (
     <div
