@@ -13,18 +13,18 @@ const fontVariables = [
 
 const Storybook = ({ children }: PropsWithChildren) => {
   const { uiActor } = MachineContext.useSelector(({ context }) => context);
+
   return (
-    <div
-      className={cn(...fontVariables)}
-      ref={(div) => {
-        if (!div) return;
-        uiActor.send({
-          type: 'SET_SCREEN_PORTAL',
-          screenPortal: div,
-        });
-      }}
-    >
-      <div className="font-sans">{children}</div>
+    <div className={cn(...fontVariables)}>
+      <div
+        ref={(screenPortal) => {
+          if (!screenPortal) return;
+          uiActor.send({ type: 'SET_SCREEN_PORTAL', screenPortal });
+        }}
+        className="h-screen w-screen font-sans"
+      >
+        {children}
+      </div>
     </div>
   );
 };
