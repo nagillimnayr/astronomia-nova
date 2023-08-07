@@ -31,12 +31,14 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
       const content = contentRef.current;
       if (!content) return;
 
+      // Save current height value.
+      const fromHeight = window.getComputedStyle(content).height;
       // Get the computed value of height at fit-content.
       content.style.height = 'fit-content';
       const toHeight = window.getComputedStyle(content).height;
-      console.log('to height:', toHeight);
 
-      content.style.height = '0';
+      // Reset starting height value.
+      content.style.height = fromHeight;
       gsap.to(content, {
         duration: 0.5,
         height: toHeight,
@@ -57,7 +59,6 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
       // Get the computed value of the elements height.
       const fromHeight = window.getComputedStyle(content).height;
       content.style.height = fromHeight;
-      console.log('from height:', fromHeight);
       gsap.to(content, {
         duration: 0.5,
         height: 0,
@@ -117,9 +118,9 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
           {/** Button to select body. */}
           <button
             onClick={handleSelect}
-            className="m-0 inline-flex h-full w-full cursor-pointer items-center justify-start hover:bg-subtle"
+            className="m-0 inline-flex h-full w-full cursor-pointer items-center justify-start transition-colors hover:bg-subtle"
           >
-            <span className="m-0 h-8 w-fit p-1 text-left font-sans text-2xl font-medium">
+            <span className="m-0 h-8 w-fit p-1 text-left align-middle font-sans text-2xl font-medium leading-none">
               {body.name}
             </span>
           </button>
