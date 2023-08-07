@@ -1,4 +1,4 @@
-import { useRef, type PropsWithChildren } from 'react';
+import { useRef, type PropsWithChildren, useEffect } from 'react';
 import { createActorContext } from '@xstate/react';
 
 import { rootMachine } from './root-machine/root-machine';
@@ -20,6 +20,9 @@ const Initializer = () => {
   const { uiActor } = MachineContext.useSelector(({ context }) => context);
   // Create refs and assign them to global state.
   const screenPortalRef = useRef<HTMLDivElement>(null!);
-  uiActor.send({ type: 'ASSIGN_SCREEN_PORTAL_REF', screenPortalRef });
+  useEffect(() => {
+    uiActor.send({ type: 'ASSIGN_SCREEN_PORTAL_REF', screenPortalRef });
+  }, [uiActor]);
+
   return <></>;
 };
