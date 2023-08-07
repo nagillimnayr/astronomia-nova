@@ -24,8 +24,6 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<HTMLUListElement | null>(null);
 
-  const numOfSubNodes = body.countSubNodes();
-
   const openSubtree = useCallback(() => {
     return new Promise((resolve) => {
       const content = contentRef.current;
@@ -81,12 +79,12 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
 
   useEffect(() => {
     const subscription = mapActor.subscribe(() => {
-      if (isOpen && body.countSubNodes() < 1) {
+      if (isOpen && body.orbitingBodies.length < 1) {
         send({ type: 'CLOSE' });
       }
     });
     return () => subscription.unsubscribe();
-  }, [body, isOpen, mapActor, numOfSubNodes, send]);
+  }, [body, isOpen, mapActor, send]);
 
   const handleSelect = useCallback(() => {
     // Select the object.
