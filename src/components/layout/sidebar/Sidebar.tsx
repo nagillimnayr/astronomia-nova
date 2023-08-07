@@ -1,4 +1,4 @@
-import Outliner from '@/components/Outliner/Outliner';
+import Outliner from '@/simulation/components/HUD/Outliner/Outliner';
 import { Separator } from '@/components/gui/Separator';
 import { cn } from '@/lib/cn';
 import { useContext } from 'react';

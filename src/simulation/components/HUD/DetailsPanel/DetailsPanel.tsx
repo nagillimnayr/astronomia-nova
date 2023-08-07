@@ -44,7 +44,7 @@ const DetailsPanel = observer(() => {
   return (
     <div
       className={cn(
-        'absolute right-0 top-0 flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border bg-muted p-4 text-muted-foreground',
+        'relative flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border bg-muted p-4 text-muted-foreground',
         !selected ? 'scale-0' : 'scale-100'
       )}
     >

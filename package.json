@@ -76,6 +76,7 @@
     "framer-motion-3d": "^10.12.16",
     "fs-extra": "^11.1.1",
     "gray-matter": "^4.0.3",
+    "gsap": "^3.12.2",
     "jotai": "^2.1.1",
     "jotai-optics": "^0.3.0",
     "katex": "^0.16.7",

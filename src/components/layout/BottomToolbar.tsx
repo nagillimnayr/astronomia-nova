@@ -2,7 +2,6 @@ import { cn } from '@/lib/cn';
 import { ToggleBar } from '@/simulation/components/HUD/ToggleBar/ToggleBar';
 import { OpacitySliders } from '@/simulation/components/HUD/opacity/OpacitySliders';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useContext } from 'react';
 
 const BottomToolbar = () => {
   const { uiActor, cameraActor, selectionActor } = MachineContext.useSelector(

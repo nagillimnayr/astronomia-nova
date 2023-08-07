@@ -65,6 +65,15 @@ class KeplerBody extends DynamicBody {
       return !Object.is(item, body);
     });
   }
+
+  // Recursively count the number of sub-nodes.
+  countSubNodes() {
+    let count = this._orbitingBodies.length;
+    for (const body of this._orbitingBodies) {
+      count += body.countSubNodes();
+    }
+    return count;
+  }
 }
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

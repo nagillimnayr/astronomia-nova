@@ -49,7 +49,7 @@ const SiteLayout = ({ children }: SiteLayoutProps) => {
       </div> */}
 
       {/** Canvas */}
-      <div className="z-[0]  col-start-1 col-end-[-1] row-span-1  row-start-2">
+      <div className="z-[0] col-start-1 col-end-[-1] row-span-1  row-start-2">
         {children}
       </div>
 

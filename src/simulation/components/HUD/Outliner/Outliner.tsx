@@ -1,6 +1,6 @@
 import { OutlinerItem } from './OutlinerItem';
 
-import { LoadingFallback } from '../LoadingFallback';
+import { LoadingFallback } from '../../../../components/LoadingFallback';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import {
@@ -10,10 +10,12 @@ import {
 import { useSelector } from '@xstate/react';
 
 const Outliner = observer(() => {
-  const { keplerTreeActor } = MachineContext.useSelector(
+  const { keplerTreeActor, mapActor } = MachineContext.useSelector(
     ({ context }) => context
   );
   const root = useSelector(keplerTreeActor, ({ context }) => context.root);
+  // Bind to state changes so that the component will re-render whenever bodyMap is modified.
+  useSelector(mapActor, ({ context }) => context.bodyMap);
 
   if (!root) {
     return <LoadingFallback />;

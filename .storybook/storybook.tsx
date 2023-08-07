@@ -13,10 +13,17 @@ const fontVariables = [
 
 const Storybook = ({ children }: PropsWithChildren) => {
   const { uiActor } = MachineContext.useSelector(({ context }) => context);
-  const screenPortalRef = React.useRef<HTMLDivElement>(null!);
-  uiActor.send({ type: 'ASSIGN_SCREEN_PORTAL_REF', screenPortalRef });
   return (
-    <div className={cn(...fontVariables)} ref={screenPortalRef}>
+    <div
+      className={cn(...fontVariables)}
+      ref={(div) => {
+        if (!div) return;
+        uiActor.send({
+          type: 'SET_SCREEN_PORTAL',
+          screenPortal: div,
+        });
+      }}
+    >
       <div className="font-sans">{children}</div>
     </div>
   );
