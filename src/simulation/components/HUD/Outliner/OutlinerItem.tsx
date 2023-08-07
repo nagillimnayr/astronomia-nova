@@ -109,7 +109,7 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
           ref={contentRef}
           // data-state={isOpen ? 'open' : 'closed'}
           className={cn(
-            'm-0 flex w-full flex-col overflow-y-hidden border-2 border-red-500 transition-all'
+            'm-0 flex w-full flex-col overflow-y-hidden transition-all'
             // 'data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down'
           )}
         >
