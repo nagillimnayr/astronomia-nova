@@ -1,15 +1,10 @@
 import { Canvas } from '@react-three/fiber';
-import Simulation from '@/simulation/components/Simulation';
 
 import { Perf } from 'r3f-perf';
 import { VRButton, XR } from '@react-three/xr';
 import { type PropsWithChildren, Suspense, useContext, useRef } from 'react';
 import { LoadingFallback } from '../LoadingFallback';
-import {
-  CameraControls,
-  Hud,
-  PerspectiveCamera as PerspectiveCam,
-} from '@react-three/drei';
+
 import { HUD } from '@/simulation/components/HUD/HUD';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CamView } from '@/simulation/components/HUD/CamView/CamView';
