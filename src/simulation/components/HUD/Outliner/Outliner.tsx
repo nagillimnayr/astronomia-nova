@@ -1,15 +1,13 @@
 import { OutlinerItem } from './OutlinerItem';
 
 import { LoadingFallback } from '../../../../components/LoadingFallback';
-import { observer } from 'mobx-react-lite';
-import { useContext } from 'react';
 import {
   MachineContext,
   // RootActorContext,
 } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 
-const Outliner = observer(() => {
+const Outliner = () => {
   const { keplerTreeActor, mapActor } = MachineContext.useSelector(
     ({ context }) => context
   );
@@ -25,6 +23,6 @@ const Outliner = observer(() => {
       <OutlinerItem body={root} />
     </div>
   );
-});
+};
 
 export default Outliner;

@@ -13,55 +13,63 @@ type Services = {
   closeSubtree: PromiseService;
 };
 
-export const outlinerItemMachine = createMachine({
-  predictableActionArguments: true,
-  tsTypes: {} as import('./outliner-item-machine.typegen').Typegen0,
-  schema: {
-    context: {} as Context,
-    events: {} as Events,
-    services: {} as Services,
-  },
+export const outlinerItemMachine = createMachine(
+  {
+    predictableActionArguments: true,
+    tsTypes: {} as import('./outliner-item-machine.typegen').Typegen0,
+    schema: {
+      context: {} as Context,
+      events: {} as Events,
+      services: {} as Services,
+    },
 
-  id: 'outliner-item-machine',
+    id: 'outliner-item-machine',
 
-  context: {
-    body: null!,
-  },
+    context: {
+      body: null!,
+    },
 
-  initial: 'open',
-  states: {
-    opening: {
-      invoke: {
-        src: 'openSubtree',
-        onDone: { target: 'open' },
-      },
-    },
-    open: {
-      on: {
-        TOGGLE: {
-          target: 'closing',
-        },
-        CLOSE: {
-          target: 'closing',
+    initial: 'open',
+    states: {
+      opening: {
+        invoke: {
+          src: 'openSubtree',
+          onDone: { target: 'open' },
         },
       },
-    },
-    closing: {
-      invoke: {
-        src: 'closeSubtree',
-        onDone: { target: 'closed' },
-      },
-    },
-    closed: {
-      on: {
-        TOGGLE: {
-          target: 'opening',
+      open: {
+        on: {
+          TOGGLE: {
+            target: 'closing',
+          },
+          CLOSE: {
+            target: 'closing',
+          },
         },
-        OPEN: {
-          cond: ({ body }) => body.orbitingBodies.length > 0,
-          target: 'opening',
+      },
+      closing: {
+        invoke: {
+          src: 'closeSubtree',
+          onDone: { target: 'closed' },
+        },
+      },
+      closed: {
+        on: {
+          TOGGLE: {
+            cond: 'validateSubNodeCount',
+            target: 'opening',
+          },
+          OPEN: {
+            cond: 'validateSubNodeCount',
+            target: 'opening',
+          },
         },
       },
     },
   },
-});
+  {
+    guards: {
+      validateSubNodeCount: ({ body }) => body.orbitingBodies.length > 0,
+    },
+  }
+);

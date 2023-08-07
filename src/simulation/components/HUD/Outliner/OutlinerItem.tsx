@@ -63,16 +63,20 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
   const isOpen = state.matches('open');
 
   useEffect(() => {
-    if (isOpen && numOfSubNodes < 1) {
-      send({ type: 'CLOSE' });
-    }
-  }, [isOpen, numOfSubNodes, send]);
+    const subscription = mapActor.subscribe(() => {
+      if (isOpen && body.countSubNodes() < 1) {
+        send({ type: 'CLOSE' });
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [body, isOpen, mapActor, numOfSubNodes, send]);
 
   const handleSelect = useCallback(() => {
     // Select the object.
     selectionActor.send({ type: 'SELECT', selection: body });
   }, [body, selectionActor]);
 
+  const dataState = state.value;
   return (
     <div
       ref={rootRef}
@@ -84,9 +88,10 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
         <div className="m-0 inline-flex h-fit w-full items-center justify-start p-0">
           {/** Trigger to toggle collapsible content open/closed. */}
           <button
-            data-state={isOpen ? 'open' : 'closed'}
+            data-state={dataState}
             className={cn(
-              'm-0 flex aspect-square h-full min-h-fit flex-col items-start justify-center overflow-hidden whitespace-nowrap rounded-full p-0 transition-all hover:bg-subtle data-[state=open]:rotate-90'
+              'm-0 flex aspect-square h-full min-h-fit flex-col items-start justify-center overflow-hidden whitespace-nowrap rounded-full p-0 transition-all duration-500 hover:bg-subtle',
+              'data-[state=open]:rotate-90 data-[state=opening]:rotate-90'
             )}
             onClick={() => send({ type: 'TOGGLE' })}
           >
@@ -107,7 +112,7 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
         {/** Subtree of orbiting bodies. */}
         <div
           ref={contentRef}
-          // data-state={isOpen ? 'open' : 'closed'}
+          data-state={dataState}
           className={cn(
             'm-0 flex w-full flex-col overflow-y-hidden transition-all'
             // 'data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down'
