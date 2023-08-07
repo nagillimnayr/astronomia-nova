@@ -1,5 +1,5 @@
-import KeplerBody from '@/simulation/classes/kepler-body';
-import { ContextFrom, EventFrom, createMachine } from 'xstate';
+import type KeplerBody from '@/simulation/classes/kepler-body';
+import { createMachine } from 'xstate';
 
 type Context = {
   body: KeplerBody;
@@ -25,9 +25,10 @@ export const outlinerItemMachine = createMachine(
 
     id: 'outliner-item-machine',
 
-    context: {
+    context: () => ({
       body: null!,
-    },
+      subnodes: new Map<string, HTMLDivElement>(),
+    }),
 
     initial: 'open',
     states: {

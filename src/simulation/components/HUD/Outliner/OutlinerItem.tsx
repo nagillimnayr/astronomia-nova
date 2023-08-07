@@ -1,12 +1,13 @@
 import type KeplerBody from '@/simulation/classes/kepler-body';
 import * as Collapsible from '@radix-ui/react-collapsible';
-import { gsap } from 'gsap';
-
+import { gsap, Elastic } from 'gsap';
+import useMeasure from 'react-use-measure';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useMachine, useSelector } from '@xstate/react';
 import { outlinerItemMachine } from './outliner-item-machine/outliner-item-machine';
+import { InterpreterFrom } from 'xstate';
 
 type OutlinerItemProps = {
   body: KeplerBody;
@@ -29,29 +30,44 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
     return new Promise((resolve) => {
       const content = contentRef.current;
       if (!content) return;
+
+      // Get the computed value of height at fit-content.
+      content.style.height = 'fit-content';
+      const toHeight = window.getComputedStyle(content).height;
+      console.log('to height:', toHeight);
+
+      content.style.height = '0';
       gsap.to(content, {
         duration: 0.5,
-        height: 60 * numOfSubNodes,
-
-        onComplete: resolve,
+        height: toHeight,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          content.style.height = 'fit-content';
+          resolve(null);
+        },
       });
     });
-  }, [numOfSubNodes]);
+  }, []);
 
   const closeSubtree = useCallback(() => {
     return new Promise((resolve) => {
       const content = contentRef.current;
       if (!content) return;
+
+      // Get the computed value of the elements height.
+      const fromHeight = window.getComputedStyle(content).height;
+      content.style.height = fromHeight;
+      console.log('from height:', fromHeight);
       gsap.to(content, {
         duration: 0.5,
         height: 0,
-
+        ease: 'power2.inOut',
         onComplete: resolve,
       });
     });
   }, []);
 
-  const [state, send] = useMachine(outlinerItemMachine, {
+  const [state, send, actor] = useMachine(outlinerItemMachine, {
     context: {
       body,
     },
@@ -103,7 +119,7 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
             onClick={handleSelect}
             className="m-0 inline-flex h-full w-full cursor-pointer items-center justify-start hover:bg-subtle"
           >
-            <span className="m-0 h-fit w-fit p-1 text-left font-sans text-xl font-medium">
+            <span className="m-0 h-8 w-fit p-1 text-left font-sans text-2xl font-medium">
               {body.name}
             </span>
           </button>
@@ -112,9 +128,8 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
         {/** Subtree of orbiting bodies. */}
         <div
           ref={contentRef}
-          data-state={dataState}
           className={cn(
-            'm-0 flex w-full flex-col overflow-y-hidden transition-all'
+            'm-0 flex h-fit w-full flex-col overflow-y-hidden transition-all'
             // 'data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down'
           )}
         >
