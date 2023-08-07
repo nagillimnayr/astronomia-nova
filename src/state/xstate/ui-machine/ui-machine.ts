@@ -3,6 +3,7 @@ import { type MutableRefObject } from 'react';
 import { dialogMachine } from './dialog-machine/dialog-machine';
 
 type Context = {
+  settingsMenuActor: ActorRefFrom<typeof dialogMachine>;
   surfaceDialogActor: ActorRefFrom<typeof dialogMachine>;
   screenPortalRef: MutableRefObject<HTMLDivElement>;
   camViewPortalRef: MutableRefObject<HTMLDivElement>;
@@ -33,6 +34,7 @@ export const uiMachine = createMachine(
 
     // Initial context:
     context: () => ({
+      settingsMenuActor: null!,
       surfaceDialogActor: null!,
       screenPortalRef: null!,
       camViewPortalRef: null!,
@@ -40,6 +42,11 @@ export const uiMachine = createMachine(
 
     // Spawn child actor:
     entry: assign({
+      settingsMenuActor: () =>
+        spawn(dialogMachine, {
+          name: 'settingsMenuActor',
+          sync: true,
+        }),
       surfaceDialogActor: () =>
         spawn(dialogMachine, {
           name: 'surfaceDialogActor',
