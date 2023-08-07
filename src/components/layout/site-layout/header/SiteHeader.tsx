@@ -65,22 +65,6 @@ const SiteHeader = ({ className }: Props) => {
         </div>
 
         <NavBar className="mr-auto" />
-
-        {/* <div className="ml-auto aspect-square h-full">
-          <SidebarToggle />
-        </div> */}
-
-        {/* visibility toggle */}
-        {/* <button
-          className="absolute left-[50%] top-full flex h-4 w-10 -translate-x-1/2 flex-row items-center justify-center rounded-b-xl  bg-gray-200 bg-opacity-40 p-0"
-          onClick={handleClick}
-        >
-          <Icon
-            className="-translate-y-0.5"
-            path={isOpen ? mdiMenuUp : mdiMenuDown}
-            size={2}
-          />
-        </button> */}
       </header>
     </>
   );

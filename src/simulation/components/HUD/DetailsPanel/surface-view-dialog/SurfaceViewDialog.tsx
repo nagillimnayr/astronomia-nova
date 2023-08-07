@@ -1,11 +1,10 @@
 import { Slider } from '@/components/gui/Slider';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import { observer } from 'mobx-react-lite';
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { useActor, useSelector } from '@xstate/react';
 
 const SurfaceViewDialog = observer(() => {
