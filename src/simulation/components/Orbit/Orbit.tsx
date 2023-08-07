@@ -128,12 +128,13 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     calculateOrbitalPeriod(semiMajorAxis, centralMass) / DAY;
 
   const color = colorMap.get(name) ?? 'white';
+  const { meanRadius, obliquity } = physicalData.table;
   const bodyParams: BodyParams = {
     name: name,
     color,
     mass: physicalData.table.mass,
-    meanRadius: physicalData.table.meanRadius,
-    obliquity: physicalData.table.obliquity,
+    meanRadius: meanRadius,
+    obliquity: obliquity,
     initialPosition: _pos.divideScalar(DIST_MULT).toArray(),
     initialVelocity: _vel.divideScalar(DIST_MULT).toArray(),
   };
@@ -182,7 +183,12 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
       <Body ref={orbitingBodyRef} params={bodyParams} texture={texture}>
         {children}
       </Body>
-      {/* <BodyTrail bodyRef={orbitingBodyRef} orbitalPeriod={orbitalPeriod} /> */}
+      {/* <BodyTrail
+        bodyRef={orbitingBodyRef}
+        orbitalPeriod={orbitalPeriod}
+        color={color}
+        lineWidth={meanRadius / DIST_MULT}
+      /> */}
 
       <Trajectory
         semiMajorAxis={semiMajorAxis}

@@ -25,6 +25,7 @@ import { CircleMarker } from '@/simulation/components/Body/tags/marker/CircleMar
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { Tags } from './tags/Tags';
+import { BodyTrail } from './trail/BodyTrail';
 
 // Extend KeplerBody so the reconciler is aware of it.
 extend({ KeplerBody });
@@ -125,7 +126,6 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
           />
 
           <Tags name={name} bodyRef={bodyRef} meanRadius={meanRadius} />
-
           {/* <axesHelper args={[1.5 * (meanRadius / EARTH_RADIUS)]} /> */}
           <VelocityArrow />
         </KeplerTreeContext.Provider>
