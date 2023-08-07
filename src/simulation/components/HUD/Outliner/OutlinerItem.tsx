@@ -137,10 +137,10 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
             ref={listRef}
             className="ml-2 h-fit overflow-y-hidden border-l border-gray-600 pl-1 marker:text-gray-600"
           >
-            {body.orbitingBodies.map((child, index) => {
+            {body.orbitingBodies.map((child) => {
               // Recursively traverse the tree to construct the tree view.
               return (
-                <li key={index} className="w-full list-outside list-none">
+                <li key={child.name} className="w-full list-outside list-none">
                   <OutlinerItem body={child} />
                 </li>
               );
