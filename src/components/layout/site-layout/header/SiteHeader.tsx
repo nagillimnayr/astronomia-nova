@@ -5,8 +5,7 @@ import Image from 'next/image';
 import { useCallback, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
 
-import NavBar from './Navigation/nav-menu/NavBar';
-import { SidebarToggle } from '../sidebar/SidebarToggle';
+import NavBar from '../Navigation/nav-menu/NavBar';
 import { type ClassNameValue } from 'tailwind-merge';
 
 type Props = {

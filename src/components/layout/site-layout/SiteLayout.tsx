@@ -1,12 +1,9 @@
 'use client';
 import { cn } from '@/lib/cn';
 import { atomicAge, orbitron, roboto } from '@/lib/fonts';
-import SiteHeader from './SiteHeader';
-import SiteFooter from './SiteFooter';
-import { Sidebar } from '@/components/layout/sidebar/Sidebar';
+import SiteHeader from './header/SiteHeader';
 import { BottomToolbar } from '../BottomToolbar';
-import { useContext, useEffect, useRef } from 'react';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { useEffect, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 
 const fontVariables = [atomicAge.variable, orbitron.variable, roboto.variable];

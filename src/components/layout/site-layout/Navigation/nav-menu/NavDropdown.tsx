@@ -1,16 +1,8 @@
-import { Menu } from '@headlessui/react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import {
-  Fragment,
-  MutableRefObject,
-  PropsWithChildren,
-  useContext,
-  useRef,
-} from 'react';
+import { type PropsWithChildren, useRef } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { ClassNameValue } from 'tailwind-merge';
+import { type ClassNameValue } from 'tailwind-merge';
 
 type link = {
   href: string;
