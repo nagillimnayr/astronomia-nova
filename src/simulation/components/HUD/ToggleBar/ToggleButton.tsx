@@ -12,7 +12,7 @@ type Props = PropsWithChildren & {
   target: keyof ContextFrom<typeof visibilityMachine>;
   defaultOff?: boolean;
 };
-export const ToggleItem = ({ children, target, defaultOff }: Props) => {
+export const ToggleButton = ({ children, target, defaultOff }: Props) => {
   const { visibilityActor } = MachineContext.useSelector(
     ({ context }) => context
   );

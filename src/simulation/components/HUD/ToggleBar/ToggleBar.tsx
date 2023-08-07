@@ -1,5 +1,5 @@
 import * as RadixToolbar from '@radix-ui/react-toolbar';
-import { ToggleItem } from './ToggleItem';
+import { ToggleButton } from './ToggleButton';
 
 import { type ClassNameValue } from 'tailwind-merge';
 import { cn } from '@/lib/cn';
@@ -16,21 +16,21 @@ export const ToggleBar = ({ className }: Props) => {
       )}
     >
       {/** Trajectory Visibility Toggle. */}
-      <ToggleItem target={'trajectories'}>
+      <ToggleButton target={'trajectories'}>
         <span className="icon-[mdi--orbit] text-xl" />
-      </ToggleItem>
+      </ToggleButton>
       {/** Annotation Visibility Toggle. */}
-      <ToggleItem target={'annotations'}>
+      <ToggleButton target={'annotations'}>
         <span className="icon-[mdi--tag-text] text-xl" />
-      </ToggleItem>
+      </ToggleButton>
       {/** Marker Visibility Toggle. */}
-      <ToggleItem target={'markers'}>
+      <ToggleButton target={'markers'}>
         <span className="icon-[mdi--target] text-xl" />
-      </ToggleItem>
+      </ToggleButton>
       {/** Velocity Arrow Visibility Toggle. */}
-      <ToggleItem target={'velocityArrows'} defaultOff>
+      <ToggleButton target={'velocityArrows'} defaultOff>
         <span className="icon-[mdi--arrow-top-right-thin] text-xl" />
-      </ToggleItem>
+      </ToggleButton>
     </RadixToolbar.Root>
   );
 };
