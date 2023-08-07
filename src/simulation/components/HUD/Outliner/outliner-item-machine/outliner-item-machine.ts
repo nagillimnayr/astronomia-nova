@@ -1,23 +1,39 @@
-import { createMachine } from 'xstate';
+import KeplerBody from '@/simulation/classes/kepler-body';
+import { ContextFrom, EventFrom, createMachine } from 'xstate';
 
-type Context = {};
+type Context = {
+  body: KeplerBody;
+};
 
 type Events = { type: 'TOGGLE' } | { type: 'OPEN' } | { type: 'CLOSE' };
 
-const outlinerItemMachine = createMachine({
+type PromiseService = { data: unknown };
+type Services = {
+  openSubtree: PromiseService;
+  closeSubtree: PromiseService;
+};
+
+export const outlinerItemMachine = createMachine({
   predictableActionArguments: true,
   tsTypes: {} as import('./outliner-item-machine.typegen').Typegen0,
   schema: {
     context: {} as Context,
     events: {} as Events,
+    services: {} as Services,
   },
 
   id: 'outliner-item-machine',
-  initial: 'opening',
+
+  context: {
+    body: null!,
+  },
+
+  initial: 'open',
   states: {
     opening: {
       invoke: {
         src: 'openSubtree',
+        onDone: { target: 'open' },
       },
     },
     open: {
@@ -33,6 +49,7 @@ const outlinerItemMachine = createMachine({
     closing: {
       invoke: {
         src: 'closeSubtree',
+        onDone: { target: 'closed' },
       },
     },
     closed: {
@@ -41,6 +58,7 @@ const outlinerItemMachine = createMachine({
           target: 'opening',
         },
         OPEN: {
+          cond: ({ body }) => body.orbitingBodies.length > 0,
           target: 'opening',
         },
       },
