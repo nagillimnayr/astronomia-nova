@@ -76,14 +76,9 @@ export function RingMarker({ children, bodyRef }: Props) {
     // If too close to parent, minimize scale.
     const n = distanceToCamera / 100;
 
-    // Since the local coordinates will have the parent at the origin, we can use the body's local coords to get the distance to the parent.
-    const distanceToParent = body.position.length();
-    const ratio = distanceToParent / distanceToCamera;
-
-    const factor = ratio > threshold ? Math.max(1e-5, n) : 1e-5;
+    const factor = Math.max(1e-5, n);
     // Scale relative to distance from camera.
-    const isOrbiter = body.parent instanceof KeplerOrbit;
-    circleRef.current.scale.setScalar(isOrbiter ? factor : Math.max(1e-5, n));
+    circleRef.current.scale.setScalar(factor);
   });
 
   return (
