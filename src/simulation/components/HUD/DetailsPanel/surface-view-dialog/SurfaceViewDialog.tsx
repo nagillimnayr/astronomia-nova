@@ -3,11 +3,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
-import { observer } from 'mobx-react-lite';
+
 import { useCallback } from 'react';
 import { useActor, useSelector } from '@xstate/react';
 
-const SurfaceViewDialog = observer(() => {
+const SurfaceViewDialog = () => {
   const { uiActor, cameraActor, surfaceActor } = MachineContext.useSelector(
     ({ context }) => context
   );
@@ -24,9 +24,11 @@ const SurfaceViewDialog = observer(() => {
   const close = useCallback(() => {
     surfaceDialogActor.send({ type: 'CLOSE' });
   }, [surfaceDialogActor]);
+
+  if (!screenPortalRef) return;
   return (
     <AlertDialog.Portal container={screenPortalRef.current}>
-      <AlertDialog.Overlay className="prose fixed left-1/2 top-1/2 flex h-48 w-96 max-w-[50vw] -translate-x-1/2 translate-y-1/2 flex-col items-center justify-start overflow-hidden rounded-lg bg-card px-10 py-3 font-sans prose-headings:m-0">
+      <AlertDialog.Overlay className="prose pointer-events-auto fixed left-1/2 top-1/2 flex h-48 w-96 max-w-[50vw] -translate-x-1/2 translate-y-1/2 flex-col items-center justify-start overflow-hidden rounded-lg bg-card px-10 py-3 font-sans prose-headings:m-0">
         <AlertDialog.Title className="m-0 text-center text-3xl ">
           Surface View
         </AlertDialog.Title>
@@ -128,6 +130,6 @@ const SurfaceViewDialog = observer(() => {
       </AlertDialog.Overlay>
     </AlertDialog.Portal>
   );
-});
+};
 
 export { SurfaceViewDialog };
