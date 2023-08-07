@@ -17,7 +17,7 @@ export const Slider = ({ className, ...props }: Props) => {
       </RadixSlider.Track>
       <RadixSlider.Thumb
         className={cn(
-          'focus-outline pointer-events-auto block aspect-square  w-4 rounded-full bg-white shadow-lg  shadow-black transition-all duration-500 hover:bg-black hover:shadow-lg hover:outline hover:outline-1 hover:outline-white focus:bg-black focus:shadow-lg focus:shadow-black focus:outline focus:outline-1 focus:outline-white'
+          'focus-outline block aspect-square  w-4 rounded-full bg-white shadow-lg  shadow-black transition-all duration-500 hover:bg-black hover:shadow-lg hover:outline hover:outline-1 hover:outline-white focus:bg-black focus:shadow-lg focus:shadow-black focus:outline focus:outline-1 focus:outline-white'
         )}
       />
     </RadixSlider.Root>
