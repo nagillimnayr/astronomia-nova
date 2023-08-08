@@ -100,7 +100,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       >
         <meshBasicMaterial map={texture} />
 
-        {/* <axesHelper args={[2 * (meanRadius / EARTH_RADIUS)]} /> */}
+        {/* <axesHelper args={[2 * (meanRadius / DIST_MULT)]} /> */}
 
         {/* <HtmlMarker bodyRef={bodyRef} /> */}
         {/* <Marker bodyRef={bodyRef} meanRadius={meanRadius} /> */}

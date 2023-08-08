@@ -25,10 +25,7 @@ declare global {
   }
 }
 
-type CelestialSphereProps = {
-  children?: React.ReactNode;
-};
-export const CelestialSphere = (props: CelestialSphereProps) => {
+export const CelestialSphere = () => {
   const [starmap, hiptyc, milkyway] = useLoader(EXRLoader, [
     'assets/textures/stars/starmap_2020_4k.exr',
     'assets/textures/stars/hiptyc_2020_4k.exr',
@@ -77,7 +74,11 @@ export const CelestialSphere = (props: CelestialSphereProps) => {
   return (
     <>
       {/** Scale x by -1 to flip uvs. */}
-      <Sphere args={[1e14, 128, 128]} scale={[-1, 1, 1]}>
+      <Sphere
+        args={[1e14, 128, 128]}
+        scale={[-1, 1, 1]}
+        rotation={[degToRad(23.44), 0, 0]}
+      >
         {starmap && celestialGridTexture && constellationTexture ? (
           <celestialSphereMaterial
             key={CelestialSphereMaterial.key}
