@@ -1,7 +1,15 @@
+import { type MutableRefObject } from 'react';
 import { assign, createMachine, log } from 'xstate';
+import { gsap } from 'gsap';
 
-type Context = {};
-type Events = { type: 'OPEN' } | { type: 'CLOSE' } | { type: 'TOGGLE' };
+type Context = {
+  dialogRef: MutableRefObject<HTMLDivElement | null> | null;
+};
+type Events =
+  | { type: 'OPEN' }
+  | { type: 'CLOSE' }
+  | { type: 'TOGGLE' }
+  | { type: 'SET_REF'; ref: MutableRefObject<HTMLDivElement | null> };
 
 type PromiseService = { data: unknown };
 type Services = {
@@ -20,7 +28,21 @@ export const dialogMachine = createMachine(
     },
     id: 'dialog-machine',
 
-    context: () => ({}),
+    context: () => ({
+      dialogRef: null,
+    }),
+
+    on: {
+      SET_REF: {
+        cond: ({ dialogRef }, { ref }) => dialogRef !== ref,
+        actions: [
+          assign({
+            dialogRef: (_, { ref }) => ref,
+          }),
+          'logEvent',
+        ],
+      },
+    },
 
     initial: 'closed',
     states: {
@@ -67,11 +89,33 @@ export const dialogMachine = createMachine(
       logEvent: log((_, event) => event),
     },
     services: {
-      openDialog: () => {
-        return new Promise((resolve) => resolve(null));
+      openDialog: (context) => {
+        return new Promise((resolve) => {
+          const { dialogRef } = context;
+          if (!dialogRef || !dialogRef.current) return resolve(null);
+          const dialogDiv = dialogRef.current;
+          gsap.to(dialogDiv, {
+            duration: 0.3,
+            opacity: '100%',
+            ease: 'power2.in',
+            onComplete: resolve,
+          });
+        });
       },
-      closeDialog: () => {
-        return new Promise((resolve) => resolve(null));
+      closeDialog: (context) => {
+        return new Promise((resolve) => {
+          const { dialogRef } = context;
+          if (!dialogRef || !dialogRef.current) {
+            return resolve(null);
+          }
+          const dialogDiv = dialogRef.current;
+          gsap.to(dialogDiv, {
+            duration: 0.3,
+            opacity: 0,
+            ease: 'power2.out',
+            onComplete: resolve,
+          });
+        });
       },
     },
   }

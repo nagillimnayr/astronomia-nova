@@ -3,55 +3,32 @@ import { SettingsToggleButton } from './SettingsToggleButton';
 import { OpacitySliders } from '../opacity/OpacitySliders';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useActor, useSelector, useMachine } from '@xstate/react';
-import { useCallback, useRef } from 'react';
-import { gsap } from 'gsap';
+import { useCallback, useEffect, useRef } from 'react';
 import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
 import { cn } from '@/lib/cn';
 
 export const SettingsMenu = () => {
-  // const { uiActor } = MachineContext.useSelector(({ context }) => context);
-  // const settingsMenuActor = useSelector(
-  //   uiActor,
-  //   ({ context }) => context.settingsMenuActor
-  // );
-
   const divRef = useRef<HTMLDivElement>(null!);
 
-  const openDialog = useCallback(() => {
-    return new Promise((resolve) => {
-      const div = divRef.current;
-      gsap.to(div, {
-        duration: 0.3,
-        opacity: '100%',
-        ease: 'power2.in',
-        onComplete: resolve,
-      });
-    });
-  }, []);
-  const closeDialog = useCallback(() => {
-    return new Promise((resolve) => {
-      const div = divRef.current;
-      gsap.to(div, {
-        duration: 0.3,
-        opacity: 0,
-        ease: 'power2.out',
-        onComplete: resolve,
-      });
-    });
-  }, []);
-  const [state, send, actor] = useMachine(dialogMachine, {
-    services: {
-      openDialog,
-      closeDialog,
-    },
-  });
+  // Use state machine.
+  const [state, send, actor] = useMachine(dialogMachine);
 
+  // Open button click handler.
   const handleOpenClick = useCallback(() => {
     actor.send({ type: 'TOGGLE' });
   }, [actor]);
 
+  // Close button click handler.
   const handleCloseClick = useCallback(() => {
     actor.send({ type: 'CLOSE' });
+  }, [actor]);
+
+  useEffect(() => {
+    // If ref has not already been set in the actor's context. Set it.
+    const dialogRef = actor.getSnapshot()!.context.dialogRef;
+    if (!dialogRef) {
+      actor.send({ type: 'SET_REF', ref: divRef });
+    }
   }, [actor]);
 
   return (
@@ -74,7 +51,6 @@ export const SettingsMenu = () => {
       >
         {/** Close button. */}
         <button
-          // data-state={state.value}
           onClick={handleCloseClick}
           className="absolute right-0 top-0 h-fit w-fit p-1"
         >
