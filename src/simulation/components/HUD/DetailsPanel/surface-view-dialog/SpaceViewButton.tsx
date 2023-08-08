@@ -28,8 +28,9 @@ export const SpaceViewButton = ({ children, className }: Props) => {
     <>
       <button
         onClick={handleClick}
+        data-state={inSurfaceView ? 'shown' : 'hidden'}
         className={cn(
-          'pointer-events-auto flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 font-sans hover:bg-subtle hover:text-subtle-foreground',
+          'pointer-events-auto flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 font-sans hover:bg-subtle hover:text-subtle-foreground data-[state=hidden]:hidden',
           className
         )}
       >

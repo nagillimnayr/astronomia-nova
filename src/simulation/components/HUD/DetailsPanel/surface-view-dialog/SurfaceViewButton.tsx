@@ -1,7 +1,7 @@
 import { type ClassNameValue } from 'tailwind-merge';
-import * as AlertDialog from '@radix-ui/react-alert-dialog';
+
 import { cn } from '@/lib/cn';
-import { SurfaceViewDialog } from './SurfaceViewDialog';
+
 import { useCallback, useContext } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
@@ -11,11 +11,7 @@ type Props = {
   className?: ClassNameValue;
   defaultOpen?: boolean;
 };
-export const SurfaceViewButton = ({
-  children,
-  className,
-  defaultOpen,
-}: Props) => {
+export const SurfaceViewButton = ({ className, defaultOpen }: Props) => {
   const { uiActor, cameraActor, selectionActor } = MachineContext.useSelector(
     ({ context }) => context
   );
@@ -43,25 +39,19 @@ export const SurfaceViewButton = ({
   }, [cameraActor, selected, surfaceDialogActor]);
 
   return (
-    <AlertDialog.Root defaultOpen={defaultOpen ?? false}>
-      {/** Button to trigger dialog box popup. */}
-      {inSpaceView ? (
-        <AlertDialog.Trigger asChild>
-          {/** Surface view button. */}
-          <button
-            onClick={handleClick}
-            className={cn(
-              'pointer-events-auto flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 font-sans hover:bg-subtle hover:text-subtle-foreground',
-              className
-            )}
-          >
-            Surface&nbsp;
-            <span className="icon-[mdi--telescope]" />
-          </button>
-        </AlertDialog.Trigger>
-      ) : null}
-
-      <SurfaceViewDialog />
-    </AlertDialog.Root>
+    <>
+      {/** Surface view button. */}
+      <button
+        onClick={handleClick}
+        data-state={inSpaceView ? 'shown' : 'hidden'}
+        className={cn(
+          'pointer-events-auto flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 font-sans hover:bg-subtle hover:text-subtle-foreground data-[state=hidden]:hidden',
+          className
+        )}
+      >
+        Surface&nbsp;
+        <span className="icon-[mdi--telescope]" />
+      </button>
+    </>
   );
 };
