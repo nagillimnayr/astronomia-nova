@@ -1,5 +1,5 @@
 import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/gui/Slider';
+import { Slider } from '@/components/gui/slider/Slider';
 import { Input } from '@/components/ui/input';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';

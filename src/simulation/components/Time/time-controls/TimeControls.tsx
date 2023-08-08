@@ -1,4 +1,4 @@
-import { Slider } from '@/components/gui/Slider';
+import { Slider } from '@/components/gui/slider/Slider';
 import { TimescaleSlider } from './TimescaleSlider';
 
 import PauseButton from './PauseButton';
