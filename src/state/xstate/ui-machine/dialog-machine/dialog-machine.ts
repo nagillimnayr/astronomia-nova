@@ -3,6 +3,12 @@ import { assign, createMachine, log } from 'xstate';
 type Context = {};
 type Events = { type: 'OPEN' } | { type: 'CLOSE' } | { type: 'TOGGLE' };
 
+type PromiseService = { data: unknown };
+type Services = {
+  openDialog: PromiseService;
+  closeDialog: PromiseService;
+};
+
 export const dialogMachine = createMachine(
   {
     predictableActionArguments: true,
@@ -10,6 +16,7 @@ export const dialogMachine = createMachine(
     schema: {
       context: {} as Context,
       events: {} as Events,
+      services: {} as Services,
     },
     id: 'dialog-machine',
 
@@ -17,26 +24,38 @@ export const dialogMachine = createMachine(
 
     initial: 'closed',
     states: {
+      opening: {
+        invoke: {
+          src: 'openDialog',
+          onDone: { target: 'open' },
+        },
+      },
       open: {
         on: {
           CLOSE: {
-            target: 'closed',
+            target: 'closing',
             actions: ['logEvent'],
           },
           TOGGLE: {
-            target: 'closed',
+            target: 'closing',
             actions: ['logEvent'],
           },
+        },
+      },
+      closing: {
+        invoke: {
+          src: 'closeDialog',
+          onDone: { target: 'closed' },
         },
       },
       closed: {
         on: {
           OPEN: {
-            target: 'open',
+            target: 'opening',
             actions: ['logEvent'],
           },
           TOGGLE: {
-            target: 'open',
+            target: 'opening',
             actions: ['logEvent'],
           },
         },
@@ -46,6 +65,14 @@ export const dialogMachine = createMachine(
   {
     actions: {
       logEvent: log((_, event) => event),
+    },
+    services: {
+      openDialog: () => {
+        return new Promise((resolve) => resolve(null));
+      },
+      closeDialog: () => {
+        return new Promise((resolve) => resolve(null));
+      },
     },
   }
 );
