@@ -5,7 +5,6 @@ import DouglasLogo from './DouglasLogo';
 import { CamViewPortal } from './CamView/CamViewPortal';
 import Outliner from './Outliner/Outliner';
 import { VRButton } from '@react-three/xr';
-import { SettingsButton } from './settings/SettingsButton';
 import { SettingsMenu } from './settings/SettingsMenu';
 
 type Props = {
