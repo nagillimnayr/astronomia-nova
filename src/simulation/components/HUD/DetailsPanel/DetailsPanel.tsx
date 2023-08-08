@@ -1,19 +1,21 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 import { Separator } from '@/components/gui/Separator';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
 import { SurfaceViewButton } from './surface-view-dialog/SurfaceViewButton';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { DIST_MULT } from '@/simulation/utils/constants';
-import { useSelector } from '@xstate/react';
+import { useSelector, useMachine } from '@xstate/react';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import { SpaceViewButton } from './surface-view-dialog/SpaceViewButton';
 import { cn } from '@/lib/cn';
 import { FocusButton } from './FocusButton';
 import { TracePathButton } from './TracePathButton';
+import { gsap } from 'gsap';
+import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
 
 const DetailsPanel = observer(() => {
-  const { cameraActor, selectionActor } = MachineContext.useSelector(
+  const { selectionActor } = MachineContext.useSelector(
     ({ context }) => context
   );
 
@@ -22,18 +24,69 @@ const DetailsPanel = observer(() => {
     ({ context }) => context.selected
   );
 
-  const handleCloseClick = useCallback(() => {
-    // Deselect selected object.
-    selectionActor.send('DESELECT');
-  }, [selectionActor]);
+  const divRef = useRef<HTMLDivElement>(null!);
 
-  const handleFocusClick = useCallback(() => {
-    // Focus camera on selection.
-    cameraActor.send({
-      type: 'SET_TARGET',
-      focusTarget: selected,
+  const openDialog = useCallback(() => {
+    return new Promise((resolve) => {
+      const div = divRef.current;
+      gsap.to(div, {
+        duration: 0.3,
+        opacity: '100%',
+        ease: 'power2.in',
+        onComplete: resolve,
+      });
     });
-  }, [cameraActor, selected]);
+  }, []);
+  const closeDialog = useCallback(() => {
+    return new Promise((resolve) => {
+      const div = divRef.current;
+      gsap.to(div, {
+        duration: 0.3,
+        opacity: 0,
+        ease: 'power3.inOut',
+        onComplete: () => {
+          // Deselect.
+          setTimeout(() => {
+            selectionActor.send('DESELECT');
+            resolve(null);
+          }, 300);
+        },
+      });
+    });
+  }, [selectionActor]);
+  const [state, send, actor] = useMachine(dialogMachine, {
+    services: {
+      openDialog,
+      closeDialog,
+    },
+  });
+
+  // const handleOpenClick = useCallback(() => {
+  //   actor.send({ type: 'TOGGLE' });
+  // }, [actor]);
+
+  const handleCloseClick = useCallback(() => {
+    actor.send({ type: 'CLOSE' });
+  }, [actor]);
+
+  // const handleCloseClick = useCallback(() => {
+  //   // Deselect selected object.
+  //   selectionActor.send('DESELECT');
+  // }, [selectionActor]);
+
+  // const handleFocusClick = useCallback(() => {
+  //   // Focus camera on selection.
+  //   cameraActor.send({
+  //     type: 'SET_TARGET',
+  //     focusTarget: selected,
+  //   });
+  // }, [cameraActor, selected]);
+
+  useEffect(() => {
+    if (selected && state.matches('closed')) {
+      actor.send({ type: 'OPEN' });
+    }
+  }, [actor, selected, state]);
 
   // if (!selected) return null; // If nothing is selected, display nothing.
   let orbit: KeplerOrbit | null = null;
@@ -43,17 +96,19 @@ const DetailsPanel = observer(() => {
 
   return (
     <div
+      ref={divRef}
+      data-state={state.value}
       className={cn(
         'relative flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border bg-muted p-4 text-muted-foreground',
-        !selected ? 'scale-0' : 'scale-100'
+        'transition-all duration-300 data-[state=closed]:hidden'
       )}
     >
       {/** Close button. */}
-      <button className="absolute right-0 top-0 h-fit w-fit p-1">
-        <span
-          onClick={handleCloseClick}
-          className="icon-[mdi--close-box-outline] pointer-events-auto aspect-square text-xl text-muted-foreground transition-colors hover:cursor-pointer hover:text-yellow-400 "
-        />
+      <button
+        className="group pointer-events-auto absolute right-0 top-0 mr-1 mt-1 inline-flex h-fit w-fit items-center justify-center p-0 transition-colors hover:cursor-pointer hover:text-yellow-400"
+        onClick={handleCloseClick}
+      >
+        <span className="icon-[mdi--close-box-outline] aspect-square text-xl text-muted-foreground transition-colors group-hover:text-yellow-400 " />
       </button>
 
       {/** Name. */}
@@ -90,7 +145,7 @@ const DetailsPanel = observer(() => {
         <div className="flex w-full flex-col items-start justify-start"></div>
       </div>
 
-      <div className="mt-auto flex w-full flex-row items-start  justify-between">
+      <div className="mt-auto flex w-full flex-row items-start justify-between">
         {/** Camera focus button. */}
         <FocusButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
 
