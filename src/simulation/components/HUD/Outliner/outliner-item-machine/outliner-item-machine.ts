@@ -30,7 +30,7 @@ export const outlinerItemMachine = createMachine(
       subnodes: new Map<string, HTMLDivElement>(),
     }),
 
-    initial: 'open',
+    initial: 'closed',
     states: {
       opening: {
         invoke: {

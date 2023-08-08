@@ -11,8 +11,9 @@ import { InterpreterFrom } from 'xstate';
 
 type OutlinerItemProps = {
   body: KeplerBody;
+  defaultOpen?: boolean;
 };
-const OutlinerItem = ({ body }: OutlinerItemProps) => {
+const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
   const { mapActor, selectionActor } = MachineContext.useSelector(
     ({ context }) => context
   );
@@ -37,15 +38,20 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
 
       // Reset starting height value.
       content.style.height = fromHeight;
-      const diff = Math.abs(parseFloat(toHeight) - parseFloat(fromHeight));
-      const duration = Math.max(0.5, diff / 288);
+      // const diff = Math.abs(parseFloat(toHeight) - parseFloat(fromHeight));
+      // const duration = Math.max(0.5, diff / 288);
       gsap.to(content, {
-        duration,
+        duration: 0.5,
         height: toHeight,
-        ease: 'power2.out',
+        // ease: 'power2.out',
+        ease: 'power2.inOut',
         onComplete: () => {
-          content.style.height = 'fit-content';
-          resolve(null);
+          // For whatever reason, onComplete seems to get called before the animation finishes.
+          // Timeout so that it doesn't immediately snap to full height.
+          setTimeout(() => {
+            content.style.height = 'fit-content';
+            resolve(null);
+          }, 300);
         },
       });
     });
@@ -60,12 +66,19 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
       const fromHeight = window.getComputedStyle(content).height;
       content.style.height = fromHeight;
 
-      const duration = Math.max(0.5, parseFloat(fromHeight) / 288);
+      // const duration = Math.max(0.5, parseFloat(fromHeight) / 288);
       gsap.to(content, {
-        duration,
+        duration: 0.5,
         height: 0,
-        ease: 'power2.in',
-        onComplete: resolve,
+        ease: 'power2.inOut',
+        // ease: 'none',
+        onComplete: () => {
+          // For whatever reason, onComplete seems to get called before the animation finishes.
+          // Timeout so that it doesn't immediately snap to full height.
+          setTimeout(() => {
+            resolve(null);
+          }, 300);
+        },
       });
     });
   }, []);
@@ -89,6 +102,13 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
     });
     return () => subscription.unsubscribe();
   }, [body, isOpen, mapActor, send]);
+
+  useEffect(() => {
+    // This should only run when mounting and when the orbiting bodies are updated, which is necessary since the outliner will likely load before the orbiting planets.
+    if (defaultOpen && body.orbitingBodies.length > 0) {
+      actor.send({ type: 'OPEN' });
+    }
+  }, [actor, body.orbitingBodies.length, defaultOpen]);
 
   const handleSelect = useCallback(() => {
     // Select the object.
@@ -130,10 +150,11 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
 
         {/** Subtree of orbiting bodies. */}
         <div
+          data-state={state.value}
           ref={contentRef}
           className={cn(
-            'm-0 flex h-fit w-full flex-col overflow-y-hidden transition-all'
-            // 'data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down'
+            'm-0 flex h-fit w-full flex-col overflow-y-hidden transition-all',
+            'data-[state=closed]:h-0 data-[state=open]:h-fit'
           )}
         >
           {/** Add some left margin to indent each subtree from its parent, left padding to line up the left border with the list marker. */}
