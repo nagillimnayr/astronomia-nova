@@ -1,7 +1,7 @@
 import { Canvas } from '@react-three/fiber';
 
 import { Perf } from 'r3f-perf';
-import { VRButton, XR } from '@react-three/xr';
+import { VRButton, XR, Controllers } from '@react-three/xr';
 import { type PropsWithChildren, Suspense, useContext, useRef } from 'react';
 import { LoadingFallback } from '../LoadingFallback';
 
@@ -41,6 +41,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
             >
               {/* <Hud renderPriority={1}> */}
               <XR>
+                <Controllers/>
                 <Scene>{children}</Scene>
                 {/* <Stats /> */}
                 {/* <Perf /> */}
