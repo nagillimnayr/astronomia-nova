@@ -61,26 +61,18 @@ const DetailsPanel = observer(() => {
     },
   });
 
-  // const handleOpenClick = useCallback(() => {
-  //   actor.send({ type: 'TOGGLE' });
-  // }, [actor]);
+  useEffect(() => {
+    // If ref has not already been set in the actor's context. Set it.
+    const dialogRef = actor.getSnapshot()!.context.dialogRef;
+    if (!dialogRef) {
+      actor.send({ type: 'SET_REF', ref: divRef });
+    }
+  }, [actor]);
 
+  // Close button click handler.
   const handleCloseClick = useCallback(() => {
     actor.send({ type: 'CLOSE' });
   }, [actor]);
-
-  // const handleCloseClick = useCallback(() => {
-  //   // Deselect selected object.
-  //   selectionActor.send('DESELECT');
-  // }, [selectionActor]);
-
-  // const handleFocusClick = useCallback(() => {
-  //   // Focus camera on selection.
-  //   cameraActor.send({
-  //     type: 'SET_TARGET',
-  //     focusTarget: selected,
-  //   });
-  // }, [cameraActor, selected]);
 
   useEffect(() => {
     if (selected && state.matches('closed')) {
