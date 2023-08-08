@@ -6,6 +6,7 @@ import { CamViewPortal } from './CamView/CamViewPortal';
 import Outliner from './Outliner/Outliner';
 import { VRButton } from '@react-three/xr';
 import { SettingsMenu } from './settings/SettingsMenu';
+import { SurfaceViewDialog } from './DetailsPanel/surface-view-dialog/SurfaceViewDialog';
 
 type Props = {
   className: string;
@@ -48,9 +49,18 @@ export const HUD = ({ className }: Props) => {
           </div>
         </div>
 
-        {/** Time Panel */}
+        {/** Surface View Dialog. */}
+        <div className={'relative z-50 col-start-4  col-end-5 row-start-[-4]'}>
+          <div className="pointer-events-auto absolute left-1/2 top-0 h-fit  w-fit  -translate-x-1/2">
+            <SurfaceViewDialog />
+          </div>
+        </div>
+
+        {/** Time Panel. */}
         <div
-          className={'relative col-start-4 col-end-5 row-span-1 row-start-[-3]'}
+          className={
+            'relative z-40 col-start-4 col-end-5 row-span-1 row-start-[-3]'
+          }
         >
           <div className="pointer-events-auto absolute bottom-0 left-1/2 h-fit w-fit -translate-x-1/2">
             <TimePanel />
