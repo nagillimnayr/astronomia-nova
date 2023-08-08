@@ -20,7 +20,7 @@ const TimescaleDisplay = () => {
 
     // Unsubscribe on dismount.
     return () => subscription.unsubscribe();
-  }, []);
+  }, [timeActor]);
 
   return (
     <span className="w-min-fit flex flex-row justify-center whitespace-nowrap text-white">
