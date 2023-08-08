@@ -37,10 +37,12 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
 
       // Reset starting height value.
       content.style.height = fromHeight;
+      const diff = Math.abs(parseFloat(toHeight) - parseFloat(fromHeight));
+      const duration = Math.max(0.5, diff / 288);
       gsap.to(content, {
-        duration: 0.5,
+        duration,
         height: toHeight,
-        ease: 'power2.inOut',
+        ease: 'power2.out',
         onComplete: () => {
           content.style.height = 'fit-content';
           resolve(null);
@@ -57,10 +59,12 @@ const OutlinerItem = ({ body }: OutlinerItemProps) => {
       // Get the computed value of the elements height.
       const fromHeight = window.getComputedStyle(content).height;
       content.style.height = fromHeight;
+
+      const duration = Math.max(0.5, parseFloat(fromHeight) / 288);
       gsap.to(content, {
-        duration: 0.5,
+        duration,
         height: 0,
-        ease: 'power2.inOut',
+        ease: 'power2.in',
         onComplete: resolve,
       });
     });
