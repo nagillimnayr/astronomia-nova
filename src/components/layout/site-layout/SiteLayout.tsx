@@ -37,24 +37,9 @@ const SiteLayout = ({ children }: SiteLayoutProps) => {
         <SiteHeader />
       </div>
 
-      {/** Outliner */}
-      {/* <div className="z-[1] col-span-1 col-start-1 row-span-1 row-start-2">
-        <Sidebar />
-      </div> */}
-
       {/** Canvas */}
-      <div className="z-[0] col-start-1 col-end-[-1] row-span-1  row-start-2">
+      <div className="z-[0] col-start-1 col-end-[-1]   row-start-2 row-end-[-1]">
         {children}
-      </div>
-
-      {/** Todo: Put something here */}
-      {/* <div className="z-[1] col-start-[-2] col-end-[-1] row-span-1 row-start-2">
-        <div className="h-full w-full bg-muted" />
-      </div> */}
-
-      {/** Toolbar (Time controls, toggle buttons, etc) */}
-      <div className="z-[1] col-start-1 col-end-[-1] row-start-[-2] row-end-[-1]">
-        <BottomToolbar />
       </div>
     </div>
   );
