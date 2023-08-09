@@ -12,23 +12,12 @@ type Props = {
   className?: ClassNameValue;
 };
 const SiteHeader = ({ className }: Props) => {
-  const [isOpen, setIsOpen] = useState<boolean>(true);
   const headerRef = useRef<HTMLElement>(null!);
-
-  const handleClick = useCallback(() => {
-    headerRef.current.setAttribute(
-      'data-state',
-      isOpen ? 'closed' : 'reopened'
-    );
-
-    setIsOpen(!isOpen);
-  }, [isOpen]);
 
   return (
     <>
       <header
         ref={headerRef}
-        data-state="open"
         className={cn(
           `relative z-40 flex h-full w-full min-w-full translate-y-[0%] flex-row items-center justify-start border-b bg-muted py-4 pl-6 pr-36 text-muted-foreground transition-transform duration-300 ease-in`,
           `data-[state=closed]:-translate-y-[100%]`,
@@ -64,7 +53,7 @@ const SiteHeader = ({ className }: Props) => {
           </Link>
         </div>
 
-        <NavBar className="mr-auto" />
+        {/* <NavBar className="mr-auto" /> */}
       </header>
     </>
   );
