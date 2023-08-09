@@ -9,6 +9,7 @@ import { HUD } from '@/simulation/components/HUD/HUD';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CamView } from '@/simulation/components/HUD/CamView/CamView';
 import Scene from './Scene';
+import { VRManager } from './vr/VRManager';
 
 const CanvasWrapper = ({ children }: PropsWithChildren) => {
   const { cameraActor, uiActor } = MachineContext.useSelector(
@@ -40,8 +41,14 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
               }}
             >
               {/* <Hud renderPriority={1}> */}
-              <XR>
-                <Controllers/>
+              <XR
+                onSessionStart={(event) => {
+                  //
+                  console.log('starting XR session:', event);
+                }}
+              >
+                <Controllers />
+                <VRManager />
                 <Scene>{children}</Scene>
                 {/* <Stats /> */}
                 {/* <Perf /> */}
