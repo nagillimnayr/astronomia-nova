@@ -8,6 +8,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useMachine, useSelector } from '@xstate/react';
 import { outlinerItemMachine } from './outliner-item-machine/outliner-item-machine';
 import { InterpreterFrom } from 'xstate';
+import { VisibilityToggleButton } from './VisibilityToggleButton';
 
 type OutlinerItemProps = {
   body: KeplerBody;
@@ -100,6 +101,8 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
         send({ type: 'CLOSE' });
       }
     });
+
+    // Cleanup.
     return () => subscription.unsubscribe();
   }, [body, isOpen, mapActor, send]);
 
@@ -134,18 +137,20 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
             )}
             onClick={() => send({ type: 'TOGGLE' })}
           >
+            {/** Chevron icon. */}
             <span className={cn('icon-[mdi--chevron-right]')} />{' '}
           </button>
 
           {/** Button to select body. */}
           <button
             onClick={handleSelect}
-            className="m-0 inline-flex h-full w-full cursor-pointer items-center justify-start transition-colors hover:bg-subtle"
+            className="m-0 inline-flex h-full w-full cursor-pointer items-center justify-start px-1 transition-colors hover:bg-subtle"
           >
             <span className="m-0 h-8 w-fit p-1 text-left align-middle font-sans text-2xl font-medium leading-none">
               {body.name}
             </span>
           </button>
+          <VisibilityToggleButton name={body.name} />
         </div>
 
         {/** Subtree of orbiting bodies. */}
