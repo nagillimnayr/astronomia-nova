@@ -10,10 +10,7 @@ const SurfaceViewDialog = () => {
   const { uiActor, cameraActor, surfaceActor } = MachineContext.useSelector(
     ({ context }) => context
   );
-  const { surfaceDialogActor, screenPortalRef } = useSelector(
-    uiActor,
-    ({ context }) => context
-  );
+  const { surfaceDialogActor } = useSelector(uiActor, ({ context }) => context);
 
   const { latitude, longitude } = useSelector(
     surfaceActor,
@@ -36,7 +33,6 @@ const SurfaceViewDialog = () => {
 
   const [state, send] = useActor(surfaceDialogActor);
 
-  if (!screenPortalRef) return;
   return (
     <div
       ref={divRef}

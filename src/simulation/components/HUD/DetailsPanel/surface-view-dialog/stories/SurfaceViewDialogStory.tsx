@@ -1,26 +1,18 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { SurfaceViewDialog } from '../SurfaceViewDialog';
-import * as AlertDialog from '@radix-ui/react-alert-dialog';
+import { SurfaceViewButton } from '../SurfaceViewButton';
 
 export const SurfaceViewDialogStory = () => {
-  const { uiActor } = MachineContext.useSelector(({ context }) => context);
-  const { screenPortalRef } = useSelector(uiActor, ({ context }) => context);
+  // const { uiActor } = MachineContext.useSelector(({ context }) => context);
+  // const { surfaceDialogActor } = useSelector(uiActor, ({ context }) => context);
   return (
     <>
-      <div
-        ref={screenPortalRef}
-        className="grid h-screen w-full place-items-center "
-      >
-        <AlertDialog.Root defaultOpen>
-          <AlertDialog.Trigger asChild>
-            <button className="pointer-events-auto rounded-lg border-2 border-white p-2 hover:bg-muted">
-              button
-            </button>
-          </AlertDialog.Trigger>
-
-          <SurfaceViewDialog />
-        </AlertDialog.Root>
+      <div className="absolute left-10 top-10 p-0">
+        <SurfaceViewButton />
+      </div>
+      <div className="grid h-screen w-full place-items-center ">
+        <SurfaceViewDialog />
       </div>
     </>
   );
