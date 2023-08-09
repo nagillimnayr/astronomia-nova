@@ -1,9 +1,11 @@
 import { cn } from '@/lib/cn';
 import {
   autoUpdate,
+  offset,
   useFloating,
   useHover,
   useInteractions,
+  useTransitionStatus,
 } from '@floating-ui/react';
 import { type PropsWithChildren, useState } from 'react';
 
@@ -14,8 +16,12 @@ export const SliderTooltip = ({ children }: Props) => {
     whileElementsMounted: autoUpdate,
     open: isOpen,
     onOpenChange: setIsOpen,
+    middleware: [offset(10)],
   });
-  const hover = useHover(context);
+  const hover = useHover(context, {
+    restMs: 100,
+  });
+  const { isMounted, status } = useTransitionStatus(context, { duration: 300 });
 
   const { getReferenceProps, getFloatingProps } = useInteractions([hover]);
   return (
@@ -27,12 +33,13 @@ export const SliderTooltip = ({ children }: Props) => {
         className={cn('h-full w-full rounded-full bg-transparent')}
       />
       {/** Floating tooltip. */}
-      {isOpen && (
+      {isMounted && (
         <div
+          data-status={status}
           ref={refs.setFloating}
           style={floatingStyles}
           {...getFloatingProps()}
-          className="text-md h-fit w-fit flex-row items-center justify-center  rounded-md border-white bg-card p-2"
+          className="text-md flex h-fit w-fit flex-row items-center justify-center rounded-md border border-white bg-card px-2 py-1 transition-all duration-300  data-[status=close]:opacity-0 data-[status=initial]:opacity-0  data-[status=open]:opacity-100"
         >
           <span className="text-md">{children}</span>
         </div>
