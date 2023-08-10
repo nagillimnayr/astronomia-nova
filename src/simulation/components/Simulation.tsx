@@ -4,10 +4,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { retrogradeState } from './Retrograde/retrogradeState';
 import { useKeyPressed } from '@react-hooks-library/core';
 import { useTimeStore } from '../state/zustand/time-store';
-import { useSimStore } from '../state/zustand/sim-store';
-import { useCameraStore } from '../state/zustand/camera-store';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { CameraControls } from '@react-three/drei';
+
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { ObservationPoint } from './surface-view/observation-point/ObservationPoint';
 import SolarSystem from './SolarSystem/SolarSystem';
@@ -21,8 +18,6 @@ const Simulation = ({ children }: SimProps) => {
   const rootActor = MachineContext.useActorRef();
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   console.log('render Simulation');
-  // function for accessing scene state
-  const getThree = useThree((state) => state.get);
 
   useEffect(() => {
     // Reset timers, timescale, etc when the component is mounted.
@@ -32,7 +27,6 @@ const Simulation = ({ children }: SimProps) => {
 
   useFrame(({ clock, camera }, delta) => {
     rootActor.send({ type: 'UPDATE', deltaTime: delta });
-
     // Update camera.
     cameraActor.send({ type: 'UPDATE', deltaTime: delta });
   }, -10);
