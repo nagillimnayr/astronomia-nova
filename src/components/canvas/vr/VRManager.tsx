@@ -1,5 +1,6 @@
 import { useController, useXR, useXREvent } from '@react-three/xr';
 import { PlayerControls } from './PlayerControls';
+import { VRPlayer } from './VRPlayer';
 
 export const VRManager = () => {
   const { player, isPresenting, session, controllers } = useXR();
@@ -19,6 +20,7 @@ export const VRManager = () => {
   return (
     <>
       <PlayerControls />
+      <VRPlayer />
     </>
   );
 };
