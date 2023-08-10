@@ -18,6 +18,7 @@ import { celestialSphereMachine } from '../visibility-machine/celestial-sphere-m
 import { mapMachine } from '../map-machine/map-machine';
 import { surfaceMachine } from '../surface-machine/surface-machine';
 import { uiMachine } from '../ui-machine/ui-machine';
+import { vrMachine } from '../vr-machine/vr-machine';
 
 type Context = {
   timeActor: ActorRefFrom<typeof timeMachine>;
@@ -29,6 +30,7 @@ type Context = {
   celestialSphereActor: ActorRefFrom<typeof celestialSphereMachine>;
   mapActor: ActorRefFrom<typeof mapMachine>;
   surfaceActor: ActorRefFrom<typeof surfaceMachine>;
+  vrActor: ActorRefFrom<typeof vrMachine>;
 };
 
 type Events = { type: 'UPDATE'; deltaTime: number } | { type: 'LOG_CHILDREN' };
@@ -53,6 +55,7 @@ export const rootMachine = createMachine(
       celestialSphereActor: null!,
       mapActor: null!,
       surfaceActor: null!,
+      vrActor: null!,
     },
 
     entry: [
@@ -102,6 +105,11 @@ export const rootMachine = createMachine(
         surfaceActor: () =>
           spawn(surfaceMachine, {
             name: 'surfaceActor',
+            sync: true,
+          }),
+        vrActor: () =>
+          spawn(vrMachine, {
+            name: 'vrActor',
             sync: true,
           }),
       }),
