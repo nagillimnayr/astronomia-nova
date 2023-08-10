@@ -90,9 +90,6 @@ export const PlayerControls = () => {
   const getThree = useThree(({ get }) => get);
 
   useFrame((state, delta, frame) => {
-    if (frame instanceof XRFrame) {
-      //
-    }
     const leftController = controllers[1];
     const rightController = controllers[0];
     if (!session || !player || !rightController || !leftController) return;
@@ -125,16 +122,7 @@ export const PlayerControls = () => {
     player.rotateOnAxis(_xAxis, -deltaB * rotateSpeed);
   });
 
-  useKeyDown('l', () => {
-    if (!isPresenting) return;
-    const rightController = controllers[1];
-    if (!session || !player || !rightController) return;
-    const rightGamepad = rightController.inputSource.gamepad;
-    if (!rightGamepad) return;
-
-    const axes = rightGamepad.axes;
-    console.log('axes count:', axes.length);
-    console.log('axes:', axes);
+  
   });
 
   return (
