@@ -12,7 +12,7 @@ import Scene from './Scene';
 import { VRManager } from './vr/VRManager';
 
 const CanvasWrapper = ({ children }: PropsWithChildren) => {
-  const { cameraActor, uiActor } = MachineContext.useSelector(
+  const { cameraActor, uiActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context
   );
   const container = useRef<HTMLDivElement>(null!);
@@ -34,24 +34,29 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
               gl={{ logarithmicDepthBuffer: true, alpha: true }}
               linear
               flat
-              ref={(canvas) => {
-                if (!canvas) return;
-                // Assign canvas context in camera state machine.
-                cameraActor.send({ type: 'ASSIGN_CANVAS', canvas });
-              }}
+
+              // ref={(canvas) => {
+              //   if (!canvas) return;
+              //   // Assign canvas context in camera state machine.
+              //   cameraActor.send({ type: 'ASSIGN_CANVAS', canvas });
+              // }}
             >
               {/* <Hud renderPriority={1}> */}
               <XR
                 onSessionStart={(event) => {
-                  //
-                  console.log('starting XR session:', event);
+                  const session = event.target;
+
+                  // Assign session object to external state machine and start session state.
+                  vrActor.send({ type: 'START_SESSION', session });
+                }}
+                onSessionEnd={(event) => {
+                  console.log('Ending XR session:', event);
+                  vrActor.send({ type: 'END_SESSION' });
                 }}
               >
                 <Controllers />
                 <VRManager />
                 <Scene>{children}</Scene>
-                {/* <Stats /> */}
-                {/* <Perf /> */}
               </XR>
               {/* </Hud> */}
               {/* <Hud renderPriority={2}>
