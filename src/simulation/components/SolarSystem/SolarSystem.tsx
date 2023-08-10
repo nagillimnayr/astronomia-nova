@@ -27,19 +27,8 @@ const SolarSystem = ({ children }: Props) => {
 
   return (
     <KeplerTreeContext.Provider value={rootRef}>
-      <Selection>
-        <EffectComposer autoClear={false} multisampling={8}>
-          <Outline
-            blur
-            edgeStrength={100}
-            visibleEdgeColor={0xffffff}
-            width={1000}
-          />
-        </EffectComposer>
-        <CelestialSphere />
-
-        <group rotation={[-degToRad(90), 0, 0]}>{children}</group>
-      </Selection>
+      <CelestialSphere />
+      <group rotation={[-degToRad(90), 0, 0]}>{children}</group>
     </KeplerTreeContext.Provider>
   );
 };
