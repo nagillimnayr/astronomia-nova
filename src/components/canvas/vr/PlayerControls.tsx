@@ -122,9 +122,6 @@ export const PlayerControls = () => {
     player.rotateOnAxis(_xAxis, -deltaB * rotateSpeed);
   });
 
-  
-  });
-
   return (
     <>
       <></>
