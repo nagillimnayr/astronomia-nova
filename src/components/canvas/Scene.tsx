@@ -18,11 +18,6 @@ const Scene = ({ children }: PropsWithChildren) => {
     cameraActor.send({ type: 'ASSIGN_THREE', get: getThree });
   }, [cameraActor, getThree]);
 
-  // useKeyPressed(' ', () => {
-  //   const { camera, controls } = getThree();
-  //   console.log('camera:', camera);
-  //   console.log('controls:', controls);
-  // });
   return (
     <>
       <CameraController />
