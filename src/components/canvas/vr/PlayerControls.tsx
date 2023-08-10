@@ -8,7 +8,8 @@ import { Event, EventListener, Vector3, XRTargetRaySpace } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { FAR, NEAR } from '../scene-constants';
 
-const _fwd = new Vector3();
+const _xAxis: Readonly<Vector3> = new Vector3(1, 0, 0);
+const _yAxis: Readonly<Vector3> = new Vector3(0, 1, 0);
 const moveSpeed = 1;
 const rotateSpeed = 1;
 
@@ -120,63 +121,9 @@ export const PlayerControls = () => {
     player.translateZ(deltaZ * moveSpeed);
 
     // Rotate player.
-    player.rotateY(-deltaA * rotateSpeed);
-    player.rotateX(-deltaB * rotateSpeed);
+    player.rotateOnWorldAxis(_yAxis, -deltaA * rotateSpeed);
+    player.rotateOnAxis(_xAxis, -deltaB * rotateSpeed);
   });
-
-  // useKeyPressed('q', () => {
-  //   console.log('session:', session);
-  //   console.log('render state:', session?.renderState);
-  //   console.log('near:', session?.renderState.depthNear);
-  //   console.log('far:', session?.renderState.depthFar);
-  //   console.log('player position:', player.position.toArray());
-  //   console.log('player:', player);
-  //   if (!session) return;
-  //   void session.updateRenderState({
-  //     depthNear: NEAR,
-  //     depthFar: FAR,
-  //   });
-  // });
-  // useKeyPressed(' ', () => {
-  //   console.log('near:', session?.renderState.depthNear);
-  //   console.log('far:', session?.renderState.depthFar);
-  //   console.log('player position:', player.position.toArray());
-  //   console.log('player:', player);
-  // });
-  // useKeyPressed('w', () => {
-  //   if (!isPresenting) return;
-  //   player.translateZ(-moveSpeed);
-  // });
-
-  // useKeyPressed('a', () => {
-  //   if (!isPresenting) return;
-  //   player.translateX(-moveSpeed);
-  // });
-
-  // useKeyPressed('s', () => {
-  //   if (!isPresenting) return;
-  //   player.translateZ(moveSpeed);
-  // });
-
-  // useKeyPressed('d', () => {
-  //   if (!isPresenting) return;
-  //   player.translateX(moveSpeed);
-  // });
-
-  // useKeyDown('ArrowUp', () => {
-  //   if (!isPresenting) return;
-  //   player.rotateX(-degToRad(rotateSpeed));
-  // });
-
-  // useKeyDown('ArrowLeft', () => {
-  //   if (!isPresenting) return;
-  //   player.rotateY(degToRad(rotateSpeed));
-  // });
-
-  // useKeyDown('ArrowRight', () => {
-  //   if (!isPresenting) return;
-  //   player.rotateY(-degToRad(rotateSpeed));
-  // });
 
   useKeyDown('l', () => {
     if (!isPresenting) return;
