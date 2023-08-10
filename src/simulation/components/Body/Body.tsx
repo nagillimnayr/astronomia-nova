@@ -94,6 +94,11 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
               const name = bodyRef.current.name;
               console.log(`removing ${name}`);
               mapActor.send({ type: 'REMOVE', name });
+
+              if (!centralBodyRef) return;
+              const centralBody = centralBodyRef.current;
+              if (!centralBody) return;
+              centralBody.removeOrbitingBody(bodyRef.current);
             }
 
             return;
