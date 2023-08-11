@@ -10,6 +10,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CamView } from '@/simulation/components/HUD/CamView/CamView';
 import Scene from './Scene';
 import { VRManager } from './vr/VRManager';
+import { Stats } from '@react-three/drei';
 
 const CanvasWrapper = ({ children }: PropsWithChildren) => {
   const { cameraActor, uiActor, vrActor } = MachineContext.useSelector(
@@ -58,6 +59,8 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                 <VRManager />
                 <Scene>{children}</Scene>
               </XR>
+              <Stats />
+              <Perf position={'bottom-left'} />
               {/* </Hud> */}
               {/* <Hud renderPriority={2}>
                 <CamView />
