@@ -2,9 +2,7 @@ import { assign, createMachine, log } from 'xstate';
 import { type Object3D, Vector3, type PerspectiveCamera } from 'three';
 import { type CameraControls } from '@react-three/drei';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { type RootState } from '@react-three/fiber';
-import { SUN_RADIUS } from '@/lib/utils/constants';
-import { DIST_MULT } from '@/simulation/utils/constants';
+import { DIST_MULT, SUN_RADIUS } from '@/simulation/utils/constants';
 
 const _targetWorldPos = new Vector3();
 const _observerWorldPos = new Vector3();
@@ -12,7 +10,6 @@ const _observerUp = new Vector3();
 
 type Context = {
   canvas: HTMLCanvasElement; // Reference to the canvas element.
-  getThree: (() => RootState) | null;
   controls: CameraControls | null;
   spaceCamera: PerspectiveCamera | null;
   surfaceCamera: PerspectiveCamera | null;
@@ -25,7 +22,6 @@ type Events =
   | { type: 'TO_SPACE' }
   | { type: 'UPDATE'; deltaTime: number }
   | { type: 'ASSIGN_CANVAS'; canvas: HTMLCanvasElement }
-  | { type: 'ASSIGN_THREE'; get: () => RootState }
   | { type: 'ASSIGN_CONTROLS'; controls: CameraControls }
   | { type: 'ASSIGN_SPACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_SURFACE_CAMERA'; camera: PerspectiveCamera }
@@ -73,15 +69,6 @@ export const cameraMachine = createMachine(
         ],
       },
 
-      ASSIGN_THREE: {
-        cond: (context, event) => {
-          return context.getThree !== event.get;
-        },
-        actions: [
-          assign({ getThree: (_, event) => event.get }),
-          log('Assigning getThree!'),
-        ],
-      },
       ASSIGN_SPACE_CAMERA: {
         cond: (context, event) => {
           return context.spaceCamera !== event.camera;

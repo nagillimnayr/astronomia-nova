@@ -53,9 +53,11 @@ class KeplerBody extends DynamicBody {
   }
 
   addOrbitingBody(body: KeplerBody) {
-    console.log(`adding ${body.name} as orbiter of ${this.name}`);
     if (!this._orbitingBodies.includes(body)) {
+      console.log(`adding ${body.name} as orbiter of ${this.name}`);
       this._orbitingBodies.push(body);
+    } else {
+      console.log(`${body.name} is already an orbiter of ${this.name}`);
     }
   }
 

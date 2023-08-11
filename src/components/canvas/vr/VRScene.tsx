@@ -6,11 +6,11 @@ import {
   Tetrahedron,
   useHelper,
 } from '@react-three/drei';
-import { RotatingObject } from './objects/RotatingObject';
+import { RotatingObject } from './components/RotatingObject';
 import { useRef } from 'react';
 import { DirectionalLight, DirectionalLightHelper } from 'three';
 import { VRManager } from './VRManager';
-import { Floor } from './objects/Floor';
+import { Floor } from './components/Floor';
 
 export const VRScene = () => {
   const dirLightRef = useRef<DirectionalLight>(null!);

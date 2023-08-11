@@ -112,7 +112,6 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
           const centralBody = centralBodyRef.current;
           if (!centralBody) return;
           centralBody.addOrbitingBody(body);
-          console.log(`adding ${body?.name} node to tree`);
         }}
         name={name ?? ''}
         args={[mass, initialPosition, initialVelocity, meanRadius, obliquity]}

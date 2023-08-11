@@ -1,13 +1,16 @@
 import { FAR, NEAR } from '@/components/canvas/scene-constants';
+import { VRCameraController } from '@/components/canvas/vr/classes/VRCameraController';
 import { type XRController } from '@react-three/xr';
-import { type Group } from 'three';
+import { Object3D, type Group, Vector3 } from 'three';
 import { assign, createMachine, log } from 'xstate';
+import { degToRad } from 'three/src/math/MathUtils';
 
 type Context = {
   session: XRSession | null;
   player: Group | null;
   leftController: XRController | null;
   rightController: XRController | null;
+  vrCameraController: VRCameraController;
 };
 
 type Events =
@@ -15,7 +18,8 @@ type Events =
   | { type: 'END_SESSION' }
   | { type: 'ASSIGN_PLAYER'; player: Group }
   | { type: 'ASSIGN_LEFT_CONTROLLER'; controller: XRController }
-  | { type: 'ASSIGN_RIGHT_CONTROLLER'; controller: XRController };
+  | { type: 'ASSIGN_RIGHT_CONTROLLER'; controller: XRController }
+  | { type: 'UPDATE'; deltaTime: number };
 
 export const vrMachine = createMachine(
   {
@@ -26,12 +30,13 @@ export const vrMachine = createMachine(
       events: {} as Events,
     },
     id: 'vr-machine',
-    context: {
+    context: () => ({
       session: null,
       player: null,
       leftController: null,
       rightController: null,
-    },
+      vrCameraController: null!,
+    }),
 
     on: {
       ASSIGN_PLAYER: {
@@ -71,6 +76,10 @@ export const vrMachine = createMachine(
             actions: ['logEvent'],
             target: 'stopped',
           },
+          UPDATE: {
+            cond: ({ session, player }) => !!(session && player),
+            actions: ['update'],
+          },
         },
       },
     },
@@ -84,6 +93,7 @@ export const vrMachine = createMachine(
       }),
       assignPlayer: assign({
         player: (_, { player }) => player,
+        vrCameraController: (_, { player }) => new VRCameraController(player),
       }),
       assignLeftController: assign({
         leftController: (_, { controller }) => controller,
@@ -114,28 +124,37 @@ export const vrMachine = createMachine(
           console.error('Error! failed to init XR session render state:', err);
         }
       },
-      initializePlayer: ({ player }) => {
+      initializePlayer: ({ player, vrCameraController }) => {
         if (!player) return;
-        // Set starting position.
-        // player.position.set(0, 0, 750);
       },
       initializeController: ({ session }, { controller }) => {
         if (!session) return;
         const inputSource = controller.inputSource;
-
-        const profiles = inputSource.profiles;
-        console.log('handedness', inputSource.handedness);
-        console.log('profiles:', profiles);
         const gamepad = inputSource.gamepad;
-        if (!gamepad) return;
-        console.log('gamepad:', gamepad);
-        console.log('gamepad connected?:', gamepad.connected);
-        controller.addEventListener('connected', (event) => {
-          console.log(`controller connected!`, event);
-        });
-        if ('gamepad' in gamepad) {
-          console.log('gamepad.gamepad', gamepad.gamepad);
+      },
+      update: (
+        { session, vrCameraController, rightController },
+        { deltaTime }
+      ) => {
+        if (!vrCameraController) {
+          console.error('Error! vrCameraController is invalid');
+          return;
         }
+        if (!rightController) return;
+        const rightGamepad = rightController.inputSource.gamepad;
+        if (!rightGamepad) return;
+
+        const rightAxes = rightGamepad.axes;
+        const yaw = rightAxes[2];
+        const pitch = rightAxes[3];
+        if (yaw) {
+          vrCameraController.addYaw(yaw * deltaTime);
+        }
+        if (pitch) {
+          vrCameraController.addPitch(pitch * deltaTime);
+        }
+
+        vrCameraController.update(deltaTime);
       },
     },
   }

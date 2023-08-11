@@ -17,8 +17,7 @@ export const PlayerControls = () => {
   const { vrActor } = MachineContext.useSelector(({ context }) => context);
   const { player, controllers, isPresenting } = useXR();
   const leftController = useController('left');
-  // const rightController = useController('right');
-  // rightController?.inputSource.gamepad?.mapping.
+  const rightController = useController('right');
 
   const session = useSelector(vrActor, ({ context }) => context.session);
   useXREvent('connected', (event) => console.log('connected!', event));
@@ -27,40 +26,40 @@ export const PlayerControls = () => {
   const gl = useThree(({ gl }) => gl);
   const xr = useThree(({ gl }) => gl.xr);
 
-  useEffect(() => {
-    console.log('xr enabled?', xr.enabled);
-    const leftController = xr.getController(0);
-    const rightController = xr.getController(1);
-    console.log('left controller:', leftController);
-    console.log('right controller:', rightController);
+  // useEffect(() => {
+  //   console.log('xr enabled?', xr.enabled);
+  //   // const leftController = xr.getController(0);
+  //   // const rightController = xr.getController(1);
+  //   console.log('left controller:', leftController);
+  //   console.log('right controller:', rightController);
 
-    type ConnectEventListener = EventListener<
-      Event,
-      'connected',
-      XRTargetRaySpace
-    >;
-    const leftConnectHandler: ConnectEventListener = (event) => {
-      console.log('left connected:', event);
-      if ('data' in event) {
-        console.log('data:', event.data);
-        console.log('typeof data:', event.data);
-      }
-    };
-    const rightConnectHandler: ConnectEventListener = (event) => {
-      console.log('right connected:', event);
-      if ('data' in event) {
-        console.log('data:', event.data);
-        console.log('typeof data:', event.data);
-      }
-    };
-    leftController.addEventListener('connected', leftConnectHandler);
-    rightController.addEventListener('connected', rightConnectHandler);
+  //   type ConnectEventListener = EventListener<
+  //     Event,
+  //     'connected',
+  //     XRTargetRaySpace
+  //   >;
+  //   const leftConnectHandler: ConnectEventListener = (event) => {
+  //     console.log('left connected:', event);
+  //     if ('data' in event) {
+  //       console.log('data:', event.data);
+  //       console.log('typeof data:', event.data);
+  //     }
+  //   };
+  //   const rightConnectHandler: ConnectEventListener = (event) => {
+  //     console.log('right connected:', event);
+  //     if ('data' in event) {
+  //       console.log('data:', event.data);
+  //       console.log('typeof data:', event.data);
+  //     }
+  //   };
+  //   leftController.addEventListener('connected', leftConnectHandler);
+  //   rightController.addEventListener('connected', rightConnectHandler);
 
-    const cleanup = () => {
-      leftController.removeEventListener('connected', leftConnectHandler);
-      rightController.removeEventListener('connected', rightConnectHandler);
-    };
-  }, [xr]);
+  //   const cleanup = () => {
+  //     leftController.removeEventListener('connected', leftConnectHandler);
+  //     rightController.removeEventListener('connected', rightConnectHandler);
+  //   };
+  // }, [xr]);
 
   useEffect(() => {
     console.log('xr enabled?', xr.enabled);
@@ -87,11 +86,9 @@ export const PlayerControls = () => {
     }
   }, [isPresenting, player, controllers, vrActor, xr.enabled]);
 
-  const getThree = useThree(({ get }) => get);
-
   useFrame((state, delta, frame) => {
-    const leftController = controllers[1];
-    const rightController = controllers[0];
+    // const leftController = controllers[1];
+    // const rightController = controllers[0];
     if (!session || !player || !rightController || !leftController) return;
     const leftGamepad = leftController.inputSource.gamepad;
     if (!leftGamepad) return;
@@ -113,13 +110,19 @@ export const PlayerControls = () => {
     const deltaA = a * delta;
     const deltaB = b * delta;
 
+    // console.log('x:', x);
+    // console.log('z:', z);
+    // console.log('a:', a);
+    // console.log('b:', b);
+
     // Translate player.
     player.translateX(deltaX * moveSpeed);
     player.translateZ(deltaZ * moveSpeed);
 
     // Rotate player.
-    player.rotateOnWorldAxis(_yAxis, -deltaA * rotateSpeed);
-    player.rotateOnAxis(_xAxis, -deltaB * rotateSpeed);
+    // player.rotateOnWorldAxis(_yAxis, -deltaA * rotateSpeed);
+    // player.rotateOnAxis(_xAxis, -deltaB * rotateSpeed);
+    vrActor.send({ type: 'UPDATE', deltaTime: delta });
   });
 
   return (

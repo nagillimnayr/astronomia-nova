@@ -1,12 +1,9 @@
 import {
-  ActorRef,
-  ActorRefFrom,
+  type ActorRefFrom,
   assign,
   createMachine,
-  forwardTo,
   log,
   send,
-  sendTo,
   spawn,
 } from 'xstate';
 import { cameraMachine } from '../camera-machine/camera-machine';
@@ -131,7 +128,7 @@ export const rootMachine = createMachine(
   {
     actions: {
       updateTimeActor: send(
-        (context, { deltaTime }) => ({ type: 'UPDATE', deltaTime }),
+        (_, { deltaTime }) => ({ type: 'UPDATE', deltaTime }),
         { to: (context) => context.timeActor }
       ),
       updateKeplerTreeActor: send(
