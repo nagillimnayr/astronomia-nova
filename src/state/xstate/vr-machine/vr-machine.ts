@@ -133,7 +133,7 @@ export const vrMachine = createMachine(
         const gamepad = inputSource.gamepad;
       },
       update: (
-        { session, vrCameraController, rightController },
+        { session, vrCameraController, rightController, leftController },
         { deltaTime }
       ) => {
         if (!vrCameraController) {
@@ -148,10 +148,20 @@ export const vrMachine = createMachine(
         const yaw = rightAxes[2];
         const pitch = rightAxes[3];
         if (yaw) {
-          vrCameraController.addYaw(yaw * deltaTime);
+          vrCameraController.addYaw(yaw);
         }
         if (pitch) {
-          vrCameraController.addPitch(pitch * deltaTime);
+          vrCameraController.addPitch(pitch);
+        }
+
+        if (!leftController) return;
+        const leftGamepad = leftController.inputSource.gamepad;
+        if (!leftGamepad) return;
+        const leftAxes = leftGamepad.axes;
+
+        const zoom = leftAxes[3];
+        if (zoom) {
+          vrCameraController.zoom(zoom);
         }
 
         vrCameraController.update(deltaTime);

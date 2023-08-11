@@ -90,34 +90,34 @@ export const PlayerControls = () => {
     // const leftController = controllers[1];
     // const rightController = controllers[0];
     if (!session || !player || !rightController || !leftController) return;
-    const leftGamepad = leftController.inputSource.gamepad;
-    if (!leftGamepad) return;
+    // const leftGamepad = leftController.inputSource.gamepad;
+    // if (!leftGamepad) return;
 
-    const leftAxes = leftGamepad.axes;
-    const x = leftAxes[2];
-    const z = leftAxes[3];
+    // const leftAxes = leftGamepad.axes;
+    // const x = leftAxes[2];
+    // const z = leftAxes[3];
 
-    const rightGamepad = rightController.inputSource.gamepad;
-    if (!rightGamepad) return;
-    const rightAxes = rightGamepad.axes;
-    const a = rightAxes[2];
-    const b = rightAxes[3];
+    // const rightGamepad = rightController.inputSource.gamepad;
+    // if (!rightGamepad) return;
+    // const rightAxes = rightGamepad.axes;
+    // const a = rightAxes[2];
+    // const b = rightAxes[3];
 
-    if (x === undefined || z === undefined) return;
-    if (a === undefined || b === undefined) return;
-    const deltaX = x * delta;
-    const deltaZ = z * delta;
-    const deltaA = a * delta;
-    const deltaB = b * delta;
+    // if (x === undefined || z === undefined) return;
+    // if (a === undefined || b === undefined) return;
+    // const deltaX = x * delta;
+    // const deltaZ = z * delta;
+    // const deltaA = a * delta;
+    // const deltaB = b * delta;
 
-    // console.log('x:', x);
-    // console.log('z:', z);
-    // console.log('a:', a);
-    // console.log('b:', b);
+    // // console.log('x:', x);
+    // // console.log('z:', z);
+    // // console.log('a:', a);
+    // // console.log('b:', b);
 
-    // Translate player.
-    player.translateX(deltaX * moveSpeed);
-    player.translateZ(deltaZ * moveSpeed);
+    // // Translate player.
+    // player.translateX(deltaX * moveSpeed);
+    // player.translateZ(deltaZ * moveSpeed);
 
     // Rotate player.
     // player.rotateOnWorldAxis(_yAxis, -deltaA * rotateSpeed);
