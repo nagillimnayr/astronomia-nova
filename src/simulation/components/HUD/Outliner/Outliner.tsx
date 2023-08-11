@@ -1,6 +1,6 @@
 import { OutlinerItem } from './OutlinerItem';
 
-import { LoadingFallback } from '../../../../components/LoadingFallback';
+import { LoadingFallback } from '@/components/fallback/LoadingFallback';
 import {
   MachineContext,
   // RootActorContext,

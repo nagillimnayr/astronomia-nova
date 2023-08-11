@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { Perf } from 'r3f-perf';
 import { VRButton, XR, Controllers } from '@react-three/xr';
 import { type PropsWithChildren, Suspense, useContext, useRef } from 'react';
-import { LoadingFallback } from '../LoadingFallback';
+import { LoadingFallback } from '../fallback/LoadingFallback';
 
 import { HUD } from '@/simulation/components/HUD/HUD';
 import { MachineContext } from '@/state/xstate/MachineProviders';
