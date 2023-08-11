@@ -1,13 +1,13 @@
 'use client';
 import { cn } from '@/lib/cn';
-import { atomicAge, orbitron, roboto } from '@/lib/fonts';
+import { orbitron, roboto } from '@/lib/fonts';
 import SiteHeader from './header/SiteHeader';
 import { BottomToolbar } from '../BottomToolbar';
 import { useEffect, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 
-const fontVariables = [atomicAge.variable, orbitron.variable, roboto.variable];
+const fontVariables = [orbitron.variable, roboto.variable];
 
 type SiteLayoutProps = {
   children: React.ReactNode;
