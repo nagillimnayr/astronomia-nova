@@ -5,6 +5,9 @@ import { DoubleSide } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { CompassMarker } from './CompassMarker';
 
+// Raise off the ground a little to prevent clipping
+const DIST_OFF_GROUND: Readonly<number> = METER * 1e-1;
+
 export const Compass = () => {
   const { innerRadius, outerRadius, segments } = useMemo(() => {
     const innerRadius = 50 * METER;
@@ -18,13 +21,13 @@ export const Compass = () => {
   }, []);
   return (
     <>
-      <object3D>
+      <object3D position={[0, DIST_OFF_GROUND, 0]}>
         {/* <axesHelper args={[innerRadius]} /> */}
         <Ring
           args={[innerRadius, outerRadius, segments]}
           rotation={[-RADS_90, 0, 0]}
         >
-          <meshBasicMaterial color={'blue'} side={DoubleSide} />
+          <meshBasicMaterial color={'blue'} />
         </Ring>
         {/* <polarGridHelper args={[innerRadius, GRID_SECTORS, radiusSegments]} /> */}
 
