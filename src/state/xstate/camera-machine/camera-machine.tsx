@@ -312,6 +312,15 @@ export const cameraMachine = createMachine(
         if (!controls) return;
         controls.minDistance = SURFACE_MIN_DIST;
         controls.maxDistance = SURFACE_MAX_DIST;
+        if (controls.distance > SURFACE_MIN_DIST) {
+          controls
+            .dollyTo(SURFACE_MIN_DIST, true)
+            .catch((reason) => console.log(reason));
+        } else if (controls.distance < SURFACE_MAX_DIST) {
+          controls
+            .dollyTo(SURFACE_MAX_DIST, true)
+            .catch((reason) => console.log(reason));
+        }
       },
     },
   }
