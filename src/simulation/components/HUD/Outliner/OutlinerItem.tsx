@@ -132,7 +132,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
           <button
             data-state={dataState}
             className={cn(
-              'm-0 flex aspect-square h-full min-h-fit flex-col items-start justify-center overflow-hidden whitespace-nowrap rounded-full p-0 transition-all duration-500 hover:bg-subtle',
+              'm-0 inline-flex aspect-square h-full min-h-fit flex-col items-center justify-center overflow-hidden whitespace-nowrap rounded-full p-0 transition-all duration-500 hover:bg-subtle',
               'data-[state=open]:rotate-90 data-[state=opening]:rotate-90'
             )}
             onClick={() => send({ type: 'TOGGLE' })}
