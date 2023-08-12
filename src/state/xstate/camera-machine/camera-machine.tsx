@@ -2,11 +2,20 @@ import { assign, createMachine, log } from 'xstate';
 import { type Object3D, Vector3, type PerspectiveCamera } from 'three';
 import { type CameraControls } from '@react-three/drei';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { DIST_MULT, SUN_RADIUS } from '@/simulation/utils/constants';
+import { DIST_MULT, SUN_RADIUS, METER } from '@/simulation/utils/constants';
 
 const _targetWorldPos = new Vector3();
 const _observerWorldPos = new Vector3();
 const _observerUp = new Vector3();
+
+// Space view constants:
+const SPACE_MAX_DIST: Readonly<number> = 1e12;
+const SPACE_MIN_DIST_FROM_SURFACE: Readonly<number> = 1e-3;
+
+// Surface view constants:
+const SURFACE_MAX_DIST: Readonly<number> = 1.5 * METER;
+const SURFACE_MIN_DIST: Readonly<number> = METER;
+const SURFACE_MIN_DIST_FROM_SURFACE: Readonly<number> = 2 * METER; // 2 meters above ground
 
 type Context = {
   canvas: HTMLCanvasElement; // Reference to the canvas element.
@@ -273,9 +282,10 @@ export const cameraMachine = createMachine(
         const { controls, focusTarget } = context;
         if (!controls) return;
 
-        controls.maxDistance = 1e12;
+        controls.maxDistance = SPACE_MAX_DIST;
         if (!focusTarget) {
-          controls.minDistance = 0.01 + SUN_RADIUS / DIST_MULT;
+          controls.minDistance =
+            SPACE_MIN_DIST_FROM_SURFACE + SUN_RADIUS / DIST_MULT;
           return;
         }
         // Type guard.
@@ -286,7 +296,7 @@ export const cameraMachine = createMachine(
         const body = context.focusTarget as KeplerBody; // Cast to KeplerBody.
         if (body && controls) {
           const radius = body.meanRadius / DIST_MULT;
-          const minDistance = 0.01 + radius;
+          const minDistance = SPACE_MIN_DIST_FROM_SURFACE + radius;
 
           // Set min distance relative to focus targets radius.
           controls.minDistance = minDistance;
@@ -300,8 +310,8 @@ export const cameraMachine = createMachine(
       setSurfaceCamDistance: (context) => {
         const { controls } = context;
         if (!controls) return;
-        controls.minDistance = 1e-5;
-        controls.maxDistance = 2e-5;
+        controls.minDistance = SURFACE_MIN_DIST;
+        controls.maxDistance = SURFACE_MAX_DIST;
       },
     },
   }

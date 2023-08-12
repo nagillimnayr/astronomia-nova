@@ -7,7 +7,7 @@ import { useCallback, useContext, useRef } from 'react';
 import { Object3D, Vector3 } from 'three';
 import { ProjectedSphere } from './ProjectedSphere';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { EARTH_RADIUS } from '@/lib/utils/constants';
+import { EARTH_RADIUS } from '@/simulation/utils/constants';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { DIST_MULT } from '@/simulation/utils/constants';
 

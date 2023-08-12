@@ -1,4 +1,4 @@
-import { UPDATES_PER_DAY } from '@/lib/utils/constants';
+import { UPDATES_PER_DAY } from '@/simulation/utils/constants';
 import { Queue } from '@datastructures-js/queue';
 import { flatten, isEqual, clamp, floor } from 'lodash';
 import {

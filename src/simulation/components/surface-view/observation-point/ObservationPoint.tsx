@@ -1,27 +1,18 @@
-import { Sphere, Wireframe } from '@react-three/drei';
-import {
-  type ReactNode,
-  forwardRef,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react';
-import { Vector3, type Mesh, type Object3D } from 'three';
+import { type ReactNode, useEffect, useRef } from 'react';
+import { type Object3D } from 'three';
 import { Observer } from '../observer/Observer';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { autorun, reaction } from 'mobx';
+
 import { degToRad } from 'three/src/math/MathUtils';
 // import { GlobalStateContext } from '@/state/xstate/MachineProviders';
-import { useActor, useSelector } from '@xstate/react';
-import { useKeyPressed } from '@react-hooks-library/core';
+import { useSelector } from '@xstate/react';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
+import { DIST_MULT } from '@/simulation/utils/constants';
 import { observer } from 'mobx-react-lite';
 import { ObservationSphere } from './ObservationSphere';
 import { SkySphere } from '../sky-sphere/SkySphere';
-import { MachineContext } from '../../../../state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { Compass } from '../compass/Compass';
+import { Sphere } from '@react-three/drei';
 
 type Props = {
   children?: ReactNode;
@@ -83,14 +74,18 @@ const ObservationPoint = observer(({ children }: Props) => {
       {body && mesh ? (
         <>
           <object3D ref={centerRef}>
-            {/* <axesHelper args={[1.5 * (body.meanRadius / EARTH_RADIUS)]} /> */}
+            {/* <axesHelper args={[1.5 * (body.meanRadius / DIST_MULT)]} /> */}
+
+            {/** Attach group at a distance so that it is on the surface of the body. */}
             <group
               name="observation-point"
-              position={[body.meanRadius / DIST_MULT + 1e-4, 0, 0]}
+              position={[body.meanRadius / DIST_MULT, 0, 0]}
               rotation={[0, 0, degToRad(-90)]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
             >
+              {/* <axesHelper args={[1e-2]} /> */}
               <ObservationSphere />
               <Observer />
+              <Compass />
               {children}
             </group>
           </object3D>

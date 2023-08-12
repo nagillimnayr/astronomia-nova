@@ -1,4 +1,4 @@
-import { DAY } from '@/lib/utils/constants';
+import { DAY } from '@/simulation/utils/constants';
 import { addSeconds } from 'date-fns';
 import { assign, createMachine, log, sendParent, sendTo } from 'xstate';
 

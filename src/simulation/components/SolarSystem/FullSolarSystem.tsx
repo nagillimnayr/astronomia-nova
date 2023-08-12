@@ -1,14 +1,11 @@
 import React, { forwardRef, useContext } from 'react';
 import Body from '../Body/Body';
-import type KeplerBody from '../../classes/kepler-body';
-import { SOLAR_MASS, SUN_RADIUS } from '../../utils/constants';
+import { SOLAR_MASS, SUN_RADIUS } from '@/simulation/utils/constants';
 import { useTexture } from '@react-three/drei';
 
 import { Orbit } from '../Orbit/Orbit';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { EARTH_RADIUS } from '@/lib/utils/constants';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 const FullSolarSystem = () => {
   const [

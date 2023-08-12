@@ -8,7 +8,7 @@ import {
   calculateOrbitFromPeriapsis,
   calculateOrbitFromStateVectors,
 } from '@/simulation/math/orbit/calculateOrbit';
-import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
+import { DIST_MULT, DAY } from '@/simulation/utils/constants';
 import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
 import {
   ColorRepresentation,
@@ -40,8 +40,6 @@ import { colorMap } from '@/simulation/utils/color-map';
 import { Trail } from '../Body/trail/Trail';
 import { BodyTrail } from '../Body/trail/BodyTrail';
 import { calculateOrbitalPeriod } from '@/simulation/math/orbital-elements/OrbitalPeriod';
-import { DAY } from '@/lib/utils/constants';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 

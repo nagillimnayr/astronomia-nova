@@ -8,7 +8,7 @@ import { useContext, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type PerspectiveCamera } from 'three';
 import { DIST_MULT, SUN_RADIUS } from '@/simulation/utils/constants';
-import { FAR, NEAR } from '@/components/canvas/scene-constants';
+import { FAR_CLIP, NEAR_CLIP } from '@/components/canvas/scene-constants';
 
 const SpaceCamera = () => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
@@ -35,8 +35,8 @@ const SpaceCamera = () => {
           });
         }}
         position={[0, 0, SUN_RADIUS / 10 / DIST_MULT + 1000]}
-        near={NEAR}
-        far={FAR}
+        near={NEAR_CLIP}
+        far={FAR_CLIP}
       />
     </>
   );

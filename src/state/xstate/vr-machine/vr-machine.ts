@@ -1,4 +1,4 @@
-import { FAR, NEAR } from '@/components/canvas/scene-constants';
+import { FAR_CLIP, NEAR_CLIP } from '@/components/canvas/scene-constants';
 import { VRCameraController } from '@/components/canvas/vr/classes/VRCameraController';
 import { type XRController } from '@react-three/xr';
 import { Object3D, type Group, Vector3 } from 'three';
@@ -117,8 +117,8 @@ export const vrMachine = createMachine(
           console.log('far:', session.renderState.depthFar);
           // Initialize the near and far clip planes.
           void session.updateRenderState({
-            depthNear: NEAR,
-            depthFar: FAR,
+            depthNear: NEAR_CLIP,
+            depthFar: FAR_CLIP,
           });
         } catch (err) {
           console.error('Error! failed to init XR session render state:', err);

@@ -1,5 +1,4 @@
-import { GRAV_CONST } from '@/lib/utils/constants';
-import { DIST_MULT } from '@/simulation/utils/constants';
+import { DIST_MULT, GRAV_CONST } from '@/simulation/utils/constants';
 
 export function calculateOrbitalPeriod(
   semiMajorAxis: number,

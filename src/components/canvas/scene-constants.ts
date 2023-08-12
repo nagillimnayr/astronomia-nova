@@ -1,2 +1,2 @@
-export const NEAR = 1e-5; // Camera near plane.
-export const FAR = 1e9; // Camera far plane.
+export const NEAR_CLIP: Readonly<number> = 1e-9;
+export const FAR_CLIP: Readonly<number> = 1e13;
