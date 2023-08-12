@@ -5,16 +5,12 @@ import { DoubleSide } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { CompassMarker } from './CompassMarker';
 
-const GRID_SECTORS: Readonly<number> = 4;
-
 export const Compass = () => {
-  const { radiusSegments, innerRadius, outerRadius, segments } = useMemo(() => {
-    const radiusSegments = 10;
-    const innerRadius = radiusSegments * METER;
+  const { innerRadius, outerRadius, segments } = useMemo(() => {
+    const innerRadius = 50 * METER;
     const outerRadius = innerRadius + innerRadius * 1e-2;
-    const segments = 32;
+    const segments = 64;
     return {
-      radiusSegments,
       innerRadius,
       outerRadius,
       segments,
@@ -23,7 +19,7 @@ export const Compass = () => {
   return (
     <>
       <object3D>
-        <axesHelper args={[innerRadius]} />
+        {/* <axesHelper args={[innerRadius]} /> */}
         <Ring
           args={[innerRadius, outerRadius, segments]}
           rotation={[-RADS_90, 0, 0]}

@@ -50,7 +50,7 @@ export const CompassMarker = ({ children, position }: Props) => {
         >
           {children}
         </Text>
-        <axesHelper args={[METER]} />
+        {/* <axesHelper args={[METER]} /> */}
       </object3D>
       <Line points={[_center, position]} />
     </>
