@@ -18,12 +18,8 @@ import KeplerBody from '../../classes/kepler-body';
 
 import { BodyMesh } from './BodyMesh';
 import { VelocityArrow } from '../Orbit/arrows/VelocityArrow';
-import { degToRad } from 'three/src/math/MathUtils';
-import { Annotation } from '@/simulation/components/Body/tags/annotation/Annotation';
-import { RingMarker } from '@/simulation/components/Body/tags/marker/RingMarker';
-import { CircleMarker } from '@/simulation/components/Body/tags/marker/CircleMarker';
+
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
 import { Tags } from './tags/Tags';
 import { BodyTrail } from './trail/BodyTrail';
 
@@ -43,6 +39,7 @@ export type BodyParams = {
   obliquity?: number;
   initialPosition?: Vector3Tuple;
   initialVelocity?: Vector3Tuple;
+  siderealRotRate: number;
 };
 type BodyProps = {
   children?: React.ReactNode;
@@ -65,6 +62,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
     obliquity,
     initialPosition,
     initialVelocity,
+    siderealRotRate,
   } = params;
 
   // Get central body from context.
@@ -127,6 +125,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
             texture={texture}
             bodyRef={bodyRef}
             ref={meshRef}
+            siderealRotRate={siderealRotRate}
           />
 
           <Tags name={name} bodyRef={bodyRef} meanRadius={meanRadius} />

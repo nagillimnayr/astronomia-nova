@@ -1,5 +1,5 @@
 import { Sphere, Trail, useCursor, useHelper } from '@react-three/drei';
-import { type ThreeEvent } from '@react-three/fiber';
+import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { Select } from '@react-three/postprocessing';
 import {
   type MutableRefObject,
@@ -18,14 +18,11 @@ import {
   type Texture,
 } from 'three';
 import type KeplerBody from '@/simulation/classes/kepler-body';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { HtmlAnnotation } from '@/simulation/components/Body/tags/annotation/HtmlAnnotation';
+
 import { degToRad } from 'three/src/math/MathUtils';
 // import { CoordinateSphere } from '../surface-view/CoordinateSphere';
-import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
+import { DAY, DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
-import { RingMarker } from './tags/marker/RingMarker';
 
 // Separate out the visual logic from the simulation logic.
 
@@ -36,13 +33,22 @@ type BodyMeshProps = {
   obliquity: number;
   texture?: Texture;
   color?: ColorRepresentation;
+  siderealRotRate: number;
 };
 
 export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
-  { name, bodyRef, meanRadius, obliquity, texture, color }: BodyMeshProps,
+  {
+    name,
+    bodyRef,
+    meanRadius,
+    obliquity,
+    texture,
+    color,
+    siderealRotRate,
+  }: BodyMeshProps,
   fwdRef
 ) {
-  const { selectionActor } = MachineContext.useSelector(
+  const { selectionActor, timeActor } = MachineContext.useSelector(
     ({ context }) => context
   );
 
@@ -84,10 +90,22 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     },
     [meshRef]
   );
+
+  useFrame((state, delta) => {
+    const timeSnapshot = timeActor.getSnapshot();
+    if (!timeSnapshot) return;
+    if (timeSnapshot.matches('paused')) return;
+    const mesh = meshRef.current;
+    if (!mesh) return;
+    const scaledDelta = delta * timeSnapshot.context.timescale * DAY;
+
+    // Rotate the body around its rotational axis.
+    mesh.rotateY(siderealRotRate * scaledDelta);
+  });
+
   const radius = meanRadius / DIST_MULT;
   return (
     <>
-      {/* <Select enabled={isSelected}> */}
       <Sphere
         rotation={[degToRad(90), 0, degToRad(obliquity)]}
         // visible={isVisible}
@@ -102,12 +120,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 
         {/* <axesHelper args={[2 * (meanRadius / DIST_MULT)]} /> */}
 
-        {/* <HtmlMarker bodyRef={bodyRef} /> */}
-        {/* <Marker bodyRef={bodyRef} meanRadius={meanRadius} /> */}
-
         {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
       </Sphere>
-      {/* </Select> */}
     </>
   );
 });

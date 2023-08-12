@@ -111,13 +111,14 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   );
   // Todo: Memoize all of these computations externally.
   // The Horizons ephemeris data for Jupiter seems to result in it wobbling a bit on its orbit. Using the Vis-Viva equation to re-calculate the velocity seems to fix it though. It also appears to have fixed some wobble with the moon.
-  // _pos.set(...vectorTable.position);
 
+  // Compute the initial orbital speed.
   const orbitalSpeed = getOrbitalSpeedFromRadius(
     radius,
     centralMass,
     semiMajorAxis
   );
+  // Compute the direction of the velocity vector.
   _vel.copy(getVelocityDirectionFromOrbitalElements(trueAnomaly, eccentricity));
   _vel.normalize();
   _vel.multiplyScalar(orbitalSpeed);
@@ -126,7 +127,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     calculateOrbitalPeriod(semiMajorAxis, centralMass) / DAY;
 
   const color = colorMap.get(name) ?? 'white';
-  const { meanRadius, obliquity } = physicalData.table;
+  const { meanRadius, obliquity, siderealRotRate } = physicalData.table;
   const bodyParams: BodyParams = {
     name: name,
     color,
@@ -135,6 +136,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     obliquity: obliquity,
     initialPosition: _pos.divideScalar(DIST_MULT).toArray(),
     initialVelocity: _vel.divideScalar(DIST_MULT).toArray(),
+    siderealRotRate,
   };
 
   // Destructure the orientation elements.
@@ -158,6 +160,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
         mapActor.send({ type: 'ADD_ORBIT', orbit }); // Add to map.
 
         // To orient the orbit correctly, we need to perform three intrinsic rotations. (Intrinsic meaning that the rotations are performed in the local coordinate space, such that when we rotate around the axes in the order z-x-z, the last z-axis rotation is around a different world-space axis than the first one, as the x-axis rotation changes the orientation of the object's local z-axis. For clarity, the rotations will be in the order z-x'-z'', where x' is the new local x-axis after the first rotation and z'' is the object's new local z-axis after the second rotation.)
+        orbit.rotation.set(0, 0, 0); // Reset the rotation before we perform the intrinsic rotations.
         orbit.rotateZ(degToRad(longitudeOfAscendingNode));
         orbit.rotateX(degToRad(inclination));
         orbit.rotateZ(degToRad(argumentOfPeriapsis));
