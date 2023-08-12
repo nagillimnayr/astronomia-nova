@@ -7,6 +7,9 @@ import { useContext, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CameraHelper, type PerspectiveCamera } from 'three';
 import { FAR_CLIP, NEAR_CLIP } from '@/components/canvas/scene-constants';
+import { METER } from '@/simulation/utils/constants';
+
+const NEAR: Readonly<number> = METER / 10;
 
 const SurfaceCamera = () => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
@@ -32,7 +35,7 @@ const SurfaceCamera = () => {
           // Assign camera to state context.
           cameraActor.send({ type: 'ASSIGN_SURFACE_CAMERA', camera });
         }}
-        near={NEAR_CLIP}
+        near={NEAR}
         far={FAR_CLIP}
         fov={50}
       />
