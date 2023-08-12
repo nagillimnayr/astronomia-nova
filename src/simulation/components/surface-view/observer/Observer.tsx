@@ -1,5 +1,6 @@
-import { DIST_MULT, METER } from '@/simulation/utils/constants';
+import { DIST_MULT, METER, RADS_90 } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { Circle } from '@react-three/drei';
 
 const DIST_ABOVE_SURFACE: Readonly<number> = 2 * METER; // 2 meters above surface.
 const Observer = () => {
@@ -18,9 +19,9 @@ const Observer = () => {
               cameraActor.send({ type: 'ASSIGN_OBSERVER', observer });
             }}
           >
-            <axesHelper args={[1e-3]} />
+            {/* <axesHelper args={[5 * METER]} /> */}
           </object3D>
-          <axesHelper args={[3e-2]} />
+          {/* <axesHelper args={[5 * METER]} /> */}
         </object3D>
       </object3D>
     </>
