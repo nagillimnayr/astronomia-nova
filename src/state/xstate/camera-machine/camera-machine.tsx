@@ -3,6 +3,7 @@ import { type Object3D, Vector3, type PerspectiveCamera } from 'three';
 import { type CameraControls } from '@react-three/drei';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { DIST_MULT, SUN_RADIUS, METER } from '@/simulation/utils/constants';
+import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 
 const _targetWorldPos = new Vector3();
 const _observerWorldPos = new Vector3();
@@ -261,14 +262,8 @@ export const cameraMachine = createMachine(
         const { controls, surfaceCamera, observer, focusTarget } = context;
         if (!controls || !surfaceCamera || !observer || !focusTarget) return;
 
-        // NOTE: This works!
-        observer.getWorldPosition(_observerWorldPos);
-        focusTarget.getWorldPosition(_targetWorldPos);
-        // Get direction from target center to observer in world coordinates.
-        _observerUp.subVectors(_observerWorldPos, _targetWorldPos);
-        _observerUp.normalize(); // Normalize the direction vector.
-
-        surfaceCamera.up.copy(_observerUp);
+        // Set the camera's up vector to be relative to the surface.
+        surfaceCamera.up.set(...getLocalUpInWorldCoords(observer));
         controls.applyCameraUp();
       },
       applySpaceCamUp: (context) => {
