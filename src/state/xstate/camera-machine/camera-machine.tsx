@@ -13,8 +13,8 @@ const SPACE_MAX_DIST: Readonly<number> = 1e12;
 const SPACE_MIN_DIST_FROM_SURFACE: Readonly<number> = 1e-3;
 
 // Surface view constants:
-const SURFACE_MAX_DIST: Readonly<number> = 1.5 * METER;
-const SURFACE_MIN_DIST: Readonly<number> = METER;
+const SURFACE_MIN_DIST: Readonly<number> = METER * 1e-1;
+const SURFACE_MAX_DIST: Readonly<number> = 1.5 * SURFACE_MIN_DIST;
 const SURFACE_MIN_DIST_FROM_SURFACE: Readonly<number> = 2 * METER; // 2 meters above ground
 
 type Context = {
