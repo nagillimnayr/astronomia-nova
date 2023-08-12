@@ -193,11 +193,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
         semiMinorAxis={semiMinorAxis}
         linearEccentricity={linearEccentricity}
         periapsis={periapsis}
-        orientation={{
-          longitudeOfAscendingNode,
-          argumentOfPeriapsis,
-          inclination,
-        }}
+        bodyRef={orbitingBodyRef}
       />
       <TrueAnomalyArrow color={'#ffffff'} target={orbitingBodyRef} />
     </keplerOrbit>
