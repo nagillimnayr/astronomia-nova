@@ -84,6 +84,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.244.0",
     "mathjs": "^11.8.0",
+    "meshline": "^3.1.6",
     "mobx": "^6.9.1",
     "mobx-log": "^2.2.1",
     "mobx-react-lite": "^4.0.3",
