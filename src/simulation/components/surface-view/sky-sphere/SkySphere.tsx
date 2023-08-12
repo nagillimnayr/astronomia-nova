@@ -1,7 +1,7 @@
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { DIST_MULT } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Sphere, Wireframe } from '@react-three/drei';
+import { Edges, Sphere, Wireframe } from '@react-three/drei';
 import { useSelector } from '@xstate/react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Mesh, Object3D } from 'three';
@@ -43,7 +43,7 @@ export const SkySphere = () => {
           args={[radius]}
           rotation={[0, 0, degToRad(body.obliquity)]}
         >
-          <Wireframe
+          {/* <Wireframe
             simplify
             stroke="white"
             squeeze
@@ -51,7 +51,10 @@ export const SkySphere = () => {
             fillOpacity={0}
             strokeOpacity={0.75}
             // fill="white"
-          />
+          /> */}
+
+          <meshBasicMaterial transparent opacity={0} />
+          <Edges scale={1} color={'white'} threshold={5.5} />
           {/* <axesHelper args={[1e-1]} /> */}
         </Sphere>
       </object3D>
