@@ -5,6 +5,8 @@ import { CameraControls } from '@react-three/drei';
 import { useContext } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 
+const MIN_POLAR_ANGLE: Readonly<number> = degToRad(1);
+const MAX_POLAR_ANGLE: Readonly<number> = degToRad(179);
 const CameraController = () => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   return (
@@ -13,6 +15,8 @@ const CameraController = () => {
         makeDefault={true}
         minDistance={1e-5}
         polarAngle={degToRad(60)}
+        minPolarAngle={MIN_POLAR_ANGLE}
+        maxPolarAngle={MAX_POLAR_ANGLE}
         ref={(controls) => {
           if (!controls) {
             return;
