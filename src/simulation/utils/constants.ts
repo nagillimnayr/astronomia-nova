@@ -21,6 +21,8 @@ export const PI_SQUARED: Readonly<number> = Math.pow(Math.PI, 2);
 export const UPDATES_PER_DAY: Readonly<number> = 60;
 
 // Angles in radians
+
+export const TWO_PI: Readonly<number> = Math.PI * 2;
 export const PI: Readonly<number> = Math.PI;
 export const PI_OVER_TWO: Readonly<number> = Math.PI / 2;
 export const PI_OVER_FOUR: Readonly<number> = Math.PI / 4;

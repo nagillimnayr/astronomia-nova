@@ -1,4 +1,3 @@
-// import { KM_TO_M } from '../utils/constants';
 import type { ElementCode } from './elementCodes';
 import type { VectorCode } from './vectorCodes';
 
@@ -11,7 +10,7 @@ import {
   type PhysicalData,
 } from './types/PhysicalData';
 import { radToDeg } from 'three/src/math/MathUtils';
-import { DAY } from '../utils/constants';
+import { DAY, TWO_PI } from '@/simulation/utils/constants';
 
 const KM_TO_M = 1000;
 
@@ -370,9 +369,8 @@ function getRotationRate(text: string) {
   }
 
   // Convert period in days into rate (rad/s).
-  const twoPi = Math.PI * 2;
   const periodInSeconds = rotationPeriod * DAY;
-  const rate = twoPi / periodInSeconds;
+  const rate = TWO_PI / periodInSeconds;
 
   return rate;
 }
