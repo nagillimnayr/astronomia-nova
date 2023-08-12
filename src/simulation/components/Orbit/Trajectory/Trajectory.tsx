@@ -68,7 +68,7 @@ export const Trajectory = ({
     visibilityActor,
     ({ context }) => context.trajectories
   );
-  const trajectoryVisibiltyOn = useSelector(trajectories, (state) =>
+  const trajectoryVisibilityOn = useSelector(trajectories, (state) =>
     state.matches('active')
   );
   const surfaceView = useSelector(cameraActor, (state) =>
@@ -109,7 +109,7 @@ export const Trajectory = ({
 
   const ref = useRef<Object3D>(null!);
 
-  let isVisible = true;
+  let isVisible = trajectoryVisibilityOn;
   if (bodyRef.current && focusTarget) {
     if (focusTarget === bodyRef.current && surfaceView) {
       isVisible = false;
