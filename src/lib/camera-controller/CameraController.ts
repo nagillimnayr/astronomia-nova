@@ -138,6 +138,9 @@ export class CameraController extends Object3D {
     // Adjust to be within min/max range.
     this._radius = clamp(radius, this._minRadius, this._maxRadius);
   }
+  setTargetRadius(radiusTarget: number) {
+    this._radiusTarget = clamp(radiusTarget, this._minRadius, this._maxRadius);
+  }
   addRadialZoom(zoom: number) {
     if (approxZero(zoom)) return;
 
