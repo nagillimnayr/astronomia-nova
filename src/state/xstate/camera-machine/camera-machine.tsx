@@ -147,7 +147,7 @@ export const cameraMachine = createMachine(
           },
           SET_TARGET: {
             internal: true,
-            actions: ['assignTarget', 'setSpaceCamDistance'],
+            actions: ['assignTarget', 'attachToTarget', 'setSpaceCamDistance'],
           },
           TO_SURFACE: {
             // Transition to 'surface' view-mode:
@@ -257,6 +257,11 @@ export const cameraMachine = createMachine(
         console.log('controls:', controls);
         console.log('surface cam:', surfaceCamera);
         console.log('space cam:', spaceCamera);
+      },
+      attachToTarget: (context, event) => {
+        const { controls, spaceCamera, focusTarget } = context;
+        if (!focusTarget || !controls) return;
+        focusTarget.add(controls);
       },
       updateSpaceView: (context, event) => {
         const { controls, spaceCamera } = context;
