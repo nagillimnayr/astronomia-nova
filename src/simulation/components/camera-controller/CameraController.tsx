@@ -4,6 +4,7 @@ import { SurfaceCamera } from './SurfaceCamera';
 import { CameraControls } from '@react-three/drei';
 import { useContext } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { BaseInstance } from '@react-three/fiber';
 
 const MIN_POLAR_ANGLE: Readonly<number> = degToRad(1);
 const MAX_POLAR_ANGLE: Readonly<number> = degToRad(179);
@@ -22,13 +23,17 @@ const CameraController = () => {
             return;
           }
 
+          console.assert(
+            '__r3f' in controls,
+            'Error: controls are not of type BaseInstance'
+          );
           // Assign controls context in camera state machine.
           cameraActor.send({
             type: 'ASSIGN_CONTROLS',
-            controls,
+            controls: controls as unknown as CameraControls & BaseInstance,
           });
         }}
-      />
+      ></CameraControls>
       <SpaceCamera />
       <SurfaceCamera />
     </>
