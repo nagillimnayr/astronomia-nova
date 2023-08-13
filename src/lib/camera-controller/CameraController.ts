@@ -1,6 +1,13 @@
 import { Group, Object3D, PerspectiveCamera, Vector3 } from 'three';
 import { damp, degToRad, clamp } from 'three/src/math/MathUtils';
-import { TWO_PI, PI_OVER_TWO, PI } from '@/simulation/utils/constants';
+import {
+  TWO_PI,
+  PI_OVER_TWO,
+  PI,
+  DEG_TO_RADS,
+  PI_OVER_THREE,
+} from '@/simulation/utils/constants';
+import { smoothCritDamp } from './smoothing';
 
 const X_AXIS: Readonly<Vector3> = new Vector3(1, 0, 0);
 const Y_AXIS: Readonly<Vector3> = new Vector3(0, 1, 0);
@@ -14,37 +21,40 @@ const MAX_POLAR_ANGLE_BOUND = PI - Number.EPSILON;
 const MIN_AZIMUTHAL_ANGLE_BOUND = 0;
 const MAX_AZIMUTHAL_ANGLE_BOUND = TWO_PI;
 
-function approxZero(num: number, epsilon = 1e-15) {
+function approxZero(num: number, epsilon = 1e-4) {
   return Math.abs(num) <= epsilon;
 }
-
-const lambda = 0.15;
 
 export class CameraController extends Object3D {
   private _camera: PerspectiveCamera | null = null;
   private _domElement: HTMLElement | null = null;
-  private _needsUpdate = false;
 
-  private _radius = 1e2;
+  private _radius = 1e3;
+  private _radiusTarget = this._radius;
+  private _radiusVelocity = 0;
   private _minRadius = MIN_RADIUS_BOUND;
   private _maxRadius = 1e10;
-  private _deltaRadius = 0;
-  private _zoomSpeed = 5;
+  private _zoomSpeed = 2;
   private _zoomFactor = 1e-1;
 
-  private _polarAngle = MIN_POLAR_ANGLE_BOUND;
+  private _polarAngle = PI_OVER_THREE;
+  private _polarAngleTarget = this._polarAngle;
+  private _polarAngleVelocity = 0;
   private _minPolarAngle = MIN_POLAR_ANGLE_BOUND;
   private _maxPolarAngle = MAX_POLAR_ANGLE_BOUND;
-  private _deltaPolarAngle = 0;
 
   private _azimuthalAngle = 0;
+  private _azimuthalAngleTarget = this._azimuthalAngle;
+  private _azimuthalAngleVelocity = 0;
   private _minAzimuthalAngle = -Infinity;
   private _maxAzimuthalAngle = Infinity;
-  private _deltaAzimuthalAngle = 0;
 
-  private _rotateSpeed = 1;
+  private _rotationSpeed = 0.75;
+  private _smoothTime = 0.25;
 
-  private _mouseDown = false;
+  private _mouseDownLeft = false;
+  private _mouseDownRight = false;
+  private _mouseDownMiddle = false;
 
   constructor(camera?: PerspectiveCamera) {
     super();
@@ -69,55 +79,77 @@ export class CameraController extends Object3D {
 
     // Rotations are intrinsic, so the order matters. Rotation around local y-axis must be done first in order to preserve the local up-vector.
     this.rotateY(this._azimuthalAngle); // Rotate around local y-axis.
-    this.rotateX(PI_OVER_TWO - this._polarAngle); // Rotate around local x-axis.
+    this.rotateX(-(PI_OVER_TWO - this._polarAngle)); // Rotate around local x-axis.
 
     this._camera?.updateProjectionMatrix();
-    this._needsUpdate = false;
   }
 
   private updateAzimuthalAngle(deltaTime: number) {
-    const newAzimuthalAngle = damp(
+    if (approxZero(this._azimuthalAngleTarget - this._azimuthalAngle)) return;
+
+    const [newValue, newVelocity] = smoothCritDamp(
       this._azimuthalAngle,
-      this._azimuthalAngle + this._deltaAzimuthalAngle,
-      lambda,
+      this._azimuthalAngleTarget,
+      this._azimuthalAngleVelocity,
+      this._smoothTime,
       deltaTime
     );
-    this.setAzimuthalAngle(newAzimuthalAngle);
-    this._deltaAzimuthalAngle = 0;
+    this._azimuthalAngleVelocity = newVelocity;
+    if (approxZero(this._azimuthalAngleTarget - newValue)) {
+      this.setAzimuthalAngle(this._azimuthalAngleTarget);
+      this._normalizeAzimuthalAngle();
+    } else {
+      this.setAzimuthalAngle(newValue);
+    }
   }
   private updatePolarAngle(deltaTime: number) {
-    const newPolarAngle = damp(
+    if (approxZero(this._polarAngleTarget - this._polarAngle)) return;
+
+    const [newValue, newVelocity] = smoothCritDamp(
       this._polarAngle,
-      this._polarAngle + this._deltaPolarAngle,
-      lambda,
+      this._polarAngleTarget,
+      this._polarAngleVelocity,
+      this._smoothTime,
       deltaTime
     );
-    this.setPolarAngle(newPolarAngle);
-    this._deltaPolarAngle = 0;
+    this._polarAngleVelocity = newVelocity;
+    approxZero(this._polarAngleTarget - newValue)
+      ? this.setPolarAngle(this._polarAngleTarget)
+      : this.setPolarAngle(newValue);
   }
   private updateRadius(deltaTime: number) {
-    const newRadius = damp(
+    if (approxZero(this._radiusTarget - this._radius)) return;
+
+    const [newValue, newVelocity] = smoothCritDamp(
       this._radius,
-      this._radius + this._deltaRadius,
-      lambda,
+      this._radiusTarget,
+      this._radiusVelocity,
+      this._smoothTime,
       deltaTime
     );
-    this.setRadius(newRadius);
-    this._deltaRadius = 0;
+    this._radiusVelocity = newVelocity;
+
+    approxZero(this._radiusTarget - newValue)
+      ? this.setRadius(this._radiusTarget)
+      : this.setRadius(newValue);
   }
 
   setRadius(radius: number) {
     // Adjust to be within min/max range.
     this._radius = clamp(radius, this._minRadius, this._maxRadius);
-    this._needsUpdate = true;
   }
   addRadialZoom(zoom: number) {
     if (approxZero(zoom)) return;
-    // this._deltaRadius +=
-    //   zoom * this._zoomSpeed * (this._radius / this._zoomFactor);
-    this._deltaRadius +=
+
+    const deltaZoom =
       zoom * this._zoomSpeed * (this._radius * this._zoomFactor);
-    this._needsUpdate = true;
+    this._radiusTarget += deltaZoom;
+
+    this._radiusTarget = clamp(
+      this._radiusTarget,
+      this._minRadius,
+      this._maxRadius
+    );
   }
 
   get radius() {
@@ -135,17 +167,22 @@ export class CameraController extends Object3D {
       this._maxPolarAngle
     );
     this._polarAngle = adjustedAngle;
-    this._needsUpdate = true;
   }
   addPolarRotation(polarRotation: number) {
     // if (approxZero(polarRotation)) return;
-    this._deltaPolarAngle += polarRotation * this._rotateSpeed;
-    this._needsUpdate = true;
+    this._polarAngleTarget += polarRotation * this._rotationSpeed * DEG_TO_RADS;
   }
 
   setAzimuthalAngle(azimuthalAngle: number) {
+    this._azimuthalAngle = clamp(
+      azimuthalAngle,
+      this._minAzimuthalAngle,
+      this._maxAzimuthalAngle
+    );
+  }
+  private _normalizeAzimuthalAngle() {
     // Adjust angle to be within range [0, TWO_PI]
-    let adjustedAngle = azimuthalAngle;
+    let adjustedAngle = this._azimuthalAngle;
     while (adjustedAngle > TWO_PI) {
       adjustedAngle -= TWO_PI;
     }
@@ -158,13 +195,13 @@ export class CameraController extends Object3D {
       this._maxAzimuthalAngle
     );
     this._azimuthalAngle = adjustedAngle;
-    this._needsUpdate = true;
+    this._azimuthalAngleTarget = adjustedAngle;
   }
 
   addAzimuthalRotation(azimuthalRotation: number) {
     // if (approxZero(azimuthalRotation)) return;
-    this._deltaAzimuthalAngle += azimuthalRotation * this._rotateSpeed;
-    this._needsUpdate = true;
+    this._azimuthalAngleTarget +=
+      azimuthalRotation * this._rotationSpeed * DEG_TO_RADS;
   }
 
   addRotation(azimuthalRotation: number, polarRotation: number) {
@@ -281,38 +318,122 @@ export class CameraController extends Object3D {
   }
 
   private _onMouseDown(event: MouseEvent) {
-    console.log('mouse down', this);
+    const button = event.button;
     if (!this._domElement) return;
-    this._mouseDown = true;
-    this._domElement.addEventListener('mousemove', this.onMouseMove);
+    event.preventDefault();
+
+    switch (button) {
+      case 0: {
+        if (
+          this._mouseDownLeft ||
+          this._mouseDownMiddle ||
+          this._mouseDownRight
+        ) {
+          return;
+        }
+        this._mouseDownLeft = true;
+        this._domElement.addEventListener('mousemove', this.onMouseMoveLeft);
+        break;
+      }
+      case 1: {
+        if (
+          this._mouseDownLeft ||
+          this._mouseDownMiddle ||
+          this._mouseDownRight
+        ) {
+          return;
+        }
+        this._mouseDownMiddle = true;
+        this._domElement.addEventListener('mousemove', this.onMouseMoveMiddle);
+        break;
+      }
+      case 2: {
+        if (
+          this._mouseDownLeft ||
+          this._mouseDownMiddle ||
+          this._mouseDownRight
+        ) {
+          return;
+        }
+        this._mouseDownRight = true;
+        this._domElement.addEventListener('mousemove', this.onMouseMoveRight);
+        break;
+      }
+    }
   }
   onMouseDown = this._onMouseDown.bind(this);
 
   private _onMouseUp(event: MouseEvent) {
-    console.log('mouse up', this);
+    const button = event.button;
     if (!this._domElement) return;
-    this._mouseDown = false;
-    this._domElement.removeEventListener('mousemove', this.onMouseMove);
+    event.preventDefault();
+
+    switch (button) {
+      case 0: {
+        this._mouseDownLeft = false;
+        this._domElement.removeEventListener('mousemove', this.onMouseMoveLeft);
+        break;
+      }
+      case 1: {
+        this._mouseDownMiddle = false;
+        this._domElement.removeEventListener(
+          'mousemove',
+          this.onMouseMoveMiddle
+        );
+        break;
+      }
+      case 2: {
+        this._mouseDownRight = false;
+        this._domElement.removeEventListener(
+          'mousemove',
+          this.onMouseMoveRight
+        );
+        event;
+        event.stopPropagation();
+        break;
+      }
+    }
   }
   onMouseUp = this._onMouseUp.bind(this);
 
-  private _onMouseMove(event: MouseEvent) {
-    if (!this._mouseDown) return;
+  private _onMouseMoveLeft(event: MouseEvent) {
+    if (!this._mouseDownLeft) return;
     event.preventDefault();
     const deltaX = -event.movementX;
-    const deltaY = event.movementY;
+    const deltaY = -event.movementY;
 
     this.addRotation(deltaX, deltaY);
   }
-  onMouseMove = this._onMouseMove.bind(this);
+  onMouseMoveLeft = this._onMouseMoveLeft.bind(this);
+
+  private _onMouseMoveMiddle(event: MouseEvent) {
+    if (!this._mouseDownMiddle) return;
+    event.preventDefault();
+    const deltaY = event.movementY / 50;
+    this.addRadialZoom(deltaY);
+  }
+  onMouseMoveMiddle = this._onMouseMoveMiddle.bind(this);
+
+  private _onMouseMoveRight(event: MouseEvent) {
+    if (!this._mouseDownRight) return;
+    event.preventDefault();
+    const deltaY = event.movementY / 50;
+    this.addRadialZoom(deltaY);
+  }
+  onMouseMoveRight = this._onMouseMoveRight.bind(this);
 
   private _onMouseWheel(event: WheelEvent) {
     event.preventDefault();
-    const deltaZoom = event.deltaY;
-    this.addRadialZoom(deltaZoom);
+    // deltaY will be between -100 and 100.
+    const zoom = event.deltaY / 100;
+    this.addRadialZoom(zoom);
   }
   onMouseWheel = this._onMouseWheel.bind(this);
 
+  onContextMenu = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
   // private onGamepadConnected: (event: GamepadEvent)=>void = (event) => {
   //   const gamepad = event.gamepad;
 
@@ -323,6 +444,7 @@ export class CameraController extends Object3D {
     this._domElement.addEventListener('mousedown', this.onMouseDown);
     this._domElement.addEventListener('mouseup', this.onMouseUp);
     this._domElement.addEventListener('wheel', this.onMouseWheel);
+    this._domElement.addEventListener('contextmenu', this.onContextMenu);
 
     // if (window !== undefined) {
     //     window.addEventListener('gamepadconnected', )
@@ -333,8 +455,15 @@ export class CameraController extends Object3D {
     this._domElement.removeEventListener('mousedown', this.onMouseDown);
     this._domElement.removeEventListener('mouseup', this.onMouseUp);
     this._domElement.removeEventListener('wheel', this.onMouseWheel);
-    if (this._mouseDown) {
-      this._domElement.removeEventListener('mousemove', this.onMouseMove);
+    this._domElement.removeEventListener('contextmenu', this.onContextMenu);
+    if (this._mouseDownLeft) {
+      this._domElement.removeEventListener('mousemove', this.onMouseMoveLeft);
+    }
+    if (this._mouseDownMiddle) {
+      this._domElement.removeEventListener('mousemove', this.onMouseMoveMiddle);
+    }
+    if (this._mouseDownRight) {
+      this._domElement.removeEventListener('mousemove', this.onMouseMoveRight);
     }
   }
 

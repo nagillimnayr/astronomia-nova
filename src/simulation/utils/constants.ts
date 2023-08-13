@@ -21,10 +21,12 @@ export const PI_SQUARED = Math.pow(Math.PI, 2);
 export const UPDATES_PER_DAY = 60;
 
 // Angles in radians
-
-export const TWO_PI = Math.PI * 2;
 export const PI = Math.PI;
+export const DEG_TO_RADS = PI / 180;
+export const TWO_PI = Math.PI * 2;
 export const PI_OVER_TWO = Math.PI / 2;
+export const PI_OVER_THREE = Math.PI / 4;
 export const PI_OVER_FOUR = Math.PI / 4;
+export const PI_OVER_SIX = Math.PI / 4;
 export const RADS_90 = degToRad(90); // 90 degrees in radians.
 export const RADS_180 = degToRad(180); // 180 degrees in radians.
