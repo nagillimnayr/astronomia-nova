@@ -1,11 +1,10 @@
-import { clamp } from 'lodash';
-import { Group, Object3D, Spherical, Vector3 } from 'three';
-import { damp, degToRad } from 'three/src/math/MathUtils';
+import { Group, Object3D, Vector3 } from 'three';
+import { damp, degToRad, clamp } from 'three/src/math/MathUtils';
+import { TWO_PI, PI_OVER_TWO } from '@/simulation/utils/constants';
 
 const _xAxis: Readonly<Vector3> = new Vector3(1, 0, 0);
 const _yAxis: Readonly<Vector3> = new Vector3(0, 1, 0);
-const TWO_PI: Readonly<number> = 2 * Math.PI;
-const PI_OVER_TWO: Readonly<number> = Math.PI / 2;
+
 const MAX_PITCH: Readonly<number> = degToRad(87);
 const MIN_PITCH: Readonly<number> = -MAX_PITCH;
 

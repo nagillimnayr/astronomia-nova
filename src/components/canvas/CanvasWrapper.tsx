@@ -35,12 +35,11 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
               gl={{ logarithmicDepthBuffer: true, alpha: true }}
               linear
               flat
-
-              // ref={(canvas) => {
-              //   if (!canvas) return;
-              //   // Assign canvas context in camera state machine.
-              //   cameraActor.send({ type: 'ASSIGN_CANVAS', canvas });
-              // }}
+              ref={(canvas) => {
+                if (!canvas) return;
+                // Assign canvas context in camera state machine.
+                cameraActor.send({ type: 'ASSIGN_CANVAS', canvas });
+              }}
             >
               {/* <Hud renderPriority={1}> */}
               <XR

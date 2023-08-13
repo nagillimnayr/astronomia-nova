@@ -11,6 +11,7 @@ import KeplerBody from '@/simulation/classes/kepler-body';
 import { DIST_MULT, SUN_RADIUS, METER } from '@/simulation/utils/constants';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { type RootState, type BaseInstance } from '@react-three/fiber';
+import { CameraController } from '@/lib/camera-controller/CameraController';
 
 const _targetWorldPos = new Vector3();
 const _observerWorldPos = new Vector3();
@@ -28,7 +29,8 @@ const SURFACE_MIN_DIST_FROM_SURFACE: Readonly<number> = 2 * METER; // 2 meters a
 type Context = {
   canvas: HTMLCanvasElement; // Reference to the canvas element.
   getThree: () => RootState;
-  controls: (CameraControls & BaseInstance) | null;
+  // controls: (CameraControls & BaseInstance) | null;
+  controls: CameraController | null;
   spaceCamera: PerspectiveCamera | null;
   surfaceCamera: PerspectiveCamera | null;
   focusTarget: Object3D | null;
@@ -41,7 +43,8 @@ type Events =
   | { type: 'UPDATE'; deltaTime: number }
   | { type: 'ASSIGN_CANVAS'; canvas: HTMLCanvasElement }
   | { type: 'ASSIGN_GET_THREE'; getThree: () => RootState }
-  | { type: 'ASSIGN_CONTROLS'; controls: CameraControls & BaseInstance }
+  // | { type: 'ASSIGN_CONTROLS'; controls: CameraControls & BaseInstance }
+  | { type: 'ASSIGN_CONTROLS'; controls: CameraController }
   | { type: 'ASSIGN_SPACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_SURFACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_OBSERVER'; observer: Object3D | null }
@@ -70,7 +73,7 @@ export const cameraMachine = createMachine(
     // Context assignment events:
     on: {
       ASSIGN_CANVAS: {
-        actions: 'assignCanvas',
+        actions: ['assignCanvas', 'logEvent', 'initializeControls'],
       },
       ASSIGN_GET_THREE: {
         actions: ['assignGetThree'],
@@ -212,6 +215,7 @@ export const cameraMachine = createMachine(
   {
     // Action implementations:
     actions: {
+      logEvent: log((_, event) => event),
       assignCanvas: assign({
         canvas: (context, event) => {
           // Only assign the canvas if the one in context is uninitialized.
@@ -224,7 +228,7 @@ export const cameraMachine = createMachine(
       }),
       assignControls: assign({
         controls: (_, event) => {
-          event.controls.mouseButtons.right = 8; // Zoom on right mouse button
+          // event.controls.mouseButtons.right = 8; // Zoom on right mouse button
           return event.controls;
         },
       }),
@@ -236,29 +240,40 @@ export const cameraMachine = createMachine(
         },
       }),
       initializeControls: (context) => {
-        const { controls, spaceCamera, surfaceCamera } = context;
+        const { controls, spaceCamera, surfaceCamera, canvas } = context;
         if (!controls) return;
-        console.log('controls __r3f:', controls.__r3f);
+        // console.log('controls __r3f:', controls.__r3f);
 
+        if (
+          spaceCamera &&
+          (!controls.camera || spaceCamera.parent !== controls)
+        ) {
+          controls.setCamera(spaceCamera);
+        }
+
+        if (canvas && !controls.domElement) {
+          controls.setDomElement(canvas);
+        }
+        console.log('controls:', controls);
         console.log('surface cam:', surfaceCamera);
         console.log('space cam:', spaceCamera);
       },
       updateSpaceView: (context, event) => {
-        const { controls } = context;
-        if (!controls) {
+        const { controls, spaceCamera } = context;
+        if (!controls || !spaceCamera) {
           console.error('camera controls are null');
           return;
         }
         const focusTarget = context.focusTarget;
-        if (!focusTarget) return;
+        // if (!focusTarget) return;
 
-        // Get world position of focus target.
-        focusTarget.getWorldPosition(_targetWorldPos);
+        // // Get world position of focus target.
+        // focusTarget.getWorldPosition(_targetWorldPos);
 
         // Update controls to follow target.
-        controls.moveTo(..._targetWorldPos.toArray(), false).catch((reason) => {
-          console.log('error updating camera controls: ', reason);
-        });
+        // controls.moveTo(..._targetWorldPos.toArray(), false).catch((reason) => {
+        //   console.log('error updating camera controls: ', reason);
+        // });
 
         // Force the controls to update the camera.
         controls.update(event.deltaTime);
@@ -276,11 +291,11 @@ export const cameraMachine = createMachine(
         if (!controls || !observer) return;
         observer.getWorldPosition(_observerWorldPos);
         // Update controls to follow target.
-        controls
-          .moveTo(..._observerWorldPos.toArray(), false)
-          .catch((reason) => {
-            console.log('error updating camera controls: ', reason);
-          });
+        // controls
+        //   .moveTo(..._observerWorldPos.toArray(), false)
+        //   .catch((reason) => {
+        //     console.log('error updating camera controls: ', reason);
+        //   });
         // Force the controls to update the camera.
         controls.update(event.deltaTime);
       },
@@ -303,14 +318,14 @@ export const cameraMachine = createMachine(
 
         // Set the camera's up vector to be relative to the surface.
         surfaceCamera.up.set(...getLocalUpInWorldCoords(observer));
-        controls.applyCameraUp();
+        // controls.applyCameraUp();
       },
       applySpaceCamUp: (context) => {
         // Reset up vector of camera.
         const { controls, spaceCamera } = context;
         if (!controls || !spaceCamera) return;
         spaceCamera.up.set(0, 1, 0);
-        controls.applyCameraUp();
+        // controls.applyCameraUp();
       },
       setSpaceCamDistance: (context) => {
         const { controls, focusTarget } = context;
@@ -334,11 +349,11 @@ export const cameraMachine = createMachine(
 
           // Set min distance relative to focus targets radius.
           controls.minDistance = minDistance;
-          if (controls.distance < minDistance) {
-            controls
-              .dollyTo(minDistance, false)
-              .catch((reason) => console.log(reason));
-          }
+          // if (controls.distance < minDistance) {
+          //   controls
+          //     .dollyTo(minDistance, false)
+          //     .catch((reason) => console.log(reason));
+          // }
         }
       },
       setSurfaceCamDistance: (context) => {
@@ -346,15 +361,15 @@ export const cameraMachine = createMachine(
         if (!controls) return;
         controls.minDistance = SURFACE_MIN_DIST;
         controls.maxDistance = SURFACE_MAX_DIST;
-        if (controls.distance > SURFACE_MIN_DIST) {
-          controls
-            .dollyTo(SURFACE_MIN_DIST, true)
-            .catch((reason) => console.log(reason));
-        } else if (controls.distance < SURFACE_MAX_DIST) {
-          controls
-            .dollyTo(SURFACE_MAX_DIST, true)
-            .catch((reason) => console.log(reason));
-        }
+        // if (controls.distance > SURFACE_MIN_DIST) {
+        //   controls
+        //     .dollyTo(SURFACE_MIN_DIST, true)
+        //     .catch((reason) => console.log(reason));
+        // } else if (controls.distance < SURFACE_MAX_DIST) {
+        //   controls
+        //     .dollyTo(SURFACE_MAX_DIST, true)
+        //     .catch((reason) => console.log(reason));
+        // }
       },
     },
   }

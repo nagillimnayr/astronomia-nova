@@ -14,17 +14,17 @@ export const MASS_MULT = 1e24;
 export const EARTH_RADIUS = 6371.0084e3;
 export const SUN_RADIUS = 696340e3;
 
-export const METER: Readonly<number> = 1 / DIST_MULT;
+export const METER = 1 / DIST_MULT;
 
-export const PI_SQUARED: Readonly<number> = Math.pow(Math.PI, 2);
+export const PI_SQUARED = Math.pow(Math.PI, 2);
 
-export const UPDATES_PER_DAY: Readonly<number> = 60;
+export const UPDATES_PER_DAY = 60;
 
 // Angles in radians
 
-export const TWO_PI: Readonly<number> = Math.PI * 2;
-export const PI: Readonly<number> = Math.PI;
-export const PI_OVER_TWO: Readonly<number> = Math.PI / 2;
-export const PI_OVER_FOUR: Readonly<number> = Math.PI / 4;
-export const RADS_90: Readonly<number> = degToRad(90); // 90 degrees in radians.
-export const RADS_180: Readonly<number> = degToRad(180); // 180 degrees in radians.
+export const TWO_PI = Math.PI * 2;
+export const PI = Math.PI;
+export const PI_OVER_TWO = Math.PI / 2;
+export const PI_OVER_FOUR = Math.PI / 4;
+export const RADS_90 = degToRad(90); // 90 degrees in radians.
+export const RADS_180 = degToRad(180); // 180 degrees in radians.
