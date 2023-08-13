@@ -14,25 +14,9 @@ export const KeyPressControl = () => {
 
   useKeyPressed(' ', (evt) => {
     evt.preventDefault();
-    const { camera, controls } = getThree();
-
-    // const camControls = controls as unknown as CameraControls;
-    // const distanceToCamera = camControls.distance;
-    const { bodyMap } = mapActor.getSnapshot()!.context;
-    const body = bodyMap.get('Moon')!;
-    const distanceToParent = body.position.length();
-
-    // Get world position of body.
-    body.getWorldPosition(_bodyWorldPos);
-    // Get world position of camera.
-    camera.getWorldPosition(_camWorldPos);
-
-    _diff.subVectors(_bodyWorldPos, _camWorldPos);
-    const distanceToCamera = _diff.length();
-    console.log('distance to camera:', distanceToCamera);
-
-    console.log('distance to parent:', body.position.length());
-    console.log('ratio parent/camera:', distanceToParent / distanceToCamera);
+    const { camera, controls, scene } = getThree();
+    console.log('camera:', camera);
+    console.log('camera parent:', camera.parent);
   });
   return (
     <>
