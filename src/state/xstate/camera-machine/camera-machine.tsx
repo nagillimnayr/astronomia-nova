@@ -17,6 +17,11 @@ import {
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { type RootState, type BaseInstance } from '@react-three/fiber';
 import { CameraController } from '@/lib/camera-controller/CameraController';
+import { observer } from 'mobx-react-lite';
+import {
+  NEAR_CLIP,
+  SURFACE_NEAR_CLIP,
+} from '@/components/canvas/scene-constants';
 
 const X_AXIS: Readonly<Vector3> = new Vector3(1, 0, 0);
 const _targetWorldPos = new Vector3();
@@ -181,6 +186,7 @@ export const cameraMachine = createMachine(
           'enterSurfaceView',
           'applySurfaceCamUp',
           'setSurfaceCamDistance',
+          'attachToObserver',
         ],
         // Cleanup on exit:
         exit: ['cleanupSurfaceCam', log('exiting surface view')],
@@ -248,7 +254,6 @@ export const cameraMachine = createMachine(
       initializeControls: (context) => {
         const { controls, spaceCamera, surfaceCamera, canvas } = context;
         if (!controls) return;
-        // console.log('controls __r3f:', controls.__r3f);
 
         if (
           spaceCamera &&
@@ -269,10 +274,17 @@ export const cameraMachine = createMachine(
         if (!focusTarget || !controls) return;
         // focusTarget.add(controls);
         controls.attachTo(focusTarget);
-        // console.log(controls.rotation.toArray());
-        // controls.rotateOnWorldAxis(X_AXIS, PI_OVER_TWO);
-        // console.log(controls.rotation.toArray());
-        // console.log('controls:', controls);
+        controls.applyWorldUp();
+      },
+      attachToObserver: (context, event) => {
+        //
+        const { controls, observer } = context;
+        if (!controls || !observer) return;
+        observer.add(controls);
+        _observerUp.set(...getLocalUpInWorldCoords(observer));
+        controls.up.copy(_observerUp);
+
+        controls.camera.up.copy(controls.up);
       },
       updateSpaceView: (context, event) => {
         const { controls, spaceCamera } = context;
@@ -297,15 +309,15 @@ export const cameraMachine = createMachine(
       enterSurfaceView: (context, event) => {
         const { controls, surfaceCamera, observer, focusTarget } = context;
         if (!controls || !surfaceCamera || !observer || !focusTarget) return;
-        observer.getWorldPosition(_observerWorldPos);
-        controls.camera = surfaceCamera;
+        // observer.getWorldPosition(_observerWorldPos);
+        // controls.camera = surfaceCamera;
 
-        console.log('surface cam:', surfaceCamera);
+        // console.log('surface cam:', surfaceCamera);
       },
       updateSurfaceView: (context, event) => {
         const { controls, observer } = context;
         if (!controls || !observer) return;
-        observer.getWorldPosition(_observerWorldPos);
+        // observer.getWorldPosition(_observerWorldPos);
         // Update controls to follow target.
         // controls
         //   .moveTo(..._observerWorldPos.toArray(), false)
@@ -331,7 +343,7 @@ export const cameraMachine = createMachine(
       applySurfaceCamUp: (context) => {
         const { controls, surfaceCamera, observer, focusTarget } = context;
         if (!controls || !surfaceCamera || !observer || !focusTarget) return;
-
+        controls.rotation.set(0, 0, 0); // Reset rotation.
         // Set the camera's up vector to be relative to the surface.
         surfaceCamera.up.set(...getLocalUpInWorldCoords(observer));
         // controls.applyCameraUp();
@@ -340,14 +352,14 @@ export const cameraMachine = createMachine(
         // Reset up vector of camera.
         const { controls, spaceCamera } = context;
         if (!controls || !spaceCamera) return;
-        spaceCamera.up.set(0, 1, 0);
-        // controls.applyCameraUp();
+        // spaceCamera.up.set(0, 1, 0);
+        controls.applyWorldUp();
       },
       setSpaceCamDistance: (context) => {
         const { controls, focusTarget } = context;
         if (!controls) return;
 
-        controls.maxDistance = SPACE_MAX_DIST;
+        // controls.maxDistance = SPACE_MAX_DIST;
         if (!focusTarget) {
           controls.minDistance =
             SPACE_MIN_DIST_FROM_SURFACE + SUN_RADIUS / DIST_MULT;
@@ -365,18 +377,17 @@ export const cameraMachine = createMachine(
 
           // Set min distance relative to focus targets radius.
           controls.minDistance = minDistance;
-          // if (controls.distance < minDistance) {
-          //   controls
-          //     .dollyTo(minDistance, false)
-          //     .catch((reason) => console.log(reason));
-          // }
+          controls.camera.near = NEAR_CLIP;
         }
       },
       setSurfaceCamDistance: (context) => {
-        const { controls } = context;
-        if (!controls) return;
+        const { controls, spaceCamera } = context;
+        if (!controls || !spaceCamera) return;
         controls.minDistance = SURFACE_MIN_DIST;
         controls.maxDistance = SURFACE_MAX_DIST;
+
+        controls.camera.near = SURFACE_NEAR_CLIP;
+
         // if (controls.distance > SURFACE_MIN_DIST) {
         //   controls
         //     .dollyTo(SURFACE_MIN_DIST, true)

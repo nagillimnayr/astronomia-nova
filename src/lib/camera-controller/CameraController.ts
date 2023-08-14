@@ -13,6 +13,7 @@ import {
   PI,
   DEG_TO_RADS,
   PI_OVER_THREE,
+  METER,
 } from '@/simulation/utils/constants';
 import { smoothCritDamp } from './smoothing';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
@@ -20,24 +21,23 @@ import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 const X_AXIS: Readonly<Vector3> = new Vector3(1, 0, 0);
 const Y_AXIS: Readonly<Vector3> = new Vector3(0, 1, 0);
 
+const EPSILON = 1e-5;
+
 const MIN_RADIUS_BOUND = Number.EPSILON;
 const MAX_RADIUS_BOUND = Infinity;
 
-const MIN_POLAR_ANGLE_BOUND = Number.EPSILON;
-const MAX_POLAR_ANGLE_BOUND = PI - Number.EPSILON;
+const MIN_POLAR_ANGLE_BOUND = EPSILON;
+const MAX_POLAR_ANGLE_BOUND = PI - EPSILON;
 
 const MIN_AZIMUTHAL_ANGLE_BOUND = 0;
 const MAX_AZIMUTHAL_ANGLE_BOUND = TWO_PI;
-
-const _cameraDirection: Readonly<Vector3> = new Vector3(0, 0, -1);
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();
 const _v3 = new Vector3();
 const _v4 = new Vector3();
-const _v5 = new Vector3();
 
-function approxZero(num: number, epsilon = 1e-4) {
+function approxZero(num: number, epsilon = EPSILON) {
   return Math.abs(num) <= epsilon;
 }
 
@@ -93,7 +93,7 @@ export class CameraController extends Object3D {
     }
   }
 
-  update(deltaTime: number, force = false) {
+  update(deltaTime: number) {
     // if (!this._needsUpdate && !force) return;
     this.updateRadius(deltaTime);
     this.updatePolarAngle(deltaTime);
@@ -171,8 +171,8 @@ export class CameraController extends Object3D {
 
     const deltaZoom =
       zoom * this._zoomSpeed * (this._radius * this._zoomFactor);
-    this._radiusTarget += deltaZoom;
 
+    this._radiusTarget += deltaZoom;
     this._radiusTarget = clamp(
       this._radiusTarget,
       this._minRadius,
@@ -257,6 +257,13 @@ export class CameraController extends Object3D {
     return this._camera!;
   }
 
+  private _clampRadiusTarget() {
+    this._radiusTarget = clamp(
+      this._radiusTarget,
+      this._minRadius,
+      this._maxRadius
+    );
+  }
   get minRadius() {
     return this._minRadius;
   }
@@ -265,7 +272,12 @@ export class CameraController extends Object3D {
   }
   setMinRadius(minRadius: number) {
     this._minRadius = clamp(minRadius, MIN_RADIUS_BOUND, this._maxRadius);
-    this.setRadius(this._radius); // Clamp radius.
+    // if (this._radius < this._minRadius) {
+    //   this._radiusTarget = this._minRadius;
+    // }
+    this._clampRadiusTarget();
+    // this.setRadius(this._radius); // Clamp radius.
+    // this._radiusTarget = this._radius;
   }
   get minDistance() {
     return this._minRadius;
@@ -283,13 +295,15 @@ export class CameraController extends Object3D {
 
   setMaxRadius(maxRadius: number) {
     this._maxRadius = clamp(maxRadius, this._minRadius, MAX_RADIUS_BOUND);
-    this.setRadius(this._radius); // Clamp radius.
+    // this.setRadius(this._radius); // Clamp radius.
+
+    this._clampRadiusTarget();
   }
   get maxDistance() {
     return this._maxRadius;
   }
   set maxDistance(maxDistance: number) {
-    this.setMinRadius(maxDistance);
+    this.setMaxRadius(maxDistance);
   }
 
   get minPolarAngle() {
@@ -358,6 +372,11 @@ export class CameraController extends Object3D {
   private updateWorldQuaternion() {
     this._worldUpQuaternion.setFromUnitVectors(this.up, Y_AXIS);
   }
+
+  getWorldUp() {
+    return getLocalUpInWorldCoords(this);
+  }
+
   // Adjust the orientation of the controller so that the local up vector is parallel with the world y-axis.
   applyWorldUp() {
     // Get the world position of the point 1 unit from the object in the z-axis.
@@ -376,7 +395,6 @@ export class CameraController extends Object3D {
 
   attachTo(obj: Object3D) {
     obj.add(this);
-    this.applyWorldUp();
   }
 
   private _onMouseDown(event: MouseEvent) {
@@ -496,6 +514,7 @@ export class CameraController extends Object3D {
     event.preventDefault();
     event.stopPropagation();
   };
+
   // private onGamepadConnected: (event: GamepadEvent)=>void = (event) => {
   //   const gamepad = event.gamepad;
 
@@ -518,6 +537,7 @@ export class CameraController extends Object3D {
     this._domElement.removeEventListener('mouseup', this.onMouseUp);
     this._domElement.removeEventListener('wheel', this.onMouseWheel);
     this._domElement.removeEventListener('contextmenu', this.onContextMenu);
+
     if (this._mouseDownLeft) {
       this._domElement.removeEventListener('mousemove', this.onMouseMoveLeft);
     }
