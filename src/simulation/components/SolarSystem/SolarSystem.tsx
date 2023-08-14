@@ -11,7 +11,12 @@ import {
 import { useSimStore } from '@/simulation/state/zustand/sim-store';
 import { degToRad } from 'three/src/math/MathUtils';
 import { ReferenceAxis } from './reference-axis/ReferenceAxis';
-import { SOLAR_SYSTEM_RADIUS } from '@/simulation/utils/constants';
+import {
+  PI,
+  SOLAR_SYSTEM_RADIUS,
+  X_AXIS,
+  X_AXIS_NEG,
+} from '@/simulation/utils/constants';
 
 export type UpdateFn = (deltaTime: number) => void;
 
@@ -33,7 +38,16 @@ const SolarSystem = ({ children }: Props) => {
 
       <group rotation={[-degToRad(90), 0, 0]}>
         {children}
-        <ReferenceAxis color={'red'} length={SOLAR_SYSTEM_RADIUS} />
+        <ReferenceAxis
+          color={'red'}
+          length={SOLAR_SYSTEM_RADIUS}
+          direction={X_AXIS}
+        />
+        <ReferenceAxis
+          color={'green'}
+          length={SOLAR_SYSTEM_RADIUS}
+          direction={X_AXIS_NEG}
+        />
       </group>
     </KeplerTreeContext.Provider>
   );
