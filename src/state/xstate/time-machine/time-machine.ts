@@ -1,9 +1,7 @@
-import { TIME_MULT } from '@/simulation/utils/constants';
+import { TIME_MULT, J2000 } from '@/simulation/utils/constants';
 import { addSeconds } from 'date-fns';
 import { assign, createMachine, log, sendParent, sendTo } from 'xstate';
 
-// J2000 epoch
-export const J2000 = new Date(2000, 0, 1, 12, 0, 0, 0);
 const MIN_TIMESCALE = -100;
 const MAX_TIMESCALE = 100;
 
