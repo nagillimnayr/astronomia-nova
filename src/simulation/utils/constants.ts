@@ -7,6 +7,7 @@ export const Z_AXIS: Readonly<Vector3> = new Vector3(0, 0, 1);
 export const GRAV_CONST = 6.674e-11; // Gravitational Constant m^3/kg/s^2;
 export const AU = 1.495978707e11; // Astronomical Unit in m
 export const SOLAR_MASS = 1988500e24; // Solar Mass in kg
+export const SOLAR_SYSTEM_RADIUS = AU * 90;
 
 export const DAY = 86400; // Day in seconds
 export const TIME_MULT = DAY / 24;
