@@ -13,9 +13,10 @@ export const AU = 1.495978707e11; // Astronomical Unit in m
 export const SOLAR_MASS = 1988500e24; // Solar Mass in kg
 export const SOLAR_SYSTEM_RADIUS = AU * 90;
 
-export const DAY = 86400; // Day in seconds
-export const TIME_MULT = DAY / 24;
-export const YEAR = 360.25; // Year in Days
+export const DAY = 86400; // Day in seconds.
+export const HOUR = 3600; // Hour in seconds.
+export const YEAR = 360.25; // Year in Days.
+export const TIME_MULT = HOUR;
 // J2000 epoch (January 1st, 2000, 12:00:00pm TT)
 export const J2000: Readonly<Date> = new Date(2000, 0, 1, 12, 0, 0, 0);
 export const J2000_JD = 2451545.0; // J2000 in Julian Date.
