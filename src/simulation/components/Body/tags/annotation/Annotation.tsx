@@ -14,6 +14,7 @@ import { type Object3D, Vector3 } from 'three';
 
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
+const _camWorldDirection = new Vector3();
 const _up = new Vector3();
 const _target = new Vector3();
 const _direction = new Vector3();
@@ -24,7 +25,7 @@ type Props = {
   meanRadius: number;
 };
 const Annotation = ({ annotation, meanRadius }: Props) => {
-  const { visibilityActor } = MachineContext.useSelector(
+  const { visibilityActor, cameraActor } = MachineContext.useSelector(
     ({ context }) => context
   );
   const annotations = useSelector(
@@ -40,7 +41,7 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
   const centerRef = useRef<Object3D>(null!);
   const textRef = useRef<Object3D>(null!);
 
-  useFrame(({ camera, controls }) => {
+  useFrame(({ camera }) => {
     if (!bodyRef) return;
     const body = bodyRef.current;
     const center = centerRef.current;
@@ -52,11 +53,9 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
     // Get world position of camera.
     camera.getWorldPosition(_camWorldPos);
 
-    if (!controls) return;
-    // Get position of camera's gaze target.
-    (controls as unknown as CameraControls).getTarget(_target);
-    // Get the direction from the target to the camera
-    _direction.subVectors(_camWorldPos, _target);
+    camera.getWorldDirection(_direction);
+    _direction.multiplyScalar(-1);
+
     // Add the direction to the position of the body.
     _lookPos.addVectors(_bodyWorldPos, _direction);
 
