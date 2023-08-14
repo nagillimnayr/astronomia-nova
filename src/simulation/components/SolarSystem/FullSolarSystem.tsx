@@ -6,6 +6,7 @@ import { useTexture } from '@react-three/drei';
 import { Orbit } from '../Orbit/Orbit';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { trpc } from '@/lib/trpc/trpc';
 
 const FullSolarSystem = () => {
   const [
@@ -37,6 +38,18 @@ const FullSolarSystem = () => {
     ({ context }) => context
   );
 
+  // Load physical data for the Sun.
+  const physicalDataQuery = trpc.loadPhysicalData.useQuery({ name: 'Sun' });
+  if (physicalDataQuery.isError) {
+    console.error(physicalDataQuery.error);
+    return;
+  }
+  // If data hasn't loaded yet, return and wait until it has.
+  if (physicalDataQuery.isLoading) return;
+  if (!physicalDataQuery.data) return;
+
+  const sunParams = physicalDataQuery.data.table;
+
   return (
     <Body
       ref={(root) => {
@@ -48,9 +61,10 @@ const FullSolarSystem = () => {
       }}
       params={{
         name: 'Sun',
-        mass: SOLAR_MASS,
+        mass: sunParams.mass,
         color: 0xfdee00,
-        meanRadius: SUN_RADIUS,
+        meanRadius: sunParams.meanRadius,
+        siderealRotRate: sunParams.siderealRotRate,
       }}
       texture={sunTexture}
     >

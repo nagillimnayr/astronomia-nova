@@ -71,9 +71,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   const centralBodyRef = useContext(KeplerTreeContext);
 
   const ephemeridesQuery = trpc.loadEphemerides.useQuery({ name: name });
-  // const [ephemeridesData, ephemeridesQuery] =
-  //   trpc.loadEphemerides.useSuspenseQuery({ name: name });
-  // ephemeridesQuery.;
+
   // If data hasn't loaded yet, return and wait until it has.
   if (!ephemeridesQuery.data) {
     return;
