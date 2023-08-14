@@ -5,20 +5,33 @@ import { DIST_MULT, EARTH_RADIUS } from '../utils/constants';
 import { degToRad } from 'three/src/math/MathUtils';
 import { type MutableRefObject } from 'react';
 
+type Params = {
+  mass: number;
+  initialPosition?: Vector3Tuple;
+  initialVelocity?: Vector3Tuple;
+  meanRadius?: number;
+  obliquity?: number;
+  siderealRotationRate?: number;
+  siderealRotationPeriod?: number;
+};
 class KeplerBody extends DynamicBody {
   private _orbitingBodies: KeplerBody[];
   private _meanRadius: number;
   private _obliquity: number;
+  private _siderealRotationRate: number;
+  private _siderealRotationPeriod: number;
 
   private _meshRef: MutableRefObject<Mesh | null> = null!;
 
-  constructor(
-    mass: number,
-    initialPosition?: Vector3Tuple,
-    initialVelocity?: Vector3Tuple,
-    meanRadius?: number,
-    obliquity?: number
-  ) {
+  constructor({
+    mass = 0,
+    initialPosition = [0, 0, 0],
+    initialVelocity = [0, 0, 0],
+    meanRadius = EARTH_RADIUS,
+    obliquity = 0,
+    siderealRotationRate = 0,
+    siderealRotationPeriod = 0,
+  }: Params) {
     super(mass, initialPosition, initialVelocity);
 
     this.position.divideScalar(DIST_MULT);
@@ -26,8 +39,10 @@ class KeplerBody extends DynamicBody {
 
     this._orbitingBodies = [];
 
-    this._meanRadius = meanRadius ?? EARTH_RADIUS;
-    this._obliquity = obliquity ?? 0;
+    this._meanRadius = meanRadius;
+    this._obliquity = obliquity;
+    this._siderealRotationRate = siderealRotationRate;
+    this._siderealRotationPeriod = siderealRotationPeriod;
   }
 
   get orbitingBodies() {
@@ -38,6 +53,13 @@ class KeplerBody extends DynamicBody {
   }
   get obliquity() {
     return this._obliquity;
+  }
+
+  get siderealRotationRate() {
+    return this._siderealRotationRate;
+  }
+  get siderealRotationPeriod() {
+    return this._siderealRotationPeriod;
   }
 
   get meshRef(): MutableRefObject<Mesh | null> {
