@@ -10,10 +10,17 @@ import { useContext } from 'react';
 import { useSelector } from '@xstate/react';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { DAY, HOUR, TIME_MULT } from '@/simulation/utils/constants';
+import KeplerBody from '@/simulation/classes/kepler-body';
 
 const TimeControls = () => {
   const rootActor = MachineContext.useActorRef();
-  const { timeActor } = MachineContext.useSelector(({ context }) => context);
+  const { timeActor, cameraActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+  const focusTarget = useSelector(
+    cameraActor,
+    ({ context }) => context.focusTarget
+  );
 
   return (
     <div className="flex flex-col items-center justify-start">
@@ -21,9 +28,11 @@ const TimeControls = () => {
         <button
           className="inline-flex h-fit w-fit items-center justify-center rounded-full border-2 bg-subtle p-1 transition-colors hover:bg-slate-700"
           onClick={() => {
+            // Advance time by the sidereal rotation period of the reference body. This way, the body will maintain its orientation relative to the fixed stars.
+            if (!(focusTarget instanceof KeplerBody)) return;
             rootActor.send({
               type: 'ADVANCE_TIME',
-              deltaTime: -DAY,
+              deltaTime: -focusTarget.siderealRotationPeriod,
             });
           }}
         >
@@ -33,9 +42,11 @@ const TimeControls = () => {
         <button
           className="inline-flex h-fit w-fit items-center justify-center rounded-full border-2 bg-subtle p-1 transition-colors hover:bg-slate-700"
           onClick={() => {
+            // Advance time by the sidereal rotation period of the reference body. This way, the body will maintain its orientation relative to the fixed stars.
+            if (!(focusTarget instanceof KeplerBody)) return;
             rootActor.send({
               type: 'ADVANCE_TIME',
-              deltaTime: DAY,
+              deltaTime: focusTarget.siderealRotationPeriod,
             });
           }}
         >
