@@ -22,6 +22,7 @@ import { VelocityArrow } from '../Orbit/arrows/VelocityArrow';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Tags } from './tags/Tags';
 import { BodyTrail } from './trail/BodyTrail';
+import { DIST_MULT, PI_OVER_TWO } from '@/simulation/utils/constants';
 
 // Extend KeplerBody so the reconciler is aware of it.
 extend({ KeplerBody });
@@ -84,7 +85,6 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
   return (
     <>
       <keplerBody
-        renderOrder={-1}
         meshRef={meshRef}
         ref={(body: KeplerBody) => {
           if (!body) {
@@ -129,7 +129,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
           />
 
           <Tags name={name} bodyRef={bodyRef} meanRadius={meanRadius} />
-          {/* <axesHelper args={[1.5 * (meanRadius / EARTH_RADIUS)]} /> */}
+          {/* <axesHelper args={[1.5 * (meanRadius / DIST_MULT)]} /> */}
           <VelocityArrow />
         </KeplerTreeContext.Provider>
       </keplerBody>
