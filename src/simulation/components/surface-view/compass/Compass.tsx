@@ -1,4 +1,4 @@
-import { RADS_90, METER } from '@/simulation/utils/constants';
+import { METER, PI_OVER_TWO } from '@/simulation/utils/constants';
 import { Ring } from '@react-three/drei';
 import { useMemo } from 'react';
 import { DoubleSide } from 'three';
@@ -25,7 +25,7 @@ export const Compass = () => {
         {/* <axesHelper args={[innerRadius]} /> */}
         <Ring
           args={[innerRadius, outerRadius, segments]}
-          rotation={[-RADS_90, 0, 0]}
+          rotation={[-PI_OVER_TWO, 0, 0]}
         >
           <meshBasicMaterial color={'blue'} />
         </Ring>
