@@ -24,7 +24,7 @@ const SurfaceCamera = () => {
   return (
     <>
       <PerspectiveCam
-        makeDefault={surfaceView}
+        // makeDefault={surfaceView}
         name="Surface-Camera"
         position={[0, 0, -1e-3]}
         rotation={[0, 0, 0]}

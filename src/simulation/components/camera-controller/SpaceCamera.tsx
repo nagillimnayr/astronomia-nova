@@ -21,7 +21,8 @@ const SpaceCamera = () => {
   return (
     <>
       <PerspectiveCam
-        makeDefault={spaceView}
+        // makeDefault={spaceView}
+        makeDefault
         name="Space-Camera"
         ref={(cam) => {
           if (!cam) return;
