@@ -22,7 +22,7 @@ import type KeplerBody from '@/simulation/classes/kepler-body';
 import { degToRad } from 'three/src/math/MathUtils';
 // import { CoordinateSphere } from '../surface-view/CoordinateSphere';
 import {
-  DAY,
+  TIME_MULT,
   DIST_MULT,
   EARTH_RADIUS,
   PI,
@@ -105,7 +105,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     if (timeSnapshot.matches('paused')) return;
     const mesh = meshRef.current;
     if (!mesh) return;
-    const scaledDelta = delta * timeSnapshot.context.timescale * DAY;
+    const scaledDelta = delta * timeSnapshot.context.timescale * TIME_MULT;
 
     // Rotate the body around its rotational axis.
     mesh.rotateY(siderealRotRate * scaledDelta);

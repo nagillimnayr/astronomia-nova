@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { clamp } from 'lodash';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { addSeconds } from 'date-fns';
-import { DAY } from '@/simulation/utils/constants';
+import { TIME_MULT } from '@/simulation/utils/constants';
 
 // J2000 epoch
 export const J2000 = new Date(2000, 0, 1, 12, 0, 0, 0);
@@ -72,7 +72,7 @@ export const useTimeStore = create<TimeStore>()(
 
     // Computes the current date based on the timeElapsed relative to the start date (refDate).
     getCurrentDate: () => {
-      return addSeconds(get().refDate, get().timeElapsed * DAY);
+      return addSeconds(get().refDate, get().timeElapsed * TIME_MULT);
     },
 
     reset: () => {

@@ -10,7 +10,7 @@ import {
   type PhysicalData,
 } from './types/PhysicalData';
 import { radToDeg } from 'three/src/math/MathUtils';
-import { DAY, TWO_PI } from '@/simulation/utils/constants';
+import { DAY, TIME_MULT, TWO_PI } from '@/simulation/utils/constants';
 
 const KM_TO_M = 1000;
 

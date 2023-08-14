@@ -1,4 +1,4 @@
-import { DAY } from '@/simulation/utils/constants';
+import { TIME_MULT } from '@/simulation/utils/constants';
 import { addSeconds } from 'date-fns';
 import { assign, createMachine, log, sendParent, sendTo } from 'xstate';
 
@@ -99,7 +99,7 @@ export const timeMachine = createMachine(
       // Computes the current date based on the timeElapsed relative to the start date (refDate).
       updateDate: assign({
         date: ({ refDate, timeElapsed }) => {
-          return addSeconds(refDate, timeElapsed * DAY);
+          return addSeconds(refDate, timeElapsed * TIME_MULT);
         },
       }),
 

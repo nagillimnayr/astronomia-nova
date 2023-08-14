@@ -1,7 +1,7 @@
 import type KeplerBody from '@/simulation/classes/kepler-body';
 import { makeFixedUpdateFn } from '@/simulation/systems/FixedTimeStep';
 import { traverseKeplerTree } from '@/simulation/systems/keplerTree';
-import { DAY } from '@/simulation/utils/constants';
+import { TIME_MULT } from '@/simulation/utils/constants';
 import { type MutableRefObject } from 'react';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
@@ -22,7 +22,7 @@ type SimStore = State & Actions;
 
 const updateSim = makeFixedUpdateFn<KeplerBody>(
   (root: KeplerBody, timeStep: number) => {
-    traverseKeplerTree(root, timeStep * DAY);
+    traverseKeplerTree(root, timeStep * TIME_MULT);
   },
   60
 );
