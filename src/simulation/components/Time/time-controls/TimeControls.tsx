@@ -9,16 +9,38 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useContext } from 'react';
 import { useSelector } from '@xstate/react';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { DAY, HOUR, TIME_MULT } from '@/simulation/utils/constants';
 
 const TimeControls = () => {
+  const rootActor = MachineContext.useActorRef();
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
-  // get state without subscribing
-  // const { incrementTimescale, decrementTimescale } = useTimeStore.getState();
   return (
     <div className="flex flex-col items-center justify-start">
-      <div className="pointer-events-auto mt-2 flex aspect-square w-fit flex-row justify-center self-center rounded-full border-none bg-gray-400/20 transition-colors hover:bg-gray-400/30">
+      <div className="pointer-events-auto mt-2 flex  w-fit flex-row items-center justify-center gap-2 self-center rounded-full border-none bg-gray-400/20 transition-colors hover:bg-gray-400/30">
+        <button
+          className="inline-flex h-fit w-fit items-center justify-center rounded-full border-2 bg-subtle p-1 transition-colors hover:bg-slate-700"
+          onClick={() => {
+            rootActor.send({
+              type: 'ADVANCE_TIME',
+              deltaTime: -DAY,
+            });
+          }}
+        >
+          <span className="icon-[mdi--clock-minus-outline] inline-flex items-center justify-center text-2xl" />
+        </button>
         <PauseButton />
+        <button
+          className="inline-flex h-fit w-fit items-center justify-center rounded-full border-2 bg-subtle p-1 transition-colors hover:bg-slate-700"
+          onClick={() => {
+            rootActor.send({
+              type: 'ADVANCE_TIME',
+              deltaTime: DAY,
+            });
+          }}
+        >
+          <span className="icon-[mdi--clock-plus-outline] inline-flex items-center justify-center text-2xl" />
+        </button>
       </div>
 
       <div className="pointer-events-auto my-2 box-content flex w-48 min-w-fit flex-row items-center justify-center self-center rounded-full  bg-gray-400/20  px-1 py-1">
