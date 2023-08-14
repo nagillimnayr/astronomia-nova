@@ -21,8 +21,16 @@ import type KeplerBody from '@/simulation/classes/kepler-body';
 
 import { degToRad } from 'three/src/math/MathUtils';
 // import { CoordinateSphere } from '../surface-view/CoordinateSphere';
-import { DAY, DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
+import {
+  DAY,
+  DIST_MULT,
+  EARTH_RADIUS,
+  PI,
+  PI_OVER_TWO,
+  Y_AXIS,
+} from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { Poles } from './poles/Poles';
 
 // Separate out the visual logic from the simulation logic.
 
@@ -107,7 +115,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   return (
     <>
       <Sphere
-        rotation={[degToRad(90), 0, degToRad(obliquity)]}
+        rotation={[PI_OVER_TWO, 0, degToRad(obliquity)]}
         // visible={isVisible}
         ref={meshRef}
         args={[radius, 128, 64]}
@@ -117,8 +125,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         onPointerLeave={() => setHovered(false)}
       >
         <meshBasicMaterial map={texture} />
-
-        {/* <axesHelper args={[2 * (meanRadius / DIST_MULT)]} /> */}
+        <Poles length={2 * radius} />
+        {/* <axesHelper args={[2 * radius]} /> */}
 
         {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
       </Sphere>
