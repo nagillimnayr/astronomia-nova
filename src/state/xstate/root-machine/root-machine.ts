@@ -17,6 +17,7 @@ import { surfaceMachine } from '../surface-machine/surface-machine';
 import { uiMachine } from '../ui-machine/ui-machine';
 import { vrMachine } from '../vr-machine/vr-machine';
 import { sendTo } from 'xstate/lib/actions';
+import { TIME_MULT } from '@/simulation/utils/constants';
 
 type Context = {
   timeActor: ActorRefFrom<typeof timeMachine>;
@@ -125,7 +126,7 @@ export const rootMachine = createMachine(
         actions: ['updateTimeActor', 'updateKeplerTreeActor'],
       },
       ADVANCE_TIME: {
-        actions: ['advanceTimeActor', 'updateKeplerTreeActor'],
+        actions: ['advanceTimeActor', 'advanceKeplerTreeActor'],
       },
       LOG_CHILDREN: {
         actions: ['logTimeActor', 'logKeplerTreeActor', 'logEvent'],
@@ -150,9 +151,23 @@ export const rootMachine = createMachine(
         },
         { to: (context) => context.keplerTreeActor }
       ),
-      advanceTimeActor: sendTo(
-        ({ timeActor }) => timeActor,
-        (_, event) => event
+      // advanceTimeActor: sendTo(
+      //   ({ timeActor }) => timeActor,
+      //   (_, event) => event
+      // ),
+      advanceTimeActor: send(
+        (_, { deltaTime }) => ({
+          type: 'ADVANCE_TIME',
+          deltaTime,
+        }),
+        { to: (context) => context.timeActor }
+      ),
+      advanceKeplerTreeActor: send(
+        (context, { deltaTime }) => ({
+          type: 'UPDATE',
+          deltaTime: deltaTime / TIME_MULT, // Since deltaTime is already in seconds, it must be divided by TIME_MULT, as it will be multiplied by TIME_MULT when passed to the update function
+        }),
+        { to: (context) => context.keplerTreeActor }
       ),
 
       logTimeActor: log((context) => context.timeActor),
