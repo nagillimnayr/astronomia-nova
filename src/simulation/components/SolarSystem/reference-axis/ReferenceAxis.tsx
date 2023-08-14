@@ -1,4 +1,5 @@
 import { X_AXIS } from '@/simulation/utils/constants';
+
 import { Vector3, type ColorRepresentation } from 'three';
 
 type Props = {

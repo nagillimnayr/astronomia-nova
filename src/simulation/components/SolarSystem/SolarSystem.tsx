@@ -44,7 +44,7 @@ const SolarSystem = ({ children }: Props) => {
           direction={X_AXIS}
         />
         <ReferenceAxis
-          color={'green'}
+          color={'#03C03C'}
           length={SOLAR_SYSTEM_RADIUS}
           direction={X_AXIS_NEG}
         />
