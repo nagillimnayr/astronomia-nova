@@ -1,9 +1,14 @@
 import { cn } from '@/lib/cn';
-import type { LinkProps } from '@/components/props/Props';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { PropsWithChildren } from 'react';
+import { ClassNameValue } from 'tailwind-merge';
 
-const NavMenuLink = ({ children, className, href }: LinkProps) => {
+type Props = PropsWithChildren & {
+  className: ClassNameValue;
+  href: URL | string;
+};
+const NavMenuLink = ({ children, className, href }: Props) => {
   return (
     <Button
       variant={'outline'}
