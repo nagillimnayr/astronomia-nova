@@ -45,7 +45,7 @@ export async function loadEphemeris(
   type: 'ELEMENTS' | 'VECTORS'
 ) {
   // Create file path.
-  const fileName = _.kebabCase(name + type);
+  const fileName = _.kebabCase(name + '-' + type);
   const jsonDirectory = path.join(process.cwd(), 'json');
 
   const pathToFile = path.resolve(
@@ -71,12 +71,12 @@ export async function loadEphemeris(
 
 export async function loadPhysicalData(name: string) {
   // Create file path.
-  const fileName = _.kebabCase(name + 'physical');
+  const fileName = _.kebabCase(name + '-physical');
   const jsonDirectory = path.join(process.cwd(), 'json');
 
   const pathToFile = path.resolve(
     jsonDirectory,
-    path.join('horizons', 'physical', `${fileName}.json`)
+    path.join('horizons', 'physical-data', `${fileName}.json`)
   );
 
   // Read and parse JSON file.
