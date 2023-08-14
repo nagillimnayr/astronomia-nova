@@ -99,19 +99,37 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     [meshRef]
   );
 
-  useFrame((state, delta) => {
-    const timeSnapshot = timeActor.getSnapshot();
-    if (!timeSnapshot) return;
-
+  useEffect(() => {
     const mesh = meshRef.current;
     if (!mesh) return;
-    const { timeElapsed } = timeSnapshot.context;
-    const time = timeElapsed * TIME_MULT;
-    const axialRotation = siderealRotRate * time;
-    // Rotate the body around its rotational axis.
-    mesh.rotation.set(PI_OVER_TWO, 0, degToRad(obliquity)); // Reset rotation.
-    mesh.rotateY(axialRotation); // Rotate around local y-axis.
-  });
+    const subscription = timeActor.subscribe((state) => {
+      const eventType = state.event.type;
+      if (eventType !== 'UPDATE' && eventType !== 'ADVANCE_TIME') return;
+
+      const timeElapsed = state.context.timeElapsed * TIME_MULT;
+      const axialRotation = siderealRotRate * timeElapsed;
+
+      // Rotate the body around its rotational axis.
+      mesh.rotation.set(PI_OVER_TWO, 0, degToRad(obliquity)); // Reset rotation.
+      mesh.rotateY(axialRotation); // Rotate around local y-axis.
+    });
+
+    return () => subscription.unsubscribe();
+  }, [obliquity, siderealRotRate, timeActor]);
+
+  // useFrame((state, delta) => {
+  //   const timeSnapshot = timeActor.getSnapshot();
+  //   if (!timeSnapshot) return;
+
+  //   const mesh = meshRef.current;
+  //   if (!mesh) return;
+  //   const { timeElapsed } = timeSnapshot.context;
+  //   const time = timeElapsed * TIME_MULT;
+  //   const axialRotation = siderealRotRate * time;
+  //   // Rotate the body around its rotational axis.
+  //   mesh.rotation.set(PI_OVER_TWO, 0, degToRad(obliquity)); // Reset rotation.
+  //   mesh.rotateY(axialRotation); // Rotate around local y-axis.
+  // });
 
   const radius = meanRadius / DIST_MULT;
   return (
