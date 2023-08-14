@@ -8,11 +8,17 @@ import {
 } from 'three';
 import { type CameraControls } from '@react-three/drei';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { DIST_MULT, SUN_RADIUS, METER } from '@/simulation/utils/constants';
+import {
+  DIST_MULT,
+  SUN_RADIUS,
+  METER,
+  PI_OVER_TWO,
+} from '@/simulation/utils/constants';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { type RootState, type BaseInstance } from '@react-three/fiber';
 import { CameraController } from '@/lib/camera-controller/CameraController';
 
+const X_AXIS: Readonly<Vector3> = new Vector3(1, 0, 0);
 const _targetWorldPos = new Vector3();
 const _observerWorldPos = new Vector3();
 const _observerUp = new Vector3();
@@ -261,7 +267,12 @@ export const cameraMachine = createMachine(
       attachToTarget: (context, event) => {
         const { controls, spaceCamera, focusTarget } = context;
         if (!focusTarget || !controls) return;
-        focusTarget.add(controls);
+        // focusTarget.add(controls);
+        controls.attachTo(focusTarget);
+        // console.log(controls.rotation.toArray());
+        // controls.rotateOnWorldAxis(X_AXIS, PI_OVER_TWO);
+        // console.log(controls.rotation.toArray());
+        // console.log('controls:', controls);
       },
       updateSpaceView: (context, event) => {
         const { controls, spaceCamera } = context;

@@ -1,4 +1,11 @@
-import { Group, Object3D, PerspectiveCamera, Vector3 } from 'three';
+import {
+  ArrowHelper,
+  Group,
+  Object3D,
+  PerspectiveCamera,
+  Quaternion,
+  Vector3,
+} from 'three';
 import { damp, degToRad, clamp } from 'three/src/math/MathUtils';
 import {
   TWO_PI,
@@ -8,6 +15,7 @@ import {
   PI_OVER_THREE,
 } from '@/simulation/utils/constants';
 import { smoothCritDamp } from './smoothing';
+import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 
 const X_AXIS: Readonly<Vector3> = new Vector3(1, 0, 0);
 const Y_AXIS: Readonly<Vector3> = new Vector3(0, 1, 0);
@@ -21,6 +29,14 @@ const MAX_POLAR_ANGLE_BOUND = PI - Number.EPSILON;
 const MIN_AZIMUTHAL_ANGLE_BOUND = 0;
 const MAX_AZIMUTHAL_ANGLE_BOUND = TWO_PI;
 
+const _cameraDirection: Readonly<Vector3> = new Vector3(0, 0, -1);
+
+const _v1 = new Vector3();
+const _v2 = new Vector3();
+const _v3 = new Vector3();
+const _v4 = new Vector3();
+const _v5 = new Vector3();
+
 function approxZero(num: number, epsilon = 1e-4) {
   return Math.abs(num) <= epsilon;
 }
@@ -28,6 +44,11 @@ function approxZero(num: number, epsilon = 1e-4) {
 export class CameraController extends Object3D {
   private _camera: PerspectiveCamera | null = null;
   private _domElement: HTMLElement | null = null;
+
+  private _worldUpQuaternion = new Quaternion();
+  private _cameraWorldDirection = new Vector3();
+
+  private _pivot = new Object3D();
 
   private _radius = 1e3;
   private _radiusTarget = this._radius;
@@ -58,10 +79,14 @@ export class CameraController extends Object3D {
 
   constructor(camera?: PerspectiveCamera) {
     super();
+    this.add(this._pivot);
+    this.name = 'camera-controller';
+    this._pivot.name = 'camera-pivot';
+
     if (camera) {
       this._camera = camera;
       const parent = camera.parent;
-      this.add(camera);
+      this._pivot.add(camera);
       if (parent) {
         parent.add(this);
       }
@@ -73,13 +98,13 @@ export class CameraController extends Object3D {
     this.updateRadius(deltaTime);
     this.updatePolarAngle(deltaTime);
     this.updateAzimuthalAngle(deltaTime);
-
-    this.rotation.set(0, 0, 0); // Reset rotations.
+    const pivot = this._pivot;
+    pivot.rotation.set(0, 0, 0); // Reset rotations.
     this._camera?.position.set(0, 0, this._radius); // Set position of camera.
 
     // Rotations are intrinsic, so the order matters. Rotation around local y-axis must be done first in order to preserve the local up-vector.
-    this.rotateY(this._azimuthalAngle); // Rotate around local y-axis.
-    this.rotateX(-(PI_OVER_TWO - this._polarAngle)); // Rotate around local x-axis.
+    pivot.rotateY(this._azimuthalAngle); // Rotate around local y-axis.
+    pivot.rotateX(-(PI_OVER_TWO - this._polarAngle)); // Rotate around local x-axis.
 
     this._camera?.updateProjectionMatrix();
   }
@@ -174,6 +199,11 @@ export class CameraController extends Object3D {
   addPolarRotation(polarRotation: number) {
     // if (approxZero(polarRotation)) return;
     this._polarAngleTarget += polarRotation * this._rotationSpeed * DEG_TO_RADS;
+    this._polarAngleTarget = clamp(
+      this._polarAngleTarget,
+      this._minPolarAngle,
+      this._maxPolarAngle
+    );
   }
 
   setAzimuthalAngle(azimuthalAngle: number) {
@@ -215,8 +245,8 @@ export class CameraController extends Object3D {
   setCamera(camera: PerspectiveCamera) {
     this._camera = camera;
     const parent = camera.parent;
-    this.add(camera);
-    if (parent && parent !== this) {
+    this._pivot.add(camera);
+    if (parent && parent !== this._pivot) {
       parent.add(this);
     }
   }
@@ -318,6 +348,35 @@ export class CameraController extends Object3D {
       MAX_AZIMUTHAL_ANGLE_BOUND
     );
     this.setAzimuthalAngle(this._azimuthalAngle); // Clamp azimuthal angle.
+  }
+
+  private updateCameraWorldDirection() {
+    if (!this._camera) return;
+    this._camera.getWorldDirection(_v1);
+    this._cameraWorldDirection.copy(_v1);
+  }
+  private updateWorldQuaternion() {
+    this._worldUpQuaternion.setFromUnitVectors(this.up, Y_AXIS);
+  }
+  // Adjust the orientation of the controller so that the local up vector is parallel with the world y-axis.
+  applyWorldUp() {
+    // Get the world position of the point 1 unit from the object in the z-axis.
+    this.getWorldPosition(_v1);
+    _v2.set(0, 0, 1);
+    _v3.addVectors(_v1, _v2);
+
+    // Look down the z-axis.
+    this.up.copy(Y_AXIS);
+    this.lookAt(_v3);
+  }
+
+  applyUp(up: Vector3) {
+    //
+  }
+
+  attachTo(obj: Object3D) {
+    obj.add(this);
+    this.applyWorldUp();
   }
 
   private _onMouseDown(event: MouseEvent) {
