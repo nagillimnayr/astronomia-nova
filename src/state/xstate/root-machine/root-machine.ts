@@ -135,11 +135,24 @@ export const rootMachine = createMachine(
   },
   {
     actions: {
-      updateTimeActor: send(
-        (_, { deltaTime }) => ({ type: 'UPDATE', deltaTime }),
-        { to: (context) => context.timeActor }
+      updateTimeActor: sendTo(
+        ({ timeActor }) => timeActor,
+        (_, { deltaTime }) => ({ type: 'UPDATE', deltaTime })
       ),
-      updateKeplerTreeActor: send(
+      // updateKeplerTreeActor: send(
+      //   (context, { deltaTime }) => {
+      //     // Scale deltaTime and send it to keplerTreeActor.
+      //     const timeActor = context.timeActor.getSnapshot()!;
+      //     const scaledDelta = deltaTime * timeActor.context.timescale;
+      //     return {
+      //       type: 'UPDATE',
+      //       deltaTime: scaledDelta,
+      //     };
+      //   },
+      //   { to: (context) => context.keplerTreeActor }
+      // ),
+      updateKeplerTreeActor: sendTo(
+        ({ keplerTreeActor }) => keplerTreeActor,
         (context, { deltaTime }) => {
           // Scale deltaTime and send it to keplerTreeActor.
           const timeActor = context.timeActor.getSnapshot()!;
@@ -148,26 +161,19 @@ export const rootMachine = createMachine(
             type: 'UPDATE',
             deltaTime: scaledDelta,
           };
-        },
-        { to: (context) => context.keplerTreeActor }
+        }
       ),
-      // advanceTimeActor: sendTo(
-      //   ({ timeActor }) => timeActor,
-      //   (_, event) => event
-      // ),
-      advanceTimeActor: send(
-        (_, { deltaTime }) => ({
-          type: 'ADVANCE_TIME',
-          deltaTime,
-        }),
-        { to: (context) => context.timeActor }
+      advanceTimeActor: sendTo(
+        ({ timeActor }) => timeActor,
+        (_, event) => event
       ),
-      advanceKeplerTreeActor: send(
+
+      advanceKeplerTreeActor: sendTo(
+        ({ keplerTreeActor }) => keplerTreeActor,
         (context, { deltaTime }) => ({
           type: 'UPDATE',
           deltaTime: deltaTime / TIME_MULT, // Since deltaTime is already in seconds, it must be divided by TIME_MULT, as it will be multiplied by TIME_MULT when passed to the update function
-        }),
-        { to: (context) => context.keplerTreeActor }
+        })
       ),
 
       logTimeActor: log((context) => context.timeActor),
