@@ -1,7 +1,7 @@
-import { type Mesh, type Vector3Tuple } from 'three';
+import { Vector3, type Mesh, type Vector3Tuple } from 'three';
 
 import { DynamicBody } from './Dynamics';
-import { EARTH_RADIUS } from '../utils/constants';
+import { DIST_MULT, EARTH_RADIUS } from '../utils/constants';
 import { degToRad } from 'three/src/math/MathUtils';
 import { type MutableRefObject } from 'react';
 
@@ -20,6 +20,10 @@ class KeplerBody extends DynamicBody {
     obliquity?: number
   ) {
     super(mass, initialPosition, initialVelocity);
+
+    this.position.divideScalar(DIST_MULT);
+    this.velocity.divideScalar(DIST_MULT);
+
     this._orbitingBodies = [];
 
     this._meanRadius = meanRadius ?? EARTH_RADIUS;

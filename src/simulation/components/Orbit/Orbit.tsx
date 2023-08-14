@@ -69,7 +69,9 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
 
   const centralBodyRef = useContext(KeplerTreeContext);
 
-  const ephemeridesQuery = trpc.loadEphemerides.useQuery({ name: name });
+  const ephemeridesQuery = trpc.loadComputedEphemerides.useQuery({
+    name: name,
+  });
 
   // If data hasn't loaded yet, return and wait until it has.
   if (!ephemeridesQuery.data) {
@@ -83,68 +85,38 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   }
   const centralMass = centralBodyRef.current.mass;
 
-  const { elementTable, physicalData } = ephemeridesQuery.data;
+  const { ephemerisTable, physicalDataTable } = ephemeridesQuery.data;
 
-  const { semiMajorAxis, eccentricity, trueAnomaly, periapsis } = elementTable;
-  const semiLatusRectum = getSemiLatusRectumFromEccentricity(
+  const {
     semiMajorAxis,
-    eccentricity
-  );
-  const semiMinorAxis = getSemiMinorAxisFromSemiLatusRectum(
-    semiMajorAxis,
-    semiLatusRectum
-  );
-
-  const linearEccentricity = getLinearEccentricityFromAxes(
-    semiMajorAxis,
-    semiMinorAxis
-  );
-
-  _pos.set(...getPosition(trueAnomaly, semiMajorAxis, eccentricity));
-  const radius = getRadiusAtTrueAnomaly(
+    semiMinorAxis,
+    semiLatusRectum,
+    eccentricity,
+    linearEccentricity,
+    apoapsis,
     trueAnomaly,
-    semiMajorAxis,
-    eccentricity
-  );
-  // Todo: Memoize all of these computations externally.
-  // The Horizons ephemeris data for Jupiter seems to result in it wobbling a bit on its orbit. Using the Vis-Viva equation to re-calculate the velocity seems to fix it though. It also appears to have fixed some wobble with the moon.
-
-  // Compute the initial orbital speed.
-  const orbitalSpeed = getOrbitalSpeedFromRadius(
-    radius,
-    centralMass,
-    semiMajorAxis
-  );
-  // Compute the direction of the velocity vector.
-  _vel.copy(getVelocityDirectionFromOrbitalElements(trueAnomaly, eccentricity));
-  _vel.normalize();
-  _vel.multiplyScalar(orbitalSpeed);
-
-  const orbitalPeriod =
-    calculateOrbitalPeriod(semiMajorAxis, centralMass) / DAY;
-
-  console.log(`(${name}) computed orbital period:`, orbitalPeriod);
-  console.log(
-    `(${name}) horizons orbital period:`,
-    elementTable.siderealOrbitPeriod / DAY
-  );
+    periapsis,
+    siderealOrbitPeriod,
+    initialPosition,
+    initialVelocity,
+  } = ephemerisTable;
 
   const color = colorMap.get(name) ?? 'white';
-  const { meanRadius, obliquity, siderealRotRate } = physicalData.table;
+  const { mass, meanRadius, obliquity, siderealRotRate } = physicalDataTable;
   const bodyParams: BodyParams = {
-    name: name,
+    name,
     color,
-    mass: physicalData.table.mass,
-    meanRadius: meanRadius,
-    obliquity: obliquity,
-    initialPosition: _pos.divideScalar(DIST_MULT).toArray(),
-    initialVelocity: _vel.divideScalar(DIST_MULT).toArray(),
+    mass,
+    meanRadius,
+    obliquity,
+    initialPosition,
+    initialVelocity,
     siderealRotRate,
   };
 
   // Destructure the orientation elements.
   const { longitudeOfAscendingNode, argumentOfPeriapsis, inclination } =
-    elementTable;
+    ephemerisTable;
   return (
     <keplerOrbit
       name={name}
@@ -180,7 +152,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
           longitudeOfAscendingNode,
           argumentOfPeriapsis,
           inclination,
-          orbitalPeriod,
+          orbitalPeriod: siderealOrbitPeriod,
         },
       ]}
     >

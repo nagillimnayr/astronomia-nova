@@ -4,6 +4,7 @@ import {
   loadEphemerides,
   loadPhysicalData,
 } from '@/lib/horizons/loadEphemerides';
+import { loadComputedEphemerides } from '@/lib/horizons/compute/loadComputed';
 
 export const appRouter = router({
   // Load ephemerides procedure. (Query)
@@ -18,6 +19,12 @@ export const appRouter = router({
     .input(z.object({ name: z.string() }))
     .query(async ({ input }) => {
       return await loadPhysicalData(input.name);
+    }),
+
+  loadComputedEphemerides: procedure
+    .input(z.object({ name: z.string() }))
+    .query(async ({ input }) => {
+      return await loadComputedEphemerides(input.name);
     }),
 });
 // export type definition of API
