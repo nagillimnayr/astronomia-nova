@@ -1,4 +1,4 @@
-import { GRAV_CONST } from '@/simulation/utils/constants';
+import { GRAV_CONST } from '../../utils/constants';
 import { Vector3, Vector3Tuple } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 

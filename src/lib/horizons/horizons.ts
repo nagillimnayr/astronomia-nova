@@ -1,3 +1,11 @@
+import {
+  computeEphemerides,
+  computePhysicalData,
+} from './compute/computeEphemerides';
+import {
+  saveComputedEphemerides,
+  saveComputedPhysicalData,
+} from './compute/saveComputed';
 import { getEphemerides, getPhysicalData } from './getEphemerides';
 import { saveEphemerides, savePhysicalData } from './saveEphemerides';
 
@@ -6,53 +14,36 @@ const SOLAR_SYSTEM_BARYCENTER = '500@0';
 const DEFAULT_CENTER = SUN_CENTER;
 
 const idSets = [
-  { id: '199', centerId: DEFAULT_CENTER },
-  { id: '299', centerId: DEFAULT_CENTER },
-  { id: '399', centerId: DEFAULT_CENTER },
-  { id: '301', centerId: '500@399' },
-  { id: '499', centerId: DEFAULT_CENTER },
-  { id: '599', centerId: DEFAULT_CENTER },
-  { id: '699', centerId: DEFAULT_CENTER },
-  { id: '799', centerId: DEFAULT_CENTER },
-  { id: '899', centerId: DEFAULT_CENTER },
+  { name: 'Mercury', id: '199', centerId: DEFAULT_CENTER },
+  { name: 'Venus', id: '299', centerId: DEFAULT_CENTER },
+  { name: 'Earth', id: '399', centerId: DEFAULT_CENTER },
+  { name: 'Moon', id: '301', centerId: '500@399' },
+  { name: 'Mars', id: '499', centerId: DEFAULT_CENTER },
+  { name: 'Jupiter', id: '599', centerId: DEFAULT_CENTER },
+  { name: 'Saturn', id: '699', centerId: DEFAULT_CENTER },
+  { name: 'Uranus', id: '799', centerId: DEFAULT_CENTER },
+  { name: 'Neptune', id: '899', centerId: DEFAULT_CENTER },
 ];
 
-// if (process.argv.length >= 3) {
-//   const id = process.argv[2];
-//   // const outputFile = process.argv[3];
-
-//   if (id) {
-//     try {
-//       const ephemerides = await getEphemerides(id);
-//       await saveEphemerides(ephemerides);
-//       console.log('elements:', ephemerides.elements);
-//       console.log('vectors:', ephemerides.vectors);
-//       console.log('physical data:', ephemerides.physicalData);
-//     } catch (e) {
-//       console.error(e);
-//     }
-//   }
-// } else {
-//   try {
-//     for (const { id, centerId } of idSets) {
-//       const ephemerides = await getEphemerides(id, centerId);
-//       await saveEphemerides(ephemerides);
-//     }
-//     // Sun physical data
-//     const physicalData = await getPhysicalData('10', '500@0');
-//     await savePhysicalData(physicalData);
-//   } catch (e) {
-//     console.error(e);
-//   }
-// }
-
 try {
-  // Sun physical data
-  const physicalData = await getPhysicalData('10', '500@0');
-  await savePhysicalData(physicalData);
+  // Sun physical data.
+  const sunPhysicalData = await getPhysicalData('10', '500@0');
+  await savePhysicalData(sunPhysicalData);
+  const sunComputedPhysicalData = await computePhysicalData('Sun');
+  await saveComputedPhysicalData(sunComputedPhysicalData);
+
+  // Planetary ephemeris data.
   for (const { id, centerId } of idSets) {
     const ephemerides = await getEphemerides(id, centerId);
     await saveEphemerides(ephemerides);
+  }
+
+  // Computed ephemeris data.
+  for (const { name } of idSets) {
+    const computedEphemerides = await computeEphemerides(name);
+    await saveComputedEphemerides(computedEphemerides);
+    const computedPhysicalData = await computePhysicalData(name);
+    await saveComputedPhysicalData(computedPhysicalData);
   }
 } catch (e) {
   console.error(e);

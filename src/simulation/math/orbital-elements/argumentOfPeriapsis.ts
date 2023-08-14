@@ -1,4 +1,4 @@
-import { Vector3 } from 'three';
+import { type Vector3 } from 'three';
 import { radToDeg } from 'three/src/math/MathUtils';
 
 /**

@@ -1,5 +1,4 @@
-import { nthRoot } from 'mathjs';
-import { GRAV_CONST, PI_SQUARED } from '@/simulation/utils/constants';
+import { GRAV_CONST, PI_SQUARED } from '../../../utils/constants';
 
 /**
  * @description
@@ -70,10 +69,10 @@ export function getSemiMajorAxisFromPeriod(
   centralMass: number
 ): number {
   // cube root of (G*M * T^2) / (4PI^2)
-  const semiMajorAxis = nthRoot(
+  const semiMajorAxis = Math.pow(
     (GRAV_CONST * centralMass * period ** 2) / (4.0 * PI_SQUARED),
-    3
-  ) as number;
+    1 / 3
+  );
   return semiMajorAxis;
 }
 

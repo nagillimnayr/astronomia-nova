@@ -1,10 +1,10 @@
 import z from 'zod';
 
-const Vector3Schema = z.tuple([z.number(), z.number(), z.number()]);
+export const Vector3TupleSchema = z.tuple([z.number(), z.number(), z.number()]);
 
 export const VectorTableSchema = z.object({
-  position: Vector3Schema,
-  velocity: Vector3Schema,
+  position: Vector3TupleSchema,
+  velocity: Vector3TupleSchema,
   range: z.number(),
   rangeRate: z.number(),
 });

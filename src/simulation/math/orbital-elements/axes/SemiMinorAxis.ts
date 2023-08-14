@@ -1,5 +1,3 @@
-//import { sqrt } from 'mathjs';
-
 /**
  * @description
  * @author Ryan Milligan

@@ -43,7 +43,7 @@ export async function loadEphemerides(name: string) {
 export async function loadEphemeris(
   name: string,
   type: 'ELEMENTS' | 'VECTORS'
-) {
+): Promise<Ephemeris> {
   // Create file path.
   const fileName = _.kebabCase(name + '-' + type);
   const jsonDirectory = path.join(process.cwd(), 'json');

@@ -3,7 +3,6 @@ import { useCallback, useContext, useMemo, useRef } from 'react';
 import Body, { type BodyParams } from '../Body/Body';
 import type KeplerBody from '@/simulation/classes/kepler-body';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
-import { CentralMassContext } from '@/simulation/context/CentralMassContext';
 import {
   calculateOrbitFromPeriapsis,
   calculateOrbitFromStateVectors,
@@ -123,6 +122,12 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
 
   const orbitalPeriod =
     calculateOrbitalPeriod(semiMajorAxis, centralMass) / DAY;
+
+  console.log(`(${name}) computed orbital period:`, orbitalPeriod);
+  console.log(
+    `(${name}) horizons orbital period:`,
+    elementTable.siderealOrbitPeriod / DAY
+  );
 
   const color = colorMap.get(name) ?? 'white';
   const { meanRadius, obliquity, siderealRotRate } = physicalData.table;
