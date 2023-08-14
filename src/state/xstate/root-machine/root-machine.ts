@@ -16,6 +16,7 @@ import { mapMachine } from '../map-machine/map-machine';
 import { surfaceMachine } from '../surface-machine/surface-machine';
 import { uiMachine } from '../ui-machine/ui-machine';
 import { vrMachine } from '../vr-machine/vr-machine';
+import { sendTo } from 'xstate/lib/actions';
 
 type Context = {
   timeActor: ActorRefFrom<typeof timeMachine>;
@@ -30,7 +31,10 @@ type Context = {
   vrActor: ActorRefFrom<typeof vrMachine>;
 };
 
-type Events = { type: 'UPDATE'; deltaTime: number } | { type: 'LOG_CHILDREN' };
+type Events =
+  | { type: 'UPDATE'; deltaTime: number }
+  | { type: 'ADVANCE_TIME'; deltaTime: number }
+  | { type: 'LOG_CHILDREN' };
 
 export const rootMachine = createMachine(
   {
@@ -120,6 +124,9 @@ export const rootMachine = createMachine(
         },
         actions: ['updateTimeActor', 'updateKeplerTreeActor'],
       },
+      ADVANCE_TIME: {
+        actions: ['advanceTimeActor', 'updateKeplerTreeActor'],
+      },
       LOG_CHILDREN: {
         actions: ['logTimeActor', 'logKeplerTreeActor', 'logEvent'],
       },
@@ -142,6 +149,10 @@ export const rootMachine = createMachine(
           };
         },
         { to: (context) => context.keplerTreeActor }
+      ),
+      advanceTimeActor: sendTo(
+        ({ timeActor }) => timeActor,
+        (_, event) => event
       ),
 
       logTimeActor: log((context) => context.timeActor),

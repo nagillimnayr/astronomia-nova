@@ -1,6 +1,7 @@
 import { TIME_MULT, J2000 } from '@/simulation/utils/constants';
 import { addSeconds } from 'date-fns';
 import { assign, createMachine, log, sendParent, sendTo } from 'xstate';
+import { EventDispatcher } from 'three';
 
 const MIN_TIMESCALE = -100;
 const MAX_TIMESCALE = 100;
@@ -22,7 +23,8 @@ type Events =
   | { type: 'DECREMENT_TIMESCALE' }
   | { type: 'SET_TIMESCALE'; timescale: number }
   | { type: 'PAUSE' }
-  | { type: 'UNPAUSE' };
+  | { type: 'UNPAUSE' }
+  | { type: 'ADVANCE_TIME'; deltaTime: number }; // Advances time by a specific amount, no time scaling.
 
 export const timeMachine = createMachine(
   {
@@ -34,13 +36,13 @@ export const timeMachine = createMachine(
     },
     id: 'time-machine',
 
-    context: {
+    context: () => ({
       timeElapsed: 0,
       previousTime: 0,
       timescale: 1,
       refDate: J2000,
       date: J2000,
-    },
+    }),
 
     on: {
       INCREMENT_TIMESCALE: { actions: ['incrementTimescale'] },
@@ -48,6 +50,9 @@ export const timeMachine = createMachine(
       SET_TIMESCALE: {
         cond: { type: 'validateTimescale' },
         actions: ['setTimescale'],
+      },
+      ADVANCE_TIME: {
+        actions: ['advanceTime', 'updateDate'],
       },
     },
 
@@ -99,6 +104,13 @@ export const timeMachine = createMachine(
         date: ({ refDate, timeElapsed }) => {
           return addSeconds(refDate, timeElapsed * TIME_MULT);
         },
+      }),
+      // Update time without scaling.
+      advanceTime: assign({
+        timeElapsed: ({ timeElapsed }, { deltaTime }) => {
+          return timeElapsed + deltaTime;
+        },
+        previousTime: ({ timeElapsed }) => timeElapsed, // Update previous time.
       }),
 
       logEvent: log((_, event) => event),
