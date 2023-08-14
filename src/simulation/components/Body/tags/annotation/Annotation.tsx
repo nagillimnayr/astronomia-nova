@@ -48,6 +48,10 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
     const text = textRef.current;
     if (!body || !center) return;
 
+    const snapshot = cameraActor.getSnapshot()!;
+    const controls = snapshot.context.controls;
+    if (!controls) return;
+
     // Get world position of body.
     body.getWorldPosition(_bodyWorldPos);
     // Get world position of camera.
@@ -60,7 +64,8 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
     _lookPos.addVectors(_bodyWorldPos, _direction);
 
     // Set the up vector so that it will be oriented correctly when lookAt() is called.
-    center.up.copy(camera.up);
+    // center.up.copy(camera.up);
+    center.up.set(...controls.getWorldUp());
     // Rotate to face camera.
     center.lookAt(_lookPos);
 
