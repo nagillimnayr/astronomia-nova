@@ -102,13 +102,15 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   useFrame((state, delta) => {
     const timeSnapshot = timeActor.getSnapshot();
     if (!timeSnapshot) return;
-    if (timeSnapshot.matches('paused')) return;
+
     const mesh = meshRef.current;
     if (!mesh) return;
-    const scaledDelta = delta * timeSnapshot.context.timescale * TIME_MULT;
-
+    const { timeElapsed } = timeSnapshot.context;
+    const time = timeElapsed * TIME_MULT;
+    const axialRotation = siderealRotRate * time;
     // Rotate the body around its rotational axis.
-    mesh.rotateY(siderealRotRate * scaledDelta);
+    mesh.rotation.set(PI_OVER_TWO, 0, degToRad(obliquity)); // Reset rotation.
+    mesh.rotateY(axialRotation); // Rotate around local y-axis.
   });
 
   const radius = meanRadius / DIST_MULT;
