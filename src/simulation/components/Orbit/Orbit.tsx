@@ -8,7 +8,7 @@ import {
   calculateOrbitFromPeriapsis,
   calculateOrbitFromStateVectors,
 } from '@/simulation/math/orbit/calculateOrbit';
-import { DIST_MULT, DAY } from '@/simulation/utils/constants';
+import { DIST_MULT, TIME_MULT } from '@/simulation/utils/constants';
 import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
 import {
   ColorRepresentation,
@@ -124,7 +124,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   _vel.multiplyScalar(orbitalSpeed);
 
   const orbitalPeriod =
-    calculateOrbitalPeriod(semiMajorAxis, centralMass) / DAY;
+    calculateOrbitalPeriod(semiMajorAxis, centralMass) / TIME_MULT;
 
   const color = colorMap.get(name) ?? 'white';
   const { meanRadius, obliquity, siderealRotRate } = physicalData.table;
