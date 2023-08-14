@@ -2,7 +2,6 @@ import { Canvas } from '@react-three/fiber';
 import { Controllers, VRButton, XR } from '@react-three/xr';
 import { VRScene } from './VRScene';
 import { CameraControls } from '@react-three/drei';
-import { FAR, NEAR } from '../scene-constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 
 export const VRCanvas = () => {
