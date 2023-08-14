@@ -478,6 +478,12 @@ export class CameraController extends Object3D {
 
   private _onMouseMoveLeft(event: MouseEvent) {
     if (!this._mouseDownLeft) return;
+    if (event.buttons % 2 === 0) {
+      this._mouseDownLeft = false;
+      this._domElement?.removeEventListener('mousemove', this.onMouseMoveLeft);
+      return;
+    }
+
     event.preventDefault();
     const deltaX = -event.movementX;
     const deltaY = -event.movementY;
