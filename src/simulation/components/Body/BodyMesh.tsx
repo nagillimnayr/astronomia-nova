@@ -106,7 +106,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       const eventType = state.event.type;
       if (eventType !== 'UPDATE' && eventType !== 'ADVANCE_TIME') return;
 
-      const timeElapsed = state.context.timeElapsed * TIME_MULT;
+      const timeElapsed = state.context.timeElapsed;
       const axialRotation = siderealRotRate * timeElapsed;
 
       // Rotate the body around its rotational axis.

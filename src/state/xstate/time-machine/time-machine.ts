@@ -93,7 +93,7 @@ export const timeMachine = createMachine(
 
       updateTime: assign({
         timeElapsed: ({ timeElapsed, timescale }, { deltaTime }) => {
-          const scaledDelta = deltaTime * timescale;
+          const scaledDelta = deltaTime * timescale * TIME_MULT;
           return timeElapsed + scaledDelta;
         },
         previousTime: ({ timeElapsed }) => timeElapsed, // Update previous time.
@@ -102,7 +102,7 @@ export const timeMachine = createMachine(
       // Computes the current date based on the timeElapsed relative to the start date (refDate).
       updateDate: assign({
         date: ({ refDate, timeElapsed }) => {
-          return addSeconds(refDate, timeElapsed * TIME_MULT);
+          return addSeconds(refDate, timeElapsed);
         },
       }),
       // Update time without scaling.
