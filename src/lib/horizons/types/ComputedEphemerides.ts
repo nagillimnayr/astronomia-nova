@@ -35,12 +35,12 @@ export const ComputedPhysicalDataTableSchema = PhysicalDataTableSchema.extend({
   siderealRotationPeriod: z.number(),
 });
 
-export const ComputedEphemeridesSchema = EphemerisIdSchema.extend({
-  ephemerisTable: ComputedEphemerisTableSchema,
-  physicalDataTable: PhysicalDataTableSchema,
-});
 export const ComputedPhysicalDataSchema = IdSchema.extend({
   table: ComputedPhysicalDataTableSchema,
+});
+export const ComputedEphemeridesSchema = EphemerisIdSchema.extend({
+  ephemerisTable: ComputedEphemerisTableSchema,
+  physicalDataTable: ComputedPhysicalDataTableSchema,
 });
 
 export type ComputedElementTable = z.infer<typeof ComputedElementTableSchema>;

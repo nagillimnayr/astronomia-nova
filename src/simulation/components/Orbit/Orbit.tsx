@@ -102,7 +102,13 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   } = ephemerisTable;
 
   const color = colorMap.get(name) ?? 'white';
-  const { mass, meanRadius, obliquity, siderealRotRate } = physicalDataTable;
+  const {
+    mass,
+    meanRadius,
+    obliquity,
+    siderealRotRate,
+    siderealRotationPeriod,
+  } = physicalDataTable;
   const bodyParams: BodyParams = {
     name,
     color,
@@ -112,6 +118,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     initialPosition,
     initialVelocity,
     siderealRotRate,
+    siderealRotationPeriod,
   };
 
   // Destructure the orientation elements.
