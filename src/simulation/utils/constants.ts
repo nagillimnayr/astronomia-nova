@@ -10,7 +10,7 @@ export const AU = 1.495978707e11; // Astronomical Unit in m
 // export const SOLAR_MASS = 1.989e30; // Solar Mass in kg
 export const SOLAR_MASS = 1988500e24; // Solar Mass in kg
 export const DAY = 86400; // Day in seconds
-export const TIME_MULT = DAY;
+export const TIME_MULT = DAY / 24;
 export const YEAR = 360.25; // Year in Days
 // export const DIST_MULT = 1e10; // Distance multiplier (10 unit = 1x10^11m = 100,000,000km)
 // export const DIST_MULT = 1e9; // Distance multiplier (100 unit = 1x10^11m = 100,000,000km)
