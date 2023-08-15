@@ -18,9 +18,11 @@ import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { type RootState, type BaseInstance } from '@react-three/fiber';
 import { type CameraController } from '@/lib/camera-controller/CameraController';
 import {
+  FAR_CLIP,
   NEAR_CLIP,
   SURFACE_NEAR_CLIP,
 } from '@/components/canvas/scene-constants';
+import { XRState } from '@react-three/xr';
 
 const X_AXIS: Readonly<Vector3> = new Vector3(1, 0, 0);
 const _targetWorldPos = new Vector3();
@@ -39,7 +41,8 @@ const SURFACE_MIN_DIST_FROM_SURFACE: Readonly<number> = 2 * METER; // 2 meters a
 type Context = {
   canvas: HTMLCanvasElement; // Reference to the canvas element.
   getThree: () => RootState;
-  // controls: (CameraControls & BaseInstance) | null;
+  getXR: () => XRState;
+  xrSession: XRSession | null;
   controls: CameraController | null;
   spaceCamera: PerspectiveCamera | null;
   surfaceCamera: PerspectiveCamera | null;
@@ -53,7 +56,8 @@ type Events =
   | { type: 'UPDATE'; deltaTime: number }
   | { type: 'ASSIGN_CANVAS'; canvas: HTMLCanvasElement }
   | { type: 'ASSIGN_GET_THREE'; getThree: () => RootState }
-  // | { type: 'ASSIGN_CONTROLS'; controls: CameraControls & BaseInstance }
+  | { type: 'ASSIGN_GET_XR'; getXR: () => XRState }
+  | { type: 'START_XR_SESSION'; xrSession: XRSession }
   | { type: 'ASSIGN_CONTROLS'; controls: CameraController }
   | { type: 'ASSIGN_SPACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_SURFACE_CAMERA'; camera: PerspectiveCamera }
@@ -76,7 +80,9 @@ export const cameraMachine = createMachine(
     context: () => ({
       canvas: null!,
       controls: null,
+      xrSession: null,
       getThree: null!,
+      getXR: null!,
       spaceCamera: null,
       surfaceCamera: null,
       observer: null,
@@ -90,6 +96,9 @@ export const cameraMachine = createMachine(
       },
       ASSIGN_GET_THREE: {
         actions: ['assignGetThree'],
+      },
+      ASSIGN_GET_XR: {
+        actions: ['assignGetXR'],
       },
       ASSIGN_CONTROLS: {
         cond: (context, event) => {
@@ -168,7 +177,7 @@ export const cameraMachine = createMachine(
           UPDATE: {
             internal: true,
             // Run action on self-transition.
-            actions: 'updateSpaceView',
+            actions: ['pollXRInputs', 'updateCamera', 'updateSpaceView'],
           },
           SET_TARGET: {
             internal: true,
@@ -193,6 +202,14 @@ export const cameraMachine = createMachine(
               'initializeControls',
             ],
           },
+          START_XR_SESSION: {
+            actions: [
+              'assignXRSession',
+              'initXRSession',
+              'setSpaceCamDistance',
+              'logEvent',
+            ],
+          },
         },
       },
       surface: {
@@ -209,7 +226,12 @@ export const cameraMachine = createMachine(
           UPDATE: {
             internal: true,
             // Run action on self-transition.
-            actions: ['updateSurfaceView', 'applySurfaceCamUp'],
+            actions: [
+              'pollXRInputs',
+              'updateCamera',
+              'updateSurfaceView',
+              'applySurfaceCamUp',
+            ],
           },
           SET_TARGET: {
             internal: true,
@@ -234,6 +256,14 @@ export const cameraMachine = createMachine(
               'setSurfaceCamDistance',
             ],
           },
+          START_XR_SESSION: {
+            actions: [
+              'assignXRSession',
+              'initXRSession',
+              'setSurfaceCamDistance',
+              'logEvent',
+            ],
+          },
         },
       },
     },
@@ -252,11 +282,16 @@ export const cameraMachine = createMachine(
       assignGetThree: assign({
         getThree: (_, { getThree }) => getThree,
       }),
+      assignGetXR: assign({
+        getXR: (_, { getXR }) => getXR,
+      }),
       assignControls: assign({
         controls: (_, event) => {
-          // event.controls.mouseButtons.right = 8; // Zoom on right mouse button
           return event.controls;
         },
+      }),
+      assignXRSession: assign({
+        xrSession: (_, { xrSession }) => xrSession,
       }),
 
       assignTarget: assign({
@@ -283,6 +318,9 @@ export const cameraMachine = createMachine(
         console.log('surface cam:', surfaceCamera);
         console.log('space cam:', spaceCamera);
       },
+      initXRSession: (context, event) => {
+        //
+      },
       attachToTarget: (context, event) => {
         const { controls, spaceCamera, focusTarget } = context;
         if (!focusTarget || !controls) return;
@@ -294,11 +332,51 @@ export const cameraMachine = createMachine(
         //
         const { controls, observer } = context;
         if (!controls || !observer) return;
-        observer.add(controls);
+        controls.attachControllerTo(observer);
         _observerUp.set(...getLocalUpInWorldCoords(observer));
         controls.up.copy(_observerUp);
 
         controls.camera.up.copy(controls.up);
+      },
+      pollXRInputs: (context, event) => {
+        // Poll XR controllers for input.
+        const { controls, getXR } = context;
+        const { session, controllers } = getXR();
+        if (!session || !controllers || !controls) return;
+        const leftController = controllers.find(
+          (controllerObj) => controllerObj.inputSource.handedness === 'left'
+        );
+        const rightController = controllers.find(
+          (controllerObj) => controllerObj.inputSource.handedness === 'right'
+        );
+        if (!leftController || !rightController) return;
+
+        const leftGamepad = leftController.inputSource.gamepad;
+        if (!leftGamepad) return;
+
+        const leftAxes = leftGamepad.axes;
+        const x = leftAxes[2];
+        const zoom = leftAxes[3];
+
+        const rightGamepad = rightController.inputSource.gamepad;
+        if (!rightGamepad) return;
+        const rightAxes = rightGamepad.axes;
+        const azimuthal = rightAxes[2];
+        const polar = rightAxes[3];
+
+        if (x === undefined || zoom === undefined) return;
+        if (azimuthal === undefined || polar === undefined) return;
+        controls.addAzimuthalRotation(azimuthal * 2);
+        controls.addPolarRotation(polar * 2);
+        controls.addRadialZoom(zoom / 4);
+      },
+      updateCamera: (context, event) => {
+        const { controls, spaceCamera } = context;
+        if (!controls || !spaceCamera) {
+          console.error('camera controls are null');
+          return;
+        }
+        controls.update(event.deltaTime);
       },
       updateSpaceView: (context, event) => {
         const { controls, spaceCamera } = context;
@@ -306,19 +384,8 @@ export const cameraMachine = createMachine(
           console.error('camera controls are null');
           return;
         }
-        const focusTarget = context.focusTarget;
-        // if (!focusTarget) return;
 
-        // // Get world position of focus target.
-        // focusTarget.getWorldPosition(_targetWorldPos);
-
-        // Update controls to follow target.
-        // controls.moveTo(..._targetWorldPos.toArray(), false).catch((reason) => {
-        //   console.log('error updating camera controls: ', reason);
-        // });
-
-        // Force the controls to update the camera.
-        controls.update(event.deltaTime);
+        // controls.update(event.deltaTime);
       },
       enterSurfaceView: (context, event) => {
         const { controls, surfaceCamera, observer, focusTarget } = context;
@@ -331,15 +398,6 @@ export const cameraMachine = createMachine(
       updateSurfaceView: (context, event) => {
         const { controls, observer } = context;
         if (!controls || !observer) return;
-        // observer.getWorldPosition(_observerWorldPos);
-        // Update controls to follow target.
-        // controls
-        //   .moveTo(..._observerWorldPos.toArray(), false)
-        //   .catch((reason) => {
-        //     console.log('error updating camera controls: ', reason);
-        //   });
-        // Force the controls to update the camera.
-        controls.update(event.deltaTime);
       },
       cleanupSurfaceCam: (context) => {
         const { controls, surfaceCamera, observer } = context;
@@ -359,14 +417,13 @@ export const cameraMachine = createMachine(
         if (!controls || !surfaceCamera || !observer || !focusTarget) return;
         controls.rotation.set(0, 0, 0); // Reset rotation.
         // Set the camera's up vector to be relative to the surface.
-        surfaceCamera.up.set(...getLocalUpInWorldCoords(observer));
+        // surfaceCamera.up.set(...getLocalUpInWorldCoords(observer));
         // controls.applyCameraUp();
       },
       applySpaceCamUp: (context) => {
         // Reset up vector of camera.
         const { controls, spaceCamera } = context;
         if (!controls || !spaceCamera) return;
-        // spaceCamera.up.set(0, 1, 0);
         controls.applyWorldUp();
       },
       setSpaceCamDistance: (context) => {
@@ -393,6 +450,13 @@ export const cameraMachine = createMachine(
           controls.minDistance = minDistance;
           controls.camera.near = NEAR_CLIP;
         }
+
+        // Update XR session frustum.
+        const { session } = context.getXR();
+        void session?.updateRenderState({
+          depthNear: NEAR_CLIP,
+          depthFar: FAR_CLIP,
+        });
       },
       setSurfaceCamDistance: (context) => {
         const { controls, spaceCamera } = context;
@@ -402,15 +466,12 @@ export const cameraMachine = createMachine(
 
         controls.camera.near = SURFACE_NEAR_CLIP;
 
-        // if (controls.distance > SURFACE_MIN_DIST) {
-        //   controls
-        //     .dollyTo(SURFACE_MIN_DIST, true)
-        //     .catch((reason) => console.log(reason));
-        // } else if (controls.distance < SURFACE_MAX_DIST) {
-        //   controls
-        //     .dollyTo(SURFACE_MAX_DIST, true)
-        //     .catch((reason) => console.log(reason));
-        // }
+        // Update XR session frustum.
+        const { session } = context.getXR();
+        void session?.updateRenderState({
+          depthNear: SURFACE_NEAR_CLIP,
+          depthFar: FAR_CLIP,
+        });
       },
       rotateAzimuthal: ({ controls }, event) => {
         if (!controls) return;
