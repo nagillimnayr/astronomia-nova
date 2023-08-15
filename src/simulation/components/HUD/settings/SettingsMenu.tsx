@@ -7,7 +7,10 @@ import { useCallback, useEffect, useRef } from 'react';
 import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
 import { cn } from '@/lib/cn';
 
-export const SettingsMenu = () => {
+type Props = {
+  defaultOpen?: boolean;
+};
+export const SettingsMenu = ({ defaultOpen }: Props) => {
   const divRef = useRef<HTMLDivElement>(null!);
 
   // Use state machine.
@@ -30,6 +33,12 @@ export const SettingsMenu = () => {
       actor.send({ type: 'SET_REF', ref: divRef });
     }
   }, [actor]);
+
+  useEffect(() => {
+    if (defaultOpen) {
+      handleOpenClick();
+    }
+  }, [defaultOpen, handleOpenClick]);
 
   return (
     <>
