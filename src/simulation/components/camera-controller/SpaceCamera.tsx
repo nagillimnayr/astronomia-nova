@@ -12,10 +12,7 @@ import { FAR_CLIP, NEAR_CLIP } from '@/components/canvas/scene-constants';
 
 const SpaceCamera = () => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
-  const spaceView = useSelector(cameraActor, (state) => state.matches('space'));
-  // const surfaceView = useSelector(cameraActor, (state) =>
-  //   state.matches('surface')
-  // );
+
   const cameraRef = useRef<PerspectiveCamera>(null!);
 
   return (
@@ -35,7 +32,7 @@ const SpaceCamera = () => {
             camera,
           });
         }}
-        position={[0, 0, SUN_RADIUS / 10 / DIST_MULT + 1000]}
+        position={[0, 0, 0]}
         near={NEAR_CLIP}
         far={FAR_CLIP}
       />
