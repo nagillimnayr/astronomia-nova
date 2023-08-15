@@ -1,10 +1,9 @@
 import { useCallback, useContext, useEffect, useRef } from 'react';
 import { Separator } from '@/components/gui/Separator';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { observer } from 'mobx-react-lite';
 import { SurfaceViewButton } from './surface-view-dialog/SurfaceViewButton';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { DIST_MULT } from '@/simulation/utils/constants';
+import { DAY, DIST_MULT, HOUR } from '@/simulation/utils/constants';
 import { useSelector, useMachine } from '@xstate/react';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import { SpaceViewButton } from './surface-view-dialog/SpaceViewButton';
@@ -13,8 +12,9 @@ import { FocusButton } from './FocusButton';
 import { TracePathButton } from './TracePathButton';
 import { gsap } from 'gsap';
 import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
+import { AttributeDetails } from './AttributeDetails';
 
-const DetailsPanel = observer(() => {
+const DetailsPanel = () => {
   const { selectionActor } = MachineContext.useSelector(
     ({ context }) => context
   );
@@ -109,34 +109,43 @@ const DetailsPanel = observer(() => {
       </header>
       <Separator className="w-full bg-border" />
       {/** Attributes. */}
-      <div className="h-full max-h-full w-full overflow-auto whitespace-nowrap border p-1">
-        <div className="flex w-full flex-col items-start justify-start">
-          {/** Mass. */}
-          <span>
-            Mass:
-            <br />
-            <span>{selected?.mass.toExponential(3)}</span>&nbsp;kg
-          </span>
-          {/** Radius. */}
-          <span>
-            Mean radius:
-            <br />
-            <span>{selected?.meanRadius.toExponential(3)}</span>
-            &nbsp;m
-          </span>
-          {/** Orbital Period */}
-          {orbit ? (
-            <span>
-              Orbital Period:
-              <br />
-              <span>{orbit.orbitalPeriod.toFixed(2)}</span>
-              &nbsp;Days
-            </span>
-          ) : null}
-        </div>
-        <div className="flex w-full flex-col items-start justify-start"></div>
-      </div>
+      {selected && (
+        <>
+          <div className="h-full max-h-full w-full overflow-auto whitespace-nowrap border p-1">
+            <div className="flex w-full flex-col items-start justify-start gap-1">
+              {/** Mass. */}
+              <AttributeDetails name={'Mass'}>
+                {selected.mass.toExponential(3) + ' kg'}
+              </AttributeDetails>
+              {/** Radius. */}
 
+              <AttributeDetails name={'Mean Radius'}>
+                {selected.meanRadius.toExponential(3) + ' m'}
+              </AttributeDetails>
+
+              {/** Sidereal Rotation Rate. */}
+              <AttributeDetails name={'Sidereal Rotation Rate'}>
+                {selected.siderealRotationRate.toExponential(3) + ' rad/s'}
+              </AttributeDetails>
+              {/** Sidereal Rotation Period. */}
+              <AttributeDetails name={'Sidereal Rotation Period'}>
+                {(selected.siderealRotationPeriod / HOUR).toLocaleString() +
+                  ' hr'}
+              </AttributeDetails>
+
+              {orbit ? (
+                <>
+                  {/** Orbital Period */}
+                  <AttributeDetails name={'Orbital Period'}>
+                    {(orbit.orbitalPeriod / DAY).toLocaleString() + ' Days'}
+                  </AttributeDetails>
+                </>
+              ) : null}
+            </div>
+            <div className="flex w-full flex-col items-start justify-start"></div>
+          </div>
+        </>
+      )}
       <div className="mt-auto flex w-full flex-row items-start justify-between">
         {/** Camera focus button. */}
         <FocusButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
@@ -149,6 +158,6 @@ const DetailsPanel = observer(() => {
       </div>
     </div>
   );
-});
+};
 
 export { DetailsPanel };
