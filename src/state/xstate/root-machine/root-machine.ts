@@ -18,6 +18,7 @@ import { uiMachine } from '../ui-machine/ui-machine';
 import { vrMachine } from '../vr-machine/vr-machine';
 import { sendTo } from 'xstate/lib/actions';
 import { TIME_MULT } from '@/simulation/utils/constants';
+import KeplerBody from '@/simulation/classes/kepler-body';
 
 type Context = {
   timeActor: ActorRefFrom<typeof timeMachine>;
@@ -35,6 +36,7 @@ type Context = {
 type Events =
   | { type: 'UPDATE'; deltaTime: number }
   | { type: 'ADVANCE_TIME'; deltaTime: number }
+  | { type: 'ADVANCE_DAY'; reverse?: boolean }
   | { type: 'LOG_CHILDREN' };
 
 export const rootMachine = createMachine(
@@ -128,6 +130,9 @@ export const rootMachine = createMachine(
       ADVANCE_TIME: {
         actions: ['advanceTimeActor', 'advanceKeplerTreeActor'],
       },
+      ADVANCE_DAY: {
+        actions: ['advanceDay'],
+      },
       LOG_CHILDREN: {
         actions: ['logTimeActor', 'logKeplerTreeActor', 'logEvent'],
       },
@@ -172,10 +177,22 @@ export const rootMachine = createMachine(
         ({ keplerTreeActor }) => keplerTreeActor,
         (context, { deltaTime }) => ({
           type: 'UPDATE',
-          deltaTime: deltaTime / TIME_MULT, // Since deltaTime is already in seconds, it must be divided by TIME_MULT, as it will be multiplied by TIME_MULT when passed to the update function
+          deltaTime: deltaTime / TIME_MULT, // Since deltaTime is already in seconds, it must be divided by TIME_MULT, as it will be multiplied by TIME_MULT when passed to the update function.
         })
       ),
+      advanceDay: (context, { reverse }) => {
+        const { cameraActor, keplerTreeActor, timeActor } = context;
+        const { focusTarget } = cameraActor.getSnapshot()!.context;
+        if (!(focusTarget instanceof KeplerBody)) return;
+        let deltaTime = focusTarget.siderealRotationPeriod;
 
+        reverse && (deltaTime *= -1);
+
+        timeActor.send({ type: 'ADVANCE_TIME', deltaTime });
+
+        deltaTime /= TIME_MULT; // Since deltaTime is already in seconds, it must be divided by TIME_MULT, as it will be multiplied by TIME_MULT when passed to the update function.
+        keplerTreeActor.send({ type: 'UPDATE', deltaTime });
+      },
       logTimeActor: log((context) => context.timeActor),
       logKeplerTreeActor: log((context) => context.keplerTreeActor),
       logEvent: log((_, event) => event),
