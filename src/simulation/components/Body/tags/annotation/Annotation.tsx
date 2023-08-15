@@ -54,10 +54,14 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
 
     // Get world position of body.
     body.getWorldPosition(_bodyWorldPos);
-    // Get world position of camera.
-    camera.getWorldPosition(_camWorldPos);
 
-    camera.getWorldDirection(_direction);
+    // Get world position of camera.
+    controls.getCameraWorldPosition(_camWorldPos);
+    // camera.getWorldPosition(_camWorldPos);
+
+    // Get world direction of camera.
+    // camera.getWorldDirection(_direction);
+    controls.getCameraWorldDirection(_direction);
     _direction.multiplyScalar(-1);
 
     // Add the direction to the position of the body.
@@ -65,7 +69,8 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
 
     // Set the up vector so that it will be oriented correctly when lookAt() is called.
     // center.up.copy(camera.up);
-    center.up.set(...controls.getWorldUp());
+    // center.up.set(...controls.getWorldUp());
+    controls.getCameraWorldUp(center.up);
     // Rotate to face camera.
     center.lookAt(_lookPos);
 
