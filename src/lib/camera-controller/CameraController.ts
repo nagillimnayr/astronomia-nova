@@ -44,7 +44,6 @@ export class CameraController extends Object3D {
   private _domElement: HTMLElement | null = null;
 
   private _worldUpQuaternion = new Quaternion();
-  private _cameraWorldDirection = new Vector3();
 
   private _pivotPoint = new Object3D();
   private _attachPoint = new Object3D();
@@ -103,6 +102,7 @@ export class CameraController extends Object3D {
     const attachPoint = this._attachPoint;
     pivotPoint.rotation.set(0, 0, 0); // Reset rotations.
     attachPoint.position.set(0, 0, this._radius); // Set position of camera.
+    this._camera?.position.set(0, 0, 0);
 
     // Rotations are intrinsic, so the order matters. Rotation around local y-axis must be done first in order to preserve the local up-vector.
     pivotPoint.rotateY(this._azimuthalAngle); // Rotate around local y-axis.
@@ -259,6 +259,17 @@ export class CameraController extends Object3D {
     return this._camera!;
   }
 
+  getCameraWorldPosition(vec: Vector3) {
+    return this._attachPoint.getWorldPosition(vec);
+  }
+  getCameraWorldDirection(vec: Vector3) {
+    return this._attachPoint.getWorldDirection(vec).multiplyScalar(-1);
+  }
+  getCameraWorldUp(vec: Vector3) {
+    vec.set(...getLocalUpInWorldCoords(this._attachPoint));
+    return vec;
+  }
+
   private _clampRadiusTarget() {
     this._radiusTarget = clamp(
       this._radiusTarget,
@@ -364,15 +375,6 @@ export class CameraController extends Object3D {
       MAX_AZIMUTHAL_ANGLE_BOUND
     );
     this.setAzimuthalAngle(this._azimuthalAngle); // Clamp azimuthal angle.
-  }
-
-  private updateCameraWorldDirection() {
-    if (!this._camera) return;
-    this._camera.getWorldDirection(_v1);
-    this._cameraWorldDirection.copy(_v1);
-  }
-  private updateWorldQuaternion() {
-    this._worldUpQuaternion.setFromUnitVectors(this.up, Y_AXIS);
   }
 
   getWorldUp() {
