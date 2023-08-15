@@ -31,6 +31,7 @@ import {
 } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Poles } from './poles/Poles';
+import { normalizeAngle } from '../../utils/rotation-utils';
 
 // Separate out the visual logic from the simulation logic.
 
@@ -107,7 +108,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       if (eventType !== 'UPDATE' && eventType !== 'ADVANCE_TIME') return;
 
       const timeElapsed = state.context.timeElapsed;
-      const axialRotation = siderealRotRate * timeElapsed;
+      const axialRotation = normalizeAngle(siderealRotRate * timeElapsed);
 
       // Rotate the body around its rotational axis.
       mesh.rotation.set(PI_OVER_TWO, 0, degToRad(obliquity)); // Reset rotation.
@@ -135,6 +136,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   return (
     <>
       <Sphere
+        name={name + '-mesh'}
         rotation={[PI_OVER_TWO, 0, degToRad(obliquity)]}
         // visible={isVisible}
         ref={meshRef}
