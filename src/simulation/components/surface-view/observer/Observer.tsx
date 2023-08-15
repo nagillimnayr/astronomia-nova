@@ -1,4 +1,4 @@
-import { DIST_MULT, METER, RADS_90 } from '@/simulation/utils/constants';
+import { DIST_MULT, METER } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Circle } from '@react-three/drei';
 
