@@ -17,8 +17,12 @@ import { timeMachine } from '../../../../state/xstate/time-machine/time-machine'
 import { useSelector } from '@xstate/react';
 import { cn } from '@/lib/cn';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
+import { ClassNameValue } from 'tailwind-merge';
 
-const PauseButton = () => {
+type Props = {
+  className?: ClassNameValue;
+};
+const PauseButton = ({ className }: Props) => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
   // Check whether paused or not.
@@ -26,7 +30,10 @@ const PauseButton = () => {
 
   return (
     <button
-      className="inline-flex aspect-square h-8 w-8 items-center justify-center rounded-full border-2 border-white p-1"
+      className={cn(
+        'inline-flex aspect-square items-center justify-center rounded-full p-1',
+        className
+      )}
       onClick={(e) => {
         e.stopPropagation();
 
