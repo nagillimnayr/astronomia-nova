@@ -8,11 +8,6 @@ import { Event, EventListener, Vector3, XRTargetRaySpace } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { FAR_CLIP, NEAR_CLIP } from '../scene-constants';
 
-const _xAxis: Readonly<Vector3> = new Vector3(1, 0, 0);
-const _yAxis: Readonly<Vector3> = new Vector3(0, 1, 0);
-const moveSpeed = 1;
-const rotateSpeed = 1;
-
 export const PlayerControls = () => {
   const { vrActor } = MachineContext.useSelector(({ context }) => context);
   const { player, controllers, isPresenting } = useXR();
