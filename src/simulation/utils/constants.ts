@@ -13,17 +13,17 @@ export const AU = 1.495978707e11; // Astronomical Unit in m
 export const SOLAR_MASS = 1988500e24; // Solar Mass in kg
 export const SOLAR_SYSTEM_RADIUS = AU * 90;
 
-export const DAY = 86400; // Day in seconds.
+export const DAY = 86400; // Synodic Day in seconds.
 export const HOUR = 3600; // Hour in seconds.
 export const YEAR = 360.25; // Year in Days.
 export const TIME_MULT = HOUR;
 // J2000 epoch (January 1st, 2000, 12:00:00pm TT)
 export const J2000: Readonly<Date> = new Date(2000, 0, 1, 12, 0, 0, 0);
-export const J2000_JD = 2451545.0; // J2000 in Julian Date.
+export const J2000_JD = 2451545.0; // J2000 in Julian Days.
 
 // export const DIST_MULT = 1e10; // Distance multiplier (10 units = 1x10^11m = 100,000,000km)
 // export const DIST_MULT = 1e9; // Distance multiplier (100 units = 1x10^11m = 100,000,000km)
-export const DIST_MULT = 1e8; // Distance multiplier
+export const DIST_MULT = 1e8; // Distance multiplier.
 export const KM_TO_M = 1000;
 export const METER = 1 / DIST_MULT;
 
@@ -34,7 +34,7 @@ export const SUN_RADIUS = 696340e3;
 
 export const PI_SQUARED = Math.pow(Math.PI, 2);
 
-export const UPDATES_PER_DAY = 60;
+export const UPDATES_PER_REAL_SECOND = 60;
 
 // Angles in radians
 export const PI = Math.PI;

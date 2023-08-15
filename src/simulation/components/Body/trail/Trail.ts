@@ -1,4 +1,4 @@
-import { UPDATES_PER_DAY } from '@/simulation/utils/constants';
+import { UPDATES_PER_REAL_SECOND } from '@/simulation/utils/constants';
 import { Queue } from '@datastructures-js/queue';
 import { flatten, isEqual, clamp, floor } from 'lodash';
 import {
@@ -28,13 +28,13 @@ type Params = {
 export class Trail extends Mesh {
   private _pointsQueue: Queue<Vector3Tuple>;
   private _maxLength: number;
-  private _itersPerUpdate = UPDATES_PER_DAY;
+  private _itersPerUpdate = UPDATES_PER_REAL_SECOND;
   private _iter = 0;
   // private _line: Line;
 
   constructor(
     resolution = [100, 100],
-    itersPerUpdate = UPDATES_PER_DAY,
+    itersPerUpdate = UPDATES_PER_REAL_SECOND,
     maxLength = 1000,
     width = 1,
     color = 'white'
@@ -49,7 +49,11 @@ export class Trail extends Mesh {
       })
     );
     this._pointsQueue = new Queue<Vector3Tuple>();
-    this._itersPerUpdate = clamp(floor(itersPerUpdate), 1, UPDATES_PER_DAY);
+    this._itersPerUpdate = clamp(
+      floor(itersPerUpdate),
+      1,
+      UPDATES_PER_REAL_SECOND
+    );
     this._maxLength = maxLength;
     // this._line = new Line();
     // this.add(this._line);
@@ -79,7 +83,11 @@ export class Trail extends Mesh {
   }
 
   set itersPerUpdate(itersPerUpdate: number) {
-    this._itersPerUpdate = clamp(floor(itersPerUpdate), 1, UPDATES_PER_DAY);
+    this._itersPerUpdate = clamp(
+      floor(itersPerUpdate),
+      1,
+      UPDATES_PER_REAL_SECOND
+    );
   }
 
   setResolution(x: number, y: number) {
@@ -110,7 +118,7 @@ export class Trail extends Mesh {
     // Reset iteration count.
     this._iter = 0;
 
-    const updatesPerDay = floor(UPDATES_PER_DAY / this._itersPerUpdate);
+    const updatesPerDay = floor(UPDATES_PER_REAL_SECOND / this._itersPerUpdate);
     const maxLength = this._maxLength * updatesPerDay;
     // Dequeue points until under max length.
     while (this._pointsQueue.size() >= maxLength) {
