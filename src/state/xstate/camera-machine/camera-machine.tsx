@@ -16,8 +16,7 @@ import {
 } from '@/simulation/utils/constants';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { type RootState, type BaseInstance } from '@react-three/fiber';
-import { CameraController } from '@/lib/camera-controller/CameraController';
-import { observer } from 'mobx-react-lite';
+import { type CameraController } from '@/lib/camera-controller/CameraController';
 import {
   NEAR_CLIP,
   SURFACE_NEAR_CLIP,
@@ -59,7 +58,10 @@ type Events =
   | { type: 'ASSIGN_SPACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_SURFACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_OBSERVER'; observer: Object3D | null }
-  | { type: 'SET_TARGET'; focusTarget: Object3D | null };
+  | { type: 'SET_TARGET'; focusTarget: Object3D | null }
+  | { type: 'ROTATE_AZIMUTHAL'; deltaAngle: number }
+  | { type: 'ROTATE_POLAR'; deltaAngle: number }
+  | { type: 'ZOOM'; deltaZoom: number };
 
 export const cameraMachine = createMachine(
   {
@@ -136,6 +138,18 @@ export const cameraMachine = createMachine(
           assign({ observer: (_, event) => event.observer }),
           'cleanupSurfaceCam',
         ],
+      },
+
+      ROTATE_AZIMUTHAL: {
+        actions: ['rotateAzimuthal'],
+      },
+
+      ROTATE_POLAR: {
+        actions: ['rotatePolar'],
+      },
+
+      ZOOM: {
+        actions: ['addRadialZoom'],
       },
     },
 
@@ -273,7 +287,7 @@ export const cameraMachine = createMachine(
         const { controls, spaceCamera, focusTarget } = context;
         if (!focusTarget || !controls) return;
         // focusTarget.add(controls);
-        controls.attachTo(focusTarget);
+        controls.attachControllerTo(focusTarget);
         controls.applyWorldUp();
       },
       attachToObserver: (context, event) => {
@@ -397,6 +411,18 @@ export const cameraMachine = createMachine(
         //     .dollyTo(SURFACE_MAX_DIST, true)
         //     .catch((reason) => console.log(reason));
         // }
+      },
+      rotateAzimuthal: ({ controls }, event) => {
+        if (!controls) return;
+        controls.addAzimuthalRotation(event.deltaAngle);
+      },
+      rotatePolar: ({ controls }, event) => {
+        if (!controls) return;
+        controls.addPolarRotation(event.deltaAngle);
+      },
+      addRadialZoom: ({ controls }, event) => {
+        if (!controls) return;
+        controls.addRadialZoom(event.deltaZoom);
       },
     },
   }

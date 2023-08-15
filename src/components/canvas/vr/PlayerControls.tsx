@@ -9,7 +9,9 @@ import { degToRad } from 'three/src/math/MathUtils';
 import { FAR_CLIP, NEAR_CLIP } from '../scene-constants';
 
 export const PlayerControls = () => {
-  const { vrActor } = MachineContext.useSelector(({ context }) => context);
+  const { vrActor, cameraActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const { player, controllers, isPresenting } = useXR();
   const leftController = useController('left');
   const rightController = useController('right');
@@ -20,41 +22,6 @@ export const PlayerControls = () => {
 
   const gl = useThree(({ gl }) => gl);
   const xr = useThree(({ gl }) => gl.xr);
-
-  // useEffect(() => {
-  //   console.log('xr enabled?', xr.enabled);
-  //   // const leftController = xr.getController(0);
-  //   // const rightController = xr.getController(1);
-  //   console.log('left controller:', leftController);
-  //   console.log('right controller:', rightController);
-
-  //   type ConnectEventListener = EventListener<
-  //     Event,
-  //     'connected',
-  //     XRTargetRaySpace
-  //   >;
-  //   const leftConnectHandler: ConnectEventListener = (event) => {
-  //     console.log('left connected:', event);
-  //     if ('data' in event) {
-  //       console.log('data:', event.data);
-  //       console.log('typeof data:', event.data);
-  //     }
-  //   };
-  //   const rightConnectHandler: ConnectEventListener = (event) => {
-  //     console.log('right connected:', event);
-  //     if ('data' in event) {
-  //       console.log('data:', event.data);
-  //       console.log('typeof data:', event.data);
-  //     }
-  //   };
-  //   leftController.addEventListener('connected', leftConnectHandler);
-  //   rightController.addEventListener('connected', rightConnectHandler);
-
-  //   const cleanup = () => {
-  //     leftController.removeEventListener('connected', leftConnectHandler);
-  //     rightController.removeEventListener('connected', rightConnectHandler);
-  //   };
-  // }, [xr]);
 
   useEffect(() => {
     console.log('xr enabled?', xr.enabled);
@@ -85,39 +52,32 @@ export const PlayerControls = () => {
     // const leftController = controllers[1];
     // const rightController = controllers[0];
     if (!session || !player || !rightController || !leftController) return;
-    // const leftGamepad = leftController.inputSource.gamepad;
-    // if (!leftGamepad) return;
+    const leftGamepad = leftController.inputSource.gamepad;
+    if (!leftGamepad) return;
 
-    // const leftAxes = leftGamepad.axes;
-    // const x = leftAxes[2];
-    // const z = leftAxes[3];
+    const leftAxes = leftGamepad.axes;
+    const x = leftAxes[2];
+    const z = leftAxes[3];
 
-    // const rightGamepad = rightController.inputSource.gamepad;
-    // if (!rightGamepad) return;
-    // const rightAxes = rightGamepad.axes;
-    // const a = rightAxes[2];
-    // const b = rightAxes[3];
+    const rightGamepad = rightController.inputSource.gamepad;
+    if (!rightGamepad) return;
+    const rightAxes = rightGamepad.axes;
+    const a = rightAxes[2];
+    const b = rightAxes[3];
 
-    // if (x === undefined || z === undefined) return;
-    // if (a === undefined || b === undefined) return;
-    // const deltaX = x * delta;
-    // const deltaZ = z * delta;
-    // const deltaA = a * delta;
-    // const deltaB = b * delta;
-
-    // // console.log('x:', x);
-    // // console.log('z:', z);
-    // // console.log('a:', a);
-    // // console.log('b:', b);
-
-    // // Translate player.
-    // player.translateX(deltaX * moveSpeed);
-    // player.translateZ(deltaZ * moveSpeed);
+    if (x === undefined || z === undefined) return;
+    if (a === undefined || b === undefined) return;
 
     // Rotate player.
     // player.rotateOnWorldAxis(_yAxis, -deltaA * rotateSpeed);
     // player.rotateOnAxis(_xAxis, -deltaB * rotateSpeed);
     vrActor.send({ type: 'UPDATE', deltaTime: delta });
+    cameraActor.send({ type: 'ROTATE_AZIMUTHAL', deltaAngle: a * 2 });
+    cameraActor.send({ type: 'ROTATE_POLAR', deltaAngle: b * 2 });
+    cameraActor.send({ type: 'ZOOM', deltaZoom: z / 4 });
+    a !== 0 && console.log('azimuthal:', a);
+    b !== 0 && console.log('polar:', b);
+    z !== 0 && console.log('zoom:', z);
   });
 
   return (

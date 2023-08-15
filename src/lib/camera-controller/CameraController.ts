@@ -2,7 +2,7 @@ import {
   ArrowHelper,
   Group,
   Object3D,
-  PerspectiveCamera,
+  type PerspectiveCamera,
   Quaternion,
   Vector3,
 } from 'three';
@@ -14,12 +14,10 @@ import {
   DEG_TO_RADS,
   PI_OVER_THREE,
   METER,
+  Y_AXIS,
 } from '@/simulation/utils/constants';
 import { smoothCritDamp } from './smoothing';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
-
-const X_AXIS: Readonly<Vector3> = new Vector3(1, 0, 0);
-const Y_AXIS: Readonly<Vector3> = new Vector3(0, 1, 0);
 
 const EPSILON = 1e-5;
 
@@ -48,7 +46,8 @@ export class CameraController extends Object3D {
   private _worldUpQuaternion = new Quaternion();
   private _cameraWorldDirection = new Vector3();
 
-  private _pivot = new Object3D();
+  private _pivotPoint = new Object3D();
+  private _attachPoint = new Object3D();
 
   private _radius = 1e3;
   private _radiusTarget = this._radius;
@@ -71,7 +70,7 @@ export class CameraController extends Object3D {
   private _maxAzimuthalAngle = Infinity;
 
   private _rotationSpeed = 0.75;
-  private _smoothTime = 0.25;
+  private _smoothTime = 0.4;
 
   private _mouseDownLeft = false;
   private _mouseDownRight = false;
@@ -79,14 +78,16 @@ export class CameraController extends Object3D {
 
   constructor(camera?: PerspectiveCamera) {
     super();
-    this.add(this._pivot);
+    this.add(this._pivotPoint);
+    this._pivotPoint.add(this._attachPoint);
     this.name = 'camera-controller';
-    this._pivot.name = 'camera-pivot';
+    this._pivotPoint.name = 'camera-pivot-point';
+    this._attachPoint.name = 'camera-attach-point';
 
     if (camera) {
       this._camera = camera;
       const parent = camera.parent;
-      this._pivot.add(camera);
+      this._attachPoint.add(camera);
       if (parent) {
         parent.add(this);
       }
@@ -98,13 +99,14 @@ export class CameraController extends Object3D {
     this.updateRadius(deltaTime);
     this.updatePolarAngle(deltaTime);
     this.updateAzimuthalAngle(deltaTime);
-    const pivot = this._pivot;
-    pivot.rotation.set(0, 0, 0); // Reset rotations.
-    this._camera?.position.set(0, 0, this._radius); // Set position of camera.
+    const pivotPoint = this._pivotPoint;
+    const attachPoint = this._attachPoint;
+    pivotPoint.rotation.set(0, 0, 0); // Reset rotations.
+    attachPoint.position.set(0, 0, this._radius); // Set position of camera.
 
     // Rotations are intrinsic, so the order matters. Rotation around local y-axis must be done first in order to preserve the local up-vector.
-    pivot.rotateY(this._azimuthalAngle); // Rotate around local y-axis.
-    pivot.rotateX(-(PI_OVER_TWO - this._polarAngle)); // Rotate around local x-axis.
+    pivotPoint.rotateY(this._azimuthalAngle); // Rotate around local y-axis.
+    pivotPoint.rotateX(-(PI_OVER_TWO - this._polarAngle)); // Rotate around local x-axis.
 
     this._camera?.updateProjectionMatrix();
   }
@@ -244,11 +246,11 @@ export class CameraController extends Object3D {
 
   setCamera(camera: PerspectiveCamera) {
     this._camera = camera;
-    const parent = camera.parent;
-    this._pivot.add(camera);
-    if (parent && parent !== this._pivot) {
-      parent.add(this);
-    }
+    // const parent = camera.parent;
+    this.attachToController(camera);
+    // if (parent && parent !== this._attachPoint) {
+    //   parent.add(this);
+    // }
   }
   set camera(camera: PerspectiveCamera) {
     this.setCamera(camera);
@@ -393,8 +395,11 @@ export class CameraController extends Object3D {
     //
   }
 
-  attachTo(obj: Object3D) {
+  attachControllerTo(obj: Object3D) {
     obj.add(this);
+  }
+  attachToController(obj: Object3D) {
+    this._attachPoint.add(obj);
   }
 
   private _onMouseDown(event: MouseEvent) {
