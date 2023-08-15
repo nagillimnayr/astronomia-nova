@@ -49,7 +49,10 @@ export const dialogMachine = createMachine(
       opening: {
         invoke: {
           src: 'openDialog',
-          onDone: { target: 'open', actions: ['logEvent'] },
+          onDone: {
+            target: 'open',
+            // actions: ['logEvent']
+          },
         },
         on: {
           CLOSE: {
@@ -73,7 +76,10 @@ export const dialogMachine = createMachine(
       closing: {
         invoke: {
           src: 'closeDialog',
-          onDone: { target: 'closed', actions: ['logEvent'] },
+          onDone: {
+            target: 'closed',
+            // actions: ['logEvent']
+          },
         },
         on: {
           OPEN: {
