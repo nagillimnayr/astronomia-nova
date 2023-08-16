@@ -14,6 +14,8 @@ type Context = {
   annotations: ActorRefFrom<typeof toggleMachine>;
   markers: ActorRefFrom<typeof toggleMachine>;
   velocityArrows: ActorRefFrom<typeof toggleMachine>;
+  polarAxes: ActorRefFrom<typeof toggleMachine>;
+  equinoxes: ActorRefFrom<typeof toggleMachine>;
 };
 
 type Events =
@@ -35,6 +37,8 @@ export const visibilityMachine = createMachine({
     annotations: null!,
     markers: null!,
     velocityArrows: null!,
+    polarAxes: null!,
+    equinoxes: null!,
   },
 
   entry: [
@@ -48,6 +52,8 @@ export const visibilityMachine = createMachine({
       markers: () => spawn(toggleMachine, { name: 'markers', sync: true }),
       velocityArrows: () =>
         spawn(toggleMachine, { name: 'velocityArrows', sync: true }),
+      polarAxes: () => spawn(toggleMachine, { name: 'polarAxes', sync: true }),
+      equinoxes: () => spawn(toggleMachine, { name: 'equinoxes', sync: true }),
     }),
   ],
 
