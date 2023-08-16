@@ -43,6 +43,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
             >
               {/* <Hud renderPriority={1}> */}
               <XR
+                referenceSpace="viewer"
                 onSessionStart={(event) => {
                   const session = event.target;
 
@@ -52,6 +53,17 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                     type: 'START_XR_SESSION',
                     xrSession: session,
                   });
+
+                  session
+                    .requestReferenceSpace('viewer')
+                    .then((refSpace) => {
+                      cameraActor.send({ type: 'ASSIGN_REF_SPACE', refSpace });
+                      vrActor.send({
+                        type: 'ASSIGN_REF_SPACE_ORIGIN',
+                        refSpace,
+                      });
+                    })
+                    .catch((reason) => console.error(reason));
                 }}
                 onSessionEnd={(event) => {
                   console.log('Ending XR session:', event);

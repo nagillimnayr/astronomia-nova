@@ -29,6 +29,10 @@ const _targetWorldPos = new Vector3();
 const _observerWorldPos = new Vector3();
 const _observerUp = new Vector3();
 
+const _cameraWorldDirection = new Vector3();
+const _worldPos = new Vector3();
+const _lookPos = new Vector3();
+
 // Space view constants:
 const SPACE_MAX_DIST: Readonly<number> = 1e12;
 const SPACE_MIN_DIST_FROM_SURFACE: Readonly<number> = 1e-3;
@@ -48,6 +52,7 @@ type Context = {
   surfaceCamera: PerspectiveCamera | null;
   focusTarget: Object3D | null;
   observer: Object3D | null;
+  refSpace: XRReferenceSpace | null;
 };
 
 type Events =
@@ -58,14 +63,18 @@ type Events =
   | { type: 'ASSIGN_GET_THREE'; getThree: () => RootState }
   | { type: 'ASSIGN_GET_XR'; getXR: () => XRState }
   | { type: 'START_XR_SESSION'; xrSession: XRSession }
+  | { type: 'END_XR_SESSION' }
+  | { type: 'POLL_XR_BUTTONS' }
   | { type: 'ASSIGN_CONTROLS'; controls: CameraController }
   | { type: 'ASSIGN_SPACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_SURFACE_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_OBSERVER'; observer: Object3D | null }
+  | { type: 'ASSIGN_REF_SPACE'; refSpace: XRReferenceSpace }
   | { type: 'SET_TARGET'; focusTarget: Object3D | null }
   | { type: 'ROTATE_AZIMUTHAL'; deltaAngle: number }
   | { type: 'ROTATE_POLAR'; deltaAngle: number }
-  | { type: 'ZOOM'; deltaZoom: number };
+  | { type: 'ZOOM'; deltaZoom: number }
+  | { type: 'RESET_REF_SPACE' };
 
 export const cameraMachine = createMachine(
   {
@@ -87,6 +96,7 @@ export const cameraMachine = createMachine(
       surfaceCamera: null,
       observer: null,
       focusTarget: null,
+      refSpace: null,
     }),
 
     // Context assignment events:
@@ -98,7 +108,7 @@ export const cameraMachine = createMachine(
         actions: ['assignGetThree'],
       },
       ASSIGN_GET_XR: {
-        actions: ['assignGetXR'],
+        actions: ['assignGetXR', 'logEvent'],
       },
       ASSIGN_CONTROLS: {
         cond: (context, event) => {
@@ -148,6 +158,9 @@ export const cameraMachine = createMachine(
           'cleanupSurfaceCam',
         ],
       },
+      ASSIGN_REF_SPACE: {
+        actions: ['logEvent', 'assignRefSpace', 'initRefSpace'],
+      },
 
       ROTATE_AZIMUTHAL: {
         actions: ['rotateAzimuthal'],
@@ -159,6 +172,13 @@ export const cameraMachine = createMachine(
 
       ZOOM: {
         actions: ['addRadialZoom'],
+      },
+
+      POLL_XR_BUTTONS: {
+        cond: ({ getXR }) => {
+          return Boolean(getXR().session);
+        },
+        actions: ['pollXRButtons'],
       },
     },
 
@@ -177,7 +197,7 @@ export const cameraMachine = createMachine(
           UPDATE: {
             internal: true,
             // Run action on self-transition.
-            actions: ['pollXRInputs', 'updateCamera', 'updateSpaceView'],
+            actions: ['pollXRInput', 'updateCamera', 'updateSpaceView'],
           },
           SET_TARGET: {
             internal: true,
@@ -204,10 +224,10 @@ export const cameraMachine = createMachine(
           },
           START_XR_SESSION: {
             actions: [
-              'assignXRSession',
-              'initXRSession',
-              'setSpaceCamDistance',
               'logEvent',
+              'assignXRSession',
+              'startXRSession',
+              'setSpaceCamDistance',
             ],
           },
         },
@@ -227,7 +247,7 @@ export const cameraMachine = createMachine(
             internal: true,
             // Run action on self-transition.
             actions: [
-              'pollXRInputs',
+              'pollXRInput',
               'updateCamera',
               'updateSurfaceView',
               'applySurfaceCamUp',
@@ -258,10 +278,10 @@ export const cameraMachine = createMachine(
           },
           START_XR_SESSION: {
             actions: [
-              'assignXRSession',
-              'initXRSession',
-              'setSurfaceCamDistance',
               'logEvent',
+              'assignXRSession',
+              'startXRSession',
+              'setSurfaceCamDistance',
             ],
           },
         },
@@ -293,6 +313,9 @@ export const cameraMachine = createMachine(
       assignXRSession: assign({
         xrSession: (_, { xrSession }) => xrSession,
       }),
+      assignRefSpace: assign({
+        refSpace: (_, { refSpace }) => refSpace,
+      }),
 
       assignTarget: assign({
         // Set new focus target.
@@ -318,8 +341,42 @@ export const cameraMachine = createMachine(
         console.log('surface cam:', surfaceCamera);
         console.log('space cam:', spaceCamera);
       },
-      initXRSession: (context, event) => {
+      startXRSession: (context, event) => {
         //
+        const { xrSession, getXR, getThree, controls } = context;
+        if (!xrSession || !getXR || !controls) {
+          console.error('error initializing xr session');
+          return;
+        }
+
+        // const { gl } = getThree();
+        // const xr = gl.xr;
+        // const glXRSession = gl.xr.getSession();
+        // console.log('xrSession:', xrSession);
+        // console.log('glXRSession:', glXRSession);
+        // console.log('xr enabled?', gl.xr.enabled);
+        // console.log('xr frame', gl.xr.getFrame());
+        // console.log('xr camera', gl.xr.getCamera());
+        // console.log('xr controller 1', gl.xr.getController(1));
+        // const refSpace = xr.getReferenceSpace();
+        // console.log('xr reference space', refSpace);
+
+        const { player } = getXR();
+        controls.attachToController(player);
+        controls.camera.getWorldDirection(_cameraWorldDirection);
+        player.up.set(...getLocalUpInWorldCoords(controls.camera));
+        player.getWorldPosition(_worldPos);
+        _lookPos.addVectors(_worldPos, _cameraWorldDirection);
+        player.lookAt(_lookPos);
+        console.log('Attaching VR Player to camera!');
+      },
+      initRefSpace: (context, event) => {
+        const { getThree } = context;
+        const { refSpace } = event;
+        const xr = getThree().gl.xr;
+
+        xr.setReferenceSpace(refSpace);
+        console.log('initial refSpace:', refSpace);
       },
       attachToTarget: (context, event) => {
         const { controls, spaceCamera, focusTarget } = context;
@@ -338,8 +395,8 @@ export const cameraMachine = createMachine(
 
         controls.camera.up.copy(controls.up);
       },
-      pollXRInputs: (context, event) => {
-        // Poll XR controllers for input.
+      pollXRInput: (context) => {
+        // Poll XR controllers for thumbstick input.
         const { controls, getXR } = context;
         const { session, controllers } = getXR();
         if (!session || !controllers || !controls) return;
@@ -353,23 +410,71 @@ export const cameraMachine = createMachine(
 
         const leftGamepad = leftController.inputSource.gamepad;
         if (!leftGamepad) return;
+        const rightGamepad = rightController.inputSource.gamepad;
+        if (!rightGamepad) return;
 
         const leftAxes = leftGamepad.axes;
         const x = leftAxes[2];
         const zoom = leftAxes[3];
 
-        const rightGamepad = rightController.inputSource.gamepad;
-        if (!rightGamepad) return;
         const rightAxes = rightGamepad.axes;
         const azimuthal = rightAxes[2];
         const polar = rightAxes[3];
 
-        if (x === undefined || zoom === undefined) return;
-        if (azimuthal === undefined || polar === undefined) return;
-        controls.addAzimuthalRotation(azimuthal * 2);
-        controls.addPolarRotation(polar * 2);
-        controls.addRadialZoom(zoom / 4);
+        if (azimuthal) {
+          controls.addAzimuthalRotation(azimuthal * 2);
+        }
+        if (polar) {
+          controls.addPolarRotation(polar * 2);
+        }
+        if (zoom) {
+          controls.addRadialZoom(zoom / 4);
+        }
       },
+      pollXRButtons: (context) => {
+        // Poll XR controllers for button input.
+        const { controls, getXR } = context;
+        const { session, controllers } = getXR();
+        if (!session || !controllers || !controls) return;
+        const leftController = controllers.find(
+          (controllerObj) => controllerObj.inputSource.handedness === 'left'
+        );
+        const rightController = controllers.find(
+          (controllerObj) => controllerObj.inputSource.handedness === 'right'
+        );
+        if (!leftController || !rightController) return;
+
+        const leftGamepad = leftController.inputSource.gamepad;
+        if (!leftGamepad) return;
+        const rightGamepad = rightController.inputSource.gamepad;
+        if (!rightGamepad) return;
+        // Poll for button input.
+        const leftButtons = leftGamepad.buttons;
+        const rightButtons = rightGamepad.buttons;
+
+        const buttonA = rightButtons.at(4);
+        const buttonB = rightButtons.at(5);
+
+        const buttonX = leftButtons.at(4);
+        const buttonY = leftButtons.at(5);
+
+        if (buttonA && buttonA.pressed) {
+          console.log('button A');
+        }
+
+        if (buttonB && buttonB.pressed) {
+          console.log('button B');
+        }
+
+        if (buttonX && buttonX.pressed) {
+          console.log('button X');
+        }
+
+        if (buttonY && buttonY.pressed) {
+          console.log('button Y');
+        }
+      },
+
       updateCamera: (context, event) => {
         const { controls, spaceCamera } = context;
         if (!controls || !spaceCamera) {

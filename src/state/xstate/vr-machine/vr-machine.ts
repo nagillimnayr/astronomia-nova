@@ -1,25 +1,32 @@
 import { FAR_CLIP, NEAR_CLIP } from '@/components/canvas/scene-constants';
-import { VRCameraController } from '@/components/canvas/vr/classes/VRCameraController';
-import { type XRController } from '@react-three/xr';
-import { Object3D, type Group, Vector3 } from 'three';
+import { type RootState } from '@react-three/fiber';
+import { type XRState, type XRController } from '@react-three/xr';
+import { Object3D, type Group, Vector3, type WebXRManager } from 'three';
 import { assign, createMachine, log } from 'xstate';
-import { degToRad } from 'three/src/math/MathUtils';
 
 type Context = {
+  getThree: () => RootState;
+  getXR: () => XRState;
+  xr: WebXRManager | null;
+  refSpaceOrigin: XRReferenceSpace | null;
   session: XRSession | null;
   player: Group | null;
   leftController: XRController | null;
   rightController: XRController | null;
-  vrCameraController: VRCameraController;
 };
 
 type Events =
   | { type: 'START_SESSION'; session: XRSession }
   | { type: 'END_SESSION' }
+  | { type: 'ASSIGN_GET_THREE'; getThree: () => RootState }
+  | { type: 'ASSIGN_GET_XR'; getXR: () => XRState }
+  | { type: 'ASSIGN_XR_MANAGER'; xr: WebXRManager }
+  | { type: 'ASSIGN_REF_SPACE_ORIGIN'; refSpace: XRReferenceSpace }
   | { type: 'ASSIGN_PLAYER'; player: Group }
   | { type: 'ASSIGN_LEFT_CONTROLLER'; controller: XRController }
   | { type: 'ASSIGN_RIGHT_CONTROLLER'; controller: XRController }
-  | { type: 'UPDATE'; deltaTime: number };
+  | { type: 'UPDATE'; deltaTime: number }
+  | { type: 'RESET_REF_SPACE' };
 
 export const vrMachine = createMachine(
   {
@@ -30,15 +37,51 @@ export const vrMachine = createMachine(
       events: {} as Events,
     },
     id: 'vr-machine',
+
     context: () => ({
+      getThree: null!,
+      getXR: null!,
+      xr: null,
+      refSpaceOrigin: null,
       session: null,
       player: null,
       leftController: null,
       rightController: null,
-      vrCameraController: null!,
     }),
 
     on: {
+      ASSIGN_GET_THREE: {
+        actions: [
+          'logEvent',
+          assign({
+            getThree: (_, { getThree }) => getThree,
+          }),
+        ],
+      },
+      ASSIGN_GET_XR: {
+        actions: [
+          'logEvent',
+          assign({
+            getXR: (_, { getXR }) => getXR,
+          }),
+        ],
+      },
+      ASSIGN_XR_MANAGER: {
+        actions: [
+          'logEvent',
+          assign({
+            xr: (_, { xr }) => xr,
+          }),
+        ],
+      },
+      ASSIGN_REF_SPACE_ORIGIN: {
+        actions: [
+          'logEvent',
+          assign({
+            refSpaceOrigin: (_, { refSpace }) => refSpace,
+          }),
+        ],
+      },
       ASSIGN_PLAYER: {
         cond: (context, event) => {
           return context.player !== event.player;
@@ -56,6 +99,9 @@ export const vrMachine = createMachine(
           return context.rightController !== event.controller;
         },
         actions: ['logEvent', 'assignRightController', 'initializeController'],
+      },
+      RESET_REF_SPACE: {
+        actions: ['logEvent', 'resetRefSpace'],
       },
     },
 
@@ -93,7 +139,6 @@ export const vrMachine = createMachine(
       }),
       assignPlayer: assign({
         player: (_, { player }) => player,
-        vrCameraController: (_, { player }) => new VRCameraController(player),
       }),
       assignLeftController: assign({
         leftController: (_, { controller }) => controller,
@@ -124,7 +169,7 @@ export const vrMachine = createMachine(
           console.error('Error! failed to init XR session render state:', err);
         }
       },
-      initializePlayer: ({ player, vrCameraController }) => {
+      initializePlayer: ({ player }) => {
         if (!player) return;
       },
       initializeController: ({ session }, { controller }) => {
@@ -132,39 +177,14 @@ export const vrMachine = createMachine(
         const inputSource = controller.inputSource;
         const gamepad = inputSource.gamepad;
       },
-      update: (
-        { session, vrCameraController, rightController, leftController },
-        { deltaTime }
-      ) => {
-        if (!vrCameraController) {
-          console.error('Error! vrCameraController is invalid');
-          return;
-        }
-        if (!rightController) return;
-        const rightGamepad = rightController.inputSource.gamepad;
-        if (!rightGamepad) return;
+      update: ({ session, rightController, leftController }, { deltaTime }) => {
+        //
+      },
 
-        const rightAxes = rightGamepad.axes;
-        const yaw = rightAxes[2];
-        const pitch = rightAxes[3];
-        if (yaw) {
-          vrCameraController.addYaw(yaw);
-        }
-        if (pitch) {
-          vrCameraController.addPitch(pitch);
-        }
-
-        if (!leftController) return;
-        const leftGamepad = leftController.inputSource.gamepad;
-        if (!leftGamepad) return;
-        const leftAxes = leftGamepad.axes;
-
-        const zoom = leftAxes[3];
-        if (zoom) {
-          vrCameraController.zoom(zoom);
-        }
-
-        vrCameraController.update(deltaTime);
+      resetRefSpace: (context) => {
+        const { getThree, refSpaceOrigin, xr } = context;
+        if (!refSpaceOrigin) return;
+        xr?.setReferenceSpace(refSpaceOrigin);
       },
     },
   }
