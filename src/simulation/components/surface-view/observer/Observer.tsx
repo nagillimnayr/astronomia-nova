@@ -2,7 +2,7 @@ import { DIST_MULT, METER } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Circle } from '@react-three/drei';
 
-const DIST_ABOVE_SURFACE: Readonly<number> = 2 * METER; // 2 meters above surface.
+const DIST_ABOVE_SURFACE: Readonly<number> = 2 * METER; // Meters above surface to place the camera.
 const Observer = () => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
