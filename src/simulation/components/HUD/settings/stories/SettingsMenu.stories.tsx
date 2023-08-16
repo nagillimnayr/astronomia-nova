@@ -15,7 +15,7 @@ type Story = StoryObj<typeof SettingsMenu>;
 export const DefaultOpen: Story = {
   render: () => {
     return (
-      <div className="grid h-screen w-full place-items-center">
+      <div className="relative grid h-screen w-full grid-cols-[8rem_1fr_8rem] grid-rows-[8rem_1fr_8rem] place-items-center">
         <SettingsMenuStory />
       </div>
     );

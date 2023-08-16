@@ -1,13 +1,24 @@
 import { PI, Y_AXIS } from '@/simulation/utils/constants';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { useSelector } from '@xstate/react';
 
 type Props = {
   length: number;
 };
 export const Poles = ({ length }: Props) => {
+  const { visibilityActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+  const actor = useSelector(
+    visibilityActor,
+    (state) => state.context.polarAxes
+  );
+  const isVisible = useSelector(actor, (state) => state.matches('active'));
   return (
     <>
       {/** North Pole. */}
       <arrowHelper
+        visible={isVisible}
         ref={(arrow) => {
           if (!arrow) return;
           arrow.setColor('red');
@@ -17,6 +28,7 @@ export const Poles = ({ length }: Props) => {
       />
       {/** South Pole. */}
       <arrowHelper
+        visible={isVisible}
         ref={(arrow) => {
           if (!arrow) return;
           arrow.setColor('blue');

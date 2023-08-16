@@ -1,6 +1,8 @@
 import { X_AXIS } from '@/simulation/utils/constants';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 
 import { Vector3, type ColorRepresentation } from 'three';
+import { useSelector } from '@xstate/react';
 
 type Props = {
   color?: ColorRepresentation;
@@ -8,9 +10,18 @@ type Props = {
   length: number;
 };
 export const ReferenceAxis = ({ color, direction, length }: Props) => {
+  const { visibilityActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+  const actor = useSelector(
+    visibilityActor,
+    (state) => state.context.equinoxes
+  );
+  const isVisible = useSelector(actor, (state) => state.matches('active'));
   return (
     <>
       <arrowHelper
+        visible={isVisible}
         ref={(arrow) => {
           if (!arrow) return;
           arrow.setColor(color ?? 'white');

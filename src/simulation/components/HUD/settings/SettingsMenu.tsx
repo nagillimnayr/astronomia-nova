@@ -6,6 +6,7 @@ import { useActor, useSelector, useMachine } from '@xstate/react';
 import { useCallback, useEffect, useRef } from 'react';
 import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
 import { cn } from '@/lib/cn';
+import { SettingsCheckbox } from './SettingsCheckbox';
 
 type Props = {
   defaultOpen?: boolean;
@@ -36,9 +37,9 @@ export const SettingsMenu = ({ defaultOpen }: Props) => {
 
   useEffect(() => {
     if (defaultOpen) {
-      handleOpenClick();
+      actor.send({ type: 'OPEN' });
     }
-  }, [defaultOpen, handleOpenClick]);
+  }, [actor, defaultOpen]);
 
   return (
     <>
@@ -69,29 +70,29 @@ export const SettingsMenu = ({ defaultOpen }: Props) => {
           <span>Settings</span>
         </div>
         <Separator />
-        {/** Visibility Toggles */}
-        {/** Trajectories */}
+        {/** Visibility Toggles. */}
+        {/** Trajectories. */}
         <div className="flex h-fit w-full min-w-fit flex-row items-center justify-start gap-2">
           <SettingsToggleButton target={'trajectories'}>
             <span className="icon-[mdi--orbit]" />
           </SettingsToggleButton>
           <span className={'min-w-fit whitespace-nowrap'}>Trajectories</span>
         </div>
-        {/** Annotations */}
+        {/** Annotations. */}
         <div className="flex h-fit w-full min-w-fit flex-row items-center justify-start gap-2">
           <SettingsToggleButton target={'annotations'}>
             <span className="icon-[mdi--tag-text]" />
           </SettingsToggleButton>
           <span className={'min-w-fit whitespace-nowrap'}>Annotations</span>
         </div>
-        {/** Markers */}
+        {/** Markers. */}
         <div className="flex h-fit w-full min-w-fit flex-row items-center justify-start gap-2">
           <SettingsToggleButton target={'markers'}>
             <span className="icon-[mdi--target]" />
           </SettingsToggleButton>
           <span className={'min-w-fit whitespace-nowrap'}>Markers</span>
         </div>
-        {/** Velocity Arrows */}
+        {/** Velocity Arrows. */}
         <div className="flex h-fit w-full min-w-fit flex-row items-center justify-start gap-2">
           <SettingsToggleButton target={'velocityArrows'} defaultOff>
             <span className="icon-[mdi--arrow-top-right-thin]" />
@@ -99,9 +100,14 @@ export const SettingsMenu = ({ defaultOpen }: Props) => {
           <span className={'min-w-fit whitespace-nowrap'}>Velocity Arrows</span>
         </div>
         <Separator />
-        {/** Opacity Sliders */}
+        {/** Opacity Sliders. */}
         <OpacitySliders direction="vertical" />
-        {/**  */}
+
+        {/** Other options. */}
+        <div className="flex h-full w-full flex-col items-start justify-start gap-1">
+          <SettingsCheckbox label="Polar Axes" target="polarAxes" defaultOff />
+          <SettingsCheckbox label="Equinoxes" target="equinoxes" defaultOff />
+        </div>
       </div>
     </>
   );
