@@ -19,7 +19,8 @@ import {
 import { smoothCritDamp } from './smoothing';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 
-const EPSILON = 1e-5;
+// const EPSILON = 1e-7;
+const EPSILON = 1e-12;
 
 const MIN_RADIUS_BOUND = Number.EPSILON;
 const MAX_RADIUS_BOUND = Infinity;
