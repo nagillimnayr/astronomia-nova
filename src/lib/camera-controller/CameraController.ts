@@ -18,9 +18,10 @@ import {
 } from '@/simulation/utils/constants';
 import { smoothCritDamp } from './smoothing';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
+import { gsap } from 'gsap';
 
 // const EPSILON = 1e-7;
-const EPSILON = 1e-12;
+const EPSILON = 1e-14;
 
 const MIN_RADIUS_BOUND = Number.EPSILON;
 const MAX_RADIUS_BOUND = Infinity;
@@ -43,8 +44,6 @@ function approxZero(num: number, epsilon = EPSILON) {
 export class CameraController extends Object3D {
   private _camera: PerspectiveCamera | null = null;
   private _domElement: HTMLElement | null = null;
-
-  private _worldUpQuaternion = new Quaternion();
 
   private _pivotPoint = new Object3D();
   private _attachPoint = new Object3D();
@@ -156,10 +155,7 @@ export class CameraController extends Object3D {
       deltaTime
     );
     this._radiusVelocity = newVelocity;
-
-    approxZero(this._radiusTarget - newValue)
-      ? this.setRadius(this._radiusTarget)
-      : this.setRadius(newValue);
+    this._radius = newValue; // Set the value directly to avoid being clamped to min/max. This allows setting the min/max distance to trigger a transition to the clamped value.
   }
 
   setRadius(radius: number) {
@@ -278,6 +274,13 @@ export class CameraController extends Object3D {
       this._maxRadius
     );
   }
+  private _clampRadius() {
+    if (this._radius < this._minRadius) {
+      this._radiusTarget = this._minRadius;
+    } else if (this._radius > this._maxRadius) {
+      this._radiusTarget = this._maxRadius;
+    }
+  }
   get minRadius() {
     return this._minRadius;
   }
@@ -286,17 +289,15 @@ export class CameraController extends Object3D {
   }
   setMinRadius(minRadius: number) {
     this._minRadius = clamp(minRadius, MIN_RADIUS_BOUND, this._maxRadius);
-    // if (this._radius < this._minRadius) {
-    //   this._radiusTarget = this._minRadius;
-    // }
+
     this._clampRadiusTarget();
-    // this.setRadius(this._radius); // Clamp radius.
-    // this._radiusTarget = this._radius;
+    // this._clampRadius();
   }
   get minDistance() {
     return this._minRadius;
   }
   set minDistance(minDistance: number) {
+    console.log('set minDistance');
     this.setMinRadius(minDistance);
   }
 
@@ -304,14 +305,15 @@ export class CameraController extends Object3D {
     return this._maxRadius;
   }
   set maxRadius(maxRadius: number) {
+    console.log('set minDistance');
     this.setMaxRadius(maxRadius);
   }
 
   setMaxRadius(maxRadius: number) {
     this._maxRadius = clamp(maxRadius, this._minRadius, MAX_RADIUS_BOUND);
-    // this.setRadius(this._radius); // Clamp radius.
 
     this._clampRadiusTarget();
+    // this._clampRadius();
   }
   get maxDistance() {
     return this._maxRadius;

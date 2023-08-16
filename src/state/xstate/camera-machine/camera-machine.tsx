@@ -240,7 +240,11 @@ export const cameraMachine = createMachine(
           'attachToObserver',
         ],
         // Cleanup on exit:
-        exit: ['cleanupSurfaceCam', log('exiting surface view')],
+        exit: [
+          log('exiting surface view'),
+          'cleanupSurfaceCam',
+          'attachToTarget',
+        ],
         on: {
           // UPDATE event:
           UPDATE: {
@@ -264,7 +268,7 @@ export const cameraMachine = createMachine(
           TO_SPACE: {
             // Transition to 'space' view-mode:
             target: 'space',
-            actions: [log('TO_SPACE')],
+            actions: ['logEvent'],
           },
           ASSIGN_CONTROLS: {
             cond: (context, event) => {
@@ -536,6 +540,7 @@ export const cameraMachine = createMachine(
         if (!controls) return;
 
         // controls.maxDistance = SPACE_MAX_DIST;
+        controls.maxDistance = Infinity;
         if (!focusTarget) {
           controls.minDistance =
             SPACE_MIN_DIST_FROM_SURFACE + SUN_RADIUS / DIST_MULT;
