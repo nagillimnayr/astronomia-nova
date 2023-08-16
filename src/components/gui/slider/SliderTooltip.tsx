@@ -64,8 +64,8 @@ export const SliderTooltip = ({ children }: Props) => {
         ref={ref}
         data-state={state.value}
         className={cn(
-          'text-md visible absolute top-full z-50 flex h-fit w-fit translate-y-2 flex-row items-center justify-center rounded-md border border-white bg-card px-2 py-1 transition-all duration-300'
-          // 'data-[state=closed]:hidden'
+          'text-md visible absolute top-full z-50 flex h-fit w-fit translate-y-2 flex-row items-center justify-center rounded-md border border-white bg-card px-2 py-1 transition-all duration-300',
+          state.matches('closed') && 'hidden'
         )}
       >
         <span className="text-md">{children}</span>
