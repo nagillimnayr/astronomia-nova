@@ -4,6 +4,8 @@ import { Vector3, type Object3D } from 'three';
 import { useSelector } from '@xstate/react';
 import { degToRad } from 'three/src/math/MathUtils';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
+import { useXR } from '@react-three/xr';
+import { useThree } from '@react-three/fiber';
 
 const _cameraWorldDirection = new Vector3();
 const _worldPos = new Vector3();
@@ -13,6 +15,8 @@ export const VRPlayer = () => {
   const { vrActor, cameraActor } = MachineContext.useSelector(
     ({ context }) => context
   );
+  const getXR = useXR(({ get }) => get);
+  const getThree = useThree(({ get }) => get);
   const objRef = useRef<Object3D>(null!);
   const player = useSelector(vrActor, ({ context }) => context.player);
 
@@ -20,15 +24,6 @@ export const VRPlayer = () => {
     cameraActor,
     ({ context }) => context.controls
   );
-
-  useEffect(() => {
-    const obj = objRef.current;
-    if (!obj || !player) return;
-    // Attach object to the player
-    player.add(obj);
-    obj.position.setY(1);
-    obj.rotation.set(0, degToRad(180), 0);
-  }, [player]);
 
   useEffect(() => {
     if (!cameraController) return;
