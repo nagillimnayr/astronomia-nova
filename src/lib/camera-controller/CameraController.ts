@@ -5,6 +5,7 @@ import {
   type PerspectiveCamera,
   Quaternion,
   Vector3,
+  Spherical,
 } from 'three';
 import { damp, degToRad, clamp } from 'three/src/math/MathUtils';
 import {
@@ -19,6 +20,7 @@ import {
 import { smoothCritDamp } from './smoothing';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { gsap } from 'gsap';
+import { normalizeAngle } from '../../simulation/utils/rotation-utils';
 
 // const EPSILON = 1e-7;
 const EPSILON = 1e-14;
@@ -36,6 +38,7 @@ const _v1 = new Vector3();
 const _v2 = new Vector3();
 const _v3 = new Vector3();
 const _v4 = new Vector3();
+const _v5 = new Vector3();
 
 function approxZero(num: number, epsilon = EPSILON) {
   return Math.abs(num) <= epsilon;
@@ -45,31 +48,28 @@ export class CameraController extends Object3D {
   private _camera: PerspectiveCamera | null = null;
   private _domElement: HTMLElement | null = null;
 
+  private _spherical = new Spherical();
+  private _sphericalTarget = new Spherical(METER * 1e11, PI_OVER_THREE, 0);
+
   private _pivotPoint = new Object3D();
   private _attachPoint = new Object3D();
 
-  private _radius = 1e3;
-  private _radiusTarget = this._radius;
   private _radiusVelocity = 0;
   private _minRadius = MIN_RADIUS_BOUND;
   private _maxRadius = 1e10;
   private _zoomSpeed = 2;
   private _zoomFactor = 1e-1;
 
-  private _polarAngle = PI_OVER_THREE;
-  private _polarAngleTarget = this._polarAngle;
   private _polarAngleVelocity = 0;
   private _minPolarAngle = MIN_POLAR_ANGLE_BOUND;
   private _maxPolarAngle = MAX_POLAR_ANGLE_BOUND;
 
-  private _azimuthalAngle = 0;
-  private _azimuthalAngleTarget = this._azimuthalAngle;
   private _azimuthalAngleVelocity = 0;
   private _minAzimuthalAngle = -Infinity;
   private _maxAzimuthalAngle = Infinity;
 
   private _rotationSpeed = 0.75;
-  private _smoothTime = 0.4;
+  private _smoothTime = 0.3;
 
   private _mouseDownLeft = false;
   private _mouseDownRight = false;
@@ -101,86 +101,94 @@ export class CameraController extends Object3D {
     const pivotPoint = this._pivotPoint;
     const attachPoint = this._attachPoint;
     pivotPoint.rotation.set(0, 0, 0); // Reset rotations.
-    attachPoint.position.set(0, 0, this._radius); // Set position of camera.
+    attachPoint.position.set(0, 0, this._spherical.radius); // Set position of camera.
     this._camera?.position.set(0, 0, 0);
 
+    const azimuthalAngle = this._spherical.theta;
+    const polarAngle = this._spherical.phi;
+
     // Rotations are intrinsic, so the order matters. Rotation around local y-axis must be done first in order to preserve the local up-vector.
-    pivotPoint.rotateY(this._azimuthalAngle); // Rotate around local y-axis.
-    pivotPoint.rotateX(-(PI_OVER_TWO - this._polarAngle)); // Rotate around local x-axis.
+    pivotPoint.rotateY(azimuthalAngle); // Rotate around local y-axis.
+    pivotPoint.rotateX(-(PI_OVER_TWO - polarAngle)); // Rotate around local x-axis.
 
     this._camera?.updateProjectionMatrix();
   }
 
   private updateAzimuthalAngle(deltaTime: number) {
-    if (approxZero(this._azimuthalAngleTarget - this._azimuthalAngle)) return;
+    this._normalizeAzimuthalAngle();
+    const azimuthalAngle = this._spherical.theta;
+    const azimuthalAngleTarget = this._sphericalTarget.theta;
+    if (approxZero(azimuthalAngleTarget - azimuthalAngle)) return;
 
     const [newValue, newVelocity] = smoothCritDamp(
-      this._azimuthalAngle,
-      this._azimuthalAngleTarget,
+      azimuthalAngle,
+      azimuthalAngleTarget,
       this._azimuthalAngleVelocity,
       this._smoothTime,
       deltaTime
     );
     this._azimuthalAngleVelocity = newVelocity;
-    if (approxZero(this._azimuthalAngleTarget - newValue)) {
-      this.setAzimuthalAngle(this._azimuthalAngleTarget);
-      this._normalizeAzimuthalAngle();
-    } else {
-      this.setAzimuthalAngle(newValue);
-    }
+
+    this.setAzimuthalAngle(newValue);
   }
   private updatePolarAngle(deltaTime: number) {
-    if (approxZero(this._polarAngleTarget - this._polarAngle)) return;
+    const polarAngle = this._spherical.phi;
+    const polarAngleTarget = this._sphericalTarget.phi;
+    if (approxZero(polarAngleTarget - polarAngle)) return;
 
     const [newValue, newVelocity] = smoothCritDamp(
-      this._polarAngle,
-      this._polarAngleTarget,
+      polarAngle,
+      polarAngleTarget,
       this._polarAngleVelocity,
       this._smoothTime,
       deltaTime
     );
     this._polarAngleVelocity = newVelocity;
-    approxZero(this._polarAngleTarget - newValue)
-      ? this.setPolarAngle(this._polarAngleTarget)
-      : this.setPolarAngle(newValue);
+    this.setPolarAngle(newValue);
   }
   private updateRadius(deltaTime: number) {
-    if (approxZero(this._radiusTarget - this._radius)) return;
+    const radius = this._spherical.radius;
+    const radiusTarget = this._sphericalTarget.radius;
+    if (approxZero(radiusTarget - radius)) return;
 
     const [newValue, newVelocity] = smoothCritDamp(
-      this._radius,
-      this._radiusTarget,
+      radius,
+      radiusTarget,
       this._radiusVelocity,
       this._smoothTime,
       deltaTime
     );
     this._radiusVelocity = newVelocity;
-    this._radius = newValue; // Set the value directly to avoid being clamped to min/max. This allows setting the min/max distance to trigger a transition to the clamped value.
+    this._setRadius(newValue);
+    this._spherical.radius = newValue;
   }
 
+  // Set radius without clamping to min/max. This allows setting the min/max distance to trigger a transition to the clamped value.
+  private _setRadius(radius: number) {
+    this._spherical.radius = Math.max(radius, 0); // We still don't want it to be negative though.
+  }
   setRadius(radius: number) {
     // Adjust to be within min/max range.
-    this._radius = clamp(radius, this._minRadius, this._maxRadius);
+    this._spherical.radius = clamp(radius, this._minRadius, this._maxRadius);
   }
   setTargetRadius(radiusTarget: number) {
-    this._radiusTarget = clamp(radiusTarget, this._minRadius, this._maxRadius);
-  }
-  addRadialZoom(zoom: number) {
-    if (approxZero(zoom)) return;
-
-    const deltaZoom =
-      zoom * this._zoomSpeed * (this._radius * this._zoomFactor);
-
-    this._radiusTarget += deltaZoom;
-    this._radiusTarget = clamp(
-      this._radiusTarget,
+    this._sphericalTarget.radius = clamp(
+      radiusTarget,
       this._minRadius,
       this._maxRadius
     );
   }
+  addRadialZoom(zoom: number) {
+    if (approxZero(zoom)) return;
+    const radius = this._spherical.radius;
+    const deltaZoom = zoom * this._zoomSpeed * (radius * this._zoomFactor);
+
+    this.setTargetRadius(this._sphericalTarget.radius + deltaZoom);
+  }
 
   get radius() {
-    return this._radius;
+    // return this._radius;
+    return this._spherical.radius;
   }
   set radius(radius) {
     this.setRadius(radius);
@@ -193,46 +201,43 @@ export class CameraController extends Object3D {
       this._minPolarAngle,
       this._maxPolarAngle
     );
-    this._polarAngle = adjustedAngle;
+    this._spherical.phi = adjustedAngle;
   }
-  addPolarRotation(polarRotation: number) {
-    // if (approxZero(polarRotation)) return;
-    this._polarAngleTarget += polarRotation * this._rotationSpeed * DEG_TO_RADS;
-    this._polarAngleTarget = clamp(
-      this._polarAngleTarget,
+  setPolarAngleTarget(polarAngleTarget: number) {
+    this._sphericalTarget.phi = clamp(
+      polarAngleTarget,
       this._minPolarAngle,
       this._maxPolarAngle
     );
   }
+  addPolarRotation(polarRotation: number) {
+    // if (approxZero(polarRotation)) return;
+    this.setPolarAngleTarget(
+      this._sphericalTarget.phi +
+        polarRotation * this._rotationSpeed * DEG_TO_RADS
+    );
+  }
 
   setAzimuthalAngle(azimuthalAngle: number) {
-    this._azimuthalAngle = clamp(
+    const adjustedAngle = clamp(
       azimuthalAngle,
       this._minAzimuthalAngle,
       this._maxAzimuthalAngle
     );
+    this._spherical.theta = adjustedAngle;
   }
   private _normalizeAzimuthalAngle() {
-    // Adjust angle to be within range [0, TWO_PI]
-    let adjustedAngle = this._azimuthalAngle;
-    while (adjustedAngle > TWO_PI) {
-      adjustedAngle -= TWO_PI;
-    }
-    while (adjustedAngle < 0) {
-      adjustedAngle += TWO_PI;
-    }
-    adjustedAngle = clamp(
-      adjustedAngle,
-      this._minAzimuthalAngle,
-      this._maxAzimuthalAngle
-    );
-    this._azimuthalAngle = adjustedAngle;
-    this._azimuthalAngleTarget = adjustedAngle;
+    const deltaTheta = this._sphericalTarget.theta - this._spherical.theta;
+    // Adjust angles to be within range [0, TWO_PI)
+    this._sphericalTarget.theta = normalizeAngle(this._sphericalTarget.theta);
+
+    // Maintain the difference between the two values.
+    this._spherical.theta = this._sphericalTarget.theta - deltaTheta;
   }
 
   addAzimuthalRotation(azimuthalRotation: number) {
     // if (approxZero(azimuthalRotation)) return;
-    this._azimuthalAngleTarget +=
+    this._sphericalTarget.theta +=
       azimuthalRotation * this._rotationSpeed * DEG_TO_RADS;
   }
 
@@ -268,19 +273,13 @@ export class CameraController extends Object3D {
   }
 
   private _clampRadiusTarget() {
-    this._radiusTarget = clamp(
-      this._radiusTarget,
+    this._sphericalTarget.radius = clamp(
+      this._sphericalTarget.radius,
       this._minRadius,
       this._maxRadius
     );
   }
-  private _clampRadius() {
-    if (this._radius < this._minRadius) {
-      this._radiusTarget = this._minRadius;
-    } else if (this._radius > this._maxRadius) {
-      this._radiusTarget = this._maxRadius;
-    }
-  }
+
   get minRadius() {
     return this._minRadius;
   }
@@ -334,7 +333,7 @@ export class CameraController extends Object3D {
       MIN_POLAR_ANGLE_BOUND,
       this._maxPolarAngle
     );
-    this.setPolarAngle(this._polarAngle); // Clamp polar angle.
+    this.setPolarAngle(this._spherical.phi); // Clamp polar angle.
   }
   get maxPolarAngle() {
     return this._maxPolarAngle;
@@ -348,7 +347,7 @@ export class CameraController extends Object3D {
       this._minPolarAngle,
       MAX_POLAR_ANGLE_BOUND
     );
-    this.setPolarAngle(this._polarAngle); // Clamp polar angle.
+    this.setPolarAngle(this._spherical.phi); // Clamp polar angle.
   }
 
   get minAzimuthalAngle() {
@@ -363,7 +362,7 @@ export class CameraController extends Object3D {
       -Infinity,
       this._maxAzimuthalAngle
     );
-    this.setAzimuthalAngle(this._azimuthalAngle); // Clamp azimuthal angle.
+    this.setAzimuthalAngle(this._spherical.theta); // Clamp azimuthal angle.
   }
   get maxAzimuthalAngle() {
     return this._maxAzimuthalAngle;
@@ -377,7 +376,7 @@ export class CameraController extends Object3D {
       this._minAzimuthalAngle,
       MAX_AZIMUTHAL_ANGLE_BOUND
     );
-    this.setAzimuthalAngle(this._azimuthalAngle); // Clamp azimuthal angle.
+    this.setAzimuthalAngle(this._spherical.theta); // Clamp azimuthal angle.
   }
 
   getWorldUp() {
@@ -403,6 +402,38 @@ export class CameraController extends Object3D {
   attachControllerTo(obj: Object3D) {
     obj.add(this);
   }
+
+  // Attach the controller to the object but maintain its current position and orientation.
+  attachToWithoutMoving(obj: Object3D) {
+    // Get world position of camera.
+    this.camera.getWorldPosition(_v1);
+    // Get world position of object.
+    obj.getWorldPosition(_v2);
+    // Get vector from object to camera.
+    _v3.subVectors(_v1, _v2);
+    // Get the spherical coordinates.
+    this._spherical.setFromVector3(_v3);
+    this._sphericalTarget.theta = this._spherical.theta;
+    this._sphericalTarget.phi = this._spherical.phi;
+
+    // Set radius.
+    const radius = _v3.length();
+    this._setRadius(radius);
+    this.setTargetRadius(radius);
+
+    // this._pivotPoint.getWorldPosition(_v1);
+
+    // Attach to the object.
+    obj.add(this);
+
+    // Maintain look direction.
+    // this.applyWorldUp();
+    // this._attachPoint.up = this.up;
+    // this._camera.up = this.up;
+    // this._attachPoint.rotateY(PI);
+    // this._camera?.lookAt(_v1);
+  }
+
   attachToController(obj: Object3D) {
     this._attachPoint.add(obj);
   }

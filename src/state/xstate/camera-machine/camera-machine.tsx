@@ -385,8 +385,8 @@ export const cameraMachine = createMachine(
       attachToTarget: (context, event) => {
         const { controls, spaceCamera, focusTarget } = context;
         if (!focusTarget || !controls) return;
-        // focusTarget.add(controls);
-        controls.attachControllerTo(focusTarget);
+        // controls.attachControllerTo(focusTarget);
+        controls.attachToWithoutMoving(focusTarget);
         controls.applyWorldUp();
       },
       attachToObserver: (context, event) => {
