@@ -32,6 +32,7 @@ import {
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Poles } from './poles/Poles';
 import { normalizeAngle } from '../../utils/rotation-utils';
+import { PlanetRing } from './planet-ring/PlanetRing';
 
 // Separate out the visual logic from the simulation logic.
 
@@ -151,6 +152,12 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         {/* <axesHelper args={[2 * radius]} /> */}
 
         {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
+        {name === 'Saturn' && (
+          <PlanetRing
+            innerRadius={meanRadius + 7e6}
+            outerRadius={meanRadius + 80e6}
+          />
+        )}
       </Sphere>
     </>
   );
