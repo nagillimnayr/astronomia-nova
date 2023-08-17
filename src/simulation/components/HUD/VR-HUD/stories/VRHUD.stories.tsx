@@ -8,6 +8,7 @@ import { VROutliner } from '../vr-outliner/VROutliner';
 import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
 import { VRHUD } from '../VRHUD';
 import { MockEarthSelect } from '@/stories/mocks/MockEarthSelect';
+import { PerspectiveCamera } from '@react-three/drei';
 
 const meta: Meta<typeof VRHUD> = {
   title: 'VRHUD/VRHUD',
@@ -31,6 +32,7 @@ export const Default: Story = {
 const VRHUDStory = () => {
   return (
     <>
+      <PerspectiveCamera makeDefault position={[0, 0, 4]} />
       <MockSolarSystem />
       <MockEarthSelect />
       <VRHUD />

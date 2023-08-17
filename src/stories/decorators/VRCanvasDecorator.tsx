@@ -11,7 +11,6 @@ export const VRCanvasDecorator = ({ children, ...props }: Props) => {
   return (
     <>
       <VRCanvas>
-        <PerspectiveCamera makeDefault position={[0, 0, 2]} />
         <CameraControls makeDefault />
         <DefaultStyleProvider
           color={colors.foreground}

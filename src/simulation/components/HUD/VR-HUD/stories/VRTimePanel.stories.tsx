@@ -5,6 +5,7 @@ import { VRTimePanel } from '../vr-time-panel/VRTimePanel';
 import { PropsWithChildren } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { PerspectiveCamera } from '@react-three/drei';
 
 const meta: Meta<typeof VRTimePanel> = {
   title: 'VRHUD/VRTimePanel',
@@ -19,9 +20,7 @@ export const Default: Story = {
   render: () => {
     return (
       <>
-        <VRTimePanelStory>
-          <VRTimePanel />
-        </VRTimePanelStory>
+        <VRTimePanelStory />
       </>
     );
   },
@@ -37,7 +36,8 @@ const VRTimePanelStory = ({ children }: PropsWithChildren) => {
   });
   return (
     <>
-      <>{children}</>
+      <PerspectiveCamera makeDefault position={[0, 0, 2]} />
+      <VRTimePanel />
     </>
   );
 };
