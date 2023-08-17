@@ -39,7 +39,7 @@ const config: StorybookConfig = {
   docs: {
     autodocs: 'tag',
   },
-  staticDirs: ['../public'],
+  staticDirs: ['../public', '../json'],
   async webpackFinal(config, { configType }) {
     if (configType === 'DEVELOPMENT') {
       // Modify config for development
