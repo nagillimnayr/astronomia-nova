@@ -5,5 +5,5 @@
   "python.formatting.provider": "none",
   "prettier.tabWidth": 2,
   "editor.tabSize": 2,
-  "cSpell.words": ["datastructures", "hiptyc", "meshline", "milkyway"]
+  "cSpell.words": ["datastructures", "hiptyc", "meshline", "milkyway", "VRHUD"]
 }
