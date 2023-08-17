@@ -5,13 +5,18 @@ import { VRDateDisplay } from './VRDateDisplay';
 import { VRTimeControls } from './vr-time-controls/VRTimeControls';
 import { VRTimescaleDisplay } from './VRTimescaleDisplay';
 import { VRTimescaleSlider } from './vr-time-controls/VRTimescaleSlider';
+import { Vector3Tuple } from 'three';
 
-export const VRTimePanel = () => {
+type VRTimePanelProps = {
+  position?: Vector3Tuple;
+};
+export const VRTimePanel = ({ position = [0, 0, 0] }: VRTimePanelProps) => {
   const height = 1;
   const width = height * GOLDEN_RATIO;
   return (
     <>
       <RootContainer
+        position={position}
         sizeX={width}
         sizeY={height}
         backgroundColor={colors.muted}
