@@ -3,7 +3,7 @@ import { DetailsPanel } from '../DetailsPanel';
 import { useEffect } from 'react';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { MockEarthSelect } from '@/stories/mock/MockEarthSelect';
+import { MockEarthSelect } from '@/stories/mocks/MockEarthSelect';
 
 const meta: Meta<typeof DetailsPanel> = {
   title: 'HUD/DetailsPanel',
