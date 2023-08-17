@@ -28,17 +28,22 @@ const vertical: Variant = {
 type VRSeparatorProps = {
   direction?: 'horizontal' | 'vertical';
   color?: ColorRepresentation;
+  opacity?: number;
 };
 export const VRSeparator = ({
   direction = 'horizontal',
   color = colors.border,
+  opacity = 1,
 }: VRSeparatorProps) => {
   const { height, width } = direction === 'horizontal' ? horizontal : vertical;
   return (
     <>
       <Container
         backgroundColor={color}
+        backgroundOpacity={opacity}
         borderRadius={1000}
+        border={0}
+        borderOpacity={0}
         height={height}
         width={width}
       />
