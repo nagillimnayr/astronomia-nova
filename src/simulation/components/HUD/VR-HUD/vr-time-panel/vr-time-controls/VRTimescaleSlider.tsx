@@ -2,7 +2,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Container, RootContainer, Text } from '@coconut-xr/koestlich';
 import { useSelector } from '@xstate/react';
 import { format } from 'date-fns';
-import { color, text } from '../../vr-hud-constants';
+import { border, color, text } from '../../vr-hud-constants';
 import { Glass, IconButton, Slider } from '@coconut-xr/apfel-kruemel';
 import { useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from '@coconut-xr/lucide-koestlich';
@@ -24,6 +24,7 @@ export const VRTimescaleSlider = ({ index }: VRTimescaleSliderProps) => {
   );
 
   const handleClickLeft = useCallback(() => {
+    if (timescale <= 1) return;
     timeActor.send({ type: 'DECREMENT_TIMESCALE' });
   }, [timeActor]);
 
@@ -48,10 +49,20 @@ export const VRTimescaleSlider = ({ index }: VRTimescaleSliderProps) => {
           justifyContent="center"
           gapColumn={10}
         >
-          <IconButton index={0} onClick={handleClickLeft}>
+          <IconButton
+            index={0}
+            onClick={handleClickLeft}
+            disabled={timescale <= 1}
+          >
             <ChevronLeft width={iconSize} height={iconSize} />
           </IconButton>
-          <Container index={1} border={4} borderRadius={text.base} flexGrow={1}>
+          <Container
+            index={1}
+            border={border.base}
+            borderRadius={text.base}
+            borderColor={color.border}
+            flexGrow={1}
+          >
             <Slider
               size="lg"
               range={100}
@@ -59,7 +70,11 @@ export const VRTimescaleSlider = ({ index }: VRTimescaleSliderProps) => {
               onValueChange={handleValueChange}
             />
           </Container>
-          <IconButton index={2} onClick={handleClickRight}>
+          <IconButton
+            index={2}
+            onClick={handleClickRight}
+            disabled={timescale >= 100}
+          >
             <ChevronRight width={iconSize} height={iconSize} />
           </IconButton>
         </Container>
