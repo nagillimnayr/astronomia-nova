@@ -19,7 +19,7 @@ export const VRPauseButton = ({ index }: VRPauseButtonProps) => {
     timeActor.send({ type });
   }, [timeActor]);
 
-  const size = 24;
+  const iconSize = text.lg;
   return (
     <>
       <Container
@@ -33,11 +33,20 @@ export const VRPauseButton = ({ index }: VRPauseButtonProps) => {
           display="flex"
           alignItems="center"
           justifyContent="center"
+          padding={2}
+          width={iconSize * 1.5}
+          height={iconSize * 1.5}
+          aspectRatio={1}
+          borderRadius={1000}
         >
           {isPaused ? (
-            <Play height={size} width={size} />
+            <Play
+              height={iconSize}
+              width={iconSize}
+              translateX={iconSize / 16}
+            />
           ) : (
-            <Pause height={size} width={size} />
+            <Pause height={iconSize} width={iconSize} />
           )}
         </IconButton>
       </Container>

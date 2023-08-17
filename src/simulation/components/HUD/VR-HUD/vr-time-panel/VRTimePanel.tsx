@@ -20,7 +20,7 @@ export const VRTimePanel = () => {
         display="flex"
         flexDirection="column"
         alignItems="stretch"
-        justifyContent="flex-start"
+        justifyContent="space-around"
         padding={text.base}
         gapRow={10}
       >

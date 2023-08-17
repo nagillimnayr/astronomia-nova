@@ -25,7 +25,7 @@ export const VRAdvanceTimeButton = ({
     rootActor.send({ type: 'ADVANCE_DAY', reverse });
   }, [reverse, rootActor]);
 
-  const iconSize = 24;
+  const iconSize = text.lg;
   return (
     <>
       <Container
@@ -40,11 +40,24 @@ export const VRAdvanceTimeButton = ({
           alignItems="center"
           justifyContent="center"
           disabled={focusTarget === null}
+          width={iconSize * 1.5}
+          height={iconSize * 1.5}
+          padding={2}
+          aspectRatio={1}
+          borderRadius={1000}
         >
           {reverse ? (
-            <Sunset height={iconSize} width={iconSize} />
+            <Sunset
+              height={iconSize}
+              width={iconSize}
+              translateY={iconSize / 16}
+            />
           ) : (
-            <Sunrise height={iconSize} width={iconSize} />
+            <Sunrise
+              height={iconSize}
+              width={iconSize}
+              translateY={iconSize / 16}
+            />
           )}
         </IconButton>
       </Container>

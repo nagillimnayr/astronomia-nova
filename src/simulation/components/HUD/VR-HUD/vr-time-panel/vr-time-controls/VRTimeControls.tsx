@@ -19,7 +19,7 @@ export const VRTimeControls = ({ index }: VRTimeControlProps) => {
         index={index}
         flexDirection="column"
         alignItems="stretch"
-        justifyContent="flex-start"
+        justifyContent="space-between"
         gapRow={10}
       >
         <Container
@@ -29,6 +29,7 @@ export const VRTimeControls = ({ index }: VRTimeControlProps) => {
           justifyContent="center"
           gapColumn={10}
           margin={10}
+          height={text.lg}
         >
           <VRAdvanceTimeButton index={0} reverse />
           <VRPauseButton index={1} />
