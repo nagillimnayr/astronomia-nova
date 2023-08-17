@@ -1,6 +1,6 @@
 import { RootContainer, Container, Text } from '@coconut-xr/koestlich';
 import { Suspense } from 'react';
-import { GOLDEN_RATIO, color, text } from '../vr-hud-constants';
+import { GOLDEN_RATIO, colors, text } from '../vr-hud-constants';
 import { VRDateDisplay } from './VRDateDisplay';
 import { VRTimeControls } from './vr-time-controls/VRTimeControls';
 import { VRTimescaleDisplay } from './VRTimescaleDisplay';
@@ -14,9 +14,9 @@ export const VRTimePanel = () => {
       <RootContainer
         sizeX={width}
         sizeY={height}
-        backgroundColor={color.muted}
+        backgroundColor={colors.muted}
         borderRadius={text.base}
-        borderColor={color.border}
+        borderColor={colors.border}
         border={4}
         display="flex"
         flexDirection="column"

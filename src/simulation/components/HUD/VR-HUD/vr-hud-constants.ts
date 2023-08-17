@@ -1,5 +1,5 @@
 export const GOLDEN_RATIO = 1.618;
-export const color = Object.freeze({
+export const colors = Object.freeze({
   background: '#09090b',
   foreground: '#ffffff',
 
@@ -17,19 +17,21 @@ export const color = Object.freeze({
 });
 
 export const text = Object.freeze({
-  sm: 16,
-  md: 24,
-  base: 32,
-  lg: 48,
-  xl: 64,
+  sm: 12,
+  md: 16,
+  base: 24,
+  lg: 36,
+  xl: 48,
+  xxl: 64,
 });
 
 export const borderRadius = Object.freeze({
-  sm: 16,
-  md: 24,
-  base: 32,
-  lg: 48,
-  xl: 64,
+  sm: 12,
+  md: 16,
+  base: 24,
+  lg: 36,
+  xl: 48,
+  xxl: 64,
 });
 
 export const border = Object.freeze({

@@ -2,7 +2,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Container, RootContainer, Text } from '@coconut-xr/koestlich';
 import { useSelector } from '@xstate/react';
 import { format } from 'date-fns';
-import { border, color, text } from '../../vr-hud-constants';
+import { border, colors, text } from '../../vr-hud-constants';
 import { Glass, IconButton, Slider } from '@coconut-xr/apfel-kruemel';
 import { useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from '@coconut-xr/lucide-koestlich';
@@ -60,7 +60,7 @@ export const VRTimescaleSlider = ({ index }: VRTimescaleSliderProps) => {
             index={1}
             border={border.base}
             borderRadius={text.base}
-            borderColor={color.border}
+            borderColor={colors.border}
             flexGrow={1}
           >
             <Slider

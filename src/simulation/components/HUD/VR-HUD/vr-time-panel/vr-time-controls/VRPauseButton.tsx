@@ -2,7 +2,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Container, RootContainer, Text } from '@coconut-xr/koestlich';
 import { useSelector } from '@xstate/react';
 import { format } from 'date-fns';
-import { color, text } from '../../vr-hud-constants';
+import { colors, text } from '../../vr-hud-constants';
 import { Play, Pause } from '@coconut-xr/lucide-koestlich';
 import { useCallback } from 'react';
 import { Glass, IconButton } from '@coconut-xr/apfel-kruemel';
