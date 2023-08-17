@@ -41,7 +41,6 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
             <Controllers />
             {/* <VRScene /> */}
             {children}
-            <CameraControls makeDefault />
             <VRManager />
           </XR>
         </Canvas>

@@ -32,6 +32,7 @@ export const VRScene = () => {
   return (
     <>
       <>
+        <CameraControls makeDefault />
         <VRHUD />
         <directionalLight
           ref={dirLightRef}
