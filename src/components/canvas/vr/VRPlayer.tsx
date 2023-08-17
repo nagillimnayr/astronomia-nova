@@ -39,9 +39,5 @@ export const VRPlayer = () => {
     player.lookAt(_lookPos);
     console.log('Attaching VR Player to camera!');
   }, [cameraController, player]);
-  return (
-    <object3D ref={objRef}>
-      <axesHelper args={[3]} />
-    </object3D>
-  );
+  return <></>;
 };
