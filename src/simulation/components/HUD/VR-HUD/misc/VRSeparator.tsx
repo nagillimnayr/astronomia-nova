@@ -5,9 +5,10 @@ import {
   GOLDEN_RATIO,
   border,
   borderRadius,
-  color,
+  colors,
   text,
 } from '../vr-hud-constants';
+import { ColorRepresentation } from 'three';
 
 // Type annotations are needed so that eslint/typescript doesn't flag a bunch of errors.
 type Dimension = number | 'auto' | `${number}%` | undefined;
@@ -26,13 +27,17 @@ const vertical: Variant = {
 
 type VRSeparatorProps = {
   direction?: 'horizontal' | 'vertical';
+  color?: ColorRepresentation;
 };
-export const VRSeparator = ({ direction = 'horizontal' }: VRSeparatorProps) => {
+export const VRSeparator = ({
+  direction = 'horizontal',
+  color = colors.border,
+}: VRSeparatorProps) => {
   const { height, width } = direction === 'horizontal' ? horizontal : vertical;
   return (
     <>
       <Container
-        backgroundColor={color.border}
+        backgroundColor={color}
         borderRadius={1000}
         height={height}
         width={width}
