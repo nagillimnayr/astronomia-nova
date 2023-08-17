@@ -39,8 +39,6 @@ export const VRScene = () => {
           position={[-5, 10, -8]}
         />
 
-        <CameraControls makeDefault />
-
         {/* <RotatingObject position={[0, 0, 0]}>
           <Dodecahedron>
             <meshPhongMaterial color={'red'} />
@@ -59,8 +57,8 @@ export const VRScene = () => {
           </Tetrahedron>
         </RotatingObject>
         <Floor />
-
-        <VRManager />
+        {/* 
+        <VRManager /> */}
       </>
     </>
   );

@@ -4,8 +4,10 @@ import { VRScene } from './VRScene';
 import { CameraControls } from '@react-three/drei';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CameraManager } from '@/simulation/components/camera-controller/CameraController';
+import { PropsWithChildren } from 'react';
+import { VRManager } from './VRManager';
 
-export const VRCanvas = () => {
+export const VRCanvas = ({ children }: PropsWithChildren) => {
   const { vrActor, cameraActor } = MachineContext.useSelector(
     ({ context }) => context
   );
@@ -37,9 +39,10 @@ export const VRCanvas = () => {
             }}
           >
             <Controllers />
-            <VRScene />
+            {/* <VRScene /> */}
+            {children}
             <CameraControls makeDefault />
-            {/* <CameraManager /> */}
+            <VRManager />
           </XR>
         </Canvas>
         <div className="absolute bottom-10 right-20 z-20 h-fit w-fit whitespace-nowrap ">

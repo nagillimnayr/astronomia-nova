@@ -9,7 +9,7 @@ const meta: Meta<typeof DetailsPanel> = {
 export default meta;
 type Story = StoryObj<typeof DetailsPanel>;
 
-export const Primary: Story = {
+export const Default: Story = {
   render: () => {
     return (
       <div className="font-sans">

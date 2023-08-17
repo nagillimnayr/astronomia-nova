@@ -9,6 +9,12 @@ const VRCanvas = dynamic(
   }
 );
 
+const VRScene = dynamic(
+  () => import('@/components/canvas/vr/VRScene').then((mod) => mod.VRScene),
+  {
+    ssr: false,
+  }
+);
 const VRPage: NextPage = () => {
   return (
     <>
@@ -18,7 +24,9 @@ const VRPage: NextPage = () => {
       </Head>
 
       <main className="h-full w-full">
-        <VRCanvas />
+        <VRCanvas>
+          <VRScene />
+        </VRCanvas>
       </main>
     </>
   );
