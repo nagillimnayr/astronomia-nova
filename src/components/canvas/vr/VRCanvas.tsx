@@ -4,7 +4,7 @@ import { VRScene } from './VRScene';
 import { CameraControls } from '@react-three/drei';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CameraManager } from '@/simulation/components/camera-controller/CameraController';
-import { PropsWithChildren } from 'react';
+import { type PropsWithChildren } from 'react';
 import { VRManager } from './VRManager';
 
 export const VRCanvas = ({ children }: PropsWithChildren) => {
