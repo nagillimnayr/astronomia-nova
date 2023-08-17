@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
 import { VRTimePanel } from '../vr-time-panel/VRTimePanel';
-import { RootContainer } from '@coconut-xr/koestlich';
+
 import { PropsWithChildren } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { MachineContext } from '@/state/xstate/MachineProviders';
