@@ -23,13 +23,13 @@ import { useActor, useSelector } from '@xstate/react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { cn } from '@/lib/cn';
-import { DIST_MULT } from '@/simulation/utils/constants';
+import { DIST_MULT, X_AXIS } from '@/simulation/utils/constants';
 import { OrbitalPlane } from '../orbital-plane/OrbitalPlane';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { Object3DNode, MaterialNode, extend } from '@react-three/fiber';
 import { flatten } from 'lodash';
 
-const _xAxis = new Vector3(1, 0, 0);
+const NUM_OF_POINTS = 2048;
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
@@ -101,7 +101,7 @@ export const Trajectory = ({
       0,
       semiMajorAxis / DIST_MULT,
       semiMinorAxis / DIST_MULT
-    ).getSpacedPoints(1024);
+    ).getSpacedPoints(NUM_OF_POINTS);
     return points;
   }, [semiMajorAxis, semiMinorAxis, linearEccentricity]);
 
@@ -139,7 +139,7 @@ export const Trajectory = ({
               arrowRef.current = arrow;
               arrow.setColor('red');
               // arrow.position.set(-linearEccentricity  / DIST_MULT, 0, 0);
-              arrow.setDirection(_xAxis);
+              arrow.setDirection(X_AXIS);
               // arrow.setLength(semiMajorAxis  / DIST_MULT, 1, 0.25);
               arrow.setLength(periapsis / DIST_MULT, 1, 0.25);
             }}
