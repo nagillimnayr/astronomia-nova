@@ -4,6 +4,7 @@ import { GOLDEN_RATIO, color, text } from '../vr-hud-constants';
 import { VRDateDisplay } from './VRDateDisplay';
 import { VRTimeControls } from './vr-time-controls/VRTimeControls';
 import { VRTimescaleDisplay } from './VRTimescaleDisplay';
+import { VRTimescaleSlider } from './vr-time-controls/VRTimescaleSlider';
 
 export const VRTimePanel = () => {
   const height = 1;
@@ -20,13 +21,14 @@ export const VRTimePanel = () => {
         display="flex"
         flexDirection="column"
         alignItems="stretch"
-        justifyContent="space-around"
+        justifyContent="space-evenly"
         padding={text.base}
         gapRow={10}
       >
         <VRTimescaleDisplay index={0} />
         <VRDateDisplay index={1} />
         <VRTimeControls index={2} />
+        <VRTimescaleSlider index={3} />
       </RootContainer>
     </>
   );

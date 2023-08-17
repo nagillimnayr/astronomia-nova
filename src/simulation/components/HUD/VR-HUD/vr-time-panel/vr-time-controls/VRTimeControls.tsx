@@ -17,25 +17,15 @@ export const VRTimeControls = ({ index }: VRTimeControlProps) => {
     <>
       <Container
         index={index}
-        flexDirection="column"
-        alignItems="stretch"
-        justifyContent="space-between"
-        gapRow={10}
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="center"
+        gapColumn={10}
+        height={text.lg}
       >
-        <Container
-          index={0}
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="center"
-          gapColumn={10}
-          margin={10}
-          height={text.lg}
-        >
-          <VRAdvanceTimeButton index={0} reverse />
-          <VRPauseButton index={1} />
-          <VRAdvanceTimeButton index={2} />
-        </Container>
-        <VRTimescaleSlider index={1} />
+        <VRAdvanceTimeButton index={0} reverse />
+        <VRPauseButton index={1} />
+        <VRAdvanceTimeButton index={2} />
       </Container>
     </>
   );
