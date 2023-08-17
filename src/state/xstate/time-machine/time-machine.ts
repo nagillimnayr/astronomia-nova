@@ -45,8 +45,14 @@ export const timeMachine = createMachine(
     }),
 
     on: {
-      INCREMENT_TIMESCALE: { actions: ['incrementTimescale'] },
-      DECREMENT_TIMESCALE: { actions: ['decrementTimescale'] },
+      INCREMENT_TIMESCALE: {
+        cond: ({ timescale }) => timescale < MAX_TIMESCALE,
+        actions: ['incrementTimescale'],
+      },
+      DECREMENT_TIMESCALE: {
+        cond: ({ timescale }) => timescale > MIN_TIMESCALE,
+        actions: ['decrementTimescale'],
+      },
       SET_TIMESCALE: {
         cond: { type: 'validateTimescale' },
         actions: ['setTimescale'],
