@@ -17,6 +17,8 @@ export const colors = Object.freeze({
 });
 
 export const text = Object.freeze({
+  xxs: 6,
+  xs: 8,
   sm: 12,
   md: 16,
   base: 24,
@@ -26,6 +28,8 @@ export const text = Object.freeze({
 });
 
 export const borderRadius = Object.freeze({
+  xxs: 6,
+  xs: 8,
   sm: 12,
   md: 16,
   base: 24,
