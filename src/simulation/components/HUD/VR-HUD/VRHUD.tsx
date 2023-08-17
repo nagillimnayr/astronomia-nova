@@ -14,7 +14,7 @@ export const VRHUD = () => {
         >
           <RootContainer>
             <VRDetailsPanel position={[2, 0, 0]} />
-            <VRTimePanel />
+            <VRTimePanel position={[0, -1, 0]} />
             <VROutliner position={[-2, 0, 0]} />
           </RootContainer>
         </DefaultStyleProvider>
