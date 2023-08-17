@@ -21,10 +21,10 @@ export const VRDateDisplay = ({ index }: VRDateDisplayProps) => {
         flexDirection="column"
         alignItems="stretch"
       >
-        <Text border={2} horizontalAlign="center" fontSize={text.lg}>
+        <Text horizontalAlign="center" fontSize={text.lg}>
           {hoursStr}
         </Text>
-        <Text horizontalAlign="center" border={2} fontSize={text.lg}>
+        <Text horizontalAlign="center" fontSize={text.lg}>
           {dateStr}
         </Text>
       </Container>

@@ -26,7 +26,6 @@ export const VRTimescaleDisplay = ({ index }: VRTimescaleDisplayProps) => {
         flexDirection="column"
         alignItems="stretch"
         justifyContent="center"
-        border={4}
       >
         <Text fontSize={text.lg} horizontalAlign="center">
           {str + ' / second'}
