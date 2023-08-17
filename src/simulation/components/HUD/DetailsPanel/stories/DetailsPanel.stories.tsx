@@ -3,6 +3,7 @@ import { DetailsPanel } from '../DetailsPanel';
 import { useEffect } from 'react';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { MockEarthSelect } from '@/stories/mock/MockEarthSelect';
 
 const meta: Meta<typeof DetailsPanel> = {
   title: 'HUD/DetailsPanel',
@@ -22,29 +23,11 @@ export const Default: Story = {
   },
 };
 
-const params = {
-  name: 'Earth',
-  mass: 5.97219e24,
-  meanRadius: 6371010,
-  obliquity: 23.4392911,
-  siderealRotationRate: 0.00007292115,
-  siderealRotationPeriod: 86164.10063718943,
-};
 const DetailsPanelStory = () => {
-  const { selectionActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
-
-  useEffect(() => {
-    // Instantiate KeplerBody.
-    const body = new KeplerBody(params);
-    body.name = params.name;
-    // Select the newly create body.
-    selectionActor.send({ type: 'SELECT', selection: body });
-  }, [selectionActor]);
   return (
     <>
       <div className="grid h-full w-full place-items-center font-sans">
+        <MockEarthSelect />
         <DetailsPanel />
       </div>
     </>
