@@ -1,14 +1,20 @@
-import { RootContainer, Container, Text } from '@coconut-xr/koestlich';
-import { Glass, IconButton, List, ListItem } from '@coconut-xr/apfel-kruemel';
-import { Suspense } from 'react';
+import { RootContainer, Container, Text, SVG } from '@coconut-xr/koestlich';
+import {
+  Glass,
+  Button,
+  IconButton,
+  List,
+  ListItem,
+} from '@coconut-xr/apfel-kruemel';
+import { Suspense, useCallback } from 'react';
 import {
   GOLDEN_RATIO,
   border,
   borderRadius,
-  color,
+  colors,
   text,
 } from '../vr-hud-constants';
-import { type Vector3Tuple } from 'three';
+import { ColorRepresentation, type Vector3Tuple } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { VRSeparator } from '../misc/VRSeparator';
@@ -16,11 +22,13 @@ import { DAY, HOUR } from '@/simulation/utils/constants';
 
 const placeholders = {
   name: 'Name',
-  mass: 5.972e25,
-  meanRadius: 6.371e6,
-  siderealRotationRate: 7.292e-5,
-  siderealRotationPeriod: 23.934 * HOUR,
+  mass: 0,
+  meanRadius: 0,
+  siderealRotationRate: 0,
+  siderealRotationPeriod: 0,
 };
+
+const padding = text.md;
 
 type VRDetailsPanelProps = {
   position?: Vector3Tuple;
@@ -40,7 +48,7 @@ export const VRDetailsPanel = ({
 
   // Dimensions of the panel.
   const width = 1;
-  const height = width * GOLDEN_RATIO;
+  const height = selected ? width * GOLDEN_RATIO : 0; // Collapse the panel if nothing is currently selected.
 
   // Attribute data.
   const {
@@ -55,19 +63,23 @@ export const VRDetailsPanel = ({
     <>
       <Suspense>
         <RootContainer
+          positionType="relative"
           position={position}
-          backgroundColor={color.muted}
+          backgroundColor={colors.muted}
           sizeX={width}
           sizeY={height}
           border={border.base}
-          borderColor={color.border}
+          borderColor={colors.border}
           borderRadius={borderRadius.base}
-          padding={20}
+          overflow="hidden"
+          padding={padding}
           flexDirection="column"
           alignItems="stretch"
           justifyContent="flex-start"
-          gapRow={20}
+          gapRow={selected ? 20 : 0}
         >
+          {/** Close Button. */}
+          <VRCloseButton />
           {/** Name. */}
           <Container
             display="flex"
@@ -76,12 +88,12 @@ export const VRDetailsPanel = ({
             justifyContent="center"
             borderRadius={borderRadius.base}
           >
-            <Text color={color.foreground} fontSize={text.lg}>
+            <Text color={colors.foreground} fontSize={text.lg}>
               {name}
             </Text>
           </Container>
 
-          <VRSeparator direction="horizontal" />
+          <VRSeparator direction="horizontal" opacity={selected ? 1 : 0} />
 
           {/** Attributes. */}
           <List type={'inset'} flexDirection="column" gapRow={5}>
@@ -132,7 +144,8 @@ export const VRDetailsPanel = ({
               <AttributeLabel></AttributeLabel>
             </ListItem>
           </List>
-          <VRSeparator direction="horizontal" />
+          <VRSeparator direction="horizontal" opacity={selected ? 1 : 0} />
+          <VRDetailsPanelButtons />
         </RootContainer>
       </Suspense>
     </>
@@ -145,7 +158,7 @@ type TextProp = {
 const AttributeLabel = ({ children }: TextProp) => {
   return (
     <>
-      <Text marginRight={'auto'} fontSize={text.md}>
+      <Text marginRight={'auto'} fontSize={text.base}>
         {children}
       </Text>
     </>
@@ -154,9 +167,176 @@ const AttributeLabel = ({ children }: TextProp) => {
 const AttributeValue = ({ children }: TextProp) => {
   return (
     <>
-      <Text marginLeft={'auto'} fontSize={text.md}>
+      <Text marginLeft={'auto'} fontSize={text.base}>
         {children}
       </Text>
+    </>
+  );
+};
+
+const closeBtnSize = text.base;
+const VRCloseButton = () => {
+  // Get actors from root state machine.
+  const { selectionActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+  const handleCloseClick = useCallback(() => {
+    // Deselect the currently selected body.
+    selectionActor.send({ type: 'DESELECT' });
+  }, [selectionActor]);
+  return (
+    <>
+      <Button
+        positionType="absolute"
+        positionTop={0}
+        positionRight={0}
+        margin={padding / 2}
+        border={0}
+        borderRadius={4}
+        aspectRatio={1}
+        width={closeBtnSize}
+        height={closeBtnSize}
+        padding={0}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        onClick={handleCloseClick}
+      >
+        <SVG
+          url="icons/mdi-close-box-outline.svg"
+          aspectRatio={1}
+          width={closeBtnSize}
+        />
+      </Button>
+    </>
+  );
+};
+
+type BtnStyles = {
+  flexDirection: 'column' | 'column-reverse' | 'row' | 'row-reverse';
+  flexGrow: number;
+  alignItems:
+    | 'auto'
+    | 'flex-start'
+    | 'center'
+    | 'flex-end'
+    | 'stretch'
+    | 'baseline'
+    | 'space-between'
+    | 'space-around';
+  justifyContent:
+    | 'flex-start'
+    | 'center'
+    | 'flex-end'
+    | 'space-between'
+    | 'space-around'
+    | 'space-evenly';
+  gapColumn: number;
+  border: number;
+  borderColor: ColorRepresentation;
+};
+const btn: BtnStyles = {
+  flexDirection: 'row',
+  flexGrow: 1,
+  alignItems: 'center',
+  justifyContent: 'center',
+  gapColumn: 12,
+  border: border.sm,
+  borderColor: colors.border,
+};
+
+type VRButtonProps = {
+  size: number;
+};
+const VRSurfaceButton = ({ size }: VRButtonProps) => {
+  return (
+    <>
+      <Button
+        flexDirection={btn.flexDirection}
+        flexGrow={btn.flexGrow}
+        alignItems={btn.alignItems}
+        justifyContent={btn.justifyContent}
+        gapColumn={btn.gapColumn}
+        border={btn.border}
+        borderColor={btn.borderColor}
+        height={size * 2}
+      >
+        <Text fontSize={size}>Surface</Text>
+        <SVG url="icons/mdi-telescope.svg" aspectRatio={1} height={size} />
+      </Button>
+    </>
+  );
+};
+
+const VRSpaceButton = ({ size }: VRButtonProps) => {
+  return (
+    <>
+      <Button
+        flexDirection={btn.flexDirection}
+        flexGrow={btn.flexGrow}
+        alignItems={btn.alignItems}
+        justifyContent={btn.justifyContent}
+        gapColumn={btn.gapColumn}
+        border={btn.border}
+        borderColor={btn.borderColor}
+        height={size * 2}
+      >
+        <Text fontSize={size}>Space</Text>
+        <SVG url="icons/ph-planet.svg" aspectRatio={1} height={size} />
+      </Button>
+    </>
+  );
+};
+
+const VRFocusButton = ({ size }: VRButtonProps) => {
+  // Get actors from root state machine.
+  const { selectionActor, cameraActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+  const handleClick = useCallback(() => {
+    // Get the currently selected body.
+    const selected = selectionActor.getSnapshot()!.context.selected;
+    if (!selected) {
+      // it shouldn't be possible to click the button if nothing is selected. So something has gone very wrong.
+      const err = 'Error! no body selected. This should not be possible.';
+      console.error(err);
+      throw new Error(err);
+    }
+    // Pass the selected body to the camera actor.
+    cameraActor.send({ type: 'SET_TARGET', focusTarget: selected });
+  }, [cameraActor, selectionActor]);
+  return (
+    <>
+      <Button
+        flexDirection={btn.flexDirection}
+        flexGrow={btn.flexGrow}
+        alignItems={btn.alignItems}
+        justifyContent={btn.justifyContent}
+        gapColumn={btn.gapColumn}
+        border={btn.border}
+        borderColor={btn.borderColor}
+        height={size * 2}
+        onClick={handleClick}
+      >
+        <Text fontSize={size}>Focus</Text>
+        <SVG url="icons/mdi-camera-control.svg" aspectRatio={1} height={size} />
+      </Button>
+    </>
+  );
+};
+
+const VRDetailsPanelButtons = () => {
+  return (
+    <>
+      <Container
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+        gapColumn={padding}
+      >
+        <VRSurfaceButton size={text.lg} />
+        <VRFocusButton size={text.lg} />
+      </Container>
     </>
   );
 };
