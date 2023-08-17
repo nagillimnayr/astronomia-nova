@@ -13,6 +13,7 @@
     "postinstall": "xstate typegen \"./src/**/*.ts?(x)\""
   },
   "dependencies": {
+    "@coconut-xr/apfel-kruemel": "^0.0.6",
     "@coconut-xr/input": "^0.0.1",
     "@coconut-xr/koestlich": "^0.3.8",
     "@coconut-xr/lucide-koestlich": "^0.0.3",
