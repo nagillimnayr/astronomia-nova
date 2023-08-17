@@ -2,10 +2,10 @@ import { Grid, GridProps } from '@react-three/drei';
 import { Object3DProps } from '@react-three/fiber';
 
 type Props = GridProps & Object3DProps;
-export const Floor = ({ position, ...props }: Props) => {
+export const Floor = ({ position = [0, 0, 0], ...props }: Props) => {
   return (
     <>
-      <Grid infiniteGrid position={position ?? [0, -1, 0]} />
+      <Grid infiniteGrid position={position} />
     </>
   );
 };

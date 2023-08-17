@@ -32,8 +32,9 @@ export const VRScene = () => {
   return (
     <>
       <>
+        <PerspectiveCamera makeDefault position={[0, 2, 3]} />
         <CameraControls makeDefault />
-        <VRHUD />
+        <VRHUD position={[0, 4, 0]} />
         <directionalLight
           ref={dirLightRef}
           intensity={0.7}
@@ -46,13 +47,13 @@ export const VRScene = () => {
           </Dodecahedron>
         </RotatingObject> */}
 
-        <RotatingObject position={[5, 0, 0]}>
+        <RotatingObject position={[5, 1, 0]}>
           <Icosahedron>
             <meshPhongMaterial color={'cyan'} />
           </Icosahedron>
         </RotatingObject>
 
-        <RotatingObject position={[-5, 0, 0]}>
+        <RotatingObject position={[-5, 1, 0]}>
           <Tetrahedron>
             <meshPhongMaterial color={'cyan'} />
           </Tetrahedron>

@@ -3,8 +3,12 @@ import { VRDetailsPanel } from './vr-details-panel/VRDetailsPanel';
 import { VRTimePanel } from './vr-time-panel/VRTimePanel';
 import { colors } from './vr-hud-constants';
 import { VROutliner } from './vr-outliner/VROutliner';
+import { type Vector3Tuple } from 'three';
 
-export const VRHUD = () => {
+type VRHUDProps = {
+  position?: Vector3Tuple;
+};
+export const VRHUD = ({ position = [0, 0, 0] }: VRHUDProps) => {
   return (
     <>
       <>
@@ -12,7 +16,7 @@ export const VRHUD = () => {
           color={colors.foreground}
           borderColor={colors.border}
         >
-          <RootContainer>
+          <RootContainer position={position}>
             <VRDetailsPanel position={[2, 0, 0]} />
             <VRTimePanel position={[0, -1, 0]} />
             <VROutliner position={[-2, 0, 0]} />
