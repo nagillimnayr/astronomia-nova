@@ -17,7 +17,7 @@ import { VROutlinerItem } from './VROutlinerItem';
 type VROutlinerProps = {
   position?: Vector3Tuple;
 };
-export const VROutliner = ({ position }: VROutlinerProps) => {
+export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
   // Get actors from root state machine.
   const { keplerTreeActor, mapActor } = MachineContext.useSelector(
     ({ context }) => context
