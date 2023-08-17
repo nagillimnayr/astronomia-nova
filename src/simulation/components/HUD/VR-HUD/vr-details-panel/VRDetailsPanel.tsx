@@ -1,4 +1,10 @@
-import { RootContainer, Container, Text, SVG } from '@coconut-xr/koestlich';
+import {
+  RootContainer,
+  Container,
+  Text,
+  SVG,
+  ContainerNode,
+} from '@coconut-xr/koestlich';
 import {
   Glass,
   Button,
@@ -6,7 +12,7 @@ import {
   List,
   ListItem,
 } from '@coconut-xr/apfel-kruemel';
-import { Suspense, useCallback } from 'react';
+import { Suspense, useCallback, useEffect, useRef } from 'react';
 import {
   GOLDEN_RATIO,
   border,
@@ -19,6 +25,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { VRSeparator } from '../misc/VRSeparator';
 import { DAY, HOUR } from '@/simulation/utils/constants';
+import { useFrame } from '@react-three/fiber';
 
 const placeholders = {
   name: 'Name',
@@ -37,7 +44,7 @@ export const VRDetailsPanel = ({
   position = [0, 0, 0],
 }: VRDetailsPanelProps) => {
   // Get selection actor from state machine.
-  const { selectionActor } = MachineContext.useSelector(
+  const { selectionActor, cameraActor } = MachineContext.useSelector(
     ({ context }) => context
   );
   // Get the currently selected body.
@@ -45,6 +52,22 @@ export const VRDetailsPanel = ({
     selectionActor,
     ({ context }) => context.selected
   );
+
+  // Get ref to root container.
+  const rootRef = useRef<ContainerNode>(null!);
+
+  useEffect(() => {
+    const subsription = cameraActor.subscribe((state) => {
+      // Ignore if last event was not starting an XR session.
+      if (state.event.type !== 'START_XR_SESSION') return;
+
+      const { controls } = state.context;
+      if (!controls) return;
+      const container = rootRef.current;
+
+      // controls.attachToController(container);
+    });
+  }, []);
 
   // Dimensions of the panel.
   const width = 1;
@@ -63,6 +86,7 @@ export const VRDetailsPanel = ({
     <>
       <Suspense>
         <RootContainer
+          ref={rootRef}
           positionType="relative"
           position={position}
           backgroundColor={colors.muted}

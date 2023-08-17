@@ -1,5 +1,10 @@
-import { RootContainer, Container, Text } from '@coconut-xr/koestlich';
-import { Suspense } from 'react';
+import {
+  RootContainer,
+  Container,
+  Text,
+  ContainerNode,
+} from '@coconut-xr/koestlich';
+import { Suspense, useRef } from 'react';
 import { GOLDEN_RATIO, colors, text } from '../vr-hud-constants';
 import { VRDateDisplay } from './VRDateDisplay';
 import { VRTimeControls } from './vr-time-controls/VRTimeControls';
@@ -11,11 +16,15 @@ type VRTimePanelProps = {
   position?: Vector3Tuple;
 };
 export const VRTimePanel = ({ position = [0, 0, 0] }: VRTimePanelProps) => {
+  // Get ref to root container.
+  const rootRef = useRef<ContainerNode>(null!);
+
   const height = 1;
   const width = height * GOLDEN_RATIO;
   return (
     <>
       <RootContainer
+        ref={rootRef}
         position={position}
         sizeX={width}
         sizeY={height}

@@ -1,6 +1,11 @@
-import { RootContainer, Container, Text } from '@coconut-xr/koestlich';
+import {
+  RootContainer,
+  Container,
+  Text,
+  ContainerNode,
+} from '@coconut-xr/koestlich';
 import { Glass, IconButton, List, ListItem } from '@coconut-xr/apfel-kruemel';
-import { Suspense } from 'react';
+import { Suspense, useRef } from 'react';
 import {
   GOLDEN_RATIO,
   border,
@@ -28,12 +33,16 @@ export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
   // Bind to state changes so that the component will re-render whenever bodyMap is modified.
   useSelector(mapActor, ({ context }) => context.bodyMap);
 
+  // Get ref to root container.
+  const rootRef = useRef<ContainerNode>(null!);
+
   const width = 1;
   const height = width * GOLDEN_RATIO;
   return (
     <>
       <Suspense>
         <RootContainer
+          ref={rootRef}
           position={position}
           sizeX={width}
           sizeY={height}
