@@ -48,8 +48,7 @@ type Context = {
   getXR: () => XRState;
   xrSession: XRSession | null;
   controls: CameraController | null;
-  spaceCamera: PerspectiveCamera | null;
-  surfaceCamera: PerspectiveCamera | null;
+  camera: PerspectiveCamera | null;
   focusTarget: Object3D | null;
   observer: Object3D | null;
   refSpace: XRReferenceSpace | null;
@@ -66,8 +65,7 @@ type Events =
   | { type: 'END_XR_SESSION' }
   | { type: 'POLL_XR_BUTTONS' }
   | { type: 'ASSIGN_CONTROLS'; controls: CameraController }
-  | { type: 'ASSIGN_SPACE_CAMERA'; camera: PerspectiveCamera }
-  | { type: 'ASSIGN_SURFACE_CAMERA'; camera: PerspectiveCamera }
+  | { type: 'ASSIGN_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_OBSERVER'; observer: Object3D | null }
   | { type: 'ASSIGN_REF_SPACE'; refSpace: XRReferenceSpace }
   | { type: 'SET_TARGET'; focusTarget: Object3D | null }
@@ -92,8 +90,7 @@ export const cameraMachine = createMachine(
       xrSession: null,
       getThree: null!,
       getXR: null!,
-      spaceCamera: null,
-      surfaceCamera: null,
+      camera: null,
       observer: null,
       focusTarget: null,
       refSpace: null,
@@ -127,25 +124,15 @@ export const cameraMachine = createMachine(
         ],
       },
 
-      ASSIGN_SPACE_CAMERA: {
+      ASSIGN_CAMERA: {
         cond: (context, event) => {
-          return context.spaceCamera !== event.camera;
+          return context.camera !== event.camera;
         },
         actions: [
-          assign({ spaceCamera: (_, event) => event.camera }),
+          assign({ camera: (_, event) => event.camera }),
           log((context, event) => {
             return event.camera;
           }, 'Assign space camera'),
-          'initializeControls',
-        ],
-      },
-      ASSIGN_SURFACE_CAMERA: {
-        cond: (context, event) => {
-          return context.surfaceCamera !== event.camera;
-        },
-        actions: [
-          assign({ surfaceCamera: (_, event) => event.camera }),
-          log('Assigning surface camera!'),
           'initializeControls',
         ],
       },
@@ -189,7 +176,7 @@ export const cameraMachine = createMachine(
         entry: ['applySpaceCamUp', 'setSpaceCamDistance'],
         // Cleanup on exit:
         exit: (context) => {
-          const { spaceCamera, observer } = context;
+          const { camera: spaceCamera, observer } = context;
           if (!spaceCamera || !observer) return;
         },
         on: {
@@ -328,22 +315,18 @@ export const cameraMachine = createMachine(
         },
       }),
       initializeControls: (context) => {
-        const { controls, spaceCamera, surfaceCamera, canvas } = context;
+        const { controls, camera, canvas } = context;
         if (!controls) return;
 
-        if (
-          spaceCamera &&
-          (!controls.camera || spaceCamera.parent !== controls)
-        ) {
-          controls.setCamera(spaceCamera);
+        if (camera && (!controls.camera || camera.parent !== controls)) {
+          controls.setCamera(camera);
         }
 
         if (canvas && !controls.domElement) {
           controls.setDomElement(canvas);
         }
         console.log('controls:', controls);
-        console.log('surface cam:', surfaceCamera);
-        console.log('space cam:', spaceCamera);
+        console.log('camera:', camera);
       },
       startXRSession: (context, event) => {
         //
@@ -383,7 +366,7 @@ export const cameraMachine = createMachine(
         console.log('initial refSpace:', refSpace);
       },
       attachToTarget: (context, event) => {
-        const { controls, spaceCamera, focusTarget } = context;
+        const { controls, camera: spaceCamera, focusTarget } = context;
         if (!focusTarget || !controls) return;
         // controls.attachControllerTo(focusTarget);
         controls.attachToWithoutMoving(focusTarget);
@@ -480,7 +463,7 @@ export const cameraMachine = createMachine(
       },
 
       updateCamera: (context, event) => {
-        const { controls, spaceCamera } = context;
+        const { controls, camera: spaceCamera } = context;
         if (!controls || !spaceCamera) {
           console.error('camera controls are null');
           return;
@@ -488,7 +471,7 @@ export const cameraMachine = createMachine(
         controls.update(event.deltaTime);
       },
       updateSpaceView: (context, event) => {
-        const { controls, spaceCamera } = context;
+        const { controls, camera: spaceCamera } = context;
         if (!controls || !spaceCamera) {
           console.error('camera controls are null');
           return;
@@ -497,8 +480,8 @@ export const cameraMachine = createMachine(
         // controls.update(event.deltaTime);
       },
       enterSurfaceView: (context, event) => {
-        const { controls, surfaceCamera, observer, focusTarget } = context;
-        if (!controls || !surfaceCamera || !observer || !focusTarget) return;
+        const { controls, observer, focusTarget } = context;
+        if (!controls || !observer || !focusTarget) return;
         // observer.getWorldPosition(_observerWorldPos);
         // controls.camera = surfaceCamera;
 
@@ -508,22 +491,10 @@ export const cameraMachine = createMachine(
         const { controls, observer } = context;
         if (!controls || !observer) return;
       },
-      cleanupSurfaceCam: (context) => {
-        const { controls, surfaceCamera, observer } = context;
-        if (!controls || !surfaceCamera || !observer) return;
 
-        // Attach the camera to the observer.
-        const parent = surfaceCamera.parent;
-        if (!parent || parent instanceof Scene) return;
-        observer.add(parent);
-        // Reset surface camera.
-        surfaceCamera.position.set(0, 0, 1e-3);
-        surfaceCamera.rotation.set(0, 0, 0);
-        surfaceCamera.updateProjectionMatrix();
-      },
       applySurfaceCamUp: (context) => {
-        const { controls, surfaceCamera, observer, focusTarget } = context;
-        if (!controls || !surfaceCamera || !observer || !focusTarget) return;
+        const { controls, observer, focusTarget } = context;
+        if (!controls || !observer || !focusTarget) return;
         controls.rotation.set(0, 0, 0); // Reset rotation.
         // Set the camera's up vector to be relative to the surface.
         // surfaceCamera.up.set(...getLocalUpInWorldCoords(observer));
@@ -531,7 +502,7 @@ export const cameraMachine = createMachine(
       },
       applySpaceCamUp: (context) => {
         // Reset up vector of camera.
-        const { controls, spaceCamera } = context;
+        const { controls, camera: spaceCamera } = context;
         if (!controls || !spaceCamera) return;
         controls.applyWorldUp();
       },
@@ -569,7 +540,7 @@ export const cameraMachine = createMachine(
         });
       },
       setSurfaceCamDistance: (context) => {
-        const { controls, spaceCamera } = context;
+        const { controls, camera: spaceCamera } = context;
         if (!controls || !spaceCamera) return;
         controls.minDistance = SURFACE_MIN_DIST;
         controls.maxDistance = SURFACE_MAX_DIST;
