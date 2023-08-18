@@ -30,6 +30,13 @@ export const Default: Story = {
 };
 
 const VRHUDStory = () => {
+  const { cameraActor, timeActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+
+  useFrame((state, delta) => {
+    timeActor.send({ type: 'UPDATE', deltaTime: delta });
+  });
   return (
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 4]} />
