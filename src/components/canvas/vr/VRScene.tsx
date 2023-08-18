@@ -13,39 +13,58 @@ import { DirectionalLight, DirectionalLightHelper } from 'three';
 import { VRManager } from './VRManager';
 import { Floor } from './components/Floor';
 import { VRHUD } from '@/simulation/components/HUD/VR-HUD/VRHUD';
-import { CameraManager } from '@/simulation/components/camera-controller/CameraController';
+import { CameraManager } from '@/simulation/components/camera-controller/CameraManager';
 import { PI_OVER_TWO } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
+import {
+  useEnterXR,
+  NonImmersiveCamera,
+  ImmersiveSessionOrigin,
+} from '@coconut-xr/natuerlich/react';
+import { VRCameraManager } from './VRCameraManager';
 
 export const VRScene = () => {
+  const rootActor = MachineContext.useActorRef();
   const { cameraActor, timeActor } = MachineContext.useSelector(
     ({ context }) => context
   );
   const dirLightRef = useRef<DirectionalLight>(null!);
   useHelper(dirLightRef, DirectionalLightHelper);
+  const getThree = useThree(({ get }) => get);
 
   useFrame((state, delta) => {
+    cameraActor.send({ type: 'UPDATE', deltaTime: delta });
     timeActor.send({ type: 'UPDATE', deltaTime: delta });
   });
 
   return (
     <>
       <>
-        <PerspectiveCamera makeDefault position={[0, 2, 3]} />
-        <CameraControls makeDefault />
-        <VRHUD position={[0, 4, 0]} />
+        {/* <VRHUD position={[0, 4, 0]} /> */}
+
+        {/* <NonImmersiveCamera
+          ref={(camera) => {
+            if (!camera) return;
+            camRef.current = camera;
+            getThree().set({ camera });
+          }}
+          position={[0, 2, 8]}
+        />
+        <ImmersiveSessionOrigin position={[0, 2, 8]} /> */}
+        {/* <CameraManager /> */}
+        <VRCameraManager />
         <directionalLight
           ref={dirLightRef}
           intensity={0.7}
-          position={[-5, 10, -8]}
+          position={[-5, 10, 8]}
         />
 
-        {/* <RotatingObject position={[0, 0, 0]}>
+        <RotatingObject position={[0, 1, 0]}>
           <Dodecahedron>
             <meshPhongMaterial color={'red'} />
           </Dodecahedron>
-        </RotatingObject> */}
+        </RotatingObject>
 
         <RotatingObject position={[5, 1, 0]}>
           <Icosahedron>
@@ -59,8 +78,8 @@ export const VRScene = () => {
           </Tetrahedron>
         </RotatingObject>
         <Floor />
-        {/* 
-        <VRManager /> */}
+
+        <VRManager />
       </>
     </>
   );

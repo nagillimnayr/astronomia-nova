@@ -1,25 +1,34 @@
 import { Canvas, useThree } from '@react-three/fiber';
-
-import { MachineContext } from '@/state/xstate/MachineProviders';
-
-import { type PropsWithChildren } from 'react';
 import { Controllers, VRButton, XR } from '@react-three/xr';
+import { VRScene } from './VRScene';
+import { CameraControls } from '@react-three/drei';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { CameraManager } from '@/simulation/components/camera-controller/CameraManager';
+import { type PropsWithChildren } from 'react';
+import { VRManager } from './VRManager';
+
+import { XRCanvas } from '@coconut-xr/natuerlich/defaults';
+import {
+  useEnterXR,
+  NonImmersiveCamera,
+  ImmersiveSessionOrigin,
+} from '@coconut-xr/natuerlich/react';
+
+const sessionOptions: XRSessionInit = {
+  requiredFeatures: ['local'],
+};
 
 export const VRCanvas = ({ children }: PropsWithChildren) => {
   const { vrActor, cameraActor } = MachineContext.useSelector(
     ({ context }) => context
   );
 
+  const enterVR = useEnterXR('immersive-vr', sessionOptions);
+
   return (
     <>
       <div className="relative z-10 h-full w-full ">
-        <Canvas
-          gl={{ logarithmicDepthBuffer: true }}
-          ref={(canvas) => {
-            if (!canvas) return;
-            cameraActor.send({ type: 'ASSIGN_CANVAS', canvas });
-          }}
-        >
+        <Canvas>
           <XR
             onSessionStart={(event) => {
               const session = event.target;
@@ -45,16 +54,10 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
             <Controllers />
             {/* <VRScene /> */}
             {children}
-            {/* <VRManager /> */}
+            <VRManager />
           </XR>
         </Canvas>
         <div className="absolute bottom-10 right-20 z-20 h-fit w-fit whitespace-nowrap ">
-          {/* <button
-            className="rounded-md border border-white p-2 transition-colors hover:bg-subtle"
-            onClick={enterVR}
-          >
-            Enter VR!
-          </button> */}
           <VRButton />
         </div>
       </div>

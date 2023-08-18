@@ -257,6 +257,11 @@ export const VRControls = () => {
         xr.setReferenceSpace(refSpace);
         break;
       }
+      case ' ': {
+        const controls = cameraActor.getSnapshot()!.context.controls;
+        if (!controls) return;
+        console.log('cam', controls.camera);
+      }
     }
   });
 
