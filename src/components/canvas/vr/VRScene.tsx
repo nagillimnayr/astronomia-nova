@@ -41,8 +41,6 @@ export const VRScene = () => {
   return (
     <>
       <>
-        <VRHUD position={[0, 1, -2]} />
-
         {/* <NonImmersiveCamera
           ref={(camera) => {
             if (!camera) return;

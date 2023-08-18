@@ -4,6 +4,7 @@ import { VRPlayer } from './VRPlayer';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEffect } from 'react';
 import { useThree } from '@react-three/fiber';
+import { VRHUD } from '@/simulation/components/HUD/VR-HUD/VRHUD';
 
 export const VRManager = () => {
   const getXR = useXR(({ get }) => get);
@@ -30,6 +31,7 @@ export const VRManager = () => {
     <>
       <VRControls />
       <VRPlayer />
+      <VRHUD />
     </>
   );
 };
