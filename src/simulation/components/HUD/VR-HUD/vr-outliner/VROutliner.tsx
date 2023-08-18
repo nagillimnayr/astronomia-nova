@@ -66,7 +66,7 @@ export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
             sizeY={height}
             border={border.base}
             borderRadius={borderRadius.base}
-            backgroundColor={colors.muted}
+            backgroundColor={colors.background}
             flexDirection="column"
             padding={text.base}
           >

@@ -26,7 +26,7 @@ export const VRTimescaleSlider = ({ index }: VRTimescaleSliderProps) => {
   const handleClickLeft = useCallback(() => {
     if (timescale <= 1) return;
     timeActor.send({ type: 'DECREMENT_TIMESCALE' });
-  }, [timeActor]);
+  }, [timeActor, timescale]);
 
   const handleClickRight = useCallback(() => {
     timeActor.send({ type: 'INCREMENT_TIMESCALE' });
@@ -48,13 +48,13 @@ export const VRTimescaleSlider = ({ index }: VRTimescaleSliderProps) => {
           alignItems="center"
           justifyContent="center"
           gapColumn={10}
-          backgroundColor={colors.muted}
+          backgroundColor={colors.background}
         >
           <IconButton
             index={0}
             onClick={handleClickLeft}
             disabled={timescale <= 1}
-            backgroundColor={colors.muted}
+            backgroundColor={colors.background}
           >
             <ChevronLeft width={iconSize} height={iconSize} />
           </IconButton>
@@ -70,14 +70,14 @@ export const VRTimescaleSlider = ({ index }: VRTimescaleSliderProps) => {
               range={100}
               value={timescale}
               onValueChange={handleValueChange}
-              backgroundColor={colors.muted}
+              backgroundColor={colors.background}
             />
           </Container>
           <IconButton
             index={2}
             onClick={handleClickRight}
             disabled={timescale >= 100}
-            backgroundColor={colors.muted}
+            backgroundColor={colors.background}
           >
             <ChevronRight width={iconSize} height={iconSize} />
           </IconButton>

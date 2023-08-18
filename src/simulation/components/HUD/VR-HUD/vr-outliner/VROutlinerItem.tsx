@@ -48,7 +48,7 @@ export const VROutlinerItem = ({
           ref={containerRef}
           flexDirection="column"
           height={'auto'}
-          backgroundColor={colors.muted}
+          backgroundColor={colors.background}
           gapRow={text.sm}
         >
           <ListItem height={'auto'} onClick={handleClick}>
@@ -58,7 +58,7 @@ export const VROutlinerItem = ({
             flexDirection="column"
             height={'auto'}
             gapRow={text.xs}
-            backgroundColor={colors.muted}
+            backgroundColor={colors.background}
             marginLeft={text.base}
             paddingLeft={text.base}
             borderLeft={border.base}

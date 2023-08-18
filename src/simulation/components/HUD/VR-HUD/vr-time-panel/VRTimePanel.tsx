@@ -50,7 +50,7 @@ export const VRTimePanel = ({ position = [0, 0, 0] }: VRTimePanelProps) => {
             // position={position}
             sizeX={width}
             sizeY={height}
-            backgroundColor={colors.muted}
+            backgroundColor={colors.background}
             borderRadius={text.base}
             borderColor={colors.border}
             border={4}

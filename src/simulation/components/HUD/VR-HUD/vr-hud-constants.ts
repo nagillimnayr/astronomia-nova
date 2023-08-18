@@ -1,6 +1,7 @@
 export const GOLDEN_RATIO = 1.618;
 export const colors = Object.freeze({
-  background: '#09090b',
+  // background: '#09090b',
+  background: '#2c2c30',
   foreground: '#ffffff',
 
   muted: '#18181b',
