@@ -4,6 +4,7 @@ import {
   Text,
   SVG,
   ContainerNode,
+  Object,
 } from '@coconut-xr/koestlich';
 import {
   Glass,
@@ -12,7 +13,7 @@ import {
   List,
   ListItem,
 } from '@coconut-xr/apfel-kruemel';
-import { Suspense, useCallback, useEffect, useRef } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   GOLDEN_RATIO,
   border,
@@ -28,7 +29,7 @@ import {
 } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { VRSeparator } from '../misc/VRSeparator';
+import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import { DAY, HOUR } from '@/simulation/utils/constants';
 import { useFrame } from '@react-three/fiber';
 
@@ -64,18 +65,6 @@ export const VRDetailsPanel = ({
   const containerRef = useRef<ContainerNode>(null!);
   const objRef = useRef<Object3D>(null!);
 
-  // useEffect(() => {
-  //   const controls = cameraActor.getSnapshot()!.context.controls;
-
-  //   if (!controls) return;
-  //   const obj = objRef.current;
-  //   // controls.attachToController(obj);
-  //   // obj.position.setZ(-5);
-  //   controls.getCameraWorldUp(obj.up);
-  //   controls.getCameraWorldPosition(_camWorldPos);
-  //   obj.lookAt(_camWorldPos);
-  // }, [cameraActor]);
-
   // Dimensions of the panel.
   const width = 1;
   const height = selected ? width * GOLDEN_RATIO : 0; // Collapse the panel if nothing is currently selected.
@@ -88,23 +77,21 @@ export const VRDetailsPanel = ({
     siderealRotationRate,
     siderealRotationPeriod,
   } = selected ?? placeholders;
-
+  console.log('render details panel');
   return (
     <>
       {/** Its better to put the object3D outside of the Suspense barrier, so as to not delay setting the reference. */}
-      <object3D ref={objRef} name="VR-Details-Panel">
+      <object3D ref={objRef} name="VR-Details-Panel" position={position}>
         <Suspense>
           <RootContainer
             ref={containerRef}
             positionType="relative"
-            position={position}
             backgroundColor={colors.background}
             sizeX={width}
             sizeY={height}
             border={border.base}
             borderColor={colors.border}
             borderRadius={borderRadius.base}
-            overflow="hidden"
             padding={padding}
             flexDirection="column"
             alignItems="stretch"
@@ -119,9 +106,13 @@ export const VRDetailsPanel = ({
               flexDirection="row"
               alignItems="center"
               justifyContent="center"
-              borderRadius={borderRadius.base}
+              backgroundColor={colors.background}
             >
-              <Text color={colors.foreground} fontSize={text.lg}>
+              <Text
+                color={colors.foreground}
+                fontSize={text.lg}
+                backgroundColor={colors.background}
+              >
                 {name}
               </Text>
             </Container>
@@ -220,6 +211,11 @@ const VRCloseButton = () => {
     // Deselect the currently selected body.
     selectionActor.send({ type: 'DESELECT' });
   }, [selectionActor]);
+
+  // Create Object to attach UI component to.
+  const obj = useMemo(() => {
+    return new Object3D();
+  }, []);
   return (
     <>
       <Button
@@ -238,11 +234,13 @@ const VRCloseButton = () => {
         justifyContent="center"
         onClick={handleCloseClick}
       >
-        <SVG
-          url="icons/mdi-close-box-outline.svg"
-          aspectRatio={1}
-          width={closeBtnSize}
-        />
+        <Suspense>
+          <SVG
+            url="icons/mdi-close-box-outline.svg"
+            aspectRatio={1}
+            width={closeBtnSize}
+          />
+        </Suspense>
       </Button>
     </>
   );
@@ -285,6 +283,10 @@ type VRButtonProps = {
   size: number;
 };
 const VRSurfaceButton = ({ size }: VRButtonProps) => {
+  // Create Object to attach UI component to.
+  const obj = useMemo(() => {
+    return new Object3D();
+  }, []);
   return (
     <>
       <Button
@@ -297,14 +299,20 @@ const VRSurfaceButton = ({ size }: VRButtonProps) => {
         borderColor={btn.borderColor}
         height={size * 2}
       >
-        <Text fontSize={size}>Surface</Text>
-        <SVG url="icons/mdi-telescope.svg" aspectRatio={1} height={size} />
+        <Suspense>
+          <Text fontSize={size}>Surface</Text>
+          <SVG url="icons/mdi-telescope.svg" aspectRatio={1} height={size} />
+        </Suspense>
       </Button>
     </>
   );
 };
 
 const VRSpaceButton = ({ size }: VRButtonProps) => {
+  // Create Object to attach UI component to.
+  const obj = useMemo(() => {
+    return new Object3D();
+  }, []);
   return (
     <>
       <Button
@@ -317,8 +325,10 @@ const VRSpaceButton = ({ size }: VRButtonProps) => {
         borderColor={btn.borderColor}
         height={size * 2}
       >
-        <Text fontSize={size}>Space</Text>
-        <SVG url="icons/ph-planet.svg" aspectRatio={1} height={size} />
+        <Suspense>
+          <Text fontSize={size}>Space</Text>
+          <SVG url="icons/ph-planet.svg" aspectRatio={1} height={size} />
+        </Suspense>
       </Button>
     </>
   );
@@ -341,6 +351,11 @@ const VRFocusButton = ({ size }: VRButtonProps) => {
     // Pass the selected body to the camera actor.
     cameraActor.send({ type: 'SET_TARGET', focusTarget: selected });
   }, [cameraActor, selectionActor]);
+
+  // Create Object to attach UI component to.
+  const obj = useMemo(() => {
+    return new Object3D();
+  }, []);
   return (
     <>
       <Button
@@ -354,8 +369,17 @@ const VRFocusButton = ({ size }: VRButtonProps) => {
         height={size * 2}
         onClick={handleClick}
       >
-        <Text fontSize={size}>Focus</Text>
-        <SVG url="icons/mdi-camera-control.svg" aspectRatio={1} height={size} />
+        {/* <Object > */}
+
+        <Suspense>
+          <Text fontSize={size}>Focus</Text>
+          <SVG
+            url="icons/mdi-camera-control.svg"
+            aspectRatio={1}
+            height={size}
+          />
+        </Suspense>
+        {/* </Object> */}
       </Button>
     </>
   );
