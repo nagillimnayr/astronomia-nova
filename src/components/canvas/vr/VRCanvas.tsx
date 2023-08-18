@@ -25,7 +25,7 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
               const session = event.target;
 
               // Assign session object to external state machine and start session state.
-              // vrActor.send({ type: 'START_SESSION', session });
+              vrActor.send({ type: 'START_SESSION', session });
               cameraActor.send({
                 type: 'START_XR_SESSION',
                 xrSession: session,
