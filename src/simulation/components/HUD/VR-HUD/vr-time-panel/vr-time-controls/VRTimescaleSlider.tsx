@@ -48,11 +48,13 @@ export const VRTimescaleSlider = ({ index }: VRTimescaleSliderProps) => {
           alignItems="center"
           justifyContent="center"
           gapColumn={10}
+          backgroundColor={colors.muted}
         >
           <IconButton
             index={0}
             onClick={handleClickLeft}
             disabled={timescale <= 1}
+            backgroundColor={colors.muted}
           >
             <ChevronLeft width={iconSize} height={iconSize} />
           </IconButton>
@@ -68,12 +70,14 @@ export const VRTimescaleSlider = ({ index }: VRTimescaleSliderProps) => {
               range={100}
               value={timescale}
               onValueChange={handleValueChange}
+              backgroundColor={colors.muted}
             />
           </Container>
           <IconButton
             index={2}
             onClick={handleClickRight}
             disabled={timescale >= 100}
+            backgroundColor={colors.muted}
           >
             <ChevronRight width={iconSize} height={iconSize} />
           </IconButton>

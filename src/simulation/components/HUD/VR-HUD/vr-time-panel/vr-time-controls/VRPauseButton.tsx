@@ -27,6 +27,7 @@ export const VRPauseButton = ({ index }: VRPauseButtonProps) => {
         display="flex"
         alignItems="center"
         justifyContent="center"
+        backgroundColor={colors.muted}
       >
         <IconButton
           onClick={handleClick}
@@ -38,6 +39,7 @@ export const VRPauseButton = ({ index }: VRPauseButtonProps) => {
           height={iconSize * 1.5}
           aspectRatio={1}
           borderRadius={1000}
+          backgroundColor={colors.muted}
         >
           {isPaused ? (
             <Play
