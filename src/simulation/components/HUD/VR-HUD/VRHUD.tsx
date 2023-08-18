@@ -29,30 +29,23 @@ export const VRHUD = ({ position = [0, 0, 0] }: VRHUDProps) => {
 
   useEffect(() => {
     // Attach to the camera.
-    const controls = cameraActor.getSnapshot()!.context.controls;
-
-    if (!controls) return;
     const obj = objRef.current;
-    obj.position.setZ(-0.5);
-    controls.attachToController(obj);
-    controls.getCameraWorldUp(obj.up);
-    controls.getCameraWorldPosition(_camWorldPos);
-    obj.lookAt(_camWorldPos);
+    cameraActor.send({ type: 'ASSIGN_VR_HUD', vrHud: obj });
   }, [cameraActor]);
 
   useEffect(() => {
     const obj = objRef.current;
     obj.visible = false;
-    const subscription = vrActor.subscribe((state) => {
-      if (state.event.type === 'START_SESSION') {
-        obj.visible = true;
-      } else if (state.event.type === 'END_SESSION') {
-        obj.visible = false;
-      }
-    });
+    // const subscription = vrActor.subscribe((state) => {
+    //   if (state.event.type === 'START_SESSION') {
+    //     obj.visible = true;
+    //   } else if (state.event.type === 'END_SESSION') {
+    //     obj.visible = false;
+    //   }
+    // });
 
-    return () => subscription.unsubscribe();
-  }, [vrActor]);
+    // return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <>

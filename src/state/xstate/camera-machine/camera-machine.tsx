@@ -31,6 +31,7 @@ const _observerUp = new Vector3();
 
 const _cameraWorldDirection = new Vector3();
 const _worldPos = new Vector3();
+const _camWorldPos = new Vector3();
 const _lookPos = new Vector3();
 
 // Space view constants:
@@ -52,6 +53,7 @@ type Context = {
   focusTarget: Object3D | null;
   observer: Object3D | null;
   refSpace: XRReferenceSpace | null;
+  vrHud: Object3D | null;
 };
 
 type Events =
@@ -68,6 +70,7 @@ type Events =
   | { type: 'ASSIGN_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_OBSERVER'; observer: Object3D | null }
   | { type: 'ASSIGN_REF_SPACE'; refSpace: XRReferenceSpace }
+  | { type: 'ASSIGN_VR_HUD'; vrHud: Object3D }
   | { type: 'SET_TARGET'; focusTarget: Object3D | null }
   | { type: 'ROTATE_AZIMUTHAL'; deltaAngle: number }
   | { type: 'ROTATE_POLAR'; deltaAngle: number }
@@ -94,6 +97,7 @@ export const cameraMachine = createMachine(
       observer: null,
       focusTarget: null,
       refSpace: null,
+      vrHud: null,
     }),
 
     // Context assignment events:
@@ -145,7 +149,15 @@ export const cameraMachine = createMachine(
       ASSIGN_REF_SPACE: {
         actions: ['logEvent', 'assignRefSpace', 'initRefSpace'],
       },
-
+      ASSIGN_VR_HUD: {
+        actions: [
+          'logEvent',
+          assign({
+            vrHud: (_, { vrHud }) => vrHud,
+          }),
+          'initializeControls',
+        ],
+      },
       ROTATE_AZIMUTHAL: {
         actions: ['rotateAzimuthal'],
       },
@@ -163,6 +175,10 @@ export const cameraMachine = createMachine(
           return Boolean(getXR().session);
         },
         actions: ['pollXRButtons'],
+      },
+
+      END_XR_SESSION: {
+        actions: ['logEvent', 'endXRSession'],
       },
     },
 
@@ -314,22 +330,31 @@ export const cameraMachine = createMachine(
         },
       }),
       initializeControls: (context) => {
-        const { controls, camera, canvas } = context;
+        const { controls, camera, canvas, vrHud } = context;
         if (!controls) return;
 
-        if (camera && (!controls.camera || camera.parent !== controls)) {
+        if (camera) {
           controls.setCamera(camera);
         }
 
         if (canvas && !controls.domElement) {
           controls.setDomElement(canvas);
         }
+
+        if (vrHud) {
+          controls.attachToController(vrHud);
+          vrHud.position.setZ(-4);
+          controls.attachToController(vrHud);
+          controls.getCameraWorldUp(vrHud.up);
+          controls.getCameraWorldPosition(_camWorldPos);
+          vrHud.lookAt(_camWorldPos);
+        }
         console.log('controls:', controls);
         console.log('camera:', camera);
       },
       startXRSession: (context, event) => {
         //
-        const { xrSession, getXR, getThree, controls } = context;
+        const { xrSession, getXR, getThree, controls, vrHud } = context;
         if (!xrSession || !getXR || !controls) {
           console.error('error initializing xr session');
           return;
@@ -355,6 +380,18 @@ export const cameraMachine = createMachine(
         _lookPos.addVectors(_worldPos, _cameraWorldDirection);
         player.lookAt(_lookPos);
         console.log('Attaching VR Player to camera!');
+
+        if (vrHud) {
+          console.log('VRHUD:', vrHud);
+          vrHud.visible = true;
+        }
+      },
+      endXRSession: (context, event) => {
+        const { vrHud } = context;
+        if (vrHud) {
+          console.log('VRHUD:', vrHud);
+          vrHud.visible = false;
+        }
       },
       initRefSpace: (context, event) => {
         const { getThree } = context;
