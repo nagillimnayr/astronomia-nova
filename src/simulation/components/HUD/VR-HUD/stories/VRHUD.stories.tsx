@@ -9,6 +9,8 @@ import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
 import { VRHUD } from '../VRHUD';
 import { MockEarthSelect } from '@/stories/mocks/MockEarthSelect';
 import { PerspectiveCamera } from '@react-three/drei';
+import { VRCameraManager } from '@/components/canvas/vr/VRCameraManager';
+import { VRManager } from '@/components/canvas/vr/VRManager';
 
 const meta: Meta<typeof VRHUD> = {
   title: 'VRHUD/VRHUD',
@@ -39,10 +41,13 @@ const VRHUDStory = () => {
   });
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 4]} />
+      {/* <PerspectiveCamera makeDefault position={[0, 0, 4]} /> */}
       <MockSolarSystem />
       <MockEarthSelect />
       <VRHUD />
+      <VRCameraManager />
+      <VRManager />
+      <directionalLight intensity={1} position={[0, 0, -100]} />
     </>
   );
 };
