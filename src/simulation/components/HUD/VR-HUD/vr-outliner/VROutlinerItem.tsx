@@ -17,6 +17,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { VRSeparator } from '../misc/VRSeparator';
 import KeplerBody from '@/simulation/classes/kepler-body';
+import { Object3D } from 'three';
 
 type VROutlinerItemProps = {
   body: KeplerBody;
@@ -35,7 +36,7 @@ export const VROutlinerItem = ({
   useSelector(mapActor, ({ context }) => context.bodyMap);
 
   // Get ref to container.
-  const ref = useRef<ContainerNode>(null!);
+  const containerRef = useRef<ContainerNode>(null!);
 
   const handleClick = useCallback(() => {
     selectionActor.send({ type: 'SELECT', selection: body });
@@ -43,15 +44,24 @@ export const VROutlinerItem = ({
   return (
     <>
       <Suspense>
-        <Container ref={ref} flexDirection="column" height={'auto'}>
+        <Container
+          ref={containerRef}
+          flexDirection="column"
+          height={'auto'}
+          backgroundColor={colors.muted}
+          gapRow={text.sm}
+        >
           <ListItem height={'auto'} onClick={handleClick}>
             <Text fontSize={text.xl}>{body.name}</Text>
           </ListItem>
           <List
             flexDirection="column"
             height={'auto'}
-            marginLeft={text.base}
             gapRow={text.xs}
+            backgroundColor={colors.muted}
+            marginLeft={text.base}
+            paddingLeft={text.base}
+            borderLeft={border.base}
           >
             {body.orbitingBodies.map((child) => {
               return <VROutlinerItem key={body.name} body={child} />;
