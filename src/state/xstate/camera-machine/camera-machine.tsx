@@ -141,10 +141,7 @@ export const cameraMachine = createMachine(
         cond: (context, event) => {
           return context.observer !== event.observer;
         },
-        actions: [
-          assign({ observer: (_, event) => event.observer }),
-          'cleanupSurfaceCam',
-        ],
+        actions: [assign({ observer: (_, event) => event.observer })],
       },
       ASSIGN_REF_SPACE: {
         actions: ['logEvent', 'assignRefSpace', 'initRefSpace'],
@@ -239,12 +236,7 @@ export const cameraMachine = createMachine(
           'attachToObserver',
         ],
         // Cleanup on exit:
-        exit: [
-          'logEvent',
-          log('exiting surface view'),
-          'cleanupSurfaceCam',
-          'attachToTarget',
-        ],
+        exit: ['logEvent', log('exiting surface view'), 'attachToTarget'],
         on: {
           // UPDATE event:
           UPDATE: {
@@ -342,8 +334,9 @@ export const cameraMachine = createMachine(
         }
 
         if (vrHud) {
+          // Attach the VR Hud to the camera.
           controls.attachToController(vrHud);
-          vrHud.position.setZ(-4);
+          vrHud.position.setZ(-5);
           controls.attachToController(vrHud);
           controls.getCameraWorldUp(vrHud.up);
           controls.getCameraWorldPosition(_camWorldPos);
@@ -384,13 +377,15 @@ export const cameraMachine = createMachine(
         if (vrHud) {
           console.log('VRHUD:', vrHud);
           vrHud.visible = true;
+          vrHud.position.setZ(-2);
         }
       },
       endXRSession: (context, event) => {
         const { vrHud } = context;
         if (vrHud) {
           console.log('VRHUD:', vrHud);
-          vrHud.visible = false;
+          // vrHud.visible = false;
+          vrHud.position.setZ(-5);
         }
       },
       initRefSpace: (context, event) => {
