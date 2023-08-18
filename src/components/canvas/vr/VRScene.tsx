@@ -41,7 +41,7 @@ export const VRScene = () => {
   return (
     <>
       <>
-        {/* <VRHUD position={[0, 4, 0]} /> */}
+        <VRHUD position={[0, 1, -2]} />
 
         {/* <NonImmersiveCamera
           ref={(camera) => {
@@ -60,11 +60,11 @@ export const VRScene = () => {
           position={[-5, 10, 8]}
         />
 
-        <RotatingObject position={[0, 1, 0]}>
+        {/* <RotatingObject position={[0, 1, 0]}>
           <Dodecahedron>
             <meshPhongMaterial color={'red'} />
           </Dodecahedron>
-        </RotatingObject>
+        </RotatingObject> */}
 
         <RotatingObject position={[5, 1, 0]}>
           <Icosahedron>
