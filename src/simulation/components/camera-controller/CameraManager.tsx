@@ -29,7 +29,7 @@ export const CameraManager = () => {
           controller.setRadius(1e3);
         }}
       />
-      <SpaceCamera />
+      <MainCamera />
     </>
   );
 };
