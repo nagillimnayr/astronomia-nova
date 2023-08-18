@@ -6,6 +6,11 @@ function constructKeplerTree() {
   const sun = new KeplerBody({ mass: 0 });
   sun.name = 'Sun';
 
+  const mercury = new KeplerBody({ mass: 0 });
+  mercury.name = 'Mercury';
+  sun.add(mercury);
+  sun.addOrbitingBody(mercury);
+
   const venus = new KeplerBody({ mass: 0 });
   venus.name = 'Venus';
   sun.add(venus);
