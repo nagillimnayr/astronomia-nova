@@ -68,6 +68,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                 onSessionEnd={(event) => {
                   console.log('Ending XR session:', event);
                   vrActor.send({ type: 'END_SESSION' });
+                  cameraActor.send({ type: 'END_XR_SESSION' });
                 }}
               >
                 <Controllers />

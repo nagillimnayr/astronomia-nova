@@ -41,6 +41,11 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
                 })
                 .catch((reason) => console.error(reason));
             }}
+            onSessionEnd={(event) => {
+              console.log('Ending XR session:', event);
+              vrActor.send({ type: 'END_SESSION' });
+              cameraActor.send({ type: 'END_XR_SESSION' });
+            }}
           >
             <Controllers />
             {/* <VRScene /> */}
