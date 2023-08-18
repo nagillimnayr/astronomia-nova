@@ -12,9 +12,9 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <div className="relative z-10 h-full w-full ">
+      <div className="relative z-10 h-full w-full touch-none select-none overscroll-none">
         <Canvas
-          gl={{ logarithmicDepthBuffer: true }}
+          gl={{ logarithmicDepthBuffer: true, localClippingEnabled: true }}
           ref={(canvas) => {
             if (!canvas) return;
             cameraActor.send({ type: 'ASSIGN_CANVAS', canvas });
