@@ -1,5 +1,5 @@
 import { degToRad } from 'three/src/math/MathUtils';
-import { SpaceCamera } from './SpaceCamera';
+import { MainCamera } from './MainCamera';
 import { CameraControls } from '@react-three/drei';
 import { useContext, useEffect, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
