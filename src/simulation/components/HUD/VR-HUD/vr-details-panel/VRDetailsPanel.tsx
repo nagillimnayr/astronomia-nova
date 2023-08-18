@@ -64,17 +64,17 @@ export const VRDetailsPanel = ({
   const containerRef = useRef<ContainerNode>(null!);
   const objRef = useRef<Object3D>(null!);
 
-  useEffect(() => {
-    const controls = cameraActor.getSnapshot()!.context.controls;
+  // useEffect(() => {
+  //   const controls = cameraActor.getSnapshot()!.context.controls;
 
-    if (!controls) return;
-    const obj = objRef.current;
-    controls.attachToController(obj);
-    obj.position.setZ(-5);
-    controls.getCameraWorldUp(obj.up);
-    controls.getCameraWorldPosition(_camWorldPos);
-    obj.lookAt(_camWorldPos);
-  }, [cameraActor]);
+  //   if (!controls) return;
+  //   const obj = objRef.current;
+  //   // controls.attachToController(obj);
+  //   // obj.position.setZ(-5);
+  //   controls.getCameraWorldUp(obj.up);
+  //   controls.getCameraWorldPosition(_camWorldPos);
+  //   obj.lookAt(_camWorldPos);
+  // }, [cameraActor]);
 
   // Dimensions of the panel.
   const width = 1;

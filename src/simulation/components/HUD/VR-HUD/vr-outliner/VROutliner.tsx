@@ -40,17 +40,17 @@ export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
   const containerRef = useRef<ContainerNode>(null!);
   const objRef = useRef<Object3D>(null!);
 
-  useEffect(() => {
-    const controls = cameraActor.getSnapshot()!.context.controls;
+  // useEffect(() => {
+  //   const controls = cameraActor.getSnapshot()!.context.controls;
 
-    if (!controls) return;
-    const obj = objRef.current;
-    obj.position.setZ(-5);
-    controls.attachToController(obj);
-    controls.getCameraWorldUp(obj.up);
-    controls.getCameraWorldPosition(_camWorldPos);
-    obj.lookAt(_camWorldPos);
-  }, [cameraActor]);
+  //   if (!controls) return;
+  //   const obj = objRef.current;
+  //   // obj.position.setZ(-5);
+  //   // controls.attachToController(obj);
+  //   controls.getCameraWorldUp(obj.up);
+  //   controls.getCameraWorldPosition(_camWorldPos);
+  //   obj.lookAt(_camWorldPos);
+  // }, [cameraActor]);
 
   const width = 1;
   const height = width * GOLDEN_RATIO;
