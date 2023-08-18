@@ -64,7 +64,7 @@ export const VROutlinerItem = ({
             borderLeft={border.base}
           >
             {body.orbitingBodies.map((child) => {
-              return <VROutlinerItem key={body.name} body={child} />;
+              return <VROutlinerItem key={child.name} body={child} />;
             })}
           </List>
         </Container>
