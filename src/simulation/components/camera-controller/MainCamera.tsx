@@ -10,7 +10,7 @@ import { type PerspectiveCamera } from 'three';
 import { DIST_MULT, SUN_RADIUS } from '@/simulation/utils/constants';
 import { FAR_CLIP, NEAR_CLIP } from '@/components/canvas/scene-constants';
 
-const SpaceCamera = () => {
+const MainCamera = () => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
   const cameraRef = useRef<PerspectiveCamera>(null!);
@@ -40,4 +40,4 @@ const SpaceCamera = () => {
   );
 };
 
-export { SpaceCamera };
+export { MainCamera as SpaceCamera };
