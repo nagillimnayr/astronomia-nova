@@ -37,8 +37,7 @@ export async function computeEphemerides(name: string) {
   if (!parsedElementTable.success) {
     throw new Error(parsedElementTable.error.toString());
   }
-  const { semiMajorAxis, eccentricity, trueAnomaly, periapsis } =
-    parsedElementTable.data;
+  const { semiMajorAxis, eccentricity, trueAnomaly } = parsedElementTable.data;
 
   const semiLatusRectum = getSemiLatusRectumFromEccentricity(
     semiMajorAxis,
@@ -79,7 +78,6 @@ export async function computeEphemerides(name: string) {
   _vel.normalize();
   _vel.multiplyScalar(orbitalSpeed);
 
-  const { inclination } = parsedElementTable.data;
   const ephemerisTable: ComputedEphemerisTable = {
     ...parsedElementTable.data,
     semiMinorAxis,
