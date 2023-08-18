@@ -24,7 +24,6 @@ export const VRHUD = ({ position = [0, 0, 0] }: VRHUDProps) => {
   );
 
   // Get refs to root container and object.
-  const containerRef = useRef<ContainerNode>(null!);
   const objRef = useRef<Object3D>(null!);
 
   useEffect(() => {
@@ -35,16 +34,8 @@ export const VRHUD = ({ position = [0, 0, 0] }: VRHUDProps) => {
 
   useEffect(() => {
     const obj = objRef.current;
-    obj.visible = false;
-    // const subscription = vrActor.subscribe((state) => {
-    //   if (state.event.type === 'START_SESSION') {
-    //     obj.visible = true;
-    //   } else if (state.event.type === 'END_SESSION') {
-    //     obj.visible = false;
-    //   }
-    // });
-
-    // return () => subscription.unsubscribe();
+    // obj.visible = false;
+    obj.visible = true;
   }, []);
 
   return (
@@ -53,12 +44,10 @@ export const VRHUD = ({ position = [0, 0, 0] }: VRHUDProps) => {
         color={colors.foreground}
         borderColor={colors.border}
       >
-        <object3D ref={objRef} name="VR-HUD">
-          <RootContainer position={position} ref={containerRef}>
-            <VRDetailsPanel position={[3, 0, 0]} />
-            <VRTimePanel position={[0, -2.5, 0]} />
-            <VROutliner position={[-3, 0, 0]} />
-          </RootContainer>
+        <object3D ref={objRef} position={position} name="VR-HUD">
+          <VRDetailsPanel position={[3, 0, 0]} />
+          <VRTimePanel position={[0, -1.5, 0]} />
+          <VROutliner position={[-3, 0, 0]} />
         </object3D>
       </DefaultStyleProvider>
     </>
