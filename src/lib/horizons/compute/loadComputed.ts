@@ -1,20 +1,19 @@
 import fs from 'fs-extra';
 import path from 'path';
-import _ from 'lodash';
+import { kebabCase } from 'lodash';
 import { fromZodError } from 'zod-validation-error';
-import { ComputedPhysicalData } from '../types/ComputedEphemerides';
 import {
   type ComputedEphemerides,
   ComputedEphemeridesSchema,
   ComputedPhysicalDataSchema,
-  ComputedPhysicalData,
+  type ComputedPhysicalData,
 } from '../types/ComputedEphemerides';
 
 export async function loadComputedEphemerides(
   name: string
 ): Promise<ComputedEphemerides> {
   // Get file path.
-  const fileName = _.kebabCase(name + '-computed');
+  const fileName = kebabCase(name + '-computed');
 
   const jsonDirectory = path.join(process.cwd(), 'json');
 
@@ -42,7 +41,7 @@ export async function loadComputedPhysicalData(
   name: string
 ): Promise<ComputedPhysicalData> {
   // Get file path.
-  const fileName = _.kebabCase(name + '-computed-physical');
+  const fileName = kebabCase(name + '-computed-physical');
 
   const jsonDirectory = path.join(process.cwd(), 'json');
 
