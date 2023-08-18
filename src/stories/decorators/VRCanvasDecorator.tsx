@@ -5,6 +5,8 @@ import { Floor } from '@/components/canvas/vr/components/Floor';
 import { DefaultStyleProvider } from '@coconut-xr/koestlich';
 import { colors } from '../../simulation/components/HUD/VR-HUD/vr-hud-constants';
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
+import { VRCameraManager } from '@/components/canvas/vr/VRCameraManager';
+import { VRManager } from '@/components/canvas/vr/VRManager';
 
 type Props = React.PropsWithChildren<CanvasProps>;
 export const VRCanvasDecorator = ({ children, ...props }: Props) => {
@@ -12,6 +14,7 @@ export const VRCanvasDecorator = ({ children, ...props }: Props) => {
     <>
       <VRCanvas>
         <CameraControls makeDefault />
+        <directionalLight position={[0, 0, 100]} intensity={0.15} />
         <DefaultStyleProvider
           color={colors.foreground}
           borderColor={colors.border}
