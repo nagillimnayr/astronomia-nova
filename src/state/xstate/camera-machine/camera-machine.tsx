@@ -125,9 +125,6 @@ export const cameraMachine = createMachine(
       },
 
       ASSIGN_CAMERA: {
-        cond: (context, event) => {
-          return context.camera !== event.camera;
-        },
         actions: [
           assign({ camera: (_, event) => event.camera }),
           log((context, event) => {
@@ -201,10 +198,9 @@ export const cameraMachine = createMachine(
               return context.controls !== event.controls;
             },
             actions: [
+              'logEvent',
               'assignControls',
               log('Assigning camera controls!'),
-              // log((context) => context.controls),
-              // log((_, event) => event.controls),
               'setSpaceCamDistance',
               'initializeControls',
             ],
@@ -228,6 +224,7 @@ export const cameraMachine = createMachine(
         ],
         // Cleanup on exit:
         exit: [
+          'logEvent',
           log('exiting surface view'),
           'cleanupSurfaceCam',
           'attachToTarget',
@@ -262,9 +259,11 @@ export const cameraMachine = createMachine(
               return context.controls !== event.controls;
             },
             actions: [
+              'logEvent',
               'assignControls',
               log('Assigning camera controls!'),
               'setSurfaceCamDistance',
+              'initializeControls',
             ],
           },
           START_XR_SESSION: {
