@@ -20,12 +20,19 @@ import {
   colors,
   text,
 } from '../vr-hud-constants';
-import { ColorRepresentation, type Vector3Tuple } from 'three';
+import {
+  ColorRepresentation,
+  Object3D,
+  Vector3,
+  type Vector3Tuple,
+} from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { VRSeparator } from '../misc/VRSeparator';
 import { DAY, HOUR } from '@/simulation/utils/constants';
 import { useFrame } from '@react-three/fiber';
+
+const _camWorldPos = new Vector3();
 
 const placeholders = {
   name: 'Name',
@@ -53,21 +60,21 @@ export const VRDetailsPanel = ({
     ({ context }) => context.selected
   );
 
-  // Get ref to root container.
-  const rootRef = useRef<ContainerNode>(null!);
+  // Get refs to root container and object.
+  const containerRef = useRef<ContainerNode>(null!);
+  const objRef = useRef<Object3D>(null!);
 
   useEffect(() => {
-    const subsription = cameraActor.subscribe((state) => {
-      // Ignore if last event was not starting an XR session.
-      if (state.event.type !== 'START_XR_SESSION') return;
+    const controls = cameraActor.getSnapshot()!.context.controls;
 
-      const { controls } = state.context;
-      if (!controls) return;
-      const container = rootRef.current;
-
-      // controls.attachToController(container);
-    });
-  }, []);
+    if (!controls) return;
+    const obj = objRef.current;
+    controls.attachToController(obj);
+    obj.position.setZ(-5);
+    controls.getCameraWorldUp(obj.up);
+    controls.getCameraWorldPosition(_camWorldPos);
+    obj.lookAt(_camWorldPos);
+  }, [cameraActor]);
 
   // Dimensions of the panel.
   const width = 1;
@@ -84,94 +91,99 @@ export const VRDetailsPanel = ({
 
   return (
     <>
-      <Suspense>
-        <RootContainer
-          ref={rootRef}
-          positionType="relative"
-          position={position}
-          backgroundColor={colors.muted}
-          sizeX={width}
-          sizeY={height}
-          border={border.base}
-          borderColor={colors.border}
-          borderRadius={borderRadius.base}
-          overflow="hidden"
-          padding={padding}
-          flexDirection="column"
-          alignItems="stretch"
-          justifyContent="flex-start"
-          gapRow={selected ? 20 : 0}
-        >
-          {/** Close Button. */}
-          <VRCloseButton />
-          {/** Name. */}
-          <Container
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="center"
+      {/** Its better to put the object3D outside of the Suspense barrier, so as to not delay setting the reference. */}
+      <object3D ref={objRef} name="VR-Details-Panel">
+        <Suspense>
+          <RootContainer
+            ref={containerRef}
+            positionType="relative"
+            position={position}
+            backgroundColor={colors.muted}
+            sizeX={width}
+            sizeY={height}
+            border={border.base}
+            borderColor={colors.border}
             borderRadius={borderRadius.base}
+            overflow="hidden"
+            padding={padding}
+            flexDirection="column"
+            alignItems="stretch"
+            justifyContent="flex-start"
+            gapRow={selected ? 20 : 0}
           >
-            <Text color={colors.foreground} fontSize={text.lg}>
-              {name}
-            </Text>
-          </Container>
+            {/** Close Button. */}
+            <VRCloseButton />
+            {/** Name. */}
+            <Container
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="center"
+              borderRadius={borderRadius.base}
+            >
+              <Text color={colors.foreground} fontSize={text.lg}>
+                {name}
+              </Text>
+            </Container>
 
-          <VRSeparator direction="horizontal" opacity={selected ? 1 : 0} />
+            <VRSeparator direction="horizontal" opacity={selected ? 1 : 0} />
 
-          {/** Attributes. */}
-          <List type={'inset'} flexDirection="column" gapRow={5}>
-            {/** Mass. */}
-            <ListItem
-              subtitle={
-                <AttributeValue>{mass.toExponential(3) + 'kg'}</AttributeValue>
-              }
-            >
-              <AttributeLabel>Mass</AttributeLabel>
-            </ListItem>
-            {/** Mean Radius. */}
-            <ListItem
-              subtitle={
-                <AttributeValue>
-                  {meanRadius.toExponential(3) + ' m'}
-                </AttributeValue>
-              }
-            >
-              <AttributeLabel>Mean Radius</AttributeLabel>
-            </ListItem>
-            {/** Sidereal Rotation Rate. */}
-            <ListItem
-              subtitle={
-                <AttributeValue>
-                  {siderealRotationRate.toExponential(3) + ' rad/s'}
-                </AttributeValue>
-              }
-            >
-              <AttributeLabel>Sidereal Rotation Rate</AttributeLabel>
-            </ListItem>
-            {/** Sidereal Rotation Period. */}
-            <ListItem
-              subtitle={
-                <AttributeValue>
-                  {(siderealRotationPeriod / HOUR).toLocaleString() + ' hr'}
-                </AttributeValue>
-              }
-            >
-              <AttributeLabel>Sidereal Rotation Period</AttributeLabel>
-            </ListItem>
-            {/**  */}
-            <ListItem>
-              <AttributeLabel></AttributeLabel>
-            </ListItem>
-            {/**  */}
-            <ListItem>
-              <AttributeLabel></AttributeLabel>
-            </ListItem>
-          </List>
-          <VRSeparator direction="horizontal" opacity={selected ? 1 : 0} />
-          <VRDetailsPanelButtons />
-        </RootContainer>
-      </Suspense>
+            {/** Attributes. */}
+            <List type={'inset'} flexDirection="column" gapRow={5}>
+              {/** Mass. */}
+              <ListItem
+                subtitle={
+                  <AttributeValue>
+                    {mass.toExponential(3) + 'kg'}
+                  </AttributeValue>
+                }
+              >
+                <AttributeLabel>Mass</AttributeLabel>
+              </ListItem>
+              {/** Mean Radius. */}
+              <ListItem
+                subtitle={
+                  <AttributeValue>
+                    {meanRadius.toExponential(3) + ' m'}
+                  </AttributeValue>
+                }
+              >
+                <AttributeLabel>Mean Radius</AttributeLabel>
+              </ListItem>
+              {/** Sidereal Rotation Rate. */}
+              <ListItem
+                subtitle={
+                  <AttributeValue>
+                    {siderealRotationRate.toExponential(3) + ' rad/s'}
+                  </AttributeValue>
+                }
+              >
+                <AttributeLabel>Sidereal Rotation Rate</AttributeLabel>
+              </ListItem>
+              {/** Sidereal Rotation Period. */}
+              <ListItem
+                subtitle={
+                  <AttributeValue>
+                    {(siderealRotationPeriod / HOUR).toLocaleString() + ' hr'}
+                  </AttributeValue>
+                }
+              >
+                <AttributeLabel>Sidereal Rotation Period</AttributeLabel>
+              </ListItem>
+              {/**  */}
+              <ListItem>
+                <AttributeLabel></AttributeLabel>
+              </ListItem>
+              {/**  */}
+              <ListItem>
+                <AttributeLabel></AttributeLabel>
+              </ListItem>
+            </List>
+            <VRSeparator direction="horizontal" opacity={selected ? 1 : 0} />
+            <VRDetailsPanelButtons />
+          </RootContainer>
+        </Suspense>
+      </object3D>
     </>
   );
 };
