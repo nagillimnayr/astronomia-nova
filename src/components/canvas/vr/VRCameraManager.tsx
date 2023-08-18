@@ -1,5 +1,5 @@
 import { CameraController } from '@/lib/camera-controller/CameraController';
-import { SpaceCamera } from '@/simulation/components/camera-controller/MainCamera';
+import { MainCamera } from '@/simulation/components/camera-controller/MainCamera';
 import { PI_OVER_THREE, PI_OVER_TWO } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Object3DNode, extend } from '@react-three/fiber';
@@ -27,7 +27,7 @@ export const VRCameraManager = () => {
           controller.setTargetRadius(8);
         }}
       />
-      <SpaceCamera />
+      <MainCamera />
     </>
   );
 };
