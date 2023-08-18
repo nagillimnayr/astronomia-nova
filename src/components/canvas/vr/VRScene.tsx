@@ -23,6 +23,7 @@ import {
   ImmersiveSessionOrigin,
 } from '@coconut-xr/natuerlich/react';
 import { VRCameraManager } from './VRCameraManager';
+import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
 
 export const VRScene = () => {
   const rootActor = MachineContext.useActorRef();
@@ -52,11 +53,12 @@ export const VRScene = () => {
         <ImmersiveSessionOrigin position={[0, 2, 8]} /> */}
         {/* <CameraManager /> */}
         <VRCameraManager />
-        <directionalLight
+        <MockSolarSystem />
+        {/* <directionalLight
           ref={dirLightRef}
           intensity={0.7}
           position={[-5, 10, 8]}
-        />
+        /> */}
 
         {/* <RotatingObject position={[0, 1, 0]}>
           <Dodecahedron>
