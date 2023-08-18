@@ -18,9 +18,8 @@ const MainCamera = () => {
   return (
     <>
       <PerspectiveCam
-        // makeDefault={spaceView}
         makeDefault
-        name="Space-Camera"
+        name="main-camera"
         ref={(cam) => {
           if (!cam) return;
           const camera = cam as PerspectiveCamera;
@@ -28,7 +27,7 @@ const MainCamera = () => {
 
           // Assign camera to state context.
           cameraActor.send({
-            type: 'ASSIGN_SPACE_CAMERA',
+            type: 'ASSIGN_CAMERA',
             camera,
           });
         }}
