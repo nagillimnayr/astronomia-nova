@@ -97,7 +97,7 @@ export function RingMarker({ children, bodyRef }: Props) {
     <>
       <Sphere
         ref={sphereRef}
-        args={[2]}
+        args={[1.25]}
         onClick={handleClick}
         onPointerOver={() => {
           setHovered(true);
