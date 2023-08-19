@@ -38,7 +38,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
               flat
               ref={(canvas) => {
                 if (!canvas) return;
-                // Assign canvas context in camera state machine.
+                // Assign canvas context in camera state machine. This is necessary so that event listeners can be attached for the camera controller.
                 cameraActor.send({ type: 'ASSIGN_CANVAS', canvas });
               }}
             >
@@ -80,10 +80,11 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                   <Stats />
                   <Perf position={'bottom-left'} />
                 </Hud>
+
+                {/** The VR UI, built with @coconut-xr/koestlich, when attached directly to the camera has serious clipping issues whenever the camera moves. Putting the UI inside of a Hud component from React-Three-Drei, however, attaches the UI to a separate scene graph, and it maintains its position relative to the camera, without actually moving, and this resolves the clipping issues. */}
                 <Hud renderPriority={2}>
-                  {/* <CamView /> */}
-                  <VRHUD />
                   <VRManager />
+                  <VRHUD />
                 </Hud>
               </XR>
             </Canvas>
