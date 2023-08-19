@@ -1,5 +1,11 @@
 import { Suspense, useEffect, useRef } from 'react';
-import { GOLDEN_RATIO, border, colors, text } from '../vr-hud-constants';
+import {
+  GOLDEN_RATIO,
+  border,
+  colors,
+  text,
+  borderRadius,
+} from '../vr-hud-constants';
 import {
   Object3D,
   Vector3Tuple,
@@ -20,6 +26,7 @@ import {
 import { VRPanel } from '../vr-ui-components/VRPanel';
 import { Flex, Box, useFlexSize } from '@react-three/flex';
 import { VRButton } from '../vr-ui-components/VRButton';
+import { VRFlexDivider } from '../vr-ui-components/VRDivider';
 
 type VRSettingsMenuProps = {
   position?: Vector3Tuple;
@@ -45,9 +52,10 @@ export const VRSettingsMenu = ({
           height={height}
           borderRadius={0.1}
           backgroundColor={colors.background}
+          borderColor={colors.border}
+          borderWidth={0.005}
         ></VRPanel>
         <group position={[0, 0, depth]}>
-          <axesHelper />
           <Flex
             ref={flexRef}
             centerAnchor
@@ -57,9 +65,11 @@ export const VRSettingsMenu = ({
             flexDirection={'column'}
             padding={0.1}
           >
-            <Box centerAnchor ref={box1Ref} width={'100%'} height={0.2}>
+            <Box centerAnchor ref={box1Ref} width={'100%'} height={0.15}>
               <Header />
             </Box>
+
+            <Divider />
             <Box centerAnchor ref={box1Ref} width={'100%'} height={0.2}>
               <VRButton
                 width={0.5}
@@ -74,6 +84,8 @@ export const VRSettingsMenu = ({
                 </Text>
               </VRButton>
             </Box>
+            <Divider />
+            <VRToggleButton label="Trajectories" />
           </Flex>
         </group>
       </group>
@@ -98,6 +110,49 @@ const Header = () => {
           Settings
         </Text>
       </Plane>
+    </>
+  );
+};
+
+type VRToggleBtnProps = {
+  label: string;
+};
+const VRToggleButton = ({ label }: VRToggleBtnProps) => {
+  return (
+    <>
+      <Box
+        marginTop={0.1}
+        width={1}
+        height={0.1}
+        flexDirection={'row'}
+        alignItems={'center'}
+        // justifyContent={'flex-start'}
+      >
+        <Box height={0.1} width={0.1}>
+          <VRButton width={0.1} height={0.1}></VRButton>
+        </Box>
+        <Box height={0.1} width={'100%'} flexGrow={1} alignSelf={'flex-end'}>
+          <Text anchorX={'center'} fontSize={0.05}>
+            {label}
+          </Text>
+        </Box>
+      </Box>
+    </>
+  );
+};
+
+const Divider = () => {
+  return (
+    <>
+      <Box
+        centerAnchor
+        width={'100%'}
+        height={0.01}
+        marginTop={0.02}
+        marginBottom={0.02}
+      >
+        <VRFlexDivider color={colors.border} />
+      </Box>
     </>
   );
 };
