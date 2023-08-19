@@ -13,12 +13,13 @@ export const KeyPressControl = () => {
   const rootActor = MachineContext.useActorRef();
 
   useEventListener('keydown', (event) => {
-    switch (event.key) {
-      case ' ': {
-        const { camera, controls, scene } = getThree();
-        console.log('camera:', camera);
-        console.log('camera parent:', camera.parent);
-      }
+    switch (
+      event.key
+      // case ' ': {
+      // const { camera, controls, scene } = getThree();
+      // console.log('camera:', camera);
+      // console.log('camera parent:', camera.parent);
+      // }
       // case 'ArrowLeft': {
       //   rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
       //   break;
@@ -27,6 +28,7 @@ export const KeyPressControl = () => {
       //   rootActor.send({ type: 'ADVANCE_DAY' });
       //   break;
       // }
+    ) {
     }
   });
 
