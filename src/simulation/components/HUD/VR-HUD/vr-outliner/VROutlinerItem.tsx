@@ -56,39 +56,39 @@ export const VROutlinerItem = ({
   }, []);
   return (
     <>
-      <Object object={obj} depth={depth.xl}>
+      <Object object={obj} depth={depth.xxs}>
         <Suspense>
           <Container
             ref={containerRef}
-            flexDirection="column"
             height={'auto'}
+            flexDirection="column"
+            alignItems="stretch"
+            justifyContent="flex-start"
             gapRow={text.xs}
-            backgroundColor={colors.background}
           >
-            <Container backgroundColor={colors.background}>
-              <Button
-                // backgroundColor={colors.background}
-                height={'auto'}
-                onClick={handleClick}
-              >
+            <Container>
+              <Button height={'auto'} onClick={handleClick}>
                 <Text fontSize={text.xl}>{body.name}</Text>
               </Button>
             </Container>
 
-            <List
-              flexDirection="column"
-              height={'auto'}
-              gapRow={text.xs}
-              // backgroundColor={colors.background}
-              marginLeft={text.base}
-              paddingLeft={text.base}
-              borderLeft={border.base}
-              borderColor={colors.border}
-            >
-              {body.orbitingBodies.map((child) => {
-                return <VROutlinerItem key={child.name} body={child} />;
-              })}
-            </List>
+            {body.orbitingBodies.length > 0 && (
+              <List
+                height={'auto'}
+                marginLeft={text.base}
+                paddingLeft={text.base}
+                borderLeft={border.base}
+                borderColor={colors.border}
+                flexDirection="column"
+                alignItems="stretch"
+                justifyContent="center"
+                gapRow={text.xs}
+              >
+                {body.orbitingBodies.map((child) => {
+                  return <VROutlinerItem key={child.name} body={child} />;
+                })}
+              </List>
+            )}
           </Container>
         </Suspense>
       </Object>
