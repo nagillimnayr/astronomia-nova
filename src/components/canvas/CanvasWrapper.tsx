@@ -10,7 +10,8 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CamView } from '@/simulation/components/HUD/CamView/CamView';
 import Scene from './Scene';
 import { VRManager } from './vr/VRManager';
-import { Stats } from '@react-three/drei';
+import { Hud, Stats } from '@react-three/drei';
+import { VRHUD } from '@/simulation/components/HUD/VR-HUD/VRHUD';
 
 const CanvasWrapper = ({ children }: PropsWithChildren) => {
   const { cameraActor, uiActor, vrActor } = MachineContext.useSelector(
@@ -41,7 +42,6 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                 cameraActor.send({ type: 'ASSIGN_CANVAS', canvas });
               }}
             >
-              {/* <Hud renderPriority={1}> */}
               <XR
                 referenceSpace="viewer"
                 onSessionStart={(event) => {
@@ -57,7 +57,10 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                   session
                     .requestReferenceSpace('viewer')
                     .then((refSpace) => {
-                      cameraActor.send({ type: 'ASSIGN_REF_SPACE', refSpace });
+                      cameraActor.send({
+                        type: 'ASSIGN_REF_SPACE',
+                        refSpace,
+                      });
                       vrActor.send({
                         type: 'ASSIGN_REF_SPACE_ORIGIN',
                         refSpace,
@@ -71,16 +74,18 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                   cameraActor.send({ type: 'END_XR_SESSION' });
                 }}
               >
-                <Controllers />
-                <VRManager />
-                <Scene>{children}</Scene>
+                <Hud renderPriority={1}>
+                  <Controllers />
+                  <Scene>{children}</Scene>
+                  <Stats />
+                  <Perf position={'bottom-left'} />
+                </Hud>
+                <Hud renderPriority={2}>
+                  {/* <CamView /> */}
+                  <VRHUD />
+                  <VRManager />
+                </Hud>
               </XR>
-              <Stats />
-              <Perf position={'bottom-left'} />
-              {/* </Hud> */}
-              {/* <Hud renderPriority={2}>
-                <CamView />
-              </Hud> */}
             </Canvas>
           </div>
         </div>

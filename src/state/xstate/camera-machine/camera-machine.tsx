@@ -335,12 +335,12 @@ export const cameraMachine = createMachine(
 
         if (vrHud) {
           // Attach the VR Hud to the camera.
-          controls.attachToController(vrHud);
-          vrHud.position.setZ(-5);
-          controls.attachToController(vrHud);
-          controls.getCameraWorldUp(vrHud.up);
-          controls.getCameraWorldPosition(_camWorldPos);
-          vrHud.lookAt(_camWorldPos);
+          // controls.attachToController(vrHud);
+          // vrHud.position.setZ(-5);
+          // controls.attachToController(vrHud);
+          // controls.getCameraWorldUp(vrHud.up);
+          // controls.getCameraWorldPosition(_camWorldPos);
+          // vrHud.lookAt(_camWorldPos);
         }
         console.log('controls:', controls);
         console.log('camera:', camera);
