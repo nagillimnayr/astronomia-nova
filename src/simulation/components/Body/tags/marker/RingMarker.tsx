@@ -1,4 +1,13 @@
-import { Billboard, Circle, Html, Ring, useCursor } from '@react-three/drei';
+import {
+  Billboard,
+  Circle,
+  Html,
+  MeshDiscardMaterial,
+  Ring,
+  Sphere,
+  useCursor,
+  useHelper,
+} from '@react-three/drei';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import {
   useCallback,
@@ -17,6 +26,7 @@ import {
   DoubleSide,
   PerspectiveCamera,
   FrontSide,
+  BoxHelper,
 } from 'three';
 
 import { useActor, useSelector } from '@xstate/react';
@@ -44,7 +54,7 @@ export function RingMarker({ children, bodyRef }: Props) {
 
   const isVisible = useSelector(markers, (state) => state.matches('active'));
 
-  const circleRef = useRef<Mesh>(null!);
+  const sphereRef = useRef<Mesh>(null!);
   const materialRef = useRef<MeshBasicMaterial>(null!);
 
   const [isHovered, setHovered] = useState<boolean>(false);
@@ -61,14 +71,14 @@ export function RingMarker({ children, bodyRef }: Props) {
 
   useFrame(({ camera }) => {
     const body = bodyRef.current;
-    if (!body || !circleRef.current) return;
+    if (!body || !sphereRef.current) return;
 
     // Get world position of body.
     body.getWorldPosition(_bodyWorldPos);
     // Get world position of camera.
     camera.getWorldPosition(_camWorldPos);
     // Rotate to face camera.
-    circleRef.current.lookAt(_camWorldPos);
+    sphereRef.current.lookAt(_camWorldPos);
 
     // Get distance to camera.
     const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
@@ -78,21 +88,31 @@ export function RingMarker({ children, bodyRef }: Props) {
 
     const factor = Math.max(1e-5, n);
     // Scale relative to distance from camera.
-    circleRef.current.scale.setScalar(factor);
+    sphereRef.current.scale.setScalar(factor);
   });
+
+  // const boxHelper = useHelper(sphereRef, BoxHelper);
 
   return (
     <>
-      <Circle
-        ref={circleRef}
-        args={[1]}
+      <Sphere
+        ref={sphereRef}
+        args={[2]}
         onClick={handleClick}
-        onPointerOver={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
+        onPointerOver={() => {
+          setHovered(true);
+          console.log('pointer enter over sphere');
+        }}
+        onPointerLeave={() => {
+          setHovered(false);
+
+          console.log('pointer leave sphere');
+        }}
       >
         {/** Transparent material so that the circle will catch clicks but not be visible. */}
-        <meshBasicMaterial side={FrontSide} opacity={0} transparent />
-        <Ring visible={isVisible} args={[1, 1.25]}>
+        <MeshDiscardMaterial />
+        {/* <meshBasicMaterial side={DoubleSide} opacity={1} transparent /> */}
+        <Ring visible={isVisible} args={[1, 1.25]} onClick={handleClick}>
           <meshBasicMaterial
             ref={materialRef}
             color={'white'}
@@ -101,7 +121,7 @@ export function RingMarker({ children, bodyRef }: Props) {
           {/* <axesHelper args={[radius * 2]} /> */}
           {children}
         </Ring>
-      </Circle>
+      </Sphere>
     </>
   );
 }

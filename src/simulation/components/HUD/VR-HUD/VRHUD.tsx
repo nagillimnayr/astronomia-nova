@@ -7,11 +7,12 @@ import { VRDetailsPanel } from './vr-details-panel/VRDetailsPanel';
 import { VRTimePanel } from './vr-time-panel/VRTimePanel';
 import { colors } from './vr-hud-constants';
 import { VROutliner } from './vr-outliner/VROutliner';
-import { Object3D, Vector3, type Vector3Tuple } from 'three';
+import { BoxHelper, Object3D, Vector3, type Vector3Tuple } from 'three';
 import { useEffect, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { VRSettingsMenu } from './vr-settings-menu/VRSettingsMenu';
+import { useHelper } from '@react-three/drei';
 
 const _camWorldPos = new Vector3();
 
@@ -26,6 +27,8 @@ export const VRHUD = ({ position = [0, 0, 0] }: VRHUDProps) => {
 
   // Get refs to root container and object.
   const objRef = useRef<Object3D>(null!);
+
+  // const boxHelper = useHelper(objRef, BoxHelper);
 
   useEffect(() => {
     // Attach to the camera.

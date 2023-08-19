@@ -24,6 +24,7 @@ import {
   text,
 } from '../vr-hud-constants';
 import {
+  BoxHelper,
   ColorRepresentation,
   Object3D,
   Vector3,
@@ -35,7 +36,7 @@ import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import { DAY, HOUR } from '@/simulation/utils/constants';
 import { useFrame } from '@react-three/fiber';
 import { VRButton } from '../vr-ui-components/VRButton';
-import { Plane } from '@react-three/drei';
+import { Plane, useHelper } from '@react-three/drei';
 
 const _camWorldPos = new Vector3();
 
@@ -68,6 +69,8 @@ export const VRDetailsPanel = ({
   // Get refs to root container and object.
   const containerRef = useRef<ContainerNode>(null!);
   const objRef = useRef<Object3D>(null!);
+
+  // const boxHelper = useHelper(objRef, BoxHelper);
 
   // Dimensions of the panel.
   const width = 1;

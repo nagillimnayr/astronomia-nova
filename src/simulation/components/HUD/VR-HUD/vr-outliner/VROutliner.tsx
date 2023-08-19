@@ -13,12 +13,13 @@ import {
   colors,
   text,
 } from '../vr-hud-constants';
-import { Object3D, Vector3, type Vector3Tuple } from 'three';
+import { BoxHelper, Object3D, Vector3, type Vector3Tuple } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import { VROutlinerItem } from './VROutlinerItem';
 import { useFrame } from '@react-three/fiber';
+import { useHelper } from '@react-three/drei';
 
 const _camWorldPos = new Vector3();
 
@@ -40,17 +41,7 @@ export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
   const containerRef = useRef<ContainerNode>(null!);
   const objRef = useRef<Object3D>(null!);
 
-  // useEffect(() => {
-  //   const controls = cameraActor.getSnapshot()!.context.controls;
-
-  //   if (!controls) return;
-  //   const obj = objRef.current;
-  //   // obj.position.setZ(-5);
-  //   // controls.attachToController(obj);
-  //   controls.getCameraWorldUp(obj.up);
-  //   controls.getCameraWorldPosition(_camWorldPos);
-  //   obj.lookAt(_camWorldPos);
-  // }, [cameraActor]);
+  // const boxHelper = useHelper(objRef, BoxHelper);
 
   const width = 1;
   const height = width * GOLDEN_RATIO;

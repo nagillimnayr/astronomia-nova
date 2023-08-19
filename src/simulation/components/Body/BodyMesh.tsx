@@ -64,6 +64,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 
   const meshRef = useRef<Mesh>(null!);
 
+  // const boxHelper = useHelper(meshRef, BoxHelper);
+
   // const [isVisible, setVisible] = useState<boolean>(true);
 
   // const [isSelected, setSelected] = useState<boolean>(false);
@@ -84,15 +86,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     },
     [bodyRef, selectionActor]
   );
-  // const handleMiss = (e: MouseEvent) => {
-  //   if (!meshRef.current) return;
-  //   // if (isSelected) {
-  //   //   // setSelected(false);
-  //   // }
-  // };
 
-  // Set forwarded ref
-  // the return value of the callback function will be assigned to fwdRef
+  // Set forwarded ref, the return value of the callback function will be assigned to fwdRef.
   useImperativeHandle(
     fwdRef,
     () => {
