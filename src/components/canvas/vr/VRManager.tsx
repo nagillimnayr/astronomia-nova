@@ -9,7 +9,6 @@ import { VRCameraManager } from './VRCameraManager';
 
 export const VRManager = () => {
   const getXR = useXR(({ get }) => get);
-  const rightController = useController('right');
   const { cameraActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context
   );
