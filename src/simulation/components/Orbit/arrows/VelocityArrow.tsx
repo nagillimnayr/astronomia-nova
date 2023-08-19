@@ -1,5 +1,5 @@
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
-import { EARTH_RADIUS } from '@/simulation/utils/constants';
+import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 
 import { useFrame } from '@react-three/fiber';
@@ -41,10 +41,11 @@ const VelocityArrow = () => {
 
     const direction = _vel.normalize();
     arrowRef.current.setDirection(direction);
+    const length = 2 * (bodyRef.current.meanRadius / DIST_MULT);
     arrowRef.current.setLength(
-      2 * (bodyRef.current.meanRadius / EARTH_RADIUS),
-      0.1,
-      0.05
+      2 * (bodyRef.current.meanRadius / DIST_MULT),
+      0.1 * length,
+      0.05 * length
     );
   });
   return (
