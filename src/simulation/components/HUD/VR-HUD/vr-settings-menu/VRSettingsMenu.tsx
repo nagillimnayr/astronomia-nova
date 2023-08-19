@@ -44,7 +44,7 @@ export const VRSettingsMenu = ({
           width={width}
           height={height}
           borderRadius={0.1}
-          color={colors.background}
+          backgroundColor={colors.background}
         ></VRPanel>
         <group position={[0, 0, depth]}>
           <axesHelper />

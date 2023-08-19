@@ -18,7 +18,7 @@ type VRPanelProps = PropsWithChildren &
     position?: Vector3Tuple;
     width?: number;
     height?: number;
-    color?: ColorRepresentation;
+    backgroundColor?: ColorRepresentation;
     borderColor?: ColorRepresentation;
     borderRadius?: number;
     borderWidth?: number;
@@ -28,7 +28,7 @@ export const VRPanel = ({
   position,
   width = 1,
   height = 1,
-  color,
+  backgroundColor,
   borderColor,
   borderRadius = 0,
   borderWidth = 0.01,
@@ -40,7 +40,7 @@ export const VRPanel = ({
       <group position={position}>
         <panelBorder
           args={[width, height, borderRadius, borderWidth, 24]}
-          color={borderColor ?? color}
+          backgroundColor={borderColor ?? backgroundColor}
         >
           <panel
             args={[
@@ -49,7 +49,7 @@ export const VRPanel = ({
               borderRadius,
               24,
             ]}
-            color={color}
+            backgroundColor={backgroundColor}
             {...props}
           >
             {children}

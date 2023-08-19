@@ -29,8 +29,8 @@ export class Panel extends Mesh {
     }
   }
 
-  set color(color: ColorRepresentation) {
-    this.color;
+  set backgroundColor(color: ColorRepresentation) {
+    this.backgroundColor;
     if (this.material instanceof MeshBasicMaterial) {
       this.material.color.set(color);
     } else if (this.material instanceof Array) {
@@ -62,8 +62,8 @@ export class PanelBorder extends Mesh {
     }
   }
 
-  set color(color: ColorRepresentation) {
-    this.color;
+  set backgroundColor(color: ColorRepresentation) {
+    this.backgroundColor;
     if (this.material instanceof MeshBasicMaterial) {
       this.material.color.set(color);
     } else if (this.material instanceof Array) {

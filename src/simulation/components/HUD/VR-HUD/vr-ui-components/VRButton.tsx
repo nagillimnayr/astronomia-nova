@@ -76,7 +76,7 @@ export const VRButton = ({
           onPointerEnter={handleStartHover}
           onPointerLeave={handleEndHover}
           onClick={onClick}
-          color={isHovered ? hoverColor : backgroundColor}
+          backgroundColor={isHovered ? hoverColor : backgroundColor}
           borderColor={isHovered ? borderHoverColor : borderColor}
         >
           {/* <meshBasicMaterial color={isHovered ? hoverColor : backgroundColor} /> */}

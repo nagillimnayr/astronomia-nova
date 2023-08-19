@@ -44,7 +44,7 @@ const VRPanelStory = () => {
         width={width}
         height={height}
         borderRadius={0.25}
-        color={colors.background}
+        backgroundColor={colors.background}
         borderColor={colors.border}
         borderWidth={0.025}
       ></VRPanel>
@@ -62,7 +62,7 @@ const VRPanelWireframeStory = () => {
         width={width}
         height={height}
         borderRadius={0.2}
-        color={colors.background}
+        backgroundColor={colors.background}
         borderColor={colors.border}
         borderWidth={0.05}
       >
