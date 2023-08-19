@@ -14,6 +14,8 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
     <>
       <div className="relative z-10 h-full w-full touch-none select-none overscroll-none">
         <Canvas
+          flat
+          linear /* Textures will appear washed out unless this is set. */
           gl={{ logarithmicDepthBuffer: true, localClippingEnabled: true }}
           ref={(canvas) => {
             if (!canvas) return;
