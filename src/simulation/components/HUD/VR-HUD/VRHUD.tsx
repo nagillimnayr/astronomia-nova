@@ -11,6 +11,7 @@ import { Object3D, Vector3, type Vector3Tuple } from 'three';
 import { useEffect, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
+import { VRSettingsMenu } from './vr-settings-menu/VRSettingsMenu';
 
 const _camWorldPos = new Vector3();
 
@@ -42,12 +43,14 @@ export const VRHUD = ({ position = [0, 0, 0] }: VRHUDProps) => {
     <>
       <DefaultStyleProvider
         color={colors.foreground}
-        borderColor={colors.border}
+        // borderColor={colors.background}
+        // backgroundColor={colors.background}
       >
         <object3D ref={objRef} position={position} name="VR-HUD">
           <VRDetailsPanel position={[3, 0, 0]} />
           <VRTimePanel position={[0, -1.5, 0]} />
           <VROutliner position={[-3, 0, 0]} />
+          {/* <VRSettingsMenu position={[0, 0.5, 0]} /> */}
         </object3D>
       </DefaultStyleProvider>
     </>
