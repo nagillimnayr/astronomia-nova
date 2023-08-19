@@ -3,19 +3,27 @@ import {
   Container,
   Text,
   ContainerNode,
+  Object,
 } from '@coconut-xr/koestlich';
-import { Glass, IconButton, List, ListItem } from '@coconut-xr/apfel-kruemel';
-import { Suspense, useCallback, useRef } from 'react';
+import {
+  Button,
+  Glass,
+  IconButton,
+  List,
+  ListItem,
+} from '@coconut-xr/apfel-kruemel';
+import { Suspense, useCallback, useMemo, useRef } from 'react';
 import {
   GOLDEN_RATIO,
   border,
   borderRadius,
   colors,
+  depth,
   text,
 } from '../vr-hud-constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { VRSeparator } from '../misc/VRSeparator';
+import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { Object3D } from 'three';
 
@@ -41,34 +49,49 @@ export const VROutlinerItem = ({
   const handleClick = useCallback(() => {
     selectionActor.send({ type: 'SELECT', selection: body });
   }, [body, selectionActor]);
+
+  // Create Object to attach UI component to.
+  const obj = useMemo(() => {
+    return new Object3D();
+  }, []);
   return (
     <>
-      <Suspense>
-        <Container
-          ref={containerRef}
-          flexDirection="column"
-          height={'auto'}
-          backgroundColor={colors.background}
-          gapRow={text.sm}
-        >
-          <ListItem height={'auto'} onClick={handleClick}>
-            <Text fontSize={text.xl}>{body.name}</Text>
-          </ListItem>
-          <List
+      <Object object={obj} depth={depth.xl}>
+        <Suspense>
+          <Container
+            ref={containerRef}
             flexDirection="column"
             height={'auto'}
             gapRow={text.xs}
             backgroundColor={colors.background}
-            marginLeft={text.base}
-            paddingLeft={text.base}
-            borderLeft={border.base}
           >
-            {body.orbitingBodies.map((child) => {
-              return <VROutlinerItem key={child.name} body={child} />;
-            })}
-          </List>
-        </Container>
-      </Suspense>
+            <Container backgroundColor={colors.background}>
+              <Button
+                // backgroundColor={colors.background}
+                height={'auto'}
+                onClick={handleClick}
+              >
+                <Text fontSize={text.xl}>{body.name}</Text>
+              </Button>
+            </Container>
+
+            <List
+              flexDirection="column"
+              height={'auto'}
+              gapRow={text.xs}
+              // backgroundColor={colors.background}
+              marginLeft={text.base}
+              paddingLeft={text.base}
+              borderLeft={border.base}
+              borderColor={colors.border}
+            >
+              {body.orbitingBodies.map((child) => {
+                return <VROutlinerItem key={child.name} body={child} />;
+              })}
+            </List>
+          </Container>
+        </Suspense>
+      </Object>
     </>
   );
 };

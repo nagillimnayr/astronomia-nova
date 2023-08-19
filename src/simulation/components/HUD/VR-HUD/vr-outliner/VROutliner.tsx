@@ -5,7 +5,7 @@ import {
   ContainerNode,
 } from '@coconut-xr/koestlich';
 import { Glass, IconButton, List, ListItem } from '@coconut-xr/apfel-kruemel';
-import { Suspense, useRef, useEffect } from 'react';
+import { Suspense, useRef, useEffect, useMemo } from 'react';
 import {
   GOLDEN_RATIO,
   border,
@@ -16,7 +16,7 @@ import {
 import { Object3D, Vector3, type Vector3Tuple } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { VRSeparator } from '../misc/VRSeparator';
+import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import { VROutlinerItem } from './VROutlinerItem';
 import { useFrame } from '@react-three/fiber';
 
@@ -61,16 +61,23 @@ export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
         <Suspense>
           <RootContainer
             ref={containerRef}
-            // position={position}
             sizeX={width}
             sizeY={height}
-            border={border.base}
+            // border={border.base}
             borderRadius={borderRadius.base}
-            backgroundColor={colors.background}
+            // backgroundColor={colors.background}
             flexDirection="column"
-            padding={text.base}
+            // padding={text.base}
           >
-            {root && <VROutlinerItem body={root} />}
+            <Container
+              padding={text.base}
+              borderRadius={borderRadius.base}
+              border={border.base}
+              backgroundColor={colors.background}
+              height={'100%'}
+            >
+              {root && <VROutlinerItem body={root} />}
+            </Container>
           </RootContainer>
         </Suspense>
       </object3D>

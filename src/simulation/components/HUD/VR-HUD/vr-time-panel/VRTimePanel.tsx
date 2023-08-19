@@ -13,8 +13,6 @@ import { VRTimescaleSlider } from './vr-time-controls/VRTimescaleSlider';
 import { Object3D, Vector3Tuple, Vector3 } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 
-const _camWorldPos = new Vector3();
-
 type VRTimePanelProps = {
   position?: Vector3Tuple;
 };

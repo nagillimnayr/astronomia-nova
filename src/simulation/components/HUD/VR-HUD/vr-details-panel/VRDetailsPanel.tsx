@@ -5,6 +5,7 @@ import {
   SVG,
   ContainerNode,
   Object,
+  noAnimation,
 } from '@coconut-xr/koestlich';
 import {
   Glass,
@@ -19,6 +20,7 @@ import {
   border,
   borderRadius,
   colors,
+  depth,
   text,
 } from '../vr-hud-constants';
 import {
@@ -32,6 +34,8 @@ import { useSelector } from '@xstate/react';
 import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import { DAY, HOUR } from '@/simulation/utils/constants';
 import { useFrame } from '@react-three/fiber';
+import { VRButton } from '../vr-ui-components/VRButton';
+import { Plane } from '@react-three/drei';
 
 const _camWorldPos = new Vector3();
 
@@ -97,6 +101,8 @@ export const VRDetailsPanel = ({
             alignItems="stretch"
             justifyContent="flex-start"
             gapRow={selected ? 20 : 0}
+            animation={noAnimation}
+            overflow="visible"
           >
             {/** Close Button. */}
             <VRCloseButton />
@@ -107,11 +113,15 @@ export const VRDetailsPanel = ({
               alignItems="center"
               justifyContent="center"
               backgroundColor={colors.background}
+              animation={noAnimation}
+              overflow="visible"
             >
               <Text
                 color={colors.foreground}
                 fontSize={text.lg}
                 backgroundColor={colors.background}
+                animation={noAnimation}
+                overflow="visible"
               >
                 {name}
               </Text>
@@ -120,55 +130,37 @@ export const VRDetailsPanel = ({
             <VRSeparator direction="horizontal" opacity={selected ? 1 : 0} />
 
             {/** Attributes. */}
-            <List type={'inset'} flexDirection="column" gapRow={5}>
+            <List
+              type={'inset'}
+              flexDirection="column"
+              gapRow={5}
+              animation={noAnimation}
+              overflow="visible"
+            >
               {/** Mass. */}
-              <ListItem
-                subtitle={
-                  <AttributeValue>
-                    {mass.toExponential(3) + 'kg'}
-                  </AttributeValue>
-                }
-              >
-                <AttributeLabel>Mass</AttributeLabel>
-              </ListItem>
+              <AttributeListItem
+                label="Mass"
+                value={mass.toExponential(3) + 'kg'}
+              />
               {/** Mean Radius. */}
-              <ListItem
-                subtitle={
-                  <AttributeValue>
-                    {meanRadius.toExponential(3) + ' m'}
-                  </AttributeValue>
-                }
-              >
-                <AttributeLabel>Mean Radius</AttributeLabel>
-              </ListItem>
+              <AttributeListItem
+                label="Mean Radius"
+                value={meanRadius.toExponential(3) + ' m'}
+              />
               {/** Sidereal Rotation Rate. */}
-              <ListItem
-                subtitle={
-                  <AttributeValue>
-                    {siderealRotationRate.toExponential(3) + ' rad/s'}
-                  </AttributeValue>
-                }
-              >
-                <AttributeLabel>Sidereal Rotation Rate</AttributeLabel>
-              </ListItem>
+              <AttributeListItem
+                label="Sidereal Rotation Rate"
+                value={siderealRotationRate.toExponential(3) + ' rad/s'}
+              />
               {/** Sidereal Rotation Period. */}
-              <ListItem
-                subtitle={
-                  <AttributeValue>
-                    {(siderealRotationPeriod / HOUR).toLocaleString() + ' hr'}
-                  </AttributeValue>
-                }
-              >
-                <AttributeLabel>Sidereal Rotation Period</AttributeLabel>
-              </ListItem>
+              <AttributeListItem
+                label="Sidereal Rotation Period"
+                value={(siderealRotationPeriod / HOUR).toLocaleString() + ' hr'}
+              />
               {/**  */}
-              <ListItem>
-                <AttributeLabel></AttributeLabel>
-              </ListItem>
+              <AttributeListItem label="" value={''} />
               {/**  */}
-              <ListItem>
-                <AttributeLabel></AttributeLabel>
-              </ListItem>
+              <AttributeListItem label="" value={''} />
             </List>
             <VRSeparator direction="horizontal" opacity={selected ? 1 : 0} />
             <VRDetailsPanelButtons />
@@ -185,7 +177,12 @@ type TextProp = {
 const AttributeLabel = ({ children }: TextProp) => {
   return (
     <>
-      <Text marginRight={'auto'} fontSize={text.base}>
+      <Text
+        marginRight={'auto'}
+        fontSize={text.base}
+        animation={noAnimation}
+        overflow="visible"
+      >
         {children}
       </Text>
     </>
@@ -194,9 +191,38 @@ const AttributeLabel = ({ children }: TextProp) => {
 const AttributeValue = ({ children }: TextProp) => {
   return (
     <>
-      <Text marginLeft={'auto'} fontSize={text.base}>
+      <Text
+        marginLeft={'auto'}
+        fontSize={text.base}
+        animation={noAnimation}
+        overflow="visible"
+      >
         {children}
       </Text>
+    </>
+  );
+};
+
+type AttributeProps = {
+  label: string;
+  value: string;
+};
+const AttributeListItem = ({ label, value }: AttributeProps) => {
+  // Create Object to attach UI component to.
+  const obj = useMemo(() => {
+    return new Object3D();
+  }, []);
+  return (
+    <>
+      <Object object={obj} depth={depth.md} animation={noAnimation}>
+        <ListItem
+          subtitle={<AttributeValue>{value}</AttributeValue>}
+          animation={noAnimation}
+          overflow="visible"
+        >
+          <AttributeLabel>{label}</AttributeLabel>
+        </ListItem>
+      </Object>
     </>
   );
 };
@@ -218,30 +244,33 @@ const VRCloseButton = () => {
   }, []);
   return (
     <>
-      <Button
-        positionType="absolute"
-        positionTop={0}
-        positionRight={0}
-        margin={padding / 2}
-        border={0}
-        borderRadius={4}
-        aspectRatio={1}
-        width={closeBtnSize}
-        height={closeBtnSize}
-        padding={0}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        onClick={handleCloseClick}
-      >
-        <Suspense>
-          <SVG
-            url="icons/mdi-close-box-outline.svg"
-            aspectRatio={1}
-            width={closeBtnSize}
-          />
-        </Suspense>
-      </Button>
+      <Object object={obj} depth={depth.md}>
+        <Button
+          positionType="absolute"
+          positionTop={0}
+          positionRight={0}
+          margin={padding / 2}
+          border={0}
+          borderRadius={4}
+          aspectRatio={1}
+          width={closeBtnSize}
+          height={closeBtnSize}
+          padding={0}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          onClick={handleCloseClick}
+          overflow="visible"
+        >
+          <Suspense>
+            <SVG
+              url="icons/mdi-close-box-outline.svg"
+              aspectRatio={1}
+              width={closeBtnSize}
+            />
+          </Suspense>
+        </Button>
+      </Object>
     </>
   );
 };
@@ -289,21 +318,26 @@ const VRSurfaceButton = ({ size }: VRButtonProps) => {
   }, []);
   return (
     <>
-      <Button
-        flexDirection={btn.flexDirection}
-        flexGrow={btn.flexGrow}
-        alignItems={btn.alignItems}
-        justifyContent={btn.justifyContent}
-        gapColumn={btn.gapColumn}
-        border={btn.border}
-        borderColor={btn.borderColor}
-        height={size * 2}
-      >
-        <Suspense>
-          <Text fontSize={size}>Surface</Text>
-          <SVG url="icons/mdi-telescope.svg" aspectRatio={1} height={size} />
-        </Suspense>
-      </Button>
+      <Object object={obj} depth={depth.md}>
+        <Button
+          flexDirection={btn.flexDirection}
+          flexGrow={btn.flexGrow}
+          alignItems={btn.alignItems}
+          justifyContent={btn.justifyContent}
+          gapColumn={btn.gapColumn}
+          border={btn.border}
+          borderColor={btn.borderColor}
+          height={size * 2}
+          overflow="visible"
+        >
+          <Suspense>
+            <Text fontSize={size} overflow="visible">
+              Surface
+            </Text>
+            <SVG url="icons/mdi-telescope.svg" aspectRatio={1} height={size} />
+          </Suspense>
+        </Button>
+      </Object>
     </>
   );
 };
@@ -315,21 +349,26 @@ const VRSpaceButton = ({ size }: VRButtonProps) => {
   }, []);
   return (
     <>
-      <Button
-        flexDirection={btn.flexDirection}
-        flexGrow={btn.flexGrow}
-        alignItems={btn.alignItems}
-        justifyContent={btn.justifyContent}
-        gapColumn={btn.gapColumn}
-        border={btn.border}
-        borderColor={btn.borderColor}
-        height={size * 2}
-      >
-        <Suspense>
-          <Text fontSize={size}>Space</Text>
-          <SVG url="icons/ph-planet.svg" aspectRatio={1} height={size} />
-        </Suspense>
-      </Button>
+      <Object object={obj} depth={depth.md}>
+        <Button
+          flexDirection={btn.flexDirection}
+          flexGrow={btn.flexGrow}
+          alignItems={btn.alignItems}
+          justifyContent={btn.justifyContent}
+          gapColumn={btn.gapColumn}
+          border={btn.border}
+          borderColor={btn.borderColor}
+          height={size * 2}
+          overflow="visible"
+        >
+          <Suspense>
+            <Text fontSize={size} overflow="visible">
+              Space
+            </Text>
+            <SVG url="icons/ph-planet.svg" aspectRatio={1} height={size} />
+          </Suspense>
+        </Button>
+      </Object>
     </>
   );
 };
@@ -358,29 +397,31 @@ const VRFocusButton = ({ size }: VRButtonProps) => {
   }, []);
   return (
     <>
-      <Button
-        flexDirection={btn.flexDirection}
-        flexGrow={btn.flexGrow}
-        alignItems={btn.alignItems}
-        justifyContent={btn.justifyContent}
-        gapColumn={btn.gapColumn}
-        border={btn.border}
-        borderColor={btn.borderColor}
-        height={size * 2}
-        onClick={handleClick}
-      >
-        {/* <Object > */}
-
-        <Suspense>
-          <Text fontSize={size}>Focus</Text>
-          <SVG
-            url="icons/mdi-camera-control.svg"
-            aspectRatio={1}
-            height={size}
-          />
-        </Suspense>
-        {/* </Object> */}
-      </Button>
+      <Object object={obj} depth={depth.md}>
+        <Button
+          flexDirection={btn.flexDirection}
+          flexGrow={btn.flexGrow}
+          alignItems={btn.alignItems}
+          justifyContent={btn.justifyContent}
+          gapColumn={btn.gapColumn}
+          border={btn.border}
+          borderColor={btn.borderColor}
+          height={size * 2}
+          onClick={handleClick}
+          overflow="visible"
+        >
+          <Suspense>
+            <Text fontSize={size} overflow="visible">
+              Focus
+            </Text>
+            <SVG
+              url="icons/mdi-camera-control.svg"
+              aspectRatio={1}
+              height={size}
+            />
+          </Suspense>
+        </Button>
+      </Object>
     </>
   );
 };
@@ -393,6 +434,7 @@ const VRDetailsPanelButtons = () => {
         alignItems="center"
         justifyContent="space-between"
         gapColumn={padding}
+        overflow="visible"
       >
         <VRSurfaceButton size={text.lg} />
         <VRFocusButton size={text.lg} />
