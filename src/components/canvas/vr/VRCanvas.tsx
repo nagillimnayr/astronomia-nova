@@ -4,6 +4,8 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 
 import { type PropsWithChildren } from 'react';
 import { Controllers, VRButton, XR } from '@react-three/xr';
+import { Hud } from '@react-three/drei';
+import { VRManager } from './VRManager';
 
 export const VRCanvas = ({ children }: PropsWithChildren) => {
   const { vrActor, cameraActor } = MachineContext.useSelector(
@@ -49,10 +51,14 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
               cameraActor.send({ type: 'END_XR_SESSION' });
             }}
           >
-            <Controllers />
-            {/* <VRScene /> */}
-            {children}
-            {/* <VRManager /> */}
+            <Hud renderPriority={1}>
+              <Controllers />
+              {/* <VRScene /> */}
+              {children}
+            </Hud>
+            <Hud renderPriority={2}>
+              <VRManager />
+            </Hud>
           </XR>
         </Canvas>
         <div className="absolute bottom-10 right-20 z-20 h-fit w-fit whitespace-nowrap ">
