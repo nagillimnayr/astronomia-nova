@@ -7,7 +7,6 @@ import { LoadingFallback } from '../fallback/LoadingFallback';
 
 import { HUD } from '@/simulation/components/HUD/HUD';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { CamView } from '@/simulation/components/HUD/CamView/CamView';
 import Scene from './Scene';
 import { VRManager } from './vr/VRManager';
 import { Hud, Stats } from '@react-three/drei';
@@ -21,7 +20,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <div className="relative z-0 flex h-full w-full flex-col justify-center border">
-        {/* <HUD className="z-10" /> */}
+        <HUD className="z-10" />
 
         {/* <div className="absolute bottom-0 right-1 z-10 h-24 w-40 select-none whitespace-nowrap">
           <VRButton />
@@ -54,9 +53,11 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                     xrSession: session,
                   });
 
+                  // Create a new reference space.
                   session
                     .requestReferenceSpace('viewer')
                     .then((refSpace) => {
+                      // Assign the new reference space to the external state machines.
                       cameraActor.send({
                         type: 'ASSIGN_REF_SPACE',
                         refSpace,
@@ -69,6 +70,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                     .catch((reason) => console.error(reason));
                 }}
                 onSessionEnd={(event) => {
+                  // Send end session event to state machines.
                   console.log('Ending XR session:', event);
                   vrActor.send({ type: 'END_SESSION' });
                   cameraActor.send({ type: 'END_XR_SESSION' });
@@ -84,7 +86,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                 {/** The VR UI, built with @coconut-xr/koestlich, when attached directly to the camera has serious clipping issues whenever the camera moves. Putting the UI inside of a Hud component from React-Three-Drei, however, attaches the UI to a separate scene graph, and it maintains its position relative to the camera, without actually moving, and this resolves the clipping issues. */}
                 <Hud renderPriority={2}>
                   <VRManager />
-                  <VRHUD />
+                  {/* <VRHUD /> */}
                 </Hud>
               </XR>
             </Canvas>
