@@ -33,7 +33,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
               className="z-[0]"
               // eventSource={container}
               gl={{ logarithmicDepthBuffer: true, alpha: true }}
-              linear
+              linear /* Textures will appear washed out unless this is set. */
               flat
               ref={(canvas) => {
                 if (!canvas) return;
