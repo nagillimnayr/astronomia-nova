@@ -35,7 +35,6 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
               gl={{
                 logarithmicDepthBuffer: true,
                 alpha: true,
-                autoClear: false,
                 localClippingEnabled: true,
                 preserveDrawingBuffer: true,
               }}
@@ -95,18 +94,19 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                   console.log('XR input sources change:', event);
                 }}
               >
-                <Hud renderPriority={1}>
-                  <Controllers />
-                  <VRManager />
-                  <Scene>{children}</Scene>
-                  {/* <Stats /> */}
-                  {/* <Perf position={'bottom-left'} /> */}
-                </Hud>
+                {/* <Hud renderPriority={1}> */}
+                <Controllers />
+                <VRManager />
+                <Scene>{children}</Scene>
+                {/* <Stats /> */}
+                {/* <Perf position={'bottom-left'} /> */}
+                {/* </Hud> */}
+
                 {/** The VR UI, built with @coconut-xr/koestlich, when attached directly to the camera has serious clipping issues whenever the camera moves. Putting the UI inside of a Hud component from React-Three-Drei, however, attaches the UI to a separate scene graph, and it maintains its position relative to the camera, without actually moving, and this resolves the clipping issues. Unfortunately, the XR session doesn't work with the Hud component. */}
-                <Hud renderPriority={2}>
-                  {/* <VRManager /> */}
-                  <VRHUD />
-                </Hud>
+                {/* <Hud renderPriority={2}> */}
+                {/* <VRManager /> */}
+                <VRHUD />
+                {/* </Hud> */}
               </XR>
             </Canvas>
           </div>
