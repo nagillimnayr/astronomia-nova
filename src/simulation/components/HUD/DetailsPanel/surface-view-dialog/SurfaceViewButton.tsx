@@ -30,7 +30,6 @@ export const SurfaceViewButton = ({ className, defaultOpen }: Props) => {
   );
 
   const handleClick = useCallback(() => {
-    // cameraState.setFocus(uiState.getSelected()!);
     cameraActor.send({
       type: 'SET_TARGET',
       focusTarget: selected,
