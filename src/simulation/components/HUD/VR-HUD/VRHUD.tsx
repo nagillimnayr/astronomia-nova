@@ -70,19 +70,19 @@ export const VRHUD = ({ position = [0, 0, -5] }: VRHUDProps) => {
   // const vrHudScene = useThree(({ scene }) => scene);
   // const vrHudScene = useMemo(() => new Scene(), []);
 
-  // return (
-  //   <>
-  //     {/* <perspectiveCamera /> */}
-  //     <VRHud position={position} vrHudScene={vrHudScene} />
-  //   </>
-  // );
-
-  return createPortal(
+  return (
     <>
+      <perspectiveCamera />
       <VRHud position={position} />
-    </>,
-    camera
+    </>
   );
+
+  // return createPortal(
+  //   <>
+  //     <VRHud position={position} />
+  //   </>,
+  //   camera
+  // );
 };
 
 type Props = VRHUDProps & {
