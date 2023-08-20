@@ -304,6 +304,30 @@ type VRButtonProps = {
   size: number;
 };
 const VRSurfaceButton = ({ size }: VRButtonProps) => {
+  const { uiActor, cameraActor, selectionActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+
+  const { surfaceDialogActor } = useSelector(uiActor, ({ context }) => context);
+
+  // Only show button when in space view.
+  const inSpaceView = useSelector(cameraActor, (state) =>
+    state.matches('space')
+  );
+  // Get selection.
+  const selected = useSelector(
+    selectionActor,
+    ({ context }) => context.selected
+  );
+
+  const handleSurfaceClick = useCallback(() => {
+    cameraActor.send({
+      type: 'SET_TARGET',
+      focusTarget: selected,
+    });
+    surfaceDialogActor.send({ type: 'TOGGLE' });
+  }, [cameraActor, selected, surfaceDialogActor]);
+
   // Create Object to attach UI component to.
   const obj = useMemo(() => {
     return new Object3D();
@@ -321,6 +345,7 @@ const VRSurfaceButton = ({ size }: VRButtonProps) => {
           borderColor={btn.borderColor}
           height={size * 2}
           overflow="visible"
+          onClick={handleSurfaceClick}
         >
           <Suspense>
             <Text fontSize={size} overflow="visible">
