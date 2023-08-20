@@ -70,8 +70,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   // const [isVisible, setVisible] = useState<boolean>(true);
 
   // const [isSelected, setSelected] = useState<boolean>(false);
-  const [isHovered, setHovered] = useState<boolean>(false);
   //const [isTrailVisible, setTrailVisibility] = useState<boolean>(false);
+  const [isHovered, setHovered] = useState<boolean>(false);
   useCursor(isHovered, 'pointer');
 
   // event handlers
@@ -82,7 +82,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         return;
       }
       const body: KeplerBody = bodyRef.current;
-      console.log('Mesh click!', body);
+      console.log('BodyMesh click!', body);
       // Select body.
       selectionActor.send({ type: 'SELECT', selection: body });
     },
@@ -134,29 +134,33 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   const rotation: Vector3Tuple = [PI_OVER_TWO, 0, degToRad(obliquity)];
   return (
     <>
-      <Sphere
-        name={name + '-mesh'}
-        rotation={rotation}
-        // visible={isVisible}
-        ref={meshRef}
-        args={[radius, 128, 128]}
-        onClick={handleClick}
-        // onPointerMissed={handleMiss}
-        onPointerOver={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
-      >
-        <meshBasicMaterial map={texture} />
-        {/* <axesHelper args={[2 * radius]} /> */}
+      <group>
+        <Sphere
+          name={name + '-mesh'}
+          rotation={rotation}
+          // visible={isVisible}
+          ref={meshRef}
+          args={[radius, 128, 128]}
+          onPointerDown={handleClick}
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+          // onPointerMissed={handleMiss}
+        >
+          <meshBasicMaterial map={texture} />
+          {/* <axesHelper args={[2 * radius]} /> */}
 
-        {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
+          {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
+        </Sphere>
         {name === 'Saturn' && (
           <PlanetRing
+            rotation={rotation}
             innerRadius={(meanRadius + 7e6) / DIST_MULT}
             outerRadius={(meanRadius + 80e6) / DIST_MULT}
+            onPointerDown={handleClick}
           />
         )}
-      </Sphere>
-      <Poles rotation={rotation} length={2 * radius} />
+        <Poles rotation={rotation} length={2 * radius} />
+      </group>
     </>
   );
 });

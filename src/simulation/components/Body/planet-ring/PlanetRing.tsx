@@ -1,27 +1,46 @@
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { DIST_MULT, PI_OVER_TWO } from '@/simulation/utils/constants';
-import { Ring, useTexture } from '@react-three/drei';
-import { DoubleSide } from 'three';
+import { Ring, useCursor, useTexture } from '@react-three/drei';
+import { Object3DNode } from '@react-three/fiber';
+import { PropsWithoutRef, useState } from 'react';
+import { DoubleSide, Object3D, Vector3Tuple } from 'three';
 
-type PlanetRingProps = {
+type PlanetRingProps = PropsWithoutRef<
+  Object3DNode<Object3D, typeof Object3D>
+> & {
   innerRadius: number;
   outerRadius: number;
+  rotation?: Vector3Tuple;
 };
-export const PlanetRing = ({ innerRadius, outerRadius }: PlanetRingProps) => {
+export const PlanetRing = ({
+  innerRadius,
+  outerRadius,
+  rotation = [0, 0, 0],
+  ...props
+}: PlanetRingProps) => {
   // const ringTexture = useTexture('assets/textures/2k_saturn_ring_alpha.png');
 
+  const [isHovered, setHovered] = useState<boolean>(false);
+  useCursor(isHovered, 'pointer');
   return (
     <>
-      <Ring
-        args={[innerRadius, outerRadius, 64]}
-        rotation={[PI_OVER_TWO, 0, 0]}
+      <object3D
+        rotation={rotation}
+        {...props}
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
       >
-        <meshBasicMaterial
-          // map={ringTexture}
-          // alphaMap={ringTexture}
-          side={DoubleSide}
-        />
-      </Ring>
+        <Ring
+          args={[innerRadius, outerRadius, 64]}
+          rotation={[PI_OVER_TWO, 0, 0]}
+        >
+          <meshBasicMaterial
+            // map={ringTexture}
+            // alphaMap={ringTexture}
+            side={DoubleSide}
+          />
+        </Ring>
+      </object3D>
     </>
   );
 };
