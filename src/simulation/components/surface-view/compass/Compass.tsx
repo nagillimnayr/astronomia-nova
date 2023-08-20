@@ -6,7 +6,7 @@ import { degToRad } from 'three/src/math/MathUtils';
 import { CompassMarker } from './CompassMarker';
 
 // Raise off the ground a little to prevent clipping
-const DIST_OFF_GROUND: Readonly<number> = METER * 1e-1;
+const DIST_OFF_GROUND: Readonly<number> = METER * 5e-1;
 
 export const Compass = () => {
   const { innerRadius, outerRadius, segments } = useMemo(() => {
