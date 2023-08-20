@@ -11,6 +11,7 @@ const _diff = new Vector3();
 export const KeyPressControl = () => {
   const getThree = useThree(({ get }) => get);
   const rootActor = MachineContext.useActorRef();
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
   useEventListener('keydown', (event) => {
     switch (event.key) {
@@ -32,6 +33,21 @@ export const KeyPressControl = () => {
         const state = getThree();
         const camera = state.camera;
         console.log('camera position:', camera.position.toArray());
+        break;
+      }
+      case '8': {
+        const vrHud = cameraActor.getSnapshot()!.context.vrHud;
+        if (!vrHud) return;
+        vrHud.translateZ(-0.05);
+        console.log('vrHud:', vrHud.position.toArray());
+        break;
+      }
+      case '2': {
+        const vrHud = cameraActor.getSnapshot()!.context.vrHud;
+        if (!vrHud) return;
+        vrHud.translateZ(0.05);
+        console.log('vrHud:', vrHud.position.toArray());
+        break;
       }
     }
   });
