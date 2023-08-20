@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef } from 'react';
+import { Suspense, useCallback, useEffect, useRef } from 'react';
 import {
   GOLDEN_RATIO,
   border,
@@ -27,6 +27,11 @@ import { VRPanel } from '../vr-ui-components/VRPanel';
 import { Flex, Box, useFlexSize } from '@react-three/flex';
 import { VRButton } from '../vr-ui-components/VRButton';
 import { VRFlexDivider } from '../vr-ui-components/VRDivider';
+import { Checkbox, IconButton } from '@coconut-xr/apfel-kruemel';
+import { ContextFrom } from 'xstate';
+import { visibilityMachine } from '@/state/xstate/visibility-machine/visibility-machine';
+import { useSelector } from '@xstate/react';
+import { Container } from '@coconut-xr/lucide-koestlich';
 
 type VRSettingsMenuProps = {
   position?: Vector3Tuple;
@@ -158,6 +163,57 @@ const Divider = () => {
       >
         <VRFlexDivider color={colors.border} />
       </Box>
+    </>
+  );
+};
+
+const VRSettingsToggleButton = () => {
+  return (
+    <>
+      <>
+        <IconButton></IconButton>
+      </>
+    </>
+  );
+};
+
+type VRCheckboxProps = {
+  defaultSelected?: boolean;
+  label: string;
+  target: keyof ContextFrom<typeof visibilityMachine>;
+};
+const VRSettingsCheckbox = ({
+  defaultSelected = false,
+  label,
+  target,
+}: VRCheckboxProps) => {
+  // Get actor from state machine.
+  const { visibilityActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+  const actor = useSelector(visibilityActor, (state) => state.context[target]);
+  const isActive = useSelector(actor, (state) => state.matches('active'));
+
+  const handleSelectedChange = useCallback(
+    (value: boolean) => {
+      const type = value ? 'DISABLE' : 'ENABLE';
+      // Send event to actor.
+      actor.send({ type });
+    },
+    [actor]
+  );
+  return (
+    <>
+      <>
+        <Container flexDirection="row" gapColumn={text.sm}>
+          <Checkbox
+            defaultSelected={defaultSelected}
+            selected={isActive}
+            onSelectedChange={handleSelectedChange}
+          />
+          <Text fontSize={text.base}>{label}</Text>
+        </Container>
+      </>
     </>
   );
 };
