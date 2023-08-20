@@ -36,60 +36,59 @@ type HudProps = {
   renderPriority?: number;
 };
 
-function RenderHud({
-  defaultScene,
-  defaultCamera,
-  renderPriority = 1,
-}: RenderHudProps) {
-  const { gl, scene, camera } = useThree();
-  let oldCLear;
-  useFrame(() => {
-    oldCLear = gl.autoClear;
-    if (renderPriority === 1) {
-      // Clear scene and render the default scene
-      gl.autoClear = true;
-      gl.render(defaultScene, defaultCamera);
-    }
-    // Disable cleaning and render the portal with its own camera
-    gl.autoClear = false;
-    gl.clearDepth();
-    gl.render(scene, camera);
-    // Restore default
-    gl.autoClear = oldCLear;
-  }, renderPriority);
-  // Without an element that receives pointer events state.pointer will always be 0/0
-  return <group onPointerOver={() => null} />;
-}
+// function RenderHud({
+//   defaultScene,
+//   defaultCamera,
+//   renderPriority = 1,
+// }: RenderHudProps) {
+//   const { gl, scene, camera } = useThree();
+//   let oldCLear;
+//   useFrame(() => {
+//     oldCLear = gl.autoClear;
+//     if (renderPriority === 1) {
+//       // Clear scene and render the default scene
+//       gl.autoClear = true;
+//       gl.render(defaultScene, defaultCamera);
+//     }
+//     // Disable cleaning and render the portal with its own camera
+//     gl.autoClear = false;
+//     gl.clearDepth();
+//     gl.render(scene, camera);
+//     // Restore default
+//     gl.autoClear = oldCLear;
+//   }, renderPriority);
+//   // Without an element that receives pointer events state.pointer will always be 0/0
+//   return <group onPointerOver={() => null} />;
+// }
 
 type VRHUDProps = {
   position?: Vector3Tuple;
 };
-export const VRHUD = ({ position = [0, 0, -3] }: VRHUDProps) => {
+export const VRHUD = ({ position = [0, 0, -5] }: VRHUDProps) => {
   // Get the current default camera so we can render the VRHUD to it.
-  // const camera = useThree(({ camera }) => camera);
-  const vrHudScene = useThree(({ scene }) => scene);
+  const camera = useThree(({ camera }) => camera);
+  // const vrHudScene = useThree(({ scene }) => scene);
   // const vrHudScene = useMemo(() => new Scene(), []);
 
-  return (
-    <>
-      {/* <perspectiveCamera /> */}
-      <VRHud position={position} vrHudScene={vrHudScene} />
-    </>
-  );
-
-  // return createPortal(
+  // return (
   //   <>
-  //     <VRHud position={position} />
-  //   </>,
-  //   camera
-  //   // vrHudScene
+  //     {/* <perspectiveCamera /> */}
+  //     <VRHud position={position} vrHudScene={vrHudScene} />
+  //   </>
   // );
+
+  return createPortal(
+    <>
+      <VRHud position={position} />
+    </>,
+    camera
+  );
 };
 
 type Props = VRHUDProps & {
   vrHudScene: Scene;
 };
-const VRHud = ({ vrHudScene, position = [0, 0, -3] }: Props) => {
+const VRHud = ({ position = [0, 0, -5] }: VRHUDProps) => {
   // Get actors from root state machine.
   const { cameraActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context
