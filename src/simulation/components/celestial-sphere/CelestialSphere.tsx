@@ -14,6 +14,7 @@ import { useSelector } from '@xstate/react';
 import {
   AU,
   DIST_MULT,
+  METER,
   SOLAR_SYSTEM_RADIUS,
 } from '@/simulation/utils/constants';
 
@@ -75,11 +76,12 @@ export const CelestialSphere = () => {
     };
   }, [constellations]);
 
+  const radius = 2 * SOLAR_SYSTEM_RADIUS * METER;
   return (
     <>
       {/** Scale x by -1 to flip uvs. */}
       <Sphere
-        args={[SOLAR_SYSTEM_RADIUS / DIST_MULT, 128, 128]}
+        args={[radius, 128, 128]}
         scale={[-1, 1, 1]}
         rotation={[degToRad(23.44), 0, 0]}
       >
