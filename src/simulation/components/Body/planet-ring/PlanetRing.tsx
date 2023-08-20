@@ -13,7 +13,7 @@ export const PlanetRing = ({ innerRadius, outerRadius }: PlanetRingProps) => {
   return (
     <>
       <Ring
-        args={[innerRadius / DIST_MULT, outerRadius / DIST_MULT, 64]}
+        args={[innerRadius, outerRadius, 64]}
         rotation={[PI_OVER_TWO, 0, 0]}
       >
         <meshBasicMaterial
