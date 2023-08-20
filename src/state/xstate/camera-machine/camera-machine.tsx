@@ -365,19 +365,19 @@ export const cameraMachine = createMachine(
         // const refSpace = xr.getReferenceSpace();
         // console.log('xr reference space', refSpace);
 
-        const { player } = getXR();
-        controls.attachToController(player);
-        controls.camera.getWorldDirection(_cameraWorldDirection);
-        player.up.set(...getLocalUpInWorldCoords(controls.camera));
-        player.getWorldPosition(_worldPos);
-        _lookPos.addVectors(_worldPos, _cameraWorldDirection);
-        player.lookAt(_lookPos);
-        console.log('Attaching VR Player to camera!');
+        // const { player } = getXR();
+        // controls.attachToController(player);
+        // controls.camera.getWorldDirection(_cameraWorldDirection);
+        // player.up.set(...getLocalUpInWorldCoords(controls.camera));
+        // player.getWorldPosition(_worldPos);
+        // _lookPos.addVectors(_worldPos, _cameraWorldDirection);
+        // player.lookAt(_lookPos);
+        // console.log('Attaching VR Player to camera!');
 
         if (vrHud) {
           console.log('VRHUD:', vrHud);
           vrHud.visible = true;
-          vrHud.position.setZ(-2);
+          vrHud.position.setZ(-1);
         }
       },
       endXRSession: (context, event) => {
