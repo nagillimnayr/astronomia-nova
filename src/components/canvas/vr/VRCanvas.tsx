@@ -51,14 +51,10 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
               cameraActor.send({ type: 'END_XR_SESSION' });
             }}
           >
-            <Hud renderPriority={1}>
-              <Controllers />
-              {/* <VRScene /> */}
-              {children}
-            </Hud>
-            <Hud renderPriority={2}>
-              <VRManager />
-            </Hud>
+            <Controllers />
+            {/* <VRScene /> */}
+            {children}
+            <VRManager />
           </XR>
         </Canvas>
         <div className="absolute bottom-10 right-20 z-20 h-fit w-fit whitespace-nowrap ">
