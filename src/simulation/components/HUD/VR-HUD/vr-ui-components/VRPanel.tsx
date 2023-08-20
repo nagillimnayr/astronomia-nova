@@ -1,8 +1,19 @@
-import { Plane, Shape } from '@react-three/drei';
-import { MeshProps, Object3DNode, extend } from '@react-three/fiber';
-import { PropsWithChildren, PropsWithRef, PropsWithoutRef } from 'react';
-import { ColorRepresentation, Vector3Tuple } from 'three';
+import {
+  MeshProps,
+  type Object3DNode,
+  extend,
+  ThreeEvent,
+} from '@react-three/fiber';
+import {
+  type PropsWithChildren,
+  PropsWithRef,
+  type PropsWithoutRef,
+  useState,
+} from 'react';
+import { type ColorRepresentation, type Vector3Tuple } from 'three';
 import { Panel, PanelBorder } from './classes/Panel';
+import { EventHandlers } from '@react-three/fiber/dist/declarations/src/core/events';
+import { useCursor } from '@react-three/drei';
 
 extend({ Panel, PanelBorder });
 
@@ -14,7 +25,8 @@ declare module '@react-three/fiber' {
 }
 
 type VRPanelProps = PropsWithChildren &
-  PropsWithoutRef<Object3DNode<Panel, typeof Panel>> & {
+  // Pick<PropsWithoutRef<Object3DNode<Panel, typeof Panel>>, 'onClick' | 'onContextMenu' | ''>
+  EventHandlers & {
     position?: Vector3Tuple;
     width?: number;
     height?: number;
@@ -35,12 +47,14 @@ export const VRPanel = ({
   ...props
 }: VRPanelProps) => {
   const borderWidth2 = borderWidth * 2;
+
   return (
     <>
       <group position={position}>
         <panelBorder
           args={[width, height, borderRadius, borderWidth, 24]}
           backgroundColor={borderColor ?? backgroundColor}
+          {...props}
         >
           <panel
             args={[
@@ -50,7 +64,6 @@ export const VRPanel = ({
               24,
             ]}
             backgroundColor={backgroundColor}
-            {...props}
           >
             {children}
           </panel>

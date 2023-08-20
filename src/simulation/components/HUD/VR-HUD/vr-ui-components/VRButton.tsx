@@ -14,7 +14,7 @@ import {
   text,
 } from '../vr-hud-constants';
 import { Mesh, type ColorRepresentation, BoxHelper, Vector3Tuple } from 'three';
-import { RoundedBox, useHelper } from '@react-three/drei';
+import { RoundedBox, useCursor, useHelper } from '@react-three/drei';
 import { useFlexSize } from '@react-three/flex';
 import { ThreeEvent } from '@react-three/fiber';
 import { VRPanel } from './VRPanel';
@@ -24,6 +24,7 @@ type VRButtonProps = PropsWithChildren & {
   hoverColor?: ColorRepresentation;
   borderColor?: ColorRepresentation;
   borderHoverColor?: ColorRepresentation;
+  borderWidth?: number;
   position?: Vector3Tuple;
   width?: number;
   height?: number;
@@ -36,6 +37,7 @@ export const VRButton = ({
   hoverColor = colors.gray300,
   borderColor,
   borderHoverColor,
+  borderWidth = 0.015,
   position = [0, 0, 0],
   width,
   height,
@@ -51,6 +53,8 @@ export const VRButton = ({
   const handleEndHover = useCallback(() => {
     setHovered(false);
   }, []);
+
+  useCursor(isHovered, 'pointer');
 
   const ref = useRef<Mesh>(null!);
   useHelper(ref, BoxHelper);
@@ -72,7 +76,7 @@ export const VRButton = ({
           width={btnWidth}
           height={btnHeight}
           borderRadius={radius}
-          borderWidth={0.015}
+          borderWidth={borderWidth}
           onPointerEnter={handleStartHover}
           onPointerLeave={handleEndHover}
           onClick={onClick}
