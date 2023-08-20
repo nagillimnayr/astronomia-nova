@@ -11,7 +11,11 @@ import {
 import { useContext, useEffect, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { AU, SOLAR_SYSTEM_RADIUS } from '@/simulation/utils/constants';
+import {
+  AU,
+  DIST_MULT,
+  SOLAR_SYSTEM_RADIUS,
+} from '@/simulation/utils/constants';
 
 // Extend the shader material.
 extend({ CelestialSphereMaterial });
@@ -75,7 +79,7 @@ export const CelestialSphere = () => {
     <>
       {/** Scale x by -1 to flip uvs. */}
       <Sphere
-        args={[SOLAR_SYSTEM_RADIUS, 128, 128]}
+        args={[SOLAR_SYSTEM_RADIUS / DIST_MULT, 128, 128]}
         scale={[-1, 1, 1]}
         rotation={[degToRad(23.44), 0, 0]}
       >
