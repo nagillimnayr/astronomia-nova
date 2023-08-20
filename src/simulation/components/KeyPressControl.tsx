@@ -13,8 +13,7 @@ export const KeyPressControl = () => {
   const rootActor = MachineContext.useActorRef();
 
   useEventListener('keydown', (event) => {
-    switch (
-      event.key
+    switch (event.key) {
       // case ' ': {
       // const { camera, controls, scene } = getThree();
       // console.log('camera:', camera);
@@ -28,7 +27,12 @@ export const KeyPressControl = () => {
       //   rootActor.send({ type: 'ADVANCE_DAY' });
       //   break;
       // }
-    ) {
+
+      case '5': {
+        const state = getThree();
+        const camera = state.camera;
+        console.log('camera position:', camera.position.toArray());
+      }
     }
   });
 
