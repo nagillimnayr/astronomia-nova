@@ -129,10 +129,15 @@ const VRToggleButton = ({ label }: VRToggleBtnProps) => {
         // justifyContent={'flex-start'}
       >
         <Box height={0.1} width={0.1}>
-          <VRButton width={0.1} height={0.1}></VRButton>
+          <VRButton
+            width={0.1}
+            height={0.1}
+            borderColor={colors.border}
+            borderWidth={0.005}
+          ></VRButton>
         </Box>
         <Box height={0.1} width={'100%'} flexGrow={1} alignSelf={'flex-end'}>
-          <Text anchorX={'center'} fontSize={0.05}>
+          <Text anchorX={'left'} fontSize={0.05}>
             {label}
           </Text>
         </Box>
