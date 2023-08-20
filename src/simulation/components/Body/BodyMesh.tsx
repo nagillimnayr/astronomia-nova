@@ -13,6 +13,7 @@ import {
 } from 'react';
 import {
   BoxHelper,
+  Vector3Tuple,
   type ColorRepresentation,
   type Mesh,
   type Texture,
@@ -81,6 +82,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         return;
       }
       const body: KeplerBody = bodyRef.current;
+      console.log('Mesh click!', body);
       // Select body.
       selectionActor.send({ type: 'SELECT', selection: body });
     },
@@ -129,11 +131,12 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   // });
 
   const radius = meanRadius / DIST_MULT;
+  const rotation: Vector3Tuple = [PI_OVER_TWO, 0, degToRad(obliquity)];
   return (
     <>
       <Sphere
         name={name + '-mesh'}
-        rotation={[PI_OVER_TWO, 0, degToRad(obliquity)]}
+        rotation={rotation}
         // visible={isVisible}
         ref={meshRef}
         args={[radius, 128, 64]}
@@ -143,17 +146,17 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         onPointerLeave={() => setHovered(false)}
       >
         <meshBasicMaterial map={texture} />
-        <Poles length={2 * radius} />
         {/* <axesHelper args={[2 * radius]} /> */}
 
         {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
         {name === 'Saturn' && (
           <PlanetRing
-            innerRadius={meanRadius + 7e6}
-            outerRadius={meanRadius + 80e6}
+            innerRadius={(meanRadius + 7e6) / DIST_MULT}
+            outerRadius={(meanRadius + 80e6) / DIST_MULT}
           />
         )}
       </Sphere>
+      <Poles rotation={rotation} length={2 * radius} />
     </>
   );
 });
