@@ -18,10 +18,9 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
   );
   const container = useRef<HTMLDivElement>(null!);
   return (
-    <Suspense fallback={<LoadingFallback />}>
-      <div className="relative z-0 flex h-full w-full flex-col justify-center border">
-        <HUD className="z-10" />
-
+    <div className="relative z-0 flex h-full w-full flex-col justify-center border">
+      <HUD className="z-10" />
+      <Suspense fallback={<LoadingFallback />}>
         {/* <div className="absolute bottom-0 right-1 z-10 h-24 w-40 select-none whitespace-nowrap">
           <VRButton />
         </div> */}
@@ -111,8 +110,8 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
             </Canvas>
           </div>
         </div>
-      </div>
-    </Suspense>
+      </Suspense>
+    </div>
   );
 };
 
