@@ -4,6 +4,8 @@ import {
   Text,
   ContainerNode,
   Object,
+  SVG,
+  ExtendedThreeEvent,
 } from '@coconut-xr/koestlich';
 import {
   Button,
@@ -12,7 +14,14 @@ import {
   List,
   ListItem,
 } from '@coconut-xr/apfel-kruemel';
-import { Suspense, useCallback, useMemo, useRef } from 'react';
+import {
+  MouseEventHandler,
+  Suspense,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   GOLDEN_RATIO,
   border,
@@ -66,10 +75,20 @@ export const VROutlinerItem = ({
             justifyContent="flex-start"
             gapRow={text.xs}
           >
-            <Container>
-              <Button height={'auto'} onClick={handleClick}>
+            <Container
+              flexDirection="row"
+              alignItems="center"
+              gapColumn={text.xs}
+              marginRight={text.base}
+            >
+              <Button
+                height={'auto'}
+                flexGrow={1} // Will stretch the button to fill as much space as it can, which will line up the eye icon buttons on the the right side.
+                onClick={handleClick}
+              >
                 <Text fontSize={text.xl}>{body.name}</Text>
               </Button>
+              <VRVisibilityToggleButton />
             </Container>
 
             {body.orbitingBodies.length > 0 && (
@@ -92,6 +111,45 @@ export const VROutlinerItem = ({
           </Container>
         </Suspense>
       </Object>
+    </>
+  );
+};
+
+const VRVisibilityToggleButton = () => {
+  const [isVisible, setVisible] = useState(true);
+  const handleClick = useCallback((event: ExtendedThreeEvent<MouseEvent>) => {
+    event.stopPropagation();
+    setVisible((isVisible) => !isVisible);
+  }, []);
+  const iconSize = 20;
+  return (
+    <>
+      <IconButton
+        onClick={handleClick}
+        height={'auto'}
+        aspectRatio={1}
+        borderRadius={1000}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        {isVisible ? (
+          <SVG
+            url="icons/MdiEyeOutline.svg"
+            width={iconSize}
+            height={iconSize}
+            aspectRatio={1}
+          ></SVG>
+        ) : (
+          <SVG
+            url="icons/MdiEyeOffOutline.svg"
+            width={iconSize + text.xxs} // Icons are not the exact same size.
+            height={iconSize + text.xxs}
+            aspectRatio={1}
+            translateY={-1} // Needs to be moved down slightly to adjust.
+          ></SVG>
+        )}
+      </IconButton>
     </>
   );
 };
