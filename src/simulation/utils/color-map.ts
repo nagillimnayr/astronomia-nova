@@ -5,7 +5,7 @@ export const colorMap: ReadonlyMap<string, ColorRepresentation> = new Map<
   ColorRepresentation
 >([
   ['Sun', '#FDEE00'],
-  ['Mercury', '#848482'],
+  ['Mercury', '#BEBFC5'],
   ['Venus', '#E9D66B'],
   ['Earth', '#03C03C'],
   ['Moon', '#C0C0C0'],
