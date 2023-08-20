@@ -1,13 +1,10 @@
 import type KeplerBody from '@/simulation/classes/kepler-body';
-import * as Collapsible from '@radix-ui/react-collapsible';
-import { gsap, Elastic } from 'gsap';
-import useMeasure from 'react-use-measure';
+import { gsap } from 'gsap';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useMachine, useSelector } from '@xstate/react';
 import { outlinerItemMachine } from './outliner-item-machine/outliner-item-machine';
-import { InterpreterFrom } from 'xstate';
 import { VisibilityToggleButton } from './VisibilityToggleButton';
 
 type OutlinerItemProps = {
@@ -33,6 +30,8 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
 
       // Save current height value.
       const fromHeight = window.getComputedStyle(content).height;
+
+      // 'fit-content' is not an animatable property, so we must get the computed value to use in the animation.
       // Get the computed value of height at fit-content.
       content.style.height = 'fit-content';
       const toHeight = window.getComputedStyle(content).height;
@@ -63,6 +62,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
       const content = contentRef.current;
       if (!content) return;
 
+      // 'fit-content' is not an animatable property, so we must get the computed value to use in the animation.
       // Get the computed value of the elements height.
       const fromHeight = window.getComputedStyle(content).height;
       content.style.height = fromHeight;
