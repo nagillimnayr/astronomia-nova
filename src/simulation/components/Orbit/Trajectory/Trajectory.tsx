@@ -29,7 +29,7 @@ import KeplerBody from '@/simulation/classes/kepler-body';
 import { Object3DNode, MaterialNode, extend } from '@react-three/fiber';
 import { flatten } from 'lodash';
 
-const NUM_OF_POINTS = 2048;
+const NUM_OF_POINTS = 4096;
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
@@ -88,7 +88,7 @@ export const Trajectory = ({
   //     semiMajorAxis / DIST_MULT,
   //     semiMinorAxis / DIST_MULT
   //   )
-  //     .getSpacedPoints(1024)
+  //     .getSpacedPoints(NUM_OF_POINTS)
   //     .map((vec2) => {
   //       const vec3Tuple: Vector3Tuple = [vec2.x, vec2.y, 0];
   //       return vec3Tuple;
@@ -128,7 +128,11 @@ export const Trajectory = ({
         <Line points={points} color={'white'} lineWidth={2} />
         {/* <mesh>
           <meshLineGeometry points={points} />
-          <meshLineMaterial color={'white'} />
+          <meshLineMaterial
+            color={'white'}
+            sizeAttenuation={0}
+            lineWidth={1e-3}
+          />
         </mesh> */}
 
         {/* Semi-major Axis / Periapsis */}
