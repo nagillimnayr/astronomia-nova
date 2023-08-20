@@ -53,7 +53,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
               }}
             >
               <XR
-                referenceSpace="viewer"
+                referenceSpace="local"
                 onSessionStart={(event) => {
                   const session = event.target;
 
@@ -66,7 +66,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
 
                   // Create a new reference space.
                   session
-                    .requestReferenceSpace('viewer')
+                    .requestReferenceSpace('local')
                     .then((refSpace) => {
                       // Assign the new reference space to the external state machines.
                       cameraActor.send({
