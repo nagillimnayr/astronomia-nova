@@ -13,6 +13,7 @@ import {
   SUN_RADIUS,
   METER,
   PI_OVER_TWO,
+  SIMULATION_RADIUS,
 } from '@/simulation/utils/constants';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { type RootState, type BaseInstance } from '@react-three/fiber';
@@ -24,24 +25,25 @@ import {
 } from '@/components/canvas/scene-constants';
 import { XRState } from '@react-three/xr';
 
-const X_AXIS: Readonly<Vector3> = new Vector3(1, 0, 0);
-const _targetWorldPos = new Vector3();
-const _observerWorldPos = new Vector3();
+// const _targetWorldPos = new Vector3();
+// const _observerWorldPos = new Vector3();
 const _observerUp = new Vector3();
 
-const _cameraWorldDirection = new Vector3();
-const _worldPos = new Vector3();
-const _camWorldPos = new Vector3();
-const _lookPos = new Vector3();
+// const _cameraWorldDirection = new Vector3();
+// const _worldPos = new Vector3();
+// const _camWorldPos = new Vector3();
+// const _lookPos = new Vector3();
+
+const NEPTUNE_APOAPSIS = 4553758200000 * METER;
 
 // Space view constants:
-const SPACE_MAX_DIST: Readonly<number> = 1e12;
-const SPACE_MIN_DIST_FROM_SURFACE: Readonly<number> = 1e-3;
+const SPACE_MAX_DIST = SIMULATION_RADIUS - NEPTUNE_APOAPSIS;
+const SPACE_MIN_DIST_FROM_SURFACE = 1e-3;
 
 // Surface view constants:
-const SURFACE_MIN_DIST: Readonly<number> = METER * 1e-1;
-const SURFACE_MAX_DIST: Readonly<number> = 1.5 * SURFACE_MIN_DIST;
-const SURFACE_MIN_DIST_FROM_SURFACE: Readonly<number> = 2 * METER; // 2 meters above ground
+const SURFACE_MIN_DIST = METER * 1e-1;
+const SURFACE_MAX_DIST = 1.5 * SURFACE_MIN_DIST;
+const SURFACE_MIN_DIST_FROM_SURFACE = 2 * METER; // 2 meters above ground
 
 type Context = {
   canvas: HTMLCanvasElement; // Reference to the canvas element.
@@ -356,7 +358,7 @@ export const cameraMachine = createMachine(
         if (vrHud) {
           console.log('VRHUD:', vrHud);
           vrHud.visible = true;
-          vrHud.position.setZ(-1);
+          vrHud.position.setZ(-2.1);
         }
       },
       endXRSession: (context, event) => {
@@ -520,8 +522,8 @@ export const cameraMachine = createMachine(
         const { controls, focusTarget } = context;
         if (!controls) return;
 
-        // controls.maxDistance = SPACE_MAX_DIST;
-        controls.maxDistance = Infinity;
+        controls.maxDistance = SPACE_MAX_DIST;
+        // controls.maxDistance = Infinity;
         if (!focusTarget) {
           controls.minDistance =
             SPACE_MIN_DIST_FROM_SURFACE + SUN_RADIUS / DIST_MULT;

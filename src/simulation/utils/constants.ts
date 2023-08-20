@@ -8,11 +8,6 @@ export const X_AXIS_NEG: Readonly<Vector3> = new Vector3(-1, 0, 0);
 export const Y_AXIS_NEG: Readonly<Vector3> = new Vector3(0, -1, 0);
 export const Z_AXIS_NEG: Readonly<Vector3> = new Vector3(0, 0, -1);
 
-export const GRAV_CONST = 6.674e-11; // Gravitational Constant m^3/kg/s^2;
-export const AU = 1.495978707e11; // Astronomical Unit in m
-export const SOLAR_MASS = 1988500e24; // Solar Mass in kg
-export const SOLAR_SYSTEM_RADIUS = AU * 90;
-
 export const DAY = 86400; // Synodic Day in seconds.
 export const HOUR = 3600; // Hour in seconds.
 export const YEAR = 360.25; // Year in Days.
@@ -27,6 +22,12 @@ export const J2000_JD = 2451545.0; // J2000 in Julian Days.
 export const DIST_MULT = 1e9; // Distance multiplier.
 export const KM_TO_M = 1000;
 export const METER = 1 / DIST_MULT;
+
+export const GRAV_CONST = 6.674e-11; // Gravitational Constant m^3/kg/s^2;
+export const AU = 1.495978707e11; // Astronomical Unit in m
+export const SOLAR_MASS = 1988500e24; // Solar Mass in kg
+export const SOLAR_SYSTEM_RADIUS = AU * 90;
+export const SIMULATION_RADIUS = 2 * SOLAR_SYSTEM_RADIUS * METER;
 
 export const MASS_MULT = 1e24;
 
