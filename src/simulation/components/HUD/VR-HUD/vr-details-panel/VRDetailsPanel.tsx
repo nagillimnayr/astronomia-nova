@@ -34,12 +34,6 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import { DAY, HOUR } from '@/simulation/utils/constants';
-import { useFrame } from '@react-three/fiber';
-import { VRButton } from '../vr-ui-components/VRButton';
-import { Plane, useHelper } from '@react-three/drei';
-import { useEventListener, useKeyPressed } from '@react-hooks-library/core';
-
-const _camWorldPos = new Vector3();
 
 const placeholders = {
   name: 'Name',
@@ -256,7 +250,7 @@ const VRCloseButton = () => {
         <Suspense>
           <SVG
             color={colors.foreground}
-            url="icons/mdi-close-box-outline.svg"
+            url="icons/MdiCloseBoxOutline.svg"
             aspectRatio={1}
             width={closeBtnSize}
           />
@@ -351,7 +345,7 @@ const VRSurfaceButton = ({ size }: VRButtonProps) => {
             <Text fontSize={size} overflow="visible">
               Surface
             </Text>
-            <SVG url="icons/mdi-telescope.svg" aspectRatio={1} height={size} />
+            <SVG url="icons/MdiTelescope.svg" aspectRatio={1} height={size} />
           </Suspense>
         </Button>
       </Object>
@@ -382,7 +376,7 @@ const VRSpaceButton = ({ size }: VRButtonProps) => {
             <Text fontSize={size} overflow="visible">
               Space
             </Text>
-            <SVG url="icons/ph-planet.svg" aspectRatio={1} height={size} />
+            <SVG url="icons/PhPlanet.svg" aspectRatio={1} height={size} />
           </Suspense>
         </Button>
       </Object>
@@ -432,7 +426,7 @@ const VRFocusButton = ({ size }: VRButtonProps) => {
               Focus
             </Text>
             <SVG
-              url="icons/mdi-camera-control.svg"
+              url="icons/MdiCameraControl.svg"
               aspectRatio={1}
               height={size}
             />

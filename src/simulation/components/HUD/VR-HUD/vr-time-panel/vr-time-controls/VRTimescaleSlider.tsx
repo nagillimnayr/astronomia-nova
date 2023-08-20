@@ -1,5 +1,5 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Container, RootContainer, Text } from '@coconut-xr/koestlich';
+import { Container, RootContainer, SVG, Text } from '@coconut-xr/koestlich';
 import { useSelector } from '@xstate/react';
 import { format } from 'date-fns';
 import { border, colors, text } from '../../vr-hud-constants';
@@ -54,7 +54,11 @@ export const VRTimescaleSlider = ({ index }: VRTimescaleSliderProps) => {
             onClick={handleClickLeft}
             disabled={timescale <= 1}
           >
-            <ChevronLeft width={iconSize} height={iconSize} />
+            <SVG
+              url="icons/MdiChevronLeft.svg"
+              width={iconSize}
+              height={iconSize}
+            />
           </IconButton>
           <Container
             index={1}
@@ -75,7 +79,11 @@ export const VRTimescaleSlider = ({ index }: VRTimescaleSliderProps) => {
             onClick={handleClickRight}
             disabled={timescale >= 100}
           >
-            <ChevronRight width={iconSize} height={iconSize} />
+            <SVG
+              url="icons/MdiChevronRight.svg"
+              width={iconSize}
+              height={iconSize}
+            />
           </IconButton>
         </Container>
       </Container>

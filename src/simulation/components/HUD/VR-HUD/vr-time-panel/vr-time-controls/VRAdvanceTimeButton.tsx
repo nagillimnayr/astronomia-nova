@@ -1,5 +1,5 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Container, RootContainer, Text } from '@coconut-xr/koestlich';
+import { Container, RootContainer, SVG, Text } from '@coconut-xr/koestlich';
 import { useSelector } from '@xstate/react';
 import { format } from 'date-fns';
 import { colors, text } from '../../vr-hud-constants';
@@ -47,13 +47,15 @@ export const VRAdvanceTimeButton = ({
           borderRadius={1000}
         >
           {reverse ? (
-            <Sunset
+            <SVG
+              url="icons/MdiWeatherSunsetDown.svg"
               height={iconSize}
               width={iconSize}
               translateY={iconSize / 16}
             />
           ) : (
-            <Sunrise
+            <SVG
+              url="icons/MdiWeatherSunsetUp.svg"
               height={iconSize}
               width={iconSize}
               translateY={iconSize / 16}

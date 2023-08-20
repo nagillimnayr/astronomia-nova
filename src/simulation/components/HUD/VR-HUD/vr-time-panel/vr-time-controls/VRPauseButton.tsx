@@ -1,5 +1,11 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Container, Object, RootContainer, Text } from '@coconut-xr/koestlich';
+import {
+  Container,
+  Object,
+  RootContainer,
+  SVG,
+  Text,
+} from '@coconut-xr/koestlich';
 import { useSelector } from '@xstate/react';
 import { format } from 'date-fns';
 import { colors, depth, text } from '../../vr-hud-constants';
@@ -47,13 +53,14 @@ export const VRPauseButton = ({ index }: VRPauseButtonProps) => {
             borderRadius={1000}
           >
             {isPaused ? (
-              <Play
+              <SVG
+                url="icons/MdiPause.svg"
                 height={iconSize}
                 width={iconSize}
                 translateX={iconSize / 16}
               />
             ) : (
-              <Pause height={iconSize} width={iconSize} />
+              <SVG url="icons/MdiPlay.svg" height={iconSize} width={iconSize} />
             )}
           </IconButton>
         </Object>
