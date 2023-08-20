@@ -1,10 +1,7 @@
 import { OutlinerItem } from './OutlinerItem';
 
 import { LoadingFallback } from '@/components/fallback/LoadingFallback';
-import {
-  MachineContext,
-  // RootActorContext,
-} from '@/state/xstate/MachineProviders';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 
 const Outliner = () => {
