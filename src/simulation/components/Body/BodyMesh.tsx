@@ -139,7 +139,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         rotation={rotation}
         // visible={isVisible}
         ref={meshRef}
-        args={[radius, 128, 64]}
+        args={[radius, 128, 128]}
         onClick={handleClick}
         // onPointerMissed={handleMiss}
         onPointerOver={() => setHovered(true)}
