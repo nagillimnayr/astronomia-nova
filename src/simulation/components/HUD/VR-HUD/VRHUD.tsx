@@ -20,15 +20,76 @@ import { useEffect, useMemo, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { VRSettingsMenu } from './vr-settings-menu/VRSettingsMenu';
-import { useCamera, useHelper } from '@react-three/drei';
+import { Hud, useCamera, useHelper } from '@react-three/drei';
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
 
-const _camWorldPos = new Vector3();
+type RenderHudProps = {
+  defaultScene: THREE.Scene;
+  defaultCamera: THREE.Camera;
+  renderPriority?: number;
+};
+
+type HudProps = {
+  /** Any React node */
+  children: React.ReactNode;
+  /** Render priority, default: 1 */
+  renderPriority?: number;
+};
+
+function RenderHud({
+  defaultScene,
+  defaultCamera,
+  renderPriority = 1,
+}: RenderHudProps) {
+  const { gl, scene, camera } = useThree();
+  let oldCLear;
+  useFrame(() => {
+    oldCLear = gl.autoClear;
+    if (renderPriority === 1) {
+      // Clear scene and render the default scene
+      gl.autoClear = true;
+      gl.render(defaultScene, defaultCamera);
+    }
+    // Disable cleaning and render the portal with its own camera
+    gl.autoClear = false;
+    gl.clearDepth();
+    gl.render(scene, camera);
+    // Restore default
+    gl.autoClear = oldCLear;
+  }, renderPriority);
+  // Without an element that receives pointer events state.pointer will always be 0/0
+  return <group onPointerOver={() => null} />;
+}
 
 type VRHUDProps = {
   position?: Vector3Tuple;
 };
 export const VRHUD = ({ position = [0, 0, -3] }: VRHUDProps) => {
+  // Get the current default camera so we can render the VRHUD to it.
+  // const camera = useThree(({ camera }) => camera);
+  const vrHudScene = useThree(({ scene }) => scene);
+  // const vrHudScene = useMemo(() => new Scene(), []);
+
+  return (
+    <>
+      {/* <perspectiveCamera /> */}
+      <VRHud position={position} vrHudScene={vrHudScene} />
+    </>
+  );
+
+  // return createPortal(
+  //   <>
+  //     <VRHud position={position} />
+  //   </>,
+  //   camera
+  //   // vrHudScene
+  // );
+};
+
+type Props = VRHUDProps & {
+  vrHudScene: Scene;
+};
+const VRHud = ({ vrHudScene, position = [0, 0, -3] }: Props) => {
   // Get actors from root state machine.
   const { cameraActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context
@@ -50,9 +111,11 @@ export const VRHUD = ({ position = [0, 0, -3] }: VRHUDProps) => {
     group.visible = true;
   }, []);
 
-  // Get the current default camera so we can render the VRHUD to it.
-  const camera = useThree(({ camera }) => camera);
-  return createPortal(
+  // useFrame((state) => {
+  //   const camera = state.camera;
+  // });
+
+  return (
     <>
       <DefaultStyleProvider
         color={colors.foreground}
@@ -65,7 +128,6 @@ export const VRHUD = ({ position = [0, 0, -3] }: VRHUDProps) => {
           {/* <VRSettingsMenu position={[0, 0.5, 0]} /> */}
         </group>
       </DefaultStyleProvider>
-    </>,
-    camera
+    </>
   );
 };
