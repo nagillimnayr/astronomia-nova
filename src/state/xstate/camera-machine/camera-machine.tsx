@@ -356,7 +356,7 @@ export const cameraMachine = createMachine(
         if (vrHud) {
           console.log('VRHUD:', vrHud);
           vrHud.visible = true;
-          vrHud.position.setZ(-0.5);
+          vrHud.position.setZ(-1);
         }
       },
       endXRSession: (context, event) => {
