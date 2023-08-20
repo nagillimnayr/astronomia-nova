@@ -9,6 +9,7 @@ import {
 import { useFrame, useThree } from '@react-three/fiber';
 import { useController, useXR, useXREvent, XR } from '@react-three/xr';
 import { useCallback, useEffect } from 'react';
+import { FAR_CLIP, NEAR_CLIP } from '../scene-constants';
 
 export const VRControls = () => {
   const rootActor = MachineContext.useActorRef();
@@ -112,6 +113,21 @@ export const VRControls = () => {
   useEventListener('keypress', (event) => {
     console.log(event.key);
     switch (event.key) {
+      case 'o': {
+        const xrSession = getXR().session;
+        if (!xrSession) {
+          console.log('no xr session');
+          return;
+        }
+        console.log('session:', xrSession);
+        console.log('xr near:', xrSession.renderState.depthNear);
+        console.log('xr far:', xrSession.renderState.depthFar);
+        void xrSession?.updateRenderState({
+          depthNear: NEAR_CLIP,
+          depthFar: FAR_CLIP,
+        });
+        break;
+      }
       case 'f': {
         const xrSession = getXR().session;
         const camera = getThree().camera;
@@ -150,118 +166,118 @@ export const VRControls = () => {
         console.log('viewer pose position:', viewerPose.transform.position);
         break;
       }
-      case '8': {
-        const { gl } = getThree();
-        const xr = gl.xr;
-        if (!xr.isPresenting) {
-          console.log('xr not presenting');
-          return;
-        }
+      // case '8': {
+      //   const { gl } = getThree();
+      //   const xr = gl.xr;
+      //   if (!xr.isPresenting) {
+      //     console.log('xr not presenting');
+      //     return;
+      //   }
 
-        let refSpace = xr.getReferenceSpace();
-        if (!refSpace) return;
-        refSpace = refSpace.getOffsetReferenceSpace(
-          new XRRigidTransform({ x: 0, y: -0.1, z: 0 })
-        );
-        xr.setReferenceSpace(refSpace);
-        break;
-      }
-      case '2': {
-        const { gl } = getThree();
-        const xr = gl.xr;
-        if (!xr.isPresenting) {
-          console.log('xr not presenting');
-          return;
-        }
+      //   let refSpace = xr.getReferenceSpace();
+      //   if (!refSpace) return;
+      //   refSpace = refSpace.getOffsetReferenceSpace(
+      //     new XRRigidTransform({ x: 0, y: -0.1, z: 0 })
+      //   );
+      //   xr.setReferenceSpace(refSpace);
+      //   break;
+      // }
+      // case '2': {
+      //   const { gl } = getThree();
+      //   const xr = gl.xr;
+      //   if (!xr.isPresenting) {
+      //     console.log('xr not presenting');
+      //     return;
+      //   }
 
-        let refSpace = xr.getReferenceSpace();
-        if (!refSpace) return;
-        refSpace = refSpace.getOffsetReferenceSpace(
-          new XRRigidTransform({ x: 0, y: 0.1, z: 0 })
-        );
-        xr.setReferenceSpace(refSpace);
-        break;
-      }
-      case '5': {
-        const { gl } = getThree();
-        const xr = gl.xr;
-        if (!xr.isPresenting) {
-          console.log('xr not presenting');
-          return;
-        }
+      //   let refSpace = xr.getReferenceSpace();
+      //   if (!refSpace) return;
+      //   refSpace = refSpace.getOffsetReferenceSpace(
+      //     new XRRigidTransform({ x: 0, y: 0.1, z: 0 })
+      //   );
+      //   xr.setReferenceSpace(refSpace);
+      //   break;
+      // }
+      // case '5': {
+      //   const { gl } = getThree();
+      //   const xr = gl.xr;
+      //   if (!xr.isPresenting) {
+      //     console.log('xr not presenting');
+      //     return;
+      //   }
 
-        vrActor.send({ type: 'RESET_REF_SPACE' });
-        break;
-      }
-      case '4': {
-        const { gl } = getThree();
-        const xr = gl.xr;
-        if (!xr.isPresenting) {
-          console.log('xr not presenting');
-          return;
-        }
+      //   vrActor.send({ type: 'RESET_REF_SPACE' });
+      //   break;
+      // }
+      // case '4': {
+      //   const { gl } = getThree();
+      //   const xr = gl.xr;
+      //   if (!xr.isPresenting) {
+      //     console.log('xr not presenting');
+      //     return;
+      //   }
 
-        let refSpace = xr.getReferenceSpace();
-        if (!refSpace) return;
-        refSpace = refSpace.getOffsetReferenceSpace(
-          new XRRigidTransform({ x: 0.1, y: 0, z: 0 })
-        );
-        xr.setReferenceSpace(refSpace);
-        break;
-      }
-      case '6': {
-        const { gl } = getThree();
-        const xr = gl.xr;
-        if (!xr.isPresenting) {
-          console.log('xr not presenting');
-          return;
-        }
+      //   let refSpace = xr.getReferenceSpace();
+      //   if (!refSpace) return;
+      //   refSpace = refSpace.getOffsetReferenceSpace(
+      //     new XRRigidTransform({ x: 0.1, y: 0, z: 0 })
+      //   );
+      //   xr.setReferenceSpace(refSpace);
+      //   break;
+      // }
+      // case '6': {
+      //   const { gl } = getThree();
+      //   const xr = gl.xr;
+      //   if (!xr.isPresenting) {
+      //     console.log('xr not presenting');
+      //     return;
+      //   }
 
-        let refSpace = xr.getReferenceSpace();
-        if (!refSpace) return;
-        refSpace = refSpace.getOffsetReferenceSpace(
-          new XRRigidTransform({ x: -0.1, y: 0, z: 0 })
-        );
-        xr.setReferenceSpace(refSpace);
-        break;
-      }
-      case '-': {
-        const { gl } = getThree();
-        const xr = gl.xr;
-        if (!xr.isPresenting) {
-          console.log('xr not presenting');
-          return;
-        }
+      //   let refSpace = xr.getReferenceSpace();
+      //   if (!refSpace) return;
+      //   refSpace = refSpace.getOffsetReferenceSpace(
+      //     new XRRigidTransform({ x: -0.1, y: 0, z: 0 })
+      //   );
+      //   xr.setReferenceSpace(refSpace);
+      //   break;
+      // }
+      // case '-': {
+      //   const { gl } = getThree();
+      //   const xr = gl.xr;
+      //   if (!xr.isPresenting) {
+      //     console.log('xr not presenting');
+      //     return;
+      //   }
 
-        let refSpace = xr.getReferenceSpace();
-        if (!refSpace) return;
-        refSpace = refSpace.getOffsetReferenceSpace(
-          new XRRigidTransform({ x: 0, y: 0, z: 0.1 })
-        );
-        xr.setReferenceSpace(refSpace);
-        break;
-      }
-      case '+': {
-        const { gl } = getThree();
-        const xr = gl.xr;
-        if (!xr.isPresenting) {
-          console.log('xr not presenting');
-          return;
-        }
+      //   let refSpace = xr.getReferenceSpace();
+      //   if (!refSpace) return;
+      //   refSpace = refSpace.getOffsetReferenceSpace(
+      //     new XRRigidTransform({ x: 0, y: 0, z: 0.1 })
+      //   );
+      //   xr.setReferenceSpace(refSpace);
+      //   break;
+      // }
+      // case '+': {
+      //   const { gl } = getThree();
+      //   const xr = gl.xr;
+      //   if (!xr.isPresenting) {
+      //     console.log('xr not presenting');
+      //     return;
+      //   }
 
-        let refSpace = xr.getReferenceSpace();
-        if (!refSpace) return;
-        refSpace = refSpace.getOffsetReferenceSpace(
-          new XRRigidTransform({ x: 0, y: 0, z: -0.1 })
-        );
-        xr.setReferenceSpace(refSpace);
-        break;
-      }
-      case ' ': {
-        const controls = cameraActor.getSnapshot()!.context.controls;
-        if (!controls) return;
-        console.log('cam', controls.camera);
-      }
+      //   let refSpace = xr.getReferenceSpace();
+      //   if (!refSpace) return;
+      //   refSpace = refSpace.getOffsetReferenceSpace(
+      //     new XRRigidTransform({ x: 0, y: 0, z: -0.1 })
+      //   );
+      //   xr.setReferenceSpace(refSpace);
+      //   break;
+      // }
+      // case ' ': {
+      //   const controls = cameraActor.getSnapshot()!.context.controls;
+      //   if (!controls) return;
+      //   console.log('cam', controls.camera);
+      // }
     }
   });
 
