@@ -7,55 +7,65 @@ import { VRDetailsPanel } from './vr-details-panel/VRDetailsPanel';
 import { VRTimePanel } from './vr-time-panel/VRTimePanel';
 import { colors } from './vr-hud-constants';
 import { VROutliner } from './vr-outliner/VROutliner';
-import { BoxHelper, Object3D, Vector3, type Vector3Tuple } from 'three';
-import { useEffect, useRef } from 'react';
+import {
+  BoxHelper,
+  Group,
+  Object3D,
+  Scene,
+  Vector3,
+  PerspectiveCamera,
+  type Vector3Tuple,
+} from 'three';
+import { useEffect, useMemo, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { VRSettingsMenu } from './vr-settings-menu/VRSettingsMenu';
-import { useHelper } from '@react-three/drei';
+import { useCamera, useHelper } from '@react-three/drei';
+import { createPortal, useFrame, useThree } from '@react-three/fiber';
 
 const _camWorldPos = new Vector3();
 
 type VRHUDProps = {
   position?: Vector3Tuple;
 };
-export const VRHUD = ({ position = [0, 0, 0] }: VRHUDProps) => {
+export const VRHUD = ({ position = [0, 0, -5] }: VRHUDProps) => {
   // Get actors from root state machine.
   const { cameraActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context
   );
 
   // Get refs to root container and object.
-  const objRef = useRef<Object3D>(null!);
+  const groupRef = useRef<Group>(null!);
 
   // const boxHelper = useHelper(objRef, BoxHelper);
 
   useEffect(() => {
     // Attach to the camera.
-    const obj = objRef.current;
-    cameraActor.send({ type: 'ASSIGN_VR_HUD', vrHud: obj });
+    const group = groupRef.current;
+    cameraActor.send({ type: 'ASSIGN_VR_HUD', vrHud: group });
   }, [cameraActor]);
 
   useEffect(() => {
-    const obj = objRef.current;
-    // obj.visible = false;
-    obj.visible = true;
+    const group = groupRef.current;
+    group.visible = true;
   }, []);
 
-  return (
+  // Get the current default camera so we can render the VRHUD to it.
+  const camera = useThree(({ camera }) => camera);
+  return createPortal(
     <>
       <DefaultStyleProvider
         color={colors.foreground}
-        // borderColor={colors.background}
-        // backgroundColor={colors.background}
+        borderColor={colors.border}
       >
-        <object3D ref={objRef} position={position} name="VR-HUD">
+        <group ref={groupRef} position={position} name="VR-HUD">
           <VRDetailsPanel position={[3, 0, 0]} />
           <VRTimePanel position={[0, -1.5, 0]} />
           <VROutliner position={[-3, 0, 0]} />
           {/* <VRSettingsMenu position={[0, 0.5, 0]} /> */}
-        </object3D>
+        </group>
       </DefaultStyleProvider>
-    </>
+    </>,
+    camera
   );
 };
