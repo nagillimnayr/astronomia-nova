@@ -43,6 +43,7 @@ export const CompassMarker = ({ children, position }: Props) => {
         position={position}
       >
         <Text
+          position={[0, METER / 2, 0]}
           fontSize={METER}
           color={'white'}
           anchorX={'center'}
@@ -52,7 +53,7 @@ export const CompassMarker = ({ children, position }: Props) => {
         </Text>
         {/* <axesHelper args={[METER]} /> */}
       </object3D>
-      <Line points={[_center, position]} />
+      <Line points={[_center, position]} lineWidth={1.5} />
     </>
   );
 };
