@@ -28,7 +28,7 @@ const _camWorldPos = new Vector3();
 type VRHUDProps = {
   position?: Vector3Tuple;
 };
-export const VRHUD = ({ position = [0, 0, -5] }: VRHUDProps) => {
+export const VRHUD = ({ position = [0, 0, -3] }: VRHUDProps) => {
   // Get actors from root state machine.
   const { cameraActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context
