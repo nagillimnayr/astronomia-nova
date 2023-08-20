@@ -4,7 +4,7 @@ import { type PropsWithChildren, useContext, useEffect } from 'react';
 
 import { CameraManager } from '@/simulation/components/camera-controller/CameraManager';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useThree } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 
 const Scene = ({ children }: PropsWithChildren) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
@@ -12,6 +12,10 @@ const Scene = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     cameraActor.send({ type: 'ASSIGN_GET_THREE', getThree });
   }, [cameraActor, getThree]);
+
+  // useFrame((state, delta, frame) => {
+  //   const { scene, camera, gl } = state;
+  // }, 1);
   return (
     <>
       <CameraManager />
