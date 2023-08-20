@@ -45,7 +45,9 @@ const SURFACE_MIN_DIST = METER * 1e-1;
 const SURFACE_MAX_DIST = 1.5 * SURFACE_MIN_DIST;
 const SURFACE_MIN_DIST_FROM_SURFACE = 2 * METER; // 2 meters above ground
 
-const VR_HUD_BASE_Z = -5;
+// Z position of VR Hud.
+const VR_HUD_Z_NON_IMMERSIVE = -5;
+const VR_HUD_Z_IMMERSIVE = -2.5;
 
 type Context = {
   canvas: HTMLCanvasElement; // Reference to the canvas element.
@@ -340,7 +342,7 @@ export const cameraMachine = createMachine(
         if (vrHud) {
           // Attach the VR Hud to the camera.
           // controls.attachToController(vrHud);
-          // vrHud.position.setZ(VR_HUD_BASE_Z);
+          // vrHud.position.setZ(VR_HUD_Z_NON_IMMERSIVE);
           // controls.attachToController(vrHud);
           // controls.getCameraWorldUp(vrHud.up);
           // controls.getCameraWorldPosition(_camWorldPos);
@@ -360,7 +362,7 @@ export const cameraMachine = createMachine(
         if (vrHud) {
           console.log('VRHUD:', vrHud);
           vrHud.visible = true;
-          vrHud.position.setZ(VR_HUD_BASE_Z);
+          vrHud.position.setZ(VR_HUD_Z_IMMERSIVE);
         }
       },
       endXRSession: (context, event) => {
@@ -368,7 +370,7 @@ export const cameraMachine = createMachine(
         if (vrHud) {
           console.log('VRHUD:', vrHud);
           // vrHud.visible = false;
-          vrHud.position.setZ(VR_HUD_BASE_Z);
+          vrHud.position.setZ(VR_HUD_Z_NON_IMMERSIVE);
         }
       },
       initRefSpace: (context, event) => {
