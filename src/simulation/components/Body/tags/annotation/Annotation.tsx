@@ -5,26 +5,19 @@ import {
   MachineContext,
   // RootMachineContext,
 } from '@/state/xstate/MachineProviders';
-import { CameraControls, Text } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
+import { Text } from '@react-three/drei';
 import { useActor, useSelector } from '@xstate/react';
-import { clamp } from 'lodash';
-import { useContext, useRef } from 'react';
+import { forwardRef, useContext, useRef } from 'react';
 import { type Object3D, Vector3 } from 'three';
 
-const _bodyWorldPos = new Vector3();
-const _camWorldPos = new Vector3();
-const _camWorldDirection = new Vector3();
-const _up = new Vector3();
-const _target = new Vector3();
-const _direction = new Vector3();
-const _lookPos = new Vector3();
-
-type Props = {
+type AnnotationProps = {
   annotation: string;
   meanRadius: number;
 };
-const Annotation = ({ annotation, meanRadius }: Props) => {
+const Annotation = forwardRef<Object3D, AnnotationProps>(function Annotation(
+  { annotation, meanRadius }: AnnotationProps,
+  fwdRef
+) {
   const { visibilityActor, cameraActor } = MachineContext.useSelector(
     ({ context }) => context
   );
@@ -36,63 +29,11 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
     state.matches('active')
   );
 
-  const bodyRef = useContext(KeplerTreeContext);
-
-  const centerRef = useRef<Object3D>(null!);
-  const textRef = useRef<Object3D>(null!);
-
-  useFrame(({ camera }) => {
-    if (!bodyRef) return;
-    const body = bodyRef.current;
-    const center = centerRef.current;
-    const text = textRef.current;
-    if (!body || !center) return;
-
-    const snapshot = cameraActor.getSnapshot()!;
-    const controls = snapshot.context.controls;
-    if (!controls) return;
-
-    // Get world position of body.
-    body.getWorldPosition(_bodyWorldPos);
-
-    // Get world position of camera.
-    controls.getCameraWorldPosition(_camWorldPos);
-    // camera.getWorldPosition(_camWorldPos);
-
-    // Get world direction of camera.
-    // camera.getWorldDirection(_direction);
-    controls.getCameraWorldDirection(_direction);
-    _direction.multiplyScalar(-1);
-
-    // Add the direction to the position of the body.
-    _lookPos.addVectors(_bodyWorldPos, _direction);
-
-    // Set the up vector so that it will be oriented correctly when lookAt() is called.
-    // center.up.copy(camera.up);
-    // center.up.set(...controls.getWorldUp());
-    controls.getCameraWorldUp(center.up);
-    // Rotate to face camera.
-    center.lookAt(_lookPos);
-
-    // Get distance to camera.
-    const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
-
-    // Scale relative to distance from camera.
-    const n = distanceToCamera / 75;
-    const factor = Math.max(1e-5, n);
-    text.scale.setScalar(factor);
-
-    // Clamp the y-position so that the annotation doesn't go inside of the body.
-    const yPos = clamp(-1.25 * factor, -(meanRadius / DIST_MULT) * 1.5);
-    // Set position so that the annotation always appears below the body and outside of the marker.
-    text.position.set(0, yPos, 0);
-  });
-
   return (
     <>
-      <object3D ref={centerRef}>
+      <object3D>
         <object3D
-          ref={textRef}
+          ref={fwdRef}
           position={[0, -(meanRadius / DIST_MULT), 0]}
           // position={[0, -10, 0]}
         >
@@ -108,6 +49,6 @@ const Annotation = ({ annotation, meanRadius }: Props) => {
       </object3D>
     </>
   );
-};
+});
 
 export { Annotation };

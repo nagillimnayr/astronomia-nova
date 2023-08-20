@@ -17,6 +17,7 @@ import {
   useRef,
   PropsWithChildren,
   useState,
+  forwardRef,
 } from 'react';
 import { ThreeEvent, useFrame } from '@react-three/fiber';
 import {
@@ -41,10 +42,13 @@ const _camWorldPos = new Vector3();
 
 const threshold = 0.02;
 
-type Props = PropsWithChildren & {
+type MarkerProps = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
 };
-export function RingMarker({ children, bodyRef }: Props) {
+export const RingMarker = forwardRef<Mesh, MarkerProps>(function RingMarker(
+  { children, bodyRef }: MarkerProps,
+  fwdRef
+) {
   const { selectionActor, visibilityActor, mapActor } =
     MachineContext.useSelector(({ context }) => context);
   const markers = useSelector(
@@ -54,7 +58,7 @@ export function RingMarker({ children, bodyRef }: Props) {
 
   const isVisible = useSelector(markers, (state) => state.matches('active'));
 
-  const sphereRef = useRef<Mesh>(null!);
+  const circleRef = useRef<Mesh>(null!);
   const materialRef = useRef<MeshBasicMaterial>(null!);
 
   const [isHovered, setHovered] = useState<boolean>(false);
@@ -64,49 +68,25 @@ export function RingMarker({ children, bodyRef }: Props) {
     (event: ThreeEvent<MouseEvent>) => {
       event.stopPropagation();
       const body = bodyRef.current;
+      console.log('Ring marker click!', body);
       selectionActor.send({ type: 'SELECT', selection: body });
     },
     [bodyRef, selectionActor]
   );
 
-  useFrame(({ camera }) => {
-    const body = bodyRef.current;
-    if (!body || !sphereRef.current) return;
-
-    // Get world position of body.
-    body.getWorldPosition(_bodyWorldPos);
-    // Get world position of camera.
-    camera.getWorldPosition(_camWorldPos);
-    // Rotate to face camera.
-    sphereRef.current.lookAt(_camWorldPos);
-
-    // Get distance to camera.
-    const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
-
-    // If too close to parent, minimize scale.
-    const n = distanceToCamera / 100;
-
-    const factor = Math.max(1e-5, n);
-    // Scale relative to distance from camera.
-    sphereRef.current.scale.setScalar(factor);
-  });
-
   // const boxHelper = useHelper(sphereRef, BoxHelper);
 
   return (
     <>
-      <Sphere
-        ref={sphereRef}
+      <Circle
+        ref={fwdRef}
         args={[1.25]}
         onClick={handleClick}
         onPointerOver={() => {
           setHovered(true);
-          console.log('pointer enter over sphere');
         }}
         onPointerLeave={() => {
           setHovered(false);
-
-          console.log('pointer leave sphere');
         }}
       >
         {/** Transparent material so that the circle will catch clicks but not be visible. */}
@@ -121,7 +101,7 @@ export function RingMarker({ children, bodyRef }: Props) {
           {/* <axesHelper args={[radius * 2]} /> */}
           {children}
         </Ring>
-      </Sphere>
+      </Circle>
     </>
   );
-}
+});
