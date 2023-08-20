@@ -1,0 +1,5 @@
+Material Design Icons:
+https://github.com/Templarian/MaterialDesign/blob/master/LICENSE
+
+Phosphor Icons:
+https://github.com/phosphor-icons/core/blob/main/LICENSE
