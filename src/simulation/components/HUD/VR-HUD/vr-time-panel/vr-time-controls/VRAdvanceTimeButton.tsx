@@ -33,7 +33,6 @@ export const VRAdvanceTimeButton = ({
         display="flex"
         alignItems="center"
         justifyContent="center"
-        backgroundColor={colors.background}
       >
         <IconButton
           onClick={handleClick}
@@ -46,7 +45,6 @@ export const VRAdvanceTimeButton = ({
           padding={2}
           aspectRatio={1}
           borderRadius={1000}
-          backgroundColor={colors.background}
         >
           {reverse ? (
             <Sunset

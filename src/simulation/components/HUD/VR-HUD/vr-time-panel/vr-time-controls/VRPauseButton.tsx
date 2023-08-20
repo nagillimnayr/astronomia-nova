@@ -2,7 +2,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Container, Object, RootContainer, Text } from '@coconut-xr/koestlich';
 import { useSelector } from '@xstate/react';
 import { format } from 'date-fns';
-import { colors, text } from '../../vr-hud-constants';
+import { colors, depth, text } from '../../vr-hud-constants';
 import { Play, Pause } from '@coconut-xr/lucide-koestlich';
 import { useCallback, useMemo } from 'react';
 import { Glass, IconButton } from '@coconut-xr/apfel-kruemel';
@@ -33,9 +33,8 @@ export const VRPauseButton = ({ index }: VRPauseButtonProps) => {
         display="flex"
         alignItems="center"
         justifyContent="center"
-        backgroundColor={colors.background}
       >
-        <Object object={obj} depth={12}>
+        <Object object={obj} depth={depth.xxs}>
           <IconButton
             onClick={handleClick}
             display="flex"
@@ -46,7 +45,6 @@ export const VRPauseButton = ({ index }: VRPauseButtonProps) => {
             height={iconSize * 1.5}
             aspectRatio={1}
             borderRadius={1000}
-            backgroundColor={colors.background}
           >
             {isPaused ? (
               <Play

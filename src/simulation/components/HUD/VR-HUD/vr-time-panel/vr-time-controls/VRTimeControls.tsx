@@ -22,7 +22,6 @@ export const VRTimeControls = ({ index }: VRTimeControlProps) => {
         justifyContent="center"
         gapColumn={10}
         height={text.lg}
-        backgroundColor={colors.background}
       >
         <VRAdvanceTimeButton index={0} reverse />
         <VRPauseButton index={1} />

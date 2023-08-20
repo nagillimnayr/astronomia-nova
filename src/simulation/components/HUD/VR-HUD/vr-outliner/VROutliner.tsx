@@ -54,9 +54,6 @@ export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
             ref={containerRef}
             sizeX={width}
             sizeY={height}
-            // border={border.base}
-            borderRadius={borderRadius.base}
-            // backgroundColor={colors.background}
             flexDirection="column"
             // padding={text.base}
           >
@@ -64,8 +61,12 @@ export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
               padding={text.base}
               borderRadius={borderRadius.base}
               border={border.base}
+              borderColor={colors.border}
               backgroundColor={colors.background}
               height={'100%'}
+              flexDirection="column"
+              alignItems="stretch"
+              justifyContent="flex-start"
             >
               {root && <VROutlinerItem body={root} />}
             </Container>

@@ -24,18 +24,6 @@ export const VRTimePanel = ({ position = [0, 0, 0] }: VRTimePanelProps) => {
   const containerRef = useRef<ContainerNode>(null!);
   const objRef = useRef<Object3D>(null!);
 
-  // useEffect(() => {
-  //   const controls = cameraActor.getSnapshot()!.context.controls;
-
-  //   if (!controls) return;
-  //   const obj = objRef.current;
-  //   // obj.position.setZ(-5);
-  //   // controls.attachToController(obj);
-  //   controls.getCameraWorldUp(obj.up);
-  //   controls.getCameraWorldPosition(_camWorldPos);
-  //   obj.lookAt(_camWorldPos);
-  // }, [cameraActor]);
-
   const height = 1;
   const width = height * GOLDEN_RATIO;
   return (
@@ -45,7 +33,6 @@ export const VRTimePanel = ({ position = [0, 0, 0] }: VRTimePanelProps) => {
         <Suspense>
           <RootContainer
             ref={containerRef}
-            // position={position}
             sizeX={width}
             sizeY={height}
             backgroundColor={colors.background}

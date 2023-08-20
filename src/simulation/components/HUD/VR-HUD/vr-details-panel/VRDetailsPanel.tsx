@@ -37,6 +37,7 @@ import { DAY, HOUR } from '@/simulation/utils/constants';
 import { useFrame } from '@react-three/fiber';
 import { VRButton } from '../vr-ui-components/VRButton';
 import { Plane, useHelper } from '@react-three/drei';
+import { useEventListener, useKeyPressed } from '@react-hooks-library/core';
 
 const _camWorldPos = new Vector3();
 
@@ -84,7 +85,7 @@ export const VRDetailsPanel = ({
     siderealRotationRate,
     siderealRotationPeriod,
   } = selected ?? placeholders;
-  console.log('render details panel');
+
   return (
     <>
       {/** Its better to put the object3D outside of the Suspense barrier, so as to not delay setting the reference. */}
@@ -104,7 +105,6 @@ export const VRDetailsPanel = ({
             alignItems="stretch"
             justifyContent="flex-start"
             gapRow={selected ? 20 : 0}
-            animation={noAnimation}
             overflow="visible"
           >
             {/** Close Button. */}
@@ -115,15 +115,15 @@ export const VRDetailsPanel = ({
               flexDirection="row"
               alignItems="center"
               justifyContent="center"
-              backgroundColor={colors.background}
-              animation={noAnimation}
+              // backgroundColor={colors.background}
+
               overflow="visible"
             >
               <Text
                 color={colors.foreground}
                 fontSize={text.lg}
-                backgroundColor={colors.background}
-                animation={noAnimation}
+                // backgroundColor={colors.background}
+
                 overflow="visible"
               >
                 {name}
@@ -137,7 +137,6 @@ export const VRDetailsPanel = ({
               type={'inset'}
               flexDirection="column"
               gapRow={5}
-              animation={noAnimation}
               overflow="visible"
             >
               {/** Mass. */}
@@ -180,12 +179,7 @@ type TextProp = {
 const AttributeLabel = ({ children }: TextProp) => {
   return (
     <>
-      <Text
-        marginRight={'auto'}
-        fontSize={text.base}
-        animation={noAnimation}
-        overflow="visible"
-      >
+      <Text marginRight={'auto'} fontSize={text.base} overflow="visible">
         {children}
       </Text>
     </>
@@ -194,12 +188,7 @@ const AttributeLabel = ({ children }: TextProp) => {
 const AttributeValue = ({ children }: TextProp) => {
   return (
     <>
-      <Text
-        marginLeft={'auto'}
-        fontSize={text.base}
-        animation={noAnimation}
-        overflow="visible"
-      >
+      <Text marginLeft={'auto'} fontSize={text.base} overflow="visible">
         {children}
       </Text>
     </>
@@ -217,10 +206,9 @@ const AttributeListItem = ({ label, value }: AttributeProps) => {
   }, []);
   return (
     <>
-      <Object object={obj} depth={depth.md} animation={noAnimation}>
+      <Object object={obj} depth={depth.xxs}>
         <ListItem
           subtitle={<AttributeValue>{value}</AttributeValue>}
-          animation={noAnimation}
           overflow="visible"
         >
           <AttributeLabel>{label}</AttributeLabel>
@@ -247,33 +235,34 @@ const VRCloseButton = () => {
   }, []);
   return (
     <>
-      <Object object={obj} depth={depth.md}>
-        <Button
-          positionType="absolute"
-          positionTop={0}
-          positionRight={0}
-          margin={padding / 2}
-          border={0}
-          borderRadius={4}
-          aspectRatio={1}
-          width={closeBtnSize}
-          height={closeBtnSize}
-          padding={0}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          onClick={handleCloseClick}
-          overflow="visible"
-        >
-          <Suspense>
-            <SVG
-              url="icons/mdi-close-box-outline.svg"
-              aspectRatio={1}
-              width={closeBtnSize}
-            />
-          </Suspense>
-        </Button>
-      </Object>
+      {/* <Object object={obj} depth={depth.xxs}> */}
+      <Button
+        positionType="absolute"
+        positionTop={0}
+        positionRight={0}
+        margin={padding / 2}
+        border={0}
+        borderRadius={4}
+        aspectRatio={1}
+        width={closeBtnSize}
+        height={closeBtnSize}
+        padding={0}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        onClick={handleCloseClick}
+        overflow="visible"
+      >
+        <Suspense>
+          <SVG
+            color={colors.foreground}
+            url="icons/mdi-close-box-outline.svg"
+            aspectRatio={1}
+            width={closeBtnSize}
+          />
+        </Suspense>
+      </Button>
+      {/* </Object> */}
     </>
   );
 };
@@ -321,7 +310,7 @@ const VRSurfaceButton = ({ size }: VRButtonProps) => {
   }, []);
   return (
     <>
-      <Object object={obj} depth={depth.md}>
+      <Object object={obj} depth={depth.xxs}>
         <Button
           flexDirection={btn.flexDirection}
           flexGrow={btn.flexGrow}
@@ -352,7 +341,7 @@ const VRSpaceButton = ({ size }: VRButtonProps) => {
   }, []);
   return (
     <>
-      <Object object={obj} depth={depth.md}>
+      <Object object={obj} depth={depth.xxs}>
         <Button
           flexDirection={btn.flexDirection}
           flexGrow={btn.flexGrow}
@@ -400,7 +389,7 @@ const VRFocusButton = ({ size }: VRButtonProps) => {
   }, []);
   return (
     <>
-      <Object object={obj} depth={depth.md}>
+      <Object object={obj} depth={depth.xxs}>
         <Button
           flexDirection={btn.flexDirection}
           flexGrow={btn.flexGrow}
