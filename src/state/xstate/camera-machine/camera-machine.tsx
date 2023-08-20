@@ -353,31 +353,10 @@ export const cameraMachine = createMachine(
           return;
         }
 
-        // const { gl } = getThree();
-        // const xr = gl.xr;
-        // const glXRSession = gl.xr.getSession();
-        // console.log('xrSession:', xrSession);
-        // console.log('glXRSession:', glXRSession);
-        // console.log('xr enabled?', gl.xr.enabled);
-        // console.log('xr frame', gl.xr.getFrame());
-        // console.log('xr camera', gl.xr.getCamera());
-        // console.log('xr controller 1', gl.xr.getController(1));
-        // const refSpace = xr.getReferenceSpace();
-        // console.log('xr reference space', refSpace);
-
-        // const { player } = getXR();
-        // controls.attachToController(player);
-        // controls.camera.getWorldDirection(_cameraWorldDirection);
-        // player.up.set(...getLocalUpInWorldCoords(controls.camera));
-        // player.getWorldPosition(_worldPos);
-        // _lookPos.addVectors(_worldPos, _cameraWorldDirection);
-        // player.lookAt(_lookPos);
-        // console.log('Attaching VR Player to camera!');
-
         if (vrHud) {
           console.log('VRHUD:', vrHud);
           vrHud.visible = true;
-          vrHud.position.setZ(-1);
+          vrHud.position.setZ(-0.5);
         }
       },
       endXRSession: (context, event) => {
