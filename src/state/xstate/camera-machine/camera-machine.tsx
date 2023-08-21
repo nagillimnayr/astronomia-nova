@@ -358,6 +358,9 @@ export const cameraMachine = createMachine(
           vrHud.visible = true;
           vrHud.position.setZ(VR_HUD_Z_IMMERSIVE);
         }
+        const { camera, gl } = context.getThree();
+        console.log('camera:', camera);
+        console.log('xr camera:', gl.xr.getCamera());
       },
       endXRSession: (context, event) => {
         const { vrHud } = context;
@@ -366,6 +369,10 @@ export const cameraMachine = createMachine(
           // vrHud.visible = false;
           vrHud.position.setZ(VR_HUD_Z_NON_IMMERSIVE);
         }
+
+        const { camera, gl } = context.getThree();
+        console.log('camera:', camera);
+        console.log('xr camera:', gl.xr.getCamera());
       },
       initRefSpace: (context, event) => {
         const { getThree } = context;
