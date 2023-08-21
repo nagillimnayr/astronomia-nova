@@ -66,11 +66,11 @@ export const VRDetailsPanel = ({
   const objRef = useRef<Object3D>(null!);
 
   // const boxHelper = useHelper(objRef, BoxHelper);
-
+  const isOpen = Boolean(selected);
   // Dimensions of the panel.
   const width = 1;
-  const height = selected ? width * GOLDEN_RATIO : 0; // Collapse the panel if nothing is currently selected.
-
+  const height = isOpen ? width * GOLDEN_RATIO : 0; // Collapse the panel if nothing is currently selected.
+  const opacity = isOpen ? 1 : 0;
   // Attribute data.
   const {
     name,
@@ -86,6 +86,7 @@ export const VRDetailsPanel = ({
       <object3D ref={objRef} name="VR-Details-Panel" position={position}>
         <Suspense>
           <RootContainer
+            precision={0.15}
             ref={containerRef}
             positionType="relative"
             backgroundColor={colors.background}
@@ -100,9 +101,11 @@ export const VRDetailsPanel = ({
             justifyContent="flex-start"
             gapRow={selected ? 20 : 0}
             overflow="visible"
+            backgroundOpacity={opacity}
+            borderOpacity={opacity}
           >
             {/** Close Button. */}
-            <VRCloseButton />
+            {isOpen && <VRCloseButton />}
             {/** Name. */}
             <Container
               display="flex"
@@ -124,7 +127,7 @@ export const VRDetailsPanel = ({
               </Text>
             </Container>
 
-            <VRSeparator direction="horizontal" opacity={selected ? 1 : 0} />
+            <VRSeparator direction="horizontal" opacity={opacity} />
 
             {/** Attributes. */}
             <List
@@ -236,10 +239,9 @@ const VRCloseButton = () => {
         positionRight={0}
         margin={padding / 2}
         border={0}
-        borderRadius={4}
         aspectRatio={1}
-        width={closeBtnSize}
-        height={closeBtnSize}
+        // width={closeBtnSize}
+        // height={closeBtnSize}
         padding={0}
         display="flex"
         alignItems="center"
@@ -248,12 +250,7 @@ const VRCloseButton = () => {
         overflow="visible"
       >
         <Suspense>
-          <SVG
-            color={colors.foreground}
-            url="icons/MdiCloseBoxOutline.svg"
-            aspectRatio={1}
-            width={closeBtnSize}
-          />
+          <SVG url="icons/MdiClose.svg" aspectRatio={1} width={closeBtnSize} />
         </Suspense>
       </Button>
       {/* </Object> */}
