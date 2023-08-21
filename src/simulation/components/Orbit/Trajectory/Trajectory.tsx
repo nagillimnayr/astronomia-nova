@@ -1,4 +1,4 @@
-import { Line } from '@react-three/drei';
+import { Line, Segment, Segments } from '@react-three/drei';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import {
   MutableRefObject,
@@ -17,7 +17,7 @@ import {
   Vector3Tuple,
 } from 'three';
 import { getLinearEccentricityFromAxes } from '@/simulation/math/orbital-elements/LinearEccentricity';
-import { degToRad } from 'three/src/math/MathUtils';
+import { degToRad, generateUUID } from 'three/src/math/MathUtils';
 
 import { useActor, useSelector } from '@xstate/react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
@@ -29,7 +29,7 @@ import KeplerBody from '@/simulation/classes/kepler-body';
 import { Object3DNode, MaterialNode, extend } from '@react-three/fiber';
 import { flatten } from 'lodash';
 
-const NUM_OF_POINTS = 4096;
+const NUM_OF_POINTS = 2 ** 14;
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
@@ -134,7 +134,17 @@ export const Trajectory = ({
             lineWidth={1e-3}
           />
         </mesh> */}
+        {/* <Segments limit={NUM_OF_POINTS} lineWidth={2}>
+          {points.map((point, index, arr) => {
+            const i = index + 1 < arr.length ? index + 1 : 0;
 
+            const start: Vector3Tuple = [...point.toArray(), 0];
+            const endPoint = arr[i];
+            if (!endPoint) return;
+            const end: Vector3Tuple = [...endPoint.toArray(), 0];
+            return <Segment key={index} start={start} end={end} />;
+          })}
+        </Segments> */}
         {/* Semi-major Axis / Periapsis */}
         {showPeriapsis ? (
           <arrowHelper
