@@ -340,13 +340,7 @@ export const cameraMachine = createMachine(
         }
 
         if (vrHud) {
-          // Attach the VR Hud to the camera.
-          // controls.attachToController(vrHud);
-          // vrHud.position.setZ(VR_HUD_Z_NON_IMMERSIVE);
-          // controls.attachToController(vrHud);
-          // controls.getCameraWorldUp(vrHud.up);
-          // controls.getCameraWorldPosition(_camWorldPos);
-          // vrHud.lookAt(_camWorldPos);
+          //
         }
         console.log('controls:', controls);
         console.log('camera:', camera);
@@ -369,7 +363,7 @@ export const cameraMachine = createMachine(
         const { vrHud } = context;
         if (vrHud) {
           console.log('VRHUD:', vrHud);
-          // vrHud.visible = false;
+          vrHud.visible = false;
           vrHud.position.setZ(VR_HUD_Z_NON_IMMERSIVE);
         }
       },

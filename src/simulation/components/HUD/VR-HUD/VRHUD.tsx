@@ -25,34 +25,12 @@ import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { VRSettingsButton } from './vr-settings-menu/VRSettingsButton';
 import { METER } from '@/simulation/utils/constants';
 
-type RenderHudProps = {
-  defaultScene: THREE.Scene;
-  defaultCamera: THREE.Camera;
-  renderPriority?: number;
-};
-
-type HudProps = {
-  /** Any React node */
-  children: React.ReactNode;
-  /** Render priority, default: 1 */
-  renderPriority?: number;
-};
-
 type VRHUDProps = {
   position?: Vector3Tuple;
 };
 export const VRHUD = ({ position = [0, 0, -5] }: VRHUDProps) => {
   // Get the current default camera so we can render the VRHUD to it.
   const camera = useThree(({ camera }) => camera);
-  // const vrHudScene = useThree(({ scene }) => scene);
-  // const vrHudScene = useMemo(() => new Scene(), []);
-
-  // return (
-  //   <>
-  //     <perspectiveCamera />
-  //     <VRHud position={position} />
-  //   </>
-  // );
 
   // Attach the VRHUD to the camera.
   return createPortal(
@@ -84,13 +62,10 @@ const VRHud = ({ position = [0, 0, -5] }: VRHUDProps) => {
   }, [cameraActor]);
 
   useEffect(() => {
+    // Set initial visibility to false.
     const group = groupRef.current;
-    group.visible = true;
+    group.visible = false;
   }, []);
-
-  // useFrame((state) => {
-  //   const camera = state.camera;
-  // });
 
   return (
     <>
