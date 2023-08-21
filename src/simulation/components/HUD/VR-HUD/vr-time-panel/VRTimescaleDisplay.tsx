@@ -14,6 +14,7 @@ export const VRTimescaleDisplay = ({ index }: VRTimescaleDisplayProps) => {
 
   const timescale = useSelector(timeActor, ({ context }) => context.timescale);
 
+  // Make plural if more than one.
   let str = `${timescale} hour`;
   if (Math.abs(timescale) > 1) {
     str += 's';
@@ -27,7 +28,7 @@ export const VRTimescaleDisplay = ({ index }: VRTimescaleDisplayProps) => {
         alignItems="stretch"
         justifyContent="center"
       >
-        <Text fontSize={text.lg} horizontalAlign="center">
+        <Text fontSize={text.xl} horizontalAlign="center">
           {str + ' / second'}
         </Text>
       </Container>
