@@ -19,8 +19,6 @@ export const SliderTooltip = ({ children }: Props) => {
         opacity: 1,
         ease: 'power2.inOut',
         onComplete: () => {
-          console.log('div opacity:', div.style.opacity);
-          console.log('div:', div.style);
           setTimeout(resolve, 500);
         },
       });
@@ -36,7 +34,6 @@ export const SliderTooltip = ({ children }: Props) => {
         ease: 'power2.inOut',
         onComplete: () => {
           div.style.display = 'none';
-          console.log(div);
           resolve();
         },
       });

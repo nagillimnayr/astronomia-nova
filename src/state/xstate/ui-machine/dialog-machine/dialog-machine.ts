@@ -39,7 +39,7 @@ export const dialogMachine = createMachine(
           assign({
             dialogRef: (_, { ref }) => ref,
           }),
-          'logEvent',
+          // 'logEvent',
         ],
       },
     },
@@ -57,7 +57,7 @@ export const dialogMachine = createMachine(
         on: {
           CLOSE: {
             target: 'closing',
-            actions: ['logEvent'],
+            // actions: ['logEvent'],
           },
         },
       },
@@ -65,11 +65,11 @@ export const dialogMachine = createMachine(
         on: {
           CLOSE: {
             target: 'closing',
-            actions: ['logEvent'],
+            // actions: ['logEvent'],
           },
           TOGGLE: {
             target: 'closing',
-            actions: ['logEvent'],
+            // actions: ['logEvent'],
           },
         },
       },
@@ -84,7 +84,7 @@ export const dialogMachine = createMachine(
         on: {
           OPEN: {
             target: 'opening',
-            actions: ['logEvent'],
+            // actions: ['logEvent'],
           },
         },
       },
@@ -92,11 +92,11 @@ export const dialogMachine = createMachine(
         on: {
           OPEN: {
             target: 'opening',
-            actions: ['logEvent'],
+            // actions: ['logEvent'],
           },
           TOGGLE: {
             target: 'opening',
-            actions: ['logEvent'],
+            // actions: ['logEvent'],
           },
         },
       },
