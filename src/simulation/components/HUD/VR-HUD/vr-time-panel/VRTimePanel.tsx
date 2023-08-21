@@ -32,7 +32,11 @@ export const VRTimePanel = ({ position = [0, 0, 0] }: VRTimePanelProps) => {
       <object3D position={position} ref={objRef} name="VR-Time-Panel">
         <Suspense>
           <RootContainer
-            ref={containerRef}
+            precision={0.5}
+            ref={(container) => {
+              if (!container) return;
+              containerRef.current = container;
+            }}
             sizeX={width}
             sizeY={height}
             backgroundColor={colors.background}
