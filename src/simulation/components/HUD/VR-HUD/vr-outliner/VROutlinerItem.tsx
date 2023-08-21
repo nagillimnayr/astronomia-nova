@@ -68,10 +68,10 @@ export const VROutlinerItem = ({
   }, []);
   return (
     <>
-      <Object object={obj} depth={depth.xxs}>
+      <Object object={obj} depth={1}>
         <Suspense>
           <Container
-            index={index + 1}
+            index={index}
             ref={containerRef}
             height={'auto'}
             flexDirection="column"
@@ -82,7 +82,7 @@ export const VROutlinerItem = ({
             backgroundColor={colors.background}
           >
             <Container
-              index={index + 2}
+              index={index + 1}
               flexDirection="row"
               alignItems="center"
               gapColumn={text.xs}
@@ -91,17 +91,17 @@ export const VROutlinerItem = ({
               backgroundColor={colors.background}
             >
               <Button
-                index={index + 3}
+                index={index + 2}
                 height={'auto'}
-                flexGrow={index + 1} // Will stretch the button to fill as much space as it can, which will line up the eye icon buttons on the the right side.
+                flexGrow={1} // Will stretch the button to fill as much space as it can, which will line up the eye icon buttons on the the right side.
                 onClick={handleClick}
               >
-                <Text index={index + 4} fontSize={text.xl}>
+                <Text index={index + 3} fontSize={text.xl}>
                   {body.name}
                 </Text>
               </Button>
               <Container
-                index={index + 5}
+                index={index + 4}
                 material={VRHudBGMaterial}
                 backgroundColor={colors.background}
               >
@@ -111,7 +111,7 @@ export const VROutlinerItem = ({
 
             {body.orbitingBodies.length > 0 && (
               <List
-                index={index + 6}
+                index={index + 5}
                 height={'auto'}
                 marginLeft={text.base}
                 paddingLeft={text.base}
@@ -127,7 +127,7 @@ export const VROutlinerItem = ({
                 {body.orbitingBodies.map((child) => {
                   return (
                     <VROutlinerItem
-                      index={index + 7}
+                      index={index + 6}
                       key={child.name}
                       body={child}
                     />
