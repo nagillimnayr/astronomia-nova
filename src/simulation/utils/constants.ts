@@ -19,7 +19,7 @@ export const J2000_JD = 2451545.0; // J2000 in Julian Days.
 // export const DIST_MULT = 1e10; // Distance multiplier (10 units = 1x10^11m = 100,000,000km)
 // export const DIST_MULT = 1e9; // Distance multiplier (100 units = 1x10^11m = 100,000,000km)
 // export const DIST_MULT = 1e8; // Distance multiplier.
-export const DIST_MULT = 1e9; // Distance multiplier.
+export const DIST_MULT = 1e4; // Distance multiplier.
 export const KM_TO_M = 1000;
 export const METER = 1 / DIST_MULT;
 
@@ -27,7 +27,7 @@ export const GRAV_CONST = 6.674e-11; // Gravitational Constant m^3/kg/s^2;
 export const AU = 1.495978707e11; // Astronomical Unit in m
 export const SOLAR_MASS = 1988500e24; // Solar Mass in kg
 export const SOLAR_SYSTEM_RADIUS = AU * 90;
-export const SIMULATION_RADIUS = 2 * SOLAR_SYSTEM_RADIUS * METER;
+export const SIMULATION_RADIUS = 4 * SOLAR_SYSTEM_RADIUS * METER;
 
 export const MASS_MULT = 1e24;
 
