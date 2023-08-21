@@ -1,10 +1,12 @@
 import { type ActorRefFrom, assign, createMachine, log, spawn } from 'xstate';
 import { type MutableRefObject } from 'react';
 import { dialogMachine } from './dialog-machine/dialog-machine';
+import { toggleMachine } from '../toggle-machine/toggle-machine';
 
 type Context = {
   // settingsMenuActor: ActorRefFrom<typeof dialogMachine>;
   surfaceDialogActor: ActorRefFrom<typeof dialogMachine>;
+  vrSettingsMenuActor: ActorRefFrom<typeof toggleMachine>;
   screenPortalRef: MutableRefObject<HTMLDivElement>;
   camViewPortalRef: MutableRefObject<HTMLDivElement>;
 };
@@ -34,25 +36,33 @@ export const uiMachine = createMachine(
 
     // Initial context:
     context: () => ({
-      settingsMenuActor: null!,
+      // settingsMenuActor: null!,
+      vrSettingsMenuActor: null!,
       surfaceDialogActor: null!,
       screenPortalRef: null!,
       camViewPortalRef: null!,
     }),
 
     // Spawn child actor:
-    entry: assign({
-      // settingsMenuActor: () =>
-      //   spawn(dialogMachine, {
-      //     name: 'settingsMenuActor',
-      //     sync: true,
-      //   }),
-      surfaceDialogActor: () =>
-        spawn(dialogMachine, {
-          name: 'surfaceDialogActor',
-          sync: true,
-        }),
-    }),
+    entry: [
+      assign({
+        // settingsMenuActor: () =>
+        //   spawn(dialogMachine, {
+        //     name: 'settingsMenuActor',
+        //     sync: true,
+        //   }),
+        vrSettingsMenuActor: () =>
+          spawn(toggleMachine, {
+            name: 'vrSettingsMenuActor',
+            sync: true,
+          }),
+        surfaceDialogActor: () =>
+          spawn(dialogMachine, {
+            name: 'surfaceDialogActor',
+            sync: true,
+          }),
+      }),
+    ],
 
     // Context assignment events:
     on: {
