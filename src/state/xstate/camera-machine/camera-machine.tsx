@@ -356,7 +356,7 @@ export const cameraMachine = createMachine(
         const { vrHud } = context;
         if (vrHud) {
           console.log('VRHUD:', vrHud);
-          // vrHud.visible = false;
+          vrHud.visible = false;
           // vrHud.position.setZ(VR_HUD_Z_NON_IMMERSIVE);
         }
 
