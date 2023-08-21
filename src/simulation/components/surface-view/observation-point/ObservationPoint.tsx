@@ -18,12 +18,23 @@ type Props = {
   children?: ReactNode;
 };
 const ObservationPoint = observer(({ children }: Props) => {
-  const { cameraActor, surfaceActor } = MachineContext.useSelector(
+  const { cameraActor, surfaceActor, uiActor } = MachineContext.useSelector(
     ({ context }) => context
   );
   const focusTarget = useSelector(
     cameraActor,
     ({ context }) => context.focusTarget
+  );
+  const dialogActor = useSelector(
+    uiActor,
+    ({ context }) => context.surfaceDialogActor
+  );
+
+  // Check if surface dialog is open.
+  const dialogOpen = useSelector(dialogActor, (state) => state.matches('open'));
+  // Check if in surface view.
+  const onSurface = useSelector(cameraActor, (state) =>
+    state.matches('surface')
   );
 
   const centerRef = useRef<Object3D>(null!);
@@ -73,7 +84,7 @@ const ObservationPoint = observer(({ children }: Props) => {
     <>
       {body && mesh ? (
         <>
-          <object3D ref={centerRef}>
+          <object3D ref={centerRef} visible={dialogOpen || onSurface}>
             {/* <axesHelper args={[1.5 * (body.meanRadius / DIST_MULT)]} /> */}
 
             {/** Attach group at a distance so that it is on the surface of the body. */}
