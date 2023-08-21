@@ -51,14 +51,12 @@ export const VRAdvanceTimeButton = ({
               url="icons/MdiWeatherSunsetDown.svg"
               height={iconSize}
               width={iconSize}
-              translateY={iconSize / 16}
             />
           ) : (
             <SVG
               url="icons/MdiWeatherSunsetUp.svg"
               height={iconSize}
               width={iconSize}
-              translateY={iconSize / 16}
             />
           )}
         </IconButton>
