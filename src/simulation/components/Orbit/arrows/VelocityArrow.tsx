@@ -37,11 +37,11 @@ const VelocityArrow = () => {
 
     // Update direction of velocity arrow.
     _vel.copy(bodyRef.current.velocity);
-    const lenSq = _vel.lengthSq();
-    if (lenSq < 1e-12) {
-      arrowRef.current.setLength(lenSq, 0.1, 0.05);
-      return;
-    }
+    // const lenSq = _vel.lengthSq();
+    // if (lenSq < 1e-12) {
+    //   arrowRef.current.setLength(lenSq, 0.1, 0.05);
+    //   return;
+    // }
 
     const direction = _vel.normalize();
     arrowRef.current.setDirection(direction);
@@ -49,6 +49,10 @@ const VelocityArrow = () => {
     arrowRef.current.setLength(length, 0.1 * length, 0.05 * length);
     // console.log(length);
   });
+
+  if (!bodyRef || !bodyRef.current) return;
+  const speed = bodyRef.current.velocity.lengthSq();
+  if (Math.abs(speed) < 1e-16) return;
   return (
     <arrowHelper
       visible={isVisible}
