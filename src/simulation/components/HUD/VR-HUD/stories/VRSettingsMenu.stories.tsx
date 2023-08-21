@@ -7,6 +7,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
 import { PerspectiveCamera } from '@react-three/drei';
 import { VRSettingsMenu } from '../vr-settings-menu/VRSettingsMenu';
+import { VRSettingsButton } from '../vr-settings-menu/VRSettingsButton';
 
 const meta: Meta<typeof VRSettingsMenu> = {
   title: 'VRHUD/VRSettingsMenu',
@@ -30,8 +31,9 @@ export const Default: Story = {
 const VRSettingsMenuStory = () => {
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 2]} />
-      <VRSettingsMenu />
+      <PerspectiveCamera makeDefault position={[0, 0, 2.5]} />
+      <VRSettingsButton position={[1, 1, 0]} />
+      <VRSettingsMenu defaultOpen />
     </>
   );
 };

@@ -22,6 +22,7 @@ import { useSelector } from '@xstate/react';
 import { VRSettingsMenu } from './vr-settings-menu/VRSettingsMenu';
 import { Hud, useCamera, useHelper } from '@react-three/drei';
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
+import { VRSettingsButton } from './vr-settings-menu/VRSettingsButton';
 
 type RenderHudProps = {
   defaultScene: THREE.Scene;
@@ -101,7 +102,8 @@ const VRHud = ({ position = [0, 0, -5] }: VRHUDProps) => {
           <VRDetailsPanel position={[3, 0, 0]} />
           <VRTimePanel position={[0, -1.5, 0]} />
           <VROutliner position={[-3, 0, 0]} />
-          {/* <VRSettingsMenu position={[0, 0.5, 0]} /> */}
+          <VRSettingsButton position={[3.25, 2, 0]} />
+          <VRSettingsMenu position={[0, 0.5, 0.25]} />
         </group>
       </DefaultStyleProvider>
     </>

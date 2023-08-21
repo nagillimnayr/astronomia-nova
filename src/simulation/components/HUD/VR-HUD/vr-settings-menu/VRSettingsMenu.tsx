@@ -63,9 +63,8 @@ export const VRSettingsMenu = ({
   }, [vrSettingsMenuActor]);
 
   useEffect(() => {
-    if (defaultOpen) {
-      vrSettingsMenuActor.send({ type: 'ENABLE' });
-    }
+    const type = defaultOpen ? 'ENABLE' : 'DISABLE';
+    vrSettingsMenuActor.send({ type });
   }, [vrSettingsMenuActor, defaultOpen]);
 
   const isOpen = state.matches('active');
