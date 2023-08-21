@@ -37,11 +37,6 @@ import { degToRad } from 'three/src/math/MathUtils';
 import { Annotation } from '../annotation/Annotation';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 
-const _bodyWorldPos = new Vector3();
-const _camWorldPos = new Vector3();
-
-const threshold = 0.02;
-
 type MarkerProps = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
 };
@@ -68,7 +63,7 @@ export const RingMarker = forwardRef<Mesh, MarkerProps>(function RingMarker(
     (event: ThreeEvent<MouseEvent>) => {
       event.stopPropagation();
       const body = bodyRef.current;
-      console.log('Ring marker click!', body);
+      // console.log('Ring marker click!', body);
       selectionActor.send({ type: 'SELECT', selection: body });
     },
     [bodyRef, selectionActor]

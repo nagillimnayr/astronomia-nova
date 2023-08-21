@@ -23,9 +23,6 @@ import {
 import { useActor, useSelector } from '@xstate/react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 
-const _bodyWorldPos = new Vector3();
-const _camWorldPos = new Vector3();
-
 type CircleMarkerProps = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
   color: ColorRepresentation;
@@ -50,7 +47,7 @@ export const CircleMarker = forwardRef<Mesh, CircleMarkerProps>(
     const handleClick = useCallback(
       (event: ThreeEvent<MouseEvent>) => {
         event.stopPropagation();
-        console.log('circle click');
+        // console.log('circle click');
         const body = bodyRef.current;
         selectionActor.send({ type: 'SELECT', selection: body });
       },

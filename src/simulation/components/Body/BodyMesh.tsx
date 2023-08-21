@@ -82,7 +82,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         return;
       }
       const body: KeplerBody = bodyRef.current;
-      console.log('BodyMesh click!', body);
+      // console.log('BodyMesh click!', body);
       // Select body.
       selectionActor.send({ type: 'SELECT', selection: body });
     },
@@ -115,20 +115,6 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 
     return () => subscription.unsubscribe();
   }, [obliquity, siderealRotRate, timeActor]);
-
-  // useFrame((state, delta) => {
-  //   const timeSnapshot = timeActor.getSnapshot();
-  //   if (!timeSnapshot) return;
-
-  //   const mesh = meshRef.current;
-  //   if (!mesh) return;
-  //   const { timeElapsed } = timeSnapshot.context;
-  //   const time = timeElapsed * TIME_MULT;
-  //   const axialRotation = siderealRotRate * time;
-  //   // Rotate the body around its rotational axis.
-  //   mesh.rotation.set(PI_OVER_TWO, 0, degToRad(obliquity)); // Reset rotation.
-  //   mesh.rotateY(axialRotation); // Rotate around local y-axis.
-  // });
 
   const radius = meanRadius / DIST_MULT;
   const rotation: Vector3Tuple = [PI_OVER_TWO, 0, degToRad(obliquity)];
