@@ -1,4 +1,11 @@
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  PropsWithoutRef,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   GOLDEN_RATIO,
   border,
@@ -21,6 +28,7 @@ import { type visibilityMachine } from '@/state/xstate/visibility-machine/visibi
 import { useSelector } from '@xstate/react';
 import {
   Container,
+  ContainerProperties,
   ExtendedThreeEvent,
   RootContainer,
   SVG,
@@ -77,6 +85,7 @@ export const VRSettingsMenu = ({
                 target="trajectories"
                 iconUrl="icons/MdiOrbit.svg"
                 defaultSelected
+                height={text.xxl}
               />
               {/** Annotations. */}
               <VRToggleButton
@@ -84,6 +93,7 @@ export const VRSettingsMenu = ({
                 target={'annotations'}
                 iconUrl={'icons/MdiTagText.svg'}
                 defaultSelected
+                height={text.xxl}
               />
               {/** Markers. */}
               <VRToggleButton
@@ -91,6 +101,7 @@ export const VRSettingsMenu = ({
                 target={'markers'}
                 iconUrl={'icons/MdiTarget.svg'}
                 defaultSelected
+                height={text.xxl}
               />
               {/** Velocity Arrows. */}
               <VRToggleButton
@@ -98,6 +109,7 @@ export const VRSettingsMenu = ({
                 target={'velocityArrows'}
                 iconUrl={'icons/MdiArrowTopRightThin.svg'}
                 defaultSelected
+                height={text.xxl}
               />
             </Container>
             <VRSeparator color={colors.border} />
@@ -149,19 +161,20 @@ const Header = () => {
         alignItems="stretch"
         justifyContent="center"
       >
-        <Text fontSize={text.lg}>Settings</Text>
+        <Text fontSize={text.xl}>Settings</Text>
       </Container>
     </>
   );
 };
 
-type VRToggleBtnProps = {
+type VRToggleBtnProps = Pick<ContainerProperties, 'height'> & {
   defaultSelected?: boolean;
   label: string;
   target: keyof ContextFrom<typeof visibilityMachine>;
   iconUrl: string;
 };
 const VRToggleButton = ({
+  height = text.xl,
   target,
   label,
   defaultSelected = true,
@@ -193,21 +206,23 @@ const VRToggleButton = ({
 
   return (
     <>
-      <Container flexDirection="row" gapColumn={text.sm}>
+      <Container flexDirection="row" gapColumn={text.sm} height={height}>
         <IconButton
           aspectRatio={1}
-          height={'100%'}
+          height={height}
+          width={height}
           borderColor={colors.border}
           border={border.base}
           borderRadius={borderRadius.sm}
           disabled={!isActive}
+          padding={text.xs}
           onPointerEnter={() => setIsHovered(true)}
           onPointerLeave={() => setIsHovered(false)}
           onPointerDown={handleClick}
         >
-          <SVG url={iconUrl} />
+          <SVG url={iconUrl} height={'100%'} width={'100%'} aspectRatio={1} />
         </IconButton>
-        <Text fontSize={text.base} verticalAlign="center">
+        <Text fontSize={text.lg} verticalAlign="center">
           {label}
         </Text>
       </Container>

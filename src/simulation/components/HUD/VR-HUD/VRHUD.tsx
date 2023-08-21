@@ -5,7 +5,7 @@ import {
 } from '@coconut-xr/koestlich';
 import { VRDetailsPanel } from './vr-details-panel/VRDetailsPanel';
 import { VRTimePanel } from './vr-time-panel/VRTimePanel';
-import { colors } from './vr-hud-constants';
+import { colors, text } from './vr-hud-constants';
 import { VROutliner } from './vr-outliner/VROutliner';
 import {
   BoxHelper,
@@ -95,6 +95,7 @@ const VRHud = ({ position = [0, 0, -5] }: VRHUDProps) => {
       <DefaultStyleProvider
         color={colors.foreground}
         borderColor={colors.border}
+        fontSize={text.base}
       >
         <group ref={groupRef} position={position} name="VR-HUD">
           <VRDetailsPanel position={[3, 0, 0]} />
