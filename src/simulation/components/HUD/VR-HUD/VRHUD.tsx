@@ -101,7 +101,7 @@ const VRHud = ({ position = [0, 0, -5] }: VRHUDProps) => {
           <VRDetailsPanel position={[3, 0, 0]} />
           <VRTimePanel position={[0, -1.5, 0]} />
           <VROutliner position={[-3, 0, 0]} />
-          <VRSettingsMenu position={[0, 0.5, 0]} />
+          {/* <VRSettingsMenu position={[0, 0.5, 0]} /> */}
         </group>
       </DefaultStyleProvider>
     </>
