@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useEffect, useRef } from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import {
   GOLDEN_RATIO,
   border,
@@ -8,30 +8,28 @@ import {
 } from '../vr-hud-constants';
 import {
   Object3D,
-  Vector3Tuple,
+  type Vector3Tuple,
   Vector3,
-  Group,
+  type Group,
   BoxHelper,
   ColorRepresentation,
 } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import {
-  Edges,
-  Plane,
-  RoundedBox,
-  Text,
-  useHelper,
-  Box as Cube,
-} from '@react-three/drei';
-import { VRPanel } from '../vr-ui-components/VRPanel';
-import { Flex, Box, useFlexSize } from '@react-three/flex';
-import { VRButton } from '../vr-ui-components/VRButton';
-import { VRFlexDivider } from '../vr-ui-components/VRDivider';
-import { Checkbox, IconButton } from '@coconut-xr/apfel-kruemel';
-import { ContextFrom } from 'xstate';
-import { visibilityMachine } from '@/state/xstate/visibility-machine/visibility-machine';
+import { Checkbox, IconButton, Slider } from '@coconut-xr/apfel-kruemel';
+import { type ContextFrom } from 'xstate';
+import { type visibilityMachine } from '@/state/xstate/visibility-machine/visibility-machine';
 import { useSelector } from '@xstate/react';
-import { Container } from '@coconut-xr/lucide-koestlich';
+import {
+  Container,
+  ExtendedThreeEvent,
+  RootContainer,
+  SVG,
+  Text,
+} from '@coconut-xr/koestlich';
+import { VRSeparator } from '../vr-ui-components/VRSeparator';
+import { capitalize } from 'lodash';
+import { useCursor } from '@react-three/drei';
+import { celestialSphereMachine } from '@/state/xstate/visibility-machine/celestial-sphere-machine';
 
 type VRSettingsMenuProps = {
   position?: Vector3Tuple;
@@ -39,140 +37,180 @@ type VRSettingsMenuProps = {
 export const VRSettingsMenu = ({
   position = [0, 0, 0],
 }: VRSettingsMenuProps) => {
-  const flexRef = useRef<Group>(null!);
-  const box1Ref = useRef<Group>(null!);
-  // const box2Ref = useRef<Group>(null!);
-  useHelper(flexRef, BoxHelper);
-  useHelper(box1Ref, BoxHelper, 'blue');
-  // useHelper(box2Ref, BoxHelper, 'red');
-
   const width = 1;
   const height = width * GOLDEN_RATIO;
-  const depth = 0.02;
   return (
     <>
       <group position={position}>
-        <VRPanel
-          width={width}
-          height={height}
-          borderRadius={0.1}
-          backgroundColor={colors.background}
-          borderColor={colors.border}
-          borderWidth={0.005}
-        ></VRPanel>
-        <group position={[0, 0, depth]}>
-          <Flex
-            ref={flexRef}
-            centerAnchor
-            size={[width, height, depth]}
-            justifyContent={'flex-start'}
-            alignItems={'stretch'}
-            flexDirection={'column'}
-            padding={0.1}
+        <RootContainer
+          sizeX={width}
+          sizeY={height}
+          borderRadius={border.base}
+          flexDirection="column"
+        >
+          <Container
+            padding={text.base}
+            borderRadius={borderRadius.base}
+            border={border.base}
+            borderColor={colors.border}
+            backgroundColor={colors.background}
+            height={'100%'}
+            flexDirection="column"
+            alignItems="stretch"
+            justifyContent="flex-start"
           >
-            <Box centerAnchor ref={box1Ref} width={'100%'} height={0.15}>
-              <Header />
-            </Box>
+            <Header />
 
-            <Divider />
-            <Box centerAnchor ref={box1Ref} width={'100%'} height={0.2}>
-              <VRButton
-                width={0.5}
-                height={0.2}
-                backgroundColor={colors.background}
-                borderColor={colors.border}
-                hoverColor={colors.gray300}
-                borderHoverColor={colors.gray400}
-              >
-                <Text position={[0, 0, 0.01]} fontSize={0.05}>
-                  Hello World
-                </Text>
-              </VRButton>
-            </Box>
-            <Divider />
-            <VRToggleButton label="Trajectories" />
-          </Flex>
-        </group>
+            <VRSeparator color={colors.border} />
+
+            {/** Toggle Buttons. */}
+            <Container
+              flexDirection="column"
+              alignItems="stretch"
+              justifyContent="flex-start"
+              paddingY={text.sm}
+              gapRow={text.sm}
+            >
+              {/** Trajectories. */}
+              <VRToggleButton
+                label={'Trajectories'}
+                target="trajectories"
+                iconUrl="icons/MdiOrbit.svg"
+                defaultSelected
+              />
+              {/** Annotations. */}
+              <VRToggleButton
+                label={'Annotations'}
+                target={'annotations'}
+                iconUrl={'icons/MdiTagText.svg'}
+                defaultSelected
+              />
+              {/** Markers. */}
+              <VRToggleButton
+                label={'Markers'}
+                target={'markers'}
+                iconUrl={'icons/MdiTarget.svg'}
+                defaultSelected
+              />
+              {/** Velocity Arrows. */}
+              <VRToggleButton
+                label={'Velocity Arrows'}
+                target={'velocityArrows'}
+                iconUrl={'icons/MdiArrowTopRightThin.svg'}
+                defaultSelected
+              />
+            </Container>
+            <VRSeparator color={colors.border} />
+
+            {/** Opacity Sliders. */}
+            <Container
+              flexDirection="column"
+              alignItems="stretch"
+              justifyContent="flex-start"
+              paddingY={text.sm}
+              gapRow={text.sm}
+            >
+              {/** Constellations. */}
+              <VROpacitySliders
+                label="Constellation Opacity"
+                target="constellations"
+              />
+              {/** Celestial Grid. */}
+              <VROpacitySliders
+                label="Celestial Grid Opacity"
+                target="celestialGrid"
+              />
+            </Container>
+            <VRSeparator color={colors.border} />
+            {/** Checkboxes. */}
+            <Container
+              flexDirection="column"
+              alignItems="stretch"
+              justifyContent="flex-start"
+              paddingY={text.sm}
+              gapRow={text.sm}
+            >
+              {/** Polar Axes. */}
+              {/** Equinoxes. */}
+            </Container>
+          </Container>
+        </RootContainer>
       </group>
     </>
   );
 };
 
 const Header = () => {
-  const [width, height] = useFlexSize();
-  console.log('width:', width);
-  console.log('height:', height);
   return (
     <>
-      <Plane args={[width ?? 1, height]}>
-        <meshBasicMaterial transparent opacity={0} />
-        <Text
-          position={[0, 0, 0.02]}
-          // anchorX={'center'}
-          // anchorY={'middle'}
-          fontSize={0.1}
-        >
-          Settings
-        </Text>
-      </Plane>
+      <Container
+        width={'100%'}
+        flexDirection="column"
+        alignItems="stretch"
+        justifyContent="center"
+      >
+        <Text fontSize={text.lg}>Settings</Text>
+      </Container>
     </>
   );
 };
 
 type VRToggleBtnProps = {
+  defaultSelected?: boolean;
   label: string;
+  target: keyof ContextFrom<typeof visibilityMachine>;
+  iconUrl: string;
 };
-const VRToggleButton = ({ label }: VRToggleBtnProps) => {
-  return (
-    <>
-      <Box
-        marginTop={0.1}
-        width={1}
-        height={0.1}
-        flexDirection={'row'}
-        alignItems={'center'}
-        // justifyContent={'flex-start'}
-      >
-        <Box height={0.1} width={0.1}>
-          <VRButton
-            width={0.1}
-            height={0.1}
-            borderColor={colors.border}
-            borderWidth={0.005}
-          ></VRButton>
-        </Box>
-        <Box height={0.1} width={'100%'} flexGrow={1} alignSelf={'flex-end'}>
-          <Text anchorX={'left'} fontSize={0.05}>
-            {label}
-          </Text>
-        </Box>
-      </Box>
-    </>
+const VRToggleButton = ({
+  target,
+  label,
+  defaultSelected = true,
+  iconUrl,
+}: VRToggleBtnProps) => {
+  // Get actor from state machine.
+  const { visibilityActor } = MachineContext.useSelector(
+    ({ context }) => context
   );
-};
+  const actor = useSelector(visibilityActor, ({ context }) => context[target]);
+  const isActive = useSelector(actor, (state) => state.matches('active'));
 
-const Divider = () => {
-  return (
-    <>
-      <Box
-        centerAnchor
-        width={'100%'}
-        height={0.01}
-        marginTop={0.02}
-        marginBottom={0.02}
-      >
-        <VRFlexDivider color={colors.border} />
-      </Box>
-    </>
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  useCursor(isHovered, 'pointer');
+
+  useEffect(() => {
+    // Set starting state in external state machine.
+    const type = defaultSelected ? 'ENABLE' : 'DISABLE';
+    actor.send({ type });
+  }, [actor, defaultSelected, target]);
+
+  const handleClick = useCallback(
+    (event: ExtendedThreeEvent<PointerEvent>) => {
+      event.stopPropagation();
+      actor.send({ type: 'TOGGLE' });
+    },
+    [actor]
   );
-};
 
-const VRSettingsToggleButton = () => {
   return (
     <>
-      <>
-        <IconButton></IconButton>
-      </>
+      <Container flexDirection="row" gapColumn={text.sm}>
+        <IconButton
+          aspectRatio={1}
+          height={'100%'}
+          borderColor={colors.border}
+          border={border.base}
+          borderRadius={borderRadius.sm}
+          disabled={!isActive}
+          onPointerEnter={() => setIsHovered(true)}
+          onPointerLeave={() => setIsHovered(false)}
+          onPointerDown={handleClick}
+        >
+          <SVG url={iconUrl} />
+        </IconButton>
+        <Text fontSize={text.base} verticalAlign="center">
+          {label}
+        </Text>
+      </Container>
     </>
   );
 };
@@ -191,7 +229,7 @@ const VRSettingsCheckbox = ({
   const { visibilityActor } = MachineContext.useSelector(
     ({ context }) => context
   );
-  const actor = useSelector(visibilityActor, (state) => state.context[target]);
+  const actor = useSelector(visibilityActor, ({ context }) => context[target]);
   const isActive = useSelector(actor, (state) => state.matches('active'));
 
   const handleSelectedChange = useCallback(
@@ -202,6 +240,13 @@ const VRSettingsCheckbox = ({
     },
     [actor]
   );
+
+  useEffect(() => {
+    // Set starting state in external state machine.
+    const type = defaultSelected ? 'ENABLE' : 'DISABLE';
+    actor.send({ type });
+  }, [actor, defaultSelected, target]);
+
   return (
     <>
       <>
@@ -214,6 +259,43 @@ const VRSettingsCheckbox = ({
           <Text fontSize={text.base}>{label}</Text>
         </Container>
       </>
+    </>
+  );
+};
+
+type VROpacitySliderProps = {
+  label: string;
+  target: keyof ContextFrom<typeof celestialSphereMachine>;
+};
+const VROpacitySliders = ({ label, target }: VROpacitySliderProps) => {
+  // Get actor from state machine.
+  const { celestialSphereActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+  const actor = useSelector(
+    celestialSphereActor,
+    ({ context }) => context[target]
+  );
+  // Get opacity value.
+  const opacity = useSelector(actor, ({ context }) => context.opacity);
+
+  const handleValueChange = useCallback(
+    (value: number) => {
+      actor.send({ type: 'SET_OPACITY', opacity: value });
+    },
+    [actor]
+  );
+  return (
+    <>
+      <Container flexDirection="column" gapRow={text.xxs}>
+        <Text fontSize={text.base}>{label}</Text>
+        <Slider
+          value={opacity}
+          onValueChange={handleValueChange}
+          range={1}
+          size="md"
+        />
+      </Container>
     </>
   );
 };
