@@ -1,14 +1,18 @@
+import KeplerBody from '@/simulation/classes/kepler-body';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 
 import { useFrame } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
-import { useContext, useRef } from 'react';
+import { MutableRefObject, useContext, useRef } from 'react';
 import { Vector3, type ArrowHelper } from 'three';
 
 const _vel = new Vector3();
 
+type VelocityArrowRefs = {
+  bodyRef: MutableRefObject<KeplerBody>;
+};
 const VelocityArrow = () => {
   const { visibilityActor } = MachineContext.useSelector(
     ({ context }) => context
@@ -42,11 +46,8 @@ const VelocityArrow = () => {
     const direction = _vel.normalize();
     arrowRef.current.setDirection(direction);
     const length = 2 * (bodyRef.current.meanRadius / DIST_MULT);
-    arrowRef.current.setLength(
-      2 * (bodyRef.current.meanRadius / DIST_MULT),
-      0.1 * length,
-      0.05 * length
-    );
+    arrowRef.current.setLength(length, 0.1 * length, 0.05 * length);
+    // console.log(length);
   });
   return (
     <arrowHelper
@@ -55,8 +56,12 @@ const VelocityArrow = () => {
         if (!arrow) return;
         arrowRef.current = arrow;
         arrow.setColor('green');
-        if (!bodyRef || !bodyRef.current) return;
-        arrow.setLength(2 * bodyRef.current.meanRadius, 0.1, 0.05);
+        if (!bodyRef || !bodyRef.current) {
+          console.log('bodyRef invalid');
+          return;
+        }
+        const length = 2 * (bodyRef.current.meanRadius / DIST_MULT);
+        arrow.setLength(length, 0.1 * length, 0.05 * length);
       }}
     />
   );
