@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { colors, text } from '../vr-hud-constants';
 import { Glass, Slider } from '@coconut-xr/apfel-kruemel';
 import { useCallback } from 'react';
+import { VRHudBGMaterial } from '../vr-materials/VRHudBGMaterial';
 
 type VRTimescaleDisplayProps = {
   index: number;
@@ -27,8 +28,16 @@ export const VRTimescaleDisplay = ({ index }: VRTimescaleDisplayProps) => {
         flexDirection="column"
         alignItems="stretch"
         justifyContent="center"
+        material={VRHudBGMaterial}
+        backgroundColor={colors.background}
       >
-        <Text fontSize={text.xl} horizontalAlign="center">
+        <Text
+          index={index + 1}
+          fontSize={text.xl}
+          horizontalAlign="center"
+          material={VRHudBGMaterial}
+          backgroundColor={colors.background}
+        >
           {str + ' / second'}
         </Text>
       </Container>

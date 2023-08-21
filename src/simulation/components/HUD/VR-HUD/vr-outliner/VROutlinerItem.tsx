@@ -35,6 +35,7 @@ import { useSelector } from '@xstate/react';
 import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { Object3D } from 'three';
+import { VRHudBGMaterial } from '../vr-materials/VRHudBGMaterial';
 
 type VROutlinerItemProps = {
   body: KeplerBody;
@@ -77,6 +78,8 @@ export const VROutlinerItem = ({
             alignItems="stretch"
             justifyContent="flex-start"
             gapRow={text.xs}
+            material={VRHudBGMaterial}
+            backgroundColor={colors.background}
           >
             <Container
               index={index + 2}
@@ -84,6 +87,8 @@ export const VROutlinerItem = ({
               alignItems="center"
               gapColumn={text.xs}
               marginRight={text.base}
+              material={VRHudBGMaterial}
+              backgroundColor={colors.background}
             >
               <Button
                 index={index + 3}
@@ -95,7 +100,11 @@ export const VROutlinerItem = ({
                   {body.name}
                 </Text>
               </Button>
-              <Container index={index + 5}>
+              <Container
+                index={index + 5}
+                material={VRHudBGMaterial}
+                backgroundColor={colors.background}
+              >
                 <VRVisibilityToggleButton />
               </Container>
             </Container>
@@ -112,6 +121,8 @@ export const VROutlinerItem = ({
                 alignItems="stretch"
                 justifyContent="center"
                 gapRow={text.xs}
+                material={VRHudBGMaterial}
+                backgroundColor={colors.background}
               >
                 {body.orbitingBodies.map((child) => {
                   return (

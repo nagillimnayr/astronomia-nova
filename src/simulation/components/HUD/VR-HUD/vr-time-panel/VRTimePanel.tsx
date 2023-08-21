@@ -12,6 +12,7 @@ import { VRTimescaleDisplay } from './VRTimescaleDisplay';
 import { VRTimescaleSlider } from './vr-time-controls/VRTimescaleSlider';
 import { Object3D, Vector3Tuple, Vector3 } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { VRHudBGMaterial } from '../vr-materials/VRHudBGMaterial';
 
 type VRTimePanelProps = {
   position?: Vector3Tuple;
@@ -49,6 +50,7 @@ export const VRTimePanel = ({ position = [0, 0, 0] }: VRTimePanelProps) => {
             justifyContent="space-evenly"
             padding={text.base}
             gapRow={10}
+            material={VRHudBGMaterial}
           >
             <VRTimescaleDisplay index={0} />
             <VRDateDisplay index={1} />

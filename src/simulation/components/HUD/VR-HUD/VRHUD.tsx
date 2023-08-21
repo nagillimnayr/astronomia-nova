@@ -23,6 +23,7 @@ import { VRSettingsMenu } from './vr-settings-menu/VRSettingsMenu';
 import { Hud, useCamera, useHelper } from '@react-three/drei';
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { VRSettingsButton } from './vr-settings-menu/VRSettingsButton';
+import { METER } from '@/simulation/utils/constants';
 
 type RenderHudProps = {
   defaultScene: THREE.Scene;
@@ -98,7 +99,7 @@ const VRHud = ({ position = [0, 0, -5] }: VRHUDProps) => {
         borderColor={colors.border}
         fontSize={text.base}
       >
-        <group ref={groupRef} position={position} name="VR-HUD">
+        <group name="VR-HUD" ref={groupRef} position={position}>
           <VRDetailsPanel position={[3, 0, 0]} />
           <VRTimePanel position={[0, -1.5, 0]} />
           <VROutliner position={[-3, 0, 0]} />

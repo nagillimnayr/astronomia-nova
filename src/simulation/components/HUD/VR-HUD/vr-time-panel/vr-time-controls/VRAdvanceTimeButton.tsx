@@ -6,6 +6,7 @@ import { colors, text } from '../../vr-hud-constants';
 import { Play, Pause, Sunset, Sunrise } from '@coconut-xr/lucide-koestlich';
 import { useCallback } from 'react';
 import { Glass, IconButton } from '@coconut-xr/apfel-kruemel';
+import { VRHudBGMaterial } from '../../vr-materials/VRHudBGMaterial';
 
 type VRAdvanceTimeButtonProps = {
   index: number;
@@ -33,6 +34,8 @@ export const VRAdvanceTimeButton = ({
         display="flex"
         alignItems="center"
         justifyContent="center"
+        material={VRHudBGMaterial}
+        backgroundColor={colors.background}
       >
         <IconButton
           onClick={handleClick}

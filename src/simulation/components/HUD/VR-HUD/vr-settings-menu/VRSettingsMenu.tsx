@@ -39,6 +39,7 @@ import { useCursor } from '@react-three/drei';
 import { celestialSphereMachine } from '@/state/xstate/visibility-machine/celestial-sphere-machine';
 import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
 import { toggleMachine } from '@/state/xstate/toggle-machine/toggle-machine';
+import { VRHudBGMaterial } from '../vr-materials/VRHudBGMaterial';
 
 type VRSettingsMenuProps = {
   position?: Vector3Tuple;
@@ -76,22 +77,21 @@ export const VRSettingsMenu = ({
       <group position={position}>
         <RootContainer
           sizeX={width}
-          sizeY={height}
-          borderRadius={border.base}
+          sizeY={isOpen ? height : 0}
           flexDirection="column"
+          material={VRHudBGMaterial}
         >
           <Container
+            height={'100%'}
+            flexDirection="column"
+            alignItems="stretch"
+            justifyContent="flex-start"
             padding={text.base}
             borderRadius={borderRadius.base}
             border={border.base}
             borderColor={colors.border}
+            material={VRHudBGMaterial}
             backgroundColor={colors.background}
-            height={isOpen ? '100%' : '0%'}
-            backgroundOpacity={isOpen ? 1 : 0}
-            borderOpacity={isOpen ? 1 : 0}
-            flexDirection="column"
-            alignItems="stretch"
-            justifyContent="flex-start"
           >
             {/** Close button. */}
             {isOpen && (
@@ -115,6 +115,8 @@ export const VRSettingsMenu = ({
               justifyContent="flex-start"
               paddingY={text.sm}
               gapRow={text.sm}
+              material={VRHudBGMaterial}
+              backgroundColor={colors.background}
             >
               {/** Trajectories. */}
               <VRToggleButton
@@ -158,6 +160,8 @@ export const VRSettingsMenu = ({
               justifyContent="flex-start"
               paddingY={text.sm}
               gapRow={text.sm}
+              material={VRHudBGMaterial}
+              backgroundColor={colors.background}
             >
               {/** Constellations. */}
               <VROpacitySliders
@@ -178,6 +182,8 @@ export const VRSettingsMenu = ({
               justifyContent="flex-start"
               paddingY={text.sm}
               gapRow={text.sm}
+              material={VRHudBGMaterial}
+              backgroundColor={colors.background}
             >
               {/** Polar Axes. */}
               {/** Equinoxes. */}
@@ -248,6 +254,8 @@ const VRToggleButton = ({
         gapColumn={text.sm}
         height={height}
         maxHeight={'100%'}
+        material={VRHudBGMaterial}
+        backgroundColor={colors.background}
       >
         <IconButton
           aspectRatio={1}
@@ -265,7 +273,12 @@ const VRToggleButton = ({
         >
           <SVG url={iconUrl} height={'100%'} width={'100%'} aspectRatio={1} />
         </IconButton>
-        <Text fontSize={text.lg} verticalAlign="center">
+        <Text
+          fontSize={text.lg}
+          verticalAlign="center"
+          material={VRHudBGMaterial}
+          backgroundColor={colors.background}
+        >
           {label}
         </Text>
       </Container>
@@ -308,7 +321,12 @@ const VRSettingsCheckbox = ({
   return (
     <>
       <>
-        <Container flexDirection="row" gapColumn={text.sm}>
+        <Container
+          flexDirection="row"
+          gapColumn={text.sm}
+          material={VRHudBGMaterial}
+          backgroundColor={colors.background}
+        >
           <Checkbox
             defaultSelected={defaultSelected}
             selected={isActive}
@@ -345,7 +363,12 @@ const VROpacitySliders = ({ label, target }: VROpacitySliderProps) => {
   );
   return (
     <>
-      <Container flexDirection="column" gapRow={text.xxs}>
+      <Container
+        flexDirection="column"
+        gapRow={text.xxs}
+        material={VRHudBGMaterial}
+        backgroundColor={colors.background}
+      >
         <Text fontSize={text.base}>{label}</Text>
         <Slider
           value={opacity}

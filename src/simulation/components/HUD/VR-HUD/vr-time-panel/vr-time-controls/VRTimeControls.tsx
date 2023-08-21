@@ -6,6 +6,7 @@ import { colors, text } from '../../vr-hud-constants';
 import { VRPauseButton } from './VRPauseButton';
 import { VRTimescaleSlider } from './VRTimescaleSlider';
 import { VRAdvanceTimeButton } from './VRAdvanceTimeButton';
+import { VRHudBGMaterial } from '../../vr-materials/VRHudBGMaterial';
 
 type VRTimeControlProps = {
   index: number;
@@ -22,10 +23,12 @@ export const VRTimeControls = ({ index }: VRTimeControlProps) => {
         justifyContent="center"
         gapColumn={10}
         height={text.lg}
+        material={VRHudBGMaterial}
+        backgroundColor={colors.background}
       >
-        <VRAdvanceTimeButton index={0} reverse />
-        <VRPauseButton index={1} />
-        <VRAdvanceTimeButton index={2} />
+        <VRAdvanceTimeButton index={index + 1} reverse />
+        <VRPauseButton index={index + 2} />
+        <VRAdvanceTimeButton index={index + 3} />
       </Container>
     </>
   );

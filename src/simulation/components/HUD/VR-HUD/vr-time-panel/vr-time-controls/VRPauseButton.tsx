@@ -13,6 +13,7 @@ import { Play, Pause } from '@coconut-xr/lucide-koestlich';
 import { useCallback, useMemo } from 'react';
 import { Glass, IconButton } from '@coconut-xr/apfel-kruemel';
 import { Object3D } from 'three';
+import { VRHudBGMaterial } from '../../vr-materials/VRHudBGMaterial';
 
 type VRPauseButtonProps = {
   index: number;
@@ -39,6 +40,8 @@ export const VRPauseButton = ({ index }: VRPauseButtonProps) => {
         display="flex"
         alignItems="center"
         justifyContent="center"
+        material={VRHudBGMaterial}
+        backgroundColor={colors.background}
       >
         <Object object={obj} depth={depth.xxs}>
           <IconButton

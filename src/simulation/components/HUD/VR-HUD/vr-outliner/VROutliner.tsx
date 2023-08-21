@@ -20,6 +20,7 @@ import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import { VROutlinerItem } from './VROutlinerItem';
 import { useFrame } from '@react-three/fiber';
 import { useHelper } from '@react-three/drei';
+import { VRHudBGMaterial } from '../vr-materials/VRHudBGMaterial';
 
 const _camWorldPos = new Vector3();
 
@@ -51,23 +52,26 @@ export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
       <object3D position={position} ref={objRef} name="VR-Outliner">
         <Suspense>
           <RootContainer
+            precision={0.15}
             ref={containerRef}
             sizeX={width}
             sizeY={height}
             flexDirection="column"
-            precision={0.15}
+            padding={text.base}
+            border={border.base}
+            borderColor={colors.border}
+            borderRadius={borderRadius.base}
+            material={VRHudBGMaterial}
+            backgroundColor={colors.background}
           >
             <Container
               index={0}
-              padding={text.base}
-              borderRadius={borderRadius.base}
-              border={border.base}
-              borderColor={colors.border}
-              backgroundColor={colors.background}
               height={'100%'}
               flexDirection="column"
               alignItems="stretch"
               justifyContent="flex-start"
+              material={VRHudBGMaterial}
+              backgroundColor={colors.background}
             >
               {root && <VROutlinerItem index={1} body={root} />}
             </Container>

@@ -3,6 +3,8 @@ export const colors = Object.freeze({
   // background: '#09090b',
   background: '#4b5563', // gray600
   foreground: '#ffffff', // white
+  textGray: '#9ca3af',
+  background2: '#374151',
 
   // border: '#2a2a2a',
   border: '#6b7280', // gray500

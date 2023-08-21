@@ -34,6 +34,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import { DAY, HOUR } from '@/simulation/utils/constants';
+import { VRHudBGMaterial } from '../vr-materials/VRHudBGMaterial';
 
 const placeholders = {
   name: 'Name',
@@ -43,7 +44,7 @@ const placeholders = {
   siderealRotationPeriod: 0,
 };
 
-const padding = text.md;
+const pad = text.md;
 
 type VRDetailsPanelProps = {
   position?: Vector3Tuple;
@@ -67,10 +68,11 @@ export const VRDetailsPanel = ({
 
   // const boxHelper = useHelper(objRef, BoxHelper);
   const isOpen = Boolean(selected);
+  const opacity = isOpen ? 1 : 0;
+  const padding = isOpen ? pad : 0;
   // Dimensions of the panel.
   const width = 1;
-  const height = isOpen ? width * GOLDEN_RATIO : 0; // Collapse the panel if nothing is currently selected.
-  const opacity = isOpen ? 1 : 0;
+  const height = width * GOLDEN_RATIO;
   // Attribute data.
   const {
     name,
@@ -89,80 +91,86 @@ export const VRDetailsPanel = ({
             precision={0.15}
             ref={containerRef}
             positionType="relative"
-            backgroundColor={colors.background}
             sizeX={width}
-            sizeY={height}
-            border={border.base}
-            borderColor={colors.border}
-            borderRadius={borderRadius.base}
-            padding={padding}
+            sizeY={isOpen ? height : 0}
             flexDirection="column"
             alignItems="stretch"
             justifyContent="flex-start"
-            gapRow={selected ? 20 : 0}
-            overflow="visible"
-            backgroundOpacity={opacity}
-            borderOpacity={opacity}
+            material={VRHudBGMaterial}
           >
-            {/** Close Button. */}
-            {isOpen && <VRCloseButton />}
-            {/** Name. */}
             <Container
-              display="flex"
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="center"
-              // backgroundColor={colors.background}
-
-              overflow="visible"
+              positionType="relative"
+              width={'100%'}
+              height={'100%'}
+              borderColor={colors.border}
+              borderRadius={borderRadius.base}
+              border={isOpen ? border.base : 0}
+              padding={padding}
+              gapRow={selected ? 20 : 0}
+              material={VRHudBGMaterial}
+              backgroundColor={colors.background}
             >
-              <Text
-                color={colors.foreground}
-                fontSize={text.lg}
-                // backgroundColor={colors.background}
-
-                overflow="visible"
+              {/** Close Button. */}
+              {isOpen && <VRCloseButton />}
+              {/** Name. */}
+              <Container
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="center"
+                material={VRHudBGMaterial}
+                backgroundColor={colors.background}
               >
-                {name}
-              </Text>
+                <Text
+                  color={colors.foreground}
+                  fontSize={text.lg}
+                  material={VRHudBGMaterial}
+                  backgroundColor={colors.background}
+                >
+                  {name}
+                </Text>
+              </Container>
+
+              <VRSeparator direction="horizontal" opacity={opacity} />
+
+              {/** Attributes. */}
+              <List
+                type={'inset'}
+                flexDirection="column"
+                gapRow={5}
+                material={VRHudBGMaterial}
+                backgroundColor={colors.background}
+              >
+                {/** Mass. */}
+                <AttributeListItem
+                  label="Mass"
+                  value={mass.toExponential(3) + 'kg'}
+                />
+                {/** Mean Radius. */}
+                <AttributeListItem
+                  label="Mean Radius"
+                  value={meanRadius.toExponential(3) + ' m'}
+                />
+                {/** Sidereal Rotation Rate. */}
+                <AttributeListItem
+                  label="Sidereal Rotation Rate"
+                  value={siderealRotationRate.toExponential(3) + ' rad/s'}
+                />
+                {/** Sidereal Rotation Period. */}
+                <AttributeListItem
+                  label="Sidereal Rotation Period"
+                  value={
+                    (siderealRotationPeriod / HOUR).toLocaleString() + ' hr'
+                  }
+                />
+                {/**  */}
+                <AttributeListItem label="" value={''} />
+                {/**  */}
+                <AttributeListItem label="" value={''} />
+              </List>
+              <VRSeparator direction="horizontal" opacity={selected ? 1 : 0} />
+              <VRDetailsPanelButtons />
             </Container>
-
-            <VRSeparator direction="horizontal" opacity={opacity} />
-
-            {/** Attributes. */}
-            <List
-              type={'inset'}
-              flexDirection="column"
-              gapRow={5}
-              overflow="visible"
-            >
-              {/** Mass. */}
-              <AttributeListItem
-                label="Mass"
-                value={mass.toExponential(3) + 'kg'}
-              />
-              {/** Mean Radius. */}
-              <AttributeListItem
-                label="Mean Radius"
-                value={meanRadius.toExponential(3) + ' m'}
-              />
-              {/** Sidereal Rotation Rate. */}
-              <AttributeListItem
-                label="Sidereal Rotation Rate"
-                value={siderealRotationRate.toExponential(3) + ' rad/s'}
-              />
-              {/** Sidereal Rotation Period. */}
-              <AttributeListItem
-                label="Sidereal Rotation Period"
-                value={(siderealRotationPeriod / HOUR).toLocaleString() + ' hr'}
-              />
-              {/**  */}
-              <AttributeListItem label="" value={''} />
-              {/**  */}
-              <AttributeListItem label="" value={''} />
-            </List>
-            <VRSeparator direction="horizontal" opacity={selected ? 1 : 0} />
-            <VRDetailsPanelButtons />
           </RootContainer>
         </Suspense>
       </object3D>
@@ -176,7 +184,12 @@ type TextProp = {
 const AttributeLabel = ({ children }: TextProp) => {
   return (
     <>
-      <Text marginRight={'auto'} fontSize={text.base} overflow="visible">
+      <Text
+        marginRight={'auto'}
+        fontSize={text.base}
+        material={VRHudBGMaterial}
+        backgroundColor={colors.background2}
+      >
         {children}
       </Text>
     </>
@@ -185,7 +198,12 @@ const AttributeLabel = ({ children }: TextProp) => {
 const AttributeValue = ({ children }: TextProp) => {
   return (
     <>
-      <Text marginLeft={'auto'} fontSize={text.base} overflow="visible">
+      <Text
+        marginLeft={'auto'}
+        fontSize={text.base}
+        material={VRHudBGMaterial}
+        backgroundColor={colors.background2}
+      >
         {children}
       </Text>
     </>
@@ -204,12 +222,18 @@ const AttributeListItem = ({ label, value }: AttributeProps) => {
   return (
     <>
       <Object object={obj} depth={depth.xxs}>
-        <ListItem
-          subtitle={<AttributeValue>{value}</AttributeValue>}
-          overflow="visible"
+        <Container
+          material={VRHudBGMaterial}
+          backgroundColor={colors.background2}
         >
-          <AttributeLabel>{label}</AttributeLabel>
-        </ListItem>
+          <ListItem
+            material={VRHudBGMaterial}
+            backgroundColor={colors.background2}
+            subtitle={<AttributeValue>{value}</AttributeValue>}
+          >
+            <AttributeLabel>{label}</AttributeLabel>
+          </ListItem>
+        </Container>
       </Object>
     </>
   );
@@ -237,7 +261,7 @@ const VRCloseButton = () => {
         positionType="absolute"
         positionTop={0}
         positionRight={0}
-        margin={padding / 2}
+        margin={pad / 2}
         border={0}
         aspectRatio={1}
         // width={closeBtnSize}
@@ -247,7 +271,6 @@ const VRCloseButton = () => {
         alignItems="center"
         justifyContent="center"
         onClick={handleCloseClick}
-        overflow="visible"
       >
         <Suspense>
           <SVG url="icons/MdiClose.svg" aspectRatio={1} width={closeBtnSize} />
@@ -335,11 +358,10 @@ const VRSurfaceButton = ({ size }: VRButtonProps) => {
           border={btn.border}
           borderColor={btn.borderColor}
           height={size * 2}
-          overflow="visible"
           onClick={handleSurfaceClick}
         >
           <Suspense>
-            <Text fontSize={size} overflow="visible">
+            <Text fontSize={size} material={VRHudBGMaterial}>
               Surface
             </Text>
             <SVG url="icons/MdiTelescope.svg" aspectRatio={1} height={size} />
@@ -367,10 +389,9 @@ const VRSpaceButton = ({ size }: VRButtonProps) => {
           border={btn.border}
           borderColor={btn.borderColor}
           height={size * 2}
-          overflow="visible"
         >
           <Suspense>
-            <Text fontSize={size} overflow="visible">
+            <Text fontSize={size} material={VRHudBGMaterial}>
               Space
             </Text>
             <SVG url="icons/PhPlanet.svg" aspectRatio={1} height={size} />
@@ -416,10 +437,9 @@ const VRFocusButton = ({ size }: VRButtonProps) => {
           borderColor={btn.borderColor}
           height={size * 2}
           onClick={handleClick}
-          overflow="visible"
         >
           <Suspense>
-            <Text fontSize={size} overflow="visible">
+            <Text fontSize={size} material={VRHudBGMaterial}>
               Focus
             </Text>
             <SVG
@@ -441,8 +461,9 @@ const VRDetailsPanelButtons = () => {
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
-        gapColumn={padding}
-        overflow="visible"
+        gapColumn={pad}
+        material={VRHudBGMaterial}
+        backgroundColor={colors.background}
       >
         <VRSurfaceButton size={text.lg} />
         <VRFocusButton size={text.lg} />
