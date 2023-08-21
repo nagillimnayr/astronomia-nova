@@ -93,8 +93,8 @@ export const CelestialSphere = () => {
             starMap={starmap}
             gridMap={celestialGridTexture}
             figureMap={constellationTexture}
-            gridOpacity={0.05}
-            figureOpacity={0.25}
+            gridOpacity={0}
+            figureOpacity={0}
             side={BackSide}
           />
         ) : null}
