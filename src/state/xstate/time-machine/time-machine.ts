@@ -68,7 +68,7 @@ export const timeMachine = createMachine(
         on: {
           UNPAUSE: {
             target: 'unpaused',
-            actions: ['logEvent'],
+            // actions: ['logEvent'],
           },
         },
       },
@@ -79,7 +79,7 @@ export const timeMachine = createMachine(
           },
           PAUSE: {
             target: 'paused',
-            actions: ['logEvent'],
+            // actions: ['logEvent'],
           },
         },
       },
@@ -119,7 +119,7 @@ export const timeMachine = createMachine(
         previousTime: ({ timeElapsed }) => timeElapsed, // Update previous time.
       }),
 
-      logEvent: log((_, event) => event),
+      // logEvent: log((_, event) => event),
       // logTimer: log((context) => context.timeElapsed),
     },
     guards: {
