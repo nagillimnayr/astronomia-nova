@@ -53,13 +53,17 @@ export const VRPauseButton = ({ index }: VRPauseButtonProps) => {
             borderRadius={1000}
           >
             {isPaused ? (
-              <SVG url="icons/MdiPlay.svg" height={iconSize} width={iconSize} />
+              <SVG
+                url="icons/MdiPlay.svg"
+                height={iconSize}
+                width={iconSize}
+                translateX={iconSize / 16} // Center the Play icon.
+              />
             ) : (
               <SVG
                 url="icons/MdiPause.svg"
                 height={iconSize}
                 width={iconSize}
-                // translateX={iconSize / 16}
               />
             )}
           </IconButton>
