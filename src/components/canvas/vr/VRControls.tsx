@@ -151,10 +151,11 @@ export const VRControls = () => {
 
         if (!xrFrame) {
           console.log('no xr frame');
-          // return;
-        } else {
-          console.log('xr frame:', xrFrame);
+          return;
         }
+
+        console.log('xr frame:', xrFrame);
+
         const referenceSpace = xr.getReferenceSpace();
         if (!referenceSpace) {
           console.log('no reference space');
@@ -168,152 +169,8 @@ export const VRControls = () => {
         console.log('viewer pose position:', viewerPose.transform.position);
         break;
       }
-      // case '8': {
-      //   const { gl } = getThree();
-      //   const xr = gl.xr;
-      //   if (!xr.isPresenting) {
-      //     console.log('xr not presenting');
-      //     return;
-      //   }
-
-      //   let refSpace = xr.getReferenceSpace();
-      //   if (!refSpace) return;
-      //   refSpace = refSpace.getOffsetReferenceSpace(
-      //     new XRRigidTransform({ x: 0, y: -0.1, z: 0 })
-      //   );
-      //   xr.setReferenceSpace(refSpace);
-      //   break;
-      // }
-      // case '2': {
-      //   const { gl } = getThree();
-      //   const xr = gl.xr;
-      //   if (!xr.isPresenting) {
-      //     console.log('xr not presenting');
-      //     return;
-      //   }
-
-      //   let refSpace = xr.getReferenceSpace();
-      //   if (!refSpace) return;
-      //   refSpace = refSpace.getOffsetReferenceSpace(
-      //     new XRRigidTransform({ x: 0, y: 0.1, z: 0 })
-      //   );
-      //   xr.setReferenceSpace(refSpace);
-      //   break;
-      // }
-      // case '5': {
-      //   const { gl } = getThree();
-      //   const xr = gl.xr;
-      //   if (!xr.isPresenting) {
-      //     console.log('xr not presenting');
-      //     return;
-      //   }
-
-      //   vrActor.send({ type: 'RESET_REF_SPACE' });
-      //   break;
-      // }
-      // case '4': {
-      //   const { gl } = getThree();
-      //   const xr = gl.xr;
-      //   if (!xr.isPresenting) {
-      //     console.log('xr not presenting');
-      //     return;
-      //   }
-
-      //   let refSpace = xr.getReferenceSpace();
-      //   if (!refSpace) return;
-      //   refSpace = refSpace.getOffsetReferenceSpace(
-      //     new XRRigidTransform({ x: 0.1, y: 0, z: 0 })
-      //   );
-      //   xr.setReferenceSpace(refSpace);
-      //   break;
-      // }
-      // case '6': {
-      //   const { gl } = getThree();
-      //   const xr = gl.xr;
-      //   if (!xr.isPresenting) {
-      //     console.log('xr not presenting');
-      //     return;
-      //   }
-
-      //   let refSpace = xr.getReferenceSpace();
-      //   if (!refSpace) return;
-      //   refSpace = refSpace.getOffsetReferenceSpace(
-      //     new XRRigidTransform({ x: -0.1, y: 0, z: 0 })
-      //   );
-      //   xr.setReferenceSpace(refSpace);
-      //   break;
-      // }
-      // case '-': {
-      //   const { gl } = getThree();
-      //   const xr = gl.xr;
-      //   if (!xr.isPresenting) {
-      //     console.log('xr not presenting');
-      //     return;
-      //   }
-
-      //   let refSpace = xr.getReferenceSpace();
-      //   if (!refSpace) return;
-      //   refSpace = refSpace.getOffsetReferenceSpace(
-      //     new XRRigidTransform({ x: 0, y: 0, z: 0.1 })
-      //   );
-      //   xr.setReferenceSpace(refSpace);
-      //   break;
-      // }
-      // case '+': {
-      //   const { gl } = getThree();
-      //   const xr = gl.xr;
-      //   if (!xr.isPresenting) {
-      //     console.log('xr not presenting');
-      //     return;
-      //   }
-
-      //   let refSpace = xr.getReferenceSpace();
-      //   if (!refSpace) return;
-      //   refSpace = refSpace.getOffsetReferenceSpace(
-      //     new XRRigidTransform({ x: 0, y: 0, z: -0.1 })
-      //   );
-      //   xr.setReferenceSpace(refSpace);
-      //   break;
-      // }
-      // case ' ': {
-      //   const controls = cameraActor.getSnapshot()!.context.controls;
-      //   if (!controls) return;
-      //   console.log('cam', controls.camera);
-      // }
     }
   });
-
-  // useFrame((state, delta, frame) => {
-  //   // const leftController = controllers[1];
-  //   // const rightController = controllers[0];
-  //   if (!session || !player || !rightController || !leftController) return;
-  //   const leftGamepad = leftController.inputSource.gamepad;
-  //   if (!leftGamepad) return;
-
-  //   const leftAxes = leftGamepad.axes;
-  //   const x = leftAxes[2];
-  //   const z = leftAxes[3];
-
-  //   const rightGamepad = rightController.inputSource.gamepad;
-  //   if (!rightGamepad) return;
-  //   const rightAxes = rightGamepad.axes;
-  //   const a = rightAxes[2];
-  //   const b = rightAxes[3];
-
-  //   if (x === undefined || z === undefined) return;
-  //   if (a === undefined || b === undefined) return;
-
-  //   // Rotate player.
-  //   // player.rotateOnWorldAxis(_yAxis, -deltaA * rotateSpeed);
-  //   // player.rotateOnAxis(_xAxis, -deltaB * rotateSpeed);
-  //   // vrActor.send({ type: 'UPDATE', deltaTime: delta });
-  //   cameraActor.send({ type: 'ROTATE_AZIMUTHAL', deltaAngle: a * 2 });
-  //   cameraActor.send({ type: 'ROTATE_POLAR', deltaAngle: b * 2 });
-  //   cameraActor.send({ type: 'ZOOM', deltaZoom: z / 4 });
-  //   a !== 0 && console.log('azimuthal:', a);
-  //   b !== 0 && console.log('polar:', b);
-  //   z !== 0 && console.log('zoom:', z);
-  // });
 
   return (
     <>
