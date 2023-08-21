@@ -36,31 +36,6 @@ type HudProps = {
   renderPriority?: number;
 };
 
-// function RenderHud({
-//   defaultScene,
-//   defaultCamera,
-//   renderPriority = 1,
-// }: RenderHudProps) {
-//   const { gl, scene, camera } = useThree();
-//   let oldCLear;
-//   useFrame(() => {
-//     oldCLear = gl.autoClear;
-//     if (renderPriority === 1) {
-//       // Clear scene and render the default scene
-//       gl.autoClear = true;
-//       gl.render(defaultScene, defaultCamera);
-//     }
-//     // Disable cleaning and render the portal with its own camera
-//     gl.autoClear = false;
-//     gl.clearDepth();
-//     gl.render(scene, camera);
-//     // Restore default
-//     gl.autoClear = oldCLear;
-//   }, renderPriority);
-//   // Without an element that receives pointer events state.pointer will always be 0/0
-//   return <group onPointerOver={() => null} />;
-// }
-
 type VRHUDProps = {
   position?: Vector3Tuple;
 };
@@ -125,7 +100,7 @@ const VRHud = ({ position = [0, 0, -5] }: VRHUDProps) => {
           <VRDetailsPanel position={[3, 0, 0]} />
           <VRTimePanel position={[0, -1.5, 0]} />
           <VROutliner position={[-3, 0, 0]} />
-          {/* <VRSettingsMenu position={[0, 0.5, 0]} /> */}
+          <VRSettingsMenu position={[0, 0.5, 0]} />
         </group>
       </DefaultStyleProvider>
     </>
