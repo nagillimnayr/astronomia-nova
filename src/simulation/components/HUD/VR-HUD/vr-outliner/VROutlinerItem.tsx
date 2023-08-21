@@ -39,10 +39,12 @@ import { Object3D } from 'three';
 type VROutlinerItemProps = {
   body: KeplerBody;
   defaultOpen?: boolean;
+  index: number;
 };
 export const VROutlinerItem = ({
   body,
   defaultOpen = false,
+  index,
 }: VROutlinerItemProps) => {
   // Get actors from root state machine.
   const { mapActor, selectionActor } = MachineContext.useSelector(
@@ -68,6 +70,7 @@ export const VROutlinerItem = ({
       <Object object={obj} depth={depth.xxs}>
         <Suspense>
           <Container
+            index={index + 1}
             ref={containerRef}
             height={'auto'}
             flexDirection="column"
@@ -76,23 +79,30 @@ export const VROutlinerItem = ({
             gapRow={text.xs}
           >
             <Container
+              index={index + 2}
               flexDirection="row"
               alignItems="center"
               gapColumn={text.xs}
               marginRight={text.base}
             >
               <Button
+                index={index + 3}
                 height={'auto'}
-                flexGrow={1} // Will stretch the button to fill as much space as it can, which will line up the eye icon buttons on the the right side.
+                flexGrow={index + 1} // Will stretch the button to fill as much space as it can, which will line up the eye icon buttons on the the right side.
                 onClick={handleClick}
               >
-                <Text fontSize={text.xl}>{body.name}</Text>
+                <Text index={index + 4} fontSize={text.xl}>
+                  {body.name}
+                </Text>
               </Button>
-              <VRVisibilityToggleButton />
+              <Container index={index + 5}>
+                <VRVisibilityToggleButton />
+              </Container>
             </Container>
 
             {body.orbitingBodies.length > 0 && (
               <List
+                index={index + 6}
                 height={'auto'}
                 marginLeft={text.base}
                 paddingLeft={text.base}
@@ -104,7 +114,13 @@ export const VROutlinerItem = ({
                 gapRow={text.xs}
               >
                 {body.orbitingBodies.map((child) => {
-                  return <VROutlinerItem key={child.name} body={child} />;
+                  return (
+                    <VROutlinerItem
+                      index={index + 7}
+                      key={child.name}
+                      body={child}
+                    />
+                  );
                 })}
               </List>
             )}

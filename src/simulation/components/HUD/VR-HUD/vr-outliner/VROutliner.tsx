@@ -58,6 +58,7 @@ export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
             precision={0.15}
           >
             <Container
+              index={0}
               padding={text.base}
               borderRadius={borderRadius.base}
               border={border.base}
@@ -68,7 +69,7 @@ export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
               alignItems="stretch"
               justifyContent="flex-start"
             >
-              {root && <VROutlinerItem body={root} />}
+              {root && <VROutlinerItem index={1} body={root} />}
             </Container>
           </RootContainer>
         </Suspense>
