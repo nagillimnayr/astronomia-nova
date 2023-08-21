@@ -88,7 +88,7 @@ export const VRDetailsPanel = ({
       <object3D ref={objRef} name="VR-Details-Panel" position={position}>
         <Suspense>
           <RootContainer
-            precision={0.15}
+            precision={0.1}
             ref={containerRef}
             positionType="relative"
             sizeX={width}
@@ -99,9 +99,8 @@ export const VRDetailsPanel = ({
             material={VRHudBGMaterial}
           >
             <Container
-              positionType="relative"
               width={'100%'}
-              height={'100%'}
+              height={isOpen ? '100%' : '0%'}
               borderColor={colors.border}
               borderRadius={borderRadius.base}
               border={isOpen ? border.base : 0}
@@ -256,27 +255,37 @@ const VRCloseButton = () => {
   }, []);
   return (
     <>
-      {/* <Object object={obj} depth={depth.xxs}> */}
-      <Button
+      <Container
+        material={VRHudBGMaterial}
+        backgroundColor={colors.background}
         positionType="absolute"
         positionTop={0}
         positionRight={0}
-        margin={pad / 2}
-        border={0}
-        aspectRatio={1}
-        // width={closeBtnSize}
-        // height={closeBtnSize}
-        padding={0}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        onClick={handleCloseClick}
       >
-        <Suspense>
-          <SVG url="icons/MdiClose.svg" aspectRatio={1} width={closeBtnSize} />
-        </Suspense>
-      </Button>
-      {/* </Object> */}
+        <Object object={obj} depth={depth.xxs}>
+          <Button
+            margin={pad / 2}
+            border={0}
+            aspectRatio={1}
+            // width={closeBtnSize}
+            // height={closeBtnSize}
+            padding={0}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            onClick={handleCloseClick}
+          >
+            <Suspense>
+              <SVG
+                color={'white'}
+                url="icons/MdiClose.svg"
+                aspectRatio={1}
+                width={closeBtnSize}
+              />
+            </Suspense>
+          </Button>
+        </Object>
+      </Container>
     </>
   );
 };
