@@ -12,6 +12,8 @@ import { VRManager } from './vr/VRManager';
 import { Hud, Loader, Preload, Stats } from '@react-three/drei';
 import { VRHUD } from '@/simulation/components/HUD/VR-HUD/VRHUD';
 
+const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'viewer';
+
 const CanvasWrapper = ({ children }: PropsWithChildren) => {
   const { cameraActor, uiActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context
@@ -51,7 +53,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                 }}
               >
                 <XR
-                  referenceSpace="local"
+                  referenceSpace={REF_SPACE_TYPE}
                   onSessionStart={(event) => {
                     const session = event.target;
 
@@ -64,7 +66,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
 
                     // Create a new reference space.
                     session
-                      .requestReferenceSpace('local')
+                      .requestReferenceSpace(REF_SPACE_TYPE)
                       .then((refSpace) => {
                         // Assign the new reference space to the external state machines.
                         cameraActor.send({
@@ -91,21 +93,21 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                     console.log('XR input sources change:', event);
                   }}
                 >
-                  <Suspense fallback={null}>
-                    {/* <Hud renderPriority={1}> */}
-                    <Controllers />
-                    <VRManager />
-                    <Scene>{children}</Scene>
-                    <Stats />
-                    <Perf position={'bottom-left'} />
-                    {/* </Hud> */}
+                  {/* <Suspense fallback={null}> */}
+                  {/* <Hud renderPriority={1}> */}
+                  <Controllers />
+                  <VRManager />
+                  <Scene>{children}</Scene>
+                  <Stats />
+                  <Perf position={'bottom-left'} />
+                  {/* </Hud> */}
 
-                    {/* <Hud renderPriority={2}> */}
-                    {/* <VRManager /> */}
-                    <VRHUD />
-                    {/* </Hud> */}
-                    <Preload all />
-                  </Suspense>
+                  {/* <Hud renderPriority={2}> */}
+                  {/* <VRManager /> */}
+                  <VRHUD />
+                  {/* </Hud> */}
+                  <Preload all />
+                  {/* </Suspense> */}
                 </XR>
               </Canvas>
             </div>
