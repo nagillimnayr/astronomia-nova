@@ -1,11 +1,5 @@
 import { assign, createMachine, log } from 'xstate';
-import {
-  type Object3D,
-  Vector3,
-  type PerspectiveCamera,
-  Scene,
-  Group,
-} from 'three';
+import { type Object3D, Vector3, PerspectiveCamera, Scene, Group } from 'three';
 import { type CameraControls } from '@react-three/drei';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import {
@@ -25,14 +19,7 @@ import {
 } from '@/components/canvas/scene-constants';
 import { XRState } from '@react-three/xr';
 
-// const _targetWorldPos = new Vector3();
-// const _observerWorldPos = new Vector3();
 const _observerUp = new Vector3();
-
-// const _cameraWorldDirection = new Vector3();
-// const _worldPos = new Vector3();
-// const _camWorldPos = new Vector3();
-// const _lookPos = new Vector3();
 
 const NEPTUNE_APOAPSIS = 4553758200000 * METER;
 
@@ -47,7 +34,10 @@ const SURFACE_MIN_DIST_FROM_SURFACE = 2 * METER; // 2 meters above ground
 
 // Z position of VR Hud.
 const VR_HUD_Z_NON_IMMERSIVE = -5;
-const VR_HUD_Z_IMMERSIVE = -2.5;
+// const VR_HUD_Z_IMMERSIVE = -2.5;
+const VR_HUD_Z_IMMERSIVE = -5;
+
+const FOV = 50;
 
 type Context = {
   canvas: HTMLCanvasElement; // Reference to the canvas element.
@@ -371,8 +361,12 @@ export const cameraMachine = createMachine(
         }
 
         const { camera, gl } = context.getThree();
-        console.log('camera:', camera);
         console.log('xr camera:', gl.xr.getCamera());
+        // Need to reset the FOV because it gets messed up for some reason.
+        if (camera instanceof PerspectiveCamera) {
+          camera.fov = 50;
+        }
+        console.log('camera:', camera);
       },
       initRefSpace: (context, event) => {
         const { getThree } = context;
