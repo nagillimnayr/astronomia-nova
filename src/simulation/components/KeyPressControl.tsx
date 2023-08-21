@@ -49,6 +49,11 @@ export const KeyPressControl = () => {
         console.log('vrHud:', vrHud.position.toArray());
         break;
       }
+      case 'c': {
+        const { camera } = getThree();
+        console.log('main camera:', camera);
+        break;
+      }
     }
   });
 

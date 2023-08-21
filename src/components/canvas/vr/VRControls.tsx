@@ -111,7 +111,7 @@ export const VRControls = () => {
   }, [isPresenting, player, controllers, vrActor, xr.enabled]);
 
   useEventListener('keypress', (event) => {
-    console.log(event.key);
+    // console.log(event.key);
     switch (event.key) {
       case 'o': {
         const xrSession = getXR().session;
@@ -151,7 +151,9 @@ export const VRControls = () => {
 
         if (!xrFrame) {
           console.log('no xr frame');
-          return;
+          // return;
+        } else {
+          console.log('xr frame:', xrFrame);
         }
         const referenceSpace = xr.getReferenceSpace();
         if (!referenceSpace) {
