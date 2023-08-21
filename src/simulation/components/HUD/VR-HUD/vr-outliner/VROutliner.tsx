@@ -55,7 +55,6 @@ export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
             sizeX={width}
             sizeY={height}
             flexDirection="column"
-            // padding={text.base}
           >
             <Container
               padding={text.base}
