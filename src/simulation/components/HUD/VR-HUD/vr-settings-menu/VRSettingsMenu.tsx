@@ -12,6 +12,7 @@ import {
   colors,
   text,
   borderRadius,
+  PRECISION,
 } from '../vr-hud-constants';
 import {
   Object3D,
@@ -76,6 +77,7 @@ export const VRSettingsMenu = ({
     <>
       <group position={position}>
         <RootContainer
+          precision={PRECISION}
           sizeX={width}
           sizeY={isOpen ? height : 0}
           flexDirection="column"

@@ -17,6 +17,7 @@ import {
 import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   GOLDEN_RATIO,
+  PRECISION,
   border,
   borderRadius,
   colors,
@@ -88,7 +89,7 @@ export const VRDetailsPanel = ({
       <object3D ref={objRef} name="VR-Details-Panel" position={position}>
         <Suspense>
           <RootContainer
-            precision={0.1}
+            precision={PRECISION}
             ref={containerRef}
             positionType="relative"
             sizeX={width}

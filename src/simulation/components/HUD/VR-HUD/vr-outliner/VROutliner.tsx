@@ -8,6 +8,7 @@ import { Glass, IconButton, List, ListItem } from '@coconut-xr/apfel-kruemel';
 import { Suspense, useRef, useEffect, useMemo } from 'react';
 import {
   GOLDEN_RATIO,
+  PRECISION,
   border,
   borderRadius,
   colors,
@@ -52,7 +53,7 @@ export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
       <object3D position={position} ref={objRef} name="VR-Outliner">
         <Suspense>
           <RootContainer
-            precision={0.15}
+            precision={PRECISION}
             ref={containerRef}
             sizeX={width}
             sizeY={height}

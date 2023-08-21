@@ -1,4 +1,6 @@
 export const GOLDEN_RATIO = 1.618;
+export const PRECISION = 0.1;
+
 export const colors = Object.freeze({
   // background: '#09090b',
   background: '#4b5563', // gray600

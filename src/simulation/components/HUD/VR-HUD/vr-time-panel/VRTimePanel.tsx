@@ -5,7 +5,7 @@ import {
   ContainerNode,
 } from '@coconut-xr/koestlich';
 import { Suspense, useEffect, useRef } from 'react';
-import { GOLDEN_RATIO, colors, text } from '../vr-hud-constants';
+import { GOLDEN_RATIO, PRECISION, colors, text } from '../vr-hud-constants';
 import { VRDateDisplay } from './VRDateDisplay';
 import { VRTimeControls } from './vr-time-controls/VRTimeControls';
 import { VRTimescaleDisplay } from './VRTimescaleDisplay';
@@ -33,7 +33,7 @@ export const VRTimePanel = ({ position = [0, 0, 0] }: VRTimePanelProps) => {
       <object3D position={position} ref={objRef} name="VR-Time-Panel">
         <Suspense>
           <RootContainer
-            precision={0.5}
+            precision={PRECISION}
             ref={(container) => {
               if (!container) return;
               containerRef.current = container;
