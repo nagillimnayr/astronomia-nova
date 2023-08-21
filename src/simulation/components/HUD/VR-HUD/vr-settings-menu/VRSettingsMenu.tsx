@@ -25,7 +25,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Checkbox, IconButton, Slider } from '@coconut-xr/apfel-kruemel';
 import { type ContextFrom } from 'xstate';
 import { type visibilityMachine } from '@/state/xstate/visibility-machine/visibility-machine';
-import { useSelector } from '@xstate/react';
+import { useActor, useMachine, useSelector } from '@xstate/react';
 import {
   Container,
   ContainerProperties,
@@ -35,16 +35,41 @@ import {
   Text,
 } from '@coconut-xr/koestlich';
 import { VRSeparator } from '../vr-ui-components/VRSeparator';
-import { capitalize } from 'lodash';
 import { useCursor } from '@react-three/drei';
 import { celestialSphereMachine } from '@/state/xstate/visibility-machine/celestial-sphere-machine';
+import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
+import { toggleMachine } from '@/state/xstate/toggle-machine/toggle-machine';
 
 type VRSettingsMenuProps = {
   position?: Vector3Tuple;
+  defaultOpen?: boolean;
 };
 export const VRSettingsMenu = ({
   position = [0, 0, 0],
+  defaultOpen = false,
 }: VRSettingsMenuProps) => {
+  // Get actor from state machine.
+  const { uiActor } = MachineContext.useSelector(({ context }) => context);
+  const vrSettingsMenuActor = useSelector(
+    uiActor,
+    ({ context }) => context.vrSettingsMenuActor
+  );
+
+  const [state, send] = useActor(vrSettingsMenuActor);
+
+  // Close button click handler.
+  const handleCloseClick = useCallback(() => {
+    vrSettingsMenuActor.send({ type: 'DISABLE' });
+  }, [vrSettingsMenuActor]);
+
+  useEffect(() => {
+    if (defaultOpen) {
+      vrSettingsMenuActor.send({ type: 'ENABLE' });
+    }
+  }, [vrSettingsMenuActor, defaultOpen]);
+
+  const isOpen = state.matches('active');
+
   const width = 1;
   const height = width * GOLDEN_RATIO;
   return (
@@ -62,14 +87,27 @@ export const VRSettingsMenu = ({
             border={border.base}
             borderColor={colors.border}
             backgroundColor={colors.background}
-            height={'100%'}
+            height={isOpen ? '100%' : '0%'}
+            backgroundOpacity={isOpen ? 1 : 0}
+            borderOpacity={isOpen ? 1 : 0}
             flexDirection="column"
             alignItems="stretch"
             justifyContent="flex-start"
           >
+            {/** Close button. */}
+            {isOpen && (
+              <IconButton
+                positionType="absolute"
+                positionTop={0}
+                positionRight={0}
+                onClick={handleCloseClick}
+              >
+                <SVG url="icons/MdiClose.svg" />
+              </IconButton>
+            )}
             <Header />
 
-            <VRSeparator color={colors.border} />
+            <VRSeparator color={colors.border} opacity={isOpen ? 1 : 0} />
 
             {/** Toggle Buttons. */}
             <Container
@@ -112,7 +150,7 @@ export const VRSettingsMenu = ({
                 height={text.xxl}
               />
             </Container>
-            <VRSeparator color={colors.border} />
+            <VRSeparator color={colors.border} opacity={isOpen ? 1 : 0} />
 
             {/** Opacity Sliders. */}
             <Container
@@ -133,7 +171,7 @@ export const VRSettingsMenu = ({
                 target="celestialGrid"
               />
             </Container>
-            <VRSeparator color={colors.border} />
+            <VRSeparator color={colors.border} opacity={isOpen ? 1 : 0} />
             {/** Checkboxes. */}
             <Container
               flexDirection="column"
@@ -206,11 +244,17 @@ const VRToggleButton = ({
 
   return (
     <>
-      <Container flexDirection="row" gapColumn={text.sm} height={height}>
+      <Container
+        flexDirection="row"
+        gapColumn={text.sm}
+        height={height}
+        maxHeight={'100%'}
+      >
         <IconButton
           aspectRatio={1}
           height={height}
           width={height}
+          maxHeight={'100%'}
           borderColor={colors.border}
           border={border.base}
           borderRadius={borderRadius.sm}
@@ -311,6 +355,14 @@ const VROpacitySliders = ({ label, target }: VROpacitySliderProps) => {
           size="md"
         />
       </Container>
+    </>
+  );
+};
+
+const VRCloseButton = () => {
+  return (
+    <>
+      <IconButton></IconButton>
     </>
   );
 };
