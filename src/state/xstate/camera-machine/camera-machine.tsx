@@ -71,7 +71,9 @@ type Events =
   | { type: 'ROTATE_AZIMUTHAL'; deltaAngle: number }
   | { type: 'ROTATE_POLAR'; deltaAngle: number }
   | { type: 'ZOOM'; deltaZoom: number }
-  | { type: 'RESET_REF_SPACE' };
+  | { type: 'RESET_REF_SPACE' }
+  | { type: 'HIDE_VR_HUD' }
+  | { type: 'SHOW_VR_HUD' };
 
 export const cameraMachine = createMachine(
   {
@@ -149,6 +151,7 @@ export const cameraMachine = createMachine(
             vrHud: (_, { vrHud }) => vrHud,
           }),
           'initializeControls',
+          'hideVRHud',
         ],
       },
       ROTATE_AZIMUTHAL: {
@@ -171,7 +174,13 @@ export const cameraMachine = createMachine(
       },
 
       END_XR_SESSION: {
-        actions: ['logEvent', 'endXRSession'],
+        actions: ['logEvent', 'endXRSession', 'hideVRHud'],
+      },
+      SHOW_VR_HUD: {
+        actions: ['logEvent', 'showVRHud'],
+      },
+      HIDE_VR_HUD: {
+        actions: ['logEvent', 'hideVRHud'],
       },
     },
 
@@ -200,7 +209,7 @@ export const cameraMachine = createMachine(
             // Transition to 'surface' view-mode:
             target: 'surface',
 
-            actions: [log('TO_SURFACE')],
+            actions: ['logEvent'],
           },
           ASSIGN_CONTROLS: {
             cond: (context, event) => {
@@ -209,7 +218,6 @@ export const cameraMachine = createMachine(
             actions: [
               'logEvent',
               'assignControls',
-              log('Assigning camera controls!'),
               'setSpaceCamDistance',
               'initializeControls',
             ],
@@ -220,6 +228,7 @@ export const cameraMachine = createMachine(
               'assignXRSession',
               'startXRSession',
               'setSpaceCamDistance',
+              'showVRHud',
             ],
           },
         },
@@ -265,7 +274,6 @@ export const cameraMachine = createMachine(
             actions: [
               'logEvent',
               'assignControls',
-              log('Assigning camera controls!'),
               'setSurfaceCamDistance',
               'initializeControls',
             ],
@@ -276,6 +284,7 @@ export const cameraMachine = createMachine(
               'assignXRSession',
               'startXRSession',
               'setSurfaceCamDistance',
+              'showVRHud',
             ],
           },
         },
@@ -344,13 +353,8 @@ export const cameraMachine = createMachine(
         }
 
         if (vrHud) {
-          console.log('VRHUD:', vrHud);
-          vrHud.visible = true;
           vrHud.position.setZ(VR_HUD_Z_IMMERSIVE);
         }
-        const { camera, gl } = context.getThree();
-        console.log('camera:', camera);
-        console.log('xr camera:', gl.xr.getCamera());
       },
       endXRSession: (context, event) => {
         const { vrHud } = context;
@@ -577,6 +581,16 @@ export const cameraMachine = createMachine(
       addRadialZoom: ({ controls }, event) => {
         if (!controls) return;
         controls.addRadialZoom(event.deltaZoom);
+      },
+      showVRHud: (context) => {
+        const { vrHud } = context;
+        if (!vrHud) return;
+        vrHud.visible = true;
+      },
+      hideVRHud: (context) => {
+        const { vrHud } = context;
+        if (!vrHud) return;
+        vrHud.visible = false;
       },
     },
   }
