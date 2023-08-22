@@ -67,7 +67,9 @@ export const VRDebugDisplay = () => {
 
     const frame = gl.xr.getFrame();
     if (!frame) return;
-    // console.log('frame:', frame);
+
+    vrActor.send({ type: 'ASSIGN_FRAME', frame });
+
     const refSpace = gl.xr.getReferenceSpace();
     if (!refSpace) return;
     const pose = frame.getViewerPose(refSpace);
