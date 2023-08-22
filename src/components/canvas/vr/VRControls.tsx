@@ -59,10 +59,21 @@ export const VRControls = () => {
     if (buttonA && buttonA.pressed) {
       rootActor.send({ type: 'ADVANCE_DAY' });
       console.log('button A');
+
+      const vrHud = cameraActor.getSnapshot()!.context.vrHud;
+
+      // Move vrHud closer.
+      if (!vrHud) return;
+      vrHud.translateZ(0.05);
     }
 
     if (buttonB && buttonB.pressed) {
       console.log('button B');
+      const vrHud = cameraActor.getSnapshot()!.context.vrHud;
+
+      // Move vrHud back.
+      if (!vrHud) return;
+      vrHud.translateZ(-0.05);
     }
 
     if (buttonX && buttonX.pressed) {
