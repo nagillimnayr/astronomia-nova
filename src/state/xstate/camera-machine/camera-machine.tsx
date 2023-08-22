@@ -367,6 +367,7 @@ export const cameraMachine = createMachine(
           camera.fov = 50;
         }
         console.log('camera:', camera);
+        camera.rotation.set(0, 0, 0);
       },
       initRefSpace: (context, event) => {
         const { getThree } = context;
