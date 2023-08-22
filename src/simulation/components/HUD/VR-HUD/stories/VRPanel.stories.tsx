@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { PerspectiveCamera, Wireframe as Wires } from '@react-three/drei';
+import {
+  CameraControls,
+  PerspectiveCamera,
+  Wireframe as Wires,
+} from '@react-three/drei';
 import { VRPanel } from '../vr-ui-components/VRPanel';
 import { GOLDEN_RATIO, colors } from '../vr-hud-constants';
 
@@ -40,6 +44,7 @@ const VRPanelStory = () => {
   return (
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 2]} />
+      <CameraControls makeDefault />
       <VRPanel
         width={width}
         height={height}

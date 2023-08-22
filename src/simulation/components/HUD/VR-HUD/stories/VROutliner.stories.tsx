@@ -6,7 +6,7 @@ import { useFrame } from '@react-three/fiber';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { VROutliner } from '../vr-outliner/VROutliner';
 import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
-import { PerspectiveCamera } from '@react-three/drei';
+import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 
 const meta: Meta<typeof VROutliner> = {
   title: 'VRHUD/VROutliner',
@@ -31,6 +31,7 @@ const VROutlinerStory = () => {
   return (
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 2]} />
+      <CameraControls makeDefault />
       <MockSolarSystem />
       <VROutliner />
     </>

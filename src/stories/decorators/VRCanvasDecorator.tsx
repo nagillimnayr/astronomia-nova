@@ -13,7 +13,7 @@ export const VRCanvasDecorator = ({ children, ...props }: Props) => {
   return (
     <>
       <VRCanvas>
-        <CameraControls makeDefault />
+        {/* <CameraControls makeDefault /> */}
         <directionalLight position={[0, 0, 100]} intensity={0.15} />
         <DefaultStyleProvider
           color={colors.foreground}

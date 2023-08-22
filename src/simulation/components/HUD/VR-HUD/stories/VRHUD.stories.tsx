@@ -6,9 +6,9 @@ import { useFrame } from '@react-three/fiber';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { VROutliner } from '../vr-outliner/VROutliner';
 import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
-import { VRHUD } from '../VRHUD';
+import { VRHUD, VRHud } from '../VRHUD';
 import { MockEarthSelect } from '@/stories/mocks/MockEarthSelect';
-import { PerspectiveCamera } from '@react-three/drei';
+import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 import { VRCameraManager } from '@/components/canvas/vr/VRCameraManager';
 import { VRManager } from '@/components/canvas/vr/VRManager';
 
@@ -41,11 +41,13 @@ const VRHUDStory = () => {
   });
   return (
     <>
-      {/* <PerspectiveCamera makeDefault position={[0, 0, 4]} /> */}
       <MockSolarSystem />
       <MockEarthSelect />
-      <VRHUD />
-      <VRCameraManager />
+      <VRHud defaultOpen />
+      {/* <VRCameraManager /> */}
+
+      <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+      <CameraControls makeDefault />
       <VRManager />
       <directionalLight intensity={1} position={[0, 0, -100]} />
     </>

@@ -42,10 +42,10 @@ export const VRHUD = ({ position = [0, 0, -5] }: VRHUDProps) => {
   );
 };
 
-type Props = VRHUDProps & {
-  vrHudScene: Scene;
+type VRHudProps = VRHUDProps & {
+  defaultOpen?: boolean;
 };
-const VRHud = ({ position = [0, 0, 0] }: VRHUDProps) => {
+export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
   // Get actors from root state machine.
   const { cameraActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context
@@ -60,13 +60,10 @@ const VRHud = ({ position = [0, 0, 0] }: VRHUDProps) => {
     // Attach to the camera.
     const group = groupRef.current;
     cameraActor.send({ type: 'ASSIGN_VR_HUD', vrHud: group });
+    if (defaultOpen) {
+      cameraActor.send({ type: 'SHOW_VR_HUD' });
+    }
   }, [cameraActor]);
-
-  useEffect(() => {
-    // Set initial visibility to false.
-    const group = groupRef.current;
-    group.visible = false;
-  }, []);
 
   return (
     <>
