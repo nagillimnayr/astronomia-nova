@@ -214,11 +214,8 @@ export const vrMachine = createMachine(
         // Get position and orientation from pose.
         const pos = pose.transform.position;
         const orientation = pose.transform.orientation;
-        // Negate the y translation but preserve the orientation.
-        const offsetTransform = new XRRigidTransform(
-          { x: 0, y: pos.y, z: 0 } // Y must be positive.
-          // orientation
-        );
+        // Negate the translation but preserve the orientation.
+        const offsetTransform = new XRRigidTransform(pos);
 
         const offsetRefSpace =
           refSpace.getOffsetReferenceSpace(offsetTransform);
