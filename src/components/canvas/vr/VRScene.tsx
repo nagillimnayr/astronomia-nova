@@ -24,6 +24,7 @@ import {
 } from '@coconut-xr/natuerlich/react';
 import { VRCameraManager } from './VRCameraManager';
 import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
+import { VRStats } from './VRStats';
 
 export const VRScene = () => {
   const rootActor = MachineContext.useActorRef();
@@ -81,6 +82,7 @@ export const VRScene = () => {
         <VRCameraManager position={[0, 0, 0]} />
       </>
 
+      <VRStats />
       <VRHUD />
     </>
   );
