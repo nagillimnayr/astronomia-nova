@@ -13,6 +13,7 @@ type Context = {
   player: Group | null;
   leftController: XRController | null;
   rightController: XRController | null;
+  xrFrame: XRFrame | null;
   pose: XRViewerPose | null;
 };
 
@@ -28,6 +29,7 @@ type Events =
   | { type: 'ASSIGN_RIGHT_CONTROLLER'; controller: XRController }
   | { type: 'UPDATE'; deltaTime: number }
   | { type: 'RESET_REF_SPACE' }
+  | { type: 'ASSIGN_FRAME'; frame: XRFrame }
   | { type: 'ASSIGN_POSE'; pose: XRViewerPose }
   | { type: 'ADJUST_REF_SPACE_TO_POSE'; pose: XRViewerPose };
 
@@ -50,6 +52,7 @@ export const vrMachine = createMachine(
       player: null,
       leftController: null,
       rightController: null,
+      xrFrame: null,
       pose: null,
     }),
 
@@ -106,6 +109,13 @@ export const vrMachine = createMachine(
       },
       RESET_REF_SPACE: {
         actions: ['logEvent', 'resetRefSpace'],
+      },
+      ASSIGN_FRAME: {
+        actions: [
+          assign({
+            xrFrame: (_, { frame }) => frame,
+          }),
+        ],
       },
       ASSIGN_POSE: {
         actions: [
