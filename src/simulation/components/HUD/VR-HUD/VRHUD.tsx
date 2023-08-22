@@ -24,7 +24,7 @@ import { Hud, useCamera, useHelper } from '@react-three/drei';
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { VRSettingsButton } from './vr-settings-menu/VRSettingsButton';
 import { METER } from '@/simulation/utils/constants';
-import { VRDebugDisplay } from './VRDebugDisplay';
+import { VRDebugDisplay } from './vr-debug/VRDebugDisplay';
 
 type VRHUDProps = {
   position?: Vector3Tuple;

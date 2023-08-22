@@ -25,6 +25,7 @@ import {
 import { VRCameraManager } from './VRCameraManager';
 import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
 import { VRStats } from './VRStats';
+import { VRDebugPortal } from '@/simulation/components/HUD/VR-HUD/vr-debug/VRDebugDisplay';
 
 export const VRScene = () => {
   const rootActor = MachineContext.useActorRef();
@@ -83,7 +84,8 @@ export const VRScene = () => {
       </>
 
       <VRStats />
-      <VRHUD />
+      {/* <VRHUD /> */}
+      <VRDebugPortal position={[0, 0.5, -1]} />
     </>
   );
 };
