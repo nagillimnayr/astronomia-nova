@@ -340,6 +340,7 @@ export const cameraMachine = createMachine(
 
         if (vrHud) {
           //
+          controls.attachToController(vrHud);
         }
         console.log('controls:', controls);
         console.log('camera:', camera);

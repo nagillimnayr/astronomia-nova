@@ -13,7 +13,7 @@ import { useRef } from 'react';
 import { DirectionalLight, DirectionalLightHelper } from 'three';
 import { VRManager } from './VRManager';
 import { Floor } from './components/Floor';
-import { VRHUD } from '@/simulation/components/HUD/VR-HUD/VRHUD';
+import { VRHUD, VRHud } from '@/simulation/components/HUD/VR-HUD/VRHUD';
 import { CameraManager } from '@/simulation/components/camera-controller/CameraManager';
 import { PI_OVER_TWO } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
@@ -89,7 +89,7 @@ export const VRScene = () => {
       />
 
       <VRStats />
-      <VRHUD />
+      <VRHud />
       <VRDebugPortal position={[0, 0, -1]} scale={0.05} />
       {/* <VRDebugPortal position={[0, 0, -1]} /> */}
     </>
