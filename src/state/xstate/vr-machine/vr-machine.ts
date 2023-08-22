@@ -230,7 +230,7 @@ export const vrMachine = createMachine(
         const offsetRefSpace =
           refSpace.getOffsetReferenceSpace(offsetTransform);
 
-        xr.setReferenceSpace(offsetRefSpace);
+        // xr.setReferenceSpace(offsetRefSpace);
       },
     },
   }
