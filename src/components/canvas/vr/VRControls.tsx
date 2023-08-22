@@ -17,20 +17,11 @@ export const VRControls = () => {
     ({ context }) => context
   );
   const { player, controllers, isPresenting, session } = useXR();
-  // const leftController = useController('left');
-  // const rightController = useController('right');
-
-  useXREvent('connected', (event) => console.log('connected!', event));
-  useXREvent('disconnected', (event) => console.log('disconnected!', event));
 
   const getXR = useXR(({ get }) => get);
   const getThree = useThree(({ get }) => get);
-  const gl = useThree(({ gl }) => gl);
   const xr = useThree(({ gl }) => gl.xr);
 
-  const handleSelectStart = useCallback((event: XRInputSourceEvent) => {
-    console.log('selectstart');
-  }, []);
   const pollXRButtons = useCallback(() => {
     // cameraActor.send({ type: 'POLL_XR_BUTTONS' });
     const { controllers, session } = getXR();
@@ -97,15 +88,6 @@ export const VRControls = () => {
     }
   }, [cameraActor, getXR, rootActor, vrActor]);
   useInterval(pollXRButtons, 250); // Poll buttons every 0.25 seconds.
-
-  useEffect(() => {
-    if (!session) return;
-    session.addEventListener('selectstart', handleSelectStart);
-
-    return () => {
-      session.removeEventListener('selectstart', handleSelectStart);
-    };
-  }, [handleSelectStart, session]);
 
   useEffect(() => {
     console.log('xr enabled?', xr.enabled);
@@ -234,6 +216,31 @@ export const VRControls = () => {
       }
     }
   });
+
+  useEffect(() => {
+    if (!session) return;
+    function handleInputEvent(inputEvent: XRInputSourceEvent) {
+      vrActor.send({ type: 'ASSIGN_INPUT_EVENT', inputEvent });
+    }
+
+    session.addEventListener('select', handleInputEvent);
+    session.addEventListener('squeeze', handleInputEvent);
+
+    function handleEnd() {
+      if (!session) return;
+      session.removeEventListener('select', handleInputEvent);
+      session.removeEventListener('squeeze', handleInputEvent);
+    }
+
+    session.addEventListener('end', handleEnd);
+
+    return () => {
+      handleEnd();
+      if (session) {
+        session.removeEventListener('end', handleEnd);
+      }
+    };
+  }, [session, vrActor]);
 
   return (
     <>

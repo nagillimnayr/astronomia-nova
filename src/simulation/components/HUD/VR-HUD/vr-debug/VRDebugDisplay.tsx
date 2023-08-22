@@ -5,6 +5,7 @@ import { VRDebugPoseDisplay } from './VRDebugPoseDisplay';
 import { createPortal, useThree } from '@react-three/fiber';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
+import { VRDebugEventDisplay } from './VRDebugEventDisplay';
 
 type VRDebugDisplayProps = {
   position?: Vector3Tuple;
@@ -25,6 +26,7 @@ export const VRDebugDisplay = ({
       >
         <VRDebugPoseDisplay position={[0, 2.5, 0]} />
         <VRDebugFrustumDisplay position={[0, -0.5, 0]} />
+        <VRDebugEventDisplay position={[0, -3, 0]} />
       </group>
     </>
   );

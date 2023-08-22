@@ -4,6 +4,12 @@ import { type XRState, type XRController } from '@react-three/xr';
 import { Object3D, type Group, Vector3, type WebXRManager } from 'three';
 import { assign, createMachine, log } from 'xstate';
 
+const EPSILON = 1e-16;
+const MIN_NEAR = EPSILON;
+const MIN_FAR = EPSILON;
+const DEFAULT_NEAR = 0.1;
+const DEFAULT_FAR = 1000;
+
 type Context = {
   getThree: () => RootState;
   getXR: () => XRState;
@@ -14,6 +20,7 @@ type Context = {
   leftController: XRController | null;
   rightController: XRController | null;
   pose: XRViewerPose | null;
+  lastInputEvent: XRInputSourceEvent | null;
 };
 
 type Events =
@@ -29,7 +36,11 @@ type Events =
   | { type: 'UPDATE'; deltaTime: number }
   | { type: 'RESET_REF_SPACE' }
   | { type: 'ASSIGN_POSE'; pose: XRViewerPose }
-  | { type: 'ADJUST_REF_SPACE_TO_POSE' };
+  | { type: 'ADJUST_REF_SPACE_TO_POSE' }
+  | { type: 'ASSIGN_INPUT_EVENT'; inputEvent: XRInputSourceEvent }
+  | { type: 'INCREASE_NEAR'; value: number }
+  | { type: 'INCREASE_FAR'; value: number }
+  | { type: 'RESET_FRUSTUM' };
 
 export const vrMachine = createMachine(
   {
@@ -51,6 +62,7 @@ export const vrMachine = createMachine(
       leftController: null,
       rightController: null,
       pose: null,
+      lastInputEvent: null,
     }),
 
     on: {
@@ -107,17 +119,6 @@ export const vrMachine = createMachine(
       RESET_REF_SPACE: {
         actions: ['logEvent', 'resetRefSpace'],
       },
-
-      ASSIGN_POSE: {
-        actions: [
-          assign({
-            pose: (_, { pose }) => pose,
-          }),
-        ],
-      },
-      ADJUST_REF_SPACE_TO_POSE: {
-        actions: ['adjustRefSpaceToPose'],
-      },
     },
 
     initial: 'inactive',
@@ -126,7 +127,7 @@ export const vrMachine = createMachine(
         on: {
           START_SESSION: {
             cond: (context, event) => context.session !== event.session,
-            actions: ['logEvent', 'assignSession', 'initializeSession'],
+            actions: ['logEvent', 'assignSession', 'startSession'],
             target: 'active',
           },
         },
@@ -134,12 +135,39 @@ export const vrMachine = createMachine(
       active: {
         on: {
           END_SESSION: {
-            actions: ['logEvent'],
+            actions: ['logEvent', 'endSession'],
             target: 'inactive',
           },
           UPDATE: {
-            cond: ({ session, player }) => !!(session && player),
+            cond: ({ session, player }) => Boolean(session && player),
             actions: ['update'],
+          },
+          ASSIGN_POSE: {
+            actions: [
+              assign({
+                pose: (_, { pose }) => pose,
+              }),
+              'adjustRefSpaceToPose',
+            ],
+          },
+          ADJUST_REF_SPACE_TO_POSE: {
+            actions: ['adjustRefSpaceToPose'],
+          },
+          ASSIGN_INPUT_EVENT: {
+            actions: [
+              assign({
+                lastInputEvent: (_, { inputEvent }) => inputEvent,
+              }),
+            ],
+          },
+          INCREASE_NEAR: {
+            actions: ['logEvent', 'increaseNear'],
+          },
+          INCREASE_FAR: {
+            actions: ['logEvent', 'increaseFar'],
+          },
+          RESET_FRUSTUM: {
+            actions: ['logEvent', 'resetFrustum'],
           },
         },
       },
@@ -164,25 +192,12 @@ export const vrMachine = createMachine(
 
       // Other actions:
       logEvent: log((_, event) => event),
-      initializeSession: (context, event) => {
+      startSession: (context, event) => {
         const { session } = context;
         if (!session) throw new Error('Error! XRSession is null');
-        console.log('session input sources:', session.inputSources);
-        session.addEventListener('select', (event) => console.log(event));
-        session.addEventListener('selectstart', (event) => console.log(event));
-        session.addEventListener('selectend', (event) => console.log(event));
-        try {
-          console.log('Initializing XRSession!');
-          console.log('near:', session.renderState.depthNear);
-          console.log('far:', session.renderState.depthFar);
-          // Initialize the near and far clip planes.
-          // void session.updateRenderState({
-          //   depthNear: NEAR_CLIP,
-          //   depthFar: FAR_CLIP,
-          // });
-        } catch (err) {
-          console.error('Error! failed to init XR session render state:', err);
-        }
+      },
+      endSession(context, event, meta) {
+        //
       },
       initializePlayer: ({ player }) => {
         if (!player) return;
@@ -222,6 +237,37 @@ export const vrMachine = createMachine(
 
         xr.setReferenceSpace(offsetRefSpace);
       },
+      increaseNear({ getXR }, { value }, meta) {
+        const { session } = getXR();
+        if (!session) return;
+        const { depthNear } = session.renderState;
+        const near = Math.max(MIN_NEAR, depthNear + value);
+        // Update near plane.
+        void session.updateRenderState({
+          depthNear: near,
+        });
+      },
+      increaseFar({ getXR }, { value }, meta) {
+        const { session } = getXR();
+        if (!session) return;
+        const { depthFar } = session.renderState;
+        const far = Math.max(MIN_FAR, depthFar + value);
+        // Update far plane.
+        void session.updateRenderState({
+          depthFar: far,
+        });
+      },
+      resetFrustum({ getXR }, event, meta) {
+        const { session } = getXR();
+        if (!session) return;
+
+        // Reset frustum.
+        void session.updateRenderState({
+          depthNear: DEFAULT_NEAR,
+          depthFar: DEFAULT_FAR,
+        });
+      },
     },
+    guards: {},
   }
 );
