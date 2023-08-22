@@ -24,6 +24,7 @@ import { Hud, useCamera, useHelper } from '@react-three/drei';
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { VRSettingsButton } from './vr-settings-menu/VRSettingsButton';
 import { METER } from '@/simulation/utils/constants';
+import { VRDebugDisplay } from './VRDebugDisplay';
 
 type VRHUDProps = {
   position?: Vector3Tuple;
@@ -80,6 +81,7 @@ const VRHud = ({ position = [0, 0, -5] }: VRHUDProps) => {
           <VROutliner position={[-3, 0, 0]} />
           <VRSettingsButton position={[3.25, 2, 0]} />
           <VRSettingsMenu position={[0, 0.5, 0.25]} />
+          <VRDebugDisplay />
         </group>
       </DefaultStyleProvider>
     </>
