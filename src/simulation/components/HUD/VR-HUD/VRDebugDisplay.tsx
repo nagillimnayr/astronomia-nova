@@ -87,22 +87,22 @@ export const VRDebugDisplay = () => {
   const y = pos[1];
   const z = pos[2];
 
-  const width = 1;
-  const height = 1;
+  const width = 0.75;
+  const height = 0.75;
   return (
     <>
       <group position={[0, 0, 0]}>
         <RootContainer
           sizeX={width}
           sizeY={height}
-          backgroundColor={colors.background}
+          // backgroundColor={colors.background}
           display="flex"
           alignItems="center"
           justifyContent="center"
         >
-          <Text fontSize={80}>{'x:' + x.toFixed(3)}</Text>
-          <Text fontSize={80}>{'y:' + x.toFixed(3)}</Text>
-          <Text fontSize={80}>{'z:' + z.toFixed(3)}</Text>
+          <Text fontSize={80}>{'x: ' + x.toFixed(3)}</Text>
+          <Text fontSize={80}>{'y: ' + y.toFixed(3)}</Text>
+          <Text fontSize={80}>{'z: ' + z.toFixed(3)}</Text>
           {/* <Text ref={textRef} fontSize={80}>
             {dist.toString()}
           </Text> */}

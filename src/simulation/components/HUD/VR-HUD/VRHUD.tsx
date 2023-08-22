@@ -76,10 +76,10 @@ const VRHud = ({ position = [0, 0, -5] }: VRHUDProps) => {
         fontSize={text.base}
       >
         <group name="VR-HUD" ref={groupRef} position={position}>
-          <VRDetailsPanel position={[3, 0, 0]} />
+          <VRDetailsPanel position={[1, 0, 0]} />
           <VRTimePanel position={[0, -1.5, 0]} />
-          <VROutliner position={[-3, 0, 0]} />
-          <VRSettingsButton position={[3.25, 2, 0]} />
+          <VROutliner position={[-1, 0, 0]} />
+          <VRSettingsButton position={[1, 2, 0]} />
           <VRSettingsMenu position={[0, 0.5, 0.25]} />
           <VRDebugDisplay />
         </group>
