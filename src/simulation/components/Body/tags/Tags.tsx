@@ -67,21 +67,15 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // const { gl } = getThree();
     // const xr = gl.xr;
     // if (xr.enabled) {
-    //   const xrCam = xr.getCamera();
-    //   // xrCam.getWorldDirection(_direction);
-    //   // _direction.multiplyScalar(-1);
-    //   // xrCam.getWorldPosition(_camWorldPos);
-    //   // Add the direction to the position of the body.
-    //   // _lookPos.addVectors(_bodyWorldPos, _direction);
-    //   // group.up.set(...getLocalUpInWorldCoords(xrCam));
-    //   // controls.getCameraWorldUp(group.up);
+    //   // const xrCam = xr.getCamera();
+    //   // If in VR, look at camera.
+    //   group.lookAt(_camWorldPos);
     // } else {
-    //   // controls.getCameraWorldUp(group.up);
+    //   // Otherwise, look in direction of camera.
+    //   group.lookAt(_lookPos);
     // }
-
-    // Rotate to face camera.
-    // group.lookAt(_lookPos);
-    group.lookAt(_camWorldPos);
+    // group.lookAt(_camWorldPos);
+    group.lookAt(_lookPos);
 
     // Get distance to camera.
     const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
