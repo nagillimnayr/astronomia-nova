@@ -11,6 +11,7 @@ import Scene from './Scene';
 import { VRManager } from './vr/VRManager';
 import { Hud, Loader, Preload, Stats } from '@react-three/drei';
 import { VRHUD } from '@/simulation/components/HUD/VR-HUD/VRHUD';
+import { VRDebugPortal } from '@/simulation/components/HUD/VR-HUD/vr-debug/VRDebugDisplay';
 
 const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
 
@@ -104,6 +105,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                     {/* <Hud renderPriority={2}> */}
                     {/* <VRManager /> */}
                     <VRHUD />
+                    <VRDebugPortal position={[0, 0.5, -1]} />
                     {/* </Hud> */}
                     <Preload all />
                   </Suspense>
