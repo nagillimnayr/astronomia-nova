@@ -3,6 +3,8 @@ import { Object3D, type Vector3Tuple, Vector3, type Group } from 'three';
 import { VRDebugFrustumDisplay } from './VRDebugFrustumDisplay';
 import { VRDebugPoseDisplay } from './VRDebugPoseDisplay';
 import { createPortal, useThree } from '@react-three/fiber';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { useSelector } from '@xstate/react';
 
 type VRDebugDisplayProps = {
   position?: Vector3Tuple;
@@ -12,9 +14,15 @@ export const VRDebugDisplay = ({
   position = [0, 0, 0],
   scale = 0.05,
 }: VRDebugDisplayProps) => {
+  const { vrActor } = MachineContext.useSelector(({ context }) => context);
+  const inSession = useSelector(vrActor, (state) => state.matches('active'));
   return (
     <>
-      <group position={position} scale={scale}>
+      <group
+        visible={inSession} // Only visible when in XR session.
+        position={position}
+        scale={scale}
+      >
         <VRDebugPoseDisplay position={[0, 2.5, 0]} />
         <VRDebugFrustumDisplay position={[0, -0.5, 0]} />
       </group>
