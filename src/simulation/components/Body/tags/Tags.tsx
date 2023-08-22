@@ -6,11 +6,12 @@ import { CircleMarker } from '@/simulation/components/Body/tags/marker/CircleMar
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { colorMap } from '@/simulation/utils/color-map';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { Group, Mesh, Object3D, Vector3 } from 'three';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import { clamp } from 'lodash';
 import { DIST_MULT } from '@/simulation/utils/constants';
+import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 
 const threshold = 0.02;
 
@@ -26,6 +27,8 @@ type Props = {
 };
 export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+
+  const getThree = useThree(({ get }) => get);
 
   const color = useMemo(() => {
     const color = colorMap.get(name);
@@ -61,8 +64,24 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
 
     // Set the up vector so that it will be oriented correctly when lookAt() is called.
     controls.getCameraWorldUp(group.up);
+    // const { gl } = getThree();
+    // const xr = gl.xr;
+    // if (xr.enabled) {
+    //   const xrCam = xr.getCamera();
+    //   // xrCam.getWorldDirection(_direction);
+    //   // _direction.multiplyScalar(-1);
+    //   // xrCam.getWorldPosition(_camWorldPos);
+    //   // Add the direction to the position of the body.
+    //   // _lookPos.addVectors(_bodyWorldPos, _direction);
+    //   // group.up.set(...getLocalUpInWorldCoords(xrCam));
+    //   // controls.getCameraWorldUp(group.up);
+    // } else {
+    //   // controls.getCameraWorldUp(group.up);
+    // }
+
     // Rotate to face camera.
-    group.lookAt(_lookPos);
+    // group.lookAt(_lookPos);
+    group.lookAt(_camWorldPos);
 
     // Get distance to camera.
     const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
