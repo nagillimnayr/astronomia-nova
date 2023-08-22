@@ -71,10 +71,6 @@ export class CameraController extends Object3D {
   private _rotationSpeed = 0.75;
   private _smoothTime = 0.3;
 
-  private _mouseDownLeft = false;
-  private _mouseDownRight = false;
-  private _mouseDownMiddle = false;
-
   constructor(camera?: PerspectiveCamera) {
     super();
     this.add(this._pivotPoint);
@@ -395,10 +391,6 @@ export class CameraController extends Object3D {
     this.lookAt(_v3);
   }
 
-  applyUp(up: Vector3) {
-    //
-  }
-
   attachControllerTo(obj: Object3D) {
     obj.add(this);
   }
@@ -438,76 +430,63 @@ export class CameraController extends Object3D {
     this._attachPoint.add(obj);
   }
 
-  private _onMouseDown(event: MouseEvent) {
+  private _onPointerDown(event: PointerEvent) {
     const button = event.button;
     if (!this._domElement) return;
     event.preventDefault();
 
-    switch (button) {
-      case 0: {
-        if (
-          this._mouseDownLeft ||
-          this._mouseDownMiddle ||
-          this._mouseDownRight
-        ) {
-          return;
-        }
-        this._mouseDownLeft = true;
-        this._domElement.addEventListener('mousemove', this.onMouseMoveLeft);
-        break;
-      }
-      case 1: {
-        if (
-          this._mouseDownLeft ||
-          this._mouseDownMiddle ||
-          this._mouseDownRight
-        ) {
-          return;
-        }
-        this._mouseDownMiddle = true;
-        this._domElement.addEventListener('mousemove', this.onMouseMoveMiddle);
-        break;
-      }
-      case 2: {
-        if (
-          this._mouseDownLeft ||
-          this._mouseDownMiddle ||
-          this._mouseDownRight
-        ) {
-          return;
-        }
-        this._mouseDownRight = true;
-        this._domElement.addEventListener('mousemove', this.onMouseMoveRight);
-        break;
-      }
-    }
-  }
-  onMouseDown = this._onMouseDown.bind(this);
-
-  private _onMouseUp(event: MouseEvent) {
-    const button = event.button;
-    if (!this._domElement) return;
-    event.preventDefault();
+    this._domElement.setPointerCapture(event.pointerId);
 
     switch (button) {
       case 0: {
-        this._mouseDownLeft = false;
-        this._domElement.removeEventListener('mousemove', this.onMouseMoveLeft);
+        this._domElement.addEventListener(
+          'pointermove',
+          this.onPointerMoveLeft
+        );
         break;
       }
       case 1: {
-        this._mouseDownMiddle = false;
-        this._domElement.removeEventListener(
-          'mousemove',
-          this.onMouseMoveMiddle
+        this._domElement.addEventListener(
+          'pointermove',
+          this.onPointerMoveMiddle
         );
         break;
       }
       case 2: {
-        this._mouseDownRight = false;
+        this._domElement.addEventListener(
+          'pointermove',
+          this.onPointerMoveRight
+        );
+        break;
+      }
+    }
+  }
+  onPointerDown = this._onPointerDown.bind(this);
+
+  private _onPointerUp(event: PointerEvent) {
+    const button = event.button;
+    if (!this._domElement) return;
+    event.preventDefault();
+
+    switch (button) {
+      case 0: {
         this._domElement.removeEventListener(
-          'mousemove',
-          this.onMouseMoveRight
+          'pointermove',
+          this.onPointerMoveLeft
+        );
+        break;
+      }
+      case 1: {
+        this._domElement.removeEventListener(
+          'pointermove',
+          this.onPointerMoveMiddle
+        );
+        break;
+      }
+      case 2: {
+        this._domElement.removeEventListener(
+          'pointermove',
+          this.onPointerMoveRight
         );
         event;
         event.stopPropagation();
@@ -515,13 +494,14 @@ export class CameraController extends Object3D {
       }
     }
   }
-  onMouseUp = this._onMouseUp.bind(this);
+  onPointerUp = this._onPointerUp.bind(this);
 
-  private _onMouseMoveLeft(event: MouseEvent) {
-    if (!this._mouseDownLeft) return;
+  private _onPointerMoveLeft(event: PointerEvent) {
     if (event.buttons % 2 === 0) {
-      this._mouseDownLeft = false;
-      this._domElement?.removeEventListener('mousemove', this.onMouseMoveLeft);
+      this._domElement?.removeEventListener(
+        'pointermove',
+        this.onPointerMoveLeft
+      );
       return;
     }
 
@@ -531,31 +511,29 @@ export class CameraController extends Object3D {
 
     this.addRotation(deltaX, deltaY);
   }
-  onMouseMoveLeft = this._onMouseMoveLeft.bind(this);
+  onPointerMoveLeft = this._onPointerMoveLeft.bind(this);
 
-  private _onMouseMoveMiddle(event: MouseEvent) {
-    if (!this._mouseDownMiddle) return;
+  private _onPointerMoveMiddle(event: PointerEvent) {
     event.preventDefault();
     const deltaY = event.movementY / 50;
     this.addRadialZoom(deltaY);
   }
-  onMouseMoveMiddle = this._onMouseMoveMiddle.bind(this);
+  onPointerMoveMiddle = this._onPointerMoveMiddle.bind(this);
 
-  private _onMouseMoveRight(event: MouseEvent) {
-    if (!this._mouseDownRight) return;
+  private _onPointerMoveRight(event: PointerEvent) {
     event.preventDefault();
     const deltaY = event.movementY / 50;
     this.addRadialZoom(deltaY);
   }
-  onMouseMoveRight = this._onMouseMoveRight.bind(this);
+  onPointerMoveRight = this._onPointerMoveRight.bind(this);
 
-  private _onMouseWheel(event: WheelEvent) {
+  private _onPointerWheel(event: WheelEvent) {
     event.preventDefault();
     // deltaY will be between -100 and 100.
     const zoom = event.deltaY / 100;
     this.addRadialZoom(zoom);
   }
-  onMouseWheel = this._onMouseWheel.bind(this);
+  onPointerWheel = this._onPointerWheel.bind(this);
 
   onContextMenu = (event: MouseEvent) => {
     event.preventDefault();
@@ -569,9 +547,9 @@ export class CameraController extends Object3D {
 
   connectEventListeners() {
     if (!this._domElement) return;
-    this._domElement.addEventListener('mousedown', this.onMouseDown);
-    this._domElement.addEventListener('mouseup', this.onMouseUp);
-    this._domElement.addEventListener('wheel', this.onMouseWheel);
+    this._domElement.addEventListener('pointerdown', this.onPointerDown);
+    this._domElement.addEventListener('pointerup', this.onPointerUp);
+    this._domElement.addEventListener('wheel', this.onPointerWheel);
     this._domElement.addEventListener('contextmenu', this.onContextMenu);
 
     // if (window !== undefined) {
@@ -580,20 +558,22 @@ export class CameraController extends Object3D {
   }
   disconnectEventListeners() {
     if (!this._domElement) return;
-    this._domElement.removeEventListener('mousedown', this.onMouseDown);
-    this._domElement.removeEventListener('mouseup', this.onMouseUp);
-    this._domElement.removeEventListener('wheel', this.onMouseWheel);
+    this._domElement.removeEventListener('pointerdown', this.onPointerDown);
+    this._domElement.removeEventListener('pointerup', this.onPointerUp);
+    this._domElement.removeEventListener('wheel', this.onPointerWheel);
     this._domElement.removeEventListener('contextmenu', this.onContextMenu);
 
-    if (this._mouseDownLeft) {
-      this._domElement.removeEventListener('mousemove', this.onMouseMoveLeft);
-    }
-    if (this._mouseDownMiddle) {
-      this._domElement.removeEventListener('mousemove', this.onMouseMoveMiddle);
-    }
-    if (this._mouseDownRight) {
-      this._domElement.removeEventListener('mousemove', this.onMouseMoveRight);
-    }
+    this._domElement.removeEventListener('pointermove', this.onPointerMoveLeft);
+
+    this._domElement.removeEventListener(
+      'pointermove',
+      this.onPointerMoveMiddle
+    );
+
+    this._domElement.removeEventListener(
+      'pointermove',
+      this.onPointerMoveRight
+    );
   }
 
   get domElement(): HTMLElement | null {
