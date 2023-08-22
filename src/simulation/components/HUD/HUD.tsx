@@ -7,6 +7,7 @@ import Outliner from './Outliner/Outliner';
 import { VRButton } from '@react-three/xr';
 import { SettingsMenu } from './settings/SettingsMenu';
 import { SurfaceViewDialog } from './DetailsPanel/surface-view-dialog/SurfaceViewDialog';
+import { DebugPanel } from './debug/DebugPanel';
 
 type Props = {
   className: string;
@@ -16,7 +17,7 @@ export const HUD = ({ className }: Props) => {
     <>
       <div
         className={cn(
-          'pointer-events-none absolute z-[3] h-full min-h-full w-full min-w-full select-none ',
+          'pointer-events-none absolute z-[3] h-full min-h-full w-full min-w-full select-none place-items-stretch',
           'grid grid-cols-[minmax(0,_20px)_repeat(5,_minmax(0,_1fr))_minmax(0,_20px)] grid-rows-[minmax(0,_20px)_repeat(5,_minmax(0,_1fr))_minmax(0,_20px)]',
           className
         )}
@@ -81,6 +82,13 @@ export const HUD = ({ className }: Props) => {
               className="select-none rounded-lg border-2 border-white p-2 transition-all hover:bg-subtle hover:bg-opacity-20"
               style={{}}
             />
+          </div>
+        </div>
+
+        {/** Debug Panel */}
+        <div className={'relative col-start-[4] col-end-[5] row-end-[3]'}>
+          <div className="pointer-events-auto flex h-full w-full flex-col items-center justify-center">
+            <DebugPanel />
           </div>
         </div>
       </div>
