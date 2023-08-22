@@ -373,8 +373,8 @@ export const cameraMachine = createMachine(
         const { refSpace } = event;
         const xr = getThree().gl.xr;
 
-        xr.setReferenceSpace(refSpace);
-        console.log('initial refSpace:', refSpace);
+        // xr.setReferenceSpace(refSpace);
+        // console.log('initial refSpace:', refSpace);
       },
       attachToTarget: (context, event) => {
         const { controls, camera: spaceCamera, focusTarget } = context;
