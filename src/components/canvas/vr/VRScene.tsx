@@ -51,19 +51,20 @@ export const VRScene = () => {
           position={[0, 2, 8]}
         />
         <ImmersiveSessionOrigin position={[0, 2, 8]} /> */}
-        {/* <CameraManager /> */}
+
         <MockSolarSystem />
         <directionalLight
           ref={dirLightRef}
           intensity={0.7}
           position={[-5, 10, 8]}
         />
+        <ambientLight intensity={0.25} />
 
-        {/* <RotatingObject position={[0, 1, 0]}>
+        <RotatingObject position={[0, 1, -5]}>
           <Dodecahedron>
             <meshPhongMaterial color={'red'} />
           </Dodecahedron>
-        </RotatingObject> */}
+        </RotatingObject>
 
         <RotatingObject position={[5, 1, 0]}>
           <Icosahedron>
@@ -77,8 +78,9 @@ export const VRScene = () => {
           </Tetrahedron>
         </RotatingObject>
         <Floor />
-        <VRCameraManager />
+        <VRCameraManager position={[0, 0, 0]} />
       </>
+
       <VRHUD />
     </>
   );
