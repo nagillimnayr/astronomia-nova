@@ -45,7 +45,7 @@ export const VRHUD = ({ position = [0, 0, -5] }: VRHUDProps) => {
 type Props = VRHUDProps & {
   vrHudScene: Scene;
 };
-const VRHud = ({ position = [0, 0, -5] }: VRHUDProps) => {
+const VRHud = ({ position = [0, 0, 0] }: VRHUDProps) => {
   // Get actors from root state machine.
   const { cameraActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context

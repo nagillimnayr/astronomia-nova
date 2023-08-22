@@ -35,7 +35,7 @@ const SURFACE_MIN_DIST_FROM_SURFACE = 2 * METER; // 2 meters above ground
 // Z position of VR Hud.
 const VR_HUD_Z_NON_IMMERSIVE = -5;
 // const VR_HUD_Z_IMMERSIVE = -2.5;
-const VR_HUD_Z_IMMERSIVE = -5;
+const VR_HUD_Z_IMMERSIVE = -2;
 
 const FOV = 50;
 

@@ -54,21 +54,17 @@ export const VRDebugDisplay = () => {
 
   // const [dist, setDist] = useState<number>(0);
   const [pos, setPos] = useState<Vector3Tuple>([0, 0, 0]);
+  const [near, setNear] = useState<number>(0);
+  const [far, setFar] = useState<number>(0);
 
   useFrame(({ gl, camera }) => {
     const session = gl.xr.getSession();
     if (!session) return;
-    // const xrCam = gl.xr.getCamera();
-    // // console.log('main cam:', camera);
-    // // console.log('xr cam:', xrCam);
-    // camera.getWorldPosition(mainCamWorldPos);
-    // xrCam.getWorldPosition(xrCamWorldPos);
-    // diff.subVectors(xrCamWorldPos, mainCamWorldPos);
-    // const distance = mainCamWorldPos.distanceTo(xrCamWorldPos);
-    // // console.log('distance', distance);
-    // setDist(distance);
-    // const refSpace = gl.xr.getReferenceSpace();
-    // console.log(refSpace);
+
+    const { depthNear, depthFar } = session.renderState;
+    setNear(depthNear);
+    setFar(depthFar);
+
     const frame = gl.xr.getFrame();
     if (!frame) return;
     // console.log('frame:', frame);
@@ -104,10 +100,29 @@ export const VRDebugDisplay = () => {
           display="flex"
           alignItems="center"
           justifyContent="center"
+          flexDirection="column"
+          gapRow={20}
         >
-          <Text fontSize={80}>{'x: ' + x.toFixed(3)}</Text>
-          <Text fontSize={80}>{'y: ' + y.toFixed(3)}</Text>
-          <Text fontSize={80}>{'z: ' + z.toFixed(3)}</Text>
+          <Container
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            flexDirection="column"
+          >
+            <Text fontSize={text.base}>{'x: ' + x.toFixed(3)}</Text>
+            <Text fontSize={text.base}>{'y: ' + y.toFixed(3)}</Text>
+            <Text fontSize={text.base}>{'z: ' + z.toFixed(3)}</Text>
+          </Container>
+          <Container
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            flexDirection="column"
+          >
+            <Text fontSize={text.base}>{'near: ' + near.toFixed(3)}</Text>
+            <Text fontSize={text.base}>{'far: ' + far.toFixed(3)}</Text>
+          </Container>
+
           {/* <Text ref={textRef} fontSize={80}>
             {dist.toString()}
           </Text> */}
