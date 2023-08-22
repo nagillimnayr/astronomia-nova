@@ -7,6 +7,8 @@ import { Controllers, VRButton, XR } from '@react-three/xr';
 import { Hud } from '@react-three/drei';
 import { VRManager } from './VRManager';
 
+const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
+
 export const VRCanvas = ({ children }: PropsWithChildren) => {
   const { vrActor, cameraActor } = MachineContext.useSelector(
     ({ context }) => context
@@ -25,6 +27,7 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
           }}
         >
           <XR
+            referenceSpace={REF_SPACE_TYPE}
             onSessionStart={(event) => {
               const session = event.target;
 
@@ -36,11 +39,11 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
               });
 
               session
-                .requestReferenceSpace('local')
+                .requestReferenceSpace(REF_SPACE_TYPE)
                 .then((refSpace) => {
-                  refSpace = refSpace.getOffsetReferenceSpace(
-                    new XRRigidTransform({ x: 0, y: -1, z: -2 })
-                  );
+                  // refSpace = refSpace.getOffsetReferenceSpace(
+                  //   new XRRigidTransform({ x: 0, y: -1, z: -2 })
+                  // );
                   cameraActor.send({ type: 'ASSIGN_REF_SPACE', refSpace });
                 })
                 .catch((reason) => console.error(reason));
