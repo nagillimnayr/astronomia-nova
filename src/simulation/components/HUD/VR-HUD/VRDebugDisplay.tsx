@@ -47,7 +47,9 @@ const mainCamWorldPos = new Vector3();
 const diff = new Vector3();
 
 export const VRDebugDisplay = () => {
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const { cameraActor, vrActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   // const refSpace = useSelector(cameraActor, ({ context }) => context.refSpace);
 
   // const [dist, setDist] = useState<number>(0);
@@ -79,6 +81,9 @@ export const VRDebugDisplay = () => {
     // console.log(transform.position);
     const { x, y, z } = transform.position;
     setPos([x, y, z]);
+
+    vrActor.send({ type: 'ADJUST_REF_SPACE_TO_POSE', pose });
+    vrActor.send({ type: 'ASSIGN_POSE', pose });
   });
 
   const textRef = useRef<TextNode>(null!);

@@ -13,6 +13,7 @@ type Context = {
   player: Group | null;
   leftController: XRController | null;
   rightController: XRController | null;
+  pose: XRViewerPose | null;
 };
 
 type Events =
@@ -26,7 +27,9 @@ type Events =
   | { type: 'ASSIGN_LEFT_CONTROLLER'; controller: XRController }
   | { type: 'ASSIGN_RIGHT_CONTROLLER'; controller: XRController }
   | { type: 'UPDATE'; deltaTime: number }
-  | { type: 'RESET_REF_SPACE' };
+  | { type: 'RESET_REF_SPACE' }
+  | { type: 'ASSIGN_POSE'; pose: XRViewerPose }
+  | { type: 'ADJUST_REF_SPACE_TO_POSE'; pose: XRViewerPose };
 
 export const vrMachine = createMachine(
   {
@@ -47,6 +50,7 @@ export const vrMachine = createMachine(
       player: null,
       leftController: null,
       rightController: null,
+      pose: null,
     }),
 
     on: {
@@ -102,6 +106,16 @@ export const vrMachine = createMachine(
       },
       RESET_REF_SPACE: {
         actions: ['logEvent', 'resetRefSpace'],
+      },
+      ASSIGN_POSE: {
+        actions: [
+          assign({
+            pose: (_, { pose }) => pose,
+          }),
+        ],
+      },
+      ADJUST_REF_SPACE_TO_POSE: {
+        actions: ['adjustRefSpaceToPose'],
       },
     },
 
@@ -185,6 +199,31 @@ export const vrMachine = createMachine(
         const { getThree, refSpaceOrigin, xr } = context;
         if (!refSpaceOrigin) return;
         xr?.setReferenceSpace(refSpaceOrigin);
+      },
+      adjustRefSpaceToPose: (context, { pose }) => {
+        if (!pose) return;
+        const { getThree } = context;
+        const { gl } = getThree();
+        const xr = gl.xr;
+        const session = xr.getSession();
+        if (!session) return;
+
+        const refSpace = xr.getReferenceSpace();
+        if (!refSpace) return;
+
+        // Get position and orientation from pose.
+        const pos = pose.transform.position;
+        const orientation = pose.transform.orientation;
+        // Negate the y translation but preserve the orientation.
+        const offsetTransform = new XRRigidTransform(
+          { x: 0, y: pos.y, z: 0 } // Y must be positive.
+          // orientation
+        );
+
+        const offsetRefSpace =
+          refSpace.getOffsetReferenceSpace(offsetTransform);
+
+        xr.setReferenceSpace(offsetRefSpace);
       },
     },
   }
