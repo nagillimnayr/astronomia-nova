@@ -111,9 +111,9 @@ export const VRDebugDisplay = () => {
             justifyContent="center"
             flexDirection="column"
           >
-            <Text fontSize={text.base}>{'x: ' + x.toFixed(3)}</Text>
-            <Text fontSize={text.base}>{'y: ' + y.toFixed(3)}</Text>
-            <Text fontSize={text.base}>{'z: ' + z.toFixed(3)}</Text>
+            <Text fontSize={text.xl}>{'x: ' + x.toFixed(3)}</Text>
+            <Text fontSize={text.xl}>{'y: ' + y.toFixed(3)}</Text>
+            <Text fontSize={text.xl}>{'z: ' + z.toFixed(3)}</Text>
           </Container>
           <Container
             display="flex"
@@ -121,8 +121,8 @@ export const VRDebugDisplay = () => {
             justifyContent="center"
             flexDirection="column"
           >
-            <Text fontSize={text.base}>{'near: ' + near.toFixed(3)}</Text>
-            <Text fontSize={text.base}>{'far: ' + far.toFixed(3)}</Text>
+            <Text fontSize={text.xl}>{'near: ' + near.toFixed(3)}</Text>
+            <Text fontSize={text.xl}>{'far: ' + far.toFixed(3)}</Text>
           </Container>
 
           {/* <Text ref={textRef} fontSize={80}>
