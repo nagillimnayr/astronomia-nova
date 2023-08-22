@@ -36,7 +36,7 @@ export const VRHUD = ({ position = [0, 0, -5] }: VRHUDProps) => {
   // Attach the VRHUD to the camera.
   return createPortal(
     <>
-      <VRHud position={position} />
+      <>{/* <VRHud position={position} /> */}</>
     </>,
     camera
   );
