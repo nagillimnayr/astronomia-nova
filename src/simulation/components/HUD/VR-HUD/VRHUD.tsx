@@ -24,7 +24,7 @@ import { Hud, useCamera, useHelper } from '@react-three/drei';
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { VRSettingsButton } from './vr-settings-menu/VRSettingsButton';
 import { METER } from '@/simulation/utils/constants';
-import { VRDebugDisplay } from './vr-debug/VRDebugDisplay';
+import { VRDebugDisplay, VRDebugPortal } from './vr-debug/VRDebugDisplay';
 
 type VRHUDProps = {
   position?: Vector3Tuple;
@@ -65,7 +65,7 @@ export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
     if (defaultOpen) {
       cameraActor.send({ type: 'SHOW_VR_HUD' });
     }
-  }, [cameraActor]);
+  }, [cameraActor, defaultOpen]);
 
   return (
     <>
@@ -80,9 +80,9 @@ export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
           <VROutliner position={[-1, 0, 0]} />
           <VRSettingsButton position={[1, 1.25, 0]} />
           <VRSettingsMenu position={[0, 0.5, 0.25]} />
-          <VRDebugDisplay position={[0, 0, 0]} scale={0.15} />
         </group>
       </DefaultStyleProvider>
+      {/* <VRDebugPortal position={[0, 0, -1]} scale={0.15} /> */}
     </>
   );
 };

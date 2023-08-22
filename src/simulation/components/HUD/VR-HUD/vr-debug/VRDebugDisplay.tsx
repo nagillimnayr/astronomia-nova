@@ -24,6 +24,7 @@ export const VRDebugDisplay = ({
 
 export const VRDebugPortal = ({
   position = [0, 0, -1],
+  scale = 0.15,
 }: VRDebugDisplayProps) => {
   const camera = useThree(({ camera }) => camera);
 
@@ -31,7 +32,7 @@ export const VRDebugPortal = ({
   return createPortal(
     <>
       <>
-        <VRDebugDisplay position={position} />
+        <VRDebugDisplay position={position} scale={scale} />
       </>
     </>,
     camera
