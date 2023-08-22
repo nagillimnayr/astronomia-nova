@@ -33,14 +33,15 @@ import {
   ExtendedThreeEvent,
   RootContainer,
   SVG,
-  Text,
+  // Text,
   TextNode,
 } from '@coconut-xr/koestlich';
-import { useCursor } from '@react-three/drei';
+import { Text, useCursor } from '@react-three/drei';
 import { celestialSphereMachine } from '@/state/xstate/visibility-machine/celestial-sphere-machine';
 import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
 import { toggleMachine } from '@/state/xstate/toggle-machine/toggle-machine';
 import { useFrame, useThree } from '@react-three/fiber';
+import { PropsWithChildren } from 'react';
 
 const xrCamWorldPos = new Vector3();
 const mainCamWorldPos = new Vector3();
@@ -92,7 +93,7 @@ export const VRDebugDisplay = () => {
   return (
     <>
       <group position={[0, 0, 0]}>
-        <RootContainer
+        {/* <RootContainer
           sizeX={width}
           sizeY={height}
           // backgroundColor={colors.background}
@@ -122,13 +123,19 @@ export const VRDebugDisplay = () => {
             <Text fontSize={text.xl}>{'far: ' + far.toFixed(3)}</Text>
           </Container>
 
-          {/* <Text ref={textRef} fontSize={80}>
-            {dist.toString()}
-          </Text> */}
-          {/* <Text fontSize={text.xxl}>{x.toFixed(2)}</Text>
-          <Text fontSize={text.xxl}>{y.toFixed(2)}</Text>
-          <Text fontSize={text.xxl}>{z.toFixed(2)}</Text> */}
-        </RootContainer>
+         
+        </RootContainer> */}
+        <group scale={0.15}>
+          <Text position={[0, 1, 0]} anchorX={'center'} anchorY={'middle'}>
+            {'x: ' + x.toFixed(3)}
+          </Text>
+          <Text position={[0, 0, 0]} anchorX={'center'} anchorY={'middle'}>
+            {'y: ' + y.toFixed(3)}
+          </Text>
+          <Text position={[0, -1, 0]} anchorX={'center'} anchorY={'middle'}>
+            {'z: ' + z.toFixed(3)}
+          </Text>
+        </group>
       </group>
     </>
   );
