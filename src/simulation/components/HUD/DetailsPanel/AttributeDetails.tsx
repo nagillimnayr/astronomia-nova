@@ -8,12 +8,8 @@ export const AttributeDetails = ({ name, children }: Props) => {
   return (
     <>
       <div className="m-0 flex h-fit w-full flex-col items-start justify-start overflow-hidden whitespace-nowrap">
-        <Label htmlFor={name} className="text-xs ">
-          {name}:
-        </Label>
-        <span id={name} className="w-full text-right text-xs">
-          {children}
-        </span>
+        <span className="text-xs ">{name}:</span>
+        <span className="w-full text-right text-xs">{children}</span>
       </div>
     </>
   );
