@@ -205,6 +205,8 @@ const Header = () => {
         flexDirection="column"
         alignItems="stretch"
         justifyContent="center"
+        material={VRHudBGMaterial}
+        backgroundColor={colors.background}
       >
         <Text fontSize={text.xl}>Settings</Text>
       </Container>
