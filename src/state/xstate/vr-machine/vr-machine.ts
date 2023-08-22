@@ -120,22 +120,22 @@ export const vrMachine = createMachine(
       },
     },
 
-    initial: 'stopped',
+    initial: 'inactive',
     states: {
-      stopped: {
+      inactive: {
         on: {
           START_SESSION: {
             cond: (context, event) => context.session !== event.session,
             actions: ['logEvent', 'assignSession', 'initializeSession'],
-            target: 'started',
+            target: 'active',
           },
         },
       },
-      started: {
+      active: {
         on: {
           END_SESSION: {
             actions: ['logEvent'],
-            target: 'stopped',
+            target: 'inactive',
           },
           UPDATE: {
             cond: ({ session, player }) => !!(session && player),
