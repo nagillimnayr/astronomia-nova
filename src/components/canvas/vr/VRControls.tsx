@@ -84,6 +84,16 @@ export const VRControls = () => {
 
     if (buttonY && buttonY.pressed) {
       console.log('button Y');
+      const xrSession = getXR().session;
+      if (!xrSession) {
+        console.log('no xr session');
+        return;
+      }
+
+      void xrSession?.updateRenderState({
+        depthNear: 0.1,
+        depthFar: 1000,
+      });
     }
   }, [cameraActor, getXR, rootActor, vrActor]);
   useInterval(pollXRButtons, 250); // Poll buttons every 0.25 seconds.
@@ -131,12 +141,26 @@ export const VRControls = () => {
           console.log('no xr session');
           return;
         }
-        console.log('session:', xrSession);
         console.log('xr near:', xrSession.renderState.depthNear);
         console.log('xr far:', xrSession.renderState.depthFar);
         void xrSession?.updateRenderState({
           depthNear: NEAR_CLIP,
           depthFar: FAR_CLIP,
+        });
+
+        break;
+      }
+      case 'p': {
+        const xrSession = getXR().session;
+        if (!xrSession) {
+          console.log('no xr session');
+          return;
+        }
+        console.log('xr near:', xrSession.renderState.depthNear);
+        console.log('xr far:', xrSession.renderState.depthFar);
+        void xrSession?.updateRenderState({
+          depthNear: 0.1,
+          depthFar: 1000,
         });
         break;
       }
