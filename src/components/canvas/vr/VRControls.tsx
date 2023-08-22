@@ -169,6 +169,64 @@ export const VRControls = () => {
         console.log('viewer pose position:', viewerPose.transform.position);
         break;
       }
+
+      case '8': {
+        const { gl } = getThree();
+        const xr = gl.xr;
+
+        const session = xr.getSession();
+        const refSpace = xr.getReferenceSpace();
+        console.log('refSpace:', refSpace);
+        if (!session) return;
+
+        const transform = new XRRigidTransform({ x: 0, y: 0.1, z: 0 });
+        const offsetRefSpace = refSpace?.getOffsetReferenceSpace(transform);
+        if (offsetRefSpace) {
+          xr.setReferenceSpace(offsetRefSpace);
+        }
+
+        break;
+      }
+
+      case '2': {
+        const { gl } = getThree();
+        const xr = gl.xr;
+
+        const session = xr.getSession();
+        const refSpace = xr.getReferenceSpace();
+        console.log('refSpace:', refSpace);
+        if (!session) return;
+
+        const transform = new XRRigidTransform({ x: 0, y: -0.1, z: 0 });
+        const offsetRefSpace = refSpace?.getOffsetReferenceSpace(transform);
+        if (offsetRefSpace) {
+          xr.setReferenceSpace(offsetRefSpace);
+        }
+
+        break;
+      }
+
+      case '5': {
+        const { gl } = getThree();
+        const xr = gl.xr;
+
+        const session = xr.getSession();
+        const refSpace = xr.getReferenceSpace();
+        // console.log('refSpace:', refSpace);
+        if (!session) return;
+
+        session
+          .requestReferenceSpace('local')
+          .then((newRefSpace) => {
+            console.log('new refspace:', newRefSpace);
+            xr.setReferenceSpace(newRefSpace);
+          })
+          .catch((reason) => {
+            console.error(reason);
+          });
+
+        break;
+      }
     }
   });
 
