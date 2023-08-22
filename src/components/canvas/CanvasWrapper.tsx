@@ -12,7 +12,7 @@ import { VRManager } from './vr/VRManager';
 import { Hud, Loader, Preload, Stats } from '@react-three/drei';
 import { VRHUD } from '@/simulation/components/HUD/VR-HUD/VRHUD';
 
-const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local';
+const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
 
 const CanvasWrapper = ({ children }: PropsWithChildren) => {
   const { cameraActor, uiActor, vrActor } = MachineContext.useSelector(
