@@ -190,43 +190,22 @@ export const VRControls = () => {
       }
 
       case '5': {
-        // const { gl } = getThree();
-        // const xr = gl.xr;
-
-        // const session = xr.getSession();
-        // const refSpace = xr.getReferenceSpace();
-        // // console.log('refSpace:', refSpace);
-        // if (!session) return;
-
-        // session
-        //   .requestReferenceSpace('local')
-        //   .then((newRefSpace) => {
-        //     console.log('new refspace:', newRefSpace);
-        //     xr.setReferenceSpace(newRefSpace);
-        //   })
-        //   .catch((reason) => {
-        //     console.error(reason);
-        //   });
-
-        // const pose = vrActor.getSnapshot()!.context.pose;
-        // console.log('pose!:', pose);
-        // if (!pose || !refSpace) return;
-
-        // // Get position and orientation from pose.
-        // const pos = pose.transform.position;
-        // const orientation = pose.transform.orientation;
-        // // Negate the y translation but preserve the orientation.
-        // const offsetTransform = new XRRigidTransform(
-        //   { x: 0, y: pos.y, z: 0 }
-        //   // orientation
-        // );
-
-        // const offsetRefSpace =
-        //   refSpace.getOffsetReferenceSpace(offsetTransform);
-
-        // xr.setReferenceSpace(offsetRefSpace);
         console.log('5: adjusting pose');
         vrActor.send({ type: 'ADJUST_REF_SPACE_TO_POSE' });
+        break;
+      }
+      case '-': {
+        const vrHud = cameraActor.getSnapshot()!.context.vrHud;
+        if (!vrHud) return;
+        vrHud.translateZ(-0.05);
+        console.log('vrHud:', vrHud.position.toArray());
+        break;
+      }
+      case '+': {
+        const vrHud = cameraActor.getSnapshot()!.context.vrHud;
+        if (!vrHud) return;
+        vrHud.translateZ(0.05);
+        console.log('vrHud:', vrHud.position.toArray());
         break;
       }
     }

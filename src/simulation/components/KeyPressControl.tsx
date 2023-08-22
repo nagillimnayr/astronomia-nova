@@ -35,20 +35,20 @@ export const KeyPressControl = () => {
       //   console.log('camera position:', camera.position.toArray());
       //   break;
       // }
-      case '-': {
-        const vrHud = cameraActor.getSnapshot()!.context.vrHud;
-        if (!vrHud) return;
-        vrHud.translateZ(-0.05);
-        console.log('vrHud:', vrHud.position.toArray());
-        break;
-      }
-      case '+': {
-        const vrHud = cameraActor.getSnapshot()!.context.vrHud;
-        if (!vrHud) return;
-        vrHud.translateZ(0.05);
-        console.log('vrHud:', vrHud.position.toArray());
-        break;
-      }
+      // case '-': {
+      //   const vrHud = cameraActor.getSnapshot()!.context.vrHud;
+      //   if (!vrHud) return;
+      //   vrHud.translateZ(-0.05);
+      //   console.log('vrHud:', vrHud.position.toArray());
+      //   break;
+      // }
+      // case '+': {
+      //   const vrHud = cameraActor.getSnapshot()!.context.vrHud;
+      //   if (!vrHud) return;
+      //   vrHud.translateZ(0.05);
+      //   console.log('vrHud:', vrHud.position.toArray());
+      //   break;
+      // }
       case 'c': {
         const { camera } = getThree();
         console.log('main camera:', camera);
