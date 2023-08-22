@@ -46,8 +46,17 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     const group = groupRef.current;
     if (!group) return;
 
+    // Get context from state machine.
     const snapshot = cameraActor.getSnapshot()!;
-    const controls = snapshot.context.controls;
+    const { controls, focusTarget } = snapshot.context;
+
+    // Check if in surface view.
+    const onSurface = snapshot.matches('surface');
+    if (body === focusTarget && onSurface) {
+      // If on surface, hide the tags of the body we're on.
+      group.visible = false;
+      return;
+    }
     if (!controls) return;
 
     // Get world position of body.
@@ -64,17 +73,8 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
 
     // Set the up vector so that it will be oriented correctly when lookAt() is called.
     controls.getCameraWorldUp(group.up);
-    // const { gl } = getThree();
-    // const xr = gl.xr;
-    // if (xr.enabled) {
-    //   // const xrCam = xr.getCamera();
-    //   // If in VR, look at camera.
-    //   group.lookAt(_camWorldPos);
-    // } else {
-    //   // Otherwise, look in direction of camera.
-    //   group.lookAt(_lookPos);
-    // }
-    // group.lookAt(_camWorldPos);
+
+    // Look in direction parallel to the line of sight of the camera.
     group.lookAt(_lookPos);
 
     // Get distance to camera.
