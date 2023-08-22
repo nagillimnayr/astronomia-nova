@@ -45,6 +45,7 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
                   //   new XRRigidTransform({ x: 0, y: -1, z: -2 })
                   // );
                   cameraActor.send({ type: 'ASSIGN_REF_SPACE', refSpace });
+                  vrActor.send({ type: 'ASSIGN_REF_SPACE_ORIGIN', refSpace });
                 })
                 .catch((reason) => console.error(reason));
             }}
