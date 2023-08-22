@@ -36,7 +36,9 @@ export const VRHUD = ({ position = [0, 0, -5] }: VRHUDProps) => {
   // Attach the VRHUD to the camera.
   return createPortal(
     <>
-      <>{/* <VRHud position={position} /> */}</>
+      <>
+        <VRHud position={position} />
+      </>
     </>,
     camera
   );
@@ -78,7 +80,7 @@ export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
           <VROutliner position={[-1, 0, 0]} />
           <VRSettingsButton position={[1, 1.25, 0]} />
           <VRSettingsMenu position={[0, 0.5, 0.25]} />
-          <VRDebugDisplay />
+          <VRDebugDisplay position={[0, 0, 0]} scale={0.15} />
         </group>
       </DefaultStyleProvider>
     </>

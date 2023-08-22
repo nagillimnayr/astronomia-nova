@@ -1,5 +1,6 @@
 import {
   CameraControls,
+  Cylinder,
   Dodecahedron,
   Grid,
   Icosahedron,
@@ -43,8 +44,7 @@ export const VRScene = () => {
 
   return (
     <>
-      <>
-        {/* <NonImmersiveCamera
+      {/* <NonImmersiveCamera
           ref={(camera) => {
             if (!camera) return;
             camRef.current = camera;
@@ -54,38 +54,43 @@ export const VRScene = () => {
         />
         <ImmersiveSessionOrigin position={[0, 2, 8]} /> */}
 
-        <MockSolarSystem />
-        <directionalLight
-          ref={dirLightRef}
-          intensity={0.7}
-          position={[-5, 10, 8]}
-        />
-        <ambientLight intensity={0.25} />
+      <MockSolarSystem />
+      <directionalLight
+        ref={dirLightRef}
+        intensity={0.7}
+        position={[-5, 10, 8]}
+      />
+      <ambientLight intensity={0.25} />
 
-        <RotatingObject position={[0, 1, -5]}>
-          <Dodecahedron>
-            <meshPhongMaterial color={'red'} />
-          </Dodecahedron>
-        </RotatingObject>
+      <RotatingObject position={[0, 1, -5]}>
+        <Dodecahedron>
+          <meshPhongMaterial color={'red'} />
+        </Dodecahedron>
+      </RotatingObject>
 
-        <RotatingObject position={[5, 1, 0]}>
-          <Icosahedron>
-            <meshPhongMaterial color={'cyan'} />
-          </Icosahedron>
-        </RotatingObject>
+      <RotatingObject position={[5, 1, 0]}>
+        <Icosahedron>
+          <meshPhongMaterial color={'cyan'} />
+        </Icosahedron>
+      </RotatingObject>
 
-        <RotatingObject position={[-5, 1, 0]}>
-          <Tetrahedron>
-            <meshPhongMaterial color={'cyan'} />
-          </Tetrahedron>
-        </RotatingObject>
-        <Floor />
-        <VRCameraManager position={[0, 0, 0]} />
-      </>
+      <RotatingObject position={[-5, 1, 0]}>
+        <Tetrahedron>
+          <meshPhongMaterial color={'cyan'} />
+        </Tetrahedron>
+      </RotatingObject>
+      <Floor />
+      <VRCameraManager position={[0, 0, 0]} />
+
+      <Cylinder
+        args={[0.05, 0.05, 1, 32]}
+        position={[0, 0.5, 0]}
+        material-color={'blue'}
+      />
 
       <VRStats />
-      {/* <VRHUD /> */}
-      <VRDebugPortal position={[0, 0.5, -1]} />
+      <VRHUD />
+      {/* <VRDebugPortal position={[0, 0, -1]} /> */}
     </>
   );
 };

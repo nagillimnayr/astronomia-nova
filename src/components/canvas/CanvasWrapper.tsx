@@ -105,7 +105,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                     {/* <Hud renderPriority={2}> */}
                     {/* <VRManager /> */}
                     <VRHUD />
-                    <VRDebugPortal position={[0, 0.5, -1]} />
+                    {/* <VRDebugPortal position={[0, 0.5, -1]} /> */}
                     {/* </Hud> */}
                     <Preload all />
                   </Suspense>
