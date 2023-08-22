@@ -190,7 +190,7 @@ export const VRControls = () => {
         console.log('refSpace:', refSpace);
         if (!session) return;
 
-        const transform = new XRRigidTransform({ x: 0, y: 0.1, z: 0 });
+        const transform = new XRRigidTransform({ x: 0, y: -0.1, z: 0 });
         const offsetRefSpace = refSpace?.getOffsetReferenceSpace(transform);
         if (offsetRefSpace) {
           xr.setReferenceSpace(offsetRefSpace);
@@ -208,7 +208,7 @@ export const VRControls = () => {
         console.log('refSpace:', refSpace);
         if (!session) return;
 
-        const transform = new XRRigidTransform({ x: 0, y: -0.1, z: 0 });
+        const transform = new XRRigidTransform({ x: 0, y: 0.1, z: 0 });
         const offsetRefSpace = refSpace?.getOffsetReferenceSpace(transform);
         if (offsetRefSpace) {
           xr.setReferenceSpace(offsetRefSpace);
