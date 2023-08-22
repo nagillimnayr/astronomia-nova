@@ -13,7 +13,6 @@ type Context = {
   player: Group | null;
   leftController: XRController | null;
   rightController: XRController | null;
-  xrFrame: XRFrame | null;
   pose: XRViewerPose | null;
 };
 
@@ -29,9 +28,8 @@ type Events =
   | { type: 'ASSIGN_RIGHT_CONTROLLER'; controller: XRController }
   | { type: 'UPDATE'; deltaTime: number }
   | { type: 'RESET_REF_SPACE' }
-  | { type: 'ASSIGN_FRAME'; frame: XRFrame }
   | { type: 'ASSIGN_POSE'; pose: XRViewerPose }
-  | { type: 'ADJUST_REF_SPACE_TO_POSE'; pose: XRViewerPose };
+  | { type: 'ADJUST_REF_SPACE_TO_POSE' };
 
 export const vrMachine = createMachine(
   {
@@ -52,7 +50,6 @@ export const vrMachine = createMachine(
       player: null,
       leftController: null,
       rightController: null,
-      xrFrame: null,
       pose: null,
     }),
 
@@ -110,13 +107,7 @@ export const vrMachine = createMachine(
       RESET_REF_SPACE: {
         actions: ['logEvent', 'resetRefSpace'],
       },
-      ASSIGN_FRAME: {
-        actions: [
-          assign({
-            xrFrame: (_, { frame }) => frame,
-          }),
-        ],
-      },
+
       ASSIGN_POSE: {
         actions: [
           assign({
@@ -210,27 +201,26 @@ export const vrMachine = createMachine(
         if (!refSpaceOrigin) return;
         xr?.setReferenceSpace(refSpaceOrigin);
       },
-      adjustRefSpaceToPose: (context, { pose }) => {
-        if (!pose) return;
-        const { getThree } = context;
+      adjustRefSpaceToPose: (context) => {
+        const { getThree, pose, refSpaceOrigin } = context;
+        if (!pose || !refSpaceOrigin) return;
         const { gl } = getThree();
         const xr = gl.xr;
-        const session = xr.getSession();
-        if (!session) return;
+        if (!xr.isPresenting) return;
 
-        const refSpace = xr.getReferenceSpace();
-        if (!refSpace) return;
+        if (!pose) return;
 
         // Get position and orientation from pose.
         const pos = pose.transform.position;
         const orientation = pose.transform.orientation;
+
         // Negate the translation but preserve the orientation.
         const offsetTransform = new XRRigidTransform(pos);
 
         const offsetRefSpace =
-          refSpace.getOffsetReferenceSpace(offsetTransform);
+          refSpaceOrigin.getOffsetReferenceSpace(offsetTransform);
 
-        // xr.setReferenceSpace(offsetRefSpace);
+        xr.setReferenceSpace(offsetRefSpace);
       },
     },
   }

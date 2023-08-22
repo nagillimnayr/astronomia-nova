@@ -3,7 +3,7 @@ import { VRControls } from './VRControls';
 import { VRPlayer } from './VRPlayer';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEffect } from 'react';
-import { useThree } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { VRHUD } from '@/simulation/components/HUD/VR-HUD/VRHUD';
 import { VRCameraManager } from './VRCameraManager';
 
@@ -27,6 +27,25 @@ export const VRManager = () => {
     if (!xr) return;
     vrActor.send({ type: 'ASSIGN_XR_MANAGER', xr });
   }, [getThree, vrActor]);
+
+  useFrame((state, delta, frame) => {
+    const { gl } = state;
+    const { xr } = gl;
+    if (!xr.enabled) return;
+
+    // const xrFrame = xr.getFrame();
+    if (!(frame instanceof XRFrame)) return;
+
+    // Get reference space.
+    const { refSpaceOrigin } = vrActor.getSnapshot()!.context;
+    if (!refSpaceOrigin) return;
+    // Get viewer pose.
+    const pose = frame.getViewerPose(refSpaceOrigin);
+    if (!pose) return;
+    // Send pose to vrActor.
+    vrActor.send({ type: 'ASSIGN_POSE', pose });
+  });
+
   return (
     <>
       <VRControls />

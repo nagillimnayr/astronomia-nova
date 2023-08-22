@@ -68,20 +68,17 @@ export const VRDebugDisplay = () => {
     const frame = gl.xr.getFrame();
     if (!frame) return;
 
-    vrActor.send({ type: 'ASSIGN_FRAME', frame });
-
     const refSpace = gl.xr.getReferenceSpace();
     if (!refSpace) return;
     const pose = frame.getViewerPose(refSpace);
-    // console.log(pose);
+
+    // const { pose } = vrActor.getSnapshot()!.context;
+
     if (!pose) return;
     const transform = pose.transform;
     // console.log(transform.position);
     const { x, y, z } = transform.position;
     setPos([x, y, z]);
-
-    vrActor.send({ type: 'ADJUST_REF_SPACE_TO_POSE', pose });
-    vrActor.send({ type: 'ASSIGN_POSE', pose });
   });
 
   const textRef = useRef<TextNode>(null!);

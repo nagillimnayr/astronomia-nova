@@ -64,7 +64,7 @@ export const VRControls = () => {
 
       // Move vrHud closer.
       if (!vrHud) return;
-      vrHud.translateZ(0.05);
+      vrHud.translateZ(0.1);
     }
 
     if (buttonB && buttonB.pressed) {
@@ -73,18 +73,19 @@ export const VRControls = () => {
 
       // Move vrHud back.
       if (!vrHud) return;
-      vrHud.translateZ(-0.05);
+      vrHud.translateZ(-0.1);
     }
 
     if (buttonX && buttonX.pressed) {
       rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
       console.log('button X');
+      vrActor.send({ type: 'ADJUST_REF_SPACE_TO_POSE' });
     }
 
     if (buttonY && buttonY.pressed) {
       console.log('button Y');
     }
-  }, [getXR, rootActor]);
+  }, [cameraActor, getXR, rootActor, vrActor]);
   useInterval(pollXRButtons, 250); // Poll buttons every 0.25 seconds.
 
   useEffect(() => {
@@ -151,35 +152,6 @@ export const VRControls = () => {
 
         break;
       }
-      case 'v': {
-        const { gl } = getThree();
-        const xr = gl.xr;
-        if (!xr.isPresenting) {
-          console.log('xr not presenting!');
-          return;
-        }
-        const xrFrame = xr.getFrame();
-
-        if (!xrFrame) {
-          console.log('no xr frame');
-          return;
-        }
-
-        console.log('xr frame:', xrFrame);
-
-        const referenceSpace = xr.getReferenceSpace();
-        if (!referenceSpace) {
-          console.log('no reference space');
-          return;
-        }
-        const viewerPose = xrFrame.getViewerPose(referenceSpace);
-        if (!viewerPose) {
-          console.log('no viewer pose');
-          return;
-        }
-        console.log('viewer pose position:', viewerPose.transform.position);
-        break;
-      }
 
       case '8': {
         const { gl } = getThree();
@@ -218,13 +190,13 @@ export const VRControls = () => {
       }
 
       case '5': {
-        const { gl } = getThree();
-        const xr = gl.xr;
+        // const { gl } = getThree();
+        // const xr = gl.xr;
 
-        const session = xr.getSession();
-        const refSpace = xr.getReferenceSpace();
-        // console.log('refSpace:', refSpace);
-        if (!session) return;
+        // const session = xr.getSession();
+        // const refSpace = xr.getReferenceSpace();
+        // // console.log('refSpace:', refSpace);
+        // if (!session) return;
 
         // session
         //   .requestReferenceSpace('local')
@@ -236,24 +208,25 @@ export const VRControls = () => {
         //     console.error(reason);
         //   });
 
-        const pose = vrActor.getSnapshot()!.context.pose;
-        console.log('pose!:', pose);
-        if (!pose || !refSpace) return;
+        // const pose = vrActor.getSnapshot()!.context.pose;
+        // console.log('pose!:', pose);
+        // if (!pose || !refSpace) return;
 
-        // Get position and orientation from pose.
-        const pos = pose.transform.position;
-        const orientation = pose.transform.orientation;
-        // Negate the y translation but preserve the orientation.
-        const offsetTransform = new XRRigidTransform(
-          { x: 0, y: pos.y, z: 0 }
-          // orientation
-        );
+        // // Get position and orientation from pose.
+        // const pos = pose.transform.position;
+        // const orientation = pose.transform.orientation;
+        // // Negate the y translation but preserve the orientation.
+        // const offsetTransform = new XRRigidTransform(
+        //   { x: 0, y: pos.y, z: 0 }
+        //   // orientation
+        // );
 
-        const offsetRefSpace =
-          refSpace.getOffsetReferenceSpace(offsetTransform);
+        // const offsetRefSpace =
+        //   refSpace.getOffsetReferenceSpace(offsetTransform);
 
-        xr.setReferenceSpace(offsetRefSpace);
-
+        // xr.setReferenceSpace(offsetRefSpace);
+        console.log('5: adjusting pose');
+        vrActor.send({ type: 'ADJUST_REF_SPACE_TO_POSE' });
         break;
       }
     }
