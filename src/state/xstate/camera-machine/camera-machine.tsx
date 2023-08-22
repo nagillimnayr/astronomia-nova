@@ -549,11 +549,11 @@ export const cameraMachine = createMachine(
         }
 
         // Update XR session frustum.
-        const { session } = context.getXR();
-        void session?.updateRenderState({
-          depthNear: NEAR_CLIP,
-          depthFar: FAR_CLIP,
-        });
+        // const { session } = context.getXR();
+        // void session?.updateRenderState({
+        //   depthNear: NEAR_CLIP,
+        //   depthFar: FAR_CLIP,
+        // });
       },
       setSurfaceCamDistance: (context) => {
         const { controls, camera: spaceCamera } = context;
@@ -564,11 +564,11 @@ export const cameraMachine = createMachine(
         controls.camera.near = SURFACE_NEAR_CLIP;
 
         // Update XR session frustum.
-        const { session } = context.getXR();
-        void session?.updateRenderState({
-          depthNear: SURFACE_NEAR_CLIP,
-          depthFar: FAR_CLIP,
-        });
+        // const { session } = context.getXR();
+        // void session?.updateRenderState({
+        //   depthNear: SURFACE_NEAR_CLIP,
+        //   depthFar: FAR_CLIP,
+        // });
       },
       rotateAzimuthal: ({ controls }, event) => {
         if (!controls) return;
