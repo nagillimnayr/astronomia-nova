@@ -176,10 +176,10 @@ export const vrMachine = createMachine(
           console.log('near:', session.renderState.depthNear);
           console.log('far:', session.renderState.depthFar);
           // Initialize the near and far clip planes.
-          void session.updateRenderState({
-            depthNear: NEAR_CLIP,
-            depthFar: FAR_CLIP,
-          });
+          // void session.updateRenderState({
+          //   depthNear: NEAR_CLIP,
+          //   depthFar: FAR_CLIP,
+          // });
         } catch (err) {
           console.error('Error! failed to init XR session render state:', err);
         }
