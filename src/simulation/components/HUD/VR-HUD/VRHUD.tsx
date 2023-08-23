@@ -62,10 +62,11 @@ export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
     // Attach to the camera.
     const group = groupRef.current;
     cameraActor.send({ type: 'ASSIGN_VR_HUD', vrHud: group });
+    vrActor.send({ type: 'ASSIGN_VR_HUD', vrHud: group });
     if (defaultOpen) {
       cameraActor.send({ type: 'SHOW_VR_HUD' });
     }
-  }, [cameraActor, defaultOpen]);
+  }, [cameraActor, defaultOpen, vrActor]);
 
   return (
     <>
