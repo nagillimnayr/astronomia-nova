@@ -1,7 +1,13 @@
 import { FAR_CLIP, NEAR_CLIP } from '@/components/canvas/scene-constants';
 import { type RootState } from '@react-three/fiber';
 import { type XRState, type XRController } from '@react-three/xr';
-import { Object3D, type Group, Vector3, type WebXRManager } from 'three';
+import {
+  Object3D,
+  type Group,
+  Vector3,
+  type WebXRManager,
+  Vector3Tuple,
+} from 'three';
 import { assign, createMachine, log } from 'xstate';
 
 const EPSILON = 1e-16;
@@ -10,6 +16,8 @@ const MIN_FAR = 10;
 const DEFAULT_NEAR = 0.1;
 const DEFAULT_FAR = 1000;
 const MAX_NEAR = DEFAULT_NEAR;
+
+const DEFAULT_HUD_POS: Vector3Tuple = [0, 0, -5];
 
 type Context = {
   getThree: () => RootState;
@@ -134,14 +142,26 @@ export const vrMachine = createMachine(
               }),
             ],
           },
+          RESET_FRUSTUM: {
+            actions: ['logEvent', 'resetFrustum'],
+          },
           INCREASE_NEAR: {
             actions: ['logEvent', 'increaseNear'],
           },
           INCREASE_FAR: {
             actions: ['logEvent', 'increaseFar'],
           },
-          RESET_FRUSTUM: {
-            actions: ['logEvent', 'resetFrustum'],
+          RESET_HUD: {
+            actions: ['logEvent', 'resetHud'],
+          },
+          INCREASE_HUD_X: {
+            actions: ['logEvent', 'increaseHudX'],
+          },
+          INCREASE_HUD_Y: {
+            actions: ['logEvent', 'increaseHudY'],
+          },
+          INCREASE_HUD_Z: {
+            actions: ['logEvent', 'increaseHudZ'],
           },
         },
       },
@@ -217,6 +237,22 @@ export const vrMachine = createMachine(
           depthNear: DEFAULT_NEAR,
           depthFar: DEFAULT_FAR,
         });
+      },
+      resetHud({ vrHud }, event, meta) {
+        if (!vrHud) return;
+        vrHud.position.set(...DEFAULT_HUD_POS);
+      },
+      increaseHudX({ vrHud }, { value }, meta) {
+        if (!vrHud) return;
+        vrHud.translateX(value);
+      },
+      increaseHudY({ vrHud }, { value }, meta) {
+        if (!vrHud) return;
+        vrHud.translateY(value);
+      },
+      increaseHudZ({ vrHud }, { value }, meta) {
+        if (!vrHud) return;
+        vrHud.translateZ(value);
       },
     },
   }
