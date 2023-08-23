@@ -95,7 +95,7 @@ const VRNonImmersiveCam = () => {
               type: 'ASSIGN_CAMERA',
               camera,
             });
-          }, 100);
+          }, 50);
         }}
         position={[0, 0, 0]}
       >

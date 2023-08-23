@@ -29,7 +29,7 @@ export const MainCamera = () => {
               type: 'ASSIGN_CAMERA',
               camera,
             });
-          }, 200);
+          }, 50);
         }}
       ></NonImmersiveCamera>
     </>
