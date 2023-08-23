@@ -85,31 +85,6 @@ export const VRControls = () => {
   }, [cameraActor, getXR, vrActor]);
   useInterval(pollXRButtons, 250); // Poll buttons every 0.25 seconds.
 
-  useEffect(() => {
-    console.log('xr enabled?', xr.enabled);
-
-    if (!player || !isPresenting || !controllers[0] || !controllers[1]) return;
-    console.log('controller count:', controllers.length);
-    console.log('initializing player controls!');
-    // Assign player.
-    vrActor.send({ type: 'ASSIGN_PLAYER', player });
-
-    // Assign controllers.
-    for (const controller of controllers) {
-      if (controller.inputSource.handedness === 'left') {
-        vrActor.send({
-          type: 'ASSIGN_LEFT_CONTROLLER',
-          controller,
-        });
-      } else if (controller.inputSource.handedness === 'right') {
-        vrActor.send({
-          type: 'ASSIGN_RIGHT_CONTROLLER',
-          controller,
-        });
-      }
-    }
-  }, [isPresenting, player, controllers, vrActor, xr.enabled]);
-
   useEventListener('keypress', (event) => {
     // console.log(event.key);
     switch (event.key) {
