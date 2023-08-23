@@ -1,10 +1,29 @@
 import { CameraController } from '@/lib/camera-controller/CameraController';
-import { PI_OVER_THREE, PI_OVER_TWO } from '@/simulation/utils/constants';
+import {
+  PI,
+  PI_OVER_THREE,
+  PI_OVER_TWO,
+  Z_AXIS_NEG,
+} from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { type Object3DNode, extend } from '@react-three/fiber';
+import { type Object3DNode, extend, useThree } from '@react-three/fiber';
 import { useRef } from 'react';
-import { type Vector3Tuple, type PerspectiveCamera } from 'three';
+import {
+  type Vector3Tuple,
+  type PerspectiveCamera,
+  Group,
+  Vector3,
+} from 'three';
 import { PerspectiveCamera as PerspectiveCam } from '@react-three/drei';
+import {
+  ImmersiveSessionOrigin,
+  NonImmersiveCamera,
+} from '@coconut-xr/natuerlich/react';
+
+import { Controllers } from '@coconut-xr/natuerlich/defaults';
+
+const _camWorldPos = new Vector3();
+const _arrowDir = new Vector3();
 
 extend({ CameraController });
 declare module '@react-three/fiber' {
@@ -44,11 +63,13 @@ export const VRCameraManager = ({
 const VRMainCamera = () => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
+  const getThree = useThree(({ get }) => get);
+
   const cameraRef = useRef<PerspectiveCamera>(null!);
 
   return (
     <>
-      <PerspectiveCam
+      {/* <PerspectiveCam
         makeDefault
         name="vr-main-camera"
         ref={(cam) => {
@@ -65,7 +86,66 @@ const VRMainCamera = () => {
         position={[0, 0, 0]}
         near={0.1}
         far={1000}
-      />
+      /> */}
+      <VRImmersiveOrigin />
+      <NonImmersiveCamera
+        ref={(camera) => {
+          if (!camera) return;
+          camera.name = 'non-immersive-camera';
+          getThree().set({ camera });
+
+          setTimeout(() => {
+            cameraActor.send({
+              type: 'ASSIGN_CAMERA',
+              camera,
+            });
+          }, 300);
+        }}
+        position={[0, 0, 0]}
+      ></NonImmersiveCamera>
+      {/* <arrowHelper
+        ref={(arrow) => {
+          if (!arrow) return;
+          const controls = cameraActor.getSnapshot()!.context.controls;
+          if (!controls) return;
+
+          controls.attachToController(arrow);
+          arrow.position.set(0, -0.01, 0);
+          controls.getCameraWorldPosition(_camWorldPos);
+          _arrowDir.set(0, 0, 0);
+          arrow.worldToLocal(_arrowDir);
+          arrow.setDirection(_arrowDir);
+          arrow.setColor('white');
+          const length = 5;
+          arrow.setLength(3, 0.1 * length, 0.01 * length);
+        }}
+      /> */}
+    </>
+  );
+};
+
+const VRImmersiveOrigin = () => {
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const playerRef = useRef<Group>(null!);
+  return (
+    <>
+      <ImmersiveSessionOrigin
+        position={[0, 0, 0]}
+        ref={(player) => {
+          if (!player) return;
+          playerRef.current = player;
+
+          const controls = cameraActor.getSnapshot()!.context.controls;
+          if (!controls) return;
+
+          controls.attachToController(player);
+
+          console.log('Attaching VR immersive origin to camera!', player);
+          player.rotation.set(0, 0, 0);
+        }}
+      >
+        <Controllers />
+      </ImmersiveSessionOrigin>
     </>
   );
 };

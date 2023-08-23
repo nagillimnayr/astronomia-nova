@@ -17,26 +17,31 @@ export const VRControls = () => {
   const { vrActor, cameraActor } = MachineContext.useSelector(
     ({ context }) => context
   );
-  const session = useXR(({ session }) => session);
+  // const session = useXR(({ session }) => session);
 
-  const getXR = useXR(({ get }) => get);
+  // const getXR = useXR(({ get }) => get);
   const getThree = useThree(({ get }) => get);
 
   const pollXRButtons = useCallback(() => {
     // cameraActor.send({ type: 'POLL_XR_BUTTONS' });
-    const { controllers, session } = getXR();
-    if (!session || !controllers) return;
-    const leftController = controllers.find(
-      (controllerObj) => controllerObj.inputSource.handedness === 'left'
-    );
-    const rightController = controllers.find(
-      (controllerObj) => controllerObj.inputSource.handedness === 'right'
-    );
-    if (!leftController || !rightController) return;
-    const leftGamepad = leftController.inputSource.gamepad;
+
+    const { gl } = getThree();
+    const { xr } = gl;
+    if (!xr.enabled || !xr.isPresenting) return;
+    const session = xr.getSession();
+    if (!session) return;
+
+    const left = session.inputSources[1];
+    const right = session.inputSources[0];
+
+    if (!(left instanceof XRInputSource)) return;
+    if (!(right instanceof XRInputSource)) return;
+
+    const leftGamepad = left.gamepad;
     if (!leftGamepad) return;
-    const rightGamepad = rightController.inputSource.gamepad;
+    const rightGamepad = right.gamepad;
     if (!rightGamepad) return;
+
     // Poll for button input.
     const leftButtons = leftGamepad.buttons;
     const rightButtons = rightGamepad.buttons;
@@ -70,33 +75,30 @@ export const VRControls = () => {
     if (buttonX && buttonX.pressed) {
       // rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
       console.log('button X');
-      vrActor.send({ type: 'ADJUST_REF_SPACE_TO_POSE' });
+      // vrActor.send({ type: 'ADJUST_REF_SPACE_TO_POSE' });
     }
 
     if (buttonY && buttonY.pressed) {
       console.log('button Y');
-      const xrSession = getXR().session;
-      if (!xrSession) {
-        console.log('no xr session');
-        return;
-      }
-      vrActor.send({ type: 'RESET_FRUSTUM' });
+      // vrActor.send({ type: 'RESET_FRUSTUM' });
     }
-  }, [cameraActor, getXR, vrActor]);
+  }, [cameraActor, vrActor]);
   useInterval(pollXRButtons, 250); // Poll buttons every 0.25 seconds.
 
   useEventListener('keypress', (event) => {
     // console.log(event.key);
     switch (event.key) {
       case 'o': {
-        const xrSession = getXR().session;
-        if (!xrSession) {
+        const { gl } = getThree();
+        const { xr } = gl;
+        const session = xr.getSession();
+        if (!session) {
           console.log('no xr session');
           return;
         }
-        console.log('xr near:', xrSession.renderState.depthNear);
-        console.log('xr far:', xrSession.renderState.depthFar);
-        void xrSession?.updateRenderState({
+        console.log('xr near:', session.renderState.depthNear);
+        console.log('xr far:', session.renderState.depthFar);
+        void session?.updateRenderState({
           depthNear: NEAR_CLIP,
           depthFar: FAR_CLIP,
         });
@@ -104,25 +106,29 @@ export const VRControls = () => {
         break;
       }
       case 'p': {
-        const xrSession = getXR().session;
-        if (!xrSession) {
+        const { gl } = getThree();
+        const { xr } = gl;
+        const session = xr.getSession();
+        if (!session) {
           console.log('no xr session');
           return;
         }
-        console.log('xr near:', xrSession.renderState.depthNear);
-        console.log('xr far:', xrSession.renderState.depthFar);
-        void xrSession?.updateRenderState({
+        console.log('xr near:', session.renderState.depthNear);
+        console.log('xr far:', session.renderState.depthFar);
+        void session?.updateRenderState({
           depthNear: 0.1,
           depthFar: 1000,
         });
         break;
       }
       case 'f': {
-        const xrSession = getXR().session;
+        const { gl } = getThree();
+        const { xr } = gl;
+        const session = xr.getSession();
         const camera = getThree().camera;
-        if (xrSession) {
-          console.log('xr near:', xrSession.renderState.depthNear);
-          console.log('xr far:', xrSession.renderState.depthFar);
+        if (session) {
+          console.log('xr near:', session.renderState.depthNear);
+          console.log('xr far:', session.renderState.depthFar);
           console.log('cam near:', camera.near);
           console.log('cam far:', camera.far);
         } else console.log('no xr session');
@@ -172,15 +178,15 @@ export const VRControls = () => {
         break;
       }
       case '7': {
-        const { player } = getXR();
-        if (!player) return;
-        player.rotateY(degToRad(1));
+        // const { player } = getXR();
+        // if (!player) return;
+        // player.rotateY(degToRad(1));
         break;
       }
       case '9': {
-        const { player } = getXR();
-        if (!player) return;
-        player.rotateY(-degToRad(1));
+        // const { player } = getXR();
+        // if (!player) return;
+        // player.rotateY(-degToRad(1));
         break;
       }
       case '-': {
@@ -200,31 +206,34 @@ export const VRControls = () => {
     }
   });
 
-  useEffect(() => {
-    if (!session) return;
-    // Send event to vrActor so it can be displayed.
-    function handleInputEvent(inputEvent: XRInputSourceEvent) {
-      vrActor.send({ type: 'ASSIGN_INPUT_EVENT', inputEvent });
-    }
+  // useEffect(() => {
+  //   const { gl } = getThree();
+  //   const { xr } = gl;
+  //   const session = xr.getSession();
+  //   if (!session) return;
+  //   // Send event to vrActor so it can be displayed.
+  //   function handleInputEvent(inputEvent: XRInputSourceEvent) {
+  //     vrActor.send({ type: 'ASSIGN_INPUT_EVENT', inputEvent });
+  //   }
 
-    session.addEventListener('select', handleInputEvent);
-    session.addEventListener('squeeze', handleInputEvent);
+  //   session.addEventListener('select', handleInputEvent);
+  //   session.addEventListener('squeeze', handleInputEvent);
 
-    function handleEnd() {
-      if (!session) return;
-      session.removeEventListener('select', handleInputEvent);
-      session.removeEventListener('squeeze', handleInputEvent);
-    }
+  //   function handleEnd() {
+  //     if (!session) return;
+  //     session.removeEventListener('select', handleInputEvent);
+  //     session.removeEventListener('squeeze', handleInputEvent);
+  //   }
 
-    session.addEventListener('end', handleEnd);
+  //   session.addEventListener('end', handleEnd);
 
-    return () => {
-      handleEnd();
-      if (session) {
-        session.removeEventListener('end', handleEnd);
-      }
-    };
-  }, [session, vrActor]);
+  //   return () => {
+  //     handleEnd();
+  //     if (session) {
+  //       session.removeEventListener('end', handleEnd);
+  //     }
+  //   };
+  // }, [ vrActor]);
 
   const deltaNear = 0.01;
   const deltaFar = 100;

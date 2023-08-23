@@ -1,4 +1,5 @@
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
+import { useInputSources } from '@coconut-xr/natuerlich/react';
 import { Box, Text } from '@react-three/drei';
 import { Object3DProps, useFrame } from '@react-three/fiber';
 import {
@@ -24,6 +25,7 @@ type Props = PropsWithChildren & {
   position?: Vector3Tuple;
 };
 export const RotatingObject = ({ children, position = [0, 0, 0] }: Props) => {
+  const inputSources = useInputSources();
   const groupRef = useRef<Group>(null!);
   const objRef = useRef<Object3D>(null!);
   const textCenterRef = useRef<Object3D>(null!);
@@ -43,21 +45,9 @@ export const RotatingObject = ({ children, position = [0, 0, 0] }: Props) => {
     center.lookAt(_camWorldPos);
   });
 
-  // const handleHover: XRInteractionHandler = useCallback(
-  //   (event: XRInteractionEvent) => {
-  //     setText('hover');
-  //   },
-  //   []
-  // );
-  // const handleBlur: XRInteractionHandler = useCallback(
-  //   (event: XRInteractionEvent) => {
-  //     setText('blur');
-  //   },
-  //   []
-  // );
   return (
     <>
-      <Interactive
+      {/* <Interactive
         onBlur={() => setText('blur')}
         onHover={() => setText('hover')}
         // onMove={() => setText('move')}
@@ -65,17 +55,29 @@ export const RotatingObject = ({ children, position = [0, 0, 0] }: Props) => {
         onSelectEnd={() => setText('selectend')}
         onSqueezeStart={() => setText('squeezestart')}
         onSqueezeEnd={() => setText('squeezeend')}
+      > */}
+      <group
+        ref={groupRef}
+        position={position}
+        onPointerEnter={() => {
+          setText('hover');
+        }}
+        onPointerLeave={() => {
+          setText('idle');
+        }}
+        onClick={() => {
+          setText('click');
+        }}
       >
-        <group ref={groupRef} position={position}>
-          <object3D ref={objRef}>{children}</object3D>
+        <object3D ref={objRef}>{children}</object3D>
 
-          <object3D ref={textCenterRef}>
-            <Text ref={textRef} position={[0, 0, 1]}>
-              {text}
-            </Text>
-          </object3D>
-        </group>
-      </Interactive>
+        <object3D ref={textCenterRef}>
+          <Text ref={textRef} position={[0, 0, 1]}>
+            {text}
+          </Text>
+        </object3D>
+      </group>
+      {/* </Interactive> */}
     </>
   );
 };

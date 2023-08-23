@@ -11,13 +11,13 @@ export const VRManager = () => {
   const { cameraActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context
   );
-  const getXR = useXR(({ get }) => get);
+  // const getXR = useXR(({ get }) => get);
   const getThree = useThree(({ get }) => get);
 
-  useEffect(() => {
-    cameraActor.send({ type: 'ASSIGN_GET_XR', getXR });
-    vrActor.send({ type: 'ASSIGN_GET_XR', getXR });
-  }, [cameraActor, getXR, vrActor]);
+  // useEffect(() => {
+  //   cameraActor.send({ type: 'ASSIGN_GET_XR', getXR });
+  //   vrActor.send({ type: 'ASSIGN_GET_XR', getXR });
+  // }, [cameraActor, getXR, vrActor]);
   useEffect(() => {
     cameraActor.send({ type: 'ASSIGN_GET_THREE', getThree: getThree });
     vrActor.send({ type: 'ASSIGN_GET_THREE', getThree: getThree });
@@ -43,7 +43,7 @@ export const VRManager = () => {
   return (
     <>
       <VRControls />
-      <VRPlayer />
+      {/* <VRPlayer /> */}
     </>
   );
 };

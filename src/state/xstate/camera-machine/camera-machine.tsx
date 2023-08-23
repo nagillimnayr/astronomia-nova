@@ -399,17 +399,18 @@ export const cameraMachine = createMachine(
         if (!xr.enabled || !xr.isPresenting) return;
         const session = xr.getSession();
         if (!session) return;
-        console.log('input source keys:', session.inputSources.keys());
 
-        let left: XRInputSource = null!;
-        let right: XRInputSource = null!;
-        session.inputSources.forEach((inputSource) => {
-          if (inputSource.handedness === 'left') {
-            left = inputSource;
-          } else if (inputSource.handedness === 'right') {
-            right = inputSource;
-          }
-        });
+        // let left: XRInputSource = null!;
+        // let right: XRInputSource = null!;
+        // session.inputSources.forEach((inputSource) => {
+        //   if (inputSource.handedness === 'left') {
+        //     left = inputSource;
+        //   } else if (inputSource.handedness === 'right') {
+        //     right = inputSource;
+        //   }
+        // });
+        const left = session.inputSources[1];
+        const right = session.inputSources[0];
 
         if (!(left instanceof XRInputSource)) return;
         if (!(right instanceof XRInputSource)) return;
@@ -446,17 +447,9 @@ export const cameraMachine = createMachine(
         if (!xr.enabled || !xr.isPresenting) return;
         const session = xr.getSession();
         if (!session) return;
-        console.log('input source keys:', session.inputSources.keys());
 
-        let left: XRInputSource = null!;
-        let right: XRInputSource = null!;
-        session.inputSources.forEach((inputSource) => {
-          if (inputSource.handedness === 'left') {
-            left = inputSource;
-          } else if (inputSource.handedness === 'right') {
-            right = inputSource;
-          }
-        });
+        const left = session.inputSources[1];
+        const right = session.inputSources[0];
 
         if (!(left instanceof XRInputSource)) return;
         if (!(right instanceof XRInputSource)) return;

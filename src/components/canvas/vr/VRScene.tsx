@@ -9,7 +9,7 @@ import {
   useHelper,
 } from '@react-three/drei';
 import { RotatingObject } from './components/RotatingObject';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { DirectionalLight, DirectionalLightHelper } from 'three';
 import { VRManager } from './VRManager';
 import { Floor } from './components/Floor';
@@ -44,15 +44,8 @@ export const VRScene = () => {
 
   return (
     <>
-      {/* <NonImmersiveCamera
-          ref={(camera) => {
-            if (!camera) return;
-            camRef.current = camera;
-            getThree().set({ camera });
-          }}
-          position={[0, 2, 8]}
-        />
-        <ImmersiveSessionOrigin position={[0, 2, 8]} /> */}
+      <ImmersiveSessionOrigin position={[0, 0, 0]} />
+      <VRCameraManager position={[0, 0, 0]} />
 
       <MockSolarSystem />
       <directionalLight
@@ -60,7 +53,7 @@ export const VRScene = () => {
         intensity={0.7}
         position={[-5, 10, 8]}
       />
-      <ambientLight intensity={0.25} />
+      <ambientLight intensity={0.75} />
 
       <RotatingObject position={[0, 1, -5]}>
         <Dodecahedron>
@@ -80,7 +73,6 @@ export const VRScene = () => {
         </Tetrahedron>
       </RotatingObject>
       <Floor />
-      <VRCameraManager position={[0, 0, 0]} />
 
       <Cylinder
         args={[0.05, 0.05, 1, 32]}
