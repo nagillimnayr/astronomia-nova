@@ -33,7 +33,7 @@ export const VRDebugFrustumDisplay = ({
     <>
       <group position={position}>
         <Text position={[0, 0.5, 0]} anchorX={'center'} anchorY={'middle'}>
-          {'near: ' + near.toFixed(2)}
+          {'near: ' + near.toString()}
         </Text>
         <Text position={[0, -0.5, 0]} anchorX={'center'} anchorY={'middle'}>
           {'far: ' + far.toFixed(2)}
