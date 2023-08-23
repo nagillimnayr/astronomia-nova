@@ -1,10 +1,10 @@
 import { CameraController } from '@/lib/camera-controller/CameraController';
-import { MainCamera } from '@/simulation/components/camera-controller/MainCamera';
 import { PI_OVER_THREE, PI_OVER_TWO } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Object3DNode, extend } from '@react-three/fiber';
+import { type Object3DNode, extend } from '@react-three/fiber';
 import { useRef } from 'react';
-import { Vector3Tuple } from 'three';
+import { type Vector3Tuple, type PerspectiveCamera } from 'three';
+import { PerspectiveCamera as PerspectiveCam } from '@react-three/drei';
 
 extend({ CameraController });
 declare module '@react-three/fiber' {
@@ -36,7 +36,36 @@ export const VRCameraManager = ({
           controller.setTargetRadius(8);
         }}
       />
-      <MainCamera />
+      <VRMainCamera />
+    </>
+  );
+};
+
+const VRMainCamera = () => {
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+
+  const cameraRef = useRef<PerspectiveCamera>(null!);
+
+  return (
+    <>
+      <PerspectiveCam
+        makeDefault
+        name="vr-main-camera"
+        ref={(cam) => {
+          if (!cam) return;
+          const camera = cam as PerspectiveCamera;
+          cameraRef.current = camera;
+
+          // Assign camera to state context.
+          cameraActor.send({
+            type: 'ASSIGN_CAMERA',
+            camera,
+          });
+        }}
+        position={[0, 0, 0]}
+        near={0.1}
+        far={1000}
+      />
     </>
   );
 };
