@@ -53,7 +53,6 @@ type Context = {
   mainCamera: PerspectiveCamera | null;
   focusTarget: Object3D | null;
   observer: Object3D | null;
-  refSpace: XRReferenceSpace | null;
   vrHud: Object3D | null;
 };
 
@@ -62,14 +61,12 @@ type Events =
   | { type: 'TO_SPACE' }
   | { type: 'UPDATE'; deltaTime: number }
   | { type: 'ASSIGN_GET_THREE'; getThree: () => RootState }
-  | { type: 'ASSIGN_GET_XR'; getXR: () => XRState }
   | { type: 'START_XR_SESSION' }
   | { type: 'END_XR_SESSION' }
   | { type: 'POLL_XR_BUTTONS' }
   | { type: 'ASSIGN_CONTROLS'; controls: CameraController }
   | { type: 'ASSIGN_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_OBSERVER'; observer: Object3D | null }
-  | { type: 'ASSIGN_REF_SPACE'; refSpace: XRReferenceSpace }
   | { type: 'ASSIGN_VR_HUD'; vrHud: Object3D }
   | { type: 'SET_TARGET'; focusTarget: Object3D | null }
   | { type: 'ROTATE_AZIMUTHAL'; deltaAngle: number }
@@ -96,7 +93,6 @@ export const cameraMachine = createMachine(
       mainCamera: null,
       observer: null,
       focusTarget: null,
-      refSpace: null,
       vrHud: null,
     }),
 
@@ -105,9 +101,7 @@ export const cameraMachine = createMachine(
       ASSIGN_GET_THREE: {
         actions: ['assignGetThree', 'initializeControls'],
       },
-      ASSIGN_GET_XR: {
-        actions: ['assignGetXR', 'logEvent'],
-      },
+
       ASSIGN_CONTROLS: {
         cond: (context, event) => {
           return context.controls !== event.controls;
@@ -131,9 +125,7 @@ export const cameraMachine = createMachine(
           'logEvent',
         ],
       },
-      ASSIGN_REF_SPACE: {
-        actions: ['logEvent', 'assignRefSpace'],
-      },
+
       ASSIGN_VR_HUD: {
         actions: [
           'logEvent',
@@ -157,9 +149,6 @@ export const cameraMachine = createMachine(
       },
 
       POLL_XR_BUTTONS: {
-        // cond: ({ getXR }) => {
-        //   return Boolean(getXR().session);
-        // },
         actions: ['pollXRButtons'],
       },
 
@@ -287,19 +276,11 @@ export const cameraMachine = createMachine(
       assignGetThree: assign({
         getThree: (_, { getThree }) => getThree,
       }),
-      assignGetXR: assign({
-        getXR: (_, { getXR }) => getXR,
-      }),
       assignControls: assign({
         controls: (_, event) => {
           return event.controls;
         },
       }),
-
-      assignRefSpace: assign({
-        refSpace: (_, { refSpace }) => refSpace,
-      }),
-
       assignTarget: assign({
         // Set new focus target.
         focusTarget: (_, event) => {

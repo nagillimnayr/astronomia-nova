@@ -22,20 +22,10 @@ export const VRManager = () => {
   }, [cameraActor, getThree, vrActor]);
 
   useFrame((state, delta, frame) => {
-    const { gl } = state;
-    const { xr } = gl;
-    if (!xr.enabled) return;
-
     if (!(frame instanceof XRFrame)) return;
 
-    // Get reference space.
-    const { refSpaceOrigin } = vrActor.getSnapshot()!.context;
-    if (!refSpaceOrigin) return;
-    // Get viewer pose.
-    const pose = frame.getViewerPose(refSpaceOrigin);
-    if (!pose) return;
-    // Send pose to vrActor.
-    vrActor.send({ type: 'ASSIGN_POSE', pose });
+    // Pass frame to vrActor.
+    vrActor.send({ type: 'UPDATE', frame });
   });
 
   return (

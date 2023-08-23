@@ -43,23 +43,6 @@ export const EnterVRButton = () => {
                 cameraActor.send({
                   type: 'START_XR_SESSION',
                 });
-
-                const { session } = useXR.getState();
-                if (!session) return;
-                session
-                  .requestReferenceSpace(REF_SPACE_TYPE)
-                  .then((refSpace) => {
-                    // Assign the new reference space to the external state machines.
-                    cameraActor.send({
-                      type: 'ASSIGN_REF_SPACE',
-                      refSpace,
-                    });
-                    vrActor.send({
-                      type: 'ASSIGN_REF_SPACE_ORIGIN',
-                      refSpace,
-                    });
-                  })
-                  .catch((reason) => console.error(reason));
               })
               .catch((reason) => console.error(reason));
           }

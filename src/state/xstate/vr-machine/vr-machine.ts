@@ -34,11 +34,7 @@ type Events =
   | { type: 'ASSIGN_GET_THREE'; getThree: () => RootState }
   | { type: 'ASSIGN_GET_XR'; getXR: () => XRState }
   | { type: 'ASSIGN_VR_HUD'; vrHud: Object3D }
-  | { type: 'ASSIGN_REF_SPACE_ORIGIN'; refSpace: XRReferenceSpace }
-  | { type: 'UPDATE'; deltaTime: number }
-  | { type: 'RESET_REF_SPACE' }
-  | { type: 'ASSIGN_POSE'; pose: XRViewerPose }
-  | { type: 'ADJUST_REF_SPACE_TO_POSE' }
+  | { type: 'UPDATE'; frame: XRFrame }
   | { type: 'ASSIGN_INPUT_EVENT'; inputEvent: XRInputSourceEvent }
   | { type: 'RESET_FRUSTUM' }
   | { type: 'INCREASE_NEAR'; value: number }
@@ -76,14 +72,7 @@ export const vrMachine = createMachine(
           }),
         ],
       },
-      ASSIGN_GET_XR: {
-        actions: [
-          'logEvent',
-          assign({
-            getXR: (_, { getXR }) => getXR,
-          }),
-        ],
-      },
+
       ASSIGN_VR_HUD: {
         actions: [
           'logEvent',
@@ -91,17 +80,6 @@ export const vrMachine = createMachine(
             vrHud: (_, { vrHud }) => vrHud,
           }),
         ],
-      },
-      ASSIGN_REF_SPACE_ORIGIN: {
-        actions: [
-          'logEvent',
-          assign({
-            refSpaceOrigin: (_, { refSpace }) => refSpace,
-          }),
-        ],
-      },
-      RESET_REF_SPACE: {
-        actions: ['logEvent', 'resetRefSpace'],
       },
     },
 
@@ -124,17 +102,7 @@ export const vrMachine = createMachine(
           UPDATE: {
             actions: ['update'],
           },
-          ASSIGN_POSE: {
-            actions: [
-              assign({
-                pose: (_, { pose }) => pose,
-              }),
-              'adjustRefSpaceToPose',
-            ],
-          },
-          ADJUST_REF_SPACE_TO_POSE: {
-            actions: ['adjustRefSpaceToPose'],
-          },
+
           ASSIGN_INPUT_EVENT: {
             actions: [
               assign({
@@ -172,38 +140,69 @@ export const vrMachine = createMachine(
     actions: {
       // Other actions:
       logEvent: log((_, event) => event),
-      startSession: (context, event) => {
-        //
+      startSession: ({ getThree }, event) => {
+        const { gl } = getThree();
+        const { xr } = gl;
+        const session = xr.getSession();
+        console.log('XR Session:', session);
       },
       endSession(context, event, meta) {
         //
       },
 
-      update: ({ getThree, getXR }, { deltaTime }) => {
-        //
-      },
-
-      adjustRefSpaceToPose: (context) => {
-        const { getThree, pose, refSpaceOrigin } = context;
-        if (!pose || !refSpaceOrigin) return;
+      update: ({ getThree }, { frame }) => {
         const { gl } = getThree();
-        const xr = gl.xr;
-        if (!xr.isPresenting) return;
+        const { xr } = gl;
+        // Get current reference space.
+        const refSpace = xr.getReferenceSpace();
+        if (!refSpace) {
+          console.error('Error: No reference space!');
+          return;
+        }
 
-        if (!pose) return;
+        // Get viewer pose relative to the current reference space.
+        const pose = frame.getViewerPose(refSpace);
+        if (!pose) {
+          console.error('Error: No pose!');
+          return;
+        }
 
         // Get position and orientation from pose.
-        const pos = pose.transform.position;
-        const orientation = pose.transform.orientation;
+        const { position, orientation } = pose.transform;
 
-        // Negate the translation but preserve the orientation.
-        const offsetTransform = new XRRigidTransform(pos);
+        // Create rigid transform from the pose position.
+        const offsetTransform = new XRRigidTransform(position);
 
+        // Create offset reference space from position. Leave orientation undefined.
         const offsetRefSpace =
-          refSpaceOrigin.getOffsetReferenceSpace(offsetTransform);
+          refSpace.getOffsetReferenceSpace(offsetTransform);
 
+        // Set new reference space with offset. This will negate the translation component of the transformation matrix of the headset's spatially tracked position relative to the session origin, but without affecting the spatially tracked orientation, which we want to preserve.
         xr.setReferenceSpace(offsetRefSpace);
       },
+
+      // adjustRefSpaceToPose: (context) => {
+      //   const { getThree, pose, refSpaceOrigin } = context;
+      //   // if (!pose || !refSpaceOrigin) return;
+      //   if (!pose) return;
+      //   const { gl } = getThree();
+      //   const { xr } = gl;
+      //   if (!xr.isPresenting) return;
+      //   if (!pose) return;
+      //   const refSpace = xr.getReferenceSpace();
+
+      //   // Get position and orientation from pose.
+      //   const pos = pose.transform.position;
+      //   const orientation = pose.transform.orientation;
+
+      //   // Negate the translation but preserve the orientation.
+      //   const offsetTransform = new XRRigidTransform(pos);
+
+      //   const offsetRefSpace =
+      //     refSpace.getOffsetReferenceSpace(offsetTransform);
+
+      //   xr.setReferenceSpace(offsetRefSpace);
+      // },
       increaseNear({ getXR }, { value }, meta) {
         const { session } = getXR();
         if (!session) return;
