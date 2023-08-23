@@ -40,7 +40,6 @@ const VR_HUD_Z_IMMERSIVE = -3;
 const FOV = 50;
 
 type Context = {
-  canvas: HTMLCanvasElement; // Reference to the canvas element.
   getThree: () => RootState;
   getXR: () => XRState;
   xrSession: XRSession | null;
@@ -56,7 +55,6 @@ type Events =
   | { type: 'TO_SURFACE' }
   | { type: 'TO_SPACE' }
   | { type: 'UPDATE'; deltaTime: number }
-  | { type: 'ASSIGN_CANVAS'; canvas: HTMLCanvasElement }
   | { type: 'ASSIGN_GET_THREE'; getThree: () => RootState }
   | { type: 'ASSIGN_GET_XR'; getXR: () => XRState }
   | { type: 'START_XR_SESSION'; xrSession: XRSession }
@@ -86,7 +84,6 @@ export const cameraMachine = createMachine(
     id: 'camera-machine',
     // Initial context:
     context: () => ({
-      canvas: null!,
       controls: null,
       xrSession: null,
       getThree: null!,
@@ -100,11 +97,8 @@ export const cameraMachine = createMachine(
 
     // Context assignment events:
     on: {
-      ASSIGN_CANVAS: {
-        actions: ['assignCanvas', 'logEvent', 'initializeControls'],
-      },
       ASSIGN_GET_THREE: {
-        actions: ['assignGetThree'],
+        actions: ['assignGetThree', 'initializeControls'],
       },
       ASSIGN_GET_XR: {
         actions: ['assignGetXR', 'logEvent'],
@@ -167,9 +161,9 @@ export const cameraMachine = createMachine(
       },
 
       POLL_XR_BUTTONS: {
-        cond: ({ getXR }) => {
-          return Boolean(getXR().session);
-        },
+        // cond: ({ getXR }) => {
+        //   return Boolean(getXR().session);
+        // },
         actions: ['pollXRButtons'],
       },
 
@@ -295,13 +289,7 @@ export const cameraMachine = createMachine(
     // Action implementations:
     actions: {
       logEvent: log((_, event) => event),
-      assignCanvas: assign({
-        canvas: (context, event) => {
-          // Only assign the canvas if the one in context is uninitialized.
-          if (context.canvas) return context.canvas;
-          return event.canvas;
-        },
-      }),
+
       assignGetThree: assign({
         getThree: (_, { getThree }) => getThree,
       }),
@@ -327,15 +315,18 @@ export const cameraMachine = createMachine(
         },
       }),
       initializeControls: (context) => {
-        const { controls, camera, canvas, vrHud } = context;
+        const { controls, camera, getThree, vrHud } = context;
         if (!controls) return;
 
         if (camera) {
           controls.setCamera(camera);
         }
 
-        if (canvas && !controls.domElement) {
-          controls.setDomElement(canvas);
+        if (getThree) {
+          const canvas = getThree().gl.domElement;
+          if (canvas && !controls.domElement) {
+            controls.setDomElement(canvas);
+          }
         }
 
         if (vrHud) {
@@ -347,8 +338,8 @@ export const cameraMachine = createMachine(
       },
       startXRSession: (context, event) => {
         //
-        const { xrSession, getXR, getThree, controls, vrHud } = context;
-        if (!xrSession || !getXR || !controls) {
+        const { xrSession, getThree, controls, vrHud } = context;
+        if (!xrSession || !controls) {
           console.error('error initializing xr session');
           return;
         }
@@ -401,20 +392,31 @@ export const cameraMachine = createMachine(
       },
       pollXRInput: (context) => {
         // Poll XR controllers for thumbstick input.
-        const { controls, getXR } = context;
-        const { session, controllers } = getXR();
-        if (!session || !controllers || !controls) return;
-        const leftController = controllers.find(
-          (controllerObj) => controllerObj.inputSource.handedness === 'left'
-        );
-        const rightController = controllers.find(
-          (controllerObj) => controllerObj.inputSource.handedness === 'right'
-        );
-        if (!leftController || !rightController) return;
+        const { controls, getThree } = context;
+        if (!controls) return;
+        const { gl } = getThree();
+        const { xr } = gl;
+        if (!xr.enabled || !xr.isPresenting) return;
+        const session = xr.getSession();
+        if (!session) return;
+        console.log('input source keys:', session.inputSources.keys());
 
-        const leftGamepad = leftController.inputSource.gamepad;
+        let left: XRInputSource = null!;
+        let right: XRInputSource = null!;
+        session.inputSources.forEach((inputSource) => {
+          if (inputSource.handedness === 'left') {
+            left = inputSource;
+          } else if (inputSource.handedness === 'right') {
+            right = inputSource;
+          }
+        });
+
+        if (!(left instanceof XRInputSource)) return;
+        if (!(right instanceof XRInputSource)) return;
+
+        const leftGamepad = left.gamepad;
         if (!leftGamepad) return;
-        const rightGamepad = rightController.inputSource.gamepad;
+        const rightGamepad = right.gamepad;
         if (!rightGamepad) return;
 
         const leftAxes = leftGamepad.axes;
@@ -437,21 +439,33 @@ export const cameraMachine = createMachine(
       },
       pollXRButtons: (context) => {
         // Poll XR controllers for button input.
-        const { controls, getXR } = context;
-        const { session, controllers } = getXR();
-        if (!session || !controllers || !controls) return;
-        const leftController = controllers.find(
-          (controllerObj) => controllerObj.inputSource.handedness === 'left'
-        );
-        const rightController = controllers.find(
-          (controllerObj) => controllerObj.inputSource.handedness === 'right'
-        );
-        if (!leftController || !rightController) return;
+        const { controls, getThree } = context;
+        if (!controls) return;
+        const { gl } = getThree();
+        const { xr } = gl;
+        if (!xr.enabled || !xr.isPresenting) return;
+        const session = xr.getSession();
+        if (!session) return;
+        console.log('input source keys:', session.inputSources.keys());
 
-        const leftGamepad = leftController.inputSource.gamepad;
+        let left: XRInputSource = null!;
+        let right: XRInputSource = null!;
+        session.inputSources.forEach((inputSource) => {
+          if (inputSource.handedness === 'left') {
+            left = inputSource;
+          } else if (inputSource.handedness === 'right') {
+            right = inputSource;
+          }
+        });
+
+        if (!(left instanceof XRInputSource)) return;
+        if (!(right instanceof XRInputSource)) return;
+
+        const leftGamepad = left.gamepad;
         if (!leftGamepad) return;
-        const rightGamepad = rightController.inputSource.gamepad;
+        const rightGamepad = right.gamepad;
         if (!rightGamepad) return;
+
         // Poll for button input.
         const leftButtons = leftGamepad.buttons;
         const rightButtons = rightGamepad.buttons;
@@ -480,16 +494,19 @@ export const cameraMachine = createMachine(
       },
 
       updateCamera: (context, event) => {
-        const { controls, camera: spaceCamera } = context;
-        if (!controls || !spaceCamera) {
+        const { controls, camera } = context;
+        if (!camera) return;
+        if (!controls) {
           console.error('camera controls are null');
           return;
         }
         controls.update(event.deltaTime);
       },
       updateSpaceView: (context, event) => {
-        const { controls, camera: spaceCamera } = context;
-        if (!controls || !spaceCamera) {
+        const { controls, camera } = context;
+
+        if (!camera) return;
+        if (!controls) {
           console.error('camera controls are null');
           return;
         }

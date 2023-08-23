@@ -39,11 +39,6 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                 }}
                 linear /* Textures will appear washed out unless this is set. */
                 flat
-                ref={(canvas) => {
-                  if (!canvas) return;
-                  // Assign canvas context in camera state machine. This is necessary so that event listeners can be attached for the camera controller.
-                  cameraActor.send({ type: 'ASSIGN_CANVAS', canvas });
-                }}
                 onCreated={(state) => {
                   // Filter intersections so that invisible objects don't trigger pointer events.
                   state.setEvents({
