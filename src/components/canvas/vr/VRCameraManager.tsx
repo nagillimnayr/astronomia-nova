@@ -13,6 +13,7 @@ import {
   type PerspectiveCamera,
   Group,
   Vector3,
+  Scene,
 } from 'three';
 import { PerspectiveCamera as PerspectiveCam } from '@react-three/drei';
 import {
@@ -88,14 +89,13 @@ const VRNonImmersiveCam = () => {
         ref={(camera) => {
           if (!camera) return;
           camera.name = 'main-camera';
-          // getThree().set({ camera });
 
           setTimeout(() => {
             cameraActor.send({
               type: 'ASSIGN_CAMERA',
               camera,
             });
-          }, 300);
+          }, 100);
         }}
         position={[0, 0, 0]}
       >
