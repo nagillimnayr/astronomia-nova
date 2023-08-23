@@ -85,11 +85,11 @@ export const HUD = ({ className }: Props) => {
         </div>
 
         {/** Debug Panel */}
-        <div className={'relative col-start-[4] col-end-[5] row-end-[3]'}>
+        {/* <div className={'relative col-start-[4] col-end-[5] row-end-[3]'}>
           <div className="pointer-events-auto flex h-full w-full flex-col items-center justify-center">
             <DebugPanel />
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );
