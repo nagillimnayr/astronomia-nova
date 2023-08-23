@@ -48,7 +48,7 @@ export const VRControls = () => {
     const buttonY = leftButtons.at(5);
 
     if (buttonA && buttonA.pressed) {
-      rootActor.send({ type: 'ADVANCE_DAY' });
+      // rootActor.send({ type: 'ADVANCE_DAY' });
       console.log('button A');
 
       const vrHud = cameraActor.getSnapshot()!.context.vrHud;
@@ -68,7 +68,7 @@ export const VRControls = () => {
     }
 
     if (buttonX && buttonX.pressed) {
-      rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
+      // rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
       console.log('button X');
       vrActor.send({ type: 'ADJUST_REF_SPACE_TO_POSE' });
     }
@@ -80,13 +80,9 @@ export const VRControls = () => {
         console.log('no xr session');
         return;
       }
-
-      void xrSession?.updateRenderState({
-        depthNear: 0.1,
-        depthFar: 1000,
-      });
+      vrActor.send({ type: 'RESET_FRUSTUM' });
     }
-  }, [cameraActor, getXR, rootActor, vrActor]);
+  }, [cameraActor, getXR, vrActor]);
   useInterval(pollXRButtons, 250); // Poll buttons every 0.25 seconds.
 
   useEffect(() => {
