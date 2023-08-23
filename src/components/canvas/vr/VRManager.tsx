@@ -6,7 +6,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { VRHUD } from '@/simulation/components/HUD/VR-HUD/VRHUD';
 import { VRCameraManager } from './VRCameraManager';
 import { useSessionChange, useXR } from '@coconut-xr/natuerlich/react';
-import { REF_SPACE_TYPE } from './VRCanvas';
+
 import { FAR_CLIP, NEAR_CLIP } from '../scene-constants';
 
 export const VRManager = () => {
@@ -53,44 +53,39 @@ const SessionInitializer = () => {
   );
   // const { session } = useXR();
 
-  useSessionChange(
-    (newSession: XRSession | undefined, prevSession: XRSession | undefined) => {
-      if (prevSession && !newSession) {
-        // Session has ended.
-        vrActor.send({ type: 'END_SESSION' });
-        cameraActor.send({
-          type: 'END_XR_SESSION',
-        });
-      }
-      if (!prevSession && newSession) {
-        // Session has started.
-        vrActor.send({ type: 'START_SESSION' });
-        cameraActor.send({
-          type: 'START_XR_SESSION',
-        });
-        newSession
-          .requestReferenceSpace(REF_SPACE_TYPE)
-          .then((refSpace) => {
-            // Assign the new reference space to the external state machines.
-            cameraActor.send({
-              type: 'ASSIGN_REF_SPACE',
-              refSpace,
-            });
-            vrActor.send({
-              type: 'ASSIGN_REF_SPACE_ORIGIN',
-              refSpace,
-            });
-          })
-          .catch((reason) => console.error(reason));
-
-        void newSession?.updateRenderState({
-          depthNear: NEAR_CLIP,
-          depthFar: FAR_CLIP,
-        });
-      }
-    },
-    []
-  );
+  // useSessionChange(
+  //   (newSession: XRSession | undefined, prevSession: XRSession | undefined) => {
+  //     if (prevSession && !newSession) {
+  //       // Session has ended.
+  //       vrActor.send({ type: 'END_SESSION' });
+  //       cameraActor.send({
+  //         type: 'END_XR_SESSION',
+  //       });
+  //     }
+  //     if (!prevSession && newSession) {
+  //       // Session has started.
+  //       vrActor.send({ type: 'START_SESSION' });
+  //       cameraActor.send({
+  //         type: 'START_XR_SESSION',
+  //       });
+  //       newSession
+  //         .requestReferenceSpace(REF_SPACE_TYPE)
+  //         .then((refSpace) => {
+  //           // Assign the new reference space to the external state machines.
+  //           cameraActor.send({
+  //             type: 'ASSIGN_REF_SPACE',
+  //             refSpace,
+  //           });
+  //           vrActor.send({
+  //             type: 'ASSIGN_REF_SPACE_ORIGIN',
+  //             refSpace,
+  //           });
+  //         })
+  //         .catch((reason) => console.error(reason));
+  //     }
+  //   },
+  //   []
+  // );
 
   return (
     <>

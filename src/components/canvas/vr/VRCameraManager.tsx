@@ -96,7 +96,7 @@ const VRMainCamera = () => {
 
           setTimeout(() => {
             cameraActor.send({
-              type: 'ASSIGN_CAMERA',
+              type: 'ASSIGN_NI_CAMERA',
               camera,
             });
           }, 300);

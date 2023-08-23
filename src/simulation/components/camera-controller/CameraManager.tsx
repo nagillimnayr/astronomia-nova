@@ -1,6 +1,9 @@
 import { degToRad } from 'three/src/math/MathUtils';
 import { MainCamera } from './MainCamera';
-import { CameraControls } from '@react-three/drei';
+import {
+  CameraControls,
+  PerspectiveCamera as PerspectiveCam,
+} from '@react-three/drei';
 import { useContext, useEffect, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import {
@@ -18,6 +21,7 @@ import {
 import { Group, PerspectiveCamera } from 'three';
 import { FAR_CLIP, NEAR_CLIP } from '@/components/canvas/scene-constants';
 import { Controllers } from '@coconut-xr/natuerlich/defaults';
+import { useSelector } from '@xstate/react';
 
 extend({ CameraController });
 declare module '@react-three/fiber' {
@@ -42,36 +46,35 @@ export const CameraManager = () => {
         }}
       />
       <VRMainCamera />
+      <VRImmersiveOrigin />
     </>
   );
 };
 
 const VRMainCamera = () => {
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const { cameraActor, vrActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
 
-  const getThree = useThree(({ get }) => get);
-
-  const cameraRef = useRef<PerspectiveCamera>(null!);
-
+  // Bind to state changes so the camera will reset itself when a session starts or ends.
+  const vrActive = useSelector(vrActor, (state) => state.matches('active'));
   return (
     <>
-      <VRImmersiveOrigin />
       <NonImmersiveCamera
-        ref={(camera) => {
-          if (!camera) return;
-          camera.name = 'non-immersive-camera';
-          getThree().set({ camera });
-
-          setTimeout(() => {
-            cameraActor.send({
-              type: 'ASSIGN_CAMERA',
-              camera,
-            });
-          }, 300);
-        }}
+        name="non-immersive-camera"
         position={[0, 0, 0]}
         near={NEAR_CLIP}
         far={FAR_CLIP}
+        ref={(camera) => {
+          if (!camera) return;
+
+          setTimeout(() => {
+            cameraActor.send({
+              type: 'ASSIGN_NI_CAMERA',
+              camera,
+            });
+          }, 200);
+        }}
       ></NonImmersiveCamera>
     </>
   );

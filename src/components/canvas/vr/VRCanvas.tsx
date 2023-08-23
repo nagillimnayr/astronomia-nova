@@ -7,7 +7,7 @@ import { VRManager } from './VRManager';
 import { XRCanvas } from '@coconut-xr/natuerlich/defaults';
 import { useEnterXR } from '@coconut-xr/natuerlich/react';
 
-export const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
+const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
 
 const sessionOptions: XRSessionInit = {
   requiredFeatures: [REF_SPACE_TYPE],
