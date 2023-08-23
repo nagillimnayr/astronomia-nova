@@ -14,14 +14,10 @@ const MAX_NEAR = DEFAULT_NEAR;
 type Context = {
   getThree: () => RootState;
   getXR: () => XRState;
-  xr: WebXRManager | null;
   refSpaceOrigin: XRReferenceSpace | null;
-  session: XRSession | null;
-  player: Group | null;
-  leftController: XRController | null;
-  rightController: XRController | null;
   pose: XRViewerPose | null;
   lastInputEvent: XRInputSourceEvent | null;
+  vrHud: Object3D | null;
 };
 
 type Events =
@@ -29,19 +25,20 @@ type Events =
   | { type: 'END_SESSION' }
   | { type: 'ASSIGN_GET_THREE'; getThree: () => RootState }
   | { type: 'ASSIGN_GET_XR'; getXR: () => XRState }
-  | { type: 'ASSIGN_XR_MANAGER'; xr: WebXRManager }
+  | { type: 'ASSIGN_VR_HUD'; vrHud: Object3D }
   | { type: 'ASSIGN_REF_SPACE_ORIGIN'; refSpace: XRReferenceSpace }
-  | { type: 'ASSIGN_PLAYER'; player: Group }
-  | { type: 'ASSIGN_LEFT_CONTROLLER'; controller: XRController }
-  | { type: 'ASSIGN_RIGHT_CONTROLLER'; controller: XRController }
   | { type: 'UPDATE'; deltaTime: number }
   | { type: 'RESET_REF_SPACE' }
   | { type: 'ASSIGN_POSE'; pose: XRViewerPose }
   | { type: 'ADJUST_REF_SPACE_TO_POSE' }
   | { type: 'ASSIGN_INPUT_EVENT'; inputEvent: XRInputSourceEvent }
+  | { type: 'RESET_FRUSTUM' }
   | { type: 'INCREASE_NEAR'; value: number }
   | { type: 'INCREASE_FAR'; value: number }
-  | { type: 'RESET_FRUSTUM' };
+  | { type: 'RESET_HUD' }
+  | { type: 'INCREASE_HUD_Y'; value: number }
+  | { type: 'INCREASE_HUD_X'; value: number }
+  | { type: 'INCREASE_HUD_Z'; value: number };
 
 export const vrMachine = createMachine(
   {
@@ -56,14 +53,10 @@ export const vrMachine = createMachine(
     context: () => ({
       getThree: null!,
       getXR: null!,
-      xr: null,
       refSpaceOrigin: null,
-      session: null,
-      player: null,
-      leftController: null,
-      rightController: null,
       pose: null,
       lastInputEvent: null,
+      vrHud: null,
     }),
 
     on: {
@@ -83,11 +76,11 @@ export const vrMachine = createMachine(
           }),
         ],
       },
-      ASSIGN_XR_MANAGER: {
+      ASSIGN_VR_HUD: {
         actions: [
           'logEvent',
           assign({
-            xr: (_, { xr }) => xr,
+            vrHud: (_, { vrHud }) => vrHud,
           }),
         ],
       },
@@ -99,24 +92,6 @@ export const vrMachine = createMachine(
           }),
         ],
       },
-      ASSIGN_PLAYER: {
-        cond: (context, event) => {
-          return context.player !== event.player;
-        },
-        actions: ['logEvent', 'assignPlayer', 'initializePlayer'],
-      },
-      ASSIGN_LEFT_CONTROLLER: {
-        cond: (context, event) => {
-          return context.leftController !== event.controller;
-        },
-        actions: ['logEvent', 'assignLeftController', 'initializeController'],
-      },
-      ASSIGN_RIGHT_CONTROLLER: {
-        cond: (context, event) => {
-          return context.rightController !== event.controller;
-        },
-        actions: ['logEvent', 'assignRightController', 'initializeController'],
-      },
       RESET_REF_SPACE: {
         actions: ['logEvent', 'resetRefSpace'],
       },
@@ -127,8 +102,7 @@ export const vrMachine = createMachine(
       inactive: {
         on: {
           START_SESSION: {
-            cond: (context, event) => context.session !== event.session,
-            actions: ['logEvent', 'assignSession', 'startSession'],
+            actions: ['logEvent', 'startSession'],
             target: 'active',
           },
         },
@@ -140,7 +114,6 @@ export const vrMachine = createMachine(
             target: 'inactive',
           },
           UPDATE: {
-            cond: ({ session, player }) => Boolean(session && player),
             actions: ['update'],
           },
           ASSIGN_POSE: {
@@ -177,46 +150,19 @@ export const vrMachine = createMachine(
 
   {
     actions: {
-      // Context assignments:
-      assignSession: assign({
-        session: (_, { session }) => session,
-      }),
-      assignPlayer: assign({
-        player: (_, { player }) => player,
-      }),
-      assignLeftController: assign({
-        leftController: (_, { controller }) => controller,
-      }),
-      assignRightController: assign({
-        rightController: (_, { controller }) => controller,
-      }),
-
       // Other actions:
       logEvent: log((_, event) => event),
       startSession: (context, event) => {
-        const { session } = context;
-        if (!session) throw new Error('Error! XRSession is null');
+        //
       },
       endSession(context, event, meta) {
         //
       },
-      initializePlayer: ({ player }) => {
-        if (!player) return;
-      },
-      initializeController: ({ session }, { controller }) => {
-        if (!session) return;
-        const inputSource = controller.inputSource;
-        const gamepad = inputSource.gamepad;
-      },
-      update: ({ session, rightController, leftController }, { deltaTime }) => {
+
+      update: ({ getThree, getXR }, { deltaTime }) => {
         //
       },
 
-      resetRefSpace: (context) => {
-        const { getThree, refSpaceOrigin, xr } = context;
-        if (!refSpaceOrigin) return;
-        xr?.setReferenceSpace(refSpaceOrigin);
-      },
       adjustRefSpaceToPose: (context) => {
         const { getThree, pose, refSpaceOrigin } = context;
         if (!pose || !refSpaceOrigin) return;
@@ -273,6 +219,5 @@ export const vrMachine = createMachine(
         });
       },
     },
-    guards: {},
   }
 );
