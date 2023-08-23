@@ -228,37 +228,37 @@ export const VRControls = () => {
 
   const deltaNear = 0.01;
   const deltaFar = 100;
-  useXREvent(
-    'squeeze',
-    (event) => {
-      vrActor.send({ type: 'INCREASE_NEAR', value: -deltaNear });
-    },
-    { handedness: 'left' }
-  );
+  // useXREvent(
+  //   'squeeze',
+  //   (event) => {
+  //     vrActor.send({ type: 'INCREASE_NEAR', value: -deltaNear });
+  //   },
+  //   { handedness: 'left' }
+  // );
 
-  useXREvent(
-    'squeeze',
-    (event) => {
-      vrActor.send({ type: 'INCREASE_NEAR', value: deltaNear });
-    },
-    { handedness: 'right' }
-  );
+  // useXREvent(
+  //   'squeeze',
+  //   (event) => {
+  //     vrActor.send({ type: 'INCREASE_NEAR', value: deltaNear });
+  //   },
+  //   { handedness: 'right' }
+  // );
 
-  useXREvent(
-    'select',
-    (event) => {
-      vrActor.send({ type: 'INCREASE_FAR', value: -deltaFar });
-    },
-    { handedness: 'left' }
-  );
+  // useXREvent(
+  //   'select',
+  //   (event) => {
+  //     vrActor.send({ type: 'INCREASE_FAR', value: -deltaFar });
+  //   },
+  //   { handedness: 'left' }
+  // );
 
-  useXREvent(
-    'select',
-    (event) => {
-      vrActor.send({ type: 'INCREASE_FAR', value: deltaFar });
-    },
-    { handedness: 'right' }
-  );
+  // useXREvent(
+  //   'select',
+  //   (event) => {
+  //     vrActor.send({ type: 'INCREASE_FAR', value: deltaFar });
+  //   },
+  //   { handedness: 'right' }
+  // );
 
   return (
     <>
