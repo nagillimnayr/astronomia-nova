@@ -10,6 +10,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useController, useXR, useXREvent, XR } from '@react-three/xr';
 import { useCallback, useEffect } from 'react';
 import { FAR_CLIP, NEAR_CLIP } from '../scene-constants';
+import { degToRad } from 'three/src/math/MathUtils';
 
 export const VRControls = () => {
   const rootActor = MachineContext.useActorRef();
@@ -166,8 +167,20 @@ export const VRControls = () => {
       }
 
       case '5': {
-        console.log('5: adjusting pose');
+        console.log('adjusting pose');
         vrActor.send({ type: 'ADJUST_REF_SPACE_TO_POSE' });
+        break;
+      }
+      case '7': {
+        const { player } = getXR();
+        if (!player) return;
+        player.rotateY(degToRad(1));
+        break;
+      }
+      case '9': {
+        const { player } = getXR();
+        if (!player) return;
+        player.rotateY(-degToRad(1));
         break;
       }
       case '-': {
