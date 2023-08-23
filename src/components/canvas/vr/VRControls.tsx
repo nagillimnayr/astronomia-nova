@@ -173,8 +173,7 @@ export const VRControls = () => {
       }
 
       case '5': {
-        console.log('adjusting pose');
-        vrActor.send({ type: 'ADJUST_REF_SPACE_TO_POSE' });
+        //
         break;
       }
       case '7': {
