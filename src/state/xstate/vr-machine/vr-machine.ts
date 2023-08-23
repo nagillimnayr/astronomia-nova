@@ -6,9 +6,10 @@ import { assign, createMachine, log } from 'xstate';
 
 const EPSILON = 1e-16;
 const MIN_NEAR = EPSILON;
-const MIN_FAR = EPSILON;
+const MIN_FAR = 10;
 const DEFAULT_NEAR = 0.1;
 const DEFAULT_FAR = 1000;
+const MAX_NEAR = DEFAULT_NEAR;
 
 type Context = {
   getThree: () => RootState;
@@ -240,7 +241,9 @@ export const vrMachine = createMachine(
       increaseNear({ getXR }, { value }, meta) {
         const { session } = getXR();
         if (!session) return;
-        const { depthNear } = session.renderState;
+        const { depthNear, depthFar } = session.renderState;
+        console.log('near:', depthNear);
+        console.log('far:', depthFar);
         const near = Math.max(MIN_NEAR, depthNear + value);
         // Update near plane.
         void session.updateRenderState({
@@ -250,7 +253,9 @@ export const vrMachine = createMachine(
       increaseFar({ getXR }, { value }, meta) {
         const { session } = getXR();
         if (!session) return;
-        const { depthFar } = session.renderState;
+        const { depthNear, depthFar } = session.renderState;
+        console.log('near:', depthNear);
+        console.log('far:', depthFar);
         const far = Math.max(MIN_FAR, depthFar + value);
         // Update far plane.
         void session.updateRenderState({

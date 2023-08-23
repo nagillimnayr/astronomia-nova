@@ -219,6 +219,7 @@ export const VRControls = () => {
 
   useEffect(() => {
     if (!session) return;
+    // Send event to vrActor so it can be displayed.
     function handleInputEvent(inputEvent: XRInputSourceEvent) {
       vrActor.send({ type: 'ASSIGN_INPUT_EVENT', inputEvent });
     }
@@ -241,6 +242,40 @@ export const VRControls = () => {
       }
     };
   }, [session, vrActor]);
+
+  const deltaNear = 0.01;
+  const deltaFar = 100;
+  useXREvent(
+    'squeeze',
+    (event) => {
+      vrActor.send({ type: 'INCREASE_NEAR', value: -deltaNear });
+    },
+    { handedness: 'left' }
+  );
+
+  useXREvent(
+    'squeeze',
+    (event) => {
+      vrActor.send({ type: 'INCREASE_NEAR', value: deltaNear });
+    },
+    { handedness: 'right' }
+  );
+
+  useXREvent(
+    'select',
+    (event) => {
+      vrActor.send({ type: 'INCREASE_FAR', value: -deltaFar });
+    },
+    { handedness: 'left' }
+  );
+
+  useXREvent(
+    'select',
+    (event) => {
+      vrActor.send({ type: 'INCREASE_FAR', value: deltaFar });
+    },
+    { handedness: 'right' }
+  );
 
   return (
     <>
