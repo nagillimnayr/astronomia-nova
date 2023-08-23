@@ -8,12 +8,12 @@ import { VRHUD } from '@/simulation/components/HUD/VR-HUD/VRHUD';
 import { VRCameraManager } from './VRCameraManager';
 
 export const VRManager = () => {
-  const getXR = useXR(({ get }) => get);
   const { cameraActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context
   );
-
+  const getXR = useXR(({ get }) => get);
   const getThree = useThree(({ get }) => get);
+
   useEffect(() => {
     cameraActor.send({ type: 'ASSIGN_GET_XR', getXR });
     vrActor.send({ type: 'ASSIGN_GET_XR', getXR });
@@ -22,18 +22,12 @@ export const VRManager = () => {
     cameraActor.send({ type: 'ASSIGN_GET_THREE', getThree: getThree });
     vrActor.send({ type: 'ASSIGN_GET_THREE', getThree: getThree });
   }, [cameraActor, getThree, vrActor]);
-  useEffect(() => {
-    const xr = getThree().gl.xr;
-    if (!xr) return;
-    vrActor.send({ type: 'ASSIGN_XR_MANAGER', xr });
-  }, [getThree, vrActor]);
 
   useFrame((state, delta, frame) => {
     const { gl } = state;
     const { xr } = gl;
     if (!xr.enabled) return;
 
-    // const xrFrame = xr.getFrame();
     if (!(frame instanceof XRFrame)) return;
 
     // Get reference space.
@@ -50,7 +44,6 @@ export const VRManager = () => {
     <>
       <VRControls />
       <VRPlayer />
-      {/* <VRHUD /> */}
     </>
   );
 };

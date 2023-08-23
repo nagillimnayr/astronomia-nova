@@ -3,17 +3,10 @@ import {
   Container,
   Text,
   SVG,
-  ContainerNode,
+  type ContainerNode,
   Object,
-  noAnimation,
 } from '@coconut-xr/koestlich';
-import {
-  Glass,
-  Button,
-  IconButton,
-  List,
-  ListItem,
-} from '@coconut-xr/apfel-kruemel';
+import { Button, IconButton, List, ListItem } from '@coconut-xr/apfel-kruemel';
 import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   GOLDEN_RATIO,
@@ -26,9 +19,8 @@ import {
 } from '../vr-hud-constants';
 import {
   BoxHelper,
-  ColorRepresentation,
+  type ColorRepresentation,
   Object3D,
-  Vector3,
   type Vector3Tuple,
 } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';

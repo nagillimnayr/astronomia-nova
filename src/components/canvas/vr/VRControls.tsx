@@ -16,11 +16,10 @@ export const VRControls = () => {
   const { vrActor, cameraActor } = MachineContext.useSelector(
     ({ context }) => context
   );
-  const { player, controllers, isPresenting, session } = useXR();
+  const session = useXR(({ session }) => session);
 
   const getXR = useXR(({ get }) => get);
   const getThree = useThree(({ get }) => get);
-  const xr = useThree(({ gl }) => gl.xr);
 
   const pollXRButtons = useCallback(() => {
     // cameraActor.send({ type: 'POLL_XR_BUTTONS' });

@@ -16,9 +16,9 @@ export const VRPlayer = () => {
     ({ context }) => context
   );
   const getXR = useXR(({ get }) => get);
+  const player = useXR(({ player }) => player);
   const getThree = useThree(({ get }) => get);
   const objRef = useRef<Object3D>(null!);
-  const player = useSelector(vrActor, ({ context }) => context.player);
 
   const cameraController = useSelector(
     cameraActor,
