@@ -363,7 +363,7 @@ export const cameraMachine = createMachine(
           // vrHud.position.setZ(VR_HUD_Z_NON_IMMERSIVE);
         }
 
-        const { gl, camera, set } = getThree();
+        const { gl } = getThree();
         const xrCamera = gl.xr.getCamera();
         console.log('gl.xr camera:', gl.xr.getCamera());
 
@@ -372,9 +372,10 @@ export const cameraMachine = createMachine(
           mainCamera.rotation.set(0, 0, 0);
           mainCamera.fov = FOV;
           console.log('mainCamera:', mainCamera);
-          set({ camera: mainCamera });
         }
         if (xrCamera) {
+          console.log('xr camera:', xrCamera);
+          controls?.attachToController(xrCamera);
           xrCamera.rotation.set(0, 0, 0);
           console.log('xr camera:', xrCamera);
         }
