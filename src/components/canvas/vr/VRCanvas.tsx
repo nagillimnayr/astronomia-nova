@@ -6,6 +6,7 @@ import { type PropsWithChildren } from 'react';
 import { VRManager } from './VRManager';
 import { XRCanvas } from '@coconut-xr/natuerlich/defaults';
 import { useEnterXR } from '@coconut-xr/natuerlich/react';
+import { EnterVRButton } from './EnterVRButton';
 
 const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
 
@@ -32,12 +33,7 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
           <VRManager />
         </XRCanvas>
         <div className="absolute bottom-10 right-20 z-20 h-fit w-fit whitespace-nowrap ">
-          <button
-            className="rounded-md border border-white p-2 transition-colors hover:bg-subtle"
-            onClick={enterVR}
-          >
-            Enter VR!
-          </button>
+          <EnterVRButton />
         </div>
       </div>
     </>

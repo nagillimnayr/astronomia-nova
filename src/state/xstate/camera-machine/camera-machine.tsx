@@ -50,8 +50,7 @@ type Context = {
   getThree: () => RootState;
   getXR: () => XRState;
   controls: CameraController | null;
-  niCamera: PerspectiveCamera | null;
-  xrCamera: ArrayCamera | PerspectiveCamera | null;
+  mainCamera: PerspectiveCamera | null;
   focusTarget: Object3D | null;
   observer: Object3D | null;
   refSpace: XRReferenceSpace | null;
@@ -68,8 +67,7 @@ type Events =
   | { type: 'END_XR_SESSION' }
   | { type: 'POLL_XR_BUTTONS' }
   | { type: 'ASSIGN_CONTROLS'; controls: CameraController }
-  | { type: 'ASSIGN_NI_CAMERA'; camera: PerspectiveCamera }
-  | { type: 'ASSIGN_XR_CAMERA'; camera: PerspectiveCamera | ArrayCamera }
+  | { type: 'ASSIGN_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_OBSERVER'; observer: Object3D | null }
   | { type: 'ASSIGN_REF_SPACE'; refSpace: XRReferenceSpace }
   | { type: 'ASSIGN_VR_HUD'; vrHud: Object3D }
@@ -95,8 +93,7 @@ export const cameraMachine = createMachine(
       controls: null,
       getThree: null!,
       getXR: null!,
-      niCamera: null,
-      xrCamera: null,
+      mainCamera: null,
       observer: null,
       focusTarget: null,
       refSpace: null,
@@ -117,18 +114,9 @@ export const cameraMachine = createMachine(
         },
         actions: ['assignControls', 'logEvent', 'initializeControls'],
       },
-
-      ASSIGN_NI_CAMERA: {
+      ASSIGN_CAMERA: {
         actions: [
-          assign({ niCamera: (_, event) => event.camera }),
-          'logEvent',
-          'setCamera',
-          'initializeControls',
-        ],
-      },
-      ASSIGN_XR_CAMERA: {
-        actions: [
-          assign({ xrCamera: (_, event) => event.camera }),
+          assign({ mainCamera: (_, event) => event.camera }),
           'logEvent',
           'setCamera',
           'initializeControls',
@@ -144,7 +132,7 @@ export const cameraMachine = createMachine(
         ],
       },
       ASSIGN_REF_SPACE: {
-        actions: ['logEvent', 'assignRefSpace', 'initRefSpace'],
+        actions: ['logEvent', 'assignRefSpace'],
       },
       ASSIGN_VR_HUD: {
         actions: [
@@ -324,11 +312,11 @@ export const cameraMachine = createMachine(
         controls?.setCamera(camera);
       },
       initializeControls: (context) => {
-        const { controls, niCamera, getThree, vrHud } = context;
+        const { controls, mainCamera, getThree, vrHud } = context;
         if (!controls) return;
 
-        if (niCamera) {
-          controls.setCamera(niCamera);
+        if (mainCamera) {
+          controls.setCamera(mainCamera);
         }
 
         if (getThree) {
@@ -346,7 +334,7 @@ export const cameraMachine = createMachine(
       },
       startXRSession: (context, event) => {
         //
-        const { getThree, controls, xrCamera, vrHud } = context;
+        const { getThree, controls, vrHud } = context;
         if (!controls) {
           console.error('error initializing xr session. Controls are null.');
           return;
@@ -368,7 +356,7 @@ export const cameraMachine = createMachine(
         }
       },
       endXRSession: (context, event) => {
-        const { vrHud, controls, niCamera, xrCamera, getThree } = context;
+        const { vrHud, controls, mainCamera, getThree } = context;
         if (vrHud) {
           console.log('VRHUD:', vrHud);
           vrHud.visible = false;
@@ -376,28 +364,22 @@ export const cameraMachine = createMachine(
         }
 
         const { gl, camera, set } = getThree();
+        const xrCamera = gl.xr.getCamera();
         console.log('gl.xr camera:', gl.xr.getCamera());
 
-        if (niCamera) {
+        if (mainCamera) {
           // Need to reset the FOV because it gets messed up for some reason.
-          niCamera.rotation.set(0, 0, 0);
-          niCamera.fov = FOV;
-          console.log('niCamera:', niCamera);
-          set({ camera: niCamera });
+          mainCamera.rotation.set(0, 0, 0);
+          mainCamera.fov = FOV;
+          console.log('mainCamera:', mainCamera);
+          set({ camera: mainCamera });
         }
         if (xrCamera) {
           xrCamera.rotation.set(0, 0, 0);
           console.log('xr camera:', xrCamera);
         }
       },
-      initRefSpace: (context, event) => {
-        const { getThree } = context;
-        const { refSpace } = event;
-        const xr = getThree().gl.xr;
 
-        // xr.setReferenceSpace(refSpace);
-        // console.log('initial refSpace:', refSpace);
-      },
       attachToTarget: (context, event) => {
         const { controls, focusTarget } = context;
         if (!focusTarget || !controls) return;

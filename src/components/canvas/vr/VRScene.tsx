@@ -27,6 +27,7 @@ import { VRCameraManager } from './VRCameraManager';
 import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
 import { VRStats } from './VRStats';
 import { VRDebugPortal } from '@/simulation/components/HUD/VR-HUD/vr-debug/VRDebugDisplay';
+import { KeyPressControl } from '@/simulation/components/KeyPressControl';
 
 export const VRScene = () => {
   const rootActor = MachineContext.useActorRef();
@@ -83,6 +84,7 @@ export const VRScene = () => {
       <VRStats />
       {/* <VRHud /> */}
       <VRDebugPortal position={[0, 0.5, -2]} scale={0.05} />
+      <KeyPressControl />
     </>
   );
 };

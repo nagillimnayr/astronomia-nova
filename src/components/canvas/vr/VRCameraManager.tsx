@@ -21,6 +21,7 @@ import {
 } from '@coconut-xr/natuerlich/react';
 
 import { Controllers } from '@coconut-xr/natuerlich/defaults';
+import { useSelector } from '@xstate/react';
 
 const _camWorldPos = new Vector3();
 const _arrowDir = new Vector3();
@@ -63,47 +64,42 @@ export const VRCameraManager = ({
 const VRMainCamera = () => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
+  return (
+    <>
+      <VRImmersiveOrigin />
+      <VRNonImmersiveCam />
+    </>
+  );
+};
+
+const VRNonImmersiveCam = () => {
+  const { cameraActor, vrActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+
   const getThree = useThree(({ get }) => get);
 
-  const cameraRef = useRef<PerspectiveCamera>(null!);
+  // Bind to state changes so the camera will reset itself when a session starts or ends.
+  const vrActive = useSelector(vrActor, (state) => state.matches('active'));
 
   return (
     <>
-      {/* <PerspectiveCam
-        makeDefault
-        name="vr-main-camera"
-        ref={(cam) => {
-          if (!cam) return;
-          const camera = cam as PerspectiveCamera;
-          cameraRef.current = camera;
-
-          // Assign camera to state context.
-          cameraActor.send({
-            type: 'ASSIGN_CAMERA',
-            camera,
-          });
-        }}
-        position={[0, 0, 0]}
-        near={0.1}
-        far={1000}
-      /> */}
-      <VRImmersiveOrigin />
       <NonImmersiveCamera
         ref={(camera) => {
           if (!camera) return;
-          camera.name = 'non-immersive-camera';
-          getThree().set({ camera });
+          camera.name = 'main-camera';
+          // getThree().set({ camera });
 
           setTimeout(() => {
             cameraActor.send({
-              type: 'ASSIGN_NI_CAMERA',
+              type: 'ASSIGN_CAMERA',
               camera,
             });
           }, 300);
         }}
         position={[0, 0, 0]}
-      ></NonImmersiveCamera>
-      {/* <arrowHelper
+      >
+        {/* <arrowHelper
         ref={(arrow) => {
           if (!arrow) return;
           const controls = cameraActor.getSnapshot()!.context.controls;
@@ -120,6 +116,7 @@ const VRMainCamera = () => {
           arrow.setLength(3, 0.1 * length, 0.01 * length);
         }}
       /> */}
+      </NonImmersiveCamera>
     </>
   );
 };

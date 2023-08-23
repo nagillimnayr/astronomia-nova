@@ -51,7 +51,7 @@ export const KeyPressControl = () => {
       // }
       case 'c': {
         const { camera } = getThree();
-        console.log('main camera:', camera);
+        console.log('default camera:', camera);
         break;
       }
     }
