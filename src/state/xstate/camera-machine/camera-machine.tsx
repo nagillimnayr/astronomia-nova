@@ -320,20 +320,21 @@ export const cameraMachine = createMachine(
         }
 
         if (getThree) {
+          // Get canvas from store.
           const canvas = getThree().gl.domElement;
           if (canvas && !controls.domElement) {
+            // Pass canvas to controls for setting up event listeners.
             controls.setDomElement(canvas);
           }
         }
 
         if (vrHud) {
-          //
+          // Attach vrHud to controls.
           controls.attachToController(vrHud);
         }
         console.log('controls:', controls);
       },
       startXRSession: (context, event) => {
-        //
         const { getThree, controls, vrHud } = context;
         if (!controls) {
           console.error('error initializing xr session. Controls are null.');
@@ -344,6 +345,7 @@ export const cameraMachine = createMachine(
 
         // Update XR session frustum.
         setTimeout(() => {
+          // Timeout so it doesn't get overwritten.
           const session = xr.getSession();
           void session?.updateRenderState({
             depthNear: NEAR_CLIP,
