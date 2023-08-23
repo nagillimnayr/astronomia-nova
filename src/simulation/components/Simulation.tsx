@@ -35,7 +35,7 @@ const Simulation = ({ children }: SimProps) => {
     <>
       <SolarSystem>{children}</SolarSystem>
 
-      {/* <ambientLight intensity={0.5} /> */}
+      <ambientLight intensity={0.5} />
       <ObservationPoint />
       {/* <Projector /> */}
       <KeyPressControl />
