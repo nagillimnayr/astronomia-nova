@@ -4,15 +4,17 @@ import { DetailsPanel } from './DetailsPanel/DetailsPanel';
 import DouglasLogo from './DouglasLogo';
 import { CamViewPortal } from './CamView/CamViewPortal';
 import Outliner from './Outliner/Outliner';
-import { VRButton } from '@react-three/xr';
 import { SettingsMenu } from './settings/SettingsMenu';
 import { SurfaceViewDialog } from './DetailsPanel/surface-view-dialog/SurfaceViewDialog';
 import { DebugPanel } from './debug/DebugPanel';
+import { ClassNameValue } from 'tailwind-merge';
+import { MouseEventHandler } from 'react';
 
 type Props = {
-  className: string;
+  className?: ClassNameValue;
+  vrButtonClickHandler: MouseEventHandler<HTMLButtonElement>;
 };
-export const HUD = ({ className }: Props) => {
+export const HUD = ({ className, vrButtonClickHandler }: Props) => {
   return (
     <>
       <div
@@ -78,10 +80,12 @@ export const HUD = ({ className }: Props) => {
         {/** VR Button */}
         <div className={'relative col-end-[-2] row-end-[-2]'}>
           <div className="pointer-events-auto absolute bottom-0 right-0 h-fit w-fit">
-            <VRButton
+            <button
               className="select-none rounded-lg border-2 border-white p-2 transition-all hover:bg-subtle hover:bg-opacity-20"
-              style={{}}
-            />
+              onClick={vrButtonClickHandler}
+            >
+              Enter VR!
+            </button>
           </div>
         </div>
 

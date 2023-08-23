@@ -29,7 +29,7 @@ type Context = {
 };
 
 type Events =
-  | { type: 'START_SESSION'; session: XRSession }
+  | { type: 'START_SESSION' }
   | { type: 'END_SESSION' }
   | { type: 'ASSIGN_GET_THREE'; getThree: () => RootState }
   | { type: 'ASSIGN_GET_XR'; getXR: () => XRState }

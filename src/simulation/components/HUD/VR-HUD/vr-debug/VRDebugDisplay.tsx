@@ -25,8 +25,8 @@ export const VRDebugDisplay = ({
         scale={scale}
       >
         {/* <VRDebugPoseDisplay position={[0, 2.5, 0]} /> */}
-        <VRDebugFrustumDisplay position={[0, -0.5, 0]} />
-        <VRDebugEventDisplay position={[0, -3, 0]} />
+        {/* <VRDebugFrustumDisplay position={[0, -0.5, 0]} /> */}
+        {/* <VRDebugEventDisplay position={[0, -3, 0]} /> */}
       </group>
     </>
   );

@@ -12,6 +12,7 @@ export const DebugPanel = () => {
   if (!controller) return;
 
   const camera = controller.camera;
+  if (!camera) return;
   const camRotation = camera.rotation;
   const { x, y, z } = camRotation;
 

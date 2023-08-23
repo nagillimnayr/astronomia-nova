@@ -42,7 +42,6 @@ const FOV = 50;
 type Context = {
   getThree: () => RootState;
   getXR: () => XRState;
-  xrSession: XRSession | null;
   controls: CameraController | null;
   camera: PerspectiveCamera | null;
   focusTarget: Object3D | null;
@@ -57,7 +56,7 @@ type Events =
   | { type: 'UPDATE'; deltaTime: number }
   | { type: 'ASSIGN_GET_THREE'; getThree: () => RootState }
   | { type: 'ASSIGN_GET_XR'; getXR: () => XRState }
-  | { type: 'START_XR_SESSION'; xrSession: XRSession }
+  | { type: 'START_XR_SESSION' }
   | { type: 'END_XR_SESSION' }
   | { type: 'POLL_XR_BUTTONS' }
   | { type: 'ASSIGN_CONTROLS'; controls: CameraController }
@@ -85,7 +84,6 @@ export const cameraMachine = createMachine(
     // Initial context:
     context: () => ({
       controls: null,
-      xrSession: null,
       getThree: null!,
       getXR: null!,
       camera: null,
@@ -107,25 +105,13 @@ export const cameraMachine = createMachine(
         cond: (context, event) => {
           return context.controls !== event.controls;
         },
-        actions: [
-          'assignControls',
-          (context, event) => {
-            console.log(
-              'Assigning camera controls!',
-              context.controls,
-              event.controls
-            );
-          },
-          'initializeControls',
-        ],
+        actions: ['assignControls', 'logEvent', 'initializeControls'],
       },
 
       ASSIGN_CAMERA: {
         actions: [
           assign({ camera: (_, event) => event.camera }),
-          log((context, event) => {
-            return event.camera;
-          }, 'Assign space camera'),
+          'logEvent',
           'initializeControls',
         ],
       },
@@ -133,7 +119,10 @@ export const cameraMachine = createMachine(
         cond: (context, event) => {
           return context.observer !== event.observer;
         },
-        actions: [assign({ observer: (_, event) => event.observer })],
+        actions: [
+          assign({ observer: (_, event) => event.observer }),
+          'logEvent',
+        ],
       },
       ASSIGN_REF_SPACE: {
         actions: ['logEvent', 'assignRefSpace', 'initRefSpace'],
@@ -219,7 +208,6 @@ export const cameraMachine = createMachine(
           START_XR_SESSION: {
             actions: [
               'logEvent',
-              'assignXRSession',
               'startXRSession',
               'setSpaceCamDistance',
               'showVRHud',
@@ -275,7 +263,6 @@ export const cameraMachine = createMachine(
           START_XR_SESSION: {
             actions: [
               'logEvent',
-              'assignXRSession',
               'startXRSession',
               'setSurfaceCamDistance',
               'showVRHud',
@@ -301,9 +288,7 @@ export const cameraMachine = createMachine(
           return event.controls;
         },
       }),
-      assignXRSession: assign({
-        xrSession: (_, { xrSession }) => xrSession,
-      }),
+
       assignRefSpace: assign({
         refSpace: (_, { refSpace }) => refSpace,
       }),
@@ -338,11 +323,22 @@ export const cameraMachine = createMachine(
       },
       startXRSession: (context, event) => {
         //
-        const { xrSession, getThree, controls, vrHud } = context;
-        if (!xrSession || !controls) {
-          console.error('error initializing xr session');
+        const { getThree, controls, vrHud } = context;
+        if (!controls) {
+          console.error('error initializing xr session. Controls are null.');
           return;
         }
+
+        const { xr } = getThree().gl;
+
+        // Update XR session frustum.
+        setTimeout(() => {
+          const session = xr.getSession();
+          void session?.updateRenderState({
+            depthNear: NEAR_CLIP,
+            depthFar: FAR_CLIP,
+          });
+        }, 100);
 
         if (vrHud) {
           vrHud.position.setZ(VR_HUD_Z_IMMERSIVE);
@@ -523,9 +519,6 @@ export const cameraMachine = createMachine(
         const { controls, observer, focusTarget } = context;
         if (!controls || !observer || !focusTarget) return;
         controls.rotation.set(0, 0, 0); // Reset rotation.
-        // Set the camera's up vector to be relative to the surface.
-        // surfaceCamera.up.set(...getLocalUpInWorldCoords(observer));
-        // controls.applyCameraUp();
       },
       applySpaceCamUp: (context) => {
         // Reset up vector of camera.
@@ -559,12 +552,13 @@ export const cameraMachine = createMachine(
           controls.camera.near = NEAR_CLIP;
         }
 
+        const { xr } = context.getThree().gl;
         // Update XR session frustum.
-        // const { session } = context.getXR();
-        // void session?.updateRenderState({
-        //   depthNear: NEAR_CLIP,
-        //   depthFar: FAR_CLIP,
-        // });
+        const session = xr.getSession();
+        void session?.updateRenderState({
+          depthNear: NEAR_CLIP,
+          depthFar: FAR_CLIP,
+        });
       },
       setSurfaceCamDistance: (context) => {
         const { controls, camera: spaceCamera } = context;
@@ -574,12 +568,13 @@ export const cameraMachine = createMachine(
 
         controls.camera.near = SURFACE_NEAR_CLIP;
 
+        const { xr } = context.getThree().gl;
         // Update XR session frustum.
-        // const { session } = context.getXR();
-        // void session?.updateRenderState({
-        //   depthNear: SURFACE_NEAR_CLIP,
-        //   depthFar: FAR_CLIP,
-        // });
+        const session = xr.getSession();
+        void session?.updateRenderState({
+          depthNear: NEAR_CLIP,
+          depthFar: FAR_CLIP,
+        });
       },
       rotateAzimuthal: ({ controls }, event) => {
         if (!controls) return;
