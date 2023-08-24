@@ -180,7 +180,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
           />
         </group>
       </Interactive>
-      <axesHelper args={[10]} ref={axesRef} />
+      {/* <axesHelper args={[10]} ref={axesRef} /> */}
       <Annotation annotation={name} meanRadius={meanRadius} ref={textRef} />
     </group>
   );
