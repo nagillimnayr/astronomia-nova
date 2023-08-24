@@ -34,13 +34,6 @@ export const VRPlayer = () => {
     // Attach the player to the camera.
     cameraController.attachToController(player);
 
-    // Rotate the player so they are facing the correct direction.
-    // const camWorldUp = getLocalUpInWorldCoords(camera);
-    // camera.getWorldDirection(_cameraWorldDirection);
-    // player.up.set(...camWorldUp);
-    // player.getWorldPosition(_worldPos);
-    // _lookPos.addVectors(_worldPos, _cameraWorldDirection);
-    // player.lookAt(_lookPos);
     console.log('Attaching VR Player to camera!', player);
     player.rotation.set(0, 0, 0);
 
@@ -53,10 +46,6 @@ export const VRPlayer = () => {
     );
     console.log('left:', leftController);
     console.log('right:', rightController);
-
-    // controllers.map((controller) => {
-    //   controller.rotation.set(0, 0, 0);
-    // });
   }, [cameraController, controllers, getXR, player]);
   return <></>;
 };
