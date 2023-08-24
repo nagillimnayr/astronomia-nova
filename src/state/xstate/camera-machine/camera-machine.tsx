@@ -347,22 +347,6 @@ export const cameraMachine = createMachine(
             xrCam2.name = 'xrCam2';
             console.log('xrCam1:', xrCam1);
             console.log('xrCam2:', xrCam2);
-
-            xrCam1.getWorldPosition(_xrCam1WorldPos);
-            xrCam2.getWorldPosition(_xrCam2WorldPos);
-            console.log('xrCam1 pos:', _xrCam1WorldPos.toArray());
-            console.log('xrCam2 pos:', _xrCam2WorldPos.toArray());
-            const distance = _xrCam1WorldPos.distanceTo(_xrCam2WorldPos);
-            console.log('xr cam distance:', distance);
-
-            // if (distance > 0.03 * METER) {
-            //   // The two cameras represent the viewer's eyes and are offset horizontally from the position of the XR camera. To account for the distance scaling, we must adjust their positions to be in line with the world scale.
-            //   xrCamera.cameras.forEach((cam) => {
-            //     cam.position.multiplyScalar(METER);
-            //     console.log(cam.position.toArray());
-            //     cam.updateProjectionMatrix();
-            //   });
-            // }
           }
         }, 100);
 
@@ -370,6 +354,13 @@ export const cameraMachine = createMachine(
         if (vrHud) {
           vrHud.position.setZ(VR_HUD_Z_IMMERSIVE);
         }
+
+        const session = xr.getSession();
+        if (!session) return;
+
+        session.inputSources.forEach((inputSource, index) => {
+          console.log(`input source #${index}:`, inputSource);
+        });
       },
       endXRSession: (context, event) => {
         const { vrHud, controls, mainCamera, getThree } = context;
@@ -423,8 +414,8 @@ export const cameraMachine = createMachine(
         const session = xr.getSession();
         if (!session) return;
 
-        const left = session.inputSources[1];
-        const right = session.inputSources[0];
+        const left = session.inputSources[0];
+        const right = session.inputSources[1];
 
         if (!(left instanceof XRInputSource)) return;
         if (!(right instanceof XRInputSource)) return;
@@ -462,8 +453,8 @@ export const cameraMachine = createMachine(
         const session = xr.getSession();
         if (!session) return;
 
-        const left = session.inputSources[1];
-        const right = session.inputSources[0];
+        const left = session.inputSources[0];
+        const right = session.inputSources[1];
 
         if (!(left instanceof XRInputSource)) return;
         if (!(right instanceof XRInputSource)) return;

@@ -11,6 +11,7 @@ import { useController, useXR, useXREvent, XR } from '@react-three/xr';
 import { useCallback, useEffect } from 'react';
 import { FAR_CLIP, NEAR_CLIP } from '../scene-constants';
 import { degToRad } from 'three/src/math/MathUtils';
+import { useSelector } from '@xstate/react';
 
 export const VRControls = () => {
   const rootActor = MachineContext.useActorRef();
@@ -205,35 +206,6 @@ export const VRControls = () => {
     }
   });
 
-  useEffect(() => {
-    const { gl } = getThree();
-    const { xr } = gl;
-    const session = xr.getSession();
-    if (!session) return;
-    // Send event to vrActor so it can be displayed.
-    function handleInputEvent(inputEvent: XRInputSourceEvent) {
-      vrActor.send({ type: 'ASSIGN_INPUT_EVENT', inputEvent });
-    }
-
-    session.addEventListener('select', handleInputEvent);
-    session.addEventListener('squeeze', handleInputEvent);
-
-    function handleEnd() {
-      if (!session) return;
-      session.removeEventListener('select', handleInputEvent);
-      session.removeEventListener('squeeze', handleInputEvent);
-    }
-
-    session.addEventListener('end', handleEnd);
-
-    return () => {
-      handleEnd();
-      if (session) {
-        session.removeEventListener('end', handleEnd);
-      }
-    };
-  }, [getThree, vrActor]);
-
   const deltaNear = 0.01;
   const deltaFar = 100;
   // useXREvent(
@@ -267,6 +239,45 @@ export const VRControls = () => {
   //   },
   //   { handedness: 'right' }
   // );
+
+  return (
+    <>
+      <>
+        <VRInputListener />
+      </>
+    </>
+  );
+};
+
+const VRInputListener = () => {
+  const { vrActor, cameraActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+  const inSession = useSelector(vrActor, (state) => state.matches('active'));
+
+  const getThree = useThree(({ get }) => get);
+
+  useEffect(() => {
+    if (!inSession) return;
+    const { xr } = getThree().gl;
+    const session = xr.getSession();
+    if (!session) return;
+
+    function handleInputEvent(inputEvent: XRInputSourceEvent) {
+      vrActor.send({ type: 'ASSIGN_INPUT_EVENT', inputEvent });
+      console.log(inputEvent);
+    }
+
+    session.addEventListener('select', handleInputEvent);
+    session.addEventListener('squeeze', handleInputEvent);
+
+    return () => {
+      if (session) {
+        session.removeEventListener('select', handleInputEvent);
+        session.removeEventListener('squeeze', handleInputEvent);
+      }
+    };
+  }, [getThree, inSession, vrActor]);
 
   return (
     <>
