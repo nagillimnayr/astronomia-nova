@@ -232,10 +232,10 @@ export const vrMachine = createMachine(
         if (!session) return;
 
         // Reset frustum.
-        void session.updateRenderState({
-          depthNear: DEFAULT_NEAR,
-          depthFar: DEFAULT_FAR,
-        });
+        // void session.updateRenderState({
+        //   depthNear: DEFAULT_NEAR,
+        //   depthFar: DEFAULT_FAR,
+        // });
       },
       resetHud({ vrHud }, event, meta) {
         if (!vrHud) return;
