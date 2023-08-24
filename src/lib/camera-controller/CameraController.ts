@@ -613,22 +613,16 @@ export class CameraController extends Object3D {
     }
 
     radius = radius ?? DEFAULT_RADIUS;
-    console.log('radius:', radius);
     this.setRadiusTarget(radius);
     this.setRadius(radius);
 
     azimuthalAngle = azimuthalAngle ?? DEFAULT_AZIMUTH;
-    console.log('azimuth:', azimuthalAngle);
     this.setAzimuthalAngleTarget(azimuthalAngle);
     this.setAzimuthalAngle(azimuthalAngle);
 
     polarAngle = polarAngle ?? DEFAULT_POLAR;
-    console.log('polar:', polarAngle);
     this.setPolarAngleTarget(polarAngle);
     this.setPolarAngle(polarAngle);
-    console.log('s radius:', this._spherical.radius);
-    console.log('s azimuth:', this._spherical.theta);
-    console.log('s polar:', this._spherical.phi);
   }
 
   /*  End of CameraController class. */
