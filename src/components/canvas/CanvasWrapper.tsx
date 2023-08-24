@@ -18,7 +18,7 @@ import { VRManager } from './vr/VRManager';
 import { Hud, Loader, Preload, Stats } from '@react-three/drei';
 import { VRHUD, VRHud } from '@/simulation/components/HUD/VR-HUD/VRHUD';
 import { VRDebugPortal } from '@/simulation/components/HUD/VR-HUD/vr-debug/VRDebugDisplay';
-import { XR } from '@react-three/xr';
+import { Controllers, XR } from '@react-three/xr';
 
 export const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
 
@@ -88,7 +88,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                     <Scene>{children}</Scene>
                     <Stats />
                     <Perf position={'bottom-left'} />
-
+                    <Controllers />
                     <VRManager />
                     {/* <VRHud /> */}
                     <VRDebugPortal position={[0, 0, -1]} scale={0.05} />

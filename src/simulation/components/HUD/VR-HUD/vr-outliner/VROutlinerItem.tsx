@@ -68,13 +68,13 @@ export const VROutlinerItem = ({
     return new Object3D();
   }, []);
 
-  const buttonRef = useRef<Object3D>(null!);
-  const buttonObj = useMemo(() => {
-    return new Object3D();
-  }, []);
-  buttonRef.current = buttonObj;
+  // const buttonRef = useRef<Object3D>(null!);
+  // const buttonObj = useMemo(() => {
+  //   return new Object3D();
+  // }, []);
+  // buttonRef.current = buttonObj;
 
-  useInteraction(buttonRef, 'onHover');
+  // useInteraction(buttonRef, 'onHover');
 
   return (
     <>
@@ -100,18 +100,18 @@ export const VROutlinerItem = ({
               material={VRHudBGMaterial}
               backgroundColor={colors.background}
             >
-              <Object object={buttonObj} depth={1}>
-                <Button
-                  index={index + 2}
-                  height={'auto'}
-                  flexGrow={1} // Will stretch the button to fill as much space as it can, which will line up the eye icon buttons on the the right side.
-                  onClick={handleClick}
-                >
-                  <Text index={index + 3} fontSize={text.xl}>
-                    {body.name}
-                  </Text>
-                </Button>
-              </Object>
+              {/* <Object object={buttonObj} depth={1}> */}
+              <Button
+                index={index + 2}
+                height={'auto'}
+                flexGrow={1} // Will stretch the button to fill as much space as it can, which will line up the eye icon buttons on the the right side.
+                onClick={handleClick}
+              >
+                <Text index={index + 3} fontSize={text.xl}>
+                  {body.name}
+                </Text>
+              </Button>
+              {/* </Object> */}
               <Container
                 index={index + 4}
                 material={VRHudBGMaterial}

@@ -28,6 +28,7 @@ import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
 import { VRStats } from './VRStats';
 import { VRDebugPortal } from '@/simulation/components/HUD/VR-HUD/vr-debug/VRDebugDisplay';
 import { KeyPressControl } from '@/simulation/components/KeyPressControl';
+import { Controllers } from '@react-three/xr';
 
 export const VRScene = () => {
   const rootActor = MachineContext.useActorRef();
@@ -45,7 +46,6 @@ export const VRScene = () => {
 
   return (
     <>
-      <ImmersiveSessionOrigin position={[0, 0, 0]} />
       <VRCameraManager position={[0, 0, 0]} />
 
       <MockSolarSystem />
@@ -80,7 +80,7 @@ export const VRScene = () => {
         position={[0, 0.5, 0]}
         material-color={'blue'}
       />
-
+      <Controllers />
       <VRStats />
       <VRHud />
       <VRDebugPortal position={[0, 0.5, -2]} scale={0.05} />

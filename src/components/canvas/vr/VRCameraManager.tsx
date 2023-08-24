@@ -10,7 +10,7 @@ import { type Object3DNode, extend, useThree } from '@react-three/fiber';
 import { useRef } from 'react';
 import {
   type Vector3Tuple,
-  type PerspectiveCamera,
+  PerspectiveCamera,
   Group,
   Vector3,
   Scene,
@@ -67,8 +67,23 @@ const VRMainCamera = () => {
 
   return (
     <>
-      <VRImmersiveOrigin />
-      <VRNonImmersiveCam />
+      <PerspectiveCam
+        makeDefault
+        ref={(camera) => {
+          if (!(camera instanceof PerspectiveCamera)) return;
+
+          camera.name = 'main-camera';
+
+          cameraActor.send({
+            type: 'ASSIGN_CAMERA',
+            camera,
+          });
+        }}
+        position={[0, 0, 0]}
+      />
+
+      {/* <VRImmersiveOrigin />
+      <VRNonImmersiveCam /> */}
     </>
   );
 };
