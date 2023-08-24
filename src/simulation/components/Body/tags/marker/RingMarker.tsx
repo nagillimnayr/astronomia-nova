@@ -36,6 +36,7 @@ import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
 import { degToRad } from 'three/src/math/MathUtils';
 import { Annotation } from '../annotation/Annotation';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
+import { Interactive } from '@react-three/xr';
 
 type MarkerProps = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
@@ -56,38 +57,42 @@ export const RingMarker = forwardRef<Mesh, MarkerProps>(function RingMarker(
   const circleRef = useRef<Mesh>(null!);
   const materialRef = useRef<MeshBasicMaterial>(null!);
 
-  const [isHovered, setHovered] = useState<boolean>(false);
-  useCursor(isHovered, 'pointer');
+  // const [isHovered, setHovered] = useState<boolean>(false);
+  // useCursor(isHovered, 'pointer');
 
-  const handleClick = useCallback(
-    (event: ThreeEvent<MouseEvent>) => {
-      event.stopPropagation();
-      const body = bodyRef.current;
-      // console.log('Ring marker click!', body);
-      selectionActor.send({ type: 'SELECT', selection: body });
-    },
-    [bodyRef, selectionActor]
-  );
+  // const handleSelect = useCallback(() => {
+  //   const body = bodyRef.current;
+  //   selectionActor.send({ type: 'SELECT', selection: body });
+  // }, [bodyRef, selectionActor]);
+
+  // const handleClick = useCallback(
+  //   (event: ThreeEvent<MouseEvent>) => {
+  //     event.stopPropagation();
+  //     handleSelect();
+  //   },
+  //   [handleSelect]
+  // );
 
   // const boxHelper = useHelper(sphereRef, BoxHelper);
 
   return (
     <>
+      {/* <Interactive
+        onSelect={handleSelect}
+        onHover={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
+      > */}
       <Circle
         ref={fwdRef}
         args={[1.25]}
-        onClick={handleClick}
-        onPointerOver={() => {
-          setHovered(true);
-        }}
-        onPointerLeave={() => {
-          setHovered(false);
-        }}
+        // onClick={handleClick}
+        // onPointerOver={() => setHovered(true)}
+        // onPointerLeave={() => setHovered(false)}
       >
         {/** Transparent material so that the circle will catch clicks but not be visible. */}
         <MeshDiscardMaterial />
         {/* <meshBasicMaterial side={DoubleSide} opacity={1} transparent /> */}
-        <Ring visible={isVisible} args={[1, 1.25]} onClick={handleClick}>
+        <Ring visible={isVisible} args={[1, 1.25]}>
           <meshBasicMaterial
             ref={materialRef}
             color={'white'}
@@ -97,6 +102,7 @@ export const RingMarker = forwardRef<Mesh, MarkerProps>(function RingMarker(
           {children}
         </Ring>
       </Circle>
+      {/* </Interactive> */}
     </>
   );
 });

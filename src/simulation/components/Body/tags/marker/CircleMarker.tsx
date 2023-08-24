@@ -22,6 +22,7 @@ import {
 
 import { useActor, useSelector } from '@xstate/react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { Interactive, XRInteractionEvent } from '@react-three/xr';
 
 type CircleMarkerProps = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
@@ -41,35 +42,40 @@ export const CircleMarker = forwardRef<Mesh, CircleMarkerProps>(
     const circleRef = useRef<Mesh>(null!);
     const materialRef = useRef<MeshBasicMaterial>(null!);
 
-    const [isHovered, setHovered] = useState<boolean>(false);
-    useCursor(isHovered, 'pointer');
+    // const [isHovered, setHovered] = useState<boolean>(false);
+    // useCursor(isHovered, 'pointer');
 
-    const handleClick = useCallback(
-      (event: ThreeEvent<MouseEvent>) => {
-        event.stopPropagation();
-        // console.log('circle click');
-        const body = bodyRef.current;
-        selectionActor.send({ type: 'SELECT', selection: body });
-      },
-      [bodyRef, selectionActor]
-    );
+    // const handleSelect = useCallback(() => {
+    //   const body = bodyRef.current;
+    //   selectionActor.send({ type: 'SELECT', selection: body });
+    // }, [bodyRef, selectionActor]);
+
+    // const handleClick = useCallback(
+    //   (event: ThreeEvent<MouseEvent>) => {
+    //     event.stopPropagation();
+    //     handleSelect();
+    //   },
+    //   [handleSelect]
+    // );
 
     return (
       <>
+        {/* <Interactive onSelect={handleSelect}> */}
         <Circle
           ref={fwdRef}
           args={[1]}
           // visible={isVisible}
-          onClick={handleClick}
+          // onClick={handleClick}
+          // onPointerEnter={() => setHovered(true)}
+          // onPointerLeave={() => setHovered(false)}
         >
           <meshBasicMaterial
             ref={materialRef}
             side={DoubleSide}
-            // opacity={1}
-            // transparent
             color={color}
           />
         </Circle>
+        {/* </Interactive> */}
       </>
     );
   }

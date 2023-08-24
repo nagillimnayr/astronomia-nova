@@ -1,17 +1,25 @@
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { MutableRefObject, useMemo, useRef } from 'react';
+import {
+  MutableRefObject,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Annotation } from '@/simulation/components/Body/tags/annotation/Annotation';
 import { RingMarker } from '@/simulation/components/Body/tags/marker/RingMarker';
 import { CircleMarker } from '@/simulation/components/Body/tags/marker/CircleMarker';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { colorMap } from '@/simulation/utils/color-map';
-import { useFrame, useThree } from '@react-three/fiber';
+import { ThreeEvent, useFrame, useThree } from '@react-three/fiber';
 import { AxesHelper, Group, Mesh, Object3D, Vector3 } from 'three';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import { clamp } from 'lodash';
 import { DIST_MULT, ORIGIN, Y_AXIS } from '@/simulation/utils/constants';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
+import { Interactive } from '@react-three/xr';
+import { useCursor } from '@react-three/drei';
 
 const threshold = 0.02;
 
@@ -26,7 +34,9 @@ type Props = {
   meanRadius: number;
 };
 export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const { cameraActor, selectionActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
 
   const getThree = useThree(({ get }) => get);
 
@@ -39,7 +49,24 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   const textRef = useRef<Object3D>(null!);
   const ringRef = useRef<Mesh>(null!);
   const circleRef = useRef<Mesh>(null!);
+  const markerRef = useRef<Group>(null!);
   const axesRef = useRef<AxesHelper>(null!);
+
+  const [isHovered, setHovered] = useState<boolean>(false);
+  useCursor(isHovered, 'pointer');
+
+  const handleSelect = useCallback(() => {
+    const body = bodyRef.current;
+    selectionActor.send({ type: 'SELECT', selection: body });
+  }, [bodyRef, selectionActor]);
+
+  const handleClick = useCallback(
+    (event: ThreeEvent<MouseEvent>) => {
+      event.stopPropagation();
+      handleSelect();
+    },
+    [handleSelect]
+  );
 
   useFrame(({ camera, gl }, _, frame) => {
     const body = bodyRef.current;
@@ -89,6 +116,8 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // Get distance to camera.
     const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
 
+    const hoverFactor = isHovered ? 1.5 : 1;
+
     const text = textRef.current;
     const textFactor = Math.max(1e-5, distanceToCamera / 60);
     // Scale the annotation so that it maintains its screen-size.
@@ -96,20 +125,15 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // Clamp the y-position of the annotation so that it doesn't go inside of the body.
     const yPos = clamp(-1.25 * textFactor, -(meanRadius / DIST_MULT) * 1.5);
     // Set position so that the annotation always appears below the body and outside of the marker.
-    text?.position.set(0, yPos, 0);
+    text?.position.set(0, yPos * hoverFactor, 0);
 
-    const ring = ringRef.current;
-    // If too close to parent, minimize marker scale.
-    const ringFactor = Math.max(1e-5, distanceToCamera / 100);
-    // Scale relative to distance from camera.
-    ring.scale.setScalar(ringFactor);
+    const markerFactor = Math.max(1e-5, distanceToCamera / 125);
 
-    const circle = circleRef.current;
-    const circleFactor = Math.max(1e-5, distanceToCamera / 150);
-    // Scale relative to distance from camera.
-    circle.scale.setScalar(circleFactor);
+    const marker = markerRef.current;
+    marker.scale.setScalar(markerFactor * hoverFactor);
+
     if (axesRef.current) {
-      axesRef.current.scale.setScalar(circleFactor);
+      axesRef.current.scale.setScalar(markerFactor);
     }
 
     // Since the local coordinates will have the parent at the origin, we can use the body's local coords to get the distance to the parent.
@@ -134,14 +158,27 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
 
   return (
     <group ref={groupRef}>
-      <RingMarker bodyRef={bodyRef} ref={ringRef} />
-      <CircleMarker
-        bodyRef={bodyRef}
-        color={color ?? 'white'}
-        ref={circleRef}
-      />
-      <Annotation annotation={name} meanRadius={meanRadius} ref={textRef} />
+      <Interactive
+        onSelect={handleSelect}
+        onHover={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
+      >
+        <group
+          ref={markerRef}
+          onClick={handleClick}
+          onPointerOver={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+        >
+          <RingMarker bodyRef={bodyRef} ref={ringRef} />
+          <CircleMarker
+            bodyRef={bodyRef}
+            color={color ?? 'white'}
+            ref={circleRef}
+          />
+        </group>
+      </Interactive>
       <axesHelper args={[10]} ref={axesRef} />
+      <Annotation annotation={name} meanRadius={meanRadius} ref={textRef} />
     </group>
   );
 };
