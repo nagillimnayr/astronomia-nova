@@ -46,6 +46,7 @@ const VR_HUD_Z_NON_IMMERSIVE = -5;
 // const VR_HUD_Z_IMMERSIVE = -2.5;
 const VR_HUD_Z_IMMERSIVE = -3;
 
+// Default FOV.
 const FOV = 50;
 
 type Context = {
@@ -65,7 +66,6 @@ type Events =
   | { type: 'ASSIGN_GET_THREE'; getThree: () => RootState }
   | { type: 'START_XR_SESSION' }
   | { type: 'END_XR_SESSION' }
-  | { type: 'POLL_XR_BUTTONS' }
   | { type: 'ASSIGN_CONTROLS'; controls: CameraController }
   | { type: 'ASSIGN_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_OBSERVER'; observer: Object3D | null }
@@ -150,10 +150,6 @@ export const cameraMachine = createMachine(
         actions: ['addRadialZoom'],
       },
 
-      POLL_XR_BUTTONS: {
-        actions: ['pollXRButtons'],
-      },
-
       END_XR_SESSION: {
         actions: ['logEvent', 'endXRSession', 'hideVRHud'],
       },
@@ -178,9 +174,7 @@ export const cameraMachine = createMachine(
         on: {
           // UPDATE event.
           UPDATE: {
-            internal: true,
-            // Run action on self-transition.
-            actions: ['pollXRInput', 'updateCamera', 'updateSpaceView'],
+            actions: ['updateCamera', 'updateSpaceView'],
           },
           SET_TARGET: {
             internal: true,
@@ -226,13 +220,7 @@ export const cameraMachine = createMachine(
           // UPDATE event:
           UPDATE: {
             internal: true,
-            // Run action on self-transition.
-            actions: [
-              'pollXRInput',
-              'updateCamera',
-              'updateSurfaceView',
-              'applySurfaceCamUp',
-            ],
+            actions: ['updateCamera', 'updateSurfaceView', 'applySurfaceCamUp'],
           },
           SET_TARGET: {
             internal: true,
@@ -346,8 +334,8 @@ export const cameraMachine = createMachine(
             const [xrCam1, xrCam2] = xrCamera.cameras;
             xrCam1.name = 'xrCam1';
             xrCam2.name = 'xrCam2';
-            console.log('xrCam1:', xrCam1);
-            console.log('xrCam2:', xrCam2);
+            // console.log('xrCam1:', xrCam1);
+            // console.log('xrCam2:', xrCam2);
           }
         }, 100);
 
@@ -409,92 +397,6 @@ export const cameraMachine = createMachine(
 
         controls.camera.up.copy(controls.up);
       },
-      pollXRInput: (context) => {
-        // Poll XR controllers for thumbstick input.
-        const { controls, getThree } = context;
-        if (!controls) return;
-        const { gl } = getThree();
-        const { xr } = gl;
-        if (!xr.enabled || !xr.isPresenting) return;
-        const session = xr.getSession();
-        if (!session) return;
-
-        const left = session.inputSources[0];
-        const right = session.inputSources[1];
-
-        if (!(left instanceof XRInputSource)) return;
-        if (!(right instanceof XRInputSource)) return;
-
-        const leftGamepad = left.gamepad;
-        if (!leftGamepad) return;
-        const rightGamepad = right.gamepad;
-        if (!rightGamepad) return;
-
-        const leftAxes = leftGamepad.axes;
-        const x = leftAxes[2];
-        const zoom = leftAxes[3];
-
-        const rightAxes = rightGamepad.axes;
-        const azimuthal = rightAxes[2];
-        const polar = rightAxes[3];
-
-        if (azimuthal) {
-          controls.addAzimuthalRotation(azimuthal * 2);
-        }
-        if (polar) {
-          controls.addPolarRotation(polar * 2);
-        }
-        if (zoom) {
-          controls.addRadialZoom(zoom / 4);
-        }
-      },
-      pollXRButtons: (context) => {
-        // Poll XR controllers for button input.
-        const { controls, getThree } = context;
-        if (!controls) return;
-        const { gl } = getThree();
-        const { xr } = gl;
-        if (!xr.enabled || !xr.isPresenting) return;
-        const session = xr.getSession();
-        if (!session) return;
-
-        const left = session.inputSources[0];
-        const right = session.inputSources[1];
-
-        if (!(left instanceof XRInputSource)) return;
-        if (!(right instanceof XRInputSource)) return;
-
-        const leftGamepad = left.gamepad;
-        if (!leftGamepad) return;
-        const rightGamepad = right.gamepad;
-        if (!rightGamepad) return;
-
-        // Poll for button input.
-        const leftButtons = leftGamepad.buttons;
-        const rightButtons = rightGamepad.buttons;
-
-        const buttonA = rightButtons.at(4);
-        const buttonB = rightButtons.at(5);
-
-        const buttonX = leftButtons.at(4);
-        const buttonY = leftButtons.at(5);
-
-        if (buttonA && buttonA.pressed) {
-          console.log('button A');
-        }
-
-        if (buttonB && buttonB.pressed) {
-          console.log('button B');
-        }
-
-        if (buttonX && buttonX.pressed) {
-          console.log('button X');
-        }
-
-        if (buttonY && buttonY.pressed) {
-          console.log('button Y');
-        }
-      },
 
       updateCamera: (context, event) => {
         const { controls } = context;
@@ -518,10 +420,9 @@ export const cameraMachine = createMachine(
       enterSurfaceView: (context, event) => {
         const { controls, observer, focusTarget } = context;
         if (!controls || !observer || !focusTarget) return;
-        // observer.getWorldPosition(_observerWorldPos);
-        // controls.camera = surfaceCamera;
 
-        // console.log('surface cam:', surfaceCamera);
+        // Set polar angle to be horizontal relative to the surface.
+        controls.setPolarAngleTarget(PI_OVER_TWO);
       },
       updateSurfaceView: (context, event) => {
         const { controls, observer } = context;

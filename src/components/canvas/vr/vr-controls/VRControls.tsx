@@ -9,9 +9,12 @@ import {
 import { useFrame, useThree } from '@react-three/fiber';
 import { useController, useXR, useXREvent, XR } from '@react-three/xr';
 import { useCallback, useEffect } from 'react';
-import { FAR_CLIP, NEAR_CLIP } from '../scene-constants';
+import { FAR_CLIP, NEAR_CLIP } from '../../scene-constants';
 import { degToRad } from 'three/src/math/MathUtils';
 import { useSelector } from '@xstate/react';
+import { getGamepads, getXRButtons } from '@/lib/xr/pollXRInputSources';
+import { VRInputListener } from './VRInputListener';
+import { VRThumbstickControls } from './VRThumbstickControls';
 
 export const VRControls = () => {
   const rootActor = MachineContext.useActorRef();
@@ -32,58 +35,46 @@ export const VRControls = () => {
     const session = xr.getSession();
     if (!session) return;
 
-    const left = session.inputSources[1];
-    const right = session.inputSources[0];
+    const { leftGamepad, rightGamepad } = getGamepads(session);
 
-    if (!(left instanceof XRInputSource)) return;
-    if (!(right instanceof XRInputSource)) return;
+    // Poll left gamepad.
+    if (leftGamepad) {
+      const [buttonX, buttonY] = getXRButtons(leftGamepad);
+      if (buttonX && buttonX.pressed) {
+        console.log('button X');
 
-    const leftGamepad = left.gamepad;
-    if (!leftGamepad) return;
-    const rightGamepad = right.gamepad;
-    if (!rightGamepad) return;
+        const vrHud = cameraActor.getSnapshot()!.context.vrHud;
 
-    // Poll for button input.
-    const leftButtons = leftGamepad.buttons;
-    const rightButtons = rightGamepad.buttons;
+        // Move vrHud closer.
+        if (!vrHud) return;
+        vrHud.translateZ(0.1);
+      }
 
-    const buttonA = rightButtons.at(4);
-    const buttonB = rightButtons.at(5);
+      if (buttonY && buttonY.pressed) {
+        console.log('button Y');
 
-    const buttonX = leftButtons.at(4);
-    const buttonY = leftButtons.at(5);
+        const vrHud = cameraActor.getSnapshot()!.context.vrHud;
 
-    if (buttonA && buttonA.pressed) {
-      // rootActor.send({ type: 'ADVANCE_DAY' });
-      console.log('button A');
-
-      const vrHud = cameraActor.getSnapshot()!.context.vrHud;
-
-      // Move vrHud closer.
-      if (!vrHud) return;
-      vrHud.translateZ(0.1);
+        // Move vrHud back.
+        if (!vrHud) return;
+        vrHud.translateZ(-0.1);
+      }
     }
 
-    if (buttonB && buttonB.pressed) {
-      console.log('button B');
-      const vrHud = cameraActor.getSnapshot()!.context.vrHud;
+    // Poll right gamepad.
+    if (rightGamepad) {
+      const [buttonA, buttonB] = getXRButtons(rightGamepad);
+      if (buttonA && buttonA.pressed) {
+        console.log('button A');
+        rootActor.send({ type: 'ADVANCE_DAY' });
+      }
 
-      // Move vrHud back.
-      if (!vrHud) return;
-      vrHud.translateZ(-0.1);
+      if (buttonB && buttonB.pressed) {
+        console.log('button B');
+        rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
+      }
     }
-
-    if (buttonX && buttonX.pressed) {
-      // rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
-      console.log('button X');
-      // vrActor.send({ type: 'ADJUST_REF_SPACE_TO_POSE' });
-    }
-
-    if (buttonY && buttonY.pressed) {
-      console.log('button Y');
-      // vrActor.send({ type: 'RESET_FRUSTUM' });
-    }
-  }, [cameraActor, getThree]);
+  }, [cameraActor, getThree, rootActor]);
   useInterval(pollXRButtons, 250); // Poll buttons every 0.25 seconds.
 
   useEventListener('keypress', (event) => {
@@ -243,45 +234,9 @@ export const VRControls = () => {
   return (
     <>
       <>
+        <VRThumbstickControls />
         <VRInputListener />
       </>
-    </>
-  );
-};
-
-const VRInputListener = () => {
-  const { vrActor, cameraActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
-  const inSession = useSelector(vrActor, (state) => state.matches('active'));
-
-  const getThree = useThree(({ get }) => get);
-
-  useEffect(() => {
-    if (!inSession) return;
-    const { xr } = getThree().gl;
-    const session = xr.getSession();
-    if (!session) return;
-
-    function handleInputEvent(inputEvent: XRInputSourceEvent) {
-      vrActor.send({ type: 'ASSIGN_INPUT_EVENT', inputEvent });
-      console.log(inputEvent);
-    }
-
-    session.addEventListener('select', handleInputEvent);
-    session.addEventListener('squeeze', handleInputEvent);
-
-    return () => {
-      if (session) {
-        session.removeEventListener('select', handleInputEvent);
-        session.removeEventListener('squeeze', handleInputEvent);
-      }
-    };
-  }, [getThree, inSession, vrActor]);
-
-  return (
-    <>
-      <></>
     </>
   );
 };

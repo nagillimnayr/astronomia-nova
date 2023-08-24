@@ -1,4 +1,4 @@
-import { VRControls } from './VRControls';
+import { VRControls } from './vr-controls/VRControls';
 import { VRPlayer } from './VRPlayer';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEffect } from 'react';
