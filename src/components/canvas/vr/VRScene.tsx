@@ -82,7 +82,7 @@ export const VRScene = () => {
       />
 
       <VRStats />
-      {/* <VRHud /> */}
+      <VRHud />
       <VRDebugPortal position={[0, 0.5, -2]} scale={0.05} />
       <KeyPressControl />
     </>

@@ -36,6 +36,7 @@ import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { Object3D } from 'three';
 import { VRHudBGMaterial } from '../vr-materials/VRHudBGMaterial';
+import { useInteraction } from '@react-three/xr';
 
 type VROutlinerItemProps = {
   body: KeplerBody;
@@ -66,6 +67,15 @@ export const VROutlinerItem = ({
   const obj = useMemo(() => {
     return new Object3D();
   }, []);
+
+  const buttonRef = useRef<Object3D>(null!);
+  const buttonObj = useMemo(() => {
+    return new Object3D();
+  }, []);
+  buttonRef.current = buttonObj;
+
+  useInteraction(buttonRef, 'onHover');
+
   return (
     <>
       <Object object={obj} depth={1}>
@@ -90,16 +100,18 @@ export const VROutlinerItem = ({
               material={VRHudBGMaterial}
               backgroundColor={colors.background}
             >
-              <Button
-                index={index + 2}
-                height={'auto'}
-                flexGrow={1} // Will stretch the button to fill as much space as it can, which will line up the eye icon buttons on the the right side.
-                onClick={handleClick}
-              >
-                <Text index={index + 3} fontSize={text.xl}>
-                  {body.name}
-                </Text>
-              </Button>
+              <Object object={buttonObj} depth={1}>
+                <Button
+                  index={index + 2}
+                  height={'auto'}
+                  flexGrow={1} // Will stretch the button to fill as much space as it can, which will line up the eye icon buttons on the the right side.
+                  onClick={handleClick}
+                >
+                  <Text index={index + 3} fontSize={text.xl}>
+                    {body.name}
+                  </Text>
+                </Button>
+              </Object>
               <Container
                 index={index + 4}
                 material={VRHudBGMaterial}

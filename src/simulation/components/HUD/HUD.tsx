@@ -10,6 +10,7 @@ import { DebugPanel } from './debug/DebugPanel';
 import { ClassNameValue } from 'tailwind-merge';
 
 import { EnterVRButton } from '@/components/canvas/vr/EnterVRButton';
+import { VRButton } from '@react-three/xr';
 
 type Props = {
   className?: ClassNameValue;
@@ -80,7 +81,8 @@ export const HUD = ({ className }: Props) => {
         {/** VR Button */}
         <div className={'relative col-end-[-2] row-end-[-2]'}>
           <div className="pointer-events-auto absolute bottom-0 right-1/2 h-fit w-fit translate-x-1/2">
-            <EnterVRButton />
+            <VRButton className="whitespace-nowrap hover:bg-subtle" />
+            {/* <EnterVRButton /> */}
           </div>
         </div>
 
