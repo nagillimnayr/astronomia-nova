@@ -8,7 +8,7 @@ import { useContext, useEffect, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Object3DNode, extend, useThree } from '@react-three/fiber';
 import { CameraController } from '@/lib/camera-controller/CameraController';
-import { PI_OVER_TWO } from '@/simulation/utils/constants';
+import { PI_OVER_THREE, PI_OVER_TWO } from '@/simulation/utils/constants';
 import {
   ImmersiveSessionOrigin,
   NonImmersiveCamera,
@@ -18,6 +18,10 @@ import { FAR_CLIP, NEAR_CLIP } from '@/components/canvas/scene-constants';
 import { Controllers } from '@coconut-xr/natuerlich/defaults';
 import { useSelector } from '@xstate/react';
 import { VRSessionOrigin } from '@/components/canvas/vr/VRSessionOrigin';
+
+const startRadius = 2e11;
+const startPolar = degToRad(75);
+const startAzimuth = 0;
 
 extend({ CameraController });
 declare module '@react-three/fiber' {
@@ -33,16 +37,14 @@ export const CameraManager = () => {
   return (
     <>
       <cameraController
+        args={[undefined, startRadius, startAzimuth, startPolar]}
         ref={(controller) => {
           if (!controller) return;
           controllerRef.current = controller;
           cameraActor.send({ type: 'ASSIGN_CONTROLS', controls: controller });
-          controller.setPolarAngle(PI_OVER_TWO);
-          controller.setRadius(1e3);
         }}
       />
       <MainCamera />
-      <VRSessionOrigin />
     </>
   );
 };

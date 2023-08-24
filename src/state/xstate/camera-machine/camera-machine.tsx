@@ -315,6 +315,7 @@ export const cameraMachine = createMachine(
           // Attach vrHud to controls.
           controls.attachToController(vrHud);
         }
+
         console.log('controls:', controls);
       },
       startXRSession: (context, event) => {
@@ -327,14 +328,14 @@ export const cameraMachine = createMachine(
         const { xr } = getThree().gl;
 
         // Update XR session frustum.
-        setTimeout(() => {
-          // Timeout so it doesn't get overwritten.
-          const session = xr.getSession();
-          void session?.updateRenderState({
-            depthNear: NEAR_CLIP,
-            depthFar: FAR_CLIP,
-          });
-        }, 100);
+        // setTimeout(() => {
+        //   // Timeout so it doesn't get overwritten.
+        //   const session = xr.getSession();
+        //   void session?.updateRenderState({
+        //     depthNear: NEAR_CLIP,
+        //     depthFar: FAR_CLIP,
+        //   });
+        // }, 100);
 
         // XR camera may not be set yet, so set timeout.
         setTimeout(() => {
@@ -359,7 +360,11 @@ export const cameraMachine = createMachine(
         if (!session) return;
 
         session.inputSources.forEach((inputSource, index) => {
-          console.log(`input source #${index}:`, inputSource);
+          console.log(
+            `input source #${index}:`,
+            inputSource.handedness,
+            inputSource
+          );
         });
       },
       endXRSession: (context, event) => {

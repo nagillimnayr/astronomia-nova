@@ -7,7 +7,7 @@ import {
   Vector3,
   Spherical,
 } from 'three';
-import { damp, degToRad, clamp } from 'three/src/math/MathUtils';
+import { clamp } from 'three/src/math/MathUtils';
 import {
   TWO_PI,
   PI_OVER_TWO,
@@ -34,6 +34,10 @@ const MAX_POLAR_ANGLE_BOUND = PI - EPSILON;
 const MIN_AZIMUTHAL_ANGLE_BOUND = 0;
 const MAX_AZIMUTHAL_ANGLE_BOUND = TWO_PI;
 
+const DEFAULT_RADIUS = 10;
+const DEFAULT_AZIMUTH = 0;
+const DEFAULT_POLAR = PI_OVER_THREE;
+
 const _v1 = new Vector3();
 const _v2 = new Vector3();
 const _v3 = new Vector3();
@@ -49,14 +53,14 @@ export class CameraController extends Object3D {
   private _domElement: HTMLElement | null = null;
 
   private _spherical = new Spherical();
-  private _sphericalTarget = new Spherical(METER * 1e11, PI_OVER_THREE, 0);
+  private _sphericalTarget = new Spherical();
 
   private _pivotPoint = new Object3D();
   private _attachPoint = new Object3D();
 
   private _radiusVelocity = 0;
   private _minRadius = MIN_RADIUS_BOUND;
-  private _maxRadius = 1e10;
+  private _maxRadius = MAX_RADIUS_BOUND;
   private _zoomSpeed = 2;
   private _zoomFactor = 1e-1;
 
@@ -70,24 +74,6 @@ export class CameraController extends Object3D {
 
   private _rotationSpeed = 0.75;
   private _smoothTime = 0.3;
-
-  constructor(camera?: PerspectiveCamera) {
-    super();
-    this.add(this._pivotPoint);
-    this._pivotPoint.add(this._attachPoint);
-    this.name = 'camera-controller';
-    this._pivotPoint.name = 'camera-pivot-point';
-    this._attachPoint.name = 'camera-attach-point';
-
-    if (camera) {
-      this._camera = camera;
-      const parent = camera.parent;
-      this._attachPoint.add(camera);
-      if (parent) {
-        parent.add(this);
-      }
-    }
-  }
 
   update(deltaTime: number) {
     // if (!this._needsUpdate && !force) return;
@@ -167,12 +153,16 @@ export class CameraController extends Object3D {
     // Adjust to be within min/max range.
     this._spherical.radius = clamp(radius, this._minRadius, this._maxRadius);
   }
-  setTargetRadius(radiusTarget: number) {
+  setRadiusTarget(radiusTarget: number) {
     this._sphericalTarget.radius = clamp(
       radiusTarget,
       this._minRadius,
       this._maxRadius
     );
+  }
+  // Alias for setRadiusTarget.
+  setTargetRadius(radiusTarget: number) {
+    this.setRadiusTarget(radiusTarget);
   }
   addRadialZoom(zoom: number) {
     if (approxZero(zoom)) return;
@@ -221,6 +211,13 @@ export class CameraController extends Object3D {
       this._maxAzimuthalAngle
     );
     this._spherical.theta = adjustedAngle;
+  }
+  setAzimuthalAngleTarget(polarAngleTarget: number) {
+    this._sphericalTarget.theta = clamp(
+      polarAngleTarget,
+      this._minAzimuthalAngle,
+      this._maxAzimuthalAngle
+    );
   }
   private _normalizeAzimuthalAngle() {
     const deltaTheta = this._sphericalTarget.theta - this._spherical.theta;
@@ -592,5 +589,47 @@ export class CameraController extends Object3D {
     // Connect event listeners.
     this.connectEventListeners();
   }
-  //
+
+  constructor(
+    camera?: PerspectiveCamera,
+    radius?: number,
+    azimuthalAngle?: number,
+    polarAngle?: number
+  ) {
+    super();
+    this.add(this._pivotPoint);
+    this._pivotPoint.add(this._attachPoint);
+    this.name = 'camera-controller';
+    this._pivotPoint.name = 'camera-pivot-point';
+    this._attachPoint.name = 'camera-attach-point';
+
+    if (camera) {
+      this._camera = camera;
+      const parent = camera.parent;
+      this._attachPoint.add(camera);
+      if (parent) {
+        parent.add(this);
+      }
+    }
+
+    radius = radius ?? DEFAULT_RADIUS;
+    console.log('radius:', radius);
+    this.setRadiusTarget(radius);
+    this.setRadius(radius);
+
+    azimuthalAngle = azimuthalAngle ?? DEFAULT_AZIMUTH;
+    console.log('azimuth:', azimuthalAngle);
+    this.setAzimuthalAngleTarget(azimuthalAngle);
+    this.setAzimuthalAngle(azimuthalAngle);
+
+    polarAngle = polarAngle ?? DEFAULT_POLAR;
+    console.log('polar:', polarAngle);
+    this.setPolarAngleTarget(polarAngle);
+    this.setPolarAngle(polarAngle);
+    console.log('s radius:', this._spherical.radius);
+    console.log('s azimuth:', this._spherical.theta);
+    console.log('s polar:', this._spherical.phi);
+  }
+
+  /*  End of CameraController class. */
 }
