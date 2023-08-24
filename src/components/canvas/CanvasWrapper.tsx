@@ -16,7 +16,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import Scene from './Scene';
 import { VRManager } from './vr/VRManager';
 import { Hud, Loader, Preload, Stats } from '@react-three/drei';
-import { VRHUD, VRHud } from '@/simulation/components/HUD/VR-HUD/VRHUD';
+import { VRHUD, VRHud } from '@/simulation/components/HUD/VR-HUD/VRHud';
 import { VRDebugPortal } from '@/simulation/components/HUD/VR-HUD/vr-debug/VRDebugDisplay';
 import { Controllers, XR } from '@react-three/xr';
 

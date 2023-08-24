@@ -3,7 +3,7 @@ import { VRPlayer } from './VRPlayer';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { VRHUD } from '@/simulation/components/HUD/VR-HUD/VRHUD';
+import { VRHUD } from '@/simulation/components/HUD/VR-HUD/VRHud';
 import { VRCameraManager } from './VRCameraManager';
 import { useSessionChange, useXR } from '@coconut-xr/natuerlich/react';
 
