@@ -45,7 +45,6 @@ export const VRScene = () => {
 
   return (
     <>
-      <ImmersiveSessionOrigin position={[0, 0, 0]} />
       <VRCameraManager position={[0, 0, 0]} />
 
       <MockSolarSystem />

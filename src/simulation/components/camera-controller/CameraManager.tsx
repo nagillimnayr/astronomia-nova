@@ -42,7 +42,7 @@ export const CameraManager = () => {
         }}
       />
       <MainCamera />
-      <VRSessionOrigin />
+      {/* <VRSessionOrigin /> */}
     </>
   );
 };

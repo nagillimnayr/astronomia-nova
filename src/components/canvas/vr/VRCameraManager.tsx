@@ -10,7 +10,7 @@ import { type Object3DNode, extend, useThree } from '@react-three/fiber';
 import { useRef } from 'react';
 import {
   type Vector3Tuple,
-  type PerspectiveCamera,
+  PerspectiveCamera,
   Group,
   Vector3,
   Scene,
@@ -63,12 +63,31 @@ export const VRCameraManager = ({
 };
 
 const VRMainCamera = () => {
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const { cameraActor, vrActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
 
+  // Name for identifying the camera.
+  const name = 'main-camera';
+
+  // Bind to state changes so the camera will reset itself when a session starts or ends.
+  const vrActive = useSelector(vrActor, (state) => state.matches('active'));
   return (
     <>
-      <VRImmersiveOrigin />
-      <VRNonImmersiveCam />
+      <>
+        <PerspectiveCam
+          makeDefault
+          name={name}
+          ref={(camera) => {
+            if (camera instanceof PerspectiveCamera) {
+              // Send camera to cameraActor.
+              cameraActor.send({ type: 'ASSIGN_CAMERA', camera });
+            }
+          }}
+        ></PerspectiveCam>
+      </>
+      {/* <VRImmersiveOrigin />
+      <VRNonImmersiveCam /> */}
     </>
   );
 };
