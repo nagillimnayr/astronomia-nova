@@ -7,10 +7,10 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { colorMap } from '@/simulation/utils/color-map';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Group, Mesh, Object3D, Vector3 } from 'three';
+import { AxesHelper, Group, Mesh, Object3D, Vector3 } from 'three';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import { clamp } from 'lodash';
-import { DIST_MULT } from '@/simulation/utils/constants';
+import { DIST_MULT, ORIGIN, Y_AXIS } from '@/simulation/utils/constants';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 
 const threshold = 0.02;
@@ -39,6 +39,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   const textRef = useRef<Object3D>(null!);
   const ringRef = useRef<Mesh>(null!);
   const circleRef = useRef<Mesh>(null!);
+  const axesRef = useRef<AxesHelper>(null!);
 
   useFrame(({ camera, gl }, _, frame) => {
     const body = bodyRef.current;
@@ -107,6 +108,9 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     const circleFactor = Math.max(1e-5, distanceToCamera / 150);
     // Scale relative to distance from camera.
     circle.scale.setScalar(circleFactor);
+    if (axesRef.current) {
+      axesRef.current.scale.setScalar(circleFactor);
+    }
 
     // Since the local coordinates will have the parent at the origin, we can use the body's local coords to get the distance to the parent.
     const distanceToParent = body.position.length();
@@ -137,6 +141,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
         ref={circleRef}
       />
       <Annotation annotation={name} meanRadius={meanRadius} ref={textRef} />
+      <axesHelper args={[10]} ref={axesRef} />
     </group>
   );
 };
