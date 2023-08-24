@@ -81,7 +81,6 @@ export const VRScene = () => {
         material-color={'blue'}
       />
       <Controllers />
-      <VRStats />
       <VRHud />
       <VRDebugPortal position={[0, 0.5, -2]} scale={0.05} />
       <KeyPressControl />
