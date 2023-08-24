@@ -18,15 +18,8 @@ import { VRManager } from './vr/VRManager';
 import { Hud, Loader, Preload, Stats } from '@react-three/drei';
 import { VRHUD, VRHud } from '@/simulation/components/HUD/VR-HUD/VRHUD';
 import { VRDebugPortal } from '@/simulation/components/HUD/VR-HUD/vr-debug/VRDebugDisplay';
-import { XR } from '@react-three/xr';
-
-export const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
-
-export const sessionOptions: XRSessionInit = {
-  requiredFeatures: [REF_SPACE_TYPE],
-};
-
-const FRAMERATE = 72;
+import { XRCanvas } from '@coconut-xr/natuerlich/defaults';
+import { useEnterXR, XR } from '@coconut-xr/natuerlich/react';
 
 const CanvasWrapper = ({ children }: PropsWithChildren) => {
   const { cameraActor, uiActor, vrActor } = MachineContext.useSelector(
@@ -61,41 +54,17 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                   });
                 }}
               >
-                <XR
-                  referenceSpace={REF_SPACE_TYPE}
-                  frameRate={FRAMERATE}
-                  onSessionStart={(event) => {
-                    const session = event.target;
-                    // Send start session event.
-                    vrActor.send({ type: 'START_SESSION' });
-                    cameraActor.send({
-                      type: 'START_XR_SESSION',
-                    });
+                <XR />
+                <Suspense fallback={null}>
+                  <Scene>{children}</Scene>
+                  <Stats />
+                  <Perf position={'bottom-left'} />
 
-                    console.log(session);
-                  }}
-                  onSessionEnd={(event) => {
-                    const session = event.target;
-                    // Send end session event.
-                    vrActor.send({ type: 'END_SESSION' });
-                    cameraActor.send({
-                      type: 'END_XR_SESSION',
-                    });
-
-                    console.log(session);
-                  }}
-                >
-                  <Suspense fallback={null}>
-                    <Scene>{children}</Scene>
-                    <Stats />
-                    <Perf position={'bottom-left'} />
-
-                    <VRManager />
-                    <VRHud />
-                    <VRDebugPortal position={[0, 0, -1]} scale={0.05} />
-                    <Preload all />
-                  </Suspense>
-                </XR>
+                  <VRManager />
+                  <VRHud />
+                  <VRDebugPortal position={[0, 0, -1]} scale={0.05} />
+                  <Preload all />
+                </Suspense>
               </Canvas>
             </div>
           </div>

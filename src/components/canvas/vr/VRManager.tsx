@@ -31,7 +31,55 @@ export const VRManager = () => {
   return (
     <>
       <VRControls />
-      <VRPlayer />
+      {/* <VRPlayer /> */}
+      <SessionInitializer />
+    </>
+  );
+};
+
+const SessionInitializer = () => {
+  const { cameraActor, vrActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+  // const { session } = useXR();
+
+  // useSessionChange(
+  //   (newSession: XRSession | undefined, prevSession: XRSession | undefined) => {
+  //     if (prevSession && !newSession) {
+  //       // Session has ended.
+  //       vrActor.send({ type: 'END_SESSION' });
+  //       cameraActor.send({
+  //         type: 'END_XR_SESSION',
+  //       });
+  //     }
+  //     if (!prevSession && newSession) {
+  //       // Session has started.
+  //       vrActor.send({ type: 'START_SESSION' });
+  //       cameraActor.send({
+  //         type: 'START_XR_SESSION',
+  //       });
+  //       newSession
+  //         .requestReferenceSpace(REF_SPACE_TYPE)
+  //         .then((refSpace) => {
+  //           // Assign the new reference space to the external state machines.
+  //           cameraActor.send({
+  //             type: 'ASSIGN_REF_SPACE',
+  //             refSpace,
+  //           });
+  //           vrActor.send({
+  //             type: 'ASSIGN_REF_SPACE_ORIGIN',
+  //             refSpace,
+  //           });
+  //         })
+  //         .catch((reason) => console.error(reason));
+  //     }
+  //   },
+  //   []
+  // );
+
+  return (
+    <>
+      <></>
     </>
   );
 };
