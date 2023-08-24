@@ -119,7 +119,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
 
     const hoverFactor = isHovered ? 1.5 : 1;
-    const vrFactor = inVR ? 1.5 : 1;
+    const vrFactor = inVR ? 1.25 : 1;
 
     const text = textRef.current;
     const textFactor = Math.max(1e-5, distanceToCamera / 60);

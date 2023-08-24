@@ -45,8 +45,9 @@ export const RingMarker = forwardRef<Mesh, MarkerProps>(function RingMarker(
   { children, bodyRef }: MarkerProps,
   fwdRef
 ) {
-  const { selectionActor, visibilityActor, mapActor } =
-    MachineContext.useSelector(({ context }) => context);
+  const { visibilityActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const markers = useSelector(
     visibilityActor,
     ({ context }) => context.markers
@@ -54,42 +55,11 @@ export const RingMarker = forwardRef<Mesh, MarkerProps>(function RingMarker(
 
   const isVisible = useSelector(markers, (state) => state.matches('active'));
 
-  const circleRef = useRef<Mesh>(null!);
   const materialRef = useRef<MeshBasicMaterial>(null!);
-
-  // const [isHovered, setHovered] = useState<boolean>(false);
-  // useCursor(isHovered, 'pointer');
-
-  // const handleSelect = useCallback(() => {
-  //   const body = bodyRef.current;
-  //   selectionActor.send({ type: 'SELECT', selection: body });
-  // }, [bodyRef, selectionActor]);
-
-  // const handleClick = useCallback(
-  //   (event: ThreeEvent<MouseEvent>) => {
-  //     event.stopPropagation();
-  //     handleSelect();
-  //   },
-  //   [handleSelect]
-  // );
-
-  // const boxHelper = useHelper(sphereRef, BoxHelper);
 
   return (
     <>
-      {/* <Interactive
-        onSelect={handleSelect}
-        onHover={() => setHovered(true)}
-        onBlur={() => setHovered(false)}
-      > */}
-      <Circle
-        ref={fwdRef}
-        args={[1.25]}
-        // onClick={handleClick}
-        // onPointerOver={() => setHovered(true)}
-        // onPointerLeave={() => setHovered(false)}
-      >
-        {/** Transparent material so that the circle will catch clicks but not be visible. */}
+      <Circle visible={isVisible} ref={fwdRef} args={[1.25]}>
         <MeshDiscardMaterial />
         {/* <meshBasicMaterial side={DoubleSide} opacity={1} transparent /> */}
         <Ring visible={isVisible} args={[1, 1.25]}>
@@ -102,7 +72,6 @@ export const RingMarker = forwardRef<Mesh, MarkerProps>(function RingMarker(
           {children}
         </Ring>
       </Circle>
-      {/* </Interactive> */}
     </>
   );
 });
