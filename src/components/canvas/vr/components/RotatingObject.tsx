@@ -47,7 +47,7 @@ export const RotatingObject = ({ children, position = [0, 0, 0] }: Props) => {
 
   return (
     <>
-      {/* <Interactive
+      <Interactive
         onBlur={() => setText('blur')}
         onHover={() => setText('hover')}
         // onMove={() => setText('move')}
@@ -55,29 +55,29 @@ export const RotatingObject = ({ children, position = [0, 0, 0] }: Props) => {
         onSelectEnd={() => setText('selectend')}
         onSqueezeStart={() => setText('squeezestart')}
         onSqueezeEnd={() => setText('squeezeend')}
-      > */}
-      <group
-        ref={groupRef}
-        position={position}
-        onPointerEnter={() => {
-          setText('hover');
-        }}
-        onPointerLeave={() => {
-          setText('idle');
-        }}
-        onClick={() => {
-          setText('click');
-        }}
       >
-        <object3D ref={objRef}>{children}</object3D>
+        <group
+          ref={groupRef}
+          position={position}
+          onPointerEnter={() => {
+            setText('hover');
+          }}
+          onPointerLeave={() => {
+            setText('idle');
+          }}
+          onClick={() => {
+            setText('click');
+          }}
+        >
+          <object3D ref={objRef}>{children}</object3D>
 
-        <object3D ref={textCenterRef}>
-          <Text ref={textRef} position={[0, 0, 1]}>
-            {text}
-          </Text>
-        </object3D>
-      </group>
-      {/* </Interactive> */}
+          <object3D ref={textCenterRef}>
+            <Text ref={textRef} position={[0, 0, 1]}>
+              {text}
+            </Text>
+          </object3D>
+        </group>
+      </Interactive>
     </>
   );
 };
