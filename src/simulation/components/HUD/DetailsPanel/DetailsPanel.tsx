@@ -118,11 +118,9 @@ const DetailsPanel = () => {
                 {selected.mass.toExponential(3) + ' kg'}
               </AttributeDetails>
               {/** Radius. */}
-
               <AttributeDetails name={'Mean Radius'}>
                 {selected.meanRadius.toExponential(3) + ' m'}
               </AttributeDetails>
-
               {/** Sidereal Rotation Rate. */}
               <AttributeDetails name={'Sidereal Rotation Rate'}>
                 {selected.siderealRotationRate.toExponential(3) + ' rad/s'}
