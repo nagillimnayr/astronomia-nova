@@ -23,6 +23,7 @@ import {
 
 import { Controllers } from '@coconut-xr/natuerlich/defaults';
 import { useSelector } from '@xstate/react';
+import { VRStats } from './VRStats';
 
 const _camWorldPos = new Vector3();
 const _arrowDir = new Vector3();
@@ -40,8 +41,13 @@ type VRCameraManagerProps = {
 export const VRCameraManager = ({
   position = [0, 0, 0],
 }: VRCameraManagerProps) => {
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const { cameraActor, vrActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const controllerRef = useRef<CameraController>(null!);
+
+  const inSession = useSelector(vrActor, (state) => state.matches('active'));
+
   return (
     <>
       <cameraController
@@ -49,10 +55,7 @@ export const VRCameraManager = ({
           if (!controller) return;
           controllerRef.current = controller;
           cameraActor.send({ type: 'ASSIGN_CONTROLS', controls: controller });
-          controller.setMinRadius(0.1);
-          // controller.setPolarAngle(PI_OVER_THREE);
-          // controller.translateY(1);
-
+          controller.setMinRadius(0.01);
           controller.position.set(...position);
           controller.setTargetRadius(8);
         }}
@@ -80,7 +83,9 @@ const VRMainCamera = () => {
           });
         }}
         position={[0, 0, 0]}
-      />
+      >
+        <VRStats />
+      </PerspectiveCam>
 
       {/* <VRImmersiveOrigin />
       <VRNonImmersiveCam /> */}
