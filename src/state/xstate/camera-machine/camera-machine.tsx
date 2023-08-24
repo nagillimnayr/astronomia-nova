@@ -28,6 +28,9 @@ import { XRState } from '@react-three/xr';
 
 const _observerUp = new Vector3();
 
+const _xrCam1WorldPos = new Vector3();
+const _xrCam2WorldPos = new Vector3();
+
 const NEPTUNE_APOAPSIS = 4553758200000 * METER;
 
 // Space view constants:
@@ -332,8 +335,35 @@ export const cameraMachine = createMachine(
             depthNear: NEAR_CLIP,
             depthFar: FAR_CLIP,
           });
+        }, 50);
+
+        setTimeout(() => {
+          const xrCamera = xr.getCamera();
+          if (xrCamera) {
+            console.log('xrcamera:', xrCamera);
+            const [xrCam1, xrCam2] = xrCamera.cameras;
+
+            console.log('xrCam1:', xrCam1);
+            console.log('xrCam2:', xrCam2);
+
+            xrCam1.getWorldPosition(_xrCam1WorldPos);
+            xrCam2.getWorldPosition(_xrCam2WorldPos);
+            console.log('xrCam1 pos:', _xrCam1WorldPos.toArray());
+            console.log('xrCam2 pos:', _xrCam2WorldPos.toArray());
+            const distance = _xrCam1WorldPos.distanceTo(_xrCam2WorldPos);
+            console.log('xr cam distance:', distance);
+
+            if (distance > 0.03 * METER) {
+              // The two cameras represent the viewer's eyes and are offset horizontally from the position of the XR camera. To account for the distance scaling, we must adjust their positions to be in line with the world scale.
+              xrCamera.cameras.forEach((cam) => {
+                cam.position.multiplyScalar(METER);
+                console.log(cam.position.toArray());
+              });
+            }
+          }
         }, 100);
 
+        // Position vrHud.
         if (vrHud) {
           vrHud.position.setZ(VR_HUD_Z_IMMERSIVE);
         }
