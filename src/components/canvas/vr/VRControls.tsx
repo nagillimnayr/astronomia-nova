@@ -82,7 +82,7 @@ export const VRControls = () => {
       console.log('button Y');
       // vrActor.send({ type: 'RESET_FRUSTUM' });
     }
-  }, [cameraActor, vrActor]);
+  }, [cameraActor, getThree]);
   useInterval(pollXRButtons, 250); // Poll buttons every 0.25 seconds.
 
   useEventListener('keypress', (event) => {
@@ -205,34 +205,34 @@ export const VRControls = () => {
     }
   });
 
-  // useEffect(() => {
-  //   const { gl } = getThree();
-  //   const { xr } = gl;
-  //   const session = xr.getSession();
-  //   if (!session) return;
-  //   // Send event to vrActor so it can be displayed.
-  //   function handleInputEvent(inputEvent: XRInputSourceEvent) {
-  //     vrActor.send({ type: 'ASSIGN_INPUT_EVENT', inputEvent });
-  //   }
+  useEffect(() => {
+    const { gl } = getThree();
+    const { xr } = gl;
+    const session = xr.getSession();
+    if (!session) return;
+    // Send event to vrActor so it can be displayed.
+    function handleInputEvent(inputEvent: XRInputSourceEvent) {
+      vrActor.send({ type: 'ASSIGN_INPUT_EVENT', inputEvent });
+    }
 
-  //   session.addEventListener('select', handleInputEvent);
-  //   session.addEventListener('squeeze', handleInputEvent);
+    session.addEventListener('select', handleInputEvent);
+    session.addEventListener('squeeze', handleInputEvent);
 
-  //   function handleEnd() {
-  //     if (!session) return;
-  //     session.removeEventListener('select', handleInputEvent);
-  //     session.removeEventListener('squeeze', handleInputEvent);
-  //   }
+    function handleEnd() {
+      if (!session) return;
+      session.removeEventListener('select', handleInputEvent);
+      session.removeEventListener('squeeze', handleInputEvent);
+    }
 
-  //   session.addEventListener('end', handleEnd);
+    session.addEventListener('end', handleEnd);
 
-  //   return () => {
-  //     handleEnd();
-  //     if (session) {
-  //       session.removeEventListener('end', handleEnd);
-  //     }
-  //   };
-  // }, [ vrActor]);
+    return () => {
+      handleEnd();
+      if (session) {
+        session.removeEventListener('end', handleEnd);
+      }
+    };
+  }, [getThree, vrActor]);
 
   const deltaNear = 0.01;
   const deltaFar = 100;
