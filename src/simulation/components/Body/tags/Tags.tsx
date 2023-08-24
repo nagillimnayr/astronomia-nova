@@ -40,7 +40,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   const ringRef = useRef<Mesh>(null!);
   const circleRef = useRef<Mesh>(null!);
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera, gl }, _, frame) => {
     const body = bodyRef.current;
     if (!body) return;
     const group = groupRef.current;
@@ -64,18 +64,26 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // Get world position of camera.
     camera.getWorldPosition(_camWorldPos);
 
-    // Get world direction of camera.
-    controls.getCameraWorldDirection(_direction);
-    _direction.multiplyScalar(-1);
-
-    // Add the direction to the position of the body.
-    _lookPos.addVectors(_bodyWorldPos, _direction);
-
     // Set the up vector so that it will be oriented correctly when lookAt() is called.
     controls.getCameraWorldUp(group.up);
 
-    // Look in direction parallel to the line of sight of the camera.
-    group.lookAt(_lookPos);
+    if (frame instanceof XRFrame) {
+      // If in xr session, the tags should look directly at the camera, rather than parallel to the direction of the camera. Because depth.
+
+      group.lookAt(_camWorldPos);
+    } else {
+      // If not in VR, the tags should look in the direction parallel to the direction of the camera.
+
+      // Get world direction of camera.
+      controls.getCameraWorldDirection(_direction);
+      _direction.multiplyScalar(-1);
+
+      // Add the direction to the position of the body.
+      _lookPos.addVectors(_bodyWorldPos, _direction);
+
+      // Look in direction parallel to the line of sight of the camera.
+      group.lookAt(_lookPos);
+    }
 
     // Get distance to camera.
     const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
