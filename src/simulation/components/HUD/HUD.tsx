@@ -80,8 +80,8 @@ export const HUD = ({ className }: Props) => {
 
         {/** VR Button */}
         <div className={'relative col-end-[-2] row-end-[-2]'}>
-          <div className="pointer-events-auto absolute bottom-0 right-0 h-fit w-fit">
-            <VRButton />
+          <div className="pointer-events-auto absolute bottom-0 right-1/2 h-fit w-fit translate-x-1/2">
+            <VRButton className="whitespace-nowrap py-4 hover:bg-subtle" />
             {/* <EnterVRButton /> */}
           </div>
         </div>
