@@ -45,7 +45,9 @@ export const VRThumbstickControls = () => {
 
       if (rightAxisX) {
         // Azimuthal rotation.
-        const azimuthal = rightAxisX * AZIMUTH_FACTOR;
+        let azimuthal = rightAxisX * AZIMUTH_FACTOR;
+        // Reverse direction of rotation if on surface.
+        onSurface && (azimuthal *= -1);
         cameraActor.send({ type: 'ROTATE_AZIMUTHAL', deltaAngle: azimuthal });
       }
 
