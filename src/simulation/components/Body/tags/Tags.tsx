@@ -95,8 +95,10 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // Set the up vector so that it will be oriented correctly when lookAt() is called.
     controls.getCameraWorldUp(group.up);
 
-    if (frame instanceof XRFrame) {
-      // If in xr session, the tags should look directly at the camera, rather than parallel to the direction of the camera. Because depth.
+    const inVR = frame instanceof XRFrame;
+
+    if (inVR) {
+      // If in VR session, the tags should look directly at the camera, rather than parallel to the direction of the camera. Because depth.
 
       group.lookAt(_camWorldPos);
     } else {
@@ -117,6 +119,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
 
     const hoverFactor = isHovered ? 1.5 : 1;
+    const vrFactor = inVR ? 1.5 : 1;
 
     const text = textRef.current;
     const textFactor = Math.max(1e-5, distanceToCamera / 60);
@@ -125,12 +128,12 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // Clamp the y-position of the annotation so that it doesn't go inside of the body.
     const yPos = clamp(-1.25 * textFactor, -(meanRadius / DIST_MULT) * 1.5);
     // Set position so that the annotation always appears below the body and outside of the marker.
-    text?.position.set(0, yPos * hoverFactor, 0);
+    text?.position.set(0, yPos * hoverFactor * vrFactor, 0);
 
     const markerFactor = Math.max(1e-5, distanceToCamera / 125);
 
     const marker = markerRef.current;
-    marker.scale.setScalar(markerFactor * hoverFactor);
+    marker.scale.setScalar(markerFactor * hoverFactor * vrFactor);
 
     if (axesRef.current) {
       axesRef.current.scale.setScalar(markerFactor);
