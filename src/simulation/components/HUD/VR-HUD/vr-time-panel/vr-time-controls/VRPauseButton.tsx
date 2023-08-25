@@ -36,12 +36,14 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
   const [isHovered, setHovered] = useState<boolean>(false);
   useCursor(isHovered, 'pointer');
 
-  // Click handler.
-  const handleClick = useCallback(() => {
-    const isPaused = timeActor.getSnapshot()!.matches('paused');
-    const type = isPaused ? 'UNPAUSE' : 'PAUSE';
-    timeActor.send({ type });
+  // Events handlers.
+  const handlePlay = useCallback(() => {
+    timeActor.send({ type: 'UNPAUSE' });
   }, [timeActor]);
+  const handlePause = useCallback(() => {
+    timeActor.send({ type: 'PAUSE' });
+  }, [timeActor]);
+  const handleClick = isPaused ? handlePlay : handlePause;
 
   const handlePointerEnter = useCallback(() => {
     setHovered(true);
