@@ -31,7 +31,7 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
 
   const groupRef = useRef<Group>(null!);
 
-  useHelper(groupRef, BoxHelper);
+  // useHelper(groupRef, BoxHelper);
 
   const [isHovered, setHovered] = useState<boolean>(false);
   useCursor(isHovered, 'pointer');
