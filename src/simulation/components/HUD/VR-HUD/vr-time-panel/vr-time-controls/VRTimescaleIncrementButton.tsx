@@ -6,7 +6,8 @@ import { Center, Circle, Svg, Text, useCursor } from '@react-three/drei';
 import { type Vector3Tuple } from 'three';
 import { ICON_MATERIAL_BASE } from '../../vr-ui-materials';
 import useHover from '@/hooks/useHover';
-import { Interactive } from '@react-three/xr';
+import { Interactive, XRInteractionEvent } from '@react-three/xr';
+import { ThreeEvent } from '@react-three/fiber';
 
 interface VRTimescaleIncrementButtonProps {
   position?: Vector3Tuple;
@@ -23,21 +24,29 @@ export const VRTimescaleIncrementButton = ({
 
   const timescaleEvents = useMemo(
     () => ({
-      decrementTimescale: () => {
+      decrementTimescale: (
+        event: ThreeEvent<MouseEvent> | XRInteractionEvent
+      ) => {
+        if ('stopPropagation' in event) {
+          event.stopPropagation();
+          // Stopping propagation will call onPointerLeave, so we need to reset isHovered.
+          setHovered(true);
+        }
         timeActor.send({ type: 'DECREMENT_TIMESCALE' });
       },
-      incrementTimescale: () => {
+      incrementTimescale: (
+        event: ThreeEvent<MouseEvent> | XRInteractionEvent
+      ) => {
+        if ('stopPropagation' in event) {
+          event.stopPropagation();
+          // Stopping propagation will call onPointerLeave, so we need to reset isHovered.
+          setHovered(true);
+        }
         timeActor.send({ type: 'INCREMENT_TIMESCALE' });
       },
     }),
-    [timeActor]
+    [setHovered, timeActor]
   );
-  // const decrementTimescale = useCallback(() => {
-  //   timeActor.send({ type: 'DECREMENT_TIMESCALE' });
-  // }, [timeActor]);
-  // const incrementTimescale = useCallback(() => {
-  //   timeActor.send({ type: 'INCREMENT_TIMESCALE' });
-  // }, [timeActor]);
 
   const handleClick = reverse
     ? timescaleEvents.decrementTimescale
@@ -55,27 +64,32 @@ export const VRTimescaleIncrementButton = ({
         onHover={hoverEvents.handlePointerEnter}
         onBlur={hoverEvents.handlePointerLeave}
       >
-        <Circle
-          args={[1]}
+        <group
           scale={isHovered ? 1.2 : 1}
           position={position}
           onClick={handleClick}
           onPointerEnter={hoverEvents.handlePointerEnter}
           onPointerLeave={hoverEvents.handlePointerLeave}
         >
-          <meshBasicMaterial color={colors.background} />
+          {/** Circle background. */}
+          <Circle
+            name="icon-circle"
+            args={[1]}
+            material-color={colors.background}
+          />
+
           {/** Offset the z position of the icon from its background. */}
-          <object3D
-            position={[0, 0, depth.xs]}
-            scale={size}
-            onClick={handleClick}
-          >
+          <object3D position={[0, 0, depth.xs]} scale={size}>
             {/** Center the Svg icon. */}
             <Center>
-              <Svg src={iconSrc} fillMaterial={ICON_MATERIAL_BASE} />
+              <Svg
+                name="svg-icon"
+                src={iconSrc}
+                fillMaterial={ICON_MATERIAL_BASE}
+              />
             </Center>
           </object3D>
-        </Circle>
+        </group>
       </Interactive>
     </>
   );
