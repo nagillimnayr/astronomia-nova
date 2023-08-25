@@ -74,7 +74,7 @@ export const VROutliner = ({ position = [0, 0, 0] }: VROutlinerProps) => {
               material={VRHudBGMaterial}
               backgroundColor={colors.background}
             >
-              {root && <VROutlinerItem index={1} body={root} />}
+              {root && <VROutlinerItem body={root} />}
             </Container>
           </RootContainer>
         </Suspense>
