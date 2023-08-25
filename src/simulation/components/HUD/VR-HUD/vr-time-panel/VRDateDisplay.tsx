@@ -16,15 +16,7 @@ type VRDateDisplayProps = {
   position?: Vector3Tuple;
 };
 export const VRDateDisplay = ({ position = [0, 0, 0] }: VRDateDisplayProps) => {
-  const { timeActor } = MachineContext.useSelector(({ context }) => context);
-
-  // Subscribe to state changes so that the component will re-render whenever the date changes.
-  // const date = useSelector(timeActor, ({ context }) => context.date);
-
-  const { refDate } = timeActor.getSnapshot()!.context;
-
-  const hoursRef = useRef<TextMesh>(null!);
-  const dateRef = useRef<unknown>(null!);
+  // const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
   return (
     <>
