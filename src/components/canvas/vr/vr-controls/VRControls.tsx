@@ -235,7 +235,7 @@ export const VRControls = () => {
     <>
       <>
         <VRThumbstickControls />
-        <VRInputListener />
+        {/* <VRInputListener /> */}
       </>
     </>
   );
