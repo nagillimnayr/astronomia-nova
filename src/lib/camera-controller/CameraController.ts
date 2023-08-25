@@ -240,6 +240,10 @@ export class CameraController extends Object3D {
   }
 
   setCamera(camera: PerspectiveCamera) {
+    if (camera === this._camera) {
+      return;
+    }
+    console.log('Setting camera in camera controller!', camera);
     this._camera = camera;
     // const parent = camera.parent;
     this.attachToController(camera);
