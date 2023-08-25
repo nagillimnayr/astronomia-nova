@@ -122,6 +122,7 @@
     "three": "^0.155.0",
     "three-mesh-ui": "^6.5.4",
     "three-stdlib": "^2.23.10",
+    "troika-three-text": "^0.48.0-unicode.3",
     "tunnel-rat": "^0.1.2",
     "usehooks-ts": "^2.9.1",
     "valtio": "^1.10.5",
