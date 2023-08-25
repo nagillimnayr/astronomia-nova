@@ -118,19 +118,19 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // Get distance to camera.
     const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
 
-    const hoverFactor = isHovered ? 1.5 : 1;
-    const vrFactor = inVR ? 1.25 : 1;
+    const hoverFactor = isHovered ? 1.25 : 1;
+    const vrFactor = inVR ? 1.5 : 1;
 
     const text = textRef.current;
     const textFactor = Math.max(1e-5, distanceToCamera / 60);
     // Scale the annotation so that it maintains its screen-size.
-    text?.scale.setScalar(textFactor);
+    text?.scale.setScalar(textFactor * vrFactor);
     // Clamp the y-position of the annotation so that it doesn't go inside of the body.
     const yPos = clamp(-1.25 * textFactor, -(meanRadius / DIST_MULT) * 1.5);
     // Set position so that the annotation always appears below the body and outside of the marker.
     text?.position.set(0, yPos * hoverFactor * vrFactor, 0);
 
-    const markerFactor = Math.max(1e-5, distanceToCamera / 125);
+    const markerFactor = Math.max(1e-5, distanceToCamera / 75);
 
     const marker = markerRef.current;
     marker.scale.setScalar(markerFactor * hoverFactor * vrFactor);
