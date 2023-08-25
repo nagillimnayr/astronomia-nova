@@ -1,1 +1,1 @@
-export as namespace troikaThreeText;
+// declare module 'troika-three-text';
