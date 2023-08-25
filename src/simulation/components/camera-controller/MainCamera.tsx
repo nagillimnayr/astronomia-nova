@@ -6,13 +6,13 @@ import { FAR_CLIP, NEAR_CLIP } from '@/components/canvas/scene-constants';
 import { PerspectiveCamera as PerspectiveCam } from '@react-three/drei';
 
 export const MainCamera = () => {
-  const cameraActor = MachineContext.useSelector(
-    ({ context }) => context.cameraActor
+  const { cameraActor, vrActor } = MachineContext.useSelector(
+    ({ context }) => context
   );
-  const vrActor = MachineContext.useSelector(({ context }) => context.vrActor);
 
   // Bind to state changes so the camera will reset itself when a session starts or ends.
   const vrActive = useSelector(vrActor, (state) => state.matches('active'));
+
   const camRef = useRef<PerspectiveCamera>(null!);
   return (
     <>
