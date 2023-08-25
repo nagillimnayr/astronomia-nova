@@ -1,69 +1,85 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Container, RootContainer, SVG, Text } from '@coconut-xr/koestlich';
 import { useSelector } from '@xstate/react';
-import { format } from 'date-fns';
-import { colors, text } from '../../vr-hud-constants';
-import { Play, Pause, Sunset, Sunrise } from '@coconut-xr/lucide-koestlich';
-import { useCallback } from 'react';
-import { Glass, IconButton } from '@coconut-xr/apfel-kruemel';
-import { VRHudBGMaterial } from '../../vr-materials/VRHudBGMaterial';
+import { colors, text, iconSize } from '../../vr-hud-constants';
+import { useCallback, useMemo, useState } from 'react';
+import {
+  Text,
+  Svg,
+  Center,
+  Circle,
+  MeshDiscardMaterial,
+  useCursor,
+} from '@react-three/drei';
+import { MeshBasicMaterial, type Vector3Tuple } from 'three';
+import { ICON_MATERIAL_BASE, ICON_MATERIAL_HOVER } from '../../vr-ui-materials';
+import { Interactive } from '@react-three/xr';
+
+const Z_OFFSET = 1e-2;
 
 type VRAdvanceTimeButtonProps = {
-  index: number;
+  position?: Vector3Tuple;
   reverse?: boolean;
 };
 export const VRAdvanceTimeButton = ({
-  index,
+  position = [0, 0, 0],
   reverse,
 }: VRAdvanceTimeButtonProps) => {
   const rootActor = MachineContext.useActorRef();
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  // Get focusTarget.
   const focusTarget = useSelector(
     cameraActor,
     ({ context }) => context.focusTarget
   );
+
+  const [isHovered, setHovered] = useState<boolean>(false);
+  useCursor(isHovered, 'pointer');
+
   const handleClick = useCallback(() => {
     rootActor.send({ type: 'ADVANCE_DAY', reverse });
   }, [reverse, rootActor]);
 
-  const iconSize = text.lg;
+  const handlePointerEnter = useCallback(() => {
+    setHovered(true);
+  }, []);
+  const handlePointerLeave = useCallback(() => {
+    setHovered(false);
+  }, []);
+
+  const iconSrc = reverse
+    ? 'icons/MdiWeatherSunsetDown.svg'
+    : 'icons/MdiWeatherSunsetUp.svg';
+
+  const size = iconSize.base;
   return (
     <>
-      <Container
-        index={index}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        material={VRHudBGMaterial}
-        backgroundColor={colors.background}
+      <Interactive
+        onSelect={handleClick}
+        onHover={handlePointerEnter}
+        onBlur={handlePointerLeave}
       >
-        <IconButton
+        <group
+          position={position}
+          scale={isHovered ? 1.2 : 1}
           onClick={handleClick}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          disabled={focusTarget === null}
-          width={iconSize * 1.5}
-          height={iconSize * 1.5}
-          padding={2}
-          aspectRatio={1}
-          borderRadius={1000}
+          onPointerEnter={handlePointerEnter}
+          onPointerLeave={handlePointerLeave}
         >
-          {reverse ? (
-            <SVG
-              url="icons/MdiWeatherSunsetDown.svg"
-              height={iconSize}
-              width={iconSize}
-            />
-          ) : (
-            <SVG
-              url="icons/MdiWeatherSunsetUp.svg"
-              height={iconSize}
-              width={iconSize}
-            />
-          )}
-        </IconButton>
-      </Container>
+          <Circle args={[1]}>
+            <meshBasicMaterial color={'red'} />
+            <object3D position={[0, 0, Z_OFFSET]} scale={size}>
+              <Center>
+                <Svg
+                  src={iconSrc}
+                  fillMaterial={
+                    isHovered ? ICON_MATERIAL_HOVER : ICON_MATERIAL_BASE
+                  }
+                />
+              </Center>
+            </object3D>
+          </Circle>
+        </group>
+      </Interactive>
     </>
   );
 };

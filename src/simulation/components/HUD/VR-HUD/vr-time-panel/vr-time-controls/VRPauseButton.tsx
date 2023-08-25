@@ -1,77 +1,92 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import {
-  Container,
-  Object,
-  RootContainer,
-  SVG,
-  Text,
-} from '@coconut-xr/koestlich';
 import { useSelector } from '@xstate/react';
-import { format } from 'date-fns';
-import { colors, depth, text } from '../../vr-hud-constants';
-import { Play, Pause } from '@coconut-xr/lucide-koestlich';
-import { useCallback, useMemo } from 'react';
-import { Glass, IconButton } from '@coconut-xr/apfel-kruemel';
-import { Object3D } from 'three';
-import { VRHudBGMaterial } from '../../vr-materials/VRHudBGMaterial';
+import { colors, depth, text, iconSize } from '../../vr-hud-constants';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import {
+  Box3,
+  BoxHelper,
+  Color,
+  Group,
+  MeshBasicMaterial,
+  Object3D,
+} from 'three';
+import {
+  Text,
+  Svg,
+  useHelper,
+  Center,
+  Circle,
+  useCursor,
+} from '@react-three/drei';
+import { type Vector3Tuple } from 'three';
+import { ICON_MATERIAL_BASE, ICON_MATERIAL_HOVER } from '../../vr-ui-materials';
+import { Interactive } from '@react-three/xr';
 
 type VRPauseButtonProps = {
-  index: number;
+  position?: Vector3Tuple;
 };
-export const VRPauseButton = ({ index }: VRPauseButtonProps) => {
+export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
   const isPaused = useSelector(timeActor, (state) => state.matches('paused'));
+
+  const groupRef = useRef<Group>(null!);
+
+  useHelper(groupRef, BoxHelper);
+
+  const [isHovered, setHovered] = useState<boolean>(false);
+  useCursor(isHovered, 'pointer');
+
+  // Click handler.
   const handleClick = useCallback(() => {
     const isPaused = timeActor.getSnapshot()!.matches('paused');
     const type = isPaused ? 'UNPAUSE' : 'PAUSE';
     timeActor.send({ type });
   }, [timeActor]);
 
-  // Create Object to attach UI component to.
-  const obj = useMemo(() => {
-    return new Object3D();
+  const handlePointerEnter = useCallback(() => {
+    setHovered(true);
+  }, []);
+  const handlePointerLeave = useCallback(() => {
+    setHovered(false);
   }, []);
 
-  const iconSize = text.lg;
+  const iconSrc = isPaused ? 'icons/MdiPlay.svg' : 'icons/MdiPause.svg';
+
+  const size = iconSize.base;
   return (
     <>
-      <Container
-        index={index}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        material={VRHudBGMaterial}
-        backgroundColor={colors.background}
+      <Interactive
+        onSelect={handleClick}
+        onHover={handlePointerEnter}
+        onBlur={handlePointerLeave}
       >
-        <Object object={obj} depth={depth.xxs}>
-          <IconButton
-            onClick={handleClick}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            padding={2}
-            width={iconSize * 1.5}
-            height={iconSize * 1.5}
-            aspectRatio={1}
-            borderRadius={1000}
-          >
-            {isPaused ? (
-              <SVG
-                url="icons/MdiPlay.svg"
-                height={iconSize}
-                width={iconSize}
-                translateX={iconSize / 16} // Center the Play icon.
-              />
-            ) : (
-              <SVG
-                url="icons/MdiPause.svg"
-                height={iconSize}
-                width={iconSize}
-              />
-            )}
-          </IconButton>
-        </Object>
-      </Container>
+        <group
+          ref={groupRef}
+          position={position}
+          scale={isHovered ? 1.2 : 1}
+          onClick={handleClick}
+          onPointerEnter={handlePointerEnter}
+          onPointerLeave={handlePointerLeave}
+        >
+          <Circle args={[1]}>
+            <meshBasicMaterial color={'red'} />
+            <object3D
+              position={[0, 0, depth.xs]}
+              scale={size}
+              onClick={handleClick}
+            >
+              <Center>
+                <Svg
+                  src={iconSrc}
+                  fillMaterial={
+                    isHovered ? ICON_MATERIAL_HOVER : ICON_MATERIAL_BASE
+                  }
+                />
+              </Center>
+            </object3D>
+          </Circle>
+        </group>
+      </Interactive>
     </>
   );
 };

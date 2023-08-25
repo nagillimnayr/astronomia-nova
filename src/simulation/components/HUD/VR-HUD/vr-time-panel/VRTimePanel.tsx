@@ -1,64 +1,56 @@
-import {
-  RootContainer,
-  Container,
-  Text,
-  ContainerNode,
-} from '@coconut-xr/koestlich';
 import { Suspense, useEffect, useRef } from 'react';
 import { GOLDEN_RATIO, PRECISION, colors, text } from '../vr-hud-constants';
 import { VRDateDisplay } from './VRDateDisplay';
 import { VRTimeControls } from './vr-time-controls/VRTimeControls';
 import { VRTimescaleDisplay } from './VRTimescaleDisplay';
 import { VRTimescaleSlider } from './vr-time-controls/VRTimescaleSlider';
-import { Object3D, Vector3Tuple, Vector3 } from 'three';
+import { Object3D, Vector3Tuple, Vector3, Group } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { VRHudBGMaterial } from '../vr-materials/VRHudBGMaterial';
+import { useThree } from '@react-three/fiber';
+import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
+
+const _camWorldPos = new Vector3();
+const _camWorldUp = new Vector3();
 
 type VRTimePanelProps = {
   position?: Vector3Tuple;
+  scale?: number;
 };
-export const VRTimePanel = ({ position = [0, 0, 0] }: VRTimePanelProps) => {
+export const VRTimePanel = ({
+  position = [0, 0, 0],
+  scale = 1,
+}: VRTimePanelProps) => {
   // Get actors from root state machine.
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const getThree = useThree(({ get }) => get);
 
   // Get refs to root container and object.
-  const containerRef = useRef<ContainerNode>(null!);
-  const objRef = useRef<Object3D>(null!);
+  const groupRef = useRef<Group>(null!);
 
   const height = 1;
   const width = height * GOLDEN_RATIO;
   return (
     <>
       {/** Its better to put the object3D outside of the Suspense barrier, so as to not delay setting the reference. */}
-      <object3D position={position} ref={objRef} name="VR-Time-Panel">
-        <Suspense>
-          <RootContainer
-            precision={PRECISION}
-            ref={(container) => {
-              if (!container) return;
-              containerRef.current = container;
-            }}
-            sizeX={width}
-            sizeY={height}
-            backgroundColor={colors.background}
-            borderRadius={text.base}
-            borderColor={colors.border}
-            border={4}
-            display="flex"
-            flexDirection="column"
-            alignItems="stretch"
-            justifyContent="space-evenly"
-            padding={text.base}
-            gapRow={10}
-            material={VRHudBGMaterial}
-          >
-            <VRTimescaleDisplay index={0} />
-            <VRDateDisplay index={1} />
-            <VRTimeControls index={2} />
-            <VRTimescaleSlider index={3} />
-          </RootContainer>
-        </Suspense>
-      </object3D>
+      <group
+        position={position}
+        ref={(group) => {
+          if (!group) return;
+          groupRef.current = group;
+          const { camera } = getThree();
+          camera.getWorldPosition(_camWorldPos);
+          getLocalUpInWorldCoords(camera, group.up);
+          group.lookAt(_camWorldPos);
+        }}
+        name="VR-Time-Panel"
+        scale={scale}
+      >
+        <VRTimescaleDisplay position={[0, 4, 0]} />
+        <VRDateDisplay position={[0, 2, 0]} />
+        <VRTimeControls position={[0, -1, 0]} />
+        {/* <VRTimescaleSlider position={[0, -1.5, 0]} /> */}
+        {/* <axesHelper args={[2]} /> */}
+      </group>
     </>
   );
 };

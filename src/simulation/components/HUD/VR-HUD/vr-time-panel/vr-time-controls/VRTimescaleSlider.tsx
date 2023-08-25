@@ -1,17 +1,16 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Container, RootContainer, SVG, Text } from '@coconut-xr/koestlich';
 import { useSelector } from '@xstate/react';
-import { format } from 'date-fns';
 import { border, colors, text } from '../../vr-hud-constants';
-import { Glass, IconButton, Slider } from '@coconut-xr/apfel-kruemel';
 import { useCallback } from 'react';
-import { ChevronLeft, ChevronRight } from '@coconut-xr/lucide-koestlich';
-import { VRHudBGMaterial } from '../../vr-materials/VRHudBGMaterial';
+import { Center, Circle, Svg, Text } from '@react-three/drei';
+import { type Vector3Tuple } from 'three';
 
 type VRTimescaleSliderProps = {
-  index: number;
+  position?: Vector3Tuple;
 };
-export const VRTimescaleSlider = ({ index }: VRTimescaleSliderProps) => {
+export const VRTimescaleSlider = ({
+  position = [0, 0, 0],
+}: VRTimescaleSliderProps) => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
   const timescale = useSelector(timeActor, ({ context }) => context.timescale);
@@ -36,65 +35,19 @@ export const VRTimescaleSlider = ({ index }: VRTimescaleSliderProps) => {
   const iconSize = 24;
   return (
     <>
-      <Container
-        index={index}
-        width={'auto'}
-        display="flex"
-        flexDirection="column"
-        alignItems="stretch"
-        justifyContent="center"
-        material={VRHudBGMaterial}
-        backgroundColor={colors.background}
-      >
-        <Container
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="center"
-          gapColumn={10}
-          material={VRHudBGMaterial}
-          backgroundColor={colors.background}
-        >
-          <IconButton
-            index={index + 1}
-            onClick={handleClickLeft}
-            disabled={timescale <= 1}
-          >
-            <SVG
-              index={index + 2}
-              url="icons/MdiChevronLeft.svg"
-              width={iconSize}
-              height={iconSize}
-            />
-          </IconButton>
-          <Container
-            index={index + 3}
-            border={border.base}
-            borderRadius={text.base}
-            borderColor={colors.border}
-            flexGrow={1}
-          >
-            <Slider
-              index={index + 4}
-              size="lg"
-              range={100}
-              value={timescale}
-              onValueChange={handleValueChange}
-            />
-          </Container>
-          <IconButton
-            index={index + 5}
-            onClick={handleClickRight}
-            disabled={timescale >= 100}
-          >
-            <SVG
-              index={index + 6}
-              url="icons/MdiChevronRight.svg"
-              width={iconSize}
-              height={iconSize}
-            />
-          </IconButton>
-        </Container>
-      </Container>
+      <group position={position}>
+        <Circle onClick={handleClickLeft}>
+          <Center>
+            <Svg src="icons/MdiChevronLeft.svg" />
+          </Center>
+        </Circle>
+        {/**  */}
+        <Circle onClick={handleClickRight}>
+          <Center>
+            <Svg src="icons/MdiChevronRight.svg" />
+          </Center>
+        </Circle>
+      </group>
     </>
   );
 };

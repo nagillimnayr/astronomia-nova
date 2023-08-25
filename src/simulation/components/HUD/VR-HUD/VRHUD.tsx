@@ -1,21 +1,8 @@
-import {
-  ContainerNode,
-  DefaultStyleProvider,
-  RootContainer,
-} from '@coconut-xr/koestlich';
 import { VRDetailsPanel } from './vr-details-panel/VRDetailsPanel';
 import { VRTimePanel } from './vr-time-panel/VRTimePanel';
 import { colors, text } from './vr-hud-constants';
 import { VROutliner } from './vr-outliner/VROutliner';
-import {
-  BoxHelper,
-  Group,
-  Object3D,
-  Scene,
-  Vector3,
-  PerspectiveCamera,
-  type Vector3Tuple,
-} from 'three';
+import { Group, type Vector3Tuple } from 'three';
 import { useEffect, useMemo, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
@@ -24,29 +11,12 @@ import { Hud, useCamera, useHelper } from '@react-three/drei';
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { VRSettingsButton } from './vr-settings-menu/VRSettingsButton';
 import { METER } from '@/simulation/utils/constants';
-import { VRDebugDisplay, VRDebugPortal } from './vr-debug/VRDebugDisplay';
 
-type VRHUDProps = {
+type VRHudProps = {
   position?: Vector3Tuple;
-};
-export const VRHUD = ({ position = [0, 0, -5] }: VRHUDProps) => {
-  // Get the current default camera so we can render the VRHUD to it.
-  const camera = useThree(({ camera }) => camera);
-
-  // Attach the VRHUD to the camera.
-  return createPortal(
-    <>
-      <>
-        <VRHud position={position} />
-      </>
-    </>,
-    camera
-  );
-};
-
-type VRHudProps = VRHUDProps & {
   defaultOpen?: boolean;
 };
+
 export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
   // Get actors from root state machine.
   const { cameraActor, vrActor } = MachineContext.useSelector(
@@ -56,10 +26,8 @@ export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
   // Get refs to root container and object.
   const groupRef = useRef<Group>(null!);
 
-  // const boxHelper = useHelper(objRef, BoxHelper);
-
   useEffect(() => {
-    // Attach to the camera.
+    // Send to actors to attach to the camera controller.
     const group = groupRef.current;
     cameraActor.send({ type: 'ASSIGN_VR_HUD', vrHud: group });
     vrActor.send({ type: 'ASSIGN_VR_HUD', vrHud: group });
@@ -70,20 +38,13 @@ export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
 
   return (
     <>
-      <DefaultStyleProvider
-        color={colors.foreground}
-        borderColor={colors.border}
-        fontSize={text.base}
-      >
-        <group name="VR-HUD" ref={groupRef} position={position}>
-          <VRDetailsPanel position={[1, 0, 0]} />
-          <VRTimePanel position={[0, -1.5, 0]} />
-          <VROutliner position={[-1, 0, 0]} />
-          <VRSettingsButton position={[1, 1.25, 0]} />
-          <VRSettingsMenu position={[0, 0.5, 0.25]} />
-        </group>
-      </DefaultStyleProvider>
-      {/* <VRDebugPortal position={[0, 0, -1]} scale={0.15} /> */}
+      <group name="VR-Hud" ref={groupRef} position={position}>
+        {/* <VRDetailsPanel position={[1, 0, 0]} /> */}
+        <VRTimePanel position={[0, -1.5, 0]} scale={0.2} />
+        {/* <VROutliner position={[-1, 0, 0]} />
+        <VRSettingsButton position={[1, 1.25, 0]} />
+        <VRSettingsMenu position={[0, 0.5, 0.25]} /> */}
+      </group>
     </>
   );
 };

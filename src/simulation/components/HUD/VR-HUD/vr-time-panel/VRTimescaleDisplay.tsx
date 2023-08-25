@@ -1,16 +1,17 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Container, RootContainer, Text } from '@coconut-xr/koestlich';
 import { useSelector } from '@xstate/react';
-import { format } from 'date-fns';
 import { colors, text } from '../vr-hud-constants';
-import { Glass, Slider } from '@coconut-xr/apfel-kruemel';
 import { useCallback } from 'react';
 import { VRHudBGMaterial } from '../vr-materials/VRHudBGMaterial';
+import { Text } from '@react-three/drei';
+import { type Vector3Tuple } from 'three';
 
 type VRTimescaleDisplayProps = {
-  index: number;
+  position?: Vector3Tuple;
 };
-export const VRTimescaleDisplay = ({ index }: VRTimescaleDisplayProps) => {
+export const VRTimescaleDisplay = ({
+  position = [0, 0, 0],
+}: VRTimescaleDisplayProps) => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
   const timescale = useSelector(timeActor, ({ context }) => context.timescale);
@@ -20,27 +21,13 @@ export const VRTimescaleDisplay = ({ index }: VRTimescaleDisplayProps) => {
   if (Math.abs(timescale) > 1) {
     str += 's';
   }
+
+  const fontSize = 1;
   return (
     <>
-      <Container
-        index={index}
-        display="flex"
-        flexDirection="column"
-        alignItems="stretch"
-        justifyContent="center"
-        material={VRHudBGMaterial}
-        backgroundColor={colors.background}
-      >
-        <Text
-          index={index + 1}
-          fontSize={text.xl}
-          horizontalAlign="center"
-          material={VRHudBGMaterial}
-          backgroundColor={colors.background}
-        >
-          {str + ' / second'}
-        </Text>
-      </Container>
+      <group position={position}>
+        <Text fontSize={fontSize}>{str + ' / second'}</Text>
+      </group>
     </>
   );
 };

@@ -1,35 +1,27 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Container, RootContainer, Text } from '@coconut-xr/koestlich';
 import { useSelector } from '@xstate/react';
-import { format } from 'date-fns';
 import { colors, text } from '../../vr-hud-constants';
 import { VRPauseButton } from './VRPauseButton';
 import { VRTimescaleSlider } from './VRTimescaleSlider';
 import { VRAdvanceTimeButton } from './VRAdvanceTimeButton';
-import { VRHudBGMaterial } from '../../vr-materials/VRHudBGMaterial';
+import { Text } from '@react-three/drei';
+import { type Vector3Tuple } from 'three';
 
 type VRTimeControlProps = {
-  index: number;
+  position?: Vector3Tuple;
 };
-export const VRTimeControls = ({ index }: VRTimeControlProps) => {
+export const VRTimeControls = ({
+  position = [0, 0, 0],
+}: VRTimeControlProps) => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
   return (
     <>
-      <Container
-        index={index}
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="center"
-        gapColumn={10}
-        height={text.lg}
-        material={VRHudBGMaterial}
-        backgroundColor={colors.background}
-      >
-        <VRAdvanceTimeButton index={index + 1} reverse />
-        <VRPauseButton index={index + 2} />
-        <VRAdvanceTimeButton index={index + 3} />
-      </Container>
+      <group position={position}>
+        <VRAdvanceTimeButton position={[-2.5, 0, 0]} reverse />
+        <VRPauseButton position={[0, 0, 0]} />
+        <VRAdvanceTimeButton position={[2.5, 0, 0]} />
+      </group>
     </>
   );
 };

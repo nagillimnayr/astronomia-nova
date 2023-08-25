@@ -13,7 +13,7 @@ import { useEffect, useRef } from 'react';
 import { DirectionalLight, DirectionalLightHelper } from 'three';
 import { VRManager } from './VRManager';
 import { Floor } from './components/Floor';
-import { VRHUD, VRHud } from '@/simulation/components/HUD/VR-HUD/VRHud';
+import { VRHud } from '@/simulation/components/HUD/VR-HUD/VRHud';
 import { CameraManager } from '@/simulation/components/camera-controller/CameraManager';
 import { PI_OVER_TWO } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';

@@ -37,16 +37,17 @@ import KeplerBody from '@/simulation/classes/kepler-body';
 import { Object3D } from 'three';
 import { VRHudBGMaterial } from '../vr-materials/VRHudBGMaterial';
 import { useInteraction } from '@react-three/xr';
+import { type Vector3Tuple } from 'three';
 
 type VROutlinerItemProps = {
   body: KeplerBody;
   defaultOpen?: boolean;
-  index: number;
+  position?: Vector3Tuple;
 };
 export const VROutlinerItem = ({
   body,
   defaultOpen = false,
-  index,
+  position = [0, 0, 0],
 }: VROutlinerItemProps) => {
   // Get actors from root state machine.
   const { mapActor, selectionActor } = MachineContext.useSelector(
