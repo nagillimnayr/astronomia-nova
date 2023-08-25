@@ -8,6 +8,7 @@ import { Object3D, Vector3Tuple, Vector3, Group } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useThree } from '@react-three/fiber';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
+import { useSelector } from '@xstate/react';
 
 const _camWorldPos = new Vector3();
 const _camWorldUp = new Vector3();
@@ -21,11 +22,26 @@ export const VRTimePanel = ({
   scale = 1,
 }: VRTimePanelProps) => {
   // Get actors from root state machine.
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const { cameraActor, vrActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const getThree = useThree(({ get }) => get);
+
+  // Subscribe so that component will re-render upon entering VR.
+  const inVR = useSelector(vrActor, (state) => state.matches('active'));
 
   // Get refs to root container and object.
   const groupRef = useRef<Group>(null!);
+
+  useEffect(() => {
+    const group = groupRef.current;
+    if (!group || !inVR) return;
+    // Look at camera.
+    const { camera } = getThree();
+    camera.getWorldPosition(_camWorldPos);
+    getLocalUpInWorldCoords(camera, group.up);
+    group.lookAt(_camWorldPos);
+  }, [getThree, inVR]);
 
   const height = 1;
   const width = height * GOLDEN_RATIO;
@@ -37,10 +53,6 @@ export const VRTimePanel = ({
         ref={(group) => {
           if (!group) return;
           groupRef.current = group;
-          const { camera } = getThree();
-          camera.getWorldPosition(_camWorldPos);
-          getLocalUpInWorldCoords(camera, group.up);
-          group.lookAt(_camWorldPos);
         }}
         name="VR-Time-Panel"
         scale={scale}
