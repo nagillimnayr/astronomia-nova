@@ -19,8 +19,8 @@ export const opacityMachine = createMachine({
     opacity: 0,
   },
 
-  entry: log('opacity machine entry'),
-  exit: log('opacity machine exit'),
+  // entry: log('opacity machine entry'),
+  // exit: log('opacity machine exit'),
 
   on: {
     SET_OPACITY: {

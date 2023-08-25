@@ -42,7 +42,7 @@ export const visibilityMachine = createMachine({
   },
 
   entry: [
-    log('visibilityMachine entry'),
+    // log('visibilityMachine entry'),
     // Spawn child actors.
     assign({
       trajectories: () =>

@@ -29,7 +29,7 @@ export const mapMachine = createMachine(
       orbitMap: new Map<string, KeplerOrbit>(),
     }),
 
-    entry: log('map-machine entry'),
+    // entry: log('map-machine entry'),
 
     on: {
       ADD_BODY: {

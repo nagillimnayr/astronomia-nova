@@ -26,7 +26,7 @@ export const celestialSphereMachine = createMachine({
   },
 
   entry: [
-    log('celestialSphereMachine entry'),
+    // log('celestialSphereMachine entry'),
     // Spawn child actors.
     assign({
       constellations: () =>
@@ -36,5 +36,5 @@ export const celestialSphereMachine = createMachine({
     }),
   ],
 
-  exit: log('celestialSphereMachine exit'),
+  // exit: log('celestialSphereMachine exit'),
 });
