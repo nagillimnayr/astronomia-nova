@@ -34,6 +34,7 @@ export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
     if (defaultOpen) {
       cameraActor.send({ type: 'SHOW_VR_HUD' });
     }
+    return () => console.log('VRhud unmounting.');
   }, [cameraActor, defaultOpen, vrActor]);
 
   const inVR = useSelector(vrActor, (state) => state.matches('active'));
