@@ -1,25 +1,25 @@
 import { useSelector } from '@xstate/react';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { PerspectiveCamera } from 'three';
 import { FAR_CLIP, NEAR_CLIP } from '@/components/canvas/scene-constants';
 import { PerspectiveCamera as PerspectiveCam } from '@react-three/drei';
+import { useThree } from '@react-three/fiber';
 
 export const MainCamera = () => {
-  const { cameraActor, vrActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
   const camRef = useRef<PerspectiveCamera>(null!);
   return (
     <>
       <PerspectiveCam
         makeDefault
-        name="main-camera"
+        name="Main-Camera"
         position={[0, 0, 0]}
         near={NEAR_CLIP}
         far={FAR_CLIP}
         ref={(camera) => {
+          console.log('Main-Camera:', camera);
           if (!(camera instanceof PerspectiveCamera)) return;
           if (camRef.current === camera) return;
           camRef.current = camera;
