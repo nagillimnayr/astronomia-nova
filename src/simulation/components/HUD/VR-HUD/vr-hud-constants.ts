@@ -8,6 +8,9 @@ export const colors = Object.freeze({
   textGray: '#9ca3af',
   background2: '#374151',
 
+  iconBase: '#ffffff', // white
+  iconHover: '#d1d5db', // white
+
   // border: '#2a2a2a',
   border: '#6b7280', // gray500
   input: '#282829',
@@ -26,42 +29,49 @@ export const colors = Object.freeze({
   slate700: '#334155',
 });
 
-export const text = Object.freeze({
-  xxs: 6,
-  xs: 8,
-  sm: 12,
-  md: 16,
-  base: 24,
-  lg: 36,
-  xl: 48,
-  xxl: 64,
-});
+export const SCALE_FACTOR = 0.02;
+
+export const text = {
+  xxs: 12 * SCALE_FACTOR,
+  xs: 16 * SCALE_FACTOR,
+  sm: 24 * SCALE_FACTOR,
+  md: 32 * SCALE_FACTOR,
+  base: 48 * SCALE_FACTOR,
+  lg: 72 * SCALE_FACTOR,
+  xl: 96 * SCALE_FACTOR,
+  xxl: 128 * SCALE_FACTOR,
+} as const;
 
 export const borderRadius = Object.freeze({
-  xxs: 6,
-  xs: 8,
-  sm: 12,
-  md: 16,
-  base: 24,
-  lg: 36,
-  xl: 48,
-  xxl: 64,
+  xxs: 6 * SCALE_FACTOR,
+  xs: 8 * SCALE_FACTOR,
+  sm: 12 * SCALE_FACTOR,
+  md: 16 * SCALE_FACTOR,
+  base: 24 * SCALE_FACTOR,
+  lg: 36 * SCALE_FACTOR,
+  xl: 48 * SCALE_FACTOR,
+  xxl: 64 * SCALE_FACTOR,
 });
 
 export const border = Object.freeze({
-  sm: 1,
-  md: 2,
-  base: 4,
-  lg: 6,
-  xl: 8,
+  sm: 1 * SCALE_FACTOR,
+  md: 2 * SCALE_FACTOR,
+  base: 4 * SCALE_FACTOR,
+  lg: 6 * SCALE_FACTOR,
+  xl: 8 * SCALE_FACTOR,
 });
 
 export const depth = {
-  xxs: 4,
-  xs: 6,
-  sm: 8,
-  md: 12,
-  base: 16,
-  lg: 20,
-  xl: 24,
+  xxs: 1 * SCALE_FACTOR,
+  xs: 2 * SCALE_FACTOR,
+  sm: 1 * SCALE_FACTOR,
+  md: 4 * SCALE_FACTOR,
+  base: 5 * SCALE_FACTOR,
+  lg: 6 * SCALE_FACTOR,
+  xl: 7 * SCALE_FACTOR,
+  xxl: 8 * SCALE_FACTOR,
 } as const;
+
+export const iconSize = {
+  base: text.sm * 0.15,
+};
