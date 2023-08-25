@@ -1,26 +1,20 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { colors, depth, text, iconSize } from '../../vr-hud-constants';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { depth, iconSize } from '../../vr-hud-constants';
+import { useCallback, useRef, useState } from 'react';
+import { BoxHelper, type Group } from 'three';
 import {
-  Box3,
-  BoxHelper,
-  Color,
-  Group,
-  MeshBasicMaterial,
-  Object3D,
-} from 'three';
-import {
-  Text,
   Svg,
-  useHelper,
   Center,
   Circle,
   useCursor,
+  Sphere,
+  useHelper,
 } from '@react-three/drei';
 import { type Vector3Tuple } from 'three';
 import { ICON_MATERIAL_BASE, ICON_MATERIAL_HOVER } from '../../vr-ui-materials';
 import { Interactive } from '@react-three/xr';
+import useHover from '@/hooks/useHover';
 
 type VRPauseButtonProps = {
   position?: Vector3Tuple;
@@ -30,10 +24,12 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
   const isPaused = useSelector(timeActor, (state) => state.matches('paused'));
 
   const groupRef = useRef<Group>(null!);
+  const iconRef = useRef<Group>(null!);
 
   // useHelper(groupRef, BoxHelper);
+  // useHelper(iconRef, BoxHelper, 'blue');
 
-  const [isHovered, setHovered] = useState<boolean>(false);
+  const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
 
   // Events handlers.
@@ -45,13 +41,6 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
   }, [timeActor]);
   const handleClick = isPaused ? handlePlay : handlePause;
 
-  const handlePointerEnter = useCallback(() => {
-    setHovered(true);
-  }, []);
-  const handlePointerLeave = useCallback(() => {
-    setHovered(false);
-  }, []);
-
   const iconSrc = isPaused ? 'icons/MdiPlay.svg' : 'icons/MdiPause.svg';
 
   const size = iconSize.base;
@@ -59,16 +48,16 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
     <>
       <Interactive
         onSelect={handleClick}
-        onHover={handlePointerEnter}
-        onBlur={handlePointerLeave}
+        onHover={hoverEvents.handlePointerEnter}
+        onBlur={hoverEvents.handlePointerLeave}
       >
         <group
           ref={groupRef}
           position={position}
           scale={isHovered ? 1.2 : 1}
           onClick={handleClick}
-          onPointerEnter={handlePointerEnter}
-          onPointerLeave={handlePointerLeave}
+          onPointerEnter={hoverEvents.handlePointerEnter}
+          onPointerLeave={hoverEvents.handlePointerLeave}
         >
           <Circle args={[1]}>
             <meshBasicMaterial color={'red'} />
@@ -77,14 +66,22 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
               scale={size}
               onClick={handleClick}
             >
-              <Center>
+              <Center
+                disableZ
+                onCentered={(props) => {
+                  console.log('centered:', props);
+                }}
+              >
                 <Svg
+                  ref={iconRef}
                   src={iconSrc}
                   fillMaterial={
                     isHovered ? ICON_MATERIAL_HOVER : ICON_MATERIAL_BASE
                   }
                 />
               </Center>
+              {/* <Sphere args={[0.5]} material-color={'blue'} /> */}
+              {/* <axesHelper args={[10]} /> */}
             </object3D>
           </Circle>
         </group>

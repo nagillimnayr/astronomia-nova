@@ -5,8 +5,8 @@ function useHover() {
 
   const hoverEvents = useMemo(
     () => ({
-      onPointerEnter: () => setHovered(true),
-      onPointerLeave: () => setHovered(false),
+      handlePointerEnter: () => setHovered(true),
+      handlePointerLeave: () => setHovered(false),
     }),
     []
   );
