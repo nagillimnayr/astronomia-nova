@@ -1,7 +1,6 @@
 import { TIME_MULT, J2000 } from '@/simulation/utils/constants';
 import { addSeconds } from 'date-fns';
-import { assign, createMachine, log, sendParent, sendTo } from 'xstate';
-import { EventDispatcher } from 'three';
+import { assign, createMachine, log } from 'xstate';
 
 const MIN_TIMESCALE = -100;
 const MAX_TIMESCALE = 100;
@@ -38,7 +37,6 @@ export const timeMachine = createMachine(
 
     context: () => ({
       timeElapsed: 0,
-      previousTime: 0,
       timescale: 1,
       refDate: J2000,
       date: J2000,
@@ -68,7 +66,7 @@ export const timeMachine = createMachine(
         on: {
           UNPAUSE: {
             target: 'unpaused',
-            // actions: ['logEvent'],
+            actions: ['logEvent'],
           },
         },
       },
@@ -79,7 +77,7 @@ export const timeMachine = createMachine(
           },
           PAUSE: {
             target: 'paused',
-            // actions: ['logEvent'],
+            actions: ['logEvent'],
           },
         },
       },
@@ -102,7 +100,6 @@ export const timeMachine = createMachine(
           const scaledDelta = deltaTime * timescale * TIME_MULT;
           return timeElapsed + scaledDelta;
         },
-        previousTime: ({ timeElapsed }) => timeElapsed, // Update previous time.
       }),
 
       // Computes the current date based on the timeElapsed relative to the start date (refDate).
@@ -116,10 +113,9 @@ export const timeMachine = createMachine(
         timeElapsed: ({ timeElapsed }, { deltaTime }) => {
           return timeElapsed + deltaTime;
         },
-        previousTime: ({ timeElapsed }) => timeElapsed, // Update previous time.
       }),
 
-      // logEvent: log((_, event) => event),
+      logEvent: log((_, event) => event),
       // logTimer: log((context) => context.timeElapsed),
     },
     guards: {

@@ -68,6 +68,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
     siderealRotationPeriod,
   } = params;
 
+  console.log(`render ${name}`);
   // Get central body from context.
   const centralBodyRef = useContext(KeplerTreeContext);
 
@@ -89,21 +90,9 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
       <keplerBody
         meshRef={meshRef}
         ref={(body: KeplerBody) => {
-          if (!body) {
-            if (bodyRef.current) {
-              const name = bodyRef.current.name;
-              console.log(`removing ${name}`);
-              mapActor.send({ type: 'REMOVE', name });
+          if (!body) return;
 
-              if (!centralBodyRef) return;
-              const centralBody = centralBodyRef.current;
-              if (!centralBody) return;
-              centralBody.removeOrbitingBody(bodyRef.current);
-            }
-
-            return;
-          }
-
+          if (bodyRef.current === body) return;
           bodyRef.current = body;
           mapActor.send({ type: 'ADD_BODY', body: body });
 

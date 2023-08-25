@@ -19,12 +19,6 @@ const Simulation = ({ children }: SimProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   console.log('render Simulation');
 
-  useEffect(() => {
-    // Reset timers, timescale, etc when the component is mounted.
-    console.log('resetting timeStore!');
-    useTimeStore.getState().reset();
-  }, []);
-
   useFrame(({ clock, camera }, delta) => {
     rootActor.send({ type: 'UPDATE', deltaTime: delta });
     // Update camera.

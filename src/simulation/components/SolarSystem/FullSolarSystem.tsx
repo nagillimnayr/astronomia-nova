@@ -1,14 +1,14 @@
-import React, { forwardRef, useContext } from 'react';
+import { useRef } from 'react';
 import Body from '../Body/Body';
-import { SOLAR_MASS, SUN_RADIUS } from '@/simulation/utils/constants';
 import { useTexture } from '@react-three/drei';
 
 import { Orbit } from '../Orbit/Orbit';
-import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { trpc } from '@/lib/trpc/trpc';
+import KeplerBody from '@/simulation/classes/kepler-body';
 
 const FullSolarSystem = () => {
+  console.log('render FullSolarSystem');
   const [
     sunTexture,
     mercuryTexture,
@@ -32,7 +32,7 @@ const FullSolarSystem = () => {
     'assets/textures/2k_uranus.jpg',
     'assets/textures/2k_neptune.jpg',
   ]);
-  const rootRef = useContext(KeplerTreeContext);
+  const rootRef = useRef<KeplerBody>(null!);
 
   const { keplerTreeActor } = MachineContext.useSelector(
     ({ context }) => context
@@ -54,9 +54,7 @@ const FullSolarSystem = () => {
     <Body
       ref={(root) => {
         if (!root) return;
-        if (rootRef) {
-          rootRef.current = root;
-        }
+        rootRef.current = root;
         keplerTreeActor.send({ type: 'ASSIGN_ROOT', root });
       }}
       params={{
