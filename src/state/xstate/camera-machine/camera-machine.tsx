@@ -101,14 +101,14 @@ export const cameraMachine = createMachine(
     // Context assignment events:
     on: {
       ASSIGN_GET_THREE: {
-        actions: ['assignGetThree', 'initializeControls'],
+        actions: ['logEvent', 'assignGetThree', 'initializeControls'],
       },
 
       ASSIGN_CONTROLS: {
         cond: (context, event) => {
           return context.controls !== event.controls;
         },
-        actions: ['assignControls', 'logEvent', 'initializeControls'],
+        actions: ['logEvent', 'assignControls', 'initializeControls'],
       },
       ASSIGN_CAMERA: {
         actions: [
@@ -225,6 +225,7 @@ export const cameraMachine = createMachine(
           SET_TARGET: {
             internal: true,
             actions: [
+              'logEvent',
               'assignTarget',
               'applySurfaceCamUp',
               'setSurfaceCamDistance',
@@ -282,9 +283,11 @@ export const cameraMachine = createMachine(
         const { camera } = event;
         controls?.setCamera(camera);
       },
-      initializeControls: (context) => {
+      initializeControls: (context, event) => {
         const { controls, mainCamera, getThree, vrHud } = context;
         if (!controls) return;
+
+        console.log('initializing controls!', event);
 
         if (mainCamera) {
           controls.setCamera(mainCamera);
@@ -303,8 +306,6 @@ export const cameraMachine = createMachine(
           // Attach vrHud to controls.
           controls.attachToController(vrHud);
         }
-
-        console.log('controls:', controls);
       },
       startXRSession: (context, event) => {
         const { getThree, controls, vrHud } = context;
@@ -315,27 +316,15 @@ export const cameraMachine = createMachine(
 
         const { xr } = getThree().gl;
 
-        // Update XR session frustum.
-        // setTimeout(() => {
-        //   // Timeout so it doesn't get overwritten.
-        //   const session = xr.getSession();
-        //   void session?.updateRenderState({
-        //     depthNear: NEAR_CLIP,
-        //     depthFar: FAR_CLIP,
-        //   });
-        // }, 100);
-
         // XR camera may not be set yet, so set timeout.
         setTimeout(() => {
           const xrCamera = xr.getCamera();
-          if (xrCamera) {
+          if (xrCamera && xrCamera.name !== 'xr-camera') {
             console.log('xrCamera:', xrCamera);
             xrCamera.name = 'xr-camera';
             const [xrCam1, xrCam2] = xrCamera.cameras;
             xrCam1.name = 'xrCam1';
             xrCam2.name = 'xrCam2';
-            // console.log('xrCam1:', xrCam1);
-            // console.log('xrCam2:', xrCam2);
           }
         }, 100);
 
@@ -343,17 +332,6 @@ export const cameraMachine = createMachine(
         if (vrHud) {
           vrHud.position.setZ(VR_HUD_Z_IMMERSIVE);
         }
-
-        const session = xr.getSession();
-        if (!session) return;
-
-        session.inputSources.forEach((inputSource, index) => {
-          console.log(
-            `input source #${index}:`,
-            inputSource.handedness,
-            inputSource
-          );
-        });
       },
       endXRSession: (context, event) => {
         const { vrHud, controls, mainCamera, getThree } = context;
