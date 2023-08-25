@@ -82,7 +82,6 @@ export const VROutlinerItem = ({
       <Object object={obj} depth={1}>
         <Suspense>
           <Container
-            index={index}
             ref={containerRef}
             height={'auto'}
             flexDirection="column"
@@ -93,7 +92,6 @@ export const VROutlinerItem = ({
             backgroundColor={colors.background}
           >
             <Container
-              index={index + 1}
               flexDirection="row"
               alignItems="center"
               gapColumn={text.xs}
@@ -103,18 +101,14 @@ export const VROutlinerItem = ({
             >
               {/* <Object object={buttonObj} depth={1}> */}
               <Button
-                index={index + 2}
                 height={'auto'}
                 flexGrow={1} // Will stretch the button to fill as much space as it can, which will line up the eye icon buttons on the the right side.
                 onClick={handleClick}
               >
-                <Text index={index + 3} fontSize={text.xl}>
-                  {body.name}
-                </Text>
+                <Text fontSize={text.xl}>{body.name}</Text>
               </Button>
               {/* </Object> */}
               <Container
-                index={index + 4}
                 material={VRHudBGMaterial}
                 backgroundColor={colors.background}
               >
@@ -124,7 +118,6 @@ export const VROutlinerItem = ({
 
             {body.orbitingBodies.length > 0 && (
               <List
-                index={index + 5}
                 height={'auto'}
                 marginLeft={text.base}
                 paddingLeft={text.base}
@@ -138,13 +131,7 @@ export const VROutlinerItem = ({
                 backgroundColor={colors.background}
               >
                 {body.orbitingBodies.map((child) => {
-                  return (
-                    <VROutlinerItem
-                      index={index + 6}
-                      key={child.name}
-                      body={child}
-                    />
-                  );
+                  return <VROutlinerItem key={child.name} body={child} />;
                 })}
               </List>
             )}
