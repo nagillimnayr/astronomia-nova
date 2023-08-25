@@ -36,14 +36,20 @@ export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
     }
   }, [cameraActor, defaultOpen, vrActor]);
 
+  const inVR = useSelector(vrActor, (state) => state.matches('active'));
+
   return (
     <>
       <group name="VR-Hud" ref={groupRef} position={position}>
-        {/* <VRDetailsPanel position={[1, 0, 0]} /> */}
-        <VRTimePanel position={[0, -1.5, 0]} scale={0.2} />
-        {/* <VROutliner position={[-1, 0, 0]} />
-        <VRSettingsButton position={[1, 1.25, 0]} />
-        <VRSettingsMenu position={[0, 0.5, 0.25]} /> */}
+        {inVR && (
+          <>
+            {/* <VRDetailsPanel position={[1, 0, 0]} /> */}
+            <VRTimePanel position={[0, -1.5, 0]} scale={0.2} />
+            {/* <VROutliner position={[-1, 0, 0]} /> */}
+            {/* <VRSettingsButton position={[1, 1.25, 0]} /> */}
+            {/* <VRSettingsMenu position={[0, 0.5, 0.25]} />  */}
+          </>
+        )}
       </group>
     </>
   );
