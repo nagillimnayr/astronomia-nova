@@ -10,6 +10,7 @@ import {
   useCursor,
   Sphere,
   useHelper,
+  OnCenterCallbackProps,
 } from '@react-three/drei';
 import { type Vector3Tuple } from 'three';
 import { ICON_MATERIAL_BASE, ICON_MATERIAL_HOVER } from '../../vr-ui-materials';
@@ -39,6 +40,7 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
   const handlePause = useCallback(() => {
     timeActor.send({ type: 'PAUSE' });
   }, [timeActor]);
+
   const handleClick = isPaused ? handlePlay : handlePause;
 
   const iconSrc = isPaused ? 'icons/MdiPlay.svg' : 'icons/MdiPause.svg';
@@ -61,28 +63,24 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
         >
           <Circle args={[1]}>
             <meshBasicMaterial color={'red'} />
-            <object3D
+            <Center
+              disableZ
               position={[0, 0, depth.xs]}
               scale={size}
-              onClick={handleClick}
+              onCentered={(props) => {
+                // This is just to force the Center component to re-center each time the component is re-rendered.
+                // console.log('centered', props);
+              }}
             >
-              <Center
-                disableZ
-                onCentered={(props) => {
-                  console.log('centered:', props);
-                }}
-              >
-                <Svg
-                  ref={iconRef}
-                  src={iconSrc}
-                  fillMaterial={
-                    isHovered ? ICON_MATERIAL_HOVER : ICON_MATERIAL_BASE
-                  }
-                />
-              </Center>
-              {/* <Sphere args={[0.5]} material-color={'blue'} /> */}
-              {/* <axesHelper args={[10]} /> */}
-            </object3D>
+              <Svg
+                ref={iconRef}
+                src={iconSrc}
+                fillMaterial={
+                  isHovered ? ICON_MATERIAL_HOVER : ICON_MATERIAL_BASE
+                }
+              />
+            </Center>
+            {/* <Sphere args={[0.5]} material-color={'blue'} /> */}
           </Circle>
         </group>
       </Interactive>
