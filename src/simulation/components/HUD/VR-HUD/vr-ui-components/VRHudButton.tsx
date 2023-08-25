@@ -34,7 +34,7 @@ type VRHudButtonProps = ComponentPropsWithoutRef<typeof Button>;
 // };
 
 export const VRButton = ({ children, ...props }: VRHudButtonProps) => {
-  const { isHovered, setHovered, hoverProps } = useHover();
+  const { isHovered, setHovered, hoverEvents: hoverProps } = useHover();
 
   useCursor(isHovered, 'pointer');
 
