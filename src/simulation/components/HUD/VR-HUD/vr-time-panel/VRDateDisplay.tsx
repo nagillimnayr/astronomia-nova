@@ -104,9 +104,6 @@ const DateText = ({ position }: TextMeshProps) => {
           position={position}
           anchorX={'center'}
           anchorY={'middle'}
-          onSync={(troika) => {
-            console.log('dateMesh:', troika);
-          }}
         >
           {dateStr}
         </Text>
