@@ -1,7 +1,7 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { depth, iconSize } from '../../vr-hud-constants';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { BoxHelper, type Group } from 'three';
 import {
   Svg,
@@ -14,8 +14,9 @@ import {
 } from '@react-three/drei';
 import { type Vector3Tuple } from 'three';
 import { ICON_MATERIAL_BASE, ICON_MATERIAL_HOVER } from '../../vr-ui-materials';
-import { Interactive } from '@react-three/xr';
+import { Interactive, XRInteractionEvent } from '@react-three/xr';
 import useHover from '@/hooks/useHover';
+import { ThreeEvent } from '@react-three/fiber';
 
 type VRPauseButtonProps = {
   position?: Vector3Tuple;
@@ -34,14 +35,29 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
   useCursor(isHovered, 'pointer');
 
   // Events handlers.
-  const handlePlay = useCallback(() => {
-    timeActor.send({ type: 'UNPAUSE' });
-  }, [timeActor]);
-  const handlePause = useCallback(() => {
-    timeActor.send({ type: 'PAUSE' });
-  }, [timeActor]);
+  const eventHandlers = useMemo(
+    () => ({
+      unpause: (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
+        if ('stopPropagation' in event) {
+          event.stopPropagation();
+          // Stopping propagation will call onPointerLeave, so we need to reset isHovered.
+          setHovered(true);
+        }
+        timeActor.send({ type: 'UNPAUSE' });
+      },
+      pause: (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
+        if ('stopPropagation' in event) {
+          event.stopPropagation();
+          // Stopping propagation will call onPointerLeave, so we need to reset isHovered.
+          setHovered(true);
+        }
+        timeActor.send({ type: 'PAUSE' });
+      },
+    }),
+    [setHovered, timeActor]
+  );
 
-  const handleClick = isPaused ? handlePlay : handlePause;
+  const handleClick = isPaused ? eventHandlers.unpause : eventHandlers.pause;
 
   const iconSrc = isPaused ? 'icons/MdiPlay.svg' : 'icons/MdiPause.svg';
 
