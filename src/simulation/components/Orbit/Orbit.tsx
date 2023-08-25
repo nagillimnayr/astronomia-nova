@@ -83,7 +83,6 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     console.log('centralBodyRef.current is null');
     return;
   }
-  const centralMass = centralBodyRef.current.mass;
 
   const { ephemerisTable, physicalDataTable } = ephemeridesQuery.data;
 
@@ -129,12 +128,12 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
       name={name}
       ref={(orbit) => {
         if (!orbit) {
-          if (orbitRef.current) {
-            mapActor.send({
-              type: 'REMOVE_ORBIT',
-              name: orbitRef.current.name,
-            }); // Remove from map.
-          }
+          // if (orbitRef.current) {
+          //   mapActor.send({
+          //     type: 'REMOVE_ORBIT',
+          //     name: orbitRef.current.name,
+          //   }); // Remove from map.
+          // }
           return;
         }
         if (orbitRef.current === orbit) return;
