@@ -36,9 +36,9 @@ const VRTimePanelStory = ({ children }: PropsWithChildren) => {
   });
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 2]} />
+      <PerspectiveCamera makeDefault position={[0, 0, 5]} />
       <CameraControls makeDefault />
-      <VRTimePanel />
+      <VRTimePanel position={[0, 0, 0]} />
     </>
   );
 };

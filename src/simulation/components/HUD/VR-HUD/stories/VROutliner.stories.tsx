@@ -33,7 +33,7 @@ const VROutlinerStory = () => {
       <PerspectiveCamera makeDefault position={[0, 0, 2]} />
       <CameraControls makeDefault />
       <MockSolarSystem />
-      <VROutliner />
+      {/* <VROutliner /> */}
     </>
   );
 };

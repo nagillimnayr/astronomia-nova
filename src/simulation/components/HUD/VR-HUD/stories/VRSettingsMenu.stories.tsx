@@ -33,8 +33,8 @@ const VRSettingsMenuStory = () => {
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 2.5]} />
       <CameraControls makeDefault />
-      <VRSettingsButton position={[1, 1, 0]} />
-      <VRSettingsMenu defaultOpen />
+      {/* <VRSettingsButton position={[1, 1, 0]} />
+      <VRSettingsMenu defaultOpen /> */}
     </>
   );
 };

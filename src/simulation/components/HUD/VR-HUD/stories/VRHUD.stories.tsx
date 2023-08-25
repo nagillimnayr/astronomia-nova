@@ -6,20 +6,20 @@ import { useFrame } from '@react-three/fiber';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { VROutliner } from '../vr-outliner/VROutliner';
 import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
-import { VRHUD, VRHud } from '../VRHud';
+import { VRHud } from '../VRHud';
 import { MockEarthSelect } from '@/stories/mocks/MockEarthSelect';
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 import { VRCameraManager } from '@/components/canvas/vr/VRCameraManager';
 import { VRManager } from '@/components/canvas/vr/VRManager';
 
-const meta: Meta<typeof VRHUD> = {
+const meta: Meta<typeof VRHud> = {
   title: 'VRHUD/VRHUD',
-  component: VRHUD,
+  component: VRHud,
   decorators: [(storyFn) => <VRCanvasDecorator>{storyFn()}</VRCanvasDecorator>],
 };
 
 export default meta;
-type Story = StoryObj<typeof VRHUD>;
+type Story = StoryObj<typeof VRHud>;
 
 export const Default: Story = {
   render: () => {
