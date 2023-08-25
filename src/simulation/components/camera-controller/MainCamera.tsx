@@ -10,9 +10,6 @@ export const MainCamera = () => {
     ({ context }) => context
   );
 
-  // Bind to state changes so the camera will reset itself when a session starts or ends.
-  const vrActive = useSelector(vrActor, (state) => state.matches('active'));
-
   const camRef = useRef<PerspectiveCamera>(null!);
   return (
     <>
@@ -24,9 +21,9 @@ export const MainCamera = () => {
         far={FAR_CLIP}
         ref={(camera) => {
           if (!(camera instanceof PerspectiveCamera)) return;
-          // if (camRef.current === camera) return;
+          if (camRef.current === camera) return;
           camRef.current = camera;
-          console.log('hello');
+          console.log('Assigning main camera to controls');
           cameraActor.send({
             type: 'ASSIGN_CAMERA',
             camera,
