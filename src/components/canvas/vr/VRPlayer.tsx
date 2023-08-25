@@ -30,7 +30,7 @@ export const VRPlayer = () => {
     if (!cameraController) return;
     const camera = cameraController.camera;
     if (!camera || !player) return;
-
+    player.name = 'vr-player';
     // Attach the player to the camera.
     cameraController.attachToController(player);
 
