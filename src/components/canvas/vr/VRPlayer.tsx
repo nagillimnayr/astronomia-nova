@@ -13,40 +13,23 @@ const _worldPos = new Vector3();
 const _lookPos = new Vector3();
 
 export const VRPlayer = () => {
-  const { vrActor, cameraActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
-  const getThree = useThree(({ get }) => get);
-  const getXR = useXR(({ get }) => get);
-  const player = useXR(({ player }) => player);
-  const controllers = useXR(({ controllers }) => controllers);
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
-  const cameraController = useSelector(
-    cameraActor,
-    ({ context }) => context.controls
-  );
+  const player = useXR(({ player }) => player);
+  // const controllers = useXR(({ controllers }) => controllers);
 
   useEffect(() => {
-    if (!cameraController) return;
-    const camera = cameraController.camera;
+    const { controls } = cameraActor.getSnapshot()!.context;
+    if (!controls) return;
+    const camera = controls.camera;
     if (!camera || !player) return;
     player.name = 'vr-player';
     // Attach the player to the camera.
-    cameraController.attachToController(player);
+    controls.attachToController(player);
 
     console.log('Attaching VR Player to camera!', player);
     player.rotation.set(0, 0, 0);
-
-    // Get controllers.
-    const leftController = controllers.find(
-      (controller) => controller.inputSource.handedness === 'left'
-    );
-    const rightController = controllers.find(
-      (controller) => controller.inputSource.handedness === 'right'
-    );
-    console.log('left:', leftController);
-    console.log('right:', rightController);
-  }, [cameraController, controllers, getXR, player]);
+  }, [cameraActor, player]);
   return (
     <>
       <Controllers />
