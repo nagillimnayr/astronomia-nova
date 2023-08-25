@@ -8,7 +8,6 @@ import { trpc } from '@/lib/trpc/trpc';
 import KeplerBody from '@/simulation/classes/kepler-body';
 
 const FullSolarSystem = () => {
-  console.log('render FullSolarSystem');
   const [
     sunTexture,
     mercuryTexture,
