@@ -32,7 +32,7 @@ const VRDetailsPanelStory = () => {
       <PerspectiveCamera makeDefault position={[0, 0, 2]} />
       <CameraControls makeDefault />
       <MockEarthSelect />
-      {/* <VRDetailsPanel /> */}
+      <VRDetailsPanel />
     </>
   );
 };
