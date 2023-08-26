@@ -61,10 +61,10 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
   // const width = 2;
   const height = width / 2;
   const radius = 0.2 * height;
-  const iconSize = 0.02 * height;
+  const iconSize = 0.015 * height;
   const fontSize = 0.35 * height;
 
-  const textXPos = -0.15 * width;
+  const textXPos = -0.125 * width;
   const iconXPos = 0.25 * width;
   return (
     <>

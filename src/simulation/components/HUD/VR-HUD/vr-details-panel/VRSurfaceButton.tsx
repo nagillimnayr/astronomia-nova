@@ -92,11 +92,12 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
   const fontSize = 0.35 * height;
 
   const textXPos = -0.125 * width;
-  // const textYPos = -0.05 * height;
-  const textYPos = 0;
+  const textYPos = -0.025 * height;
+  // const textYPos = 0;
 
   const iconXPos = 0.3 * width;
-  const iconYPos = 0.05 * height;
+  // const iconYPos = 0.05 * height;
+  const iconYPos = 0;
   // const iconYPos = 0;
   return (
     <>
