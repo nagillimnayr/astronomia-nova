@@ -1,7 +1,7 @@
 import { PI, PI_OVER_TWO } from '@/simulation/utils/constants';
 import { Path, Shape, ShapeGeometry } from 'three';
 
-const _shape = new Shape();
+// const _shape = new Shape();
 const _hole = new Path();
 
 /**
@@ -20,31 +20,33 @@ export function makeRoundedPlane(
   width: number,
   height: number,
   radius: number,
-  segments?: number
+  shape: Shape
 ) {
-  _shape.curves.length = 0;
-  _shape.holes.length = 0;
+  shape.curves.length = 0;
+  shape.holes.length = 0;
+  _hole.curves.length = 0;
+
   const x = width / 2;
   const y = height / 2;
 
   // Clamp the radius to the lesser side length;
-  const min = Math.min(x, y);
-  if (radius > min) {
-    radius = min;
+  const minOver2 = Math.min(x, y) / 2;
+  if (radius > minOver2) {
+    radius = minOver2;
   }
 
-  _shape.moveTo(x - radius, y);
-  _shape.lineTo(-x + radius, y);
-  _shape.arc(0, -radius, radius, PI_OVER_TWO, PI, false);
-  _shape.lineTo(-x, -y + radius);
-  _shape.arc(radius, 0, radius, PI, 3 * PI_OVER_TWO, false);
-  _shape.lineTo(x - radius, -y);
-  _shape.arc(0, radius, radius, 3 * PI_OVER_TWO, 0, false);
-  _shape.lineTo(x, y - radius);
-  _shape.arc(-radius, 0, radius, 0, PI_OVER_TWO, false);
-  _shape.closePath();
+  shape.moveTo(x - radius, y);
+  shape.lineTo(-x + radius, y);
+  shape.arc(0, -radius, radius, PI_OVER_TWO, PI, false);
+  shape.lineTo(-x, -y + radius);
+  shape.arc(radius, 0, radius, PI, 3 * PI_OVER_TWO, false);
+  shape.lineTo(x - radius, -y);
+  shape.arc(0, radius, radius, 3 * PI_OVER_TWO, 0, false);
+  shape.lineTo(x, y - radius);
+  shape.arc(-radius, 0, radius, 0, PI_OVER_TWO, false);
+  shape.closePath();
 
-  return new ShapeGeometry(_shape, segments);
+  return shape;
 }
 
 export function makeRoundedPlaneBorder(
@@ -52,10 +54,10 @@ export function makeRoundedPlaneBorder(
   height: number,
   radius: number,
   borderWidth: number,
-  segments?: number
+  shape: Shape
 ) {
-  _shape.curves.length = 0;
-  _shape.holes.length = 0;
+  shape.curves.length = 0;
+  shape.holes.length = 0;
   _hole.curves.length = 0;
 
   const x2 = width / 2;
@@ -65,9 +67,9 @@ export function makeRoundedPlaneBorder(
   const radius2 = radius + borderWidth;
 
   // Clamp the radius to the lesser side length;
-  const min = Math.min(x, y);
-  if (radius > min) {
-    radius = min;
+  const minOver2 = Math.min(x, y) / 2;
+  if (radius > minOver2) {
+    radius = minOver2;
   }
 
   // Center of top-left arc.
@@ -87,23 +89,16 @@ export function makeRoundedPlaneBorder(
   const topRightCY = y - radius;
 
   // Outer rounded rect.
-  _shape.moveTo(x2 - radius2, y2);
-  _shape.lineTo(-x2 + radius2, y2);
+  shape.moveTo(x2 - radius2, y2);
+  shape.lineTo(-x2 + radius2, y2);
   // Top-left arc.
-  _shape.absarc(topLeftCX, topLeftCY, radius2, PI_OVER_TWO, PI, false);
-  _shape.lineTo(-x2, -y2 + radius2);
+  shape.absarc(topLeftCX, topLeftCY, radius2, PI_OVER_TWO, PI, false);
+  shape.lineTo(-x2, -y2 + radius2);
   // Bottom-left arc.
-  _shape.absarc(
-    bottomLeftCX,
-    bottomLeftCY,
-    radius2,
-    PI,
-    3 * PI_OVER_TWO,
-    false
-  );
-  _shape.lineTo(x2 - radius2, -y2);
+  shape.absarc(bottomLeftCX, bottomLeftCY, radius2, PI, 3 * PI_OVER_TWO, false);
+  shape.lineTo(x2 - radius2, -y2);
   // Bottom-right arc.
-  _shape.absarc(
+  shape.absarc(
     bottomRightCX,
     bottomRightCY,
     radius2,
@@ -111,10 +106,10 @@ export function makeRoundedPlaneBorder(
     0,
     false
   );
-  _shape.lineTo(x2, y2 - radius2);
+  shape.lineTo(x2, y2 - radius2);
   // Top-right arc.
-  _shape.absarc(topRightCX, topRightCY, radius2, 0, PI_OVER_TWO, false);
-  _shape.closePath();
+  shape.absarc(topRightCX, topRightCY, radius2, 0, PI_OVER_TWO, false);
+  shape.closePath();
 
   // Inner rounded rect.
   _hole.moveTo(x - radius, y);
@@ -132,7 +127,7 @@ export function makeRoundedPlaneBorder(
   _hole.absarc(topRightCX, topRightCY, radius, 0, PI_OVER_TWO, false);
   _hole.closePath();
 
-  _shape.holes.push(_hole);
+  shape.holes.push(_hole);
 
-  return new ShapeGeometry(_shape, segments);
+  return shape;
 }

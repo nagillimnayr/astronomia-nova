@@ -11,16 +11,18 @@ import {
   useState,
 } from 'react';
 import { type ColorRepresentation, type Vector3Tuple } from 'three';
-import { Panel, PanelBorder } from './classes/Panel';
+import { Panel, PanelInner, PanelOuter } from './classes/Panel';
 import { EventHandlers } from '@react-three/fiber/dist/declarations/src/core/events';
 import { useCursor } from '@react-three/drei';
+import { colors } from '../vr-hud-constants';
 
-extend({ Panel, PanelBorder });
+extend({ Panel, PanelInner, PanelOuter });
 
 declare module '@react-three/fiber' {
   interface ThreeElements {
     panel: Object3DNode<Panel, typeof Panel>;
-    panelBorder: Object3DNode<PanelBorder, typeof PanelBorder>;
+    panelInner: Object3DNode<PanelInner, typeof PanelInner>;
+    panelOuter: Object3DNode<PanelOuter, typeof PanelOuter>;
   }
 }
 
@@ -30,44 +32,35 @@ type VRPanelProps = PropsWithChildren &
     position?: Vector3Tuple;
     width?: number;
     height?: number;
+    radius?: number;
+    borderWidth?: number;
+    segments?: number;
     backgroundColor?: ColorRepresentation;
     borderColor?: ColorRepresentation;
-    borderRadius?: number;
-    borderWidth?: number;
   };
 export const VRPanel = ({
   children,
   position,
-  width = 1,
+  width = 2,
   height = 1,
-  backgroundColor,
-  borderColor,
-  borderRadius = 0,
+  radius = 0.2,
   borderWidth = 0.01,
+  segments,
+  backgroundColor = colors.background,
+  borderColor = colors.border,
   ...props
 }: VRPanelProps) => {
-  const borderWidth2 = borderWidth * 2;
-
   return (
     <>
       <group position={position}>
-        <panelBorder
-          args={[width, height, borderRadius, borderWidth, 24]}
-          backgroundColor={borderColor ?? backgroundColor}
+        <panel
+          args={[width, height, radius, borderWidth, segments]}
+          backgroundColor={backgroundColor}
+          borderColor={borderColor}
           {...props}
         >
-          <panel
-            args={[
-              width - borderWidth2,
-              height - borderWidth2,
-              borderRadius,
-              24,
-            ]}
-            backgroundColor={backgroundColor}
-          >
-            {children}
-          </panel>
-        </panelBorder>
+          {children}
+        </panel>
       </group>
     </>
   );
