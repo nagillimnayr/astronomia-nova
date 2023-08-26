@@ -1,6 +1,6 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { colors, text, iconSize } from '../../vr-hud-constants';
+import { colors, text, icons } from '../../vr-hud-constants';
 import { useCallback, useMemo, useState } from 'react';
 import {
   Text,
@@ -50,7 +50,7 @@ export const VRAdvanceTimeButton = ({
     ? 'icons/MdiWeatherSunsetDown.svg'
     : 'icons/MdiWeatherSunsetUp.svg';
 
-  const size = iconSize.base;
+  const size = icons.base;
   return (
     <>
       <Interactive
@@ -65,16 +65,10 @@ export const VRAdvanceTimeButton = ({
           onPointerEnter={handlePointerEnter}
           onPointerLeave={handlePointerLeave}
         >
-          <Circle args={[1]}>
-            <meshBasicMaterial color={'red'} />
+          <Circle args={[1]} material-color={colors.icon.bg.base}>
             <object3D position={[0, 0, Z_OFFSET]} scale={size}>
               <Center>
-                <Svg
-                  src={iconSrc}
-                  fillMaterial={
-                    isHovered ? ICON_MATERIAL_HOVER : ICON_MATERIAL_BASE
-                  }
-                />
+                <Svg src={iconSrc} fillMaterial={ICON_MATERIAL_BASE} />
               </Center>
             </object3D>
           </Circle>

@@ -1,6 +1,6 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { depth, iconSize } from '../../vr-hud-constants';
+import { colors, depth, icons } from '../../vr-hud-constants';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { BoxHelper, type Group } from 'three';
 import {
@@ -61,7 +61,7 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
 
   const iconSrc = isPaused ? 'icons/MdiPlay.svg' : 'icons/MdiPause.svg';
 
-  const size = iconSize.base;
+  const iconSize = icons.base;
   return (
     <>
       <Interactive
@@ -77,12 +77,10 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
           onPointerEnter={hoverEvents.handlePointerEnter}
           onPointerLeave={hoverEvents.handlePointerLeave}
         >
-          <Circle args={[1]}>
-            <meshBasicMaterial color={'red'} />
+          <Circle args={[1]} material-color={colors.icon.bg.base}>
             <Center
               disableZ
               position={[0, 0, depth.xs]}
-              scale={size}
               onCentered={(props) => {
                 // This is just to force the Center component to re-center each time the component is re-rendered.
                 // console.log('centered', props);
@@ -91,9 +89,8 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
               <Svg
                 ref={iconRef}
                 src={iconSrc}
-                fillMaterial={
-                  isHovered ? ICON_MATERIAL_HOVER : ICON_MATERIAL_BASE
-                }
+                fillMaterial={ICON_MATERIAL_BASE}
+                scale={iconSize}
               />
             </Center>
             {/* <Sphere args={[0.5]} material-color={'blue'} /> */}

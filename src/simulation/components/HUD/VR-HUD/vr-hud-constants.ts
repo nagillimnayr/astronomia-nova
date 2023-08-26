@@ -8,8 +8,18 @@ export const colors = Object.freeze({
   textGray: '#9ca3af',
   background2: '#374151',
 
-  iconBase: '#ffffff', // white
-  iconHover: '#d1d5db', // white
+  icon: {
+    fg: {
+      base: '#ffffff', // white
+      hover: '#d1d5db',
+      disabled: '#d1d5db',
+    },
+    bg: {
+      base: '#6b7280',
+      hover: '#4b5563',
+      disabled: '#9ca3af',
+    },
+  },
 
   // border: '#2a2a2a',
   border: '#6b7280', // gray500
@@ -72,6 +82,6 @@ export const depth = {
   xxl: 8 * SCALE_FACTOR,
 } as const;
 
-export const iconSize = {
-  base: text.sm * 0.15,
-};
+export const icons = {
+  base: text.sm * 1,
+} as const;

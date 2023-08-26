@@ -1,6 +1,6 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { border, colors, iconSize, text } from '../../vr-hud-constants';
+import { border, colors, icons, text } from '../../vr-hud-constants';
 import { useCallback } from 'react';
 import { Center, Circle, Svg, Text } from '@react-three/drei';
 import { type Vector3Tuple } from 'three';
@@ -24,7 +24,7 @@ export const VRTimescaleSlider = ({
     [timeActor]
   );
 
-  const size = iconSize.base;
+  const size = icons.base;
   return (
     <>
       <group position={position}>

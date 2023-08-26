@@ -1,6 +1,6 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { border, colors, depth, iconSize, text } from '../../vr-hud-constants';
+import { border, colors, depth, icons, text } from '../../vr-hud-constants';
 import { useCallback, useMemo } from 'react';
 import { Center, Circle, Svg, Text, useCursor } from '@react-three/drei';
 import { type Vector3Tuple } from 'three';
@@ -56,7 +56,7 @@ export const VRTimescaleIncrementButton = ({
     ? 'icons/MdiChevronLeft.svg'
     : 'icons/MdiChevronRight.svg';
 
-  const size = iconSize.base;
+  const size = icons.base;
   return (
     <>
       <Interactive
@@ -75,7 +75,7 @@ export const VRTimescaleIncrementButton = ({
           <Circle
             name="icon-circle"
             args={[1]}
-            material-color={colors.background}
+            material-color={colors.icon.bg.base}
           />
 
           {/** Offset the z position of the icon from its background. */}
