@@ -29,6 +29,7 @@ import { VRStats } from './VRStats';
 import { VRDebugPortal } from '@/simulation/components/HUD/VR-HUD/vr-debug/VRDebugDisplay';
 import { KeyPressControl } from '@/simulation/components/KeyPressControl';
 import { Controllers } from '@react-three/xr';
+import { VRGrabbable } from './components/VRGrabbable';
 
 export const VRScene = () => {
   const rootActor = MachineContext.useActorRef();
@@ -73,6 +74,13 @@ export const VRScene = () => {
           <meshPhongMaterial color={'cyan'} />
         </Tetrahedron>
       </RotatingObject>
+
+      <VRGrabbable position={[7, 1, 3]} color={'magenta'} />
+      <VRGrabbable position={[2, 1, -4]} color={'aliceblue'} />
+      <VRGrabbable position={[-6, 1, 2]} color={'coral'} />
+      <VRGrabbable position={[-3, 1, 8]} color={'cornflowerblue'} />
+      <VRGrabbable position={[-3, 1, -4]} color={'indigo'} />
+
       <Floor />
 
       <Cylinder
@@ -82,7 +90,7 @@ export const VRScene = () => {
       />
       <Controllers />
       <VRHud />
-      <VRDebugPortal position={[0, 0.5, -2]} scale={0.05} />
+      {/* <VRDebugPortal position={[0, 0.5, -2]} scale={0.05} /> */}
       <KeyPressControl />
     </>
   );
