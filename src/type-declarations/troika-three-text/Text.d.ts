@@ -1,3 +1,12 @@
+import {
+  Mesh,
+  type MeshBasicMaterial,
+  type Vector2,
+  type BufferGeometry,
+  type NormalBufferAttributes,
+  type Material,
+} from 'three';
+
 /**
  * @class Text
  *
@@ -5,8 +14,8 @@
  * fields (SDF).
  */
 export class Text extends Mesh<
-  import('three').BufferGeometry<import('three').NormalBufferAttributes>,
-  import('three').Material | import('three').Material[]
+  BufferGeometry<NormalBufferAttributes>,
+  Material | Material[]
 > {
   constructor();
   /**
@@ -322,6 +331,5 @@ export class Text extends Mesh<
   copy(source: any): this;
   clone(): any;
 }
-import { Mesh } from 'three';
-import { MeshBasicMaterial } from 'three';
-import { Vector2 } from 'three';
+type TextMesh = Text;
+export { TextMesh };

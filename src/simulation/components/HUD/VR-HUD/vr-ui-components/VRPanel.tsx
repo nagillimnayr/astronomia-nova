@@ -1,5 +1,5 @@
 import { type Object3DNode, extend } from '@react-three/fiber';
-import { type PropsWithChildren } from 'react';
+import { forwardRef, type PropsWithChildren } from 'react';
 import { type ColorRepresentation, type Vector3Tuple } from 'three';
 import { Panel, PanelInner, PanelOuter } from './classes/Panel';
 import { colors } from '../vr-hud-constants';
@@ -25,22 +25,26 @@ export type VRPanelProps = PropsWithChildren & {
   backgroundColor?: ColorRepresentation;
   borderColor?: ColorRepresentation;
 };
-export const VRPanel = React.memo(function VRPanel({
-  children,
-  position,
-  width = 2,
-  height = 1,
-  radius = 0.2,
-  borderWidth = 0.01,
-  segments,
-  backgroundColor = colors.background,
-  borderColor = colors.border,
-  ...props
-}: VRPanelProps) {
+export const VRPanel = forwardRef<Panel, VRPanelProps>(function VRPanel(
+  {
+    children,
+    position,
+    width = 2,
+    height = 1,
+    radius = 0.2,
+    borderWidth = 0.01,
+    segments,
+    backgroundColor = colors.background,
+    borderColor = colors.border,
+    ...props
+  }: VRPanelProps,
+  fwdRef
+) {
   return (
     <>
       <group position={position}>
         <panel
+          ref={fwdRef}
           args={[width, height, radius, borderWidth, segments]}
           backgroundColor={backgroundColor}
           borderColor={borderColor}

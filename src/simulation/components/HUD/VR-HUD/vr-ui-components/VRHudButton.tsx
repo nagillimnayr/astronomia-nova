@@ -3,6 +3,7 @@ import { type ThreeEvent } from '@react-three/fiber';
 import { type XRInteractionEvent } from '@react-three/xr';
 import {
   PropsWithChildren,
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -11,6 +12,9 @@ import {
 import { Box3, type Group, type Object3D, Vector3 } from 'three';
 import { VRPanel, type VRPanelProps } from './VRPanel';
 import { VRLabel } from './VRLabel';
+import { Panel } from './classes/Panel';
+import { TextMesh } from '@/type-declarations/troika-three-text/Text';
+import { useCursor } from '@react-three/drei';
 
 const bbox = new Box3();
 const bbSize = new Vector3();
@@ -20,26 +24,40 @@ const HORIZONTAL_RATIO = 2 / 1.6;
 
 type VRHudButtonProps = Omit<VRPanelProps, 'onClick'> & {
   onClick?: (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => void;
+  label: string;
 };
 export const VRHudButton = ({
   onClick,
   width = 2,
   height = 1,
+  label,
 }: VRHudButtonProps) => {
   const { isHovered, setHovered, hoverEvents } = useHover();
+  useCursor(isHovered, 'pointer');
+
   const containerRef = useRef<Group>(null!);
+  const panelRef = useRef<Panel>(null!);
   const labelRef = useRef<Object3D>(null!);
-  const widthRef = useRef<number>(width);
+  const troikaRef = useRef<TextMesh | null>(null);
+  const widthRef = useRef<number>(1);
 
-  useEffect(() => {
-    const label = labelRef.current;
-    if (!labelRef) return;
+  const handleSync = useCallback((troika: TextMesh) => {
+    troikaRef.current = troika;
+    const labelObj = labelRef.current;
+    const panel = panelRef.current;
+    if (!label || !panel) return;
 
-    bbox.setFromObject(label);
+    // Measure the bounding box of the text.
+    bbox.setFromObject(labelObj);
     bbox.getSize(bbSize);
-    console.log('label bbox size:', bbSize);
-    widthRef.current = bbSize.x * HORIZONTAL_RATIO;
-  });
+
+    // Multiply width by ratio.
+    const newWidth = bbSize.x * HORIZONTAL_RATIO;
+
+    // Set panel width.
+    panel.setWidth(newWidth);
+    widthRef.current = newWidth;
+  }, []);
 
   return (
     <>
@@ -50,11 +68,11 @@ export const VRHudButton = ({
         onPointerLeave={hoverEvents.handlePointerLeave}
         scale={isHovered ? 1.2 : 1}
       >
-        <VRPanel width={widthRef.current} height={height}>
-          <object3D ref={labelRef}>
-            <VRLabel label={'Label'} fontSize={height * 0.5} />
-          </object3D>
-        </VRPanel>
+        <VRPanel ref={panelRef} width={widthRef.current} height={height} />
+
+        <object3D ref={labelRef}>
+          <VRLabel label={label} fontSize={height * 0.5} onSync={handleSync} />
+        </object3D>
       </group>
     </>
   );
