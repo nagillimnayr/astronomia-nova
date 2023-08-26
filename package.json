@@ -120,7 +120,7 @@
     "swr": "^2.2.0",
     "tailwind-merge": "^1.13.2",
     "tailwindcss-animate": "^1.0.6",
-    "three": "^0.155.0",
+    "three": "^0.153.0",
     "three-mesh-ui": "^6.5.4",
     "three-stdlib": "^2.23.10",
     "troika-three-text": "^0.48.0-unicode.3",
