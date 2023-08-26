@@ -30,7 +30,8 @@ const VRDetailsPanelStory = () => {
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 3]} />
       <CameraControls makeDefault />
-      {/* <MockEarthSelect /> */}
+      {/** Panel is only open when a body is selected. */}
+      <MockEarthSelect />
       <VRSurfaceButton width={2} />
     </>
   );
