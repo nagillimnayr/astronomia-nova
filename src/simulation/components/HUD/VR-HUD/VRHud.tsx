@@ -37,6 +37,7 @@ export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
     return () => console.log('VRhud unmounting.');
   }, [cameraActor, defaultOpen, vrActor]);
 
+  // Subscribe so that component will re-render upon entering VR.
   const inVR = useSelector(vrActor, (state) => state.matches('active'));
 
   return (
@@ -44,7 +45,7 @@ export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
       <group name="VR-Hud" ref={groupRef} position={position}>
         {inVR && (
           <>
-            {/* <VRDetailsPanel position={[1, 0, 0]} /> */}
+            <VRDetailsPanel position={[1, 0, 0]} />
             <VRTimePanel position={[0, -1.5, 0]} scale={0.2} />
             {/* <VROutliner position={[-1, 0, 0]} /> */}
             {/* <VRSettingsButton position={[1, 1.25, 0]} /> */}
