@@ -45,22 +45,39 @@ export const VRCameraManager = ({
     ({ context }) => context
   );
   const controllerRef = useRef<CameraController>(null!);
-
-  const inSession = useSelector(vrActor, (state) => state.matches('active'));
+  const camRef = useRef<PerspectiveCamera>(null!);
+  const getThree = useThree(({ get }) => get);
 
   return (
     <>
       <cameraController
+        position={position}
         ref={(controller) => {
           if (!controller) return;
+          if (controllerRef.current === controller) return;
           controllerRef.current = controller;
+          const { camera } = getThree();
+
           cameraActor.send({ type: 'ASSIGN_CONTROLS', controls: controller });
           controller.setMinRadius(0.01);
-          controller.position.set(...position);
           controller.setTargetRadius(8);
+
+          if (camRef.current === camera) return;
+          if (camera instanceof PerspectiveCamera) {
+            camRef.current = camera;
+            // Initialize camera.
+            camera.name = 'main-camera';
+            // camera.near = NEAR_CLIP;
+            // camera.far = FAR_CLIP;
+            cameraActor.send({
+              type: 'ASSIGN_CAMERA',
+              camera,
+            });
+          }
         }}
       />
-      <VRMainCamera />
+
+      {/* <VRMainCamera /> */}
     </>
   );
 };
