@@ -40,9 +40,11 @@ const pad = text.md;
 
 type VRDetailsPanelProps = {
   position?: Vector3Tuple;
+  scale?: number;
 };
 export const VRDetailsPanel = ({
   position = [0, 0, 0],
+  scale = 1,
 }: VRDetailsPanelProps) => {
   // Get selection actor from state machine.
   const { selectionActor, cameraActor, vrActor } = MachineContext.useSelector(
@@ -83,6 +85,7 @@ export const VRDetailsPanel = ({
       <group
         name="vr-details-panel"
         position={position}
+        scale={scale}
         visible={isOpen}
         ref={(container) => {
           if (!container) return;
@@ -109,8 +112,8 @@ export const VRDetailsPanel = ({
         </Text>
 
         {/** Buttons. */}
-        <VRFocusButton width={0.5} position={[-0.35, -0.25, depth.xs]} />
-        <VRSurfaceButton width={0.5} position={[0.35, -0.25, depth.xs]} />
+        <VRFocusButton width={0.6} position={[-0.35, -0.25, depth.xs]} />
+        <VRSurfaceButton width={0.6} position={[0.35, -0.25, depth.xs]} />
       </group>
     </>
   );
