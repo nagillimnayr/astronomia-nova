@@ -35,7 +35,9 @@ type VRSurfaceButtonProps = {
   position?: Vector3Tuple;
 };
 export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const { cameraActor, selectionActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const containerRef = useRef<Group>(null!);
   const contentRef = useRef<Group>(null!);
   // useHelper(contentRef, BoxHelper);
@@ -50,13 +52,20 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
         // Stopping propagation will call onPointerLeave, so we need to reset isHovered.
         setHovered(true);
       }
+      // Get current selection.
+      const { selected } = selectionActor.getSnapshot()!.context;
+      // Set focus target to selected.
+      cameraActor.send({
+        type: 'SET_TARGET',
+        focusTarget: selected,
+      });
 
       // Transition to surface.
       cameraActor.send({
         type: 'TO_SURFACE',
       });
     },
-    [cameraActor, setHovered]
+    [cameraActor, selectionActor, setHovered]
   );
 
   // const width = 2;
