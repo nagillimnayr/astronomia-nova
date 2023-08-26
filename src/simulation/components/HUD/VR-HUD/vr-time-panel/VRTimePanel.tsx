@@ -27,21 +27,8 @@ export const VRTimePanel = ({
   );
   const getThree = useThree(({ get }) => get);
 
-  // Subscribe so that component will re-render upon entering VR.
-  const inVR = useSelector(vrActor, (state) => state.matches('active'));
-
   // Get refs to root container and object.
-  const groupRef = useRef<Group>(null!);
-
-  useEffect(() => {
-    const group = groupRef.current;
-    if (!group || !inVR) return;
-    // Look at camera.
-    const { camera } = getThree();
-    camera.getWorldPosition(_camWorldPos);
-    getLocalUpInWorldCoords(camera, group.up);
-    group.lookAt(_camWorldPos);
-  }, [getThree, inVR]);
+  const containerRef = useRef<Group>(null!);
 
   const height = 1;
   const width = height * GOLDEN_RATIO;
@@ -50,11 +37,17 @@ export const VRTimePanel = ({
       {/** Its better to put the object3D outside of the Suspense barrier, so as to not delay setting the reference. */}
       <group
         position={position}
-        ref={(group) => {
-          if (!group) return;
-          groupRef.current = group;
+        ref={(container) => {
+          if (!container) return;
+          containerRef.current = container;
+
+          // Look at camera.
+          const { camera } = getThree();
+          camera.getWorldPosition(_camWorldPos);
+          getLocalUpInWorldCoords(camera, container.up);
+          container.lookAt(_camWorldPos);
         }}
-        name="VR-Time-Panel"
+        name="vr-time-panel"
         scale={scale}
       >
         <VRTimescaleDisplay position={[0, 4, 0]} />

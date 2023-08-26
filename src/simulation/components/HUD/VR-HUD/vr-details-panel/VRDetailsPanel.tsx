@@ -13,6 +13,7 @@ import {
   Object3D,
   type Vector3Tuple,
   type Group,
+  Vector3,
 } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
@@ -21,7 +22,10 @@ import { ICON_MATERIAL_BASE } from '../vr-ui-materials';
 import { VRFocusButton } from './VRFocusButton';
 import { VRPanel } from '../vr-ui-components/VRPanel';
 import { VRSurfaceButton } from './VRSurfaceButton';
+import { useThree } from '@react-three/fiber';
+import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 
+const _camWorldPos = new Vector3();
 const FONT_SIZE = 0.05;
 
 const placeholders = {
@@ -41,7 +45,7 @@ export const VRDetailsPanel = ({
   position = [0, 0, 0],
 }: VRDetailsPanelProps) => {
   // Get selection actor from state machine.
-  const { selectionActor, cameraActor } = MachineContext.useSelector(
+  const { selectionActor, cameraActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context
   );
   // Get the currently selected body.
@@ -49,6 +53,11 @@ export const VRDetailsPanel = ({
     selectionActor,
     ({ context }) => context.selected
   );
+
+  const getThree = useThree(({ get }) => get);
+
+  // Subscribe so that component will re-render upon entering VR.
+  const inVR = useSelector(vrActor, (state) => state.matches('active'));
 
   const containerRef = useRef<Group>(null!);
   // const boxHelper = useHelper(containerRef, BoxHelper);
@@ -72,10 +81,19 @@ export const VRDetailsPanel = ({
   return (
     <>
       <group
-        ref={containerRef}
         name="vr-details-panel"
         position={position}
         visible={isOpen}
+        ref={(container) => {
+          if (!container) return;
+          containerRef.current = container;
+
+          // Look at camera.
+          const { camera } = getThree();
+          camera.getWorldPosition(_camWorldPos);
+          getLocalUpInWorldCoords(camera, container.up);
+          container.lookAt(_camWorldPos);
+        }}
       >
         {/** Background. */}
         <VRPanel width={width} height={height} />
