@@ -28,7 +28,7 @@ const VRDetailsPanelStory = () => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+      <PerspectiveCamera makeDefault position={[0, 0, 3]} />
       <CameraControls makeDefault />
       {/* <MockEarthSelect /> */}
       <VRFocusButton
