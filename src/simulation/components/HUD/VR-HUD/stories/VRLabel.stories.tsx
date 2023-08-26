@@ -34,7 +34,7 @@ const VRLabelStory = () => {
   const width = 2;
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 2]} />
+      <PerspectiveCamera makeDefault position={[0, 0, 5]} />
       <CameraControls makeDefault />
       <VRLabel label="Label" fontSize={1.32} />
     </>
