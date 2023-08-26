@@ -19,7 +19,7 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
   );
   const containerRef = useRef<Group>(null!);
   const contentRef = useRef<Group>(null!);
-  const boxHelper = useHelper(contentRef, BoxHelper);
+  // const boxHelper = useHelper(contentRef, BoxHelper);
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
@@ -74,11 +74,11 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
         >
           <VRPanel width={width} height={height} radius={radius}></VRPanel>
 
-          <group ref={contentRef}>
+          <group ref={contentRef} position={[0, 0, depth.xxs]}>
             {/** Text. */}
             <Text
               fontSize={fontSize}
-              position={[textXPos, 0, depth.xs]}
+              position={[textXPos, 0, 0]}
               anchorX={'center'}
               anchorY={'middle'}
               textAlign={'center'}
@@ -87,7 +87,7 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
             </Text>
 
             {/** Icon. */}
-            <object3D position={[iconXPos, 0, depth.xs]}>
+            <object3D position={[iconXPos, 0, 0]}>
               <Center>
                 <Svg
                   src="icons/MdiCameraControl.svg"

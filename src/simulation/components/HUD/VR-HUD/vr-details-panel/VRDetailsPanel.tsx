@@ -1,7 +1,6 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   GOLDEN_RATIO,
-  PRECISION,
   border,
   borderRadius,
   colors,
@@ -13,16 +12,15 @@ import {
   type ColorRepresentation,
   Object3D,
   type Vector3Tuple,
-  Group,
+  type Group,
 } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { VRSeparator } from '../vr-ui-components/VRSeparator';
-import { DAY, HOUR } from '@/simulation/utils/constants';
 import { Svg, Text, useHelper } from '@react-three/drei';
 import { ICON_MATERIAL_BASE } from '../vr-ui-materials';
 import { VRFocusButton } from './VRFocusButton';
 import { VRPanel } from '../vr-ui-components/VRPanel';
+import { VRSurfaceButton } from './VRSurfaceButton';
 
 const FONT_SIZE = 0.05;
 
@@ -53,7 +51,7 @@ export const VRDetailsPanel = ({
   );
 
   const containerRef = useRef<Group>(null!);
-  const boxHelper = useHelper(containerRef, BoxHelper);
+  // const boxHelper = useHelper(containerRef, BoxHelper);
 
   // Only open if a body is selected.
   const isOpen = Boolean(selected);
@@ -73,17 +71,28 @@ export const VRDetailsPanel = ({
 
   return (
     <>
-      <group ref={containerRef} name="vr-details-panel" position={position}>
+      <group
+        ref={containerRef}
+        name="vr-details-panel"
+        position={position}
+        visible={isOpen}
+      >
         {/** Background. */}
         <VRPanel width={width} height={height} />
 
         {/** Name. */}
-        <Header position={[0, height / 3, depth.xs]} name={name} />
+        <Text
+          position={[0, height / 4, depth.xs]}
+          fontSize={height / 4}
+          anchorX={'center'}
+          anchorY={'top'}
+        >
+          {name}
+        </Text>
 
         {/** Buttons. */}
-
         <VRFocusButton width={0.5} position={[-0.35, -0.25, depth.xs]} />
-        <VRFocusButton width={0.5} position={[0.35, -0.25, depth.xs]} />
+        <VRSurfaceButton width={0.5} position={[0.35, -0.25, depth.xs]} />
       </group>
     </>
   );
@@ -207,65 +216,6 @@ const VRCloseButton = () => {
       <object3D>
         <Svg src="icons/MdiClose.svg" fillMaterial={ICON_MATERIAL_BASE} />
       </object3D>
-    </>
-  );
-};
-
-type VRButtonProps = {
-  size: number;
-};
-const VRSurfaceButton = ({ size }: VRButtonProps) => {
-  const { uiActor, cameraActor, selectionActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
-
-  const { surfaceDialogActor } = useSelector(uiActor, ({ context }) => context);
-
-  // Only show button when in space view.
-  const inSpaceView = useSelector(cameraActor, (state) =>
-    state.matches('space')
-  );
-
-  const handleSurfaceClick = useCallback(() => {
-    // Get selection.
-    const { selected } = selectionActor.getSnapshot()!.context;
-    cameraActor.send({
-      type: 'SET_TARGET',
-      focusTarget: selected,
-    });
-    surfaceDialogActor.send({ type: 'TOGGLE' });
-  }, [cameraActor, selectionActor, surfaceDialogActor]);
-
-  return (
-    <>
-      <object3D>
-        <Text fontSize={size}>Surface</Text>
-        <Svg src="icons/MdiTelescope.svg" />
-      </object3D>
-    </>
-  );
-};
-
-const VRSpaceButton = ({ size }: VRButtonProps) => {
-  //
-
-  return (
-    <>
-      <object3D>
-        <Text fontSize={size}>Space</Text>
-        <Svg src="icons/PhPlanet.svg" />
-      </object3D>
-    </>
-  );
-};
-
-const VRDetailsPanelButtons = () => {
-  return (
-    <>
-      <group>
-        {/* <VRSurfaceButton size={text.lg} /> */}
-        <VRFocusButton width={0.2} />
-      </group>
     </>
   );
 };

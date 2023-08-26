@@ -38,7 +38,7 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const containerRef = useRef<Group>(null!);
   const contentRef = useRef<Group>(null!);
-  useHelper(contentRef, BoxHelper);
+  // useHelper(contentRef, BoxHelper);
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
@@ -91,13 +91,13 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
           <VRPanel width={width} height={height} radius={radius}></VRPanel>
 
           <group
-            position={[0.05127 * height, -0.008 * height, depth.xs]}
+            position={[0.05127 * height, -0.008 * height, depth.xxs]}
             ref={contentRef}
           >
             {/** Text. */}
             <Text
               fontSize={fontSize}
-              position={[textXPos, textYPos, depth.xs]}
+              position={[textXPos, textYPos, 0]}
               anchorX={'center'}
               anchorY={'middle'}
               textAlign={'center'}
@@ -106,7 +106,7 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
             </Text>
 
             {/** Icon. */}
-            <object3D position={[iconXPos, iconYPos, depth.xs]}>
+            <object3D position={[iconXPos, iconYPos, 0]}>
               <Center>
                 <Svg
                   src="icons/MdiTelescope.svg"
