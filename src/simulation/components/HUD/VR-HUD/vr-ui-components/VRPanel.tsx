@@ -1,19 +1,7 @@
-import {
-  MeshProps,
-  type Object3DNode,
-  extend,
-  ThreeEvent,
-} from '@react-three/fiber';
-import {
-  type PropsWithChildren,
-  PropsWithRef,
-  type PropsWithoutRef,
-  useState,
-} from 'react';
+import { type Object3DNode, extend } from '@react-three/fiber';
+import { type PropsWithChildren } from 'react';
 import { type ColorRepresentation, type Vector3Tuple } from 'three';
 import { Panel, PanelInner, PanelOuter } from './classes/Panel';
-import { EventHandlers } from '@react-three/fiber/dist/declarations/src/core/events';
-import { useCursor } from '@react-three/drei';
 import { colors } from '../vr-hud-constants';
 import React from 'react';
 
@@ -27,17 +15,16 @@ declare module '@react-three/fiber' {
   }
 }
 
-export type VRPanelProps = PropsWithChildren &
-  EventHandlers & {
-    position?: Vector3Tuple;
-    width?: number;
-    height?: number;
-    radius?: number;
-    borderWidth?: number;
-    segments?: number;
-    backgroundColor?: ColorRepresentation;
-    borderColor?: ColorRepresentation;
-  };
+export type VRPanelProps = PropsWithChildren & {
+  position?: Vector3Tuple;
+  width?: number;
+  height?: number;
+  radius?: number;
+  borderWidth?: number;
+  segments?: number;
+  backgroundColor?: ColorRepresentation;
+  borderColor?: ColorRepresentation;
+};
 export const VRPanel = React.memo(function VRPanel({
   children,
   position,
