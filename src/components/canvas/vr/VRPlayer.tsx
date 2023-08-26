@@ -13,14 +13,17 @@ const _worldPos = new Vector3();
 const _lookPos = new Vector3();
 
 export const VRPlayer = () => {
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const { cameraActor, vrActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
 
   const player = useXR(({ player }) => player);
+  const isPresenting = useXR(({ isPresenting }) => isPresenting);
   // const controllers = useXR(({ controllers }) => controllers);
 
   useEffect(() => {
     const { controls } = cameraActor.getSnapshot()!.context;
-    if (!controls) return;
+    if (!controls || !isPresenting) return;
     const camera = controls.camera;
     if (!camera || !player) return;
     player.name = 'vr-player';
@@ -29,7 +32,7 @@ export const VRPlayer = () => {
 
     console.log('Attaching VR Player to camera!', player);
     player.rotation.set(0, 0, 0);
-  }, [cameraActor, player]);
+  }, [cameraActor, isPresenting, player]);
   return (
     <>
       <Controllers />
