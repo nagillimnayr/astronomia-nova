@@ -2,12 +2,11 @@ import { assign, createMachine, log } from 'xstate';
 import {
   type Object3D,
   Vector3,
-  PerspectiveCamera,
+  type PerspectiveCamera,
   Scene,
   Group,
   ArrayCamera,
 } from 'three';
-import { type CameraControls } from '@react-three/drei';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import {
   DIST_MULT,
@@ -17,14 +16,14 @@ import {
   SIMULATION_RADIUS,
 } from '@/simulation/utils/constants';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
-import { type RootState, type BaseInstance } from '@react-three/fiber';
+import { type RootState } from '@react-three/fiber';
 import { type CameraController } from '@/lib/camera-controller/CameraController';
 import {
   FAR_CLIP,
   NEAR_CLIP,
   SURFACE_NEAR_CLIP,
 } from '@/components/canvas/scene-constants';
-import { XRState } from '@react-three/xr';
+import { type XRState } from '@react-three/xr';
 
 const _observerUp = new Vector3();
 const _xrCam1WorldPos = new Vector3();
@@ -135,7 +134,7 @@ export const cameraMachine = createMachine(
             vrHud: (_, { vrHud }) => vrHud,
           }),
           'initializeControls',
-          'hideVRHud',
+          // 'hideVRHud',
         ],
       },
       ROTATE_AZIMUTHAL: {
@@ -202,7 +201,7 @@ export const cameraMachine = createMachine(
               'logEvent',
               'startXRSession',
               'setSpaceCamDistance',
-              'showVRHud',
+              // 'showVRHud',
             ],
           },
         },
@@ -252,7 +251,7 @@ export const cameraMachine = createMachine(
               'logEvent',
               'startXRSession',
               'setSurfaceCamDistance',
-              'showVRHud',
+              // 'showVRHud',
             ],
           },
         },
@@ -337,7 +336,6 @@ export const cameraMachine = createMachine(
         const { vrHud, controls, mainCamera, getThree } = context;
         if (vrHud) {
           console.log('VRHUD:', vrHud);
-          vrHud.visible = false;
           // vrHud.position.setZ(VR_HUD_Z_NON_IMMERSIVE);
         }
 
@@ -443,14 +441,6 @@ export const cameraMachine = createMachine(
           controls.minDistance = minDistance;
           controls.camera.near = NEAR_CLIP;
         }
-
-        const { xr } = context.getThree().gl;
-        // Update XR session frustum.
-        // const session = xr.getSession();
-        // void session?.updateRenderState({
-        //   depthNear: NEAR_CLIP,
-        //   depthFar: FAR_CLIP,
-        // });
       },
       setSurfaceCamDistance: (context) => {
         const { controls } = context;
@@ -459,14 +449,6 @@ export const cameraMachine = createMachine(
         controls.maxDistance = SURFACE_MAX_DIST;
 
         controls.camera.near = SURFACE_NEAR_CLIP;
-
-        const { xr } = context.getThree().gl;
-        // Update XR session frustum.
-        // const session = xr.getSession();
-        // void session?.updateRenderState({
-        //   depthNear: NEAR_CLIP,
-        //   depthFar: FAR_CLIP,
-        // });
       },
       rotateAzimuthal: ({ controls }, event) => {
         if (!controls) return;

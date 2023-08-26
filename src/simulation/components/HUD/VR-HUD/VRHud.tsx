@@ -17,7 +17,10 @@ type VRHudProps = {
   defaultOpen?: boolean;
 };
 
-export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
+export const VRHud = ({
+  position = [0, 0, 0],
+  defaultOpen = false,
+}: VRHudProps) => {
   // Get actors from root state machine.
   const { cameraActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context
@@ -27,23 +30,25 @@ export const VRHud = ({ position = [0, 0, 0], defaultOpen }: VRHudProps) => {
   const groupRef = useRef<Group>(null!);
 
   useEffect(() => {
+    if (!cameraActor || !vrActor) return;
     // Send to actors to attach to the camera controller.
     const group = groupRef.current;
     cameraActor.send({ type: 'ASSIGN_VR_HUD', vrHud: group });
     vrActor.send({ type: 'ASSIGN_VR_HUD', vrHud: group });
-    if (defaultOpen) {
-      cameraActor.send({ type: 'SHOW_VR_HUD' });
-    }
+    // if (defaultOpen) {
+    //   cameraActor.send({ type: 'SHOW_VR_HUD' });
+    // }
     return () => console.log('VRhud unmounting.');
-  }, [cameraActor, defaultOpen, vrActor]);
+  }, [cameraActor, vrActor]);
 
   // Subscribe so that component will re-render upon entering VR.
   const inVR = useSelector(vrActor, (state) => state.matches('active'));
 
+  const isOpen = inVR || defaultOpen;
   return (
     <>
       <group name="VR-Hud" ref={groupRef} position={position}>
-        {inVR && (
+        {isOpen && (
           <>
             <VRDetailsPanel position={[1.5, 0, 0]} />
             <VRTimePanel position={[0, -1.5, 0]} scale={0.2} />

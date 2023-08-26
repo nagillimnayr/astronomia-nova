@@ -41,6 +41,7 @@ const VRHUDStory = () => {
   });
   return (
     <>
+      <axesHelper />
       <MockSolarSystem />
       <MockEarthSelect />
       <VRHud defaultOpen />
