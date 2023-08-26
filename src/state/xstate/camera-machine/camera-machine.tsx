@@ -134,7 +134,6 @@ export const cameraMachine = createMachine(
             vrHud: (_, { vrHud }) => vrHud,
           }),
           'initializeControls',
-          // 'hideVRHud',
         ],
       },
       ROTATE_AZIMUTHAL: {
@@ -150,7 +149,7 @@ export const cameraMachine = createMachine(
       },
 
       END_XR_SESSION: {
-        actions: ['logEvent', 'endXRSession', 'hideVRHud'],
+        actions: ['logEvent', 'endXRSession'],
       },
       SHOW_VR_HUD: {
         actions: ['logEvent', 'showVRHud'],
