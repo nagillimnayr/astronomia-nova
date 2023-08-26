@@ -13,7 +13,7 @@ import { VRCameraManager } from '@/components/canvas/vr/VRCameraManager';
 import { VRManager } from '@/components/canvas/vr/VRManager';
 
 const meta: Meta<typeof VRHud> = {
-  title: 'VRHUD/VRHUD',
+  title: 'VR-UI/VRHud',
   component: VRHud,
   decorators: [(storyFn) => <VRCanvasDecorator>{storyFn()}</VRCanvasDecorator>],
 };

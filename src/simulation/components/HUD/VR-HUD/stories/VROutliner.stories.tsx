@@ -9,7 +9,7 @@ import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 
 const meta: Meta<typeof VROutliner> = {
-  title: 'VRHUD/VROutliner',
+  title: 'VR-UI/VROutliner',
   component: VROutliner,
   decorators: [(storyFn) => <VRCanvasDecorator>{storyFn()}</VRCanvasDecorator>],
 };

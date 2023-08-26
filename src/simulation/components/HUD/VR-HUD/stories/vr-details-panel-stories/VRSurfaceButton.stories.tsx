@@ -3,10 +3,10 @@ import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { MockEarthSelect } from '@/stories/mocks/MockEarthSelect';
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
-import { VRSurfaceButton } from '../vr-details-panel/VRSurfaceButton';
+import { VRSurfaceButton } from '../../vr-details-panel/VRSurfaceButton';
 
 const meta: Meta<typeof VRSurfaceButton> = {
-  title: 'VRHUD/VRDetailsPanel/VRSurfaceButton',
+  title: 'VR-UI/vr-details-panel/VRSurfaceButton',
   component: VRSurfaceButton,
   decorators: [(storyFn) => <VRCanvasDecorator>{storyFn()}</VRCanvasDecorator>],
 };

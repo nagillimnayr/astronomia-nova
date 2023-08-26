@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
-import { VRTimePanel } from '../vr-time-panel/VRTimePanel';
+import { VRTimePanel } from '../../vr-time-panel/VRTimePanel';
 
 import { PropsWithChildren } from 'react';
 import { useFrame } from '@react-three/fiber';
@@ -8,7 +8,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 
 const meta: Meta<typeof VRTimePanel> = {
-  title: 'VRHUD/VRTimePanel',
+  title: 'VR-UI/vr-time-panel/VRTimePanel',
   component: VRTimePanel,
   decorators: [(storyFn) => <VRCanvasDecorator>{storyFn()}</VRCanvasDecorator>],
 };

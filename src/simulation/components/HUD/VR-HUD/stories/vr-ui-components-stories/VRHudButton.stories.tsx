@@ -6,11 +6,11 @@ import {
   PerspectiveCamera,
   Wireframe as Wires,
 } from '@react-three/drei';
-import { GOLDEN_RATIO, colors } from '../vr-hud-constants';
-import { VRHudButton } from '../vr-ui-components/VRHudButton';
+import { GOLDEN_RATIO, colors } from '../../vr-hud-constants';
+import { VRHudButton } from '../../vr-ui-components/VRHudButton';
 
 const meta: Meta<typeof VRHudButton> = {
-  title: 'VRHUD/VRHudButton',
+  title: 'VR-UI/components/VRHudButton',
   component: VRHudButton,
   decorators: [(storyFn) => <VRCanvasDecorator>{storyFn()}</VRCanvasDecorator>],
 };

@@ -6,11 +6,11 @@ import {
   PerspectiveCamera,
   Wireframe as Wires,
 } from '@react-three/drei';
-import { GOLDEN_RATIO, colors } from '../vr-hud-constants';
-import { VRLabel } from '../vr-ui-components/VRLabel';
+import { GOLDEN_RATIO, colors } from '../../vr-hud-constants';
+import { VRLabel } from '../../vr-ui-components/VRLabel';
 
 const meta: Meta<typeof VRLabel> = {
-  title: 'VRHUD/VRLabel',
+  title: 'VR-UI/components/VRLabel',
   component: VRLabel,
   decorators: [(storyFn) => <VRCanvasDecorator>{storyFn()}</VRCanvasDecorator>],
 };

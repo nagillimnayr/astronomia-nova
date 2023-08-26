@@ -10,7 +10,7 @@ import { VRSettingsMenu } from '../vr-settings-menu/VRSettingsMenu';
 import { VRSettingsButton } from '../vr-settings-menu/VRSettingsButton';
 
 const meta: Meta<typeof VRSettingsMenu> = {
-  title: 'VRHUD/VRSettingsMenu',
+  title: 'VR-UI/VRSettingsMenu',
   component: VRSettingsMenu,
   decorators: [(storyFn) => <VRCanvasDecorator>{storyFn()}</VRCanvasDecorator>],
 };

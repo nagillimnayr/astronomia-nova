@@ -6,11 +6,11 @@ import {
   PerspectiveCamera,
   Wireframe as Wires,
 } from '@react-three/drei';
-import { VRPanel } from '../vr-ui-components/VRPanel';
-import { GOLDEN_RATIO, colors } from '../vr-hud-constants';
+import { VRPanel } from '../../vr-ui-components/VRPanel';
+import { GOLDEN_RATIO, colors } from '../../vr-hud-constants';
 
 const meta: Meta<typeof VRPanel> = {
-  title: 'VRHUD/VRPanel',
+  title: 'VR-UI/components/VRPanel',
   component: VRPanel,
   decorators: [(storyFn) => <VRCanvasDecorator>{storyFn()}</VRCanvasDecorator>],
 };
