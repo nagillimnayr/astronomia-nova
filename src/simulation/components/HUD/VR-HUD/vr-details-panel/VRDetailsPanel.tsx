@@ -21,10 +21,8 @@ import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import { DAY, HOUR } from '@/simulation/utils/constants';
 import { Svg, Text, useHelper } from '@react-three/drei';
 import { ICON_MATERIAL_BASE } from '../vr-ui-materials';
-import { Box, Flex, useFlexSize } from '@react-three/flex';
 import { VRFocusButton } from './VRFocusButton';
 import { VRPanel } from '../vr-ui-components/VRPanel';
-import { FlexPlane } from '../vr-ui-components/flex/FlexPlane';
 
 const FONT_SIZE = 0.05;
 
