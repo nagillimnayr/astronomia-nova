@@ -1,12 +1,3 @@
-import {
-  RootContainer,
-  Container,
-  Text,
-  SVG,
-  type ContainerNode,
-  Object,
-} from '@coconut-xr/koestlich';
-import { Button, IconButton, List, ListItem } from '@coconut-xr/apfel-kruemel';
 import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   GOLDEN_RATIO,
@@ -22,12 +13,20 @@ import {
   type ColorRepresentation,
   Object3D,
   type Vector3Tuple,
+  Group,
 } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import { DAY, HOUR } from '@/simulation/utils/constants';
-import { VRHudBGMaterial } from '../vr-materials/VRHudBGMaterial';
+import { Svg, Text, useHelper } from '@react-three/drei';
+import { ICON_MATERIAL_BASE } from '../vr-ui-materials';
+import { Box, Flex, useFlexSize } from '@react-three/flex';
+import { VRFocusButton } from './VRFocusButton';
+import { VRPanel } from '../vr-ui-components/VRPanel';
+import { FlexPlane } from '../vr-ui-components/flex/FlexPlane';
+
+const FONT_SIZE = 0.05;
 
 const placeholders = {
   name: 'Name',
@@ -55,17 +54,16 @@ export const VRDetailsPanel = ({
     ({ context }) => context.selected
   );
 
-  // Get refs to root container and object.
-  const containerRef = useRef<ContainerNode>(null!);
-  const objRef = useRef<Object3D>(null!);
+  const containerRef = useRef<Group>(null!);
+  const boxHelper = useHelper(containerRef, BoxHelper);
 
-  // const boxHelper = useHelper(objRef, BoxHelper);
+  // Only open if a body is selected.
   const isOpen = Boolean(selected);
-  const opacity = isOpen ? 1 : 0;
-  const padding = isOpen ? pad : 0;
+
   // Dimensions of the panel.
-  const width = 1;
-  const height = width * GOLDEN_RATIO;
+  const height = 1;
+  const width = height * GOLDEN_RATIO;
+
   // Attribute data.
   const {
     name,
@@ -77,156 +75,118 @@ export const VRDetailsPanel = ({
 
   return (
     <>
-      {/** Its better to put the object3D outside of the Suspense barrier, so as to not delay setting the reference. */}
-      <object3D ref={objRef} name="VR-Details-Panel" position={position}>
-        <Suspense>
-          <RootContainer
-            precision={PRECISION}
-            ref={containerRef}
-            positionType="relative"
-            sizeX={width}
-            sizeY={isOpen ? height : 0}
-            flexDirection="column"
-            alignItems="stretch"
-            justifyContent="flex-start"
-            material={VRHudBGMaterial}
-          >
-            <Container
-              width={'100%'}
-              height={isOpen ? '100%' : '0%'}
-              borderColor={colors.border}
-              borderRadius={borderRadius.base}
-              border={isOpen ? border.base : 0}
-              padding={padding}
-              gapRow={selected ? 20 : 0}
-              material={VRHudBGMaterial}
-              backgroundColor={colors.background}
-            >
-              {/** Close Button. */}
-              {isOpen && <VRCloseButton />}
-              {/** Name. */}
-              <Container
-                display="flex"
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="center"
-                material={VRHudBGMaterial}
-                backgroundColor={colors.background}
-              >
-                <Text
-                  color={colors.foreground}
-                  fontSize={text.lg}
-                  material={VRHudBGMaterial}
-                  backgroundColor={colors.background}
-                >
-                  {name}
-                </Text>
-              </Container>
+      <group ref={containerRef} name="vr-details-panel" position={position}>
+        {/** Background. */}
+        <VRPanel width={width} height={height} />
 
-              <VRSeparator direction="horizontal" opacity={opacity} />
+        {/** Name. */}
+        <Header position={[0, height / 3, depth.xs]} name={name} />
 
-              {/** Attributes. */}
-              <List
-                type={'inset'}
-                flexDirection="column"
-                gapRow={5}
-                material={VRHudBGMaterial}
-                backgroundColor={colors.background}
-              >
-                {/** Mass. */}
-                <AttributeListItem
-                  label="Mass"
-                  value={mass.toExponential(3) + 'kg'}
-                />
-                {/** Mean Radius. */}
-                <AttributeListItem
-                  label="Mean Radius"
-                  value={meanRadius.toExponential(3) + ' m'}
-                />
-                {/** Sidereal Rotation Rate. */}
-                <AttributeListItem
-                  label="Sidereal Rotation Rate"
-                  value={siderealRotationRate.toExponential(3) + ' rad/s'}
-                />
-                {/** Sidereal Rotation Period. */}
-                <AttributeListItem
-                  label="Sidereal Rotation Period"
-                  value={
-                    (siderealRotationPeriod / HOUR).toLocaleString() + ' hr'
-                  }
-                />
-                {/**  */}
-                <AttributeListItem label="" value={''} />
-                {/**  */}
-                <AttributeListItem label="" value={''} />
-              </List>
-              <VRSeparator direction="horizontal" opacity={selected ? 1 : 0} />
-              <VRDetailsPanelButtons />
-            </Container>
-          </RootContainer>
-        </Suspense>
-      </object3D>
+        {/** Buttons. */}
+
+        <VRFocusButton width={0.5} position={[-0.35, -0.25, depth.xs]} />
+        <VRFocusButton width={0.5} position={[0.35, -0.25, depth.xs]} />
+      </group>
     </>
   );
 };
 
-type TextProp = {
+type HeaderProps = {
+  name: string;
+  position?: Vector3Tuple;
+};
+const Header = ({ name, position }: HeaderProps) => {
+  return (
+    <>
+      <Text
+        position={position}
+        fontSize={text.lg}
+        anchorX={'center'}
+        anchorY={'top'}
+      >
+        {name}
+      </Text>
+    </>
+  );
+};
+
+type AttributeListProps = {
+  position?: Vector3Tuple;
+  height: number;
+};
+const AttributeList = ({ position, height }: AttributeListProps) => {
+  return (
+    <>
+      {/** Attributes. */}
+
+      {/** Mass. */}
+      {/* <Attribute label={'Mass'} value={mass.toExponential(3) + ' kg'} /> */}
+
+      {/** Mean Radius. */}
+      {/* <Attribute
+        label={'Mean Radius'}
+        value={meanRadius.toExponential(3) + ' m'}
+      /> */}
+
+      {/** Sidereal Rotation Rate. */}
+      {/* <Attribute
+        label={'Sidereal Rotation Rate'}
+        value={siderealRotationRate.toExponential(3) + ' rad/s'}
+      /> */}
+
+      {/** Sidereal Rotation Period. */}
+      {/* <Attribute
+        label={'Sidereal Rotation Period'}
+        value={(siderealRotationPeriod / HOUR).toLocaleString() + ' hr'}
+      /> */}
+    </>
+  );
+};
+
+type TextProps = {
   children?: string;
+  position?: Vector3Tuple;
 };
-const AttributeLabel = ({ children }: TextProp) => {
+const AttributeLabel = ({ children, position }: TextProps) => {
   return (
-    <>
-      <Text
-        marginRight={'auto'}
-        fontSize={text.base}
-        material={VRHudBGMaterial}
-        backgroundColor={colors.background2}
-      >
-        {children}
-      </Text>
-    </>
+    <Text
+      position={position}
+      fontSize={text.md}
+      anchorX={'center'}
+      anchorY={'middle'}
+    >
+      {children}
+    </Text>
   );
 };
-const AttributeValue = ({ children }: TextProp) => {
+const AttributeValue = ({ children, position }: TextProps) => {
   return (
-    <>
-      <Text
-        marginLeft={'auto'}
-        fontSize={text.base}
-        material={VRHudBGMaterial}
-        backgroundColor={colors.background2}
-      >
-        {children}
-      </Text>
-    </>
+    <Text
+      position={position}
+      fontSize={text.md}
+      anchorX={'center'}
+      anchorY={'middle'}
+    >
+      {children}
+    </Text>
   );
 };
 
 type AttributeProps = {
+  position?: Vector3Tuple;
   label: string;
   value: string;
 };
-const AttributeListItem = ({ label, value }: AttributeProps) => {
-  // Create Object to attach UI component to.
-  const obj = useMemo(() => {
-    return new Object3D();
-  }, []);
+const Attribute = ({ position, label, value }: AttributeProps) => {
+  const groupRef = useRef<Group>(null!);
+  useHelper(groupRef, BoxHelper);
   return (
     <>
-      <Object object={obj} depth={depth.xxs}>
-        <Container
-          material={VRHudBGMaterial}
-          backgroundColor={colors.background2}
-        >
-          <ListItem
-            material={VRHudBGMaterial}
-            backgroundColor={colors.background2}
-            subtitle={<AttributeValue>{value}</AttributeValue>}
-          >
-            <AttributeLabel>{label}</AttributeLabel>
-          </ListItem>
-        </Container>
-      </Object>
+      <group ref={groupRef}>
+        <AttributeLabel position={[-0.5, 0, 0]}>{label}</AttributeLabel>
+
+        <AttributeValue position={[0.5, 0, 0]}>{value}</AttributeValue>
+      </group>
     </>
   );
 };
@@ -243,77 +203,14 @@ const VRCloseButton = () => {
   }, [selectionActor]);
 
   // Create Object to attach UI component to.
-  const obj = useMemo(() => {
-    return new Object3D();
-  }, []);
+
   return (
     <>
-      <Container
-        material={VRHudBGMaterial}
-        backgroundColor={colors.background}
-        positionType="absolute"
-        positionTop={0}
-        positionRight={0}
-      >
-        <Object object={obj} depth={depth.xxs}>
-          <Button
-            margin={pad / 2}
-            border={0}
-            aspectRatio={1}
-            // width={closeBtnSize}
-            // height={closeBtnSize}
-            padding={0}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            onClick={handleCloseClick}
-          >
-            <Suspense>
-              <SVG
-                color={'white'}
-                url="icons/MdiClose.svg"
-                aspectRatio={1}
-                width={closeBtnSize}
-              />
-            </Suspense>
-          </Button>
-        </Object>
-      </Container>
+      <object3D>
+        <Svg src="icons/MdiClose.svg" fillMaterial={ICON_MATERIAL_BASE} />
+      </object3D>
     </>
   );
-};
-
-type BtnStyles = {
-  flexDirection: 'column' | 'column-reverse' | 'row' | 'row-reverse';
-  flexGrow: number;
-  alignItems:
-    | 'auto'
-    | 'flex-start'
-    | 'center'
-    | 'flex-end'
-    | 'stretch'
-    | 'baseline'
-    | 'space-between'
-    | 'space-around';
-  justifyContent:
-    | 'flex-start'
-    | 'center'
-    | 'flex-end'
-    | 'space-between'
-    | 'space-around'
-    | 'space-evenly';
-  gapColumn: number;
-  border: number;
-  borderColor: ColorRepresentation;
-};
-const btn: BtnStyles = {
-  flexDirection: 'row',
-  flexGrow: 1,
-  alignItems: 'center',
-  justifyContent: 'center',
-  gapColumn: 12,
-  border: border.sm,
-  borderColor: colors.border,
 };
 
 type VRButtonProps = {
@@ -330,128 +227,36 @@ const VRSurfaceButton = ({ size }: VRButtonProps) => {
   const inSpaceView = useSelector(cameraActor, (state) =>
     state.matches('space')
   );
-  // Get selection.
-  const selected = useSelector(
-    selectionActor,
-    ({ context }) => context.selected
-  );
 
   const handleSurfaceClick = useCallback(() => {
+    // Get selection.
+    const { selected } = selectionActor.getSnapshot()!.context;
     cameraActor.send({
       type: 'SET_TARGET',
       focusTarget: selected,
     });
     surfaceDialogActor.send({ type: 'TOGGLE' });
-  }, [cameraActor, selected, surfaceDialogActor]);
+  }, [cameraActor, selectionActor, surfaceDialogActor]);
 
-  // Create Object to attach UI component to.
-  const obj = useMemo(() => {
-    return new Object3D();
-  }, []);
   return (
     <>
-      <Object object={obj} depth={depth.xxs}>
-        <Button
-          flexDirection={btn.flexDirection}
-          flexGrow={btn.flexGrow}
-          alignItems={btn.alignItems}
-          justifyContent={btn.justifyContent}
-          gapColumn={btn.gapColumn}
-          border={btn.border}
-          borderColor={btn.borderColor}
-          height={size * 2}
-          onClick={handleSurfaceClick}
-        >
-          <Suspense>
-            <Text fontSize={size} material={VRHudBGMaterial}>
-              Surface
-            </Text>
-            <SVG url="icons/MdiTelescope.svg" aspectRatio={1} height={size} />
-          </Suspense>
-        </Button>
-      </Object>
+      <object3D>
+        <Text fontSize={size}>Surface</Text>
+        <Svg src="icons/MdiTelescope.svg" />
+      </object3D>
     </>
   );
 };
 
 const VRSpaceButton = ({ size }: VRButtonProps) => {
-  // Create Object to attach UI component to.
-  const obj = useMemo(() => {
-    return new Object3D();
-  }, []);
+  //
+
   return (
     <>
-      <Object object={obj} depth={depth.xxs}>
-        <Button
-          flexDirection={btn.flexDirection}
-          flexGrow={btn.flexGrow}
-          alignItems={btn.alignItems}
-          justifyContent={btn.justifyContent}
-          gapColumn={btn.gapColumn}
-          border={btn.border}
-          borderColor={btn.borderColor}
-          height={size * 2}
-        >
-          <Suspense>
-            <Text fontSize={size} material={VRHudBGMaterial}>
-              Space
-            </Text>
-            <SVG url="icons/PhPlanet.svg" aspectRatio={1} height={size} />
-          </Suspense>
-        </Button>
-      </Object>
-    </>
-  );
-};
-
-const VRFocusButton = ({ size }: VRButtonProps) => {
-  // Get actors from root state machine.
-  const { selectionActor, cameraActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
-  const handleClick = useCallback(() => {
-    // Get the currently selected body.
-    const selected = selectionActor.getSnapshot()!.context.selected;
-    if (!selected) {
-      // it shouldn't be possible to click the button if nothing is selected. So something has gone very wrong.
-      const err = 'Error! no body selected. This should not be possible.';
-      console.error(err);
-      throw new Error(err);
-    }
-    // Pass the selected body to the camera actor.
-    cameraActor.send({ type: 'SET_TARGET', focusTarget: selected });
-  }, [cameraActor, selectionActor]);
-
-  // Create Object to attach UI component to.
-  const obj = useMemo(() => {
-    return new Object3D();
-  }, []);
-  return (
-    <>
-      <Object object={obj} depth={depth.xxs}>
-        <Button
-          flexDirection={btn.flexDirection}
-          flexGrow={btn.flexGrow}
-          alignItems={btn.alignItems}
-          justifyContent={btn.justifyContent}
-          gapColumn={btn.gapColumn}
-          border={btn.border}
-          borderColor={btn.borderColor}
-          height={size * 2}
-          onClick={handleClick}
-        >
-          <Suspense>
-            <Text fontSize={size} material={VRHudBGMaterial}>
-              Focus
-            </Text>
-            <SVG
-              url="icons/MdiCameraControl.svg"
-              aspectRatio={1}
-              height={size}
-            />
-          </Suspense>
-        </Button>
-      </Object>
+      <object3D>
+        <Text fontSize={size}>Space</Text>
+        <Svg src="icons/PhPlanet.svg" />
+      </object3D>
     </>
   );
 };
@@ -459,17 +264,10 @@ const VRFocusButton = ({ size }: VRButtonProps) => {
 const VRDetailsPanelButtons = () => {
   return (
     <>
-      <Container
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        gapColumn={pad}
-        material={VRHudBGMaterial}
-        backgroundColor={colors.background}
-      >
-        <VRSurfaceButton size={text.lg} />
-        <VRFocusButton size={text.lg} />
-      </Container>
+      <group>
+        {/* <VRSurfaceButton size={text.lg} /> */}
+        <VRFocusButton width={0.2} />
+      </group>
     </>
   );
 };

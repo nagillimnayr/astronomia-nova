@@ -40,7 +40,8 @@ const Wireframe: Story = {
 
 const VRPanelStory = () => {
   const height = 1;
-  const width = height * GOLDEN_RATIO;
+  // const width = height * GOLDEN_RATIO;
+  const width = 2;
   return (
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 2]} />
@@ -48,7 +49,7 @@ const VRPanelStory = () => {
       <VRPanel
         width={width}
         height={height}
-        borderRadius={0.25}
+        radius={0.25}
         backgroundColor={colors.background}
         borderColor={colors.border}
         borderWidth={0.025}
@@ -66,7 +67,7 @@ const VRPanelWireframeStory = () => {
       <VRPanel
         width={width}
         height={height}
-        borderRadius={0.2}
+        radius={0.2}
         backgroundColor={colors.background}
         borderColor={colors.border}
         borderWidth={0.05}
