@@ -28,16 +28,6 @@ const Default: Story = {
   },
 };
 
-const Wireframe: Story = {
-  render: () => {
-    return (
-      <>
-        <VRHudButtonWireframeStory />
-      </>
-    );
-  },
-};
-
 const VRHudButtonStory = () => {
   const height = 1;
   // const width = height * GOLDEN_RATIO;
@@ -58,24 +48,4 @@ const VRHudButtonStory = () => {
   );
 };
 
-const VRHudButtonWireframeStory = () => {
-  const height = 1;
-  const width = height * GOLDEN_RATIO;
-  return (
-    <>
-      <PerspectiveCamera makeDefault position={[0, 0, 2]} />
-      <VRHudButton
-        width={width}
-        height={height}
-        radius={0.2}
-        backgroundColor={colors.background}
-        borderColor={colors.border}
-        borderWidth={0.05}
-      >
-        <Wires thickness={0.02} />
-      </VRHudButton>
-    </>
-  );
-};
-
-export { Default, Wireframe };
+export { Default };
