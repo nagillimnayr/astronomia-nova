@@ -141,10 +141,7 @@ export const vrMachine = createMachine(
       // Other actions:
       logEvent: log((_, event) => event),
       startSession: ({ getThree }, event) => {
-        const { gl } = getThree();
-        const { xr } = gl;
-        const session = xr.getSession();
-        console.log('XR Session:', session);
+        //
       },
       endSession(context, event, meta) {
         //
@@ -155,6 +152,7 @@ export const vrMachine = createMachine(
         const { xr } = gl;
         // Get current reference space.
         const refSpace = xr.getReferenceSpace();
+
         if (!refSpace) {
           console.error('Error: No reference space!');
           return;

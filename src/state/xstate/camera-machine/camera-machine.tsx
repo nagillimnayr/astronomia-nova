@@ -199,7 +199,7 @@ export const cameraMachine = createMachine(
             actions: [
               'logEvent',
               'startXRSession',
-              'setSpaceCamDistance',
+              // 'setSpaceCamDistance',
               // 'showVRHud',
             ],
           },
