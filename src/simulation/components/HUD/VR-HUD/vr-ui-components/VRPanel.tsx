@@ -15,6 +15,7 @@ import { Panel, PanelInner, PanelOuter } from './classes/Panel';
 import { EventHandlers } from '@react-three/fiber/dist/declarations/src/core/events';
 import { useCursor } from '@react-three/drei';
 import { colors } from '../vr-hud-constants';
+import React from 'react';
 
 extend({ Panel, PanelInner, PanelOuter });
 
@@ -26,8 +27,7 @@ declare module '@react-three/fiber' {
   }
 }
 
-type VRPanelProps = PropsWithChildren &
-  // Pick<PropsWithoutRef<Object3DNode<Panel, typeof Panel>>, 'onClick' | 'onContextMenu' | ''>
+export type VRPanelProps = PropsWithChildren &
   EventHandlers & {
     position?: Vector3Tuple;
     width?: number;
@@ -38,7 +38,7 @@ type VRPanelProps = PropsWithChildren &
     backgroundColor?: ColorRepresentation;
     borderColor?: ColorRepresentation;
   };
-export const VRPanel = ({
+export const VRPanel = React.memo(function VRPanel({
   children,
   position,
   width = 2,
@@ -49,7 +49,7 @@ export const VRPanel = ({
   backgroundColor = colors.background,
   borderColor = colors.border,
   ...props
-}: VRPanelProps) => {
+}: VRPanelProps) {
   return (
     <>
       <group position={position}>
@@ -64,4 +64,4 @@ export const VRPanel = ({
       </group>
     </>
   );
-};
+});
