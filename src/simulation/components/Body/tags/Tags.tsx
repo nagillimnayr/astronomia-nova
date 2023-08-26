@@ -18,7 +18,7 @@ import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import { clamp } from 'lodash';
 import { DIST_MULT, ORIGIN, Y_AXIS } from '@/simulation/utils/constants';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
-import { Interactive } from '@react-three/xr';
+import { Interactive, XRInteractionEvent } from '@react-three/xr';
 import { useCursor } from '@react-three/drei';
 
 const threshold = 0.02;
@@ -55,17 +55,18 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   const [isHovered, setHovered] = useState<boolean>(false);
   useCursor(isHovered, 'pointer');
 
-  const handleSelect = useCallback(() => {
-    const body = bodyRef.current;
-    selectionActor.send({ type: 'SELECT', selection: body });
-  }, [bodyRef, selectionActor]);
-
   const handleClick = useCallback(
-    (event: ThreeEvent<MouseEvent>) => {
-      event.stopPropagation();
-      handleSelect();
+    (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
+      if ('stopPropagation' in event) {
+        event.stopPropagation();
+      }
+      const group = groupRef.current;
+      if (!group.visible) return;
+      // Select body.
+      const body = bodyRef.current;
+      selectionActor.send({ type: 'SELECT', selection: body });
     },
-    [handleSelect]
+    [bodyRef, selectionActor]
   );
 
   useFrame(({ camera, gl }, _, frame) => {
@@ -162,7 +163,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   return (
     <group ref={groupRef}>
       <Interactive
-        onSelect={handleSelect}
+        onSelect={handleClick}
         onHover={() => setHovered(true)}
         onBlur={() => setHovered(false)}
       >
