@@ -18,6 +18,8 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
     ({ context }) => context
   );
   const containerRef = useRef<Group>(null!);
+  const contentRef = useRef<Group>(null!);
+  const boxHelper = useHelper(contentRef, BoxHelper);
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
@@ -62,6 +64,7 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
         onBlur={hoverEvents.handlePointerLeave}
       >
         <group
+          name="vr-focus-button"
           ref={containerRef}
           position={position}
           scale={isHovered ? 1.2 : 1}
@@ -71,27 +74,29 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
         >
           <VRPanel width={width} height={height} radius={radius}></VRPanel>
 
-          {/** Text. */}
-          <Text
-            fontSize={fontSize}
-            position={[textXPos, 0, depth.xs]}
-            anchorX={'center'}
-            anchorY={'middle'}
-            textAlign={'center'}
-          >
-            {'Focus'}
-          </Text>
+          <group ref={contentRef}>
+            {/** Text. */}
+            <Text
+              fontSize={fontSize}
+              position={[textXPos, 0, depth.xs]}
+              anchorX={'center'}
+              anchorY={'middle'}
+              textAlign={'center'}
+            >
+              {'Focus'}
+            </Text>
 
-          {/** Icon. */}
-          <object3D position={[iconXPos, 0, depth.xs]}>
-            <Center>
-              <Svg
-                src="icons/MdiCameraControl.svg"
-                fillMaterial={ICON_MATERIAL_BASE}
-                scale={iconSize}
-              />
-            </Center>
-          </object3D>
+            {/** Icon. */}
+            <object3D position={[iconXPos, 0, depth.xs]}>
+              <Center>
+                <Svg
+                  src="icons/MdiCameraControl.svg"
+                  fillMaterial={ICON_MATERIAL_BASE}
+                  scale={iconSize}
+                />
+              </Center>
+            </object3D>
+          </group>
         </group>
       </Interactive>
     </>

@@ -38,9 +38,7 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const containerRef = useRef<Group>(null!);
   const contentRef = useRef<Group>(null!);
-  const boxRef = useRef<Mesh>(null!);
-  // useHelper(contentRef, BoxHelper);
-  // useHelper(boxRef, BoxHelper);
+  useHelper(contentRef, BoxHelper);
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
@@ -82,6 +80,7 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
         onBlur={hoverEvents.handlePointerLeave}
       >
         <group
+          name="vr-surface-button"
           ref={containerRef}
           position={position}
           scale={isHovered ? 1.2 : 1}
