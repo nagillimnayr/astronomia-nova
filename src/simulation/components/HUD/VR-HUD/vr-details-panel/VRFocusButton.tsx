@@ -8,6 +8,7 @@ import { Interactive, type XRInteractionEvent } from '@react-three/xr';
 import { VRPanel } from '../vr-ui-components/VRPanel';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type ThreeEvent } from '@react-three/fiber';
+import { useSelector } from '@xstate/react';
 
 type VRFocusButtonProps = {
   width: number;
@@ -23,6 +24,15 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
+
+  // Get the currently selected body.
+  const selected = useSelector(
+    selectionActor,
+    ({ context }) => context.selected
+  );
+
+  // Only open if a body is selected.
+  const isOpen = Boolean(selected);
 
   const handleClick = useCallback(
     (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
@@ -58,47 +68,50 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
   const iconXPos = 0.25 * width;
   return (
     <>
-      <Interactive
-        onSelect={handleClick}
-        onHover={hoverEvents.handlePointerEnter}
-        onBlur={hoverEvents.handlePointerLeave}
+      <group
+        name="vr-focus-button"
+        ref={containerRef}
+        position={position}
+        visible={isOpen}
+        scale={isHovered ? 1.2 : 1}
+        onClick={handleClick}
+        onPointerEnter={hoverEvents.handlePointerEnter}
+        onPointerLeave={hoverEvents.handlePointerLeave}
       >
-        <group
-          name="vr-focus-button"
-          ref={containerRef}
-          position={position}
-          scale={isHovered ? 1.2 : 1}
-          onClick={handleClick}
-          onPointerEnter={hoverEvents.handlePointerEnter}
-          onPointerLeave={hoverEvents.handlePointerLeave}
+        <Interactive
+          onSelect={handleClick}
+          onHover={hoverEvents.handlePointerEnter}
+          onBlur={hoverEvents.handlePointerLeave}
         >
-          <VRPanel width={width} height={height} radius={radius}></VRPanel>
+          <group>
+            <VRPanel width={width} height={height} radius={radius}></VRPanel>
 
-          <group ref={contentRef} position={[0, 0, depth.xxs]}>
-            {/** Text. */}
-            <Text
-              fontSize={fontSize}
-              position={[textXPos, 0, 0]}
-              anchorX={'center'}
-              anchorY={'middle'}
-              textAlign={'center'}
-            >
-              {'Focus'}
-            </Text>
+            <group ref={contentRef} position={[0, 0, depth.xxs]}>
+              {/** Text. */}
+              <Text
+                fontSize={fontSize}
+                position={[textXPos, 0, 0]}
+                anchorX={'center'}
+                anchorY={'middle'}
+                textAlign={'center'}
+              >
+                {'Focus'}
+              </Text>
 
-            {/** Icon. */}
-            <object3D position={[iconXPos, 0, 0]}>
-              <Center>
-                <Svg
-                  src="icons/MdiCameraControl.svg"
-                  fillMaterial={ICON_MATERIAL_BASE}
-                  scale={iconSize}
-                />
-              </Center>
-            </object3D>
+              {/** Icon. */}
+              <object3D position={[iconXPos, 0, 0]}>
+                <Center>
+                  <Svg
+                    src="icons/MdiCameraControl.svg"
+                    fillMaterial={ICON_MATERIAL_BASE}
+                    scale={iconSize}
+                  />
+                </Center>
+              </object3D>
+            </group>
           </group>
-        </group>
-      </Interactive>
+        </Interactive>
+      </group>
     </>
   );
 };

@@ -25,6 +25,7 @@ import { Interactive, type XRInteractionEvent } from '@react-three/xr';
 import { VRPanel } from '../vr-ui-components/VRPanel';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type ThreeEvent } from '@react-three/fiber';
+import { useSelector } from '@xstate/react';
 
 const boundingBox = new Box3();
 const bbSize = new Vector3();
@@ -45,6 +46,15 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
 
+  // Get the currently selected body.
+  const selected = useSelector(
+    selectionActor,
+    ({ context }) => context.selected
+  );
+
+  // Only open if a body is selected.
+  const isOpen = Boolean(selected);
+
   const handleClick = useCallback(
     (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
       if ('stopPropagation' in event) {
@@ -54,6 +64,13 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
       }
       // Get current selection.
       const { selected } = selectionActor.getSnapshot()!.context;
+      if (!selected) {
+        // it shouldn't be possible to click the button if nothing is selected. So something has gone wrong.
+        const err = 'Error! no body selected. This should not be possible.';
+        console.error(err);
+        throw new Error(err);
+      }
+
       // Set focus target to selected.
       cameraActor.send({
         type: 'SET_TARGET',
@@ -83,50 +100,53 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
   // const iconYPos = 0;
   return (
     <>
-      <Interactive
-        onSelect={handleClick}
-        onHover={hoverEvents.handlePointerEnter}
-        onBlur={hoverEvents.handlePointerLeave}
+      <group
+        name="vr-surface-button"
+        ref={containerRef}
+        position={position}
+        visible={isOpen}
+        scale={isHovered ? 1.2 : 1}
+        onClick={handleClick}
+        onPointerEnter={hoverEvents.handlePointerEnter}
+        onPointerLeave={hoverEvents.handlePointerLeave}
       >
-        <group
-          name="vr-surface-button"
-          ref={containerRef}
-          position={position}
-          scale={isHovered ? 1.2 : 1}
-          onClick={handleClick}
-          onPointerEnter={hoverEvents.handlePointerEnter}
-          onPointerLeave={hoverEvents.handlePointerLeave}
+        <Interactive
+          onSelect={handleClick}
+          onHover={hoverEvents.handlePointerEnter}
+          onBlur={hoverEvents.handlePointerLeave}
         >
-          <VRPanel width={width} height={height} radius={radius}></VRPanel>
+          <group>
+            <VRPanel width={width} height={height} radius={radius}></VRPanel>
 
-          <group
-            position={[0.05127 * height, -0.008 * height, depth.xxs]}
-            ref={contentRef}
-          >
-            {/** Text. */}
-            <Text
-              fontSize={fontSize}
-              position={[textXPos, textYPos, 0]}
-              anchorX={'center'}
-              anchorY={'middle'}
-              textAlign={'center'}
+            <group
+              position={[0.05127 * height, -0.008 * height, depth.xxs]}
+              ref={contentRef}
             >
-              {'Surface'}
-            </Text>
+              {/** Text. */}
+              <Text
+                fontSize={fontSize}
+                position={[textXPos, textYPos, 0]}
+                anchorX={'center'}
+                anchorY={'middle'}
+                textAlign={'center'}
+              >
+                {'Surface'}
+              </Text>
 
-            {/** Icon. */}
-            <object3D position={[iconXPos, iconYPos, 0]}>
-              <Center>
-                <Svg
-                  src="icons/MdiTelescope.svg"
-                  fillMaterial={ICON_MATERIAL_BASE}
-                  scale={iconSize}
-                />
-              </Center>
-            </object3D>
+              {/** Icon. */}
+              <object3D position={[iconXPos, iconYPos, 0]}>
+                <Center>
+                  <Svg
+                    src="icons/MdiTelescope.svg"
+                    fillMaterial={ICON_MATERIAL_BASE}
+                    scale={iconSize}
+                  />
+                </Center>
+              </object3D>
+            </group>
           </group>
-        </group>
-      </Interactive>
+        </Interactive>
+      </group>
     </>
   );
 };

@@ -54,16 +54,16 @@ export const VRDetailsPanel = ({
     ({ context }) => context.selected
   );
 
+  // Only open if a body is selected.
+  const isOpen = Boolean(selected);
+
   const getThree = useThree(({ get }) => get);
 
-  // Subscribe so that component will re-render upon entering VR.
-  const inVR = useSelector(vrActor, (state) => state.matches('active'));
+  // // Subscribe so that component will re-render upon entering VR.
+  // const inVR = useSelector(vrActor, (state) => state.matches('active'));
 
   const containerRef = useRef<Group>(null!);
   // const boxHelper = useHelper(containerRef, BoxHelper);
-
-  // Only open if a body is selected.
-  const isOpen = Boolean(selected);
 
   // Dimensions of the panel.
   const height = 1;
