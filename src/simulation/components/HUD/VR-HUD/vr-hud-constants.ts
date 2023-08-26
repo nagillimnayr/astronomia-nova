@@ -29,17 +29,17 @@ export const colors = Object.freeze({
   slate700: '#334155',
 });
 
-export const SCALE_FACTOR = 0.02;
+export const SCALE_FACTOR = 0.01;
 
 export const text = {
-  xxs: 12 * SCALE_FACTOR,
-  xs: 16 * SCALE_FACTOR,
-  sm: 24 * SCALE_FACTOR,
-  md: 32 * SCALE_FACTOR,
-  base: 48 * SCALE_FACTOR,
-  lg: 72 * SCALE_FACTOR,
-  xl: 96 * SCALE_FACTOR,
-  xxl: 128 * SCALE_FACTOR,
+  xxs: 2 * SCALE_FACTOR,
+  xs: 4 * SCALE_FACTOR,
+  sm: 6 * SCALE_FACTOR,
+  md: 8 * SCALE_FACTOR,
+  base: 12 * SCALE_FACTOR,
+  lg: 16 * SCALE_FACTOR,
+  xl: 20 * SCALE_FACTOR,
+  xxl: 24 * SCALE_FACTOR,
 } as const;
 
 export const borderRadius = Object.freeze({
