@@ -45,23 +45,26 @@ export const VRHudButton = ({
   const troikaRef = useRef<TextMesh | null>(null);
   const widthRef = useRef<number>(1);
 
-  const handleSync = useCallback((troika: TextMesh) => {
-    troikaRef.current = troika;
-    const labelObj = labelRef.current;
-    const panel = panelRef.current;
-    if (!label || !panel) return;
+  const handleSync = useCallback(
+    (troika: TextMesh) => {
+      troikaRef.current = troika;
+      const labelObj = labelRef.current;
+      const panel = panelRef.current;
+      if (!label || !panel) return;
 
-    // Measure the bounding box of the text.
-    bbox.setFromObject(labelObj);
-    bbox.getSize(bbSize);
+      // Measure the bounding box of the text.
+      bbox.setFromObject(labelObj);
+      bbox.getSize(bbSize);
 
-    // Multiply width by ratio.
-    const newWidth = bbSize.x * HORIZONTAL_RATIO;
+      // Multiply width by ratio.
+      const newWidth = bbSize.x * HORIZONTAL_RATIO;
 
-    // Set panel width.
-    panel.setWidth(newWidth);
-    widthRef.current = newWidth;
-  }, []);
+      // Set panel width.
+      panel.setWidth(newWidth);
+      widthRef.current = newWidth;
+    },
+    [label]
+  );
 
   return (
     <>
