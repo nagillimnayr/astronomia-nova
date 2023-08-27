@@ -1,11 +1,4 @@
-import {
-  type ActorRefFrom,
-  assign,
-  createMachine,
-  log,
-  send,
-  spawn,
-} from 'xstate';
+import { type ActorRefFrom, assign, createMachine, log, spawn } from 'xstate';
 import { cameraMachine } from '../camera-machine/camera-machine';
 import { selectionMachine } from '../selection-machine/selection-machine';
 import { visibilityMachine } from '../visibility-machine/visibility-machine';
@@ -131,6 +124,10 @@ export const rootMachine = createMachine(
         actions: ['advanceTimeActor', 'advanceKeplerTreeActor'],
       },
       ADVANCE_DAY: {
+        cond: ({ cameraActor }) => {
+          const { focusTarget } = cameraActor.getSnapshot()!.context;
+          return focusTarget instanceof KeplerBody;
+        },
         actions: ['advanceDay'],
       },
       LOG_CHILDREN: {
