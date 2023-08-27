@@ -22,7 +22,7 @@ export const ObservationSphere = () => {
   const sphereRef = useRef<Mesh>(null!);
 
   const sphereGeometry = useMemo(() => {
-    const radius = 0.25e5 * METER;
+    const radius = 0.5e5 * METER;
     const resolution = 16;
     const geometry = new SphereGeometry(radius, resolution, resolution);
     const nonIndexedGeometry = geometry.toNonIndexed(); // Necessary for wireframe.

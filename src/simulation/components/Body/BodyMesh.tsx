@@ -17,6 +17,7 @@ import {
   type ColorRepresentation,
   type Mesh,
   type Texture,
+  Vector3,
 } from 'three';
 import type KeplerBody from '@/simulation/classes/kepler-body';
 
@@ -34,10 +35,8 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Poles } from './poles/Poles';
 import { normalizeAngle } from '../../utils/rotation-utils';
 import { PlanetRing } from './planet-ring/PlanetRing';
-import { Interactive } from '@react-three/xr';
+import { Interactive, XRInteractionEvent } from '@react-three/xr';
 import useHover from '@/hooks/useHover';
-
-// Separate out the visual logic from the simulation logic.
 
 type BodyMeshProps = {
   name: string;
@@ -61,9 +60,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   }: BodyMeshProps,
   fwdRef
 ) {
-  const { selectionActor, timeActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
+  const { selectionActor, timeActor, surfaceActor } =
+    MachineContext.useSelector(({ context }) => context);
 
   const meshRef = useRef<Mesh>(null!);
 
@@ -78,17 +76,31 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 
   // event handlers
   const handleClick = useCallback(
-    (e: ThreeEvent<MouseEvent>) => {
-      e.stopPropagation();
-      if (!meshRef.current || !bodyRef.current) {
+    (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
+      const bodyMesh = meshRef.current;
+      if (!bodyMesh) {
+        // Should not be possible.
+        console.error('bodyMesh is invalid. This should not be possible.');
         return;
       }
-      const body: KeplerBody = bodyRef.current;
-      // console.log('BodyMesh click!', body);
-      // Select body.
-      selectionActor.send({ type: 'SELECT', selection: body });
+      let point: Vector3 = null!;
+      if ('stopPropagation' in event) {
+        event.stopPropagation();
+        setHovered(true);
+        point = event.point;
+      } else {
+        if (!event.intersection) return;
+        point = event.intersection.point;
+      }
+      // Get point of intersection.
+      console.log('intersection point', point);
+      // Get position relative to the body.
+      bodyMesh.worldToLocal(point);
+
+      // Set latitude/ longitude from point.
+      surfaceActor.send({ type: 'SET_COORDS_FROM_VECTOR', pos: point });
     },
-    [bodyRef, selectionActor]
+    [setHovered, surfaceActor]
   );
 
   // Set forwarded ref, the return value of the callback function will be assigned to fwdRef.
@@ -124,6 +136,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     <>
       <group>
         <Interactive
+          onSelect={handleClick}
           onHover={hoverEvents.handlePointerEnter}
           onBlur={hoverEvents.handlePointerLeave}
         >
