@@ -9,7 +9,7 @@ import {
   type Vector3Tuple,
 } from 'three';
 
-const rotRate = -1;
+const rotRate = -0.05;
 
 type VRGrabbableProps = {
   position?: Vector3Tuple;

@@ -4,6 +4,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { VRCameraManager } from './VRCameraManager';
+import { VRHoverIndicator } from './VRHoverIndicator';
 
 export const VRManager = () => {
   const { cameraActor, vrActor } = MachineContext.useSelector(
@@ -28,6 +29,9 @@ export const VRManager = () => {
     <>
       <VRControls />
       <VRPlayer />
+
+      <VRHoverIndicator handedness="left" />
+      <VRHoverIndicator handedness="right" />
     </>
   );
 };

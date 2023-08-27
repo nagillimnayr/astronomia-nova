@@ -17,7 +17,7 @@ import {
   Vector3Tuple,
 } from 'three';
 
-const rotRate = 1;
+const rotRate = 0.2;
 
 const _camWorldPos = new Vector3();
 
@@ -39,10 +39,10 @@ export const RotatingObject = ({ children, position = [0, 0, 0] }: Props) => {
     obj.rotateY(delta * rotRate);
     obj.rotateZ(delta * rotRate);
 
-    const center = textCenterRef.current;
-    center.up.set(...getLocalUpInWorldCoords(camera));
-    camera.getWorldPosition(_camWorldPos);
-    center.lookAt(_camWorldPos);
+    // const center = textCenterRef.current;
+    // center.up.set(...getLocalUpInWorldCoords(camera));
+    // camera.getWorldPosition(_camWorldPos);
+    // center.lookAt(_camWorldPos);
   });
 
   return (
@@ -71,11 +71,11 @@ export const RotatingObject = ({ children, position = [0, 0, 0] }: Props) => {
         >
           <object3D ref={objRef}>{children}</object3D>
 
-          <object3D ref={textCenterRef}>
+          {/* <object3D ref={textCenterRef}>
             <Text ref={textRef} position={[0, 0, 1]}>
               {text}
             </Text>
-          </object3D>
+          </object3D> */}
         </group>
       </Interactive>
     </>
