@@ -155,10 +155,10 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // If the ratio of distances is less than the threshold, set to be invisible.
     const shouldBeVisible = ratio > threshold;
     // If visibility is already as it should be, then there is nothing to do.
-    if (group.visible === shouldBeVisible) return;
+    if (marker.visible === shouldBeVisible) return;
     // Otherwise, set this object and all of its children to the appropriate visibility.
     // This is so that they don't trigger pointer events.
-    group.traverse((obj) => {
+    marker.traverse((obj) => {
       obj.visible = shouldBeVisible;
     });
   });
