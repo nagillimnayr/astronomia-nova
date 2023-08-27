@@ -77,10 +77,14 @@ export const surfaceMachine = createMachine(
         // Adjust angles.
         latitude -= 90; // Equator should be at 0.
         latitude *= -1; // Flip so north pole is +90, south pole is -90.
-        if (longitude > MAX_LONGITUDE) {
+
+        longitude -= 90; // Adjust so in line with local x axis of body.
+        while (longitude > MAX_LONGITUDE) {
           longitude -= 360;
         }
-        longitude -= 90;
+        while (longitude < MIN_LONGITUDE) {
+          longitude += 360;
+        }
 
         return {
           latitude,
