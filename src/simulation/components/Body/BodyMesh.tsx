@@ -34,6 +34,8 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Poles } from './poles/Poles';
 import { normalizeAngle } from '../../utils/rotation-utils';
 import { PlanetRing } from './planet-ring/PlanetRing';
+import { Interactive } from '@react-three/xr';
+import useHover from '@/hooks/useHover';
 
 // Separate out the visual logic from the simulation logic.
 
@@ -71,7 +73,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 
   // const [isSelected, setSelected] = useState<boolean>(false);
   //const [isTrailVisible, setTrailVisibility] = useState<boolean>(false);
-  const [isHovered, setHovered] = useState<boolean>(false);
+  const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
 
   // event handlers
@@ -121,22 +123,27 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   return (
     <>
       <group>
-        <Sphere
-          name={name + '-mesh'}
-          rotation={rotation}
-          // visible={isVisible}
-          ref={meshRef}
-          args={[radius, 128, 128]}
-          onPointerDown={handleClick}
-          onPointerEnter={() => setHovered(true)}
-          onPointerLeave={() => setHovered(false)}
-          // onPointerMissed={handleMiss}
+        <Interactive
+          onHover={hoverEvents.handlePointerEnter}
+          onBlur={hoverEvents.handlePointerLeave}
         >
-          <meshBasicMaterial map={texture} />
-          {/* <axesHelper args={[2 * radius]} /> */}
+          <Sphere
+            name={name + '-mesh'}
+            rotation={rotation}
+            // visible={isVisible}
+            ref={meshRef}
+            args={[radius, 128, 128]}
+            onPointerDown={handleClick}
+            onPointerEnter={hoverEvents.handlePointerEnter}
+            onPointerLeave={hoverEvents.handlePointerLeave}
+            // onPointerMissed={handleMiss}
+          >
+            <meshBasicMaterial map={texture} />
+            {/* <axesHelper args={[2 * radius]} /> */}
 
-          {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
-        </Sphere>
+            {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
+          </Sphere>
+        </Interactive>
         {name === 'Saturn' && (
           <PlanetRing
             rotation={rotation}
