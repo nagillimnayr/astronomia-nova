@@ -18,23 +18,21 @@ type Props = PropsWithChildren;
 const SolarSystem = ({ children }: Props) => {
   return (
     <group>
-      <Suspense>
-        <CelestialSphere />
+      <CelestialSphere />
 
-        <group rotation={[-degToRad(90), 0, 0]}>
-          <Suspense>{children}</Suspense>
-          <ReferenceAxis
-            color={'red'}
-            length={SOLAR_SYSTEM_RADIUS}
-            direction={X_AXIS}
-          />
-          <ReferenceAxis
-            color={'#03C03C'}
-            length={SOLAR_SYSTEM_RADIUS}
-            direction={X_AXIS_NEG}
-          />
-        </group>
-      </Suspense>
+      <group rotation={[-degToRad(90), 0, 0]}>
+        {children}
+        <ReferenceAxis
+          color={'red'}
+          length={SOLAR_SYSTEM_RADIUS}
+          direction={X_AXIS}
+        />
+        <ReferenceAxis
+          color={'#03C03C'}
+          length={SOLAR_SYSTEM_RADIUS}
+          direction={X_AXIS_NEG}
+        />
+      </group>
     </group>
   );
 };
