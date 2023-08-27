@@ -17,6 +17,7 @@ import { ICON_MATERIAL_BASE, ICON_MATERIAL_HOVER } from '../../vr-ui-materials';
 import { Interactive, XRInteractionEvent } from '@react-three/xr';
 import useHover from '@/hooks/useHover';
 import { ThreeEvent } from '@react-three/fiber';
+import { useSpring, animated } from '@react-spring/three';
 
 type VRPauseButtonProps = {
   position?: Vector3Tuple;
@@ -33,6 +34,9 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
+  const { scale } = useSpring({
+    scale: isHovered ? 1.2 : 1,
+  });
 
   // Events handlers.
   const eventHandlers = useMemo(
@@ -64,18 +68,18 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
   const iconSize = icons.base;
   return (
     <>
-      <Interactive
-        onSelect={handleClick}
-        onHover={hoverEvents.handlePointerEnter}
-        onBlur={hoverEvents.handlePointerLeave}
+      <animated.group
+        ref={groupRef}
+        position={position}
+        scale={scale}
+        onClick={handleClick}
+        onPointerEnter={hoverEvents.handlePointerEnter}
+        onPointerLeave={hoverEvents.handlePointerLeave}
       >
-        <group
-          ref={groupRef}
-          position={position}
-          scale={isHovered ? 1.2 : 1}
-          onClick={handleClick}
-          onPointerEnter={hoverEvents.handlePointerEnter}
-          onPointerLeave={hoverEvents.handlePointerLeave}
+        <Interactive
+          onSelect={handleClick}
+          onHover={hoverEvents.handlePointerEnter}
+          onBlur={hoverEvents.handlePointerLeave}
         >
           <Circle args={[1]} material-color={colors.icon.bg.base}>
             <Center
@@ -95,8 +99,8 @@ export const VRPauseButton = ({ position = [0, 0, 0] }: VRPauseButtonProps) => {
             </Center>
             {/* <Sphere args={[0.5]} material-color={'blue'} /> */}
           </Circle>
-        </group>
-      </Interactive>
+        </Interactive>
+      </animated.group>
     </>
   );
 };

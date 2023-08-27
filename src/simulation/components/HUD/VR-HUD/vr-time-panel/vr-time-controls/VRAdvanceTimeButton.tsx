@@ -13,6 +13,7 @@ import {
 import { MeshBasicMaterial, type Vector3Tuple } from 'three';
 import { ICON_MATERIAL_BASE, ICON_MATERIAL_HOVER } from '../../vr-ui-materials';
 import { Interactive } from '@react-three/xr';
+import { useSpring, animated } from '@react-spring/three';
 
 const Z_OFFSET = 1e-2;
 
@@ -34,6 +35,9 @@ export const VRAdvanceTimeButton = ({
 
   const [isHovered, setHovered] = useState<boolean>(false);
   useCursor(isHovered, 'pointer');
+  const { scale } = useSpring({
+    scale: isHovered ? 1.2 : 1,
+  });
 
   const handleClick = useCallback(() => {
     rootActor.send({ type: 'ADVANCE_DAY', reverse });
@@ -53,17 +57,17 @@ export const VRAdvanceTimeButton = ({
   const size = icons.base;
   return (
     <>
-      <Interactive
-        onSelect={handleClick}
-        onHover={handlePointerEnter}
-        onBlur={handlePointerLeave}
+      <animated.group
+        position={position}
+        scale={scale}
+        onClick={handleClick}
+        onPointerEnter={handlePointerEnter}
+        onPointerLeave={handlePointerLeave}
       >
-        <group
-          position={position}
-          scale={isHovered ? 1.2 : 1}
-          onClick={handleClick}
-          onPointerEnter={handlePointerEnter}
-          onPointerLeave={handlePointerLeave}
+        <Interactive
+          onSelect={handleClick}
+          onHover={handlePointerEnter}
+          onBlur={handlePointerLeave}
         >
           <Circle args={[1]} material-color={colors.icon.bg.base}>
             <object3D position={[0, 0, Z_OFFSET]} scale={size}>
@@ -72,8 +76,8 @@ export const VRAdvanceTimeButton = ({
               </Center>
             </object3D>
           </Circle>
-        </group>
-      </Interactive>
+        </Interactive>
+      </animated.group>
     </>
   );
 };

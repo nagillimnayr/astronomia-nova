@@ -8,6 +8,7 @@ import { ICON_MATERIAL_BASE } from '../../vr-ui-materials';
 import useHover from '@/hooks/useHover';
 import { Interactive, XRInteractionEvent } from '@react-three/xr';
 import { ThreeEvent } from '@react-three/fiber';
+import { useSpring, animated } from '@react-spring/three';
 
 interface VRTimescaleIncrementButtonProps {
   position?: Vector3Tuple;
@@ -21,6 +22,9 @@ export const VRTimescaleIncrementButton = ({
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
+  const { scale } = useSpring({
+    scale: isHovered ? 1.2 : 1,
+  });
 
   const timescaleEvents = useMemo(
     () => ({
@@ -59,17 +63,17 @@ export const VRTimescaleIncrementButton = ({
   const size = icons.base;
   return (
     <>
-      <Interactive
-        onSelect={handleClick}
-        onHover={hoverEvents.handlePointerEnter}
-        onBlur={hoverEvents.handlePointerLeave}
+      <animated.group
+        scale={scale}
+        position={position}
+        onClick={handleClick}
+        onPointerEnter={hoverEvents.handlePointerEnter}
+        onPointerLeave={hoverEvents.handlePointerLeave}
       >
-        <group
-          scale={isHovered ? 1.2 : 1}
-          position={position}
-          onClick={handleClick}
-          onPointerEnter={hoverEvents.handlePointerEnter}
-          onPointerLeave={hoverEvents.handlePointerLeave}
+        <Interactive
+          onSelect={handleClick}
+          onHover={hoverEvents.handlePointerEnter}
+          onBlur={hoverEvents.handlePointerLeave}
         >
           {/** Circle background. */}
           <Circle
@@ -89,8 +93,8 @@ export const VRTimescaleIncrementButton = ({
               />
             </Center>
           </object3D>
-        </group>
-      </Interactive>
+        </Interactive>
+      </animated.group>
     </>
   );
 };
