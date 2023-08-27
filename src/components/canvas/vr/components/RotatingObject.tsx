@@ -4,6 +4,7 @@ import { Box, Text } from '@react-three/drei';
 import { Object3DProps, useFrame } from '@react-three/fiber';
 import {
   Interactive,
+  RayGrab,
   XRInteractionEvent,
   XRInteractionHandler,
 } from '@react-three/xr';
@@ -47,7 +48,7 @@ export const RotatingObject = ({ children, position = [0, 0, 0] }: Props) => {
 
   return (
     <>
-      <Interactive
+      <RayGrab
         onBlur={() => setText('blur')}
         onHover={() => setText('hover')}
         // onMove={() => setText('move')}
@@ -77,7 +78,7 @@ export const RotatingObject = ({ children, position = [0, 0, 0] }: Props) => {
             </Text>
           </object3D> */}
         </group>
-      </Interactive>
+      </RayGrab>
     </>
   );
 };
