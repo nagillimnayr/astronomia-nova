@@ -1,14 +1,7 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
-import { border, colors, depth, icons, text } from '../../vr-hud-constants';
-import { useCallback, useMemo } from 'react';
-import { Center, Circle, Svg, Text, useCursor } from '@react-three/drei';
+import { useCallback } from 'react';
 import { type Vector3Tuple } from 'three';
-import { ICON_MATERIAL_BASE } from '../../vr-ui-materials';
-import useHover from '@/hooks/useHover';
-import { Interactive, XRInteractionEvent } from '@react-three/xr';
-import { ThreeEvent } from '@react-three/fiber';
-import { useSpring, animated } from '@react-spring/three';
+import { VRIconButton } from '../../vr-ui-components/VRIconButton';
 
 interface VRTimescaleIncrementButtonProps {
   position?: Vector3Tuple;
@@ -20,81 +13,20 @@ export const VRTimescaleIncrementButton = ({
 }: VRTimescaleIncrementButtonProps) => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
-  const { isHovered, setHovered, hoverEvents } = useHover();
-  useCursor(isHovered, 'pointer');
-  const { scale } = useSpring({
-    scale: isHovered ? 1.2 : 1,
-  });
-
-  const timescaleEvents = useMemo(
-    () => ({
-      decrementTimescale: (
-        event: ThreeEvent<MouseEvent> | XRInteractionEvent
-      ) => {
-        if ('stopPropagation' in event) {
-          event.stopPropagation();
-          // Stopping propagation will call onPointerLeave, so we need to reset isHovered.
-          setHovered(true);
-        }
-        timeActor.send({ type: 'DECREMENT_TIMESCALE' });
-      },
-      incrementTimescale: (
-        event: ThreeEvent<MouseEvent> | XRInteractionEvent
-      ) => {
-        if ('stopPropagation' in event) {
-          event.stopPropagation();
-          // Stopping propagation will call onPointerLeave, so we need to reset isHovered.
-          setHovered(true);
-        }
-        timeActor.send({ type: 'INCREMENT_TIMESCALE' });
-      },
-    }),
-    [setHovered, timeActor]
-  );
-
-  const handleClick = reverse
-    ? timescaleEvents.decrementTimescale
-    : timescaleEvents.incrementTimescale;
+  const handleClick = useCallback(() => {
+    const type = reverse ? 'DECREMENT_TIMESCALE' : 'INCREMENT_TIMESCALE';
+    timeActor.send({ type });
+  }, [reverse, timeActor]);
 
   const iconSrc = reverse
     ? 'icons/MdiChevronLeft.svg'
     : 'icons/MdiChevronRight.svg';
 
-  const size = icons.base;
   return (
     <>
-      <animated.group
-        scale={scale}
-        position={position}
-        onClick={handleClick}
-        onPointerEnter={hoverEvents.handlePointerEnter}
-        onPointerLeave={hoverEvents.handlePointerLeave}
-      >
-        <Interactive
-          onSelect={handleClick}
-          onHover={hoverEvents.handlePointerEnter}
-          onBlur={hoverEvents.handlePointerLeave}
-        >
-          {/** Circle background. */}
-          <Circle
-            name="icon-circle"
-            args={[1]}
-            material-color={colors.icon.bg.base}
-          />
-
-          {/** Offset the z position of the icon from its background. */}
-          <object3D position={[0, 0, depth.xs]} scale={size}>
-            {/** Center the Svg icon. */}
-            <Center>
-              <Svg
-                name="svg-icon"
-                src={iconSrc}
-                fillMaterial={ICON_MATERIAL_BASE}
-              />
-            </Center>
-          </object3D>
-        </Interactive>
-      </animated.group>
+      <object3D position={position}>
+        <VRIconButton iconSrc={iconSrc} onClick={handleClick} />
+      </object3D>
     </>
   );
 };
