@@ -29,9 +29,6 @@ export const VRManager = () => {
     <>
       <VRControls />
       <VRPlayer />
-
-      <VRHoverIndicator handedness="left" />
-      <VRHoverIndicator handedness="right" />
     </>
   );
 };
