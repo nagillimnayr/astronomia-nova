@@ -1,23 +1,25 @@
-import { Object3D, Vector3 } from 'three';
+import { PI_OVER_TWO } from '@/simulation/utils/constants';
+import { Object3D, Spherical, Vector3 } from 'three';
 import { assign, createMachine, log } from 'xstate';
 
-const _observerWorldPos = new Vector3();
-const _observerUp = new Vector3();
+const _pos = new Vector3();
+const _spherical = new Spherical();
+
+const MIN_LATITUDE = -180;
+const MAX_LATITUDE = 180;
+const MIN_LONGITUDE = -90;
+const MAX_LONGITUDE = 90;
 
 type Context = {
-  // observer: Object3D | null;
   latitude: number;
   longitude: number;
-  minLatitude: number;
-  maxLatitude: number;
-  minLongitude: number;
-  maxLongitude: number;
 };
 
 type Events =
   // | { type: 'ASSIGN_OBSERVER'; observer: Object3D | null }
   | { type: 'SET_LATITUDE'; value: number }
-  | { type: 'SET_LONGITUDE'; value: number };
+  | { type: 'SET_LONGITUDE'; value: number }
+  | { type: 'SET_COORDS_FROM_VECTOR'; pos: Vector3 };
 
 export const surfaceMachine = createMachine(
   {
@@ -31,13 +33,8 @@ export const surfaceMachine = createMachine(
 
     // Initial context:
     context: () => ({
-      observer: null,
       latitude: 0,
       longitude: 0,
-      minLatitude: -180,
-      maxLatitude: 180,
-      minLongitude: -90,
-      maxLongitude: 90,
     }),
 
     on: {
@@ -48,6 +45,9 @@ export const surfaceMachine = createMachine(
       SET_LONGITUDE: {
         cond: 'validateLongitude',
         actions: ['setLongitude'],
+      },
+      SET_COORDS_FROM_VECTOR: {
+        actions: ['setCoordsFromVector'],
       },
     },
   },
@@ -63,19 +63,29 @@ export const surfaceMachine = createMachine(
       setLongitude: assign({
         longitude: (_, { value }) => value,
       }),
+      // Expects the vector to be in local coordinates relative to the body.
+      setCoordsFromVector: assign((_, { pos }) => {
+        _spherical.setFromVector3(pos);
+        _spherical.makeSafe();
+
+        return {
+          latitude: _spherical.theta,
+          // Polar angle of spherical coordinates is measured from the pole, rather than the equator, so must be adjusted.
+          longitude: _spherical.phi - PI_OVER_TWO,
+        };
+      }),
     },
     guards: {
-      validateLatitude: ({ latitude, minLatitude, maxLatitude }, { value }) => {
+      validateLatitude: ({ latitude }, { value }) => {
         return (
-          latitude !== value && value >= minLatitude && value <= maxLatitude
+          latitude !== value && value >= MIN_LATITUDE && value <= MAX_LATITUDE
         );
       },
-      validateLongitude: (
-        { longitude, minLongitude, maxLongitude },
-        { value }
-      ) => {
+      validateLongitude: ({ longitude }, { value }) => {
         return (
-          longitude !== value && value >= minLongitude && value <= maxLongitude
+          longitude !== value &&
+          value >= MIN_LONGITUDE &&
+          value <= MAX_LONGITUDE
         );
       },
     },
