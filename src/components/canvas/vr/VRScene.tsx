@@ -30,6 +30,7 @@ import { VRDebugPortal } from '@/simulation/components/HUD/VR-HUD/vr-debug/VRDeb
 import { KeyPressControl } from '@/simulation/components/KeyPressControl';
 import { Controllers } from '@react-three/xr';
 import { VRGrabbable } from './components/VRGrabbable';
+import { SpringScaleObject } from './components/SpringScaleObject';
 
 export const VRScene = () => {
   const rootActor = MachineContext.useActorRef();
@@ -57,7 +58,7 @@ export const VRScene = () => {
       />
       <ambientLight intensity={0.75} />
 
-      <RotatingObject position={[0, 1, -5]}>
+      {/* <RotatingObject position={[0, 1, -5]}>
         <Dodecahedron>
           <meshPhongMaterial color={'red'} />
         </Dodecahedron>
@@ -73,13 +74,23 @@ export const VRScene = () => {
         <Tetrahedron>
           <meshPhongMaterial color={'cyan'} />
         </Tetrahedron>
-      </RotatingObject>
+      </RotatingObject> */}
 
-      <VRGrabbable position={[7, 1, 3]} color={'magenta'} />
-      <VRGrabbable position={[2, 1, -4]} color={'aliceblue'} />
-      <VRGrabbable position={[-6, 1, 2]} color={'coral'} />
-      <VRGrabbable position={[-3, 1, 8]} color={'cornflowerblue'} />
-      <VRGrabbable position={[-3, 1, -4]} color={'indigo'} />
+      <SpringScaleObject position={[7, 1, 3]}>
+        <VRGrabbable color={'magenta'} />
+      </SpringScaleObject>
+      <SpringScaleObject position={[2, 1, -4]}>
+        <VRGrabbable color={'aliceblue'} />
+      </SpringScaleObject>
+      <SpringScaleObject position={[-6, 1, 2]}>
+        <VRGrabbable color={'coral'} />
+      </SpringScaleObject>
+      <SpringScaleObject position={[-3, 1, 8]}>
+        <VRGrabbable color={'cornflowerblue'} />
+      </SpringScaleObject>
+      <SpringScaleObject position={[-3, 1, -4]}>
+        <VRGrabbable color={'indigo'} />
+      </SpringScaleObject>
 
       <Floor />
 
