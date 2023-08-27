@@ -60,7 +60,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   }: BodyMeshProps,
   fwdRef
 ) {
-  const { selectionActor, timeActor, surfaceActor } =
+  const { selectionActor, timeActor, surfaceActor, cameraActor } =
     MachineContext.useSelector(({ context }) => context);
 
   const meshRef = useRef<Mesh>(null!);
@@ -92,6 +92,10 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         if (!event.intersection) return;
         point = event.intersection.point;
       }
+      // Check if in surface view mode.
+      const onSurface = cameraActor.getSnapshot()!.matches('surface');
+      if (onSurface) return; // If on surface, do nothing.
+
       // Get point of intersection.
       console.log('intersection point', point);
       // Get position relative to the body.
@@ -100,7 +104,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       // Set latitude/ longitude from point.
       surfaceActor.send({ type: 'SET_COORDS_FROM_VECTOR', pos: point });
     },
-    [setHovered, surfaceActor]
+    [cameraActor, setHovered, surfaceActor]
   );
 
   // Set forwarded ref, the return value of the callback function will be assigned to fwdRef.
@@ -113,12 +117,15 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   );
 
   useEffect(() => {
-    const mesh = meshRef.current;
-    if (!mesh) return;
+    // Subscribe to updates from timeActor.
     const subscription = timeActor.subscribe((state) => {
+      const mesh = meshRef.current;
+      if (!mesh) return;
       const eventType = state.event.type;
+      // Only relevant if time has changed.
       if (eventType !== 'UPDATE' && eventType !== 'ADVANCE_TIME') return;
 
+      // Rotation rate is constant, so the current rotation can be found as a simple function of time.
       const timeElapsed = state.context.timeElapsed;
       const axialRotation = normalizeAngle(siderealRotRate * timeElapsed);
 
