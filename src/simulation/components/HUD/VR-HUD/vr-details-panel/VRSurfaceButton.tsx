@@ -26,10 +26,7 @@ import { VRPanel } from '../vr-ui-components/VRPanel';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type ThreeEvent } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
-
-const boundingBox = new Box3();
-const bbSize = new Vector3();
-const bbCenter = new Vector3();
+import { useSpring, animated } from '@react-spring/three';
 
 type VRSurfaceButtonProps = {
   width: number;
@@ -45,6 +42,9 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
+  const { scale } = useSpring({
+    scale: isHovered ? 1.2 : 1,
+  });
 
   // Get the currently selected body.
   const selected = useSelector(
@@ -101,12 +101,12 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
   // const iconYPos = 0;
   return (
     <>
-      <group
+      <animated.group
         name="vr-surface-button"
         ref={containerRef}
         position={position}
         visible={isOpen}
-        scale={isHovered ? 1.2 : 1}
+        scale={scale}
         onClick={handleClick}
         onPointerEnter={hoverEvents.handlePointerEnter}
         onPointerLeave={hoverEvents.handlePointerLeave}
@@ -147,7 +147,7 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
             </group>
           </group>
         </Interactive>
-      </group>
+      </animated.group>
     </>
   );
 };

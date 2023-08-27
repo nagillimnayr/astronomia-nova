@@ -9,6 +9,7 @@ import { VRPanel } from '../vr-ui-components/VRPanel';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type ThreeEvent } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
+import { useSpring, animated } from '@react-spring/three';
 
 type VRFocusButtonProps = {
   width: number;
@@ -24,6 +25,9 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
+  const { scale } = useSpring({
+    scale: isHovered ? 1.2 : 1,
+  });
 
   // Get the currently selected body.
   const selected = useSelector(
@@ -68,12 +72,12 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
   const iconXPos = 0.25 * width;
   return (
     <>
-      <group
+      <animated.group
         name="vr-focus-button"
         ref={containerRef}
         position={position}
         visible={isOpen}
-        scale={isHovered ? 1.2 : 1}
+        scale={scale}
         onClick={handleClick}
         onPointerEnter={hoverEvents.handlePointerEnter}
         onPointerLeave={hoverEvents.handlePointerLeave}
@@ -111,7 +115,7 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
             </group>
           </group>
         </Interactive>
-      </group>
+      </animated.group>
     </>
   );
 };
