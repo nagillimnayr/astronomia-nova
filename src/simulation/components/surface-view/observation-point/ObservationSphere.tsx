@@ -8,8 +8,8 @@ import {
 } from '@react-three/drei';
 import { WireframeMaterial } from '@react-three/drei/materials/WireframeMaterial';
 import { useSelector } from '@xstate/react';
-import { useContext, useRef } from 'react';
-import { type Mesh } from 'three';
+import { useContext, useMemo, useRef } from 'react';
+import { SphereGeometry, type Mesh } from 'three';
 
 export const ObservationSphere = () => {
   const { uiActor } = MachineContext.useSelector(({ context }) => context);
@@ -20,17 +20,25 @@ export const ObservationSphere = () => {
   const dialogOpen = useSelector(dialogActor, (state) => state.matches('open'));
 
   const sphereRef = useRef<Mesh>(null!);
-  const radius = 0.5e5 * METER;
-  const resolution = 16;
+
+  const sphereGeometry = useMemo(() => {
+    const radius = 0.25e5 * METER;
+    const resolution = 16;
+    const geometry = new SphereGeometry(radius, resolution, resolution);
+    const nonIndexedGeometry = geometry.toNonIndexed(); // Necessary for wireframe.
+    geometry.dispose(); // Cleanup original indexed geometry.
+    return nonIndexedGeometry;
+  }, []);
   return (
     <>
-      <Sphere
+      <mesh
+        ref={sphereRef}
         name="observation-sphere"
         visible={dialogOpen}
-        ref={sphereRef}
-        args={[radius, resolution, resolution]}
+        geometry={sphereGeometry}
       >
         <Wireframe
+          // geometry={sphereGeometry}
           simplify
           fillOpacity={0}
           colorBackfaces
@@ -38,9 +46,8 @@ export const ObservationSphere = () => {
           stroke={'white'}
           backfaceStroke={'white'}
         />
-        {/* <Edges scale={1} color={'white'} threshold={1} /> */}
         {/* <axesHelper args={[1e-1]} /> */}
-      </Sphere>
+      </mesh>
     </>
   );
 };

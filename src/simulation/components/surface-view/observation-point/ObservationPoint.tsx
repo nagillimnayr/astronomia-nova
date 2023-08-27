@@ -6,7 +6,7 @@ import { degToRad } from 'three/src/math/MathUtils';
 // import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { DIST_MULT } from '@/simulation/utils/constants';
+import { DIST_MULT, METER, PI_OVER_TWO } from '@/simulation/utils/constants';
 import { observer } from 'mobx-react-lite';
 import { ObservationSphere } from './ObservationSphere';
 import { SkySphere } from '../sky-sphere/SkySphere';
@@ -62,7 +62,7 @@ const ObservationPoint = observer(({ children }: Props) => {
       // Reset rotation.
       centerRef.current.rotation.set(0, 0, 0);
 
-      // We rotate around the local Y-axis first, as it will initially be the same as the parent's local Z-axis.
+      // Rotate around the local Y-axis first, which will be the polar axis of the body..
       centerRef.current.rotateY(degToRad(latitude));
       // We then rotate around the new local Z-axis after the first rotation.
       centerRef.current.rotateZ(degToRad(longitude));
@@ -84,14 +84,14 @@ const ObservationPoint = observer(({ children }: Props) => {
     <>
       {body && mesh ? (
         <>
+          {/** Pivot point at center of body. */}
           <object3D ref={centerRef} visible={dialogOpen || onSurface}>
             {/* <axesHelper args={[1.5 * (body.meanRadius / DIST_MULT)]} /> */}
-
             {/** Attach group at a distance so that it is on the surface of the body. */}
             <group
               name="observation-point"
-              position={[body.meanRadius / DIST_MULT, 0, 0]}
-              rotation={[0, 0, degToRad(-90)]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
+              position={[body.meanRadius * METER, 0, 0]} // Position on surface.
+              rotation={[0, 0, -PI_OVER_TWO]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
             >
               {/* <axesHelper args={[1e-2]} /> */}
               <ObservationSphere />
