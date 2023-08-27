@@ -20,6 +20,8 @@ import { DIST_MULT, ORIGIN, Y_AXIS } from '@/simulation/utils/constants';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { Interactive, XRInteractionEvent } from '@react-three/xr';
 import { useCursor } from '@react-three/drei';
+import useHover from '@/hooks/useHover';
+import { useSpring, animated } from '@react-spring/three';
 
 const threshold = 0.02;
 
@@ -52,13 +54,15 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   const markerRef = useRef<Group>(null!);
   const axesRef = useRef<AxesHelper>(null!);
 
-  const [isHovered, setHovered] = useState<boolean>(false);
+  const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
+  const { scale } = useSpring({ scale: isHovered ? 1.5 : 1 });
 
   const handleClick = useCallback(
     (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
       if ('stopPropagation' in event) {
         event.stopPropagation();
+        setHovered(true);
       }
       const group = groupRef.current;
       if (!group.visible) return;
@@ -66,7 +70,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
       const body = bodyRef.current;
       selectionActor.send({ type: 'SELECT', selection: body });
     },
-    [bodyRef, selectionActor]
+    [bodyRef, selectionActor, setHovered]
   );
 
   useFrame(({ camera, gl }, _, frame) => {
@@ -119,8 +123,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // Get distance to camera.
     const distanceToCamera = _bodyWorldPos.distanceTo(_camWorldPos);
 
-    const hoverFactor = isHovered ? 1.25 : 1;
-    const vrFactor = inVR ? 1.5 : 1;
+    const vrFactor = inVR ? 1.4 : 1;
 
     const text = textRef.current;
     const textFactor = Math.max(1e-5, distanceToCamera / 60);
@@ -129,12 +132,12 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // Clamp the y-position of the annotation so that it doesn't go inside of the body.
     const yPos = clamp(-1.25 * textFactor, -(meanRadius / DIST_MULT) * 1.5);
     // Set position so that the annotation always appears below the body and outside of the marker.
-    text?.position.set(0, yPos * hoverFactor * vrFactor, 0);
+    text?.position.set(0, yPos * vrFactor, 0);
 
     const markerFactor = Math.max(1e-5, distanceToCamera / 75);
 
     const marker = markerRef.current;
-    marker.scale.setScalar(markerFactor * hoverFactor * vrFactor);
+    marker.scale.setScalar(markerFactor * vrFactor);
 
     if (axesRef.current) {
       axesRef.current.scale.setScalar(markerFactor);
@@ -161,28 +164,30 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   });
 
   return (
-    <group ref={groupRef}>
-      <Interactive
-        onSelect={handleClick}
-        onHover={() => setHovered(true)}
-        onBlur={() => setHovered(false)}
-      >
+    <animated.group scale={scale}>
+      <group ref={groupRef}>
         <group
           ref={markerRef}
           onClick={handleClick}
-          onPointerOver={() => setHovered(true)}
-          onPointerLeave={() => setHovered(false)}
+          onPointerOver={hoverEvents.handlePointerEnter}
+          onPointerLeave={hoverEvents.handlePointerLeave}
         >
-          <RingMarker bodyRef={bodyRef} ref={ringRef} />
-          <CircleMarker
-            bodyRef={bodyRef}
-            color={color ?? 'white'}
-            ref={circleRef}
-          />
+          <Interactive
+            onSelect={handleClick}
+            onHover={hoverEvents.handlePointerEnter}
+            onBlur={hoverEvents.handlePointerLeave}
+          >
+            <RingMarker bodyRef={bodyRef} ref={ringRef} />
+            <CircleMarker
+              bodyRef={bodyRef}
+              color={color ?? 'white'}
+              ref={circleRef}
+            />
+          </Interactive>
         </group>
-      </Interactive>
-      {/* <axesHelper args={[10]} ref={axesRef} /> */}
-      <Annotation annotation={name} meanRadius={meanRadius} ref={textRef} />
-    </group>
+        {/* <axesHelper args={[10]} ref={axesRef} /> */}
+        <Annotation annotation={name} meanRadius={meanRadius} ref={textRef} />
+      </group>
+    </animated.group>
   );
 };
