@@ -24,7 +24,11 @@ export const Floor = ({ position = [0, 0, 0], ...props }: Props) => {
       >
         <group position={position}>
           <Grid infiniteGrid />
-          <Plane args={[1000, 1000]} rotation={[-PI_OVER_TWO, 0, 0]}>
+          <Plane
+            name="floor-mesh"
+            args={[1000, 1000]}
+            rotation={[-PI_OVER_TWO, 0, 0]}
+          >
             <MeshDiscardMaterial />
           </Plane>
         </group>
