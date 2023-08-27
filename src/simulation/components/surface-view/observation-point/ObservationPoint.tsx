@@ -91,7 +91,7 @@ const ObservationPoint = observer(({ children }: Props) => {
         <>
           {/** Pivot point at center of body. */}
           <object3D ref={centerRef} visible={dialogOpen || onSurface}>
-            <axesHelper args={[2 * (body.meanRadius / DIST_MULT)]} />
+            {/* <axesHelper args={[2 * (body.meanRadius / DIST_MULT)]} /> */}
             {/** Attach group at a distance so that it is on the surface of the body. */}
             <group
               name="observation-point"
