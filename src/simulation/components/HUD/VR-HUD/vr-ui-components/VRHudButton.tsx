@@ -15,6 +15,7 @@ import { VRLabel } from './VRLabel';
 import { Panel } from './classes/Panel';
 import { TextMesh } from '@/type-declarations/troika-three-text/Text';
 import { useCursor } from '@react-three/drei';
+import { useSpring, animated } from '@react-spring/three';
 
 const bbox = new Box3();
 const bbSize = new Vector3();
@@ -34,6 +35,9 @@ export const VRHudButton = ({
 }: VRHudButtonProps) => {
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
+  const { scale } = useSpring({
+    scale: isHovered ? 1.2 : 1,
+  });
 
   const containerRef = useRef<Group>(null!);
   const panelRef = useRef<Panel>(null!);
@@ -61,19 +65,19 @@ export const VRHudButton = ({
 
   return (
     <>
-      <group
+      <animated.group
         ref={containerRef}
         onClick={onClick}
         onPointerEnter={hoverEvents.handlePointerEnter}
         onPointerLeave={hoverEvents.handlePointerLeave}
-        scale={isHovered ? 1.2 : 1}
+        scale={scale}
       >
         <VRPanel ref={panelRef} width={widthRef.current} height={height} />
 
         <object3D ref={labelRef}>
           <VRLabel label={label} fontSize={height * 0.5} onSync={handleSync} />
         </object3D>
-      </group>
+      </animated.group>
     </>
   );
 };
