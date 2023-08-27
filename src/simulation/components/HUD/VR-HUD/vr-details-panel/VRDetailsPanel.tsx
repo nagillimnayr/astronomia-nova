@@ -24,6 +24,7 @@ import { VRPanel } from '../vr-ui-components/VRPanel';
 import { VRSurfaceButton } from './VRSurfaceButton';
 import { useThree } from '@react-three/fiber';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
+import { Interactive } from '@react-three/xr';
 
 const _camWorldPos = new Vector3();
 const FONT_SIZE = 0.05;
@@ -99,7 +100,10 @@ export const VRDetailsPanel = ({
         }}
       >
         {/** Background. */}
-        <VRPanel width={width} height={height} />
+        <Interactive>
+          {/** Wrap in Interactive so it will catch rays. */}
+          <VRPanel width={width} height={height} />
+        </Interactive>
 
         {/** Name. */}
         <Text
