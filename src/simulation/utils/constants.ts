@@ -41,8 +41,15 @@ export const UPDATES_PER_REAL_SECOND = 60;
 // Angles in radians
 export const PI = Math.PI;
 export const DEG_TO_RADS = PI / 180;
+export const RADS_TO_DEG = 180 / PI;
 export const TWO_PI = Math.PI * 2;
 export const PI_OVER_TWO = Math.PI / 2;
 export const PI_OVER_THREE = Math.PI / 4;
 export const PI_OVER_FOUR = Math.PI / 4;
 export const PI_OVER_SIX = Math.PI / 4;
+
+// Coords (in Degrees)
+export const MIN_LATITUDE = -90;
+export const MAX_LATITUDE = 90;
+export const MIN_LONGITUDE = -180;
+export const MAX_LONGITUDE = 180;

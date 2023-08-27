@@ -5,6 +5,16 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 
 import { useCallback, useEffect, useRef } from 'react';
 import { useActor, useSelector } from '@xstate/react';
+import {
+  PI,
+  PI_OVER_TWO,
+  RADS_TO_DEG,
+  TWO_PI,
+  MIN_LATITUDE,
+  MAX_LATITUDE,
+  MIN_LONGITUDE,
+  MAX_LONGITUDE,
+} from '@/simulation/utils/constants';
 
 const SurfaceViewDialog = () => {
   const { uiActor, cameraActor, surfaceActor } = MachineContext.useSelector(
@@ -53,8 +63,8 @@ const SurfaceViewDialog = () => {
               className="h-6 w-full"
               type="number"
               value={latitude}
-              min={-180}
-              max={180}
+              min={MIN_LATITUDE}
+              max={MAX_LATITUDE}
               step={0.5}
               onChange={(event) => {
                 const value = parseFloat(event.target.value);
@@ -66,8 +76,8 @@ const SurfaceViewDialog = () => {
           <Slider
             name="latitude-slider"
             value={[latitude]}
-            min={-180}
-            max={180}
+            min={MIN_LATITUDE}
+            max={MAX_LATITUDE}
             step={0.1}
             className="w-full"
             onValueChange={(values) => {
@@ -84,8 +94,8 @@ const SurfaceViewDialog = () => {
               className="h-6  w-full"
               type="number"
               value={longitude}
-              min={-90}
-              max={90}
+              min={MIN_LONGITUDE}
+              max={MAX_LATITUDE}
               step={0.5}
               onChange={(event) => {
                 const value = parseFloat(event.target.value);
@@ -97,8 +107,8 @@ const SurfaceViewDialog = () => {
           <Slider
             name="longitude-slider"
             value={[longitude]}
-            min={-90}
-            max={90}
+            min={MIN_LONGITUDE}
+            max={MAX_LONGITUDE}
             step={0.1}
             className="w-full"
             onValueChange={(values) => {

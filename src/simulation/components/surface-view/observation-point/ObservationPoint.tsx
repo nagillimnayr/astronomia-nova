@@ -6,7 +6,12 @@ import { degToRad } from 'three/src/math/MathUtils';
 // import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { DIST_MULT, METER, PI_OVER_TWO } from '@/simulation/utils/constants';
+import {
+  DEG_TO_RADS,
+  DIST_MULT,
+  METER,
+  PI_OVER_TWO,
+} from '@/simulation/utils/constants';
 import { observer } from 'mobx-react-lite';
 import { ObservationSphere } from './ObservationSphere';
 import { SkySphere } from '../sky-sphere/SkySphere';
@@ -63,9 +68,9 @@ const ObservationPoint = observer(({ children }: Props) => {
       centerRef.current.rotation.set(0, 0, 0);
 
       // Rotate around the local Y-axis first, which will be the polar axis of the body..
-      centerRef.current.rotateY(degToRad(latitude));
+      centerRef.current.rotateY(longitude * DEG_TO_RADS);
       // We then rotate around the new local Z-axis after the first rotation.
-      centerRef.current.rotateZ(degToRad(longitude));
+      centerRef.current.rotateZ(latitude * DEG_TO_RADS);
     });
 
     // Cleanup.
@@ -86,7 +91,7 @@ const ObservationPoint = observer(({ children }: Props) => {
         <>
           {/** Pivot point at center of body. */}
           <object3D ref={centerRef} visible={dialogOpen || onSurface}>
-            {/* <axesHelper args={[1.5 * (body.meanRadius / DIST_MULT)]} /> */}
+            <axesHelper args={[2 * (body.meanRadius / DIST_MULT)]} />
             {/** Attach group at a distance so that it is on the surface of the body. */}
             <group
               name="observation-point"

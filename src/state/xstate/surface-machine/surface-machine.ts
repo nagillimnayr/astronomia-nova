@@ -1,14 +1,19 @@
-import { PI_OVER_TWO } from '@/simulation/utils/constants';
+import {
+  PI,
+  PI_OVER_TWO,
+  RADS_TO_DEG,
+  TWO_PI,
+  MIN_LATITUDE,
+  MAX_LATITUDE,
+  MIN_LONGITUDE,
+  MAX_LONGITUDE,
+} from '@/simulation/utils/constants';
 import { Object3D, Spherical, Vector3 } from 'three';
 import { assign, createMachine, log } from 'xstate';
+import { radToDeg } from 'three/src/math/MathUtils';
 
 const _pos = new Vector3();
 const _spherical = new Spherical();
-
-const MIN_LATITUDE = -180;
-const MAX_LATITUDE = 180;
-const MIN_LONGITUDE = -90;
-const MAX_LONGITUDE = 90;
 
 type Context = {
   latitude: number;
@@ -47,16 +52,14 @@ export const surfaceMachine = createMachine(
         actions: ['setLongitude'],
       },
       SET_COORDS_FROM_VECTOR: {
-        actions: ['setCoordsFromVector'],
+        actions: ['logEvent', 'setCoordsFromVector'],
       },
     },
   },
   {
     actions: {
-      // logEvent: log((_, event) => event),
-      // assignObserver: assign({
-      //   observer: (_, { observer }) => observer,
-      // }),
+      logEvent: log((_, event) => event),
+
       setLatitude: assign({
         latitude: (_, { value }) => value,
       }),
@@ -68,10 +71,20 @@ export const surfaceMachine = createMachine(
         _spherical.setFromVector3(pos);
         _spherical.makeSafe();
 
+        let latitude = _spherical.phi * RADS_TO_DEG;
+        let longitude = _spherical.theta * RADS_TO_DEG;
+
+        // Adjust angles.
+        latitude -= 90; // Equator should be at 0.
+        latitude *= -1; // Flip so north pole is +90, south pole is -90.
+        if (longitude > MAX_LONGITUDE) {
+          longitude -= 360;
+        }
+        longitude -= 90;
+
         return {
-          latitude: _spherical.theta,
-          // Polar angle of spherical coordinates is measured from the pole, rather than the equator, so must be adjusted.
-          longitude: _spherical.phi - PI_OVER_TWO,
+          latitude,
+          longitude,
         };
       }),
     },
