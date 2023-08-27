@@ -18,29 +18,31 @@ export const Poles = ({ length, rotation }: PoleProps) => {
   const isVisible = useSelector(actor, (state) => state.matches('active'));
   return (
     <>
-      <group rotation={rotation}>
-        {/** North Pole. */}
-        <arrowHelper
-          visible={isVisible}
-          ref={(arrow) => {
-            if (!arrow) return;
-            arrow.setColor('red');
-            arrow.setDirection(Y_AXIS);
-            arrow.setLength(length, 0.1 * length);
-          }}
-        />
-        {/** South Pole. */}
-        <arrowHelper
-          visible={isVisible}
-          ref={(arrow) => {
-            if (!arrow) return;
-            arrow.setColor('blue');
-            arrow.setDirection(Y_AXIS);
-            arrow.setLength(length, 0.1 * length);
-            arrow.rotation.set(PI, 0, 0);
-          }}
-        />
-      </group>
+      {isVisible && (
+        <group rotation={rotation}>
+          {/** North Pole. */}
+          <arrowHelper
+            visible={isVisible}
+            ref={(arrow) => {
+              if (!arrow) return;
+              arrow.setColor('red');
+              arrow.setDirection(Y_AXIS);
+              arrow.setLength(length, 0.1 * length);
+            }}
+          />
+          {/** South Pole. */}
+          <arrowHelper
+            visible={isVisible}
+            ref={(arrow) => {
+              if (!arrow) return;
+              arrow.setColor('blue');
+              arrow.setDirection(Y_AXIS);
+              arrow.setLength(length, 0.1 * length);
+              arrow.rotation.set(PI, 0, 0);
+            }}
+          />
+        </group>
+      )}
     </>
   );
 };
