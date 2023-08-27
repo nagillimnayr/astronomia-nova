@@ -16,10 +16,12 @@ const _lookPos = new Vector3();
 type VRHoverIndicatorProps = {
   handedness: XRHandedness;
   radius?: number;
+  rayLength?: number;
 };
 export const VRHoverIndicator = ({
   handedness,
   radius = 0.02,
+  rayLength = 1e6,
 }: VRHoverIndicatorProps) => {
   const { cameraActor, vrActor } = MachineContext.useSelector(
     ({ context }) => context
@@ -28,33 +30,36 @@ export const VRHoverIndicator = ({
   const controller = useController(handedness);
   console.log('controller:', controller);
   const indicatorRef = useRef<Group>(null!);
+  const circleRef = useRef<Mesh>(null!);
+  const ringRef = useRef<Mesh>(null!);
 
   useFrame(() => {
     if (!controller) return;
-    const rayLength = 1e5;
+    const indicator = indicatorRef.current;
 
     // Get hover state.
-    const { hoverState } = getXR();
+    const hoverState = getXR().hoverState[handedness];
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const intersection: Intersection = hoverState[handedness]
-      .values()
-      .next().value;
+    const intersection: Intersection = hoverState.values().next().value;
+
     if (!intersection) {
       const ray = controller.controller.children[0];
       if (!(ray instanceof Line)) return;
 
       ray.scale.setZ(rayLength);
+      indicator.visible = false;
       return;
     }
 
+    indicator.visible = true;
+    const obj = intersection.object;
+
     const point = intersection.point;
-    const indicator = indicatorRef.current;
     indicator.position.copy(point);
 
     const face = intersection.face;
     if (face) {
-      const obj = intersection.object;
       const normal = face.normal;
       obj.getWorldPosition(_objWorldPos);
       _worldNormal.copy(normal);
@@ -70,16 +75,25 @@ export const VRHoverIndicator = ({
       //
     }
 
+    // Look in direction of the normal.
     indicator.lookAt(_lookPos);
   });
   return (
     <>
-      <group ref={indicatorRef}>
+      <group name={`hover-indicator-${handedness}`} ref={indicatorRef}>
         <axesHelper args={[radius * 2]} />
-        <Circle name={`hover-indicator-${handedness}`} args={[radius * 0.2]}>
+        <Circle
+          name={`hover-indicator-circle-${handedness}`}
+          args={[radius * 0.2]}
+          ref={circleRef}
+        >
           <meshBasicMaterial side={DoubleSide} color={'red'} />
         </Circle>
-        <Ring args={[radius * 0.9, radius]}>
+        <Ring
+          name={`hover-indicator-ring-${handedness}`}
+          args={[radius * 0.9, radius]}
+          ref={ringRef}
+        >
           <meshBasicMaterial side={DoubleSide} color={'red'} />
         </Ring>
       </group>
