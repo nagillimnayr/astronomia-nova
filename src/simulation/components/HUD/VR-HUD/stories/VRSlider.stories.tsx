@@ -60,7 +60,7 @@ const VRSliderStory = ({ ...args }: VRSliderProps) => {
   }, []);
   return (
     <>
-      <KeyboardCamControls />
+      <KeyboardCamControls distance={2} />
       <Text position={[0, 0.15, 0]} fontSize={0.35}>
         {val.toLocaleString()}
       </Text>
