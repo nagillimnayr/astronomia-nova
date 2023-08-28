@@ -8,50 +8,41 @@ const meta: Meta<typeof VRSlider> = {
   title: 'VR-UI/components/VRSlider',
   component: VRSlider,
   decorators: [(storyFn) => <VRCanvasDecorator>{storyFn()}</VRCanvasDecorator>],
+  argTypes: {
+    value: {
+      control: { type: 'range', min: -100, max: 100, step: 0.1 },
+    },
+    trackColor: { control: { type: 'color' } },
+    rangeColor: { control: { type: 'color' } },
+    thumbColor: { control: { type: 'color' } },
+    thumbBorderColor: { control: { type: 'color' } },
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof VRSlider>;
 
 const Default: Story = {
-  render: () => {
+  args: {
+    position: [0, 0, 0],
+    height: 0.1,
+    width: 2,
+    value: 0,
+    thumbRadius: 0.1,
+    trackColor: 'black',
+    rangeColor: 'white',
+    thumbColor: 'white',
+    thumbBorderColor: colors.border,
+  },
+  render: (args) => {
     return (
       <>
-        <VRSliderStory />
+        <PerspectiveCamera makeDefault position={[0, 0, 3]} />
+        <CameraControls makeDefault />
+        <VRSlider {...args} min={-100} max={100} step={0.1} />
       </>
     );
   },
-};
-
-const VRSliderStory = () => {
-  const height = 0.1;
-  const width = 2;
-  const thumbRadius = 0.15;
-
-  const min = -100;
-  const max = 100;
-  const step = 1;
-  const value = -20;
-  return (
-    <>
-      <PerspectiveCamera makeDefault position={[0, 0, 3]} />
-      <CameraControls makeDefault />
-      <VRSlider
-        position={[0, 0.5, 0]}
-        width={width}
-        height={height}
-        thumbRadius={thumbRadius}
-        trackColor={colors.background}
-        rangeColor={'white'}
-        thumbColor={'white'}
-        thumbBorderColor={colors.border}
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-      />
-    </>
-  );
 };
 
 export { Default };
