@@ -1,11 +1,26 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Circle, Plane, Ring, useCursor } from '@react-three/drei';
-import { useMemo } from 'react';
-import { type ColorRepresentation, DoubleSide, type Vector3Tuple } from 'three';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import {
+  type ColorRepresentation,
+  DoubleSide,
+  type Vector3Tuple,
+  Group,
+  Object3D,
+} from 'three';
 import { depth } from '../vr-hud-constants';
 import useHover from '@/hooks/useHover';
-import { type ThreeEvent } from '@react-three/fiber';
+import { useThree, type ThreeEvent } from '@react-three/fiber';
 import { Interactive, type XRInteractionEvent } from '@react-three/xr';
-import { useSpring, animated } from '@react-spring/three';
+import {
+  useSpring,
+  animated,
+  SpringValue,
+  useSpringValue,
+  SpringRef,
+} from '@react-spring/three';
+import { useDrag, useGesture } from '@use-gesture/react';
+import { clamp } from 'three/src/math/MathUtils';
 
 export type VRSliderProps = {
   position?: Vector3Tuple;
@@ -20,6 +35,8 @@ export type VRSliderProps = {
   rangeColor?: ColorRepresentation;
   thumbColor?: ColorRepresentation;
   thumbBorderColor?: ColorRepresentation;
+
+  onValueChange?: (value: number) => void;
 };
 export const VRSlider = ({
   position,
@@ -34,6 +51,7 @@ export const VRSlider = ({
   rangeColor = 'white',
   thumbColor = 'white',
   thumbBorderColor = 'black',
+  onValueChange,
 }: VRSliderProps) => {
   const [stepLength, rangeStart] = useMemo(() => {
     const length = max - min;
@@ -47,10 +65,35 @@ export const VRSlider = ({
     if (min < 0) {
       rangeStart += Math.abs(min) * stepLength;
     }
-    console.log('step length:', stepLength);
-    console.log('range start:', rangeStart);
+
     return [stepLength, rangeStart];
   }, [max, min, width]);
+
+  const handleValueChange = useCallback(
+    (value: number) => {
+      const newValue = clamp(value / stepLength, min, max);
+      if (onValueChange) {
+        onValueChange(value);
+      }
+    },
+    [max, min, onValueChange, stepLength]
+  );
+
+  const [spring, springRef] = useSpring(() => ({
+    x: 0,
+    onChange: {
+      x: (result) => {
+        // console.log('onChange x result:', result);
+        const newX = result as unknown as number;
+        console.log('onChange newX:', newX);
+        const value = newX / stepLength;
+        console.log('value:', value);
+        // if (onValueChange) {
+        //   onValueChange(newX);
+        // }
+      },
+    },
+  }));
 
   // Get end position of the range.
   const rangeEnd = rangeStart + value * stepLength;
@@ -60,14 +103,18 @@ export const VRSlider = ({
       <group position={position}>
         <VRSliderTrack color={trackColor} width={width} height={height} />
         <VRSliderRange
+          spring={spring}
+          springRef={springRef}
           color={rangeColor}
           height={height}
           xStart={rangeStart}
-          xEnd={rangeEnd}
+          xEnd={spring.x}
         />
 
         <VRSliderThumb
-          xPos={rangeEnd}
+          spring={spring}
+          springRef={springRef}
+          xStart={rangeStart}
           radius={thumbRadius}
           color={thumbColor}
           borderColor={thumbBorderColor}
@@ -92,23 +139,30 @@ const VRSliderTrack = ({ width, height, color }: VRSliderTrackProps) => {
 };
 
 type VRSliderRangeProps = {
+  spring: { x: SpringValue<number> };
+  springRef: SpringRef<{ x: number }>;
   xStart: number;
-  xEnd: number;
+  xEnd: SpringValue<number>;
   height: number;
   color: ColorRepresentation;
 };
-const VRSliderRange = ({ height, xStart, xEnd, color }: VRSliderRangeProps) => {
-  const width = xEnd - xStart;
-
+const VRSliderRange = ({
+  spring,
+  springRef,
+  height,
+  xStart,
+  xEnd,
+  color,
+}: VRSliderRangeProps) => {
   return (
     <>
       <object3D position={[xStart, 0, depth.xs]}>
         {/** Plane position such that its left side is at the origin of the parent object. Scaling the parent object then will keep one side at the position of the parent objects origin. */}
-        <object3D scale={[width, height, 1]}>
+        <animated.object3D scale-x={spring.x} scale-y={height}>
           <Plane position={[0.5, 0, 0]}>
             <meshBasicMaterial color={color} side={DoubleSide} />
           </Plane>
-        </object3D>
+        </animated.object3D>
       </object3D>
     </>
   );
@@ -117,38 +171,82 @@ const VRSliderRange = ({ height, xStart, xEnd, color }: VRSliderRangeProps) => {
 const ringArgs: [number, number, number] = [0.95, 1, 64];
 const circleArgs: [number, number] = [0.95, 64];
 type VRSliderThumbProps = {
-  xPos: number;
+  spring: { x: SpringValue<number> };
+  springRef: SpringRef<{ x: number }>;
+  xStart: number;
   radius: number;
   color: ColorRepresentation;
   borderColor: ColorRepresentation;
 };
 const VRSliderThumb = ({
-  xPos,
+  spring,
+  springRef,
+  xStart,
   radius,
   color,
   borderColor,
 }: VRSliderThumbProps) => {
+  const getThree = useThree(({ get }) => get);
+  const thumbRef = useRef<Object3D>(null!);
+  const anchorRef = useRef<Group>(null!);
+  // Spring scale on hover.
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered);
   const { scale } = useSpring({ scale: isHovered ? 1.2 : 1 });
+
+  const [dragStartXPos, setDragStartXPos] = useState<number>(0);
+
+  const bind = useGesture(
+    {
+      onDragStart: () => {
+        const initX = spring.x.get();
+        setDragStartXPos(initX);
+        console.log('drag start');
+      },
+      onDrag: (state) => {
+        const { size, viewport } = getThree();
+        const aspect = size.width / viewport.width;
+        const [ox] = state.offset;
+        const offsetX = ox / aspect;
+        // const newX = (dragStartXPos + offsetX);
+        console.log('dragStartXPos:', dragStartXPos);
+        // console.log('oX:', ox);
+        console.log('offset X:', offsetX);
+
+        springRef.start({ x: offsetX - xStart });
+      },
+    },
+    {
+      drag: {
+        // from: ({ initial }) => [initial[0], 0],
+      },
+    }
+  );
+
   return (
     <>
-      <animated.object3D
-        position={[xPos, 0, depth.sm]}
-        scale={scale}
-        onPointerEnter={hoverEvents.handlePointerEnter}
-        onPointerLeave={hoverEvents.handlePointerLeave}
-      >
-        <Interactive
-          onHover={hoverEvents.handlePointerEnter}
-          onBlur={hoverEvents.handlePointerLeave}
+      <group ref={anchorRef} position={[xStart, 0, depth.sm]}>
+        {/* @ts-ignore */}
+        <animated.object3D
+          ref={thumbRef}
+          position-x={spring.x}
+          {...bind()}
+          onPointerEnter={hoverEvents.handlePointerEnter}
+          onPointerLeave={hoverEvents.handlePointerLeave}
         >
-          <group scale={radius}>
-            <Ring args={ringArgs} material-color={borderColor} />
-            <Circle args={circleArgs} material-color={color} />
-          </group>
-        </Interactive>
-      </animated.object3D>
+          <Interactive
+            onHover={hoverEvents.handlePointerEnter}
+            onBlur={hoverEvents.handlePointerLeave}
+          >
+            <animated.group scale={scale}>
+              <group scale={radius}>
+                <Ring args={ringArgs} material-color={borderColor} />
+                <Circle args={circleArgs} material-color={color} />
+              </group>
+            </animated.group>
+          </Interactive>
+        </animated.object3D>
+      </group>
     </>
   );
 };
