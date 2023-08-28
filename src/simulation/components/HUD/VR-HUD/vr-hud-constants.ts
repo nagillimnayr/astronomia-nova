@@ -74,7 +74,7 @@ export const border = Object.freeze({
 export const depth = {
   xxs: 1 * SCALE_FACTOR,
   xs: 2 * SCALE_FACTOR,
-  sm: 1 * SCALE_FACTOR,
+  sm: 3 * SCALE_FACTOR,
   md: 4 * SCALE_FACTOR,
   base: 5 * SCALE_FACTOR,
   lg: 6 * SCALE_FACTOR,
