@@ -1,15 +1,9 @@
-import { Circle, Plane } from '@react-three/drei';
+import { Circle, Plane, Ring } from '@react-three/drei';
 import { useMemo } from 'react';
-import {
-  BufferAttribute,
-  ColorRepresentation,
-  DoubleSide,
-  DynamicDrawUsage,
-  Vector3Tuple,
-} from 'three';
+import { type ColorRepresentation, DoubleSide, type Vector3Tuple } from 'three';
 import { depth } from '../vr-hud-constants';
 
-type VRSliderProps = {
+export type VRSliderProps = {
   position?: Vector3Tuple;
   value: number;
   min: number;
@@ -69,9 +63,10 @@ export const VRSlider = ({
         />
 
         <VRSliderThumb
-          color={thumbColor}
           xPos={rangeEnd}
           radius={thumbRadius}
+          color={thumbColor}
+          borderColor={thumbBorderColor}
         />
       </group>
     </>
@@ -100,12 +95,11 @@ type VRSliderRangeProps = {
 };
 const VRSliderRange = ({ height, xStart, xEnd, color }: VRSliderRangeProps) => {
   const width = xEnd - xStart;
-  console.log('xStart:', xStart);
-  console.log('xEnd:', xEnd);
-  console.log('range width:', width);
+
   return (
     <>
       <object3D position={[xStart, 0, depth.xs]}>
+        {/** Plane position such that its left side is at the origin of the parent object. Scaling the parent object then will keep one side at the position of the parent objects origin. */}
         <object3D scale={[width, height, 1]}>
           <Plane position={[0.5, 0, 0]}>
             <meshBasicMaterial color={color} side={DoubleSide} />
@@ -116,16 +110,25 @@ const VRSliderRange = ({ height, xStart, xEnd, color }: VRSliderRangeProps) => {
   );
 };
 
+const ringArgs: [number, number, number] = [0.95, 1, 64];
+const circleArgs: [number, number] = [0.95, 64];
 type VRSliderThumbProps = {
   xPos: number;
   radius: number;
   color: ColorRepresentation;
+  borderColor: ColorRepresentation;
 };
-const VRSliderThumb = ({ xPos, radius, color }: VRSliderThumbProps) => {
+const VRSliderThumb = ({
+  xPos,
+  radius,
+  color,
+  borderColor,
+}: VRSliderThumbProps) => {
   return (
     <>
-      <group position={[xPos, 0, depth.sm]}>
-        <Circle scale={radius} material-color={color} />
+      <group position={[xPos, 0, depth.sm]} scale={radius}>
+        <Ring args={ringArgs} material-color={borderColor} />
+        <Circle args={circleArgs} material-color={color} />
       </group>
     </>
   );
