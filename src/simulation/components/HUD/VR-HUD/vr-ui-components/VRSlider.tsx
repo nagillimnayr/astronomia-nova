@@ -17,6 +17,7 @@ import {
   animated,
   type SpringValue,
   type SpringRef,
+  AnimationResult,
 } from '@react-spring/three';
 import { useGesture } from '@use-gesture/react';
 import { clamp } from 'three/src/math/MathUtils';
@@ -57,23 +58,23 @@ export const VRSlider = ({
     const stepLength = width / length;
 
     const halfWidth = width / 2;
-    // Min and max x pos values in scene units.
-    const minX = -halfWidth;
-    const maxX = halfWidth;
 
-    let rangeStart = minX;
+    let rangeStart = -halfWidth;
     // If min value is zero or positive, start of slider range will be the left end of the slider.
     // If min is negative, the slider range will start at zero.
     if (min < 0) {
       rangeStart += Math.abs(min) * stepLength;
     }
+    // Min and max x pos values in scene units.
+    const minX = min * stepLength;
+    const maxX = max * stepLength;
     return [stepLength, rangeStart, minX, maxX];
   }, [max, min, width]);
 
   const [spring, springRef] = useSpring(() => ({
     x: 0,
     onChange: {
-      x: (result) => {
+      x: (result: AnimationResult<SpringValue<any>>) => {
         if (typeof result !== 'number') return; // Type guard.
 
         // Convert x pos from pixel coords into range [min, max].
