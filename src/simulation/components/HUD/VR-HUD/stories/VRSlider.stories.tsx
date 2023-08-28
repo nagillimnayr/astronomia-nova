@@ -17,7 +17,7 @@ const meta: Meta<typeof VRSlider> = {
   decorators: [(storyFn) => <VRCanvasDecorator>{storyFn()}</VRCanvasDecorator>],
   argTypes: {
     value: {
-      control: { type: 'range', min: -100, max: 100, step: 0.1 },
+      control: { type: 'range', min: -100, max: 100, step: 1 },
     },
     trackColor: { control: { type: 'color' } },
     rangeColor: { control: { type: 'color' } },
@@ -39,10 +39,10 @@ const Default: Story = {
     max: 100,
     step: 2,
     thumbRadius: 0.1,
-    trackColor: 'black',
-    rangeColor: 'white',
-    thumbColor: 'white',
-    thumbBorderColor: colors.border,
+    // trackColor: 'black',
+    // rangeColor: 'white',
+    // thumbColor: 'white',
+    // thumbBorderColor: colors.border,
   },
   render: (args) => {
     return (
