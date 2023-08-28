@@ -158,7 +158,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     if (marker.visible === shouldBeVisible) return;
     // Otherwise, set this object and all of its children to the appropriate visibility.
     // This is so that they don't trigger pointer events.
-    marker.traverse((obj) => {
+    group.traverse((obj) => {
       obj.visible = shouldBeVisible;
     });
   });
