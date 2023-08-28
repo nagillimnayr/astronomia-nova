@@ -1,12 +1,32 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Circle, Plane, Ring, useCursor } from '@react-three/drei';
-import { useCallback, useMemo, useRef } from 'react';
+import {
+  Circle,
+  MeshDiscardMaterial,
+  Plane,
+  Ring,
+  useCursor,
+  useHelper,
+} from '@react-three/drei';
+import {
+  MutableRefObject,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react';
 import {
   type ColorRepresentation,
   DoubleSide,
   type Vector3Tuple,
   type Group,
   type Object3D,
+  Plane as IntersectionPlane,
+  PlaneHelper,
+  Vector3,
+  Mesh,
+  BoxHelper,
 } from 'three';
 import { depth } from '../vr-hud-constants';
 import useHover from '@/hooks/useHover';
@@ -21,6 +41,10 @@ import {
 } from '@react-spring/three';
 import { useGesture } from '@use-gesture/react';
 import { clamp } from 'three/src/math/MathUtils';
+import { ORIGIN, Z_AXIS } from '@/simulation/utils/constants';
+
+const _camWorldPos = new Vector3();
+const _thumbWorldPos = new Vector3();
 
 export type VRSliderProps = {
   position?: Vector3Tuple;
@@ -53,9 +77,12 @@ export const VRSlider = ({
   thumbBorderColor = 'black',
   onValueChange,
 }: VRSliderProps) => {
-  const [stepLength, rangeStart, minX, maxX] = useMemo(() => {
+  const stepSize = useRef<number>(0); // Size of step increments.
+  const stepLength = useRef<number>(0); // Length in scene units per step.
+  stepSize.current = step;
+  const [rangeStart, minX, maxX] = useMemo(() => {
     const length = max - min;
-    const stepLength = width / length;
+    stepLength.current = width / length;
 
     const halfWidth = width / 2;
 
@@ -63,26 +90,27 @@ export const VRSlider = ({
     // If min value is zero or positive, start of slider range will be the left end of the slider.
     // If min is negative, the slider range will start at zero.
     if (min < 0) {
-      rangeStart += Math.abs(min) * stepLength;
+      rangeStart += Math.abs(min) * stepLength.current;
     }
     // Min and max x pos values in scene units.
-    const minX = min * stepLength;
-    const maxX = max * stepLength;
-    return [stepLength, rangeStart, minX, maxX];
+    const minX = min * stepLength.current;
+    const maxX = max * stepLength.current;
+    return [rangeStart, minX, maxX];
   }, [max, min, width]);
 
   const [spring, springRef] = useSpring(() => ({
-    x: 0,
+    x: value,
     onChange: {
       x: (result: AnimationResult<SpringValue<any>>) => {
         if (typeof result !== 'number') return; // Type guard.
 
         // Convert x pos from pixel coords into range [min, max].
-        const value = result / stepLength;
+        const value = result / stepLength.current;
         // console.log('value:', value);
 
         // Adjust the value to be divisible by the step size.
-        const adjusted = Math.floor(value / step) * step;
+        const adjusted =
+          Math.round(value / stepSize.current) * stepSize.current;
         // console.log('adjusted:', adjusted);
 
         // Pass adjusted value to onValueChange callback.
@@ -92,6 +120,19 @@ export const VRSlider = ({
       },
     },
   }));
+
+  // Ref to intersection plane.
+  const planeRef = useRef<Mesh>(null!);
+  const intersectionPlaneWidth = width + thumbRadius * 4;
+  const intersectionPlaneHeight = (height + thumbRadius) * 6;
+
+  useEffect(() => {
+    const springX = spring.x.get();
+    if (springX < minX || springX > maxX) {
+      const newX = clamp(springX, minX, maxX);
+      springRef.set({ x: newX });
+    }
+  }, [maxX, minX, spring, springRef]);
 
   return (
     <>
@@ -113,6 +154,12 @@ export const VRSlider = ({
           radius={thumbRadius}
           color={thumbColor}
           borderColor={thumbBorderColor}
+          planeRef={planeRef}
+        />
+        <VRSliderIntersectionPlane
+          width={intersectionPlaneWidth}
+          height={intersectionPlaneHeight}
+          ref={planeRef}
         />
       </group>
     </>
@@ -148,7 +195,7 @@ const VRSliderRange = ({
   return (
     <>
       <object3D position={[startX, 0, depth.xs]}>
-        {/** Plane position such that its left side is at the origin of the parent object. Scaling the parent object then will keep one side at the position of the parent objects origin. */}
+        {/** Position plane such that its left side is at the origin of the parent object. Scaling the parent object then will keep one side at the position of the parent objects origin. */}
         <animated.object3D scale-x={spring.x} scale-y={height}>
           <Plane position={[0.5, 0, 0]}>
             <meshBasicMaterial color={color} side={DoubleSide} />
@@ -170,6 +217,7 @@ type VRSliderThumbProps = {
   radius: number;
   color: ColorRepresentation;
   borderColor: ColorRepresentation;
+  planeRef: MutableRefObject<Mesh>;
 };
 const VRSliderThumb = ({
   spring,
@@ -180,6 +228,7 @@ const VRSliderThumb = ({
   radius,
   color,
   borderColor,
+  planeRef,
 }: VRSliderThumbProps) => {
   const getThree = useThree(({ get }) => get);
   const thumbRef = useRef<Object3D>(null!);
@@ -191,30 +240,84 @@ const VRSliderThumb = ({
 
   // Ref for recording the x position at the start of a drag gesture.
   const dragStartXPos = useRef<number>(startX);
+
+  const pointerDown = useRef<boolean>(false);
+
   const bind = useGesture({
-    onDragStart: () => {
+    onDragStart: (state) => {
+      const { initial } = state;
+      const { camera, raycaster, pointer, size, viewport } = getThree();
+      camera.getWorldPosition(_camWorldPos); // Get camera world position.
+      const thumb = thumbRef.current;
+      thumb.getWorldPosition(_thumbWorldPos); // Get world position of thumb.
+      const distanceToOrigin = _thumbWorldPos.distanceTo(ORIGIN);
+
+      const plane = planeRef.current;
+      const prevFirstHit = raycaster.firstHitOnly;
+      raycaster.firstHitOnly = true;
+      const intersections = raycaster.intersectObject(plane);
+      if (intersections.length < 1) return;
+
       // Record the x position at the start of the current gesture.
       // use-gesture only records the screen coords, as it wasn't designed for use with Three.js, so we need to keep track of the scene coords ourselves.
       const initX = spring.x.get();
       dragStartXPos.current = initX;
+      console.log('drag start x pos:', initX);
+
+      pointerDown.current = true;
+    },
+    onDragEnd: () => {
+      pointerDown.current = false;
+      console.log('drag end');
     },
     onDrag: (state) => {
       // Get the ratio of the canvas width in pixels to the normalized viewport width.
       // This gives us the number of pixels per one scene unit, so we can convert between screen coords and scene coords.
-      const { size, viewport } = getThree();
-      const ratio = size.width / viewport.width;
-
-      // The 'movement' value from use-gesture gives the pixel coord offset from the start of the current gesture.
-      const [mx] = state.movement; // Retrieve the x component of the vector,
-      const moveX = mx / ratio; // Convert to scene units.
-      let newX = dragStartXPos.current + moveX; // Calculate new x target.
-      newX = clamp(newX, minX, maxX); // Clamp the new x target.
-      springRef.start({ x: newX }); // Set new x target.
+      // const { size, viewport } = getThree();
+      // const ratio = size.width / viewport.aspect;
+      // // console.log('size.width', size.width);
+      // // console.log('viewport.width', viewport.width);
+      // // The 'movement' value from use-gesture gives the pixel coord offset from the start of the current gesture.
+      // const [mx] = state.movement; // Retrieve the x component of the vector,
+      // const moveX = mx / ratio; // Convert to scene units.
+      // console.log('mx:', mx);
+      // console.log('ratio:', ratio);
+      // console.log('moveX:', moveX);
+      // let newX = dragStartXPos.current + moveX; // Calculate new x target.
+      // newX = clamp(newX, minX, maxX); // Clamp the new x target.
+      // springRef.start({ x: newX }); // Set new x target.
+      // console.log('dragStartXPos:', dragStartXPos.current);
+      // console.log('newX:', newX);
 
       /** Alternative that also seems to work: */
       // const [ox] = state.offset;
       // const offsetX = ox / ratio;
       // springRef.start({ x: offsetX - xStart });
+
+      const { camera, raycaster, pointer } = getThree();
+      // Get intersection with plane.
+      raycaster.setFromCamera(pointer, camera);
+      const plane = planeRef.current;
+      const prevFirstHit = raycaster.firstHitOnly;
+      raycaster.firstHitOnly = true;
+      const intersections = raycaster.intersectObject(plane);
+      if (intersections.length < 1) {
+        raycaster.firstHitOnly = prevFirstHit;
+        return;
+      }
+      const intersection = intersections[0];
+      if (!intersection) {
+        raycaster.firstHitOnly = prevFirstHit;
+        return;
+      }
+      const point = intersection.point;
+      // console.log('x:', point.x);
+      // console.log('startX:', startX);
+      const newX = clamp(point.x - startX, minX, maxX); // Clamp the new x target.
+      springRef.start({ x: newX }); // Set new x target.
+      // console.log('newX:', newX);
+
+      raycaster.firstHitOnly = prevFirstHit;
     },
   });
 
@@ -233,6 +336,7 @@ const VRSliderThumb = ({
             onHover={hoverEvents.handlePointerEnter}
             onBlur={hoverEvents.handlePointerLeave}
           >
+            {/* <planeHelper args={[intersectionPlane]} /> */}
             <animated.group scale={scale}>
               <group scale={radius}>
                 <Ring args={ringArgs} material-color={borderColor} />
@@ -245,3 +349,28 @@ const VRSliderThumb = ({
     </>
   );
 };
+
+type VRSliderIntersectionPlaneProps = {
+  width: number;
+  height: number;
+};
+const VRSliderIntersectionPlane = forwardRef<
+  Mesh,
+  VRSliderIntersectionPlaneProps
+>(function VRSliderIntersectionPlane(
+  { width, height }: VRSliderIntersectionPlaneProps,
+  fwdRef
+) {
+  const planeRef = useRef<Mesh>(null!);
+  const boxHelper = useHelper(planeRef, BoxHelper);
+
+  useImperativeHandle(fwdRef, () => planeRef.current);
+
+  return (
+    <>
+      <Plane scale={[width, height, 1]} ref={planeRef}>
+        <MeshDiscardMaterial />
+      </Plane>
+    </>
+  );
+});
