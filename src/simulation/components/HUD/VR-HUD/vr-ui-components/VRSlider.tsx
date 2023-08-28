@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Circle, Plane, Ring, useCursor } from '@react-three/drei';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import {
   type ColorRepresentation,
   DoubleSide,
   type Vector3Tuple,
-  Group,
-  Object3D,
+  type Group,
+  type Object3D,
 } from 'three';
 import { depth } from '../vr-hud-constants';
 import useHover from '@/hooks/useHover';
@@ -15,11 +15,10 @@ import { Interactive, type XRInteractionEvent } from '@react-three/xr';
 import {
   useSpring,
   animated,
-  SpringValue,
-  useSpringValue,
-  SpringRef,
+  type SpringValue,
+  type SpringRef,
 } from '@react-spring/three';
-import { useDrag, useGesture } from '@use-gesture/react';
+import { useGesture } from '@use-gesture/react';
 import { clamp } from 'three/src/math/MathUtils';
 
 export type VRSliderProps = {
@@ -53,50 +52,45 @@ export const VRSlider = ({
   thumbBorderColor = 'black',
   onValueChange,
 }: VRSliderProps) => {
-  const [stepLength, rangeStart] = useMemo(() => {
+  const [stepLength, rangeStart, minX, maxX] = useMemo(() => {
     const length = max - min;
     const stepLength = width / length;
 
     const halfWidth = width / 2;
+    // Min and max x pos values in scene units.
+    const minX = -halfWidth;
+    const maxX = halfWidth;
 
-    let rangeStart = -halfWidth;
+    let rangeStart = minX;
     // If min value is zero or positive, start of slider range will be the left end of the slider.
     // If min is negative, the slider range will start at zero.
     if (min < 0) {
       rangeStart += Math.abs(min) * stepLength;
     }
-
-    return [stepLength, rangeStart];
+    return [stepLength, rangeStart, minX, maxX];
   }, [max, min, width]);
-
-  const handleValueChange = useCallback(
-    (value: number) => {
-      const newValue = clamp(value / stepLength, min, max);
-      if (onValueChange) {
-        onValueChange(value);
-      }
-    },
-    [max, min, onValueChange, stepLength]
-  );
 
   const [spring, springRef] = useSpring(() => ({
     x: 0,
     onChange: {
       x: (result) => {
-        // console.log('onChange x result:', result);
-        const newX = result as unknown as number;
-        console.log('onChange newX:', newX);
-        const value = newX / stepLength;
-        console.log('value:', value);
-        // if (onValueChange) {
-        //   onValueChange(newX);
-        // }
+        if (typeof result !== 'number') return; // Type guard.
+
+        // Convert x pos from pixel coords into range [min, max].
+        const value = result / stepLength;
+        // console.log('value:', value);
+
+        // Adjust the value to be divisible by the step size.
+        const adjusted = Math.floor(value / step) * step;
+        // console.log('adjusted:', adjusted);
+
+        // Pass adjusted value to onValueChange callback.
+        if (onValueChange) {
+          onValueChange(adjusted);
+        }
       },
     },
   }));
-
-  // Get end position of the range.
-  const rangeEnd = rangeStart + value * stepLength;
 
   return (
     <>
@@ -104,17 +98,17 @@ export const VRSlider = ({
         <VRSliderTrack color={trackColor} width={width} height={height} />
         <VRSliderRange
           spring={spring}
-          springRef={springRef}
           color={rangeColor}
           height={height}
-          xStart={rangeStart}
-          xEnd={spring.x}
+          startX={rangeStart}
         />
 
         <VRSliderThumb
           spring={spring}
           springRef={springRef}
-          xStart={rangeStart}
+          startX={rangeStart}
+          minX={minX}
+          maxX={maxX}
           radius={thumbRadius}
           color={thumbColor}
           borderColor={thumbBorderColor}
@@ -140,23 +134,19 @@ const VRSliderTrack = ({ width, height, color }: VRSliderTrackProps) => {
 
 type VRSliderRangeProps = {
   spring: { x: SpringValue<number> };
-  springRef: SpringRef<{ x: number }>;
-  xStart: number;
-  xEnd: SpringValue<number>;
+  startX: number;
   height: number;
   color: ColorRepresentation;
 };
 const VRSliderRange = ({
   spring,
-  springRef,
   height,
-  xStart,
-  xEnd,
+  startX,
   color,
 }: VRSliderRangeProps) => {
   return (
     <>
-      <object3D position={[xStart, 0, depth.xs]}>
+      <object3D position={[startX, 0, depth.xs]}>
         {/** Plane position such that its left side is at the origin of the parent object. Scaling the parent object then will keep one side at the position of the parent objects origin. */}
         <animated.object3D scale-x={spring.x} scale-y={height}>
           <Plane position={[0.5, 0, 0]}>
@@ -173,7 +163,9 @@ const circleArgs: [number, number] = [0.95, 64];
 type VRSliderThumbProps = {
   spring: { x: SpringValue<number> };
   springRef: SpringRef<{ x: number }>;
-  xStart: number;
+  startX: number;
+  minX: number;
+  maxX: number;
   radius: number;
   color: ColorRepresentation;
   borderColor: ColorRepresentation;
@@ -181,7 +173,9 @@ type VRSliderThumbProps = {
 const VRSliderThumb = ({
   spring,
   springRef,
-  xStart,
+  startX,
+  minX, // Min x pos value in scene units.
+  maxX, // Max x pos value in scene units.
   radius,
   color,
   borderColor,
@@ -194,38 +188,38 @@ const VRSliderThumb = ({
   useCursor(isHovered);
   const { scale } = useSpring({ scale: isHovered ? 1.2 : 1 });
 
-  const [dragStartXPos, setDragStartXPos] = useState<number>(0);
-
-  const bind = useGesture(
-    {
-      onDragStart: () => {
-        const initX = spring.x.get();
-        setDragStartXPos(initX);
-        console.log('drag start');
-      },
-      onDrag: (state) => {
-        const { size, viewport } = getThree();
-        const aspect = size.width / viewport.width;
-        const [ox] = state.offset;
-        const offsetX = ox / aspect;
-        // const newX = (dragStartXPos + offsetX);
-        console.log('dragStartXPos:', dragStartXPos);
-        // console.log('oX:', ox);
-        console.log('offset X:', offsetX);
-
-        springRef.start({ x: offsetX - xStart });
-      },
+  // Ref for recording the x position at the start of a drag gesture.
+  const dragStartXPos = useRef<number>(startX);
+  const bind = useGesture({
+    onDragStart: () => {
+      // Record the x position at the start of the current gesture.
+      // use-gesture only records the screen coords, as it wasn't designed for use with Three.js, so we need to keep track of the scene coords ourselves.
+      const initX = spring.x.get();
+      dragStartXPos.current = initX;
     },
-    {
-      drag: {
-        // from: ({ initial }) => [initial[0], 0],
-      },
-    }
-  );
+    onDrag: (state) => {
+      // Get the ratio of the canvas width in pixels to the normalized viewport width.
+      // This gives us the number of pixels per one scene unit, so we can convert between screen coords and scene coords.
+      const { size, viewport } = getThree();
+      const ratio = size.width / viewport.width;
+
+      // The 'movement' value from use-gesture gives the pixel coord offset from the start of the current gesture.
+      const [mx] = state.movement; // Retrieve the x component of the vector,
+      const moveX = mx / ratio; // Convert to scene units.
+      let newX = dragStartXPos.current + moveX; // Calculate new x target.
+      newX = clamp(newX, minX, maxX); // Clamp the new x target.
+      springRef.start({ x: newX }); // Set new x target.
+
+      /** Alternative that also seems to work: */
+      // const [ox] = state.offset;
+      // const offsetX = ox / ratio;
+      // springRef.start({ x: offsetX - xStart });
+    },
+  });
 
   return (
     <>
-      <group ref={anchorRef} position={[xStart, 0, depth.sm]}>
+      <group ref={anchorRef} position={[startX, 0, depth.sm]}>
         {/* @ts-ignore */}
         <animated.object3D
           ref={thumbRef}
