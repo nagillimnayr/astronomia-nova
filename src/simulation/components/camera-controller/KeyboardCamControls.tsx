@@ -12,7 +12,7 @@ const MAX_POLAR = PI;
 
 export const KeyboardCamControls = () => {
   const pivotRef = useRef<Object3D>(null!);
-  const sph = useMemo(() => new Spherical(1, PI_OVER_TWO), []);
+  const sph = useMemo(() => new Spherical(1.5, PI_OVER_TWO), []);
   const [spherical, setSpherical] = useState<Spherical>(sph);
   const getThree = useThree(({ get }) => get);
   useEventListener('keypress', (event) => {
