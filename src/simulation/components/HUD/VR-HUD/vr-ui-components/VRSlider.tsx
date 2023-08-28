@@ -1,7 +1,11 @@
-import { Circle, Plane, Ring } from '@react-three/drei';
+import { Circle, Plane, Ring, useCursor } from '@react-three/drei';
 import { useMemo } from 'react';
 import { type ColorRepresentation, DoubleSide, type Vector3Tuple } from 'three';
 import { depth } from '../vr-hud-constants';
+import useHover from '@/hooks/useHover';
+import { type ThreeEvent } from '@react-three/fiber';
+import { Interactive, type XRInteractionEvent } from '@react-three/xr';
+import { useSpring, animated } from '@react-spring/three';
 
 export type VRSliderProps = {
   position?: Vector3Tuple;
@@ -124,12 +128,27 @@ const VRSliderThumb = ({
   color,
   borderColor,
 }: VRSliderThumbProps) => {
+  const { isHovered, setHovered, hoverEvents } = useHover();
+  useCursor(isHovered);
+  const { scale } = useSpring({ scale: isHovered ? 1.2 : 1 });
   return (
     <>
-      <group position={[xPos, 0, depth.sm]} scale={radius}>
-        <Ring args={ringArgs} material-color={borderColor} />
-        <Circle args={circleArgs} material-color={color} />
-      </group>
+      <animated.object3D
+        position={[xPos, 0, depth.sm]}
+        scale={scale}
+        onPointerEnter={hoverEvents.handlePointerEnter}
+        onPointerLeave={hoverEvents.handlePointerLeave}
+      >
+        <Interactive
+          onHover={hoverEvents.handlePointerEnter}
+          onBlur={hoverEvents.handlePointerLeave}
+        >
+          <group scale={radius}>
+            <Ring args={ringArgs} material-color={borderColor} />
+            <Circle args={circleArgs} material-color={color} />
+          </group>
+        </Interactive>
+      </animated.object3D>
     </>
   );
 };
