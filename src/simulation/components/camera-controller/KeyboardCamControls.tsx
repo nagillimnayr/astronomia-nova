@@ -3,7 +3,7 @@ import { useEventListener } from '@react-hooks-library/core';
 import { PerspectiveCamera } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useMemo, useRef, useState } from 'react';
-import { type Object3D, Spherical } from 'three';
+import { type Object3D, Spherical, Vector3Tuple } from 'three';
 import { clamp, degToRad } from 'three/src/math/MathUtils';
 
 const rotateSpeed = 1;
@@ -12,9 +12,11 @@ const MAX_POLAR = PI;
 
 type KeyboardCamControlProps = {
   distance?: number;
+  position?: Vector3Tuple;
 };
 export const KeyboardCamControls = ({
   distance = 2,
+  position,
 }: KeyboardCamControlProps) => {
   const pivotRef = useRef<Object3D>(null!);
   const sph = useMemo(() => new Spherical(distance, PI_OVER_TWO), []);
@@ -67,6 +69,7 @@ export const KeyboardCamControls = ({
   return (
     <>
       <object3D
+        position={position}
         ref={(obj) => {
           if (!obj) return;
           pivotRef.current = obj;
@@ -75,7 +78,7 @@ export const KeyboardCamControls = ({
           camera.position.set(0, 0, spherical.radius);
         }}
       >
-        <PerspectiveCamera makeDefault position={[0, 0, 1]} />
+        <PerspectiveCamera makeDefault />
       </object3D>
     </>
   );
