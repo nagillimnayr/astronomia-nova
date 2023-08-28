@@ -37,8 +37,8 @@ const Default: Story = {
   render: (args) => {
     return (
       <>
-        <PerspectiveCamera makeDefault position={[0, 0, 3]} />
-        <CameraControls makeDefault />
+        <PerspectiveCamera makeDefault position={[0, 0, 1]} />
+        {/* <CameraControls makeDefault /> */}
         <VRSlider {...args} min={-100} max={100} step={0.1} />
       </>
     );
