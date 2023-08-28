@@ -56,7 +56,6 @@ const Default: Story = {
 const VRSliderStory = ({ ...args }: VRSliderProps) => {
   const [val, setVal] = useState<number>(args.value);
   const handleValueChange = useCallback((value: number) => {
-    console.log('val:', value);
     setVal(value);
   }, []);
   return (
