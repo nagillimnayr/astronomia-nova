@@ -20,7 +20,7 @@ export const VRPlayer = () => {
 
   const player = useXR(({ player }) => player);
   const isPresenting = useXR(({ isPresenting }) => isPresenting);
-  const session = useXR(({ session }) => session);
+  // const session = useXR(({ session }) => session);
 
   useEffect(() => {
     const { controls } = cameraActor.getSnapshot()!.context;
@@ -36,13 +36,11 @@ export const VRPlayer = () => {
   }, [cameraActor, isPresenting, player]);
   return (
     <>
-      {isPresenting && (
-        <>
-          <Controllers />
-          <VRHoverIndicator handedness="left" />
-          <VRHoverIndicator handedness="right" />
-        </>
-      )}
+      <>
+        <Controllers />
+        <VRHoverIndicator handedness="left" />
+        <VRHoverIndicator handedness="right" />
+      </>
     </>
   );
 };
