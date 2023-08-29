@@ -75,7 +75,9 @@ type Events =
   | { type: 'ZOOM'; deltaZoom: number }
   | { type: 'RESET_REF_SPACE' }
   | { type: 'HIDE_VR_HUD' }
-  | { type: 'SHOW_VR_HUD' };
+  | { type: 'SHOW_VR_HUD' }
+  | { type: 'LOCK_CONTROLS' }
+  | { type: 'UNLOCK_CONTROLS' };
 
 export const cameraMachine = createMachine(
   {
@@ -156,6 +158,12 @@ export const cameraMachine = createMachine(
       },
       HIDE_VR_HUD: {
         actions: ['logEvent', 'hideVRHud'],
+      },
+      LOCK_CONTROLS: {
+        actions: ['logEvent', ({ controls }) => controls?.lock()],
+      },
+      UNLOCK_CONTROLS: {
+        actions: ['logEvent', ({ controls }) => controls?.unlock()],
       },
     },
 
