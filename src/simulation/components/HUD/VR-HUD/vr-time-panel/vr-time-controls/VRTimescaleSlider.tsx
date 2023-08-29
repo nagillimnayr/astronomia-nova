@@ -36,11 +36,9 @@ export const VRTimescaleSlider = ({
   return (
     <>
       <group position={position}>
-        {/** Decrement Timescale. */}
-        {/* <VRTimescaleIncrementButton position={[-5.5, 0, 0]} reverse /> */}
-
         {/** Slider */}
         <VRSlider
+          incrementers
           width={8}
           height={0.5}
           thumbRadius={0.4}
@@ -54,9 +52,6 @@ export const VRTimescaleSlider = ({
           thumbColor={'white'}
           thumbBorderColor={colors.border}
         />
-
-        {/** Increment Timescale. */}
-        {/* <VRTimescaleIncrementButton position={[5.5, 0, 0]} /> */}
       </group>
     </>
   );

@@ -48,6 +48,7 @@ const _thumbWorldPos = new Vector3();
 
 export type VRSliderProps = {
   position?: Vector3Tuple;
+  incrementers?: boolean; // Whether or not to add incrementer buttons to the side of the slider.
   value: number;
   min: number;
   max: number;
@@ -64,6 +65,7 @@ export type VRSliderProps = {
 };
 export const VRSlider = ({
   position,
+  incrementers,
   width,
   height,
   value,
@@ -128,6 +130,7 @@ export const VRSlider = ({
     },
   }));
 
+  // Callback for the slider to update the value.
   const setX = useCallback(
     (x: number) => {
       const newX = clamp(x, minX, maxX); // Clamp the new x target.
@@ -135,6 +138,7 @@ export const VRSlider = ({
     },
     [maxX, minX, springRef]
   );
+  // Callback for the incrementers to increment the value.
   const incrementValue = useCallback(
     (value: number) => {
       const springX = spring.x.get();
@@ -143,7 +147,7 @@ export const VRSlider = ({
       const newX = clamp(springX + amount, minX, maxX); // Clamp the new x target.
       springRef.start({ x: newX }); // Set new x target.
     },
-    [maxX, minX, springRef]
+    [maxX, minX, spring.x, springRef]
   );
 
   // Ref to intersection plane.
@@ -151,6 +155,7 @@ export const VRSlider = ({
   const intersectionPlaneWidth = width + thumbRadius * 4;
   const intersectionPlaneHeight = (height + thumbRadius) * 6;
 
+  // Runs whenever minX or maxX are changed, and clamps the target x value.
   useEffect(() => {
     const springX = spring.x.get();
     if (springX < minX || springX > maxX) {
@@ -165,14 +170,6 @@ export const VRSlider = ({
   return (
     <>
       <group position={position}>
-        {/** Decrement button. */}
-        <VRSliderIncrementer
-          decrement
-          position={[-incrementerPos, 0, depth.xs]}
-          height={height}
-          step={step}
-          incrementValue={incrementValue}
-        />
         <VRSliderTrack
           spring={spring}
           // springRef={springRef}
@@ -182,13 +179,6 @@ export const VRSlider = ({
           height={height}
           startX={startX}
           setX={setX}
-        />
-        {/** Decrement button. */}
-        <VRSliderIncrementer
-          position={[incrementerPos, 0, depth.xs]}
-          height={height}
-          step={step}
-          incrementValue={incrementValue}
         />
         {/* <VRSliderRange
           spring={spring}
@@ -213,6 +203,26 @@ export const VRSlider = ({
           height={intersectionPlaneHeight}
           ref={planeRef}
         />
+        {/** Conditionally render increment buttons. */}
+        {incrementers && (
+          <>
+            {/** Decrement button. */}
+            <VRSliderIncrementer
+              decrement
+              position={[-incrementerPos, 0, depth.xs]}
+              height={height}
+              step={step}
+              incrementValue={incrementValue}
+            />
+            {/** Increment button. */}
+            <VRSliderIncrementer
+              position={[incrementerPos, 0, depth.xs]}
+              height={height}
+              step={step}
+              incrementValue={incrementValue}
+            />
+          </>
+        )}
       </group>
     </>
   );
