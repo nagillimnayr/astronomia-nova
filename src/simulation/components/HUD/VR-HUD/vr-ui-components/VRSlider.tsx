@@ -80,7 +80,7 @@ export const VRSlider = ({
   const stepSize = useRef<number>(0); // Size of step increments.
   const stepLength = useRef<number>(0); // Length in scene units per step.
   stepSize.current = step;
-  const [rangeStart, minX, maxX] = useMemo(() => {
+  const [startX, minX, maxX] = useMemo(() => {
     if (max <= min) {
       console.error('Error: max is less than or equal to min.');
     }
@@ -89,16 +89,16 @@ export const VRSlider = ({
 
     const halfWidth = width / 2;
 
-    let rangeStart = -halfWidth;
-    // If min value is zero or positive, start of slider range will be the left end of the slider.
-    // If min is negative, the slider range will start at zero.
+    let startX = -halfWidth; // X position of either zero, or the min value if greater than zero.
+    // If min value is zero or positive, start of slider fill range will be the left end of the slider.
+    // If min is negative, the slider fill range will start at zero.
     if (min < 0) {
-      rangeStart += Math.abs(min) * stepLength.current;
+      startX += Math.abs(min) * stepLength.current;
     }
     // Min and max x pos values in scene units.
     const minX = min * stepLength.current;
     const maxX = max * stepLength.current;
-    return [rangeStart, minX, maxX];
+    return [startX, minX, maxX];
   }, [max, min, width]);
 
   const [spring, springRef] = useSpring(() => ({
@@ -150,12 +150,12 @@ export const VRSlider = ({
       <group position={position}>
         <VRSliderTrack
           spring={spring}
-          springRef={springRef}
+          // springRef={springRef}
           trackColor={trackColor}
           fillColor={fillColor}
           width={width}
           height={height}
-          startX={rangeStart}
+          startX={startX}
           setValue={setValue}
         />
         {/* <VRSliderRange
@@ -166,10 +166,10 @@ export const VRSlider = ({
         /> */}
         <VRSliderThumb
           spring={spring}
-          springRef={springRef}
-          startX={rangeStart}
-          minX={minX}
-          maxX={maxX}
+          // springRef={springRef}
+          startX={startX}
+          // minX={minX}
+          // maxX={maxX}
           radius={thumbRadius}
           color={thumbColor}
           borderColor={thumbBorderColor}
@@ -188,7 +188,7 @@ export const VRSlider = ({
 
 type VRSliderTrackProps = {
   spring: { x: SpringValue<number> };
-  springRef: SpringRef<{ x: number }>;
+  // springRef: SpringRef<{ x: number }>;
   width: number;
   height: number;
   startX: number;
@@ -198,7 +198,7 @@ type VRSliderTrackProps = {
 };
 const VRSliderTrack = ({
   spring,
-  springRef,
+  // springRef,
   width,
   height,
   startX,
@@ -254,10 +254,10 @@ const ringArgs: [number, number, number] = [0.95, 1, 64];
 const circleArgs: [number, number] = [0.95, 64];
 type VRSliderThumbProps = {
   spring: { x: SpringValue<number> };
-  springRef: SpringRef<{ x: number }>;
+  // springRef: SpringRef<{ x: number }>;
   startX: number;
-  minX: number;
-  maxX: number;
+  // minX: number;
+  // maxX: number;
   radius: number;
   color: ColorRepresentation;
   borderColor: ColorRepresentation;
@@ -266,7 +266,7 @@ type VRSliderThumbProps = {
 };
 const VRSliderThumb = ({
   spring,
-  springRef,
+  // springRef,
   startX,
   // minX, // Min x pos value in scene units.
   // maxX, // Max x pos value in scene units.
