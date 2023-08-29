@@ -26,6 +26,14 @@ import { KeyPressControl } from '@/simulation/components/KeyPressControl';
 import { Controllers } from '@react-three/xr';
 import { VRGrabbable } from './components/VRGrabbable';
 import { SpringScaleObject } from './components/SpringScaleObject';
+import { randFloat } from 'three/src/math/MathUtils';
+
+const LOW_X = -15;
+const HIGH_X = 15;
+const LOW_Y = 0.5;
+const HIGH_Y = 10;
+const LOW_Z = -15;
+const HIGH_Z = 15;
 
 export const VRScene = () => {
   const rootActor = MachineContext.useActorRef();
@@ -53,21 +61,126 @@ export const VRScene = () => {
       />
       <ambientLight intensity={0.75} />
 
-      <SpringScaleObject position={[7, 1, 3]}>
-        <VRGrabbable color={'magenta'} />
-      </SpringScaleObject>
-      <SpringScaleObject position={[2, 1, -4]}>
-        <VRGrabbable color={'aliceblue'} />
-      </SpringScaleObject>
-      <SpringScaleObject position={[-6, 1, 2]}>
-        <VRGrabbable color={'coral'} />
-      </SpringScaleObject>
-      <SpringScaleObject position={[-3, 1, 8]}>
-        <VRGrabbable color={'cornflowerblue'} />
-      </SpringScaleObject>
-      <SpringScaleObject position={[-3, 1, -4]}>
-        <VRGrabbable color={'indigo'} />
-      </SpringScaleObject>
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'magenta'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'aliceblue'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'coral'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'cornflowerblue'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'hotpink'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'magenta'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'aliceblue'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'coral'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'cornflowerblue'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'hotpink'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'magenta'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'aliceblue'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'coral'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'cornflowerblue'}
+      />
+      <VRGrabbable
+        position={[
+          randFloat(LOW_X, HIGH_X),
+          randFloat(LOW_Y, HIGH_Y),
+          randFloat(LOW_Z, HIGH_Z),
+        ]}
+        color={'hotpink'}
+      />
 
       <Floor />
 

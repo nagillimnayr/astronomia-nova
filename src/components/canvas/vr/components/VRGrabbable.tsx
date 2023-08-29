@@ -1,3 +1,5 @@
+import useHover from '@/hooks/useHover';
+import { useSpring, animated } from '@react-spring/three';
 import { Box as Cube } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { RayGrab } from '@react-three/xr';
@@ -16,6 +18,11 @@ type VRGrabbableProps = {
   color?: ColorRepresentation;
 };
 export const VRGrabbable = ({ position, color }: VRGrabbableProps) => {
+  const { isHovered, setHovered, hoverEvents } = useHover();
+  const { scale } = useSpring({
+    scale: isHovered ? 1.5 : 1,
+  });
+
   const cubeRef = useRef<Mesh>(null!);
 
   useFrame(({ camera }, delta, frame) => {
@@ -27,10 +34,20 @@ export const VRGrabbable = ({ position, color }: VRGrabbableProps) => {
 
   return (
     <>
-      <RayGrab>
-        <Cube ref={cubeRef} position={position}>
-          <meshStandardMaterial color={color} />
-        </Cube>
+      <RayGrab
+        onHover={hoverEvents.handlePointerEnter}
+        onBlur={hoverEvents.handlePointerLeave}
+      >
+        <animated.object3D
+          position={position}
+          scale={scale}
+          onPointerEnter={hoverEvents.handlePointerEnter}
+          onPointerLeave={hoverEvents.handlePointerLeave}
+        >
+          <Cube ref={cubeRef}>
+            <meshStandardMaterial color={color} />
+          </Cube>
+        </animated.object3D>
       </RayGrab>
     </>
   );
