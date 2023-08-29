@@ -11,6 +11,8 @@ type Context = {
   timescale: number;
   refDate: Date; // Reference date.
   date: Date;
+  minTimescale: number;
+  maxTimescale: number;
 };
 
 type Events =
@@ -40,15 +42,17 @@ export const timeMachine = createMachine(
       timescale: 1,
       refDate: J2000,
       date: J2000,
+      minTimescale: MIN_TIMESCALE,
+      maxTimescale: MAX_TIMESCALE,
     }),
 
     on: {
       INCREMENT_TIMESCALE: {
-        cond: ({ timescale }) => timescale < MAX_TIMESCALE,
+        cond: ({ timescale, maxTimescale }) => timescale < maxTimescale,
         actions: ['incrementTimescale'],
       },
       DECREMENT_TIMESCALE: {
-        cond: ({ timescale }) => timescale > MIN_TIMESCALE,
+        cond: ({ timescale, minTimescale }) => timescale > minTimescale,
         actions: ['decrementTimescale'],
       },
       SET_TIMESCALE: {
@@ -119,11 +123,14 @@ export const timeMachine = createMachine(
       // logTimer: log((context) => context.timeElapsed),
     },
     guards: {
-      validateTimescale: (context, { timescale }) => {
+      validateTimescale: (
+        { minTimescale, maxTimescale, ...context },
+        event
+      ) => {
         return (
-          context.timescale !== timescale &&
-          timescale >= MIN_TIMESCALE &&
-          timescale <= MAX_TIMESCALE
+          context.timescale !== event.timescale &&
+          event.timescale >= minTimescale &&
+          event.timescale <= maxTimescale
         );
       },
     },
