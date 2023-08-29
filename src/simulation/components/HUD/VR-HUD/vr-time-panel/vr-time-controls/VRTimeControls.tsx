@@ -19,20 +19,25 @@ export const VRTimeControls = ({
   return (
     <>
       <group position={position}>
-        {/** Decrement Timescale. */}
-        <VRTimescaleIncrementButton position={[-5, 0, 0]} reverse />
+        <group position={[0, 1, 0]} scale={0.8}>
+          {/** Decrement Timescale. */}
+          {/* <VRTimescaleIncrementButton position={[-5, 0, 0]} reverse /> */}
 
-        {/** Sidereal Day Reverse Button. */}
-        <VRAdvanceTimeButton position={[-2.5, 0, 0]} reverse />
+          {/** Sidereal Day Reverse Button. */}
+          <VRAdvanceTimeButton position={[-2.5, 0, 0]} reverse />
 
-        {/** Pause/Play Button. */}
-        <VRPauseButton position={[0, 0, 0]} />
+          {/** Pause/Play Button. */}
+          <VRPauseButton position={[0, 0, 0]} />
 
-        {/** Sidereal Day Advance Button. */}
-        <VRAdvanceTimeButton position={[2.5, 0, 0]} />
+          {/** Sidereal Day Advance Button. */}
+          <VRAdvanceTimeButton position={[2.5, 0, 0]} />
 
-        {/** Increment Timescale. */}
-        <VRTimescaleIncrementButton position={[5, 0, 0]} />
+          {/** Increment Timescale. */}
+          {/* <VRTimescaleIncrementButton position={[5, 0, 0]} /> */}
+        </group>
+        <group position={[0, -0.75, 0]}>
+          <VRTimescaleSlider />
+        </group>
       </group>
     </>
   );

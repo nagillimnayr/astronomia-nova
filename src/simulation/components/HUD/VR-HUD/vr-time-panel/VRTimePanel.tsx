@@ -52,7 +52,7 @@ export const VRTimePanel = ({
       >
         <VRTimescaleDisplay position={[0, 4, 0]} />
         <VRDateDisplay position={[0, 2, 0]} />
-        <VRTimeControls position={[0, -1, 0]} />
+        <VRTimeControls position={[0, -1.5, 0]} />
         {/* <VRTimescaleSlider position={[0, -1.5, 0]} /> */}
         {/* <axesHelper args={[2]} /> */}
       </group>
