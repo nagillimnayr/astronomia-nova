@@ -25,6 +25,7 @@ import {
   Vector3,
   type Mesh,
   MeshBasicMaterial,
+  Box3,
 } from 'three';
 import { depth } from '../vr-hud-constants';
 import useHover from '@/hooks/useHover';
@@ -330,6 +331,11 @@ const VRSliderThumb = ({
   const anchorRef = useRef<Group>(null!);
   const circleMatRef = useRef<MeshBasicMaterial>(null!);
 
+  // const thumbBounds = useMemo(() => new Box3(), []); // Bounding box to restrict the thumb position.
+  // useMemo(() => {
+  //   thumbBounds.set(new Vector3(minX, 0, 0), new Vector3(maxX, 0, 0));
+  // }, []);
+
   // Spring scale on hover.
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered);
@@ -338,8 +344,8 @@ const VRSliderThumb = ({
   const pointerDown = useRef<boolean>(false);
 
   const handleDrag = useCallback(() => {
-    circleMatRef.current.color.set('#03C03C');
     if (!pointerDown.current) return;
+    circleMatRef.current.color.set('#03C03C');
     // Check if we're in a VR session.
     const { camera, raycaster, pointer } = getThree();
 
@@ -381,12 +387,12 @@ const VRSliderThumb = ({
   }, [getThree, getXR, planeRef, setValue]);
 
   const handleDragStart = useCallback(() => {
-    circleMatRef.current.color.set('skyblue');
     pointerDown.current = true;
+    circleMatRef.current.color.set('skyblue');
   }, []);
   const handleDragEnd = useCallback(() => {
-    circleMatRef.current.color.set('red');
     pointerDown.current = false;
+    circleMatRef.current.color.set('red');
   }, []);
 
   const bind = useGesture({
