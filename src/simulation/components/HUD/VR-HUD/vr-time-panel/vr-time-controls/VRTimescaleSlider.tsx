@@ -5,6 +5,7 @@ import { useCallback } from 'react';
 import { Center, Circle, Svg, Text } from '@react-three/drei';
 import { type Vector3Tuple } from 'three';
 import { VRTimescaleIncrementButton } from './VRTimescaleIncrementButton';
+import { VRSlider } from '../../vr-ui-components/VRSlider';
 
 type VRTimescaleSliderProps = {
   position?: Vector3Tuple;
@@ -15,10 +16,18 @@ export const VRTimescaleSlider = ({
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
   const timescale = useSelector(timeActor, ({ context }) => context.timescale);
+  const minTimescale = useSelector(
+    timeActor,
+    ({ context }) => context.minTimescale
+  );
+  const maxTimescale = useSelector(
+    timeActor,
+    ({ context }) => context.maxTimescale
+  );
 
   const handleValueChange = useCallback(
     (value: number) => {
-      value = Math.floor(value);
+      value = Math.round(value);
       timeActor.send({ type: 'SET_TIMESCALE', timescale: value });
     },
     [timeActor]
@@ -32,6 +41,20 @@ export const VRTimescaleSlider = ({
         <VRTimescaleIncrementButton position={[-5, 0, 0]} reverse />
 
         {/** Slider */}
+        <VRSlider
+          width={5}
+          height={0.5}
+          thumbRadius={0.4}
+          value={0}
+          min={minTimescale}
+          max={maxTimescale}
+          step={1}
+          onValueChange={handleValueChange}
+          trackColor={'black'}
+          fillColor={'white'}
+          thumbColor={'white'}
+          thumbBorderColor={colors.border}
+        />
 
         {/** Increment Timescale. */}
         <VRTimescaleIncrementButton position={[5, 0, 0]} />
