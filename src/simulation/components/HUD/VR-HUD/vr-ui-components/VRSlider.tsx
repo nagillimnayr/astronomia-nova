@@ -315,20 +315,45 @@ const VRSliderThumb = ({
   useCursor(isHovered);
   const { scale } = useSpring({ scale: isHovered ? 1.2 : 1 });
 
-  // Ref for recording the x position at the start of a drag gesture.
-  const dragStartXPos = useRef<number>(startX);
-
   const pointerDown = useRef<boolean>(false);
+
+  const handleDrag = useCallback(() => {
+    if (!pointerDown.current) return;
+    const { camera, raycaster, pointer } = getThree();
+    // Get intersection with plane.
+    raycaster.setFromCamera(pointer, camera);
+    const plane = planeRef.current;
+    const prevFirstHit = raycaster.firstHitOnly;
+    raycaster.firstHitOnly = true;
+    const intersections = raycaster.intersectObject(plane);
+    if (intersections.length < 1) {
+      raycaster.firstHitOnly = prevFirstHit;
+      return;
+    }
+    const intersection = intersections[0];
+    if (!intersection) {
+      raycaster.firstHitOnly = prevFirstHit;
+      return;
+    }
+    const point = intersection.point;
+    anchorRef.current.worldToLocal(point); // Get in local coords.
+
+    setValue(point.x);
+
+    raycaster.firstHitOnly = prevFirstHit;
+  }, [getThree, planeRef, setValue]);
+
+  const handleDragStart = useCallback(() => {
+    pointerDown.current = true;
+  }, []);
+  const handleDragEnd = useCallback(() => {
+    pointerDown.current = false;
+  }, []);
 
   const bind = useGesture({
     onDragStart: (state) => {
-      // Record the x position at the start of the current gesture.
-      // use-gesture only records the screen coords, as it wasn't designed for use with Three.js, so we need to keep track of the scene coords ourselves.
-      const initX = spring.x.get();
-      dragStartXPos.current = initX;
-      // console.log('drag start x pos:', initX);
+      handleDragStart();
 
-      pointerDown.current = true;
       cameraActor.send({ type: 'LOCK_CONTROLS' });
 
       const controls = getThree().controls as CameraControls;
@@ -341,8 +366,7 @@ const VRSliderThumb = ({
       }
     },
     onDragEnd: () => {
-      pointerDown.current = false;
-      // console.log('drag end');
+      handleDragEnd();
       cameraActor.send({ type: 'UNLOCK_CONTROLS' });
       const controls = getThree().controls as CameraControls;
       if (
@@ -354,56 +378,7 @@ const VRSliderThumb = ({
       }
     },
     onDrag: (state) => {
-      // Get the ratio of the canvas width in pixels to the normalized viewport width.
-      // This gives us the number of pixels per one scene unit, so we can convert between screen coords and scene coords.
-      // const { size, viewport } = getThree();
-      // const ratio = size.width / viewport.aspect;
-      // // console.log('size.width', size.width);
-      // // console.log('viewport.width', viewport.width);
-      // // The 'movement' value from use-gesture gives the pixel coord offset from the start of the current gesture.
-      // const [mx] = state.movement; // Retrieve the x component of the vector,
-      // const moveX = mx / ratio; // Convert to scene units.
-      // console.log('mx:', mx);
-      // console.log('ratio:', ratio);
-      // console.log('moveX:', moveX);
-      // let newX = dragStartXPos.current + moveX; // Calculate new x target.
-      // newX = clamp(newX, minX, maxX); // Clamp the new x target.
-      // springRef.start({ x: newX }); // Set new x target.
-      // console.log('dragStartXPos:', dragStartXPos.current);
-      // console.log('newX:', newX);
-
-      /** Alternative that also seems to work: */
-      // const [ox] = state.offset;
-      // const offsetX = ox / ratio;
-      // springRef.start({ x: offsetX - xStart });
-
-      const { camera, raycaster, pointer } = getThree();
-      // Get intersection with plane.
-      raycaster.setFromCamera(pointer, camera);
-      const plane = planeRef.current;
-      const prevFirstHit = raycaster.firstHitOnly;
-      raycaster.firstHitOnly = true;
-      const intersections = raycaster.intersectObject(plane);
-      if (intersections.length < 1) {
-        raycaster.firstHitOnly = prevFirstHit;
-        return;
-      }
-      const intersection = intersections[0];
-      if (!intersection) {
-        raycaster.firstHitOnly = prevFirstHit;
-        return;
-      }
-      const point = intersection.point;
-      anchorRef.current.worldToLocal(point); // Get in local coords.
-      // console.log('x:', point.x);
-      // console.log('startX:', startX);
-      // const newX = clamp(point.x, minX, maxX); // Clamp the new x target.
-      // springRef.start({ x: newX }); // Set new x target.
-
-      setValue(point.x);
-      // console.log('newX:', newX);
-
-      raycaster.firstHitOnly = prevFirstHit;
+      handleDrag();
     },
   });
 
@@ -421,6 +396,9 @@ const VRSliderThumb = ({
           <Interactive
             onHover={hoverEvents.handlePointerEnter}
             onBlur={hoverEvents.handlePointerLeave}
+            onSelectStart={handleDragStart}
+            onSelectEnd={handleDragEnd}
+            onMove={handleDrag}
           >
             {/* <planeHelper args={[intersectionPlane]} /> */}
             <animated.group scale={scale}>
