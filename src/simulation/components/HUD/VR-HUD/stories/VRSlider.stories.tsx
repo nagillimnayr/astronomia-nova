@@ -19,8 +19,23 @@ const meta: Meta<typeof VRSlider> = {
     value: {
       control: { type: 'range', min: -100, max: 100, step: 1 },
     },
+    min: {
+      control: { type: 'range', min: -100, max: 0, step: 1 },
+    },
+    max: {
+      control: { type: 'range', min: 1, max: 100, step: 1 },
+    },
+    width: {
+      control: { type: 'range', min: 0.5, max: 3, step: 0.01 },
+    },
+    height: {
+      control: { type: 'range', min: 0.05, max: 1, step: 0.01 },
+    },
+    thumbRadius: {
+      control: { type: 'range', min: 0.05, max: 1, step: 0.01 },
+    },
     trackColor: { control: { type: 'color' } },
-    rangeColor: { control: { type: 'color' } },
+    fillColor: { control: { type: 'color' } },
     thumbColor: { control: { type: 'color' } },
     thumbBorderColor: { control: { type: 'color' } },
   },
@@ -39,10 +54,10 @@ const Default: Story = {
     max: 100,
     step: 2,
     thumbRadius: 0.1,
-    // trackColor: 'black',
-    // rangeColor: 'white',
-    // thumbColor: 'white',
-    // thumbBorderColor: colors.border,
+    trackColor: 'black',
+    fillColor: 'white',
+    thumbColor: 'white',
+    thumbBorderColor: colors.border,
   },
   render: (args) => {
     return (
