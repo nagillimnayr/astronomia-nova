@@ -3,7 +3,6 @@ import {
   Group,
   Object3D,
   type PerspectiveCamera,
-  Quaternion,
   Vector3,
   Spherical,
 } from 'three';
@@ -74,6 +73,8 @@ export class CameraController extends Object3D {
 
   private _rotationSpeed = 0.75;
   private _smoothTime = 0.3;
+
+  private _locked = false;
 
   update(deltaTime: number) {
     // if (!this._needsUpdate && !force) return;
@@ -431,6 +432,19 @@ export class CameraController extends Object3D {
     this._attachPoint.add(obj);
   }
 
+  get locked() {
+    return this._locked;
+  }
+
+  lock() {
+    this._locked = true;
+    this.disconnectEventListeners();
+  }
+  unlock() {
+    this._locked = false;
+    this.connectEventListeners();
+  }
+
   private _onPointerDown(event: PointerEvent) {
     const button = event.button;
     if (!this._domElement) return;
@@ -462,6 +476,7 @@ export class CameraController extends Object3D {
       }
     }
   }
+  // Bind instance's 'this' to the function so it can be passed as a callback.
   onPointerDown = this._onPointerDown.bind(this);
 
   private _onPointerUp(event: PointerEvent) {
@@ -495,6 +510,7 @@ export class CameraController extends Object3D {
       }
     }
   }
+  // Bind instance's 'this' to the function so it can be passed as a callback.
   onPointerUp = this._onPointerUp.bind(this);
 
   private _onPointerMoveLeft(event: PointerEvent) {
@@ -512,6 +528,7 @@ export class CameraController extends Object3D {
 
     this.addRotation(deltaX, deltaY);
   }
+  // Bind instance's 'this' to the function so it can be passed as a callback.
   onPointerMoveLeft = this._onPointerMoveLeft.bind(this);
 
   private _onPointerMoveMiddle(event: PointerEvent) {
@@ -519,6 +536,7 @@ export class CameraController extends Object3D {
     const deltaY = event.movementY / 50;
     this.addRadialZoom(deltaY);
   }
+  // Bind instance's 'this' to the function so it can be passed as a callback.
   onPointerMoveMiddle = this._onPointerMoveMiddle.bind(this);
 
   private _onPointerMoveRight(event: PointerEvent) {
@@ -526,6 +544,7 @@ export class CameraController extends Object3D {
     const deltaY = event.movementY / 50;
     this.addRadialZoom(deltaY);
   }
+  // Bind instance's 'this' to the function so it can be passed as a callback.
   onPointerMoveRight = this._onPointerMoveRight.bind(this);
 
   private _onPointerWheel(event: WheelEvent) {
@@ -534,6 +553,7 @@ export class CameraController extends Object3D {
     const zoom = event.deltaY / 100;
     this.addRadialZoom(zoom);
   }
+  // Bind instance's 'this' to the function so it can be passed as a callback.
   onPointerWheel = this._onPointerWheel.bind(this);
 
   onContextMenu = (event: MouseEvent) => {
