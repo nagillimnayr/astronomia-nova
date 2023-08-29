@@ -27,8 +27,10 @@ export const VRHoverIndicator = ({
     ({ context }) => context
   );
   const getXR = useXR(({ get }) => get);
+  const isPresenting = useXR(({ isPresenting }) => isPresenting);
+
   const controller = useController(handedness);
-  console.log('controller:', controller);
+  console.log(`${handedness} controller:`, controller?.uuid);
   const indicatorRef = useRef<Group>(null!);
   const circleRef = useRef<Mesh>(null!);
   const ringRef = useRef<Mesh>(null!);
@@ -80,7 +82,11 @@ export const VRHoverIndicator = ({
   });
   return (
     <>
-      <group name={`hover-indicator-${handedness}`} ref={indicatorRef}>
+      <group
+        visible={isPresenting}
+        name={`hover-indicator-${handedness}`}
+        ref={indicatorRef}
+      >
         <axesHelper args={[radius * 2]} />
         <Circle
           name={`hover-indicator-circle-${handedness}`}
