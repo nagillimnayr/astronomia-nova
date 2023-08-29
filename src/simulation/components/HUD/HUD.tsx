@@ -2,15 +2,14 @@ import { cn } from '@/lib/cn';
 import TimePanel from '../Time/TimePanel';
 import { DetailsPanel } from './DetailsPanel/DetailsPanel';
 import DouglasLogo from './DouglasLogo';
-import { CamViewPortal } from './CamView/CamViewPortal';
 import Outliner from './Outliner/Outliner';
 import { SettingsMenu } from './settings/SettingsMenu';
 import { SurfaceViewDialog } from './DetailsPanel/surface-view-dialog/SurfaceViewDialog';
 import { DebugPanel } from './debug/DebugPanel';
 import { ClassNameValue } from 'tailwind-merge';
 
-import { EnterVRButton } from '@/components/canvas/vr/EnterVRButton';
 import { VRButton } from '@react-three/xr';
+import { EnterVRButton } from '@/components/canvas/vr/EnterVRButton';
 
 type Props = {
   className?: ClassNameValue;
@@ -81,8 +80,8 @@ export const HUD = ({ className }: Props) => {
         {/** VR Button */}
         <div className={'relative col-end-[-2] row-end-[-2]'}>
           <div className="pointer-events-auto absolute bottom-0 right-1/2 h-fit w-fit translate-x-1/2">
-            <VRButton className="whitespace-nowrap hover:bg-subtle" />
-            {/* <EnterVRButton /> */}
+            {/* <VRButton className="whitespace-nowrap" /> */}
+            <EnterVRButton />
           </div>
         </div>
 

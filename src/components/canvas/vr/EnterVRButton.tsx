@@ -1,6 +1,7 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useEnterXR, useXR } from '@coconut-xr/natuerlich/react';
 import { useSelector } from '@xstate/react';
+import { toggleSession } from '@react-three/xr';
+import { useCallback, useRef } from 'react';
 
 export const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
 
@@ -13,40 +14,20 @@ export const EnterVRButton = () => {
     ({ context }) => context
   );
 
-  const enterVR = useEnterXR('immersive-vr', sessionOptions);
+  const buttonRef = useRef<HTMLButtonElement>(null!);
+  const toggleVR = useCallback(async () => {
+    console.log('toggleVR clicked');
+    const session = await toggleSession('immersive-vr');
+  }, []);
 
   const vrActive = useSelector(vrActor, (state) => state.matches('active'));
 
   return (
     <>
       <button
+        ref={buttonRef}
         className="select-none rounded-lg border-2 border-white p-2 transition-all hover:bg-subtle hover:bg-opacity-20"
-        onClick={() => {
-          if (vrActive) {
-            // End the session.
-            const { session } = useXR.getState();
-            if (!session) return;
-            session
-              .end()
-              .then(() => {
-                vrActor.send({ type: 'END_SESSION' });
-                cameraActor.send({
-                  type: 'END_XR_SESSION',
-                });
-              })
-              .catch((reason) => console.error(reason));
-          } else {
-            // Start session.
-            enterVR()
-              .then(() => {
-                vrActor.send({ type: 'START_SESSION' });
-                cameraActor.send({
-                  type: 'START_XR_SESSION',
-                });
-              })
-              .catch((reason) => console.error(reason));
-          }
-        }}
+        onClick={toggleVR}
       >
         {vrActive ? 'Exit VR!' : 'Enter VR!'}
       </button>
