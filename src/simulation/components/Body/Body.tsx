@@ -68,7 +68,6 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
     siderealRotationPeriod,
   } = params;
 
-  console.log(`render ${name}`);
   // Get central body from context.
   const centralBodyRef = useContext(KeplerTreeContext);
 
