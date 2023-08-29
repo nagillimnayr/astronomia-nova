@@ -33,16 +33,15 @@ export const VRTimescaleSlider = ({
     [timeActor]
   );
 
-  const size = icons.base;
   return (
     <>
       <group position={position}>
         {/** Decrement Timescale. */}
-        <VRTimescaleIncrementButton position={[-5, 0, 0]} reverse />
+        <VRTimescaleIncrementButton position={[-5.5, 0, 0]} reverse />
 
         {/** Slider */}
         <VRSlider
-          width={5}
+          width={8}
           height={0.5}
           thumbRadius={0.4}
           value={0}
@@ -57,7 +56,7 @@ export const VRTimescaleSlider = ({
         />
 
         {/** Increment Timescale. */}
-        <VRTimescaleIncrementButton position={[5, 0, 0]} />
+        <VRTimescaleIncrementButton position={[5.5, 0, 0]} />
       </group>
     </>
   );
