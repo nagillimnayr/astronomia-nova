@@ -24,6 +24,7 @@ import {
   type Object3D,
   Vector3,
   type Mesh,
+  MeshBasicMaterial,
 } from 'three';
 import { depth } from '../vr-hud-constants';
 import useHover from '@/hooks/useHover';
@@ -327,6 +328,8 @@ const VRSliderThumb = ({
 
   const thumbRef = useRef<Object3D>(null!);
   const anchorRef = useRef<Group>(null!);
+  const circleMatRef = useRef<MeshBasicMaterial>(null!);
+
   // Spring scale on hover.
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered);
@@ -335,6 +338,7 @@ const VRSliderThumb = ({
   const pointerDown = useRef<boolean>(false);
 
   const handleDrag = useCallback(() => {
+    circleMatRef.current.color.set('#03C03C');
     if (!pointerDown.current) return;
     // Check if we're in a VR session.
     const { camera, raycaster, pointer } = getThree();
@@ -377,9 +381,11 @@ const VRSliderThumb = ({
   }, [getThree, getXR, planeRef, setValue]);
 
   const handleDragStart = useCallback(() => {
+    circleMatRef.current.color.set('skyblue');
     pointerDown.current = true;
   }, []);
   const handleDragEnd = useCallback(() => {
+    circleMatRef.current.color.set('red');
     pointerDown.current = false;
   }, []);
 
@@ -433,11 +439,12 @@ const VRSliderThumb = ({
             onSelectEnd={handleDragEnd}
             onMove={handleDrag}
           >
-            {/* <planeHelper args={[intersectionPlane]} /> */}
             <animated.group scale={scale}>
               <group scale={radius}>
                 <Ring args={ringArgs} material-color={borderColor} />
-                <Circle args={circleArgs} material-color={color} />
+                <Circle args={circleArgs}>
+                  <meshBasicMaterial ref={circleMatRef} color={color} />
+                </Circle>
               </group>
             </animated.group>
           </Interactive>
