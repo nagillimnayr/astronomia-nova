@@ -87,6 +87,8 @@ export const VRSlider = ({
   thumbBorderColor = 'black',
   onValueChange,
 }: VRSliderProps) => {
+  const getThree = useThree(({ get }) => get);
+  const getXR = useXR(({ get }) => get);
   value = clamp(value, min, max);
   const stepSize = useRef<number>(0); // Size of step increments.
   const stepLength = useRef<number>(0); // Length in scene units per step.
@@ -172,12 +174,69 @@ export const VRSlider = ({
     }
   }, [maxX, minX, spring, springRef]);
 
+  const isDragging = useRef<boolean>(false);
+  const anchorRef = useRef<Object3D>(null!);
+
+  const handleDrag = useCallback(() => {
+    if (!isDragging.current) return;
+    // Check if we're in a VR session.
+    const { camera, raycaster, pointer } = getThree();
+
+    const { isPresenting, controllers } = getXR();
+    if (isPresenting) {
+      const rightController = controllers.find(
+        (controller) => controller.inputSource.handedness === 'right'
+      );
+      if (!rightController) return;
+      // circleMatRef.current.color.set('cyan');
+      rightController.controller.getWorldPosition(_rayWorldPosition);
+      rightController.controller.getWorldDirection(_rayWorldDirection);
+
+      // Set raycaster from XR controller ray.
+      raycaster.set(_rayWorldPosition, _rayWorldDirection);
+    } else {
+      // circleMatRef.current.color.set('#03C03C');
+      // Set raycaster from pointer and camera.
+      raycaster.setFromCamera(pointer, camera);
+    }
+    // Get intersection with plane.
+    const plane = planeRef.current;
+    const prevFirstHit = raycaster.firstHitOnly;
+    raycaster.firstHitOnly = true;
+    const intersections = raycaster.intersectObject(plane);
+    if (intersections.length < 1) {
+      raycaster.firstHitOnly = prevFirstHit;
+      return;
+    }
+    const intersection = intersections[0];
+    if (!intersection) {
+      raycaster.firstHitOnly = prevFirstHit;
+      return;
+    }
+    const point = intersection.point;
+    anchorRef.current.worldToLocal(point); // Get in local coords.
+
+    setX(point.x);
+
+    raycaster.firstHitOnly = prevFirstHit;
+  }, [getThree, getXR, planeRef, setX]);
+
+  const handleDragStart = useCallback(() => {
+    isDragging.current = true;
+    // circleMatRef.current.color.set('skyblue');
+  }, []);
+  const handleDragEnd = useCallback(() => {
+    isDragging.current = false;
+    // circleMatRef.current.color.set('red');
+  }, []);
+
   // Calculate x position of incrementer buttons.
   const incrementerPos = 1.25 * height + halfWidth + thumbRadius;
 
   return (
     <>
       <group position={position}>
+        <object3D name="anchor" ref={anchorRef} position={[startX, 0, 0]} />
         <VRSliderTrack
           spring={spring}
           trackColor={trackColor}
@@ -272,7 +331,9 @@ const VRSliderTrack = ({
     <>
       <group>
         {/** Track. */}
-        <Interactive onSelect={handleClick}>
+        <Interactive
+        // onSelect={handleClick}
+        >
           <Plane
             name="slider-track"
             ref={trackRef}
@@ -345,7 +406,6 @@ const VRSliderThumb = ({
 
   const handleDrag = useCallback(() => {
     if (!pointerDown.current) return;
-    circleMatRef.current.color.set('#03C03C');
     // Check if we're in a VR session.
     const { camera, raycaster, pointer } = getThree();
 
@@ -355,12 +415,14 @@ const VRSliderThumb = ({
         (controller) => controller.inputSource.handedness === 'right'
       );
       if (!rightController) return;
+      circleMatRef.current.color.set('cyan');
       rightController.controller.getWorldPosition(_rayWorldPosition);
       rightController.controller.getWorldDirection(_rayWorldDirection);
 
       // Set raycaster from XR controller ray.
       raycaster.set(_rayWorldPosition, _rayWorldDirection);
     } else {
+      circleMatRef.current.color.set('#03C03C');
       // Set raycaster from pointer and camera.
       raycaster.setFromCamera(pointer, camera);
     }
