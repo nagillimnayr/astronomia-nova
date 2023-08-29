@@ -39,6 +39,7 @@ import {
 import { useGesture } from '@use-gesture/react';
 import { clamp } from 'three/src/math/MathUtils';
 import { ORIGIN, Z_AXIS } from '@/simulation/utils/constants';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 
 const _camWorldPos = new Vector3();
 const _thumbWorldPos = new Vector3();
@@ -79,8 +80,8 @@ export const VRSlider = ({
   const stepLength = useRef<number>(0); // Length in scene units per step.
   stepSize.current = step;
   const [rangeStart, minX, maxX] = useMemo(() => {
-    if (max >= min) {
-      console.error('Error: max is greater than or equal to min.');
+    if (max <= min) {
+      console.error('Error: max is less than or equal to min.');
     }
     const length = max - min;
     stepLength.current = width / length;
@@ -266,14 +267,15 @@ const VRSliderThumb = ({
   spring,
   springRef,
   startX,
-  minX, // Min x pos value in scene units.
-  maxX, // Max x pos value in scene units.
+  // minX, // Min x pos value in scene units.
+  // maxX, // Max x pos value in scene units.
   radius,
   color,
   borderColor,
   planeRef,
   setValue,
 }: VRSliderThumbProps) => {
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const getThree = useThree(({ get }) => get);
   const thumbRef = useRef<Object3D>(null!);
   const anchorRef = useRef<Group>(null!);
@@ -296,10 +298,12 @@ const VRSliderThumb = ({
       // console.log('drag start x pos:', initX);
 
       pointerDown.current = true;
+      cameraActor.send({ type: 'LOCK_CONTROLS' });
     },
     onDragEnd: () => {
       pointerDown.current = false;
       // console.log('drag end');
+      cameraActor.send({ type: 'UNLOCK_CONTROLS' });
     },
     onDrag: (state) => {
       // Get the ratio of the canvas width in pixels to the normalized viewport width.
