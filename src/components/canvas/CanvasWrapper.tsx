@@ -64,32 +64,32 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                 frameRate={FRAMERATE}
                 onSessionStart={(event) => {
                   const session = event.target;
+                  console.log('onSessionStart');
                   // Send start session event.
                   vrActor.send({ type: 'START_SESSION' });
                   cameraActor.send({
                     type: 'START_XR_SESSION',
                   });
-
-                  console.log(session);
                 }}
                 onSessionEnd={(event) => {
+                  console.log('onSessionEnd');
                   const session = event.target;
                   // Send end session event.
                   vrActor.send({ type: 'END_SESSION' });
                   cameraActor.send({
                     type: 'END_XR_SESSION',
                   });
-
-                  console.log(session);
                 }}
               >
-                <Scene>{children}</Scene>
-                {/* <Stats /> */}
-                {/* <Perf position={'bottom-left'} /> */}
-                <VRManager />
-                <VRHud />
-                {/* <VRDebugPortal position={[0, 0, -1]} scale={0.05} /> */}
-                <Preload all />
+                <Suspense>
+                  <Scene>{children}</Scene>
+                  {/* <Stats /> */}
+                  {/* <Perf position={'bottom-left'} /> */}
+                  <VRManager />
+                  <VRHud />
+                  {/* <VRDebugPortal position={[0, 0, -1]} scale={0.05} /> */}
+                  <Preload all />
+                </Suspense>
               </XR>
             </Canvas>
           </div>
