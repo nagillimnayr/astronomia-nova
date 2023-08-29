@@ -15,14 +15,8 @@ type SiteLayoutProps = {
 const SiteLayout = ({ children }: SiteLayoutProps) => {
   const { uiActor } = MachineContext.useSelector(({ context }) => context);
 
-  const screenPortalRef = useSelector(
-    uiActor,
-    ({ context }) => context.screenPortalRef
-  );
-
   return (
     <div
-      ref={screenPortalRef}
       className={cn(
         ...fontVariables,
         `relative left-0 top-0 m-0 h-full max-h-full min-h-screen w-screen bg-background p-0 font-sans text-foreground`,
