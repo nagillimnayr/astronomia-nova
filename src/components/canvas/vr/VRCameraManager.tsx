@@ -24,6 +24,7 @@ import {
 import { Controllers } from '@coconut-xr/natuerlich/defaults';
 import { useSelector } from '@xstate/react';
 import { VRStats } from './VRStats';
+import { degToRad } from 'three/src/math/MathUtils';
 
 const _camWorldPos = new Vector3();
 const _arrowDir = new Vector3();
@@ -61,6 +62,7 @@ export const VRCameraManager = ({
           cameraActor.send({ type: 'ASSIGN_CONTROLS', controls: controller });
           controller.setMinRadius(0.01);
           controller.setTargetRadius(8);
+          controller.setPolarAngleTarget(degToRad(75));
 
           if (camRef.current === camera) return;
           if (camera instanceof PerspectiveCamera) {

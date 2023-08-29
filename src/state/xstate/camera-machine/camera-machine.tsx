@@ -180,7 +180,7 @@ export const cameraMachine = createMachine(
         on: {
           // UPDATE event.
           UPDATE: {
-            actions: ['updateCamera', 'updateSpaceView'],
+            actions: ['updateCamera'],
           },
           SET_TARGET: {
             internal: true,
@@ -385,21 +385,11 @@ export const cameraMachine = createMachine(
         const { controls } = context;
 
         if (!controls) {
-          console.error('camera controls are null');
           return;
         }
         controls.update(event.deltaTime);
       },
-      updateSpaceView: (context, event) => {
-        const { controls } = context;
 
-        if (!controls) {
-          console.error('camera controls are null');
-          return;
-        }
-
-        // controls.update(event.deltaTime);
-      },
       enterSurfaceView: (context, event) => {
         const { controls, observer, focusTarget } = context;
         if (!controls || !observer || !focusTarget) return;

@@ -27,14 +27,6 @@ export const Default: Story = {
 };
 
 const VRTimePanelStory = () => {
-  const { cameraActor, timeActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
-
-  // Update timer when play button is pressed.
-  useFrame((state, delta) => {
-    timeActor.send({ type: 'UPDATE', deltaTime: delta });
-  });
   return (
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 20]} />

@@ -4,6 +4,7 @@ import { useFrame } from '@react-three/fiber';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 import { VRTimescaleSlider } from '../../vr-time-panel/vr-time-controls/VRTimescaleSlider';
+import { VRCameraManager } from '@/components/canvas/vr/VRCameraManager';
 
 const meta: Meta<typeof VRTimescaleSlider> = {
   title: 'VR-UI/vr-time-panel/VRTimescaleSlider',
@@ -31,8 +32,9 @@ const VRTimescaleSliderStory = () => {
 
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 15]} />
-      <CameraControls makeDefault />
+      {/* <PerspectiveCamera makeDefault position={[0, 0, 15]} />
+      <CameraControls makeDefault /> */}
+      <VRCameraManager />
       <VRTimescaleSlider position={[0, 0, 0]} />
     </>
   );

@@ -172,7 +172,6 @@ export const VRSlider = ({
       <group position={position}>
         <VRSliderTrack
           spring={spring}
-          // springRef={springRef}
           trackColor={trackColor}
           fillColor={fillColor}
           width={width}
@@ -180,18 +179,10 @@ export const VRSlider = ({
           startX={startX}
           setX={setX}
         />
-        {/* <VRSliderRange
-          spring={spring}
-          color={fillColor}
-          height={height}
-          startX={rangeStart}
-        /> */}
+
         <VRSliderThumb
           spring={spring}
-          // springRef={springRef}
           startX={startX}
-          // minX={minX}
-          // maxX={maxX}
           radius={thumbRadius}
           color={thumbColor}
           borderColor={thumbBorderColor}
@@ -308,10 +299,7 @@ type VRSliderThumbProps = {
 };
 const VRSliderThumb = ({
   spring,
-  // springRef,
   startX,
-  // minX, // Min x pos value in scene units.
-  // maxX, // Max x pos value in scene units.
   radius,
   color,
   borderColor,
@@ -344,7 +332,11 @@ const VRSliderThumb = ({
       cameraActor.send({ type: 'LOCK_CONTROLS' });
 
       const controls = getThree().controls as CameraControls;
-      if ('enabled' in controls && typeof controls.enabled === 'boolean') {
+      if (
+        controls &&
+        'enabled' in controls &&
+        typeof controls.enabled === 'boolean'
+      ) {
         controls.enabled = false;
       }
     },
@@ -353,7 +345,11 @@ const VRSliderThumb = ({
       // console.log('drag end');
       cameraActor.send({ type: 'UNLOCK_CONTROLS' });
       const controls = getThree().controls as CameraControls;
-      if ('enabled' in controls && typeof controls.enabled === 'boolean') {
+      if (
+        controls &&
+        'enabled' in controls &&
+        typeof controls.enabled === 'boolean'
+      ) {
         controls.enabled = true;
       }
     },
