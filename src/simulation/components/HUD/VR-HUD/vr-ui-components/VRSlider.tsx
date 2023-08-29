@@ -248,9 +248,15 @@ const VRSliderTrack = ({
   const trackRef = useRef<Mesh>(null!);
   const anchorRef = useRef<Object3D>(null!);
   const handleClick = useCallback(
-    (event: ThreeEvent<MouseEvent>) => {
-      event.stopPropagation();
-      const point = event.point;
+    (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
+      let point: Vector3 = null!;
+      if ('stopPropagation' in event) {
+        event.stopPropagation();
+        point = event.point;
+      } else {
+        if (!event.intersection) return;
+        point = event.intersection.point;
+      }
       anchorRef.current.worldToLocal(point); // Get in local coords.
 
       // const newX = clamp(point.x, minX, maxX); // Clamp the new x target.
@@ -264,13 +270,15 @@ const VRSliderTrack = ({
     <>
       <group>
         {/** Track. */}
-        <Plane
-          name="slider-track"
-          ref={trackRef}
-          scale={[width, height, 1]}
-          material-color={trackColor}
-          onClick={handleClick}
-        />
+        <Interactive onSelect={handleClick}>
+          <Plane
+            name="slider-track"
+            ref={trackRef}
+            scale={[width, height, 1]}
+            material-color={trackColor}
+            onClick={handleClick}
+          />
+        </Interactive>
 
         {/** Filled Track. */}
         <object3D ref={anchorRef} position={[startX, 0, depth.xs]}>
