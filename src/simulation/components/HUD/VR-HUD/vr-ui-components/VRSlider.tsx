@@ -26,6 +26,7 @@ import {
   type Mesh,
   MeshBasicMaterial,
   Box3,
+  BoxHelper,
 } from 'three';
 import { depth } from '../vr-hud-constants';
 import useHover from '@/hooks/useHover';
@@ -534,7 +535,7 @@ const VRSliderIntersectionPlane = forwardRef<
   fwdRef
 ) {
   const planeRef = useRef<Mesh>(null!);
-  // const boxHelper = useHelper(planeRef, BoxHelper);
+  const boxHelper = useHelper(planeRef, BoxHelper);
 
   useImperativeHandle(fwdRef, () => planeRef.current);
 
