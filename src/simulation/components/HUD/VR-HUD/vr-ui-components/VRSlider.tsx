@@ -40,6 +40,7 @@ import { useGesture } from '@use-gesture/react';
 import { clamp } from 'three/src/math/MathUtils';
 import { ORIGIN, Z_AXIS } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { CameraControls } from 'three-stdlib';
 
 const _camWorldPos = new Vector3();
 const _thumbWorldPos = new Vector3();
@@ -299,11 +300,20 @@ const VRSliderThumb = ({
 
       pointerDown.current = true;
       cameraActor.send({ type: 'LOCK_CONTROLS' });
+
+      const controls = getThree().controls as CameraControls;
+      if ('enabled' in controls && typeof controls.enabled === 'boolean') {
+        controls.enabled = false;
+      }
     },
     onDragEnd: () => {
       pointerDown.current = false;
       // console.log('drag end');
       cameraActor.send({ type: 'UNLOCK_CONTROLS' });
+      const controls = getThree().controls as CameraControls;
+      if ('enabled' in controls && typeof controls.enabled === 'boolean') {
+        controls.enabled = true;
+      }
     },
     onDrag: (state) => {
       // Get the ratio of the canvas width in pixels to the normalized viewport width.
