@@ -41,6 +41,7 @@ import { clamp } from 'three/src/math/MathUtils';
 import { ORIGIN, Z_AXIS } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CameraControls } from 'three-stdlib';
+import { VRIconButton } from './VRIconButton';
 
 const _camWorldPos = new Vector3();
 const _thumbWorldPos = new Vector3();
@@ -79,13 +80,15 @@ export const VRSlider = ({
   value = clamp(value, min, max);
   const stepSize = useRef<number>(0); // Size of step increments.
   const stepLength = useRef<number>(0); // Length in scene units per step.
-  stepSize.current = step;
-  const [startX, minX, maxX] = useMemo(() => {
+  stepSize.current = step; // Store in ref so that updates to the value will be accessible in callbacks.
+
+  // Compute measurements based on width of slider and range of values.
+  const [startX, minX, maxX, halfWidth] = useMemo(() => {
     if (max <= min) {
       console.error('Error: max is less than or equal to min.');
     }
-    const length = max - min;
-    stepLength.current = width / length;
+    const range = max - min; // Size of the range of values from min to max.
+    stepLength.current = width / range; // Length in scene units between each value in the range.
 
     const halfWidth = width / 2;
 
@@ -98,16 +101,17 @@ export const VRSlider = ({
     // Min and max x pos values in scene units.
     const minX = min * stepLength.current;
     const maxX = max * stepLength.current;
-    return [startX, minX, maxX];
+    return [startX, minX, maxX, halfWidth];
   }, [max, min, width]);
 
   const [spring, springRef] = useSpring(() => ({
-    x: value,
+    // Convert value into scene units.
+    x: value * stepLength.current,
     onChange: {
       x: (result: AnimationResult<SpringValue<any>>) => {
         if (typeof result !== 'number') return; // Type guard.
 
-        // Convert x pos from pixel coords into range [min, max].
+        // Convert x pos from scene units into range [min, max].
         const value = result / stepLength.current;
         // console.log('value:', value);
 
@@ -124,9 +128,19 @@ export const VRSlider = ({
     },
   }));
 
-  const setValue = useCallback(
+  const setX = useCallback(
+    (x: number) => {
+      const newX = clamp(x, minX, maxX); // Clamp the new x target.
+      springRef.start({ x: newX }); // Set new x target.
+    },
+    [maxX, minX, springRef]
+  );
+  const incrementValue = useCallback(
     (value: number) => {
-      const newX = clamp(value, minX, maxX); // Clamp the new x target.
+      const springX = spring.x.get();
+      // Convert to scene units.
+      const amount = value * stepLength.current;
+      const newX = clamp(springX + amount, minX, maxX); // Clamp the new x target.
       springRef.start({ x: newX }); // Set new x target.
     },
     [maxX, minX, springRef]
@@ -145,9 +159,20 @@ export const VRSlider = ({
     }
   }, [maxX, minX, spring, springRef]);
 
+  // Calculate x position of incrementer buttons.
+  const incrementerPos = 1.25 * height + halfWidth + thumbRadius;
+
   return (
     <>
       <group position={position}>
+        {/** Decrement button. */}
+        <VRSliderIncrementer
+          decrement
+          position={[-incrementerPos, 0, depth.xs]}
+          height={height}
+          step={step}
+          incrementValue={incrementValue}
+        />
         <VRSliderTrack
           spring={spring}
           // springRef={springRef}
@@ -156,7 +181,14 @@ export const VRSlider = ({
           width={width}
           height={height}
           startX={startX}
-          setValue={setValue}
+          setX={setX}
+        />
+        {/** Decrement button. */}
+        <VRSliderIncrementer
+          position={[incrementerPos, 0, depth.xs]}
+          height={height}
+          step={step}
+          incrementValue={incrementValue}
         />
         {/* <VRSliderRange
           spring={spring}
@@ -174,7 +206,7 @@ export const VRSlider = ({
           color={thumbColor}
           borderColor={thumbBorderColor}
           planeRef={planeRef}
-          setValue={setValue}
+          setX={setX}
         />
         <VRSliderIntersectionPlane
           width={intersectionPlaneWidth}
@@ -194,7 +226,7 @@ type VRSliderTrackProps = {
   startX: number;
   trackColor: ColorRepresentation;
   fillColor: ColorRepresentation;
-  setValue: (value: number) => void;
+  setX: (value: number) => void;
 };
 const VRSliderTrack = ({
   spring,
@@ -204,7 +236,7 @@ const VRSliderTrack = ({
   startX,
   trackColor,
   fillColor,
-  setValue,
+  setX: setValue,
 }: VRSliderTrackProps) => {
   const trackRef = useRef<Mesh>(null!);
   const anchorRef = useRef<Object3D>(null!);
@@ -262,7 +294,7 @@ type VRSliderThumbProps = {
   color: ColorRepresentation;
   borderColor: ColorRepresentation;
   planeRef: MutableRefObject<Mesh>;
-  setValue: (value: number) => void;
+  setX: (value: number) => void;
 };
 const VRSliderThumb = ({
   spring,
@@ -274,7 +306,7 @@ const VRSliderThumb = ({
   color,
   borderColor,
   planeRef,
-  setValue,
+  setX: setValue,
 }: VRSliderThumbProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const getThree = useThree(({ get }) => get);
@@ -422,3 +454,34 @@ const VRSliderIntersectionPlane = forwardRef<
     </>
   );
 });
+
+type VRSliderIncrementerProps = {
+  position?: Vector3Tuple;
+  decrement?: boolean;
+  height: number;
+  step: number;
+  incrementValue: (value: number) => void;
+};
+const VRSliderIncrementer = ({
+  position,
+  decrement,
+  height,
+  step,
+  incrementValue,
+}: VRSliderIncrementerProps) => {
+  const handleClick = useCallback(() => {
+    const amount = decrement ? -step : step;
+    incrementValue(amount);
+  }, [decrement, incrementValue, step]);
+
+  const iconSrc = decrement
+    ? 'icons/MdiChevronLeft.svg'
+    : 'icons/MdiChevronRight.svg';
+  return (
+    <>
+      <object3D position={position} scale={height}>
+        <VRIconButton iconSrc={iconSrc} onClick={handleClick} />
+      </object3D>
+    </>
+  );
+};
