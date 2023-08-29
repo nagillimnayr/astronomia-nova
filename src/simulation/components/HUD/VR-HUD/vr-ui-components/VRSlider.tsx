@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   Circle,
+  Edges,
   MeshDiscardMaterial,
   Plane,
   Ring,
+  Wireframe,
   useCursor,
   useHelper,
 } from '@react-three/drei';
@@ -535,7 +537,6 @@ const VRSliderIntersectionPlane = forwardRef<
   fwdRef
 ) {
   const planeRef = useRef<Mesh>(null!);
-  const boxHelper = useHelper(planeRef, BoxHelper);
 
   useImperativeHandle(fwdRef, () => planeRef.current);
 
@@ -544,6 +545,7 @@ const VRSliderIntersectionPlane = forwardRef<
       <Interactive>
         <Plane scale={[width, height, 1]} ref={planeRef}>
           <MeshDiscardMaterial />
+          <Edges scale={1} color={'yellow'} />
         </Plane>
       </Interactive>
     </>
