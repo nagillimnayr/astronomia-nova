@@ -10,7 +10,7 @@ import {
 } from '@react-three/drei';
 import { RotatingObject } from './components/RotatingObject';
 import { useEffect, useRef } from 'react';
-import { DirectionalLight, DirectionalLightHelper } from 'three';
+import { type DirectionalLight, DirectionalLightHelper } from 'three';
 import { VRManager } from './VRManager';
 import { Floor } from './components/Floor';
 import { VRHud } from '@/simulation/components/HUD/VR-HUD/VRHud';
@@ -18,11 +18,6 @@ import { CameraManager } from '@/simulation/components/camera-controller/CameraM
 import { PI_OVER_TWO } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useFrame, useThree } from '@react-three/fiber';
-import {
-  useEnterXR,
-  NonImmersiveCamera,
-  ImmersiveSessionOrigin,
-} from '@coconut-xr/natuerlich/react';
 import { VRCameraManager } from './VRCameraManager';
 import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
 import { VRStats } from './VRStats';
@@ -57,24 +52,6 @@ export const VRScene = () => {
         position={[-5, 10, 8]}
       />
       <ambientLight intensity={0.75} />
-
-      {/* <RotatingObject position={[0, 1, -5]}>
-        <Dodecahedron>
-          <meshPhongMaterial color={'red'} />
-        </Dodecahedron>
-      </RotatingObject>
-
-      <RotatingObject position={[5, 1, 0]}>
-        <Icosahedron>
-          <meshPhongMaterial color={'cyan'} />
-        </Icosahedron>
-      </RotatingObject>
-
-      <RotatingObject position={[-5, 1, 0]}>
-        <Tetrahedron>
-          <meshPhongMaterial color={'cyan'} />
-        </Tetrahedron>
-      </RotatingObject> */}
 
       <SpringScaleObject position={[7, 1, 3]}>
         <VRGrabbable color={'magenta'} />
