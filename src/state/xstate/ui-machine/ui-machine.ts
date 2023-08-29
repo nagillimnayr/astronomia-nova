@@ -11,18 +11,18 @@ type Context = {
   camViewPortalRef: MutableRefObject<HTMLDivElement>;
 };
 
-type Events =
-  | { type: 'TOGGLE' }
-  | {
-      type: 'ASSIGN_SCREEN_PORTAL_REF';
-      screenPortalRef: MutableRefObject<HTMLDivElement>;
-    }
-  | { type: 'SET_SCREEN_PORTAL'; screenPortal: HTMLDivElement }
-  | {
-      type: 'ASSIGN_CAM_VIEW_PORTAL_REF';
-      camViewPortalRef: MutableRefObject<HTMLDivElement>;
-    }
-  | { type: 'SET_CAM_VIEW_PORTAL'; camViewPortal: HTMLDivElement };
+type Events = {};
+// | { type: 'TOGGLE' }
+// | {
+//     type: 'ASSIGN_SCREEN_PORTAL_REF';
+//     screenPortalRef: MutableRefObject<HTMLDivElement>;
+//   }
+// | { type: 'SET_SCREEN_PORTAL'; screenPortal: HTMLDivElement }
+// | {
+//     type: 'ASSIGN_CAM_VIEW_PORTAL_REF';
+//     camViewPortalRef: MutableRefObject<HTMLDivElement>;
+//   }
+// | { type: 'SET_CAM_VIEW_PORTAL'; camViewPortal: HTMLDivElement };
 
 export const uiMachine = createMachine(
   {
@@ -30,7 +30,7 @@ export const uiMachine = createMachine(
     tsTypes: {} as import('./ui-machine.typegen').Typegen0,
     schema: {
       context: {} as Context,
-      events: {} as Events,
+      // events: {} as Events,
     },
     id: 'ui-machine',
 
@@ -65,40 +65,40 @@ export const uiMachine = createMachine(
     ],
 
     // Context assignment events:
-    on: {
-      ASSIGN_SCREEN_PORTAL_REF: {
-        actions: ['assignScreenPortalRef', log('Assigning screen portal ref')],
-      },
-      SET_SCREEN_PORTAL: {
-        actions: [
-          (context, event) => {
-            context.screenPortalRef.current = event.screenPortal;
-          },
-        ],
-      },
-      ASSIGN_CAM_VIEW_PORTAL_REF: {
-        actions: [
-          'assignCamViewPortalRef',
-          log('Assigning cam view portal ref'),
-        ],
-      },
-      SET_CAM_VIEW_PORTAL: {
-        actions: [
-          (context, event) => {
-            context.camViewPortalRef.current = event.camViewPortal;
-          },
-        ],
-      },
-    },
+    // on: {
+    //   ASSIGN_SCREEN_PORTAL_REF: {
+    //     actions: ['assignScreenPortalRef', log('Assigning screen portal ref')],
+    //   },
+    //   SET_SCREEN_PORTAL: {
+    //     actions: [
+    //       (context, event) => {
+    //         context.screenPortalRef.current = event.screenPortal;
+    //       },
+    //     ],
+    //   },
+    //   ASSIGN_CAM_VIEW_PORTAL_REF: {
+    //     actions: [
+    //       'assignCamViewPortalRef',
+    //       log('Assigning cam view portal ref'),
+    //     ],
+    //   },
+    //   SET_CAM_VIEW_PORTAL: {
+    //     actions: [
+    //       (context, event) => {
+    //         context.camViewPortalRef.current = event.camViewPortal;
+    //       },
+    //     ],
+    //   },
+    // },
   },
   {
     actions: {
-      assignScreenPortalRef: assign({
-        screenPortalRef: (_, event) => event.screenPortalRef,
-      }),
-      assignCamViewPortalRef: assign({
-        camViewPortalRef: (_, event) => event.camViewPortalRef,
-      }),
+      // assignScreenPortalRef: assign({
+      //   screenPortalRef: (_, event) => event.screenPortalRef,
+      // }),
+      // assignCamViewPortalRef: assign({
+      //   camViewPortalRef: (_, event) => event.camViewPortalRef,
+      // }),
     },
   }
 );

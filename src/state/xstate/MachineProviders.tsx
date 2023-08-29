@@ -8,21 +8,5 @@ export const MachineContext = createActorContext(rootMachine, {
 });
 
 export const MachineProviders = ({ children }: PropsWithChildren) => {
-  return (
-    <MachineContext.Provider>
-      <Initializer />
-      {children}
-    </MachineContext.Provider>
-  );
-};
-
-const Initializer = () => {
-  const { uiActor } = MachineContext.useSelector(({ context }) => context);
-  // Create refs and assign them to global state.
-  const screenPortalRef = useRef<HTMLDivElement>(null!);
-  useEffect(() => {
-    uiActor.send({ type: 'ASSIGN_SCREEN_PORTAL_REF', screenPortalRef });
-  }, [uiActor]);
-
-  return <></>;
+  return <MachineContext.Provider>{children}</MachineContext.Provider>;
 };
