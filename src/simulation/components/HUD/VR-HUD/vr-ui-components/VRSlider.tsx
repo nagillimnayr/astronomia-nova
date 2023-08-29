@@ -8,7 +8,7 @@ import {
   useHelper,
 } from '@react-three/drei';
 import {
-  MutableRefObject,
+  type MutableRefObject,
   forwardRef,
   useCallback,
   useEffect,
@@ -22,11 +22,8 @@ import {
   type Vector3Tuple,
   type Group,
   type Object3D,
-  Plane as IntersectionPlane,
-  PlaneHelper,
   Vector3,
-  Mesh,
-  BoxHelper,
+  type Mesh,
 } from 'three';
 import { depth } from '../vr-hud-constants';
 import useHover from '@/hooks/useHover';
@@ -37,7 +34,7 @@ import {
   animated,
   type SpringValue,
   type SpringRef,
-  AnimationResult,
+  type AnimationResult,
 } from '@react-spring/three';
 import { useGesture } from '@use-gesture/react';
 import { clamp } from 'three/src/math/MathUtils';
@@ -82,6 +79,9 @@ export const VRSlider = ({
   const stepLength = useRef<number>(0); // Length in scene units per step.
   stepSize.current = step;
   const [rangeStart, minX, maxX] = useMemo(() => {
+    if (max >= min) {
+      console.error('Error: max is greater than or equal to min.');
+    }
     const length = max - min;
     stepLength.current = width / length;
 
