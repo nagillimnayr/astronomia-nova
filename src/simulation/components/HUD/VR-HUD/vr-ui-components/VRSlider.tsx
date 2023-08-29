@@ -27,8 +27,13 @@ import {
 } from 'three';
 import { depth } from '../vr-hud-constants';
 import useHover from '@/hooks/useHover';
-import { useThree, type ThreeEvent } from '@react-three/fiber';
-import { Interactive, type XRInteractionEvent } from '@react-three/xr';
+import { useThree, type ThreeEvent, Intersection } from '@react-three/fiber';
+import {
+  Interactive,
+  useController,
+  useXR,
+  type XRInteractionEvent,
+} from '@react-three/xr';
 import {
   useSpring,
   animated,
@@ -43,8 +48,9 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CameraControls } from 'three-stdlib';
 import { VRIconButton } from './VRIconButton';
 
-const _camWorldPos = new Vector3();
-const _thumbWorldPos = new Vector3();
+const _point = new Vector3();
+const _rayWorldPosition = new Vector3();
+const _rayWorldDirection = new Vector3();
 
 export type VRSliderProps = {
   position?: Vector3Tuple;
@@ -308,6 +314,9 @@ const VRSliderThumb = ({
 }: VRSliderThumbProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const getThree = useThree(({ get }) => get);
+  const getXR = useXR(({ get }) => get);
+  // const rightController = useController('right');
+
   const thumbRef = useRef<Object3D>(null!);
   const anchorRef = useRef<Group>(null!);
   // Spring scale on hover.
@@ -319,9 +328,25 @@ const VRSliderThumb = ({
 
   const handleDrag = useCallback(() => {
     if (!pointerDown.current) return;
+    // Check if we're in a VR session.
     const { camera, raycaster, pointer } = getThree();
+
+    const { isPresenting, controllers } = getXR();
+    if (isPresenting) {
+      const rightController = controllers.find(
+        (controller) => controller.inputSource.handedness === 'right'
+      );
+      if (!rightController) return;
+      rightController.controller.getWorldPosition(_rayWorldPosition);
+      rightController.controller.getWorldDirection(_rayWorldDirection);
+
+      // Set raycaster from XR controller ray.
+      raycaster.set(_rayWorldPosition, _rayWorldDirection);
+    } else {
+      // Set raycaster from pointer and camera.
+      raycaster.setFromCamera(pointer, camera);
+    }
     // Get intersection with plane.
-    raycaster.setFromCamera(pointer, camera);
     const plane = planeRef.current;
     const prevFirstHit = raycaster.firstHitOnly;
     raycaster.firstHitOnly = true;
@@ -341,7 +366,7 @@ const VRSliderThumb = ({
     setValue(point.x);
 
     raycaster.firstHitOnly = prevFirstHit;
-  }, [getThree, planeRef, setValue]);
+  }, [getThree, getXR, planeRef, setValue]);
 
   const handleDragStart = useCallback(() => {
     pointerDown.current = true;
@@ -432,9 +457,11 @@ const VRSliderIntersectionPlane = forwardRef<
 
   return (
     <>
-      <Plane scale={[width, height, 1]} ref={planeRef}>
-        <MeshDiscardMaterial />
-      </Plane>
+      <Interactive>
+        <Plane scale={[width, height, 1]} ref={planeRef}>
+          <MeshDiscardMaterial />
+        </Plane>
+      </Interactive>
     </>
   );
 });
