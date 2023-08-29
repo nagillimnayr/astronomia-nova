@@ -1,9 +1,16 @@
-import { type Object3DNode, extend } from '@react-three/fiber';
-import { forwardRef, type PropsWithChildren } from 'react';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import {
+  type Object3DNode,
+  extend,
+  MeshProps,
+  Object3DProps,
+} from '@react-three/fiber';
+import { forwardRef, PropsWithoutRef, type PropsWithChildren } from 'react';
 import { type ColorRepresentation, type Vector3Tuple } from 'three';
 import { Panel, PanelInner, PanelOuter } from './classes/Panel';
 import { colors } from '../vr-hud-constants';
 import React from 'react';
+import { Plane } from '@react-three/drei';
 
 extend({ Panel, PanelInner, PanelOuter });
 
@@ -15,16 +22,17 @@ declare module '@react-three/fiber' {
   }
 }
 
-export type VRPanelProps = PropsWithChildren & {
-  position?: Vector3Tuple;
-  width?: number;
-  height?: number;
-  radius?: number;
-  borderWidth?: number;
-  segments?: number;
-  backgroundColor?: ColorRepresentation;
-  borderColor?: ColorRepresentation;
-};
+export type VRPanelProps = PropsWithChildren &
+  Omit<PropsWithoutRef<Object3DProps>, 'args'> & {
+    position?: Vector3Tuple;
+    width?: number;
+    height?: number;
+    radius?: number;
+    borderWidth?: number;
+    segments?: number;
+    backgroundColor?: ColorRepresentation;
+    borderColor?: ColorRepresentation;
+  };
 export const VRPanel = forwardRef<Panel, VRPanelProps>(function VRPanel(
   {
     children,
@@ -42,13 +50,13 @@ export const VRPanel = forwardRef<Panel, VRPanelProps>(function VRPanel(
 ) {
   return (
     <>
-      <group position={position}>
+      {/** @ts-ignore */}
+      <group position={position} {...props}>
         <panel
           ref={fwdRef}
           args={[width, height, radius, borderWidth, segments]}
           backgroundColor={backgroundColor}
           borderColor={borderColor}
-          {...props}
         >
           {children}
         </panel>
