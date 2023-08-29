@@ -37,8 +37,6 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
               cameraActor.send({
                 type: 'START_XR_SESSION',
               });
-
-              console.log(session);
             }}
             onSessionEnd={(event) => {
               console.log('onSessionEnd');
@@ -48,8 +46,6 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
               cameraActor.send({
                 type: 'END_XR_SESSION',
               });
-
-              console.log(session);
             }}
           >
             <Suspense fallback={null}>
