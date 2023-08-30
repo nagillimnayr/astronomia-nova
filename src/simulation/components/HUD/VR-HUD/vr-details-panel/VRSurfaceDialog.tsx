@@ -36,47 +36,66 @@ export const VRSurfaceDialog = ({ position }: VRSurfaceDialogProps) => {
     cameraActor.send('TO_SURFACE');
   }, [cameraActor, surfaceDialogActor]);
 
-  const handleLatitudeChange = useCallback((newValue: number) => {
-    surfaceActor.send({ type: 'SET_LATITUDE', value: newValue });
-  }, []);
-  const handleLongitudeChange = useCallback((newValue: number) => {
-    surfaceActor.send({ type: 'SET_LONGITUDE', value: newValue });
-  }, []);
+  const handleLatitudeChange = useCallback(
+    (newValue: number) => {
+      surfaceActor.send({ type: 'SET_LATITUDE', value: newValue });
+    },
+    [surfaceActor]
+  );
+  const handleLongitudeChange = useCallback(
+    (newValue: number) => {
+      surfaceActor.send({ type: 'SET_LONGITUDE', value: newValue });
+    },
+    [surfaceActor]
+  );
 
+  const panelWidth = 6;
+  const panelHeight = 4;
+  const sliderWidth = 4;
+  const buttonHeight = 0.65;
   return (
     <>
       <animated.group position={position}>
-        <VRPanel width={8} height={4} />
+        <VRPanel width={panelWidth} height={panelHeight} />
 
-        {/** Latitude Slider. */}
-        <CoordinateSlider
-          position={[0, 1.25, depth.xs]}
-          target={'latitude'}
-          onValueChange={handleLatitudeChange}
-          min={MIN_LATITUDE}
-          max={MAX_LATITUDE}
-        />
-        {/** Longitude Slider. */}
-        <CoordinateSlider
-          position={[0, 0, depth.xs]}
-          target={'longitude'}
-          onValueChange={handleLongitudeChange}
-          min={MIN_LONGITUDE}
-          max={MAX_LONGITUDE}
-        />
+        {/** Sliders. */}
+        <group position-y={0.5} position-z={depth.xs}>
+          {/** Latitude Slider. */}
+          <object3D position-y={0.55}>
+            <CoordinateSlider
+              width={sliderWidth}
+              target={'latitude'}
+              onValueChange={handleLatitudeChange}
+              min={MIN_LATITUDE}
+              max={MAX_LATITUDE}
+            />
+          </object3D>
+          {/** Longitude Slider. */}
+          <object3D position-y={-0.55}>
+            <CoordinateSlider
+              width={sliderWidth}
+              target={'longitude'}
+              onValueChange={handleLongitudeChange}
+              min={MIN_LONGITUDE}
+              max={MAX_LONGITUDE}
+            />
+          </object3D>
+        </group>
 
-        {/** Cancel Button. */}
-        <VRHudButton
-          position={[-1.75, -1, depth.xs]}
-          label="Cancel"
-          onClick={close}
-        />
-        {/** Confirm Button. */}
-        <VRHudButton
-          position={[1.75, -1, depth.xs]}
-          label="Confirm"
-          onClick={confirm}
-        />
+        <group position-y={-1.25} position-z={depth.xs}>
+          {/** Cancel Button. */}
+          <object3D position-x={-1.2}>
+            <VRHudButton label="Cancel" onClick={close} height={buttonHeight} />
+          </object3D>
+          {/** Confirm Button. */}
+          <object3D position-x={1.1}>
+            <VRHudButton
+              label="Confirm"
+              onClick={confirm}
+              height={buttonHeight}
+            />
+          </object3D>
+        </group>
       </animated.group>
     </>
   );
@@ -84,29 +103,30 @@ export const VRSurfaceDialog = ({ position }: VRSurfaceDialogProps) => {
 
 type CoordinateSliderProps = {
   position?: Vector3Tuple;
+  width: number;
   target: keyof ContextFrom<typeof surfaceMachine>;
-  onValueChange: (newValue: number) => void;
   min: number;
   max: number;
+  onValueChange: (newValue: number) => void;
 };
 const CoordinateSlider = ({
   position,
+  width,
   target,
-  onValueChange,
   min,
   max,
+  onValueChange,
 }: CoordinateSliderProps) => {
   const { surfaceActor } = MachineContext.useSelector(({ context }) => context);
 
   const value = useSelector(surfaceActor, ({ context }) => context[target]);
   const label = capitalize(target);
 
-  const sliderWidth = 4;
   const sliderHeight = 0.1;
   const thumbRadius = 0.1;
   const step = 0.1;
   const fontSize = 0.35;
-  const halfWidth = sliderWidth / 2;
+  const halfWidth = width / 2;
   // const yOffset = 2 * thumbRadius + sliderHeight + fontSize;
   const yOffset = sliderHeight + fontSize / 2;
   return (
@@ -129,7 +149,7 @@ const CoordinateSlider = ({
           min={min}
           max={max}
           value={value}
-          width={sliderWidth}
+          width={width}
           height={sliderHeight}
           thumbRadius={thumbRadius}
           step={step}
