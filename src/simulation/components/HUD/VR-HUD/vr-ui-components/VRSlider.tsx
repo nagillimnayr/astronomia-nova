@@ -34,7 +34,12 @@ import {
 } from 'three';
 import { depth } from '../vr-hud-constants';
 import useHover from '@/hooks/useHover';
-import { useThree, type ThreeEvent, Intersection } from '@react-three/fiber';
+import {
+  useThree,
+  type ThreeEvent,
+  Intersection,
+  useFrame,
+} from '@react-three/fiber';
 import {
   Interactive,
   useController,
@@ -182,65 +187,61 @@ export const VRSlider = ({
 
   const isDragging = useRef<boolean>(false);
   const anchorRef = useRef<Object3D>(null!);
+  const markerRef = useRef<Mesh>(null!);
+  const markerMatRef = useRef<MeshBasicMaterial>(null!);
 
   const handleDrag = useCallback(() => {
     if (!isDragging.current) return;
+
     // Check if we're in a VR session.
-    const { camera, raycaster, pointer } = getThree();
-
     const { isPresenting, controllers } = getXR();
-    if (isPresenting) {
-      const rightController = controllers.find(
-        (controller) => controller.inputSource.handedness === 'right'
-      );
-      if (!rightController) return;
-      // circleMatRef.current.color.set('cyan');
+    if (!isPresenting) return;
+    const rightController = controllers.find(
+      (controller) => controller.inputSource.handedness === 'right'
+    );
+    if (!rightController) return;
+    markerMatRef.current.color.set('cyan');
 
-      const ray = rightController.controller.children[0];
-      if (!(ray instanceof Line)) return;
-
-      ray.getWorldPosition(_rayWorldPosition);
-      ray.getWorldDirection(_rayWorldDirection);
-
-      // Set raycaster from XR controller ray.
-      raycaster.set(_rayWorldPosition, _rayWorldDirection);
-    } else {
-      // circleMatRef.current.color.set('#03C03C');
-      // Set raycaster from pointer and camera.
-      raycaster.setFromCamera(pointer, camera);
+    // Get hover state.
+    const hoverState = getXR().hoverState['right'];
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const intersections = hoverState.values();
+    let intersection = intersections.next();
+    let point: Vector3 = null!;
+    while (intersection && !intersection.done) {
+      if (intersection.value.object === planeRef.current) {
+        point = intersection.value.point;
+        break;
+      } else {
+        intersection = intersections.next();
+      }
     }
-    // Get intersection with plane.
-    const plane = planeRef.current;
-    const prevFirstHit = raycaster.firstHitOnly;
-    raycaster.firstHitOnly = true;
-    const intersections = raycaster.intersectObject(plane);
-    if (intersections.length < 1) {
-      raycaster.firstHitOnly = prevFirstHit;
+    if (!point) {
+      markerMatRef.current.color.set('orange');
       return;
     }
-    const intersection = intersections[0];
-    if (!intersection) {
-      raycaster.firstHitOnly = prevFirstHit;
-      return;
-    }
-    const point = intersection.point;
-    anchorRef.current.worldToLocal(point); // Get in local coords.
+    _point.copy(point);
 
-    setX(point.x);
+    anchorRef.current.worldToLocal(_point); // Get in local coords.
 
-    raycaster.firstHitOnly = prevFirstHit;
-  }, [getThree, getXR, planeRef, setX]);
+    setX(_point.x);
+    markerRef.current.position.copy(_point);
+  }, [getXR, setX]);
 
   const handleDragStart = useCallback(() => {
     isDragging.current = true;
-    // circleMatRef.current.color.set('skyblue');
+    markerMatRef.current.color.set('skyblue');
   }, []);
   const handleDragEnd = useCallback(() => {
     isDragging.current = false;
-    // circleMatRef.current.color.set('red');
+    markerMatRef.current.color.set('red');
   }, []);
 
   useXREvent('selectend', handleDragEnd, { handedness: 'right' });
+
+  useFrame(() => {
+    handleDrag();
+  });
 
   // Calculate x position of incrementer buttons.
   const incrementerPos = 1.25 * height + halfWidth + thumbRadius;
@@ -249,6 +250,9 @@ export const VRSlider = ({
     <>
       <group position={position}>
         <object3D name="anchor" ref={anchorRef} position={[startX, 0, 0]} />
+        <Sphere name="marker" ref={markerRef} args={[thumbRadius / 2]}>
+          <meshBasicMaterial ref={markerMatRef} color={'white'} />
+        </Sphere>
         <VRSliderTrack
           spring={spring}
           trackColor={trackColor}
@@ -273,7 +277,6 @@ export const VRSlider = ({
           ref={planeRef}
           width={intersectionPlaneWidth}
           height={intersectionPlaneHeight}
-          onDrag={handleDrag}
         />
         {/** Conditionally render increment buttons. */}
         {incrementers && (
@@ -406,7 +409,6 @@ const VRSliderThumb = ({
 
   const thumbRef = useRef<Object3D>(null!);
   const anchorRef = useRef<Group>(null!);
-  const circleMatRef = useRef<MeshBasicMaterial>(null!);
 
   // const thumbBounds = useMemo(() => new Box3(), []); // Bounding box to restrict the thumb position.
   // useMemo(() => {
@@ -426,67 +428,36 @@ const VRSliderThumb = ({
     // Check if we're in a VR session.
     const { camera, raycaster, pointer } = getThree();
 
-    const { isPresenting, controllers } = getXR();
-    if (isPresenting) {
-      const rightController = controllers.find(
-        (controller) => controller.inputSource.handedness === 'right'
-      );
-      if (!rightController) return;
-      circleMatRef.current.color.set('cyan');
-
-      // Get hover state.
-      const hoverState = getXR().hoverState['right'];
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const intersections = hoverState.values();
-      let intersection = intersections.next();
-      let point: Vector3 = null!;
-      while (intersection && !intersection.done) {
-        if (intersection.value.object === planeRef.current) {
-          point = intersection.value.point;
-          break;
-        } else {
-          intersection = intersections.next();
-        }
-      }
-      if (!point) {
-        circleMatRef.current.color.set('orange');
-        return;
-      }
-      _point.copy(point);
-    } else {
-      circleMatRef.current.color.set('#03C03C');
-      // Set raycaster from pointer and camera.
-      raycaster.setFromCamera(pointer, camera);
-      // Get intersection with plane.
-      const plane = planeRef.current;
-      const prevFirstHit = raycaster.firstHitOnly;
-      raycaster.firstHitOnly = true;
-      const intersections = raycaster.intersectObject(plane);
-      if (intersections.length < 1) {
-        raycaster.firstHitOnly = prevFirstHit;
-        return;
-      }
-      const intersection = intersections[0];
-      if (!intersection) {
-        raycaster.firstHitOnly = prevFirstHit;
-        return;
-      }
-      _point.copy(intersection.point);
+    // Set raycaster from pointer and camera.
+    raycaster.setFromCamera(pointer, camera);
+    // Get intersection with plane.
+    const plane = planeRef.current;
+    const prevFirstHit = raycaster.firstHitOnly;
+    raycaster.firstHitOnly = true;
+    const intersections = raycaster.intersectObject(plane);
+    if (intersections.length < 1) {
       raycaster.firstHitOnly = prevFirstHit;
+      return;
     }
-    anchorRef.current.worldToLocal(_point); // Get in local coords.
+    const intersection = intersections[0];
+    if (!intersection) {
+      raycaster.firstHitOnly = prevFirstHit;
+      return;
+    }
+    const point = intersection.point;
+    raycaster.firstHitOnly = prevFirstHit;
 
-    setValue(_point.x);
+    anchorRef.current.worldToLocal(point); // Get in local coords.
+
+    setValue(point.x);
     markerRef.current.position.copy(_point);
   }, [getThree, getXR, planeRef, setValue]);
 
   const handleDragStart = useCallback(() => {
     pointerDown.current = true;
-    circleMatRef.current.color.set('skyblue');
   }, []);
   const handleDragEnd = useCallback(() => {
     pointerDown.current = false;
-    circleMatRef.current.color.set('red');
   }, []);
 
   useXREvent('selectend', handleDragEnd, { handedness: 'right' });
@@ -526,33 +497,32 @@ const VRSliderThumb = ({
   return (
     <>
       <group ref={anchorRef} position={[startX, 0, depth.sm]}>
-        <Sphere ref={markerRef} args={[radius / 4]} material-color={'red'} />
-        {/* @ts-ignore */}
-        <animated.object3D
-          ref={thumbRef}
-          position-x={spring.x}
-          {...bind()}
-          onPointerEnter={hoverEvents.handlePointerEnter}
-          onPointerLeave={hoverEvents.handlePointerLeave}
+        <Interactive
+          onHover={hoverEvents.handlePointerEnter}
+          onBlur={hoverEvents.handlePointerLeave}
+          onSelectStart={onDragStart}
+          // onSelectEnd={handleDragEnd}
+          // onMove={handleDrag}
+          // onSe
         >
-          <Interactive
-            onHover={hoverEvents.handlePointerEnter}
-            onBlur={hoverEvents.handlePointerLeave}
-            onSelectStart={onDragStart}
-            // onSelectEnd={handleDragEnd}
-            // onMove={handleDrag}
-            // onSe
+          {/* @ts-ignore */}
+          <animated.object3D
+            ref={thumbRef}
+            position-x={spring.x}
+            {...bind()}
+            onPointerEnter={hoverEvents.handlePointerEnter}
+            onPointerLeave={hoverEvents.handlePointerLeave}
           >
             <animated.group scale={scale}>
               <group scale={radius}>
                 <Ring args={ringArgs} material-color={borderColor} />
                 <Circle args={circleArgs}>
-                  <meshBasicMaterial ref={circleMatRef} color={color} />
+                  <meshBasicMaterial color={color} />
                 </Circle>
               </group>
             </animated.group>
-          </Interactive>
-        </animated.object3D>
+          </animated.object3D>
+        </Interactive>
       </group>
     </>
   );
@@ -561,13 +531,12 @@ const VRSliderThumb = ({
 type VRSliderIntersectionPlaneProps = {
   width: number;
   height: number;
-  onDrag: () => void;
 };
 const VRSliderIntersectionPlane = forwardRef<
   Mesh,
   VRSliderIntersectionPlaneProps
 >(function VRSliderIntersectionPlane(
-  { width, height, onDrag }: VRSliderIntersectionPlaneProps,
+  { width, height }: VRSliderIntersectionPlaneProps,
   fwdRef
 ) {
   const planeRef = useRef<Mesh>(null!);
@@ -581,7 +550,7 @@ const VRSliderIntersectionPlane = forwardRef<
 
   return (
     <>
-      <Interactive onMove={onDrag}>
+      <Interactive onMove={handleMove}>
         <Plane scale={[width, height, 1]} ref={planeRef}>
           <MeshDiscardMaterial />
           <Edges scale={1} color={'yellow'} />
