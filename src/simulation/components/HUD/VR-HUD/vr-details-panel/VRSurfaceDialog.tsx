@@ -151,7 +151,7 @@ export const VRSurfaceDialog = ({
             {/** Cancel Button. */}
             <object3D position-x={-1.2}>
               <VRHudButton
-                label="Cancel"
+                label="cancel"
                 onClick={close}
                 height={buttonHeight}
               />
@@ -159,7 +159,7 @@ export const VRSurfaceDialog = ({
             {/** Confirm Button. */}
             <object3D position-x={1.1}>
               <VRHudButton
-                label="Confirm"
+                label="confirm"
                 onClick={confirm}
                 height={buttonHeight}
               />
