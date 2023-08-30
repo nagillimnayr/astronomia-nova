@@ -202,10 +202,13 @@ export const VRSlider = ({
         (controller) => controller.inputSource.handedness === 'right'
       );
       if (!rightController) return;
-      markerMatRef.current.color.set('cyan');
 
       const ray = rightController.controller.children[0];
-      if (!(ray instanceof Line)) return;
+      if (!(ray instanceof Line)) {
+        markerMatRef.current.color.set('orange');
+        return;
+      }
+      markerMatRef.current.color.set('hotpink');
       ray.getWorldPosition(_rayWorldPosition);
       ray.getWorldDirection(_rayWorldDirection);
 
@@ -233,6 +236,7 @@ export const VRSlider = ({
     } else {
       // Set raycaster from pointer and camera.
       raycaster.setFromCamera(pointer, camera);
+      markerMatRef.current.color.set('cyan');
     }
     // Get intersection with plane.
     const plane = planeRef.current;
