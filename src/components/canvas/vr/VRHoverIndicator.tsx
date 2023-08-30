@@ -30,7 +30,7 @@ export const VRHoverIndicator = ({
   const isPresenting = useXR(({ isPresenting }) => isPresenting);
 
   const controller = useController(handedness);
-  console.log(`${handedness} controller:`, controller?.uuid);
+  // console.log(`${handedness} controller:`, controller?.uuid);
   const indicatorRef = useRef<Group>(null!);
   const circleRef = useRef<Mesh>(null!);
   const ringRef = useRef<Mesh>(null!);
