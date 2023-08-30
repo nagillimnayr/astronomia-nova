@@ -269,7 +269,12 @@ export const VRSlider = ({
     <>
       <group position={position}>
         <object3D name="anchor" ref={anchorRef} position={[startX, 0, 0]} />
-        <Sphere name="marker" ref={markerRef} args={[thumbRadius * 0.8]}>
+        <Sphere
+          visible={false}
+          name="marker"
+          ref={markerRef}
+          args={[thumbRadius * 0.8]}
+        >
           <meshBasicMaterial ref={markerMatRef} color={'white'} />
         </Sphere>
         <VRSliderTrack
@@ -288,11 +293,9 @@ export const VRSlider = ({
           radius={thumbRadius}
           color={thumbColor}
           borderColor={thumbBorderColor}
-          planeRef={planeRef}
           onDragStart={handleDragStart}
           onDrag={handleDrag}
           onDragEnd={handleDragEnd}
-          setX={setX}
         />
         <VRSliderIntersectionPlane
           ref={planeRef}
@@ -402,18 +405,13 @@ const ringArgs: [number, number, number] = [0.95, 1, 64];
 const circleArgs: [number, number] = [0.95, 64];
 type VRSliderThumbProps = {
   spring: { x: SpringValue<number> };
-  // springRef: SpringRef<{ x: number }>;
   startX: number;
-  // minX: number;
-  // maxX: number;
   radius: number;
   color: ColorRepresentation;
   borderColor: ColorRepresentation;
-  planeRef: MutableRefObject<Mesh>;
   onDragStart: () => void;
   onDrag: () => void;
   onDragEnd: () => void;
-  setX: (value: number) => void;
 };
 const VRSliderThumb = ({
   spring,
@@ -421,67 +419,20 @@ const VRSliderThumb = ({
   radius,
   color,
   borderColor,
-  planeRef,
   onDragStart,
   onDrag,
   onDragEnd,
-  setX: setValue,
 }: VRSliderThumbProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const getThree = useThree(({ get }) => get);
-  const getXR = useXR(({ get }) => get);
-  // const rightController = useController('right');
 
   const thumbRef = useRef<Object3D>(null!);
   const anchorRef = useRef<Group>(null!);
-
-  // const thumbBounds = useMemo(() => new Box3(), []); // Bounding box to restrict the thumb position.
-  // useMemo(() => {
-  //   thumbBounds.set(new Vector3(minX, 0, 0), new Vector3(maxX, 0, 0));
-  // }, []);
 
   // Spring scale on hover.
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered);
   const { scale } = useSpring({ scale: isHovered ? 1.2 : 1 });
-
-  const pointerDown = useRef<boolean>(false);
-
-  const handleDrag = useCallback(() => {
-    if (!pointerDown.current) return;
-    // Check if we're in a VR session.
-    const { camera, raycaster, pointer } = getThree();
-
-    // Set raycaster from pointer and camera.
-    raycaster.setFromCamera(pointer, camera);
-    // Get intersection with plane.
-    const plane = planeRef.current;
-    const prevFirstHit = raycaster.firstHitOnly;
-    raycaster.firstHitOnly = true;
-    const intersections = raycaster.intersectObject(plane);
-    if (intersections.length < 1) {
-      raycaster.firstHitOnly = prevFirstHit;
-      return;
-    }
-    const intersection = intersections[0];
-    if (!intersection) {
-      raycaster.firstHitOnly = prevFirstHit;
-      return;
-    }
-    const point = intersection.point;
-    raycaster.firstHitOnly = prevFirstHit;
-
-    anchorRef.current.worldToLocal(point); // Get in local coords.
-
-    setValue(point.x);
-  }, [getThree, planeRef, setValue]);
-
-  const handleDragStart = useCallback(() => {
-    pointerDown.current = true;
-  }, []);
-  const handleDragEnd = useCallback(() => {
-    pointerDown.current = false;
-  }, []);
 
   const bind = useGesture({
     onDragStart: (state) => {
@@ -513,7 +464,6 @@ const VRSliderThumb = ({
       }
     },
     onDrag: (state) => {
-      handleDrag();
       onDrag();
     },
   });
@@ -525,9 +475,6 @@ const VRSliderThumb = ({
           onHover={hoverEvents.handlePointerEnter}
           onBlur={hoverEvents.handlePointerLeave}
           onSelectStart={onDragStart}
-          // onSelectEnd={handleDragEnd}
-          // onMove={handleDrag}
-          // onSe
         >
           {/* @ts-ignore */}
           <animated.object3D
@@ -574,12 +521,12 @@ const VRSliderIntersectionPlane = forwardRef<
 
   return (
     <>
-      <Interactive onMove={handleMove}>
-        <Plane scale={[width, height, 1]} ref={planeRef}>
-          <MeshDiscardMaterial />
-          <Edges scale={1} color={'yellow'} />
-        </Plane>
-      </Interactive>
+      {/* <Interactive onMove={handleMove}> */}
+      <Plane scale={[width, height, 1]} ref={planeRef}>
+        <MeshDiscardMaterial />
+        {/* <Edges scale={1} color={'yellow'} /> */}
+      </Plane>
+      {/* </Interactive> */}
     </>
   );
 });
