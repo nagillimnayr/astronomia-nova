@@ -190,7 +190,6 @@ export const VRSlider = ({
 
   const isDragging = useRef<boolean>(false);
   const anchorRef = useRef<Object3D>(null!);
-  const arrowRef = useRef<ArrowHelper>(null!);
   const markerRef = useRef<Mesh>(null!);
   const markerMatRef = useRef<MeshBasicMaterial>(null!);
 
@@ -211,40 +210,15 @@ export const VRSlider = ({
       }
       console.log('right controller');
 
-      rightController.controller.add(arrowRef.current);
-      arrowRef.current.setColor('hotpink');
       console.log(rightController.controller);
       const ray = rightController.controller;
-      // if (!(ray instanceof Line)) {
-      //   markerMatRef.current.color.set('orange');
-      //   return;
-      // }
+
       markerMatRef.current.color.set('#00FF40');
       ray.getWorldPosition(_rayWorldPosition);
       ray.getWorldDirection(_rayWorldDirection);
       _rayWorldDirection.multiplyScalar(-1); // Reverse direction.
 
       raycaster.set(_rayWorldPosition, _rayWorldDirection);
-
-      // Get hover state.
-      // const hoverState = getXR().hoverState['right'];
-      // // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      // const intersections = hoverState.values();
-      // let intersection = intersections.next();
-      // let point: Vector3 = null!;
-      // while (intersection && !intersection.done) {
-      //   if (intersection.value.object === planeRef.current) {
-      //     point = intersection.value.point;
-      //     break;
-      //   } else {
-      //     intersection = intersections.next();
-      //   }
-      // }
-      // if (!point) {
-      //   markerMatRef.current.color.set('orange');
-      //   return;
-      // }
-      // _point.copy(point);
     } else {
       // Set raycaster from pointer and camera.
       raycaster.setFromCamera(pointer, camera);
@@ -293,7 +267,6 @@ export const VRSlider = ({
 
   return (
     <>
-      <arrowHelper ref={arrowRef} args={[Z_AXIS_NEG, ORIGIN, 2]} />
       <group position={position}>
         <object3D name="anchor" ref={anchorRef} position={[startX, 0, 0]} />
         <Sphere name="marker" ref={markerRef} args={[thumbRadius * 0.8]}>
