@@ -45,6 +45,7 @@ import {
 import {
   Interactive,
   useController,
+  useInteraction,
   useXR,
   useXREvent,
   type XRInteractionEvent,
@@ -205,10 +206,8 @@ export const VRSlider = ({
         (controller) => controller.inputSource.handedness === 'right'
       );
       if (!rightController) {
-        console.log('right controller');
         return;
       }
-      console.log('right controller');
 
       console.log(rightController.controller);
       const ray = rightController.controller;
@@ -247,7 +246,11 @@ export const VRSlider = ({
     markerRef.current.position.copy(point);
   }, [getThree, getXR, setX]);
 
-  const handleDragStart = useCallback(() => {
+  const handleDragStart = useCallback((event?: XRInteractionEvent) => {
+    if (event) {
+      // Only trigger if select was from right controller.
+      if (event.target.inputSource.handedness !== 'right') return;
+    }
     isDragging.current = true;
     markerMatRef.current.color.set('skyblue');
   }, []);
@@ -372,9 +375,7 @@ const VRSliderTrack = ({
     <>
       <group>
         {/** Track. */}
-        <Interactive
-        // onSelect={handleClick}
-        >
+        <Interactive onSelect={handleClick}>
           <Plane
             name="slider-track"
             ref={trackRef}
@@ -436,7 +437,6 @@ const VRSliderThumb = ({
 
   const bind = useGesture({
     onDragStart: (state) => {
-      // handleDragStart();
       onDragStart();
 
       cameraActor.send({ type: 'LOCK_CONTROLS' });
@@ -451,7 +451,6 @@ const VRSliderThumb = ({
       }
     },
     onDragEnd: () => {
-      // handleDragEnd();
       onDragEnd();
       cameraActor.send({ type: 'UNLOCK_CONTROLS' });
       const controls = getThree().controls as CameraControls;
