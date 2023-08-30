@@ -5,6 +5,7 @@ import {
   MeshDiscardMaterial,
   Plane,
   Ring,
+  Sphere,
   Wireframe,
   useCursor,
   useHelper,
@@ -37,6 +38,7 @@ import {
   Interactive,
   useController,
   useXR,
+  useXREvent,
   type XRInteractionEvent,
 } from '@react-three/xr';
 import {
@@ -406,6 +408,7 @@ const VRSliderThumb = ({
   const { scale } = useSpring({ scale: isHovered ? 1.2 : 1 });
 
   const pointerDown = useRef<boolean>(false);
+  const markerRef = useRef<Mesh>(null!);
 
   const handleDrag = useCallback(() => {
     if (!pointerDown.current) return;
@@ -447,6 +450,7 @@ const VRSliderThumb = ({
     anchorRef.current.worldToLocal(point); // Get in local coords.
 
     setValue(point.x);
+    markerRef.current.position.copy(point);
 
     raycaster.firstHitOnly = prevFirstHit;
   }, [getThree, getXR, planeRef, setValue]);
@@ -459,6 +463,8 @@ const VRSliderThumb = ({
     pointerDown.current = false;
     circleMatRef.current.color.set('red');
   }, []);
+
+  useXREvent('selectend', handleDragEnd, { handedness: 'right' });
 
   const bind = useGesture({
     onDragStart: (state) => {
@@ -495,6 +501,7 @@ const VRSliderThumb = ({
   return (
     <>
       <group ref={anchorRef} position={[startX, 0, depth.sm]}>
+        <Sphere ref={markerRef} args={[radius / 4]} material-color={'red'} />
         {/* @ts-ignore */}
         <animated.object3D
           ref={thumbRef}
