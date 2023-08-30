@@ -48,6 +48,7 @@ import {
   useInteraction,
   useXR,
   useXREvent,
+  XRController,
   type XRInteractionEvent,
 } from '@react-three/xr';
 import {
@@ -191,6 +192,7 @@ export const VRSlider = ({
 
   const isDragging = useRef<boolean>(false);
   const anchorRef = useRef<Object3D>(null!);
+  const controllerRef = useRef<XRController>(null!);
   const markerRef = useRef<Mesh>(null!);
   const markerMatRef = useRef<MeshBasicMaterial>(null!);
 
@@ -202,15 +204,13 @@ export const VRSlider = ({
     // Check if we're in a VR session.
     const { isPresenting, controllers } = getXR();
     if (isPresenting) {
-      const rightController = controllers.find(
-        (controller) => controller.inputSource.handedness === 'right'
-      );
-      if (!rightController) {
+      const controller = controllerRef.current;
+
+      if (!controller) {
         return;
       }
 
-      console.log(rightController.controller);
-      const ray = rightController.controller;
+      const ray = controller.controller;
 
       markerMatRef.current.color.set('#00FF40');
       ray.getWorldPosition(_rayWorldPosition);
@@ -248,8 +248,8 @@ export const VRSlider = ({
 
   const handleDragStart = useCallback((event?: XRInteractionEvent) => {
     if (event) {
-      // Only trigger if select was from right controller.
-      if (event.target.inputSource.handedness !== 'right') return;
+      //If triggered by XR controller, keep track of which controller started the drag.
+      controllerRef.current = event.target;
     }
     isDragging.current = true;
     markerMatRef.current.color.set('skyblue');
