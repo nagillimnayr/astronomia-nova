@@ -259,7 +259,12 @@ export const VRSlider = ({
     markerMatRef.current.color.set('red');
   }, []);
 
-  useXREvent('selectend', handleDragEnd, { handedness: 'right' });
+  useXREvent('selectend', (event) => {
+    // End drag if controller ended select.
+    if (event.target === controllerRef.current) {
+      handleDragEnd();
+    }
+  });
 
   useFrame(() => {
     handleDrag();
