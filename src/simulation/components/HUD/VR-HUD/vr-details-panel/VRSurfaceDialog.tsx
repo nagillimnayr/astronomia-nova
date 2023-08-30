@@ -1,4 +1,4 @@
-import { Vector3Tuple } from 'three';
+import { Group, Object3D, Vector3, Vector3Tuple } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useActor, useSelector } from '@xstate/react';
 import { useCallback, useEffect, useRef } from 'react';
@@ -17,15 +17,29 @@ import { VRLabel } from '../vr-ui-components/VRLabel';
 import { surfaceMachine } from '@/state/xstate/surface-machine/surface-machine';
 import { type ContextFrom } from 'xstate';
 import { capitalize } from 'lodash';
+import { useFrame } from '@react-three/fiber';
+import KeplerBody from '@/simulation/classes/kepler-body';
+import { DefaultOpen } from '../../DetailsPanel/surface-view-dialog/stories/SurfaceViewButton.stories';
+
+const _camWorldPos = new Vector3();
 
 type VRSurfaceDialogProps = {
   position?: Vector3Tuple;
+  defaultOpen?: boolean;
 };
-export const VRSurfaceDialog = ({ position }: VRSurfaceDialogProps) => {
+export const VRSurfaceDialog = ({
+  position,
+  defaultOpen = false,
+}: VRSurfaceDialogProps) => {
   const { uiActor, cameraActor, surfaceActor } = MachineContext.useSelector(
     ({ context }) => context
   );
   const { surfaceDialogActor } = useSelector(uiActor, ({ context }) => context);
+
+  const focusTarget = useSelector(
+    cameraActor,
+    ({ context }) => context.focusTarget
+  );
 
   const close = useCallback(() => {
     surfaceDialogActor.send({ type: 'CLOSE' });
@@ -49,54 +63,106 @@ export const VRSurfaceDialog = ({ position }: VRSurfaceDialogProps) => {
     [surfaceActor]
   );
 
+  const anchorRef = useRef<Object3D>(null!);
+  const containerRef = useRef<Group>(null!);
+
+  // Subscribe to actor's state.
+  const isOpen =
+    useSelector(surfaceDialogActor, (state) => state.matches('open')) ||
+    defaultOpen;
+
+  const visible = (Boolean(focusTarget) && isOpen) || defaultOpen;
+
   const panelWidth = 6;
   const panelHeight = 4;
   const sliderWidth = 4;
   const buttonHeight = 0.65;
+
+  useEffect(() => {
+    if (!(focusTarget instanceof KeplerBody)) return;
+    const isClosed = surfaceDialogActor.getSnapshot()!.matches('closed');
+    if (isClosed) return;
+
+    const { meanRadius } = focusTarget;
+    const anchor = anchorRef.current;
+    const container = containerRef.current;
+
+    // Attach anchor to the focus target.
+    focusTarget.add(anchor);
+
+    // Scale and position the container relative to the meanRadius
+    const scale = meanRadius / 2;
+    container.scale.setScalar(scale);
+    const yPos = -meanRadius - scale * panelHeight;
+    container.position.set(0, yPos, 0);
+  }, [focusTarget, surfaceDialogActor]);
+
+  useFrame(({ camera }, delta, frame) => {
+    const isClosed = surfaceDialogActor.getSnapshot()!.matches('closed');
+    if (isClosed) return;
+    const anchor = anchorRef.current;
+    const { controls } = cameraActor.getSnapshot()!.context;
+    if (!controls) return;
+
+    camera.getWorldPosition(_camWorldPos);
+    controls.getCameraWorldUp(anchor.up);
+    anchor.lookAt(_camWorldPos); // Look at camera.
+  });
+
   return (
     <>
-      <animated.group position={position}>
-        <VRPanel width={panelWidth} height={panelHeight} />
+      <object3D name="surface-dialog-anchor" ref={anchorRef}>
+        <animated.group
+          visible={visible}
+          ref={containerRef}
+          position={position}
+        >
+          <VRPanel width={panelWidth} height={panelHeight} />
 
-        {/** Sliders. */}
-        <group position-y={0.5} position-z={depth.xs}>
-          {/** Latitude Slider. */}
-          <object3D position-y={0.55}>
-            <CoordinateSlider
-              width={sliderWidth}
-              target={'latitude'}
-              onValueChange={handleLatitudeChange}
-              min={MIN_LATITUDE}
-              max={MAX_LATITUDE}
-            />
-          </object3D>
-          {/** Longitude Slider. */}
-          <object3D position-y={-0.55}>
-            <CoordinateSlider
-              width={sliderWidth}
-              target={'longitude'}
-              onValueChange={handleLongitudeChange}
-              min={MIN_LONGITUDE}
-              max={MAX_LONGITUDE}
-            />
-          </object3D>
-        </group>
+          {/** Sliders. */}
+          <group position-y={0.5} position-z={depth.xs}>
+            {/** Latitude Slider. */}
+            <object3D position-y={0.55}>
+              <CoordinateSlider
+                width={sliderWidth}
+                target={'latitude'}
+                onValueChange={handleLatitudeChange}
+                min={MIN_LATITUDE}
+                max={MAX_LATITUDE}
+              />
+            </object3D>
+            {/** Longitude Slider. */}
+            <object3D position-y={-0.55}>
+              <CoordinateSlider
+                width={sliderWidth}
+                target={'longitude'}
+                onValueChange={handleLongitudeChange}
+                min={MIN_LONGITUDE}
+                max={MAX_LONGITUDE}
+              />
+            </object3D>
+          </group>
 
-        <group position-y={-1.25} position-z={depth.xs}>
-          {/** Cancel Button. */}
-          <object3D position-x={-1.2}>
-            <VRHudButton label="Cancel" onClick={close} height={buttonHeight} />
-          </object3D>
-          {/** Confirm Button. */}
-          <object3D position-x={1.1}>
-            <VRHudButton
-              label="Confirm"
-              onClick={confirm}
-              height={buttonHeight}
-            />
-          </object3D>
-        </group>
-      </animated.group>
+          <group position-y={-1.25} position-z={depth.xs}>
+            {/** Cancel Button. */}
+            <object3D position-x={-1.2}>
+              <VRHudButton
+                label="Cancel"
+                onClick={close}
+                height={buttonHeight}
+              />
+            </object3D>
+            {/** Confirm Button. */}
+            <object3D position-x={1.1}>
+              <VRHudButton
+                label="Confirm"
+                onClick={confirm}
+                height={buttonHeight}
+              />
+            </object3D>
+          </group>
+        </animated.group>
+      </object3D>
     </>
   );
 };
