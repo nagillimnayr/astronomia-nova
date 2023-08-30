@@ -30,6 +30,7 @@ import {
   MeshBasicMaterial,
   Box3,
   BoxHelper,
+  Line,
 } from 'three';
 import { depth } from '../vr-hud-constants';
 import useHover from '@/hooks/useHover';
@@ -194,8 +195,12 @@ export const VRSlider = ({
       );
       if (!rightController) return;
       // circleMatRef.current.color.set('cyan');
-      rightController.controller.getWorldPosition(_rayWorldPosition);
-      rightController.controller.getWorldDirection(_rayWorldDirection);
+
+      const ray = rightController.controller.children[0];
+      if (!(ray instanceof Line)) return;
+
+      ray.getWorldPosition(_rayWorldPosition);
+      ray.getWorldDirection(_rayWorldDirection);
 
       // Set raycaster from XR controller ray.
       raycaster.set(_rayWorldPosition, _rayWorldDirection);
@@ -235,6 +240,8 @@ export const VRSlider = ({
     // circleMatRef.current.color.set('red');
   }, []);
 
+  useXREvent('selectend', handleDragEnd, { handedness: 'right' });
+
   // Calculate x position of incrementer buttons.
   const incrementerPos = 1.25 * height + halfWidth + thumbRadius;
 
@@ -262,9 +269,10 @@ export const VRSlider = ({
           setX={setX}
         />
         <VRSliderIntersectionPlane
+          ref={planeRef}
           width={intersectionPlaneWidth}
           height={intersectionPlaneHeight}
-          ref={planeRef}
+          onDrag={handleDrag}
         />
         {/** Conditionally render increment buttons. */}
         {incrementers && (
@@ -422,8 +430,12 @@ const VRSliderThumb = ({
       );
       if (!rightController) return;
       circleMatRef.current.color.set('cyan');
-      rightController.controller.getWorldPosition(_rayWorldPosition);
-      rightController.controller.getWorldDirection(_rayWorldDirection);
+
+      const ray = rightController.controller.children[0];
+      if (!(ray instanceof Line)) return;
+
+      ray.getWorldPosition(_rayWorldPosition);
+      ray.getWorldDirection(_rayWorldDirection);
 
       // Set raycaster from XR controller ray.
       raycaster.set(_rayWorldPosition, _rayWorldDirection);
@@ -535,6 +547,7 @@ const VRSliderThumb = ({
 type VRSliderIntersectionPlaneProps = {
   width: number;
   height: number;
+  onDrag: () => void;
 };
 const VRSliderIntersectionPlane = forwardRef<
   Mesh,
@@ -546,10 +559,14 @@ const VRSliderIntersectionPlane = forwardRef<
   const planeRef = useRef<Mesh>(null!);
 
   useImperativeHandle(fwdRef, () => planeRef.current);
+  const handleMove = useCallback(() => {
+    //
+    return;
+  }, []);
 
   return (
     <>
-      <Interactive>
+      <Interactive onMove={handleMove}>
         <Plane scale={[width, height, 1]} ref={planeRef}>
           <MeshDiscardMaterial />
           <Edges scale={1} color={'yellow'} />
