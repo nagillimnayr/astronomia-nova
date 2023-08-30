@@ -1,6 +1,4 @@
-import { RootContainer, Container, Text } from '@coconut-xr/koestlich';
-import { Glass, IconButton, List, ListItem } from '@coconut-xr/apfel-kruemel';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useMemo } from 'react';
 import {
   GOLDEN_RATIO,
   border,
@@ -8,45 +6,53 @@ import {
   colors,
   text,
 } from '../vr-hud-constants';
-import { ColorRepresentation } from 'three';
-
-// Type annotations are needed so that eslint/typescript doesn't flag a bunch of errors.
-type Dimension = number | 'auto' | `${number}%` | undefined;
-type Variant = {
-  width: Dimension;
-  height: Dimension;
-};
-const horizontal: Variant = {
-  width: 'auto',
-  height: 4,
-};
-const vertical: Variant = {
-  width: 4,
-  height: 'auto',
-};
+import { ColorRepresentation, MeshBasicMaterial, Vector3Tuple } from 'three';
+import { Circle, Plane } from '@react-three/drei';
+import { PI, PI_OVER_TWO } from '@/simulation/utils/constants';
 
 type VRSeparatorProps = {
-  direction?: 'horizontal' | 'vertical';
+  // direction?: 'horizontal' | 'vertical';
+  position?: Vector3Tuple;
+  height: number;
+  width: number;
   color?: ColorRepresentation;
-  opacity?: number;
+  // opacity?: number;
 };
 export const VRSeparator = ({
-  direction = 'horizontal',
+  // direction = 'horizontal',
+  position,
+  height,
+  width,
   color = colors.border,
-  opacity = 1,
-}: VRSeparatorProps) => {
-  const { height, width } = direction === 'horizontal' ? horizontal : vertical;
+}: // opacity = 1,
+VRSeparatorProps) => {
+  const material = useMemo(() => {
+    return new MeshBasicMaterial();
+  }, []);
+  useEffect(() => {
+    material.color.set(color);
+  }, [color, material.color]);
+
+  const rectWidth = width - height;
+  const halfWidth = rectWidth / 2;
+  const halfHeight = height / 2;
   return (
     <>
-      <Container
-        backgroundColor={color}
-        backgroundOpacity={opacity}
-        borderRadius={1000}
-        border={0}
-        borderOpacity={0}
-        height={height}
-        width={width}
-      />
+      <object3D position={position}>
+        <Plane scale-x={rectWidth} scale-y={height} material={material}></Plane>
+        <Circle
+          args={[1, 32, PI_OVER_TWO, PI]}
+          position-x={-halfWidth}
+          scale={halfHeight}
+          material={material}
+        />
+        <Circle
+          args={[1, 32, 3 * PI_OVER_TWO, PI]}
+          position-x={halfWidth}
+          scale={halfHeight}
+          material={material}
+        />
+      </object3D>
     </>
   );
 };
