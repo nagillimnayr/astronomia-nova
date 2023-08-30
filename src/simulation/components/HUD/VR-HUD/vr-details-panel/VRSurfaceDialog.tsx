@@ -79,13 +79,15 @@ export const VRSurfaceDialog = ({
   const buttonHeight = 0.65;
 
   useEffect(() => {
-    if (!(focusTarget instanceof KeplerBody)) return;
-    const isClosed = surfaceDialogActor.getSnapshot()!.matches('closed');
-    if (isClosed) return;
-
-    const { meanRadius } = focusTarget;
+    // const isClosed = surfaceDialogActor.getSnapshot()!.matches('closed');
     const anchor = anchorRef.current;
     const container = containerRef.current;
+    if (!isOpen || !(focusTarget instanceof KeplerBody)) {
+      anchor.removeFromParent();
+      return;
+    }
+
+    const { meanRadius } = focusTarget;
 
     // Attach anchor to the focus target.
     focusTarget.add(anchor);
@@ -93,9 +95,9 @@ export const VRSurfaceDialog = ({
     // Scale and position the container relative to the meanRadius
     const scale = meanRadius / 2;
     container.scale.setScalar(scale);
-    const yPos = -meanRadius - scale * panelHeight;
-    container.position.set(0, yPos, 0);
-  }, [focusTarget, surfaceDialogActor]);
+    const xPos = -meanRadius - scale * (panelWidth * 0.75);
+    container.position.set(xPos, 0, 0);
+  }, [focusTarget, isOpen, surfaceDialogActor]);
 
   useFrame(({ camera }, delta, frame) => {
     const isClosed = surfaceDialogActor.getSnapshot()!.matches('closed');
