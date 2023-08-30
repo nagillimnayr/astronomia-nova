@@ -9,32 +9,32 @@ import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 import { VRSettingsMenu } from '../vr-settings-menu/VRSettingsMenu';
 import { VRSettingsButton } from '../vr-settings-menu/VRSettingsButton';
 
-const meta: Meta<typeof VRSettingsMenu> = {
+type Props = React.ComponentProps<typeof VRSettingsMenu> & { size: number };
+const meta: Meta<Props> = {
   title: 'VR-UI/VRSettingsMenu',
   component: VRSettingsMenu,
   decorators: [(storyFn) => <VRCanvasDecorator>{storyFn()}</VRCanvasDecorator>],
-};
 
-export default meta;
-type Story = StoryObj<typeof VRSettingsMenu>;
-
-export const Default: Story = {
-  render: () => {
-    return (
-      <>
-        <VRSettingsMenuStory />
-      </>
-    );
+  argTypes: {
+    size: { control: { type: 'range', min: 0.01, max: 1, step: 0.001 } },
   },
 };
 
-const VRSettingsMenuStory = () => {
-  return (
-    <>
-      <PerspectiveCamera makeDefault position={[0, 0, 2.5]} />
-      <CameraControls makeDefault />
-      {/* <VRSettingsButton position={[1, 1, 0]} />
-      <VRSettingsMenu defaultOpen /> */}
-    </>
-  );
+export default meta;
+type Story = StoryObj<Props>;
+
+export const Default: Story = {
+  render: (args) => {
+    return (
+      <>
+        <PerspectiveCamera makeDefault position={[0, 0, 2.5]} />
+        <CameraControls makeDefault />
+        <VRSettingsButton position={[3, 2, 0]} size={args.size} />
+        <VRSettingsMenu defaultOpen {...args} />
+      </>
+    );
+  },
+  args: {
+    size: 0.1,
+  },
 };
