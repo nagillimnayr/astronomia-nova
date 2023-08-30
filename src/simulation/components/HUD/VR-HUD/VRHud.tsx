@@ -11,6 +11,7 @@ import { Hud, useCamera, useHelper } from '@react-three/drei';
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { VRSettingsButton } from './vr-settings-menu/VRSettingsButton';
 import { METER } from '@/simulation/utils/constants';
+import { VRSurfaceDialog } from './vr-details-panel/VRSurfaceDialog';
 
 type VRHudProps = {
   position?: Vector3Tuple;
@@ -58,6 +59,9 @@ export const VRHud = ({
           </>
         )}
       </group>
+      <>
+        <VRSurfaceDialog />
+      </>
     </>
   );
 };
