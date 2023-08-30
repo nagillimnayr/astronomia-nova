@@ -92,6 +92,7 @@ export const VRLabel = forwardRef<TextMesh, VRLabelProps>(function VRLabel(
             onSync={onSync}
             anchorX={anchorX}
             anchorY={anchorY}
+            outlineColor={'black'}
           >
             {label}
           </Text>
