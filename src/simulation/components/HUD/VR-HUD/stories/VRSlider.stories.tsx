@@ -49,7 +49,7 @@ type Story = StoryObj<typeof VRSlider>;
 
 const Default: Story = {
   args: {
-    position: [0, -0.15, 0],
+    position: [0, 0, 0],
     height: 0.1,
     width: 2,
     value: 0,
@@ -61,6 +61,7 @@ const Default: Story = {
     fillColor: 'white',
     thumbColor: 'white',
     thumbBorderColor: colors.border,
+    incrementers: false,
   },
   render: (args) => {
     return (
@@ -78,11 +79,18 @@ const VRSliderStory = ({ ...args }: VRSliderProps) => {
   }, []);
   return (
     <>
+      <PerspectiveCamera makeDefault position={[0, 0, 1.5]} />
       <CameraControls makeDefault />
-      <Text position={[0, 0.15, 0]} fontSize={0.35}>
-        {val.toLocaleString()}
-      </Text>
-      <VRSlider {...args} onValueChange={handleValueChange} />
+      <group position={args.position}>
+        <Text position={[0, 0.3, 0]} fontSize={0.35}>
+          {val.toLocaleString()}
+        </Text>
+        <VRSlider
+          {...args}
+          position={[0, 0, 0]}
+          onValueChange={handleValueChange}
+        />
+      </group>
     </>
   );
 };
