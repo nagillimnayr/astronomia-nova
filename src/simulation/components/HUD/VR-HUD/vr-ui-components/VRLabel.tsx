@@ -1,4 +1,5 @@
 import {
+  Edges,
   MeshDiscardMaterial,
   Plane,
   Text,
@@ -58,14 +59,6 @@ export const VRLabel = forwardRef<TextMesh, VRLabelProps>(function VRLabel(
   const troikaRef = useRef<TextMesh>(null!);
   const planeRef = useRef<Mesh>(null!);
 
-  const boxHelper = useHelper(containerRef, BoxHelper);
-
-  useEffect(() => {
-    if (boxHelper.current) {
-      boxHelper.current.visible = debug;
-    }
-  }, [boxHelper, debug]);
-
   useImperativeHandle(fwdRef, () => troikaRef.current);
 
   const adjustedSize = fontSize * HEIGHT_ADJUST;
@@ -79,6 +72,7 @@ export const VRLabel = forwardRef<TextMesh, VRLabelProps>(function VRLabel(
           position={[0, 0, 0]}
         >
           <MeshDiscardMaterial />
+          <Edges visible={debug} scale={1} color={'yellow'} />
         </Plane>
 
         <object3D
