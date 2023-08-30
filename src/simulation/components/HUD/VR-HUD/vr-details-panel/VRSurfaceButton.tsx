@@ -55,10 +55,12 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
     ({ context }) => context.selected
   );
 
+  const inSpace = useSelector(cameraActor, (state) => state.matches('space'));
+
   // Only open if a body is selected.
   const isOpen = Boolean(selected);
 
-  const handleClick = useCallback(
+  const handleSurfaceClick = useCallback(
     (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
       if ('stopPropagation' in event) {
         event.stopPropagation();
@@ -87,6 +89,23 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
     },
     [cameraActor, selectionActor, setHovered, surfaceDialogActor]
   );
+
+  const handleSpaceClick = useCallback(
+    (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
+      if ('stopPropagation' in event) {
+        event.stopPropagation();
+        // Stopping propagation will call onPointerLeave, so we need to reset isHovered.
+        setHovered(true);
+      }
+      // Set focus target to selected.
+      cameraActor.send({
+        type: 'TO_SPACE',
+      });
+    },
+    [cameraActor, setHovered]
+  );
+
+  const handleClick = inSpace ? handleSurfaceClick : handleSpaceClick;
 
   // const width = 2;
   const height = width / 2;
@@ -134,7 +153,7 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
                 anchorY={'middle'}
                 textAlign={'center'}
               >
-                {'Surface'}
+                {inSpace ? 'Surface' : 'Space'}
               </Text>
 
               {/** Icon. */}
