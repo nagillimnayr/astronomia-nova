@@ -83,7 +83,9 @@ export const VRSurfaceDialog = ({
     const anchor = anchorRef.current;
     const container = containerRef.current;
     if (!isOpen || !(focusTarget instanceof KeplerBody)) {
-      anchor.removeFromParent();
+      if (!defaultOpen) {
+        anchor.removeFromParent();
+      }
       return;
     }
 
