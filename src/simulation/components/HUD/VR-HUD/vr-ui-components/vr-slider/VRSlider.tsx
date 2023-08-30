@@ -325,13 +325,13 @@ export const VRSlider = ({
             {/** Decrement button. */}
             <VRSliderIncrementer
               decrement
-              position={[-incrementerPos, 0, depth.xs]}
+              position={[-incrementerPos, 0, depth.xxs]}
               height={height}
               incrementValue={incrementValue}
             />
             {/** Increment button. */}
             <VRSliderIncrementer
-              position={[incrementerPos, 0, depth.xs]}
+              position={[incrementerPos, 0, depth.xxs]}
               height={height}
               incrementValue={incrementValue}
             />
@@ -396,7 +396,7 @@ const VRSliderTrack = ({
         </Interactive>
 
         {/** Filled Track. */}
-        <object3D ref={anchorRef} position={[startX, 0, depth.xs]}>
+        <object3D ref={anchorRef} position={[startX, 0, depth.xxs / 2]}>
           {/** Position plane such that its left side is at the origin of the parent object. Scaling the parent object then will keep one side at the position of the parent objects origin. */}
           <animated.object3D
             scale-y={height}
@@ -480,7 +480,7 @@ const VRSliderThumb = ({
 
   return (
     <>
-      <group ref={anchorRef} position={[startX, 0, depth.sm]}>
+      <group ref={anchorRef} position={[startX, 0, depth.xxs]}>
         <Interactive
           onHover={handleHover}
           onBlur={handleHoverEnd}
