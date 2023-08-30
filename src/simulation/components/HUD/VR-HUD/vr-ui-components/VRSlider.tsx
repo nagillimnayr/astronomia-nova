@@ -193,40 +193,69 @@ export const VRSlider = ({
   const handleDrag = useCallback(() => {
     if (!isDragging.current) return;
 
+    const { camera, raycaster, pointer } = getThree();
+
     // Check if we're in a VR session.
     const { isPresenting, controllers } = getXR();
-    if (!isPresenting) return;
-    const rightController = controllers.find(
-      (controller) => controller.inputSource.handedness === 'right'
-    );
-    if (!rightController) return;
-    markerMatRef.current.color.set('cyan');
+    if (isPresenting) {
+      const rightController = controllers.find(
+        (controller) => controller.inputSource.handedness === 'right'
+      );
+      if (!rightController) return;
+      markerMatRef.current.color.set('cyan');
 
-    // Get hover state.
-    const hoverState = getXR().hoverState['right'];
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const intersections = hoverState.values();
-    let intersection = intersections.next();
-    let point: Vector3 = null!;
-    while (intersection && !intersection.done) {
-      if (intersection.value.object === planeRef.current) {
-        point = intersection.value.point;
-        break;
-      } else {
-        intersection = intersections.next();
-      }
+      const ray = rightController.controller.children[0];
+      if (!(ray instanceof Line)) return;
+      ray.getWorldPosition(_rayWorldPosition);
+      ray.getWorldDirection(_rayWorldDirection);
+
+      raycaster.set(_rayWorldPosition, _rayWorldDirection);
+
+      // Get hover state.
+      // const hoverState = getXR().hoverState['right'];
+      // // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // const intersections = hoverState.values();
+      // let intersection = intersections.next();
+      // let point: Vector3 = null!;
+      // while (intersection && !intersection.done) {
+      //   if (intersection.value.object === planeRef.current) {
+      //     point = intersection.value.point;
+      //     break;
+      //   } else {
+      //     intersection = intersections.next();
+      //   }
+      // }
+      // if (!point) {
+      //   markerMatRef.current.color.set('orange');
+      //   return;
+      // }
+      // _point.copy(point);
+    } else {
+      // Set raycaster from pointer and camera.
+      raycaster.setFromCamera(pointer, camera);
     }
-    if (!point) {
-      markerMatRef.current.color.set('orange');
+    // Get intersection with plane.
+    const plane = planeRef.current;
+    const prevFirstHit = raycaster.firstHitOnly;
+    raycaster.firstHitOnly = true;
+    const intersections = raycaster.intersectObject(plane);
+    if (intersections.length < 1) {
+      raycaster.firstHitOnly = prevFirstHit;
       return;
     }
-    _point.copy(point);
+    const intersection = intersections[0];
+    if (!intersection) {
+      raycaster.firstHitOnly = prevFirstHit;
+      return;
+    }
+    const point = intersection.point;
+    raycaster.firstHitOnly = prevFirstHit;
 
-    anchorRef.current.worldToLocal(_point); // Get in local coords.
+    anchorRef.current.worldToLocal(point); // Get in local coords.
 
-    setX(_point.x);
-    markerRef.current.position.copy(_point);
-  }, [getXR, setX]);
+    setX(point.x);
+    markerRef.current.position.copy(point);
+  }, [getThree, getXR, setX]);
 
   const handleDragStart = useCallback(() => {
     isDragging.current = true;
@@ -271,6 +300,8 @@ export const VRSlider = ({
           borderColor={thumbBorderColor}
           planeRef={planeRef}
           onDragStart={handleDragStart}
+          onDrag={handleDrag}
+          onDragEnd={handleDragEnd}
           setX={setX}
         />
         <VRSliderIntersectionPlane
@@ -390,6 +421,8 @@ type VRSliderThumbProps = {
   borderColor: ColorRepresentation;
   planeRef: MutableRefObject<Mesh>;
   onDragStart: () => void;
+  onDrag: () => void;
+  onDragEnd: () => void;
   setX: (value: number) => void;
 };
 const VRSliderThumb = ({
@@ -400,6 +433,8 @@ const VRSliderThumb = ({
   borderColor,
   planeRef,
   onDragStart,
+  onDrag,
+  onDragEnd,
   setX: setValue,
 }: VRSliderThumbProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
@@ -421,7 +456,6 @@ const VRSliderThumb = ({
   const { scale } = useSpring({ scale: isHovered ? 1.2 : 1 });
 
   const pointerDown = useRef<boolean>(false);
-  const markerRef = useRef<Mesh>(null!);
 
   const handleDrag = useCallback(() => {
     if (!pointerDown.current) return;
@@ -450,8 +484,7 @@ const VRSliderThumb = ({
     anchorRef.current.worldToLocal(point); // Get in local coords.
 
     setValue(point.x);
-    markerRef.current.position.copy(_point);
-  }, [getThree, getXR, planeRef, setValue]);
+  }, [getThree, planeRef, setValue]);
 
   const handleDragStart = useCallback(() => {
     pointerDown.current = true;
@@ -460,11 +493,10 @@ const VRSliderThumb = ({
     pointerDown.current = false;
   }, []);
 
-  useXREvent('selectend', handleDragEnd, { handedness: 'right' });
-
   const bind = useGesture({
     onDragStart: (state) => {
-      handleDragStart();
+      // handleDragStart();
+      onDragStart();
 
       cameraActor.send({ type: 'LOCK_CONTROLS' });
 
@@ -478,7 +510,8 @@ const VRSliderThumb = ({
       }
     },
     onDragEnd: () => {
-      handleDragEnd();
+      // handleDragEnd();
+      onDragEnd();
       cameraActor.send({ type: 'UNLOCK_CONTROLS' });
       const controls = getThree().controls as CameraControls;
       if (
@@ -491,6 +524,7 @@ const VRSliderThumb = ({
     },
     onDrag: (state) => {
       handleDrag();
+      onDrag();
     },
   });
 
