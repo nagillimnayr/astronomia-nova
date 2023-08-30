@@ -266,6 +266,7 @@ export const VRSlider = ({
           color={thumbColor}
           borderColor={thumbBorderColor}
           planeRef={planeRef}
+          onDragStart={handleDragStart}
           setX={setX}
         />
         <VRSliderIntersectionPlane
@@ -385,6 +386,7 @@ type VRSliderThumbProps = {
   color: ColorRepresentation;
   borderColor: ColorRepresentation;
   planeRef: MutableRefObject<Mesh>;
+  onDragStart: () => void;
   setX: (value: number) => void;
 };
 const VRSliderThumb = ({
@@ -394,6 +396,7 @@ const VRSliderThumb = ({
   color,
   borderColor,
   planeRef,
+  onDragStart,
   setX: setValue,
 }: VRSliderThumbProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
@@ -535,9 +538,10 @@ const VRSliderThumb = ({
           <Interactive
             onHover={hoverEvents.handlePointerEnter}
             onBlur={hoverEvents.handlePointerLeave}
-            onSelectStart={handleDragStart}
-            onSelectEnd={handleDragEnd}
-            onMove={handleDrag}
+            onSelectStart={onDragStart}
+            // onSelectEnd={handleDragEnd}
+            // onMove={handleDrag}
+            // onSe
           >
             <animated.group scale={scale}>
               <group scale={radius}>
