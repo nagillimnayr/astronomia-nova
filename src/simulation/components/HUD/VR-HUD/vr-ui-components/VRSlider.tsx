@@ -567,12 +567,13 @@ const VRSliderIntersectionPlane = forwardRef<
   Mesh,
   VRSliderIntersectionPlaneProps
 >(function VRSliderIntersectionPlane(
-  { width, height }: VRSliderIntersectionPlaneProps,
+  { width, height, onDrag }: VRSliderIntersectionPlaneProps,
   fwdRef
 ) {
   const planeRef = useRef<Mesh>(null!);
 
   useImperativeHandle(fwdRef, () => planeRef.current);
+
   const handleMove = useCallback(() => {
     //
     return;
@@ -580,7 +581,7 @@ const VRSliderIntersectionPlane = forwardRef<
 
   return (
     <>
-      <Interactive onMove={handleMove}>
+      <Interactive onMove={onDrag}>
         <Plane scale={[width, height, 1]} ref={planeRef}>
           <MeshDiscardMaterial />
           <Edges scale={1} color={'yellow'} />
