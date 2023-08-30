@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
 import { CameraControls, PerspectiveCamera, Text } from '@react-three/drei';
-import { VRSlider, VRSliderProps } from '../vr-ui-components/VRSlider';
+import {
+  VRSlider,
+  VRSliderProps,
+} from '../vr-ui-components/vr-slider/VRSlider';
 import { colors } from '../vr-hud-constants';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { Object3D, Spherical, Vector3Tuple } from 'three';
@@ -75,7 +78,7 @@ const VRSliderStory = ({ ...args }: VRSliderProps) => {
   }, []);
   return (
     <>
-      <KeyboardCamControls distance={2} />
+      <CameraControls makeDefault />
       <Text position={[0, 0.15, 0]} fontSize={0.35}>
         {val.toLocaleString()}
       </Text>
