@@ -2,9 +2,10 @@ import {
   MeshDiscardMaterial,
   Plane,
   Text,
+  useHelper,
   // useHelper,
 } from '@react-three/drei';
-import { forwardRef, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import {
   Box3,
   BoxHelper,
@@ -30,9 +31,26 @@ type VRLabelProps = {
   label: string;
   fontSize?: number;
   onSync?: (troika: TextMesh) => void;
+  debug?: boolean;
+  anchorX?: number | 'center' | 'left' | 'right';
+  anchorY?:
+    | number
+    | 'bottom'
+    | 'top'
+    | 'middle'
+    | 'top-baseline'
+    | 'bottom-baseline';
 };
 export const VRLabel = forwardRef<TextMesh, VRLabelProps>(function VRLabel(
-  { position, label, fontSize = 1, onSync }: VRLabelProps,
+  {
+    position,
+    label,
+    fontSize = 1,
+    onSync,
+    debug = false,
+    anchorX,
+    anchorY,
+  }: VRLabelProps,
   fwdRef
 ) {
   const containerRef = useRef<Group>(null!);
@@ -40,19 +58,20 @@ export const VRLabel = forwardRef<TextMesh, VRLabelProps>(function VRLabel(
   const troikaRef = useRef<TextMesh>(null!);
   const planeRef = useRef<Mesh>(null!);
 
-  // const boxHelper = useHelper(containerRef, BoxHelper);
+  const boxHelper = useHelper(containerRef, BoxHelper);
+
+  useEffect(() => {
+    if (boxHelper.current) {
+      boxHelper.current.visible = debug;
+    }
+  }, [boxHelper, debug]);
 
   useImperativeHandle(fwdRef, () => troikaRef.current);
 
   const adjustedSize = fontSize * HEIGHT_ADJUST;
   return (
     <>
-      <group
-        ref={containerRef}
-        position={position}
-        // onPointerEnter={hoverEvents.handlePointerEnter}
-        // onPointerLeave={hoverEvents.handlePointerLeave}
-      >
+      <group ref={containerRef} position={position}>
         {/** Invisible Plane Mesh to Increase the height of the bounding box so that it is flush with the top of the text. */}
         <Plane
           args={[0.1 * fontSize, fontSize]}
@@ -71,6 +90,8 @@ export const VRLabel = forwardRef<TextMesh, VRLabelProps>(function VRLabel(
             lineHeight={0.5} // Adjust bounds so that lower bound is flush with bottom of text.
             fontSize={adjustedSize}
             onSync={onSync}
+            anchorX={anchorX}
+            anchorY={anchorY}
           >
             {label}
           </Text>
