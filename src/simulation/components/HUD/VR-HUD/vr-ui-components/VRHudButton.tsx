@@ -14,8 +14,9 @@ import { VRPanel, type VRPanelProps } from './VRPanel';
 import { VRLabel } from './VRLabel';
 import { Panel } from './classes/Panel';
 import { TextMesh } from '@/type-declarations/troika-three-text/Text';
-import { useCursor } from '@react-three/drei';
+import { Text, useCursor } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
+import { depth } from '../vr-hud-constants';
 
 const bbox = new Box3();
 const bbSize = new Vector3();
@@ -80,7 +81,16 @@ export const VRHudButton = ({
         <VRPanel ref={panelRef} width={widthRef.current} height={height} />
 
         <object3D ref={labelRef}>
-          <VRLabel label={label} fontSize={height * 0.5} onSync={handleSync} />
+          {/* <VRLabel label={label} fontSize={height * 0.5} onSync={handleSync} /> */}
+          <Text
+            position-z={depth.xs}
+            anchorX={'center'}
+            anchorY={'middle'}
+            fontSize={height * 0.65}
+            onSync={handleSync}
+          >
+            {label}
+          </Text>
         </object3D>
       </animated.group>
     </>

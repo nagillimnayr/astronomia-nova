@@ -43,7 +43,7 @@ const VRHudButtonStory = () => {
         backgroundColor={colors.background}
         borderColor={colors.border}
         borderWidth={0.025}
-        label={'Hello World'}
+        label={'button'}
       />
     </>
   );
