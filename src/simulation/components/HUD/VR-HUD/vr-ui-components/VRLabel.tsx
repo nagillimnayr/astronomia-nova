@@ -4,8 +4,16 @@ import {
   Text,
   // useHelper,
 } from '@react-three/drei';
-import { useRef } from 'react';
-import { Box3, BoxHelper, Group, Mesh, Object3D, Vector3 } from 'three';
+import { forwardRef, useRef } from 'react';
+import {
+  Box3,
+  BoxHelper,
+  Group,
+  Mesh,
+  Object3D,
+  Vector3,
+  Vector3Tuple,
+} from 'three';
 import { depth } from '../vr-hud-constants';
 // import useHover from '@/hooks/useHover';
 import React from 'react';
@@ -18,16 +26,17 @@ const bbCenter = new Vector3();
 const HEIGHT_ADJUST = 4 / 3;
 
 type VRLabelProps = {
+  position?: Vector3Tuple;
   label: string;
   fontSize?: number;
   onSync?: (troika: TextMesh) => void;
 };
-export const VRLabel = React.memo(function VRLabel({
+export const VRLabel = function VRLabel({
+  position,
   label,
   fontSize = 1,
   onSync,
 }: VRLabelProps) {
-  // const { isHovered, setHovered, hoverEvents } = useHover();
   const containerRef = useRef<Group>(null!);
   const textRef = useRef<Object3D>(null!);
   const planeRef = useRef<Mesh>(null!);
@@ -39,6 +48,7 @@ export const VRLabel = React.memo(function VRLabel({
     <>
       <group
         ref={containerRef}
+        position={position}
         // onPointerEnter={hoverEvents.handlePointerEnter}
         // onPointerLeave={hoverEvents.handlePointerLeave}
       >
@@ -66,4 +76,4 @@ export const VRLabel = React.memo(function VRLabel({
       </group>
     </>
   );
-});
+};
