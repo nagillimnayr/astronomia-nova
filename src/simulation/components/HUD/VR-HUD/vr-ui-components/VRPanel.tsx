@@ -39,7 +39,7 @@ export const VRPanel = forwardRef<Panel, VRPanelProps>(function VRPanel(
     position,
     width = 2,
     height = 1,
-    radius = 0.2,
+    radius = 0.2 * height,
     borderWidth = 0.01,
     segments,
     backgroundColor = colors.background,
