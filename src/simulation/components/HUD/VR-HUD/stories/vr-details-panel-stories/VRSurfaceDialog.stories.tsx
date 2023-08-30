@@ -29,7 +29,7 @@ const VRSurfaceDialogStory = () => {
     <>
       <VRCameraManager position={[0, 2, 0]} />
       <MockEarthSelect />
-      <VRSurfaceDialog position={[0, 2, 0]} />
+      <VRSurfaceDialog defaultOpen position={[0, 2, 0]} />
     </>
   );
 };
