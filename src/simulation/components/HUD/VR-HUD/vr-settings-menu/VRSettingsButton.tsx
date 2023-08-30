@@ -3,6 +3,7 @@ import {
   Suspense,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -20,6 +21,7 @@ import {
   type Group,
   BoxHelper,
   ColorRepresentation,
+  MeshBasicMaterial,
 } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Checkbox, IconButton, Slider } from '@coconut-xr/apfel-kruemel';
@@ -35,68 +37,71 @@ import {
   Text,
 } from '@coconut-xr/koestlich';
 import { VRSeparator } from '../vr-ui-components/VRSeparator';
-import { useCursor } from '@react-three/drei';
+import {
+  Center,
+  Circle,
+  Edges,
+  MeshDiscardMaterial,
+  Plane,
+  Svg,
+  useCursor,
+} from '@react-three/drei';
 import { VRSettingsMenu } from './VRSettingsMenu';
+import { useSpring, animated } from '@react-spring/three';
+import useHover from '@/hooks/useHover';
 
 type VRSettingsButtonProps = {
   position?: Vector3Tuple;
+  size: number;
+  debug?: boolean;
 };
-export const VRSettingsButton = ({ position }: VRSettingsButtonProps) => {
-  return (
-    <>
-      <group position={position}>
-        <RootContainer
-          sizeX={0.25}
-          sizeY={0.25}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          // border={border.base}
-          // borderColor={colors.border}
-        >
-          <ToggleMenuButton />
-        </RootContainer>
-
-        {/* <VRSettingsMenu /> */}
-      </group>
-    </>
-  );
-};
-
-const iconSize = 80;
-const ToggleMenuButton = () => {
-  // Get actor from state machine.
+export const VRSettingsButton = ({
+  position,
+  size,
+  debug = false,
+}: VRSettingsButtonProps) => {
   const { uiActor } = MachineContext.useSelector(({ context }) => context);
   const vrSettingsMenuActor = useSelector(
     uiActor,
     ({ context }) => context.vrSettingsMenuActor
   );
 
+  const { isHovered, setHovered, hoverEvents } = useHover();
+  useCursor(isHovered, 'pointer');
+  const { scale } = useSpring({ scale: isHovered ? 1.2 : 1 });
+
   const handleClick = useCallback(() => {
-    //
     vrSettingsMenuActor.send({ type: 'TOGGLE' });
   }, [vrSettingsMenuActor]);
+
+  const material = useMemo(() => {
+    return new MeshBasicMaterial({ transparent: true, opacity: 0.35 });
+  }, []);
+
+  useEffect(() => {
+    return () => material.dispose();
+  }, [material]);
+
   return (
     <>
-      <IconButton
-        onClick={handleClick}
-        borderRadius={1000}
-        aspectRatio={1}
-        width={'100%'}
-        height={'100%'}
-        padding={text.md}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
+      <animated.group
+        position={position}
+        scale={scale}
+        onPointerEnter={hoverEvents.handlePointerEnter}
+        onPointerLeave={hoverEvents.handlePointerLeave}
       >
-        <SVG
-          url="icons/MdiCog.svg"
-          opacity={0.5}
-          aspectRatio={1}
-          width={iconSize}
-          height={iconSize}
-        />
-      </IconButton>
+        <group scale={size}>
+          <Circle scale={10} onClick={handleClick}>
+            <MeshDiscardMaterial />
+            <Edges visible={debug} scale={1} color={'yellow'} />
+          </Circle>
+          <Center>
+            <Suspense>
+              <Svg src={'icons/MdiCog.svg'} fillMaterial={material} />
+            </Suspense>
+          </Center>
+        </group>
+      </animated.group>
     </>
   );
 };
