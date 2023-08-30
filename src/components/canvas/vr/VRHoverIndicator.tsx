@@ -35,51 +35,57 @@ export const VRHoverIndicator = ({
   const circleRef = useRef<Mesh>(null!);
   const ringRef = useRef<Mesh>(null!);
 
-  useFrame(() => {
-    if (!controller) return;
-    const indicator = indicatorRef.current;
+  useEffect(() => {
+    const subscription = cameraActor.subscribe((state) => {
+      if (state.event.type !== 'UPDATE') return;
+      if (!controller) return;
+      const indicator = indicatorRef.current;
 
-    // Get hover state.
-    const hoverState = getXR().hoverState[handedness];
+      // Get hover state.
+      const hoverState = getXR().hoverState[handedness];
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const intersection: Intersection = hoverState.values().next().value;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const intersection: Intersection = hoverState.values().next().value;
 
-    if (!intersection) {
-      const ray = controller.controller.children[0];
-      if (!(ray instanceof Line)) return;
+      if (!intersection) {
+        const ray = controller.controller.children[0];
+        if (!(ray instanceof Line)) return;
 
-      ray.scale.setZ(rayLength);
-      indicator.visible = false;
-      return;
-    }
+        ray.scale.setZ(rayLength);
+        indicator.visible = false;
+        return;
+      }
 
-    indicator.visible = true;
-    const obj = intersection.object;
+      indicator.visible = true;
+      const obj = intersection.object;
 
-    const point = intersection.point;
-    indicator.position.copy(point);
+      const point = intersection.point;
+      indicator.position.copy(point);
 
-    const face = intersection.face;
-    if (face) {
-      const normal = face.normal;
-      obj.getWorldPosition(_objWorldPos);
-      _worldNormal.copy(normal);
-      // Get the normal in world coordinates.
-      obj.localToWorld(_worldNormal);
-      // Subtract object's world position so that we just get the direction.
-      _worldNormal.sub(_objWorldPos);
-      // Add the direction to the point of intersection to get the position to look at.
-      _lookPos.addVectors(point, _worldNormal);
-      indicator.translateZ(0.01); // Slight offset to prevent z-fighting.
-    } else {
-      controller.controller.getWorldPosition(_lookPos);
-      //
-    }
+      const face = intersection.face;
+      if (face) {
+        const normal = face.normal;
+        obj.getWorldPosition(_objWorldPos);
+        _worldNormal.copy(normal);
+        // Get the normal in world coordinates.
+        obj.localToWorld(_worldNormal);
+        // Subtract object's world position so that we just get the direction.
+        _worldNormal.sub(_objWorldPos);
+        // Add the direction to the point of intersection to get the position to look at.
+        _lookPos.addVectors(point, _worldNormal);
+        indicator.translateZ(0.01); // Slight offset to prevent z-fighting.
+      } else {
+        controller.controller.getWorldPosition(_lookPos);
+        //
+      }
 
-    // Look in direction of the normal.
-    indicator.lookAt(_lookPos);
-  });
+      // Look in direction of the normal.
+      indicator.lookAt(_lookPos);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [cameraActor, controller, getXR, handedness, rayLength]);
+
   return (
     <>
       <group
