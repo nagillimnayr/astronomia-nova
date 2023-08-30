@@ -32,6 +32,7 @@ export const VRHudButton = ({
   width = 2,
   height = 1,
   label,
+  position,
 }: VRHudButtonProps) => {
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
@@ -70,6 +71,7 @@ export const VRHudButton = ({
     <>
       <animated.group
         ref={containerRef}
+        position={position}
         onClick={onClick}
         onPointerEnter={hoverEvents.handlePointerEnter}
         onPointerLeave={hoverEvents.handlePointerLeave}
