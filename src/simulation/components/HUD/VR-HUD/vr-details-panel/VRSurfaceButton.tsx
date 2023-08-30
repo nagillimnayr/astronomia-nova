@@ -33,9 +33,12 @@ type VRSurfaceButtonProps = {
   position?: Vector3Tuple;
 };
 export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
-  const { cameraActor, selectionActor } = MachineContext.useSelector(
+  const { cameraActor, selectionActor, uiActor } = MachineContext.useSelector(
     ({ context }) => context
   );
+
+  const { surfaceDialogActor } = useSelector(uiActor, ({ context }) => context);
+
   const containerRef = useRef<Group>(null!);
   const contentRef = useRef<Group>(null!);
   // useHelper(contentRef, BoxHelper);
@@ -77,12 +80,12 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
         focusTarget: selected,
       });
 
-      // Transition to surface.
-      cameraActor.send({
-        type: 'TO_SURFACE',
+      // Open surface dialog.
+      surfaceDialogActor.send({
+        type: 'OPEN',
       });
     },
-    [cameraActor, selectionActor, setHovered]
+    [cameraActor, selectionActor, setHovered, surfaceDialogActor]
   );
 
   // const width = 2;
