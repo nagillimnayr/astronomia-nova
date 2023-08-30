@@ -29,7 +29,7 @@ export const Default: Story = {
       <>
         <PerspectiveCamera makeDefault position={[0, 0, 2.5]} />
         <CameraControls makeDefault />
-        <VRSettingsButton position={[3, 2, 0]} size={args.size} />
+        <VRSettingsButton position={[1, 1, 0]} size={args.size} />
         <VRSettingsMenu defaultOpen {...args} />
       </>
     );
