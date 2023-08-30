@@ -431,40 +431,50 @@ const VRSliderThumb = ({
       if (!rightController) return;
       circleMatRef.current.color.set('cyan');
 
-      const ray = rightController.controller.children[0];
-      if (!(ray instanceof Line)) return;
-
-      ray.getWorldPosition(_rayWorldPosition);
-      ray.getWorldDirection(_rayWorldDirection);
-
-      // Set raycaster from XR controller ray.
-      raycaster.set(_rayWorldPosition, _rayWorldDirection);
+      // Get hover state.
+      const hoverState = getXR().hoverState['right'];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const intersections = hoverState.values();
+      let intersection = intersections.next();
+      let point: Vector3 = null!;
+      while (intersection && !intersection.done) {
+        if (intersection.value.object === planeRef.current) {
+          point = intersection.value.point;
+          break;
+        } else {
+          intersection = intersections.next();
+        }
+      }
+      if (!point) {
+        circleMatRef.current.color.set('orange');
+        return;
+      }
+      _point.copy(point);
     } else {
       circleMatRef.current.color.set('#03C03C');
       // Set raycaster from pointer and camera.
       raycaster.setFromCamera(pointer, camera);
-    }
-    // Get intersection with plane.
-    const plane = planeRef.current;
-    const prevFirstHit = raycaster.firstHitOnly;
-    raycaster.firstHitOnly = true;
-    const intersections = raycaster.intersectObject(plane);
-    if (intersections.length < 1) {
+      // Get intersection with plane.
+      const plane = planeRef.current;
+      const prevFirstHit = raycaster.firstHitOnly;
+      raycaster.firstHitOnly = true;
+      const intersections = raycaster.intersectObject(plane);
+      if (intersections.length < 1) {
+        raycaster.firstHitOnly = prevFirstHit;
+        return;
+      }
+      const intersection = intersections[0];
+      if (!intersection) {
+        raycaster.firstHitOnly = prevFirstHit;
+        return;
+      }
+      _point.copy(intersection.point);
       raycaster.firstHitOnly = prevFirstHit;
-      return;
     }
-    const intersection = intersections[0];
-    if (!intersection) {
-      raycaster.firstHitOnly = prevFirstHit;
-      return;
-    }
-    const point = intersection.point;
-    anchorRef.current.worldToLocal(point); // Get in local coords.
+    anchorRef.current.worldToLocal(_point); // Get in local coords.
 
-    setValue(point.x);
-    markerRef.current.position.copy(point);
-
-    raycaster.firstHitOnly = prevFirstHit;
+    setValue(_point.x);
+    markerRef.current.position.copy(_point);
   }, [getThree, getXR, planeRef, setValue]);
 
   const handleDragStart = useCallback(() => {
