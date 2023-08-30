@@ -31,6 +31,7 @@ import {
   Box3,
   BoxHelper,
   Line,
+  ArrowHelper,
 } from 'three';
 import { depth } from '../vr-hud-constants';
 import useHover from '@/hooks/useHover';
@@ -39,6 +40,7 @@ import {
   type ThreeEvent,
   Intersection,
   useFrame,
+  createPortal,
 } from '@react-three/fiber';
 import {
   Interactive,
@@ -60,6 +62,7 @@ import { ORIGIN, Z_AXIS } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CameraControls } from 'three-stdlib';
 import { VRIconButton } from './VRIconButton';
+import { Z_AXIS_NEG } from '../../../../utils/constants';
 
 const _point = new Vector3();
 const _rayWorldPosition = new Vector3();
@@ -187,6 +190,7 @@ export const VRSlider = ({
 
   const isDragging = useRef<boolean>(false);
   const anchorRef = useRef<Object3D>(null!);
+  const arrowRef = useRef<ArrowHelper>(null!);
   const markerRef = useRef<Mesh>(null!);
   const markerMatRef = useRef<MeshBasicMaterial>(null!);
 
@@ -201,16 +205,24 @@ export const VRSlider = ({
       const rightController = controllers.find(
         (controller) => controller.inputSource.handedness === 'right'
       );
-      if (!rightController) return;
-
-      const ray = rightController.controller.children[0];
-      if (!(ray instanceof Line)) {
-        markerMatRef.current.color.set('orange');
+      if (!rightController) {
+        console.log('right controller');
         return;
       }
-      markerMatRef.current.color.set('hotpink');
+      console.log('right controller');
+
+      rightController.controller.add(arrowRef.current);
+      arrowRef.current.setColor('hotpink');
+      console.log(rightController.controller);
+      const ray = rightController.controller;
+      // if (!(ray instanceof Line)) {
+      //   markerMatRef.current.color.set('orange');
+      //   return;
+      // }
+      markerMatRef.current.color.set('#00FF40');
       ray.getWorldPosition(_rayWorldPosition);
       ray.getWorldDirection(_rayWorldDirection);
+      _rayWorldDirection.multiplyScalar(-1); // Reverse direction.
 
       raycaster.set(_rayWorldPosition, _rayWorldDirection);
 
@@ -281,9 +293,10 @@ export const VRSlider = ({
 
   return (
     <>
+      <arrowHelper ref={arrowRef} args={[Z_AXIS_NEG, ORIGIN, 2]} />
       <group position={position}>
         <object3D name="anchor" ref={anchorRef} position={[startX, 0, 0]} />
-        <Sphere name="marker" ref={markerRef} args={[thumbRadius / 2]}>
+        <Sphere name="marker" ref={markerRef} args={[thumbRadius * 0.8]}>
           <meshBasicMaterial ref={markerMatRef} color={'white'} />
         </Sphere>
         <VRSliderTrack
