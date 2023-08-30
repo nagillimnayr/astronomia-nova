@@ -4,7 +4,7 @@ import {
   Text,
   // useHelper,
 } from '@react-three/drei';
-import { forwardRef, useRef } from 'react';
+import { forwardRef, useImperativeHandle, useRef } from 'react';
 import {
   Box3,
   BoxHelper,
@@ -31,17 +31,18 @@ type VRLabelProps = {
   fontSize?: number;
   onSync?: (troika: TextMesh) => void;
 };
-export const VRLabel = function VRLabel({
-  position,
-  label,
-  fontSize = 1,
-  onSync,
-}: VRLabelProps) {
+export const VRLabel = forwardRef<TextMesh, VRLabelProps>(function VRLabel(
+  { position, label, fontSize = 1, onSync }: VRLabelProps,
+  fwdRef
+) {
   const containerRef = useRef<Group>(null!);
   const textRef = useRef<Object3D>(null!);
+  const troikaRef = useRef<TextMesh>(null!);
   const planeRef = useRef<Mesh>(null!);
 
   // const boxHelper = useHelper(containerRef, BoxHelper);
+
+  useImperativeHandle(fwdRef, () => troikaRef.current);
 
   const adjustedSize = fontSize * HEIGHT_ADJUST;
   return (
@@ -66,6 +67,7 @@ export const VRLabel = function VRLabel({
           position={[0, -0.125 * adjustedSize, depth.xs]} // Move the text down slightly to center the bounding box.
         >
           <Text
+            ref={troikaRef}
             lineHeight={0.5} // Adjust bounds so that lower bound is flush with bottom of text.
             fontSize={adjustedSize}
             onSync={onSync}
@@ -76,4 +78,4 @@ export const VRLabel = function VRLabel({
       </group>
     </>
   );
-};
+});
