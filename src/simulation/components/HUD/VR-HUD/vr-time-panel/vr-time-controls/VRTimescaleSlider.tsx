@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import { Center, Circle, Svg, Text } from '@react-three/drei';
 import { type Vector3Tuple } from 'three';
 import { VRTimescaleIncrementButton } from './VRTimescaleIncrementButton';
-import { VRSlider } from '../../vr-ui-components/VRSlider';
+import { VRSlider } from '../../vr-ui-components/vr-slider/VRSlider';
 
 type VRTimescaleSliderProps = {
   position?: Vector3Tuple;
