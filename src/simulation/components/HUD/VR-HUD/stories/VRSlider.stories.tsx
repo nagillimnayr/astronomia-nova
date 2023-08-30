@@ -87,6 +87,7 @@ const VRSliderStory = ({ ...args }: VRSliderProps) => {
         </Text>
         <VRSlider
           {...args}
+          value={val}
           position={[0, 0, 0]}
           onValueChange={handleValueChange}
         />
