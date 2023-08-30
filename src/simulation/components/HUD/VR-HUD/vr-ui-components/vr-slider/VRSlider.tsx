@@ -33,7 +33,7 @@ import {
   Line,
   ArrowHelper,
 } from 'three';
-import { depth } from '../vr-hud-constants';
+import { depth } from '../../vr-hud-constants';
 import useHover from '@/hooks/useHover';
 import {
   useThree,
@@ -63,8 +63,8 @@ import { clamp } from 'three/src/math/MathUtils';
 import { ORIGIN, Z_AXIS } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { CameraControls } from 'three-stdlib';
-import { VRIconButton } from './VRIconButton';
-import { Z_AXIS_NEG } from '../../../../utils/constants';
+import { VRIconButton } from '../VRIconButton';
+import { Z_AXIS_NEG } from '../../../../../utils/constants';
 
 const _point = new Vector3();
 const _rayWorldPosition = new Vector3();
@@ -302,7 +302,6 @@ export const VRSlider = ({
           color={thumbColor}
           borderColor={thumbBorderColor}
           onDragStart={handleDragStart}
-          onDrag={handleDrag}
           onDragEnd={handleDragEnd}
         />
         <VRSliderIntersectionPlane
@@ -416,7 +415,6 @@ type VRSliderThumbProps = {
   color: ColorRepresentation;
   borderColor: ColorRepresentation;
   onDragStart: () => void;
-  onDrag: () => void;
   onDragEnd: () => void;
 };
 const VRSliderThumb = ({
@@ -426,7 +424,6 @@ const VRSliderThumb = ({
   color,
   borderColor,
   onDragStart,
-  onDrag,
   onDragEnd,
 }: VRSliderThumbProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
@@ -436,9 +433,14 @@ const VRSliderThumb = ({
   const anchorRef = useRef<Group>(null!);
 
   // Spring scale on hover.
-  const { isHovered, setHovered, hoverEvents } = useHover();
-  useCursor(isHovered);
-  const { scale } = useSpring({ scale: isHovered ? 1.2 : 1 });
+  const [{ scale }, scaleApi] = useSpring(() => ({ scale: 1 }));
+
+  const handleHover = useCallback(() => {
+    scaleApi.start({ scale: 1.25 });
+  }, [scaleApi]);
+  const handleHoverEnd = useCallback(() => {
+    scaleApi.start({ scale: 1 });
+  }, [scaleApi]);
 
   const bind = useGesture({
     onDragStart: (state) => {
@@ -467,17 +469,14 @@ const VRSliderThumb = ({
         controls.enabled = true;
       }
     },
-    onDrag: (state) => {
-      onDrag();
-    },
   });
 
   return (
     <>
       <group ref={anchorRef} position={[startX, 0, depth.sm]}>
         <Interactive
-          onHover={hoverEvents.handlePointerEnter}
-          onBlur={hoverEvents.handlePointerLeave}
+          onHover={handleHover}
+          onBlur={handleHoverEnd}
           onSelectStart={onDragStart}
         >
           {/* @ts-ignore */}
@@ -485,8 +484,8 @@ const VRSliderThumb = ({
             ref={thumbRef}
             position-x={spring.x}
             {...bind()}
-            onPointerEnter={hoverEvents.handlePointerEnter}
-            onPointerLeave={hoverEvents.handlePointerLeave}
+            onPointerEnter={handleHover}
+            onPointerLeave={handleHoverEnd}
           >
             <animated.group scale={scale}>
               <group scale={radius}>
@@ -518,19 +517,12 @@ const VRSliderIntersectionPlane = forwardRef<
 
   useImperativeHandle(fwdRef, () => planeRef.current);
 
-  const handleMove = useCallback(() => {
-    //
-    return;
-  }, []);
-
   return (
     <>
-      {/* <Interactive onMove={handleMove}> */}
       <Plane scale={[width, height, 1]} ref={planeRef}>
         <MeshDiscardMaterial />
         {/* <Edges scale={1} color={'yellow'} /> */}
       </Plane>
-      {/* </Interactive> */}
     </>
   );
 });
