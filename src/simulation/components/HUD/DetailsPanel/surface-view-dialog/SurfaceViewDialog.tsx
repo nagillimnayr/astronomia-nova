@@ -41,6 +41,11 @@ const SurfaceViewDialog = () => {
     surfaceDialogActor.send({ type: 'CLOSE' });
   }, [surfaceDialogActor]);
 
+  const confirm = useCallback(() => {
+    cameraActor.send('TO_SURFACE');
+    surfaceDialogActor.send({ type: 'CLOSE' });
+  }, [cameraActor, surfaceDialogActor]);
+
   const [state, send] = useActor(surfaceDialogActor);
 
   return (
@@ -130,10 +135,7 @@ const SurfaceViewDialog = () => {
         {/** Confirm button. */}
         <button
           className="col-span-1 col-start-2 row-span-1 row-start-2 h-fit w-full min-w-fit place-items-center rounded-md  border border-muted  px-2 py-1 text-xl hover:bg-muted"
-          onClick={() => {
-            cameraActor.send('TO_SURFACE');
-            close();
-          }}
+          onClick={confirm}
         >
           Confirm
         </button>
