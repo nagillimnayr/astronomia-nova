@@ -12,7 +12,10 @@ import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { VRSettingsButton } from './vr-settings-menu/VRSettingsButton';
 import { METER } from '@/simulation/utils/constants';
 import { VRSurfaceDialog } from './vr-details-panel/VRSurfaceDialog';
-import { VRHudSphereAttachment } from './vr-projection-sphere/VRHudSphereAttachment';
+import {
+  VRHudSphere,
+  VRHudSphereAttachment,
+} from './vr-projection-sphere/VRHudSphereAttachment';
 import { PI_OVER_SIX } from '../../../utils/constants';
 import { degToRad } from 'three/src/math/MathUtils';
 
@@ -49,21 +52,52 @@ export const VRHud = ({
   const inVR = useSelector(vrActor, (state) => state.matches('active'));
 
   const isOpen = inVR || defaultOpen;
+
+  const radius = 3;
   return (
     <>
       <group name="VR-Hud" ref={groupRef} position={position}>
         {isOpen && (
           <>
             <group position-z={0}>
-              <VRDetailsPanel position={[1.5, 0, 0]} scale={0.6} />
+              {/** Details Panel. */}
+              <VRHudSphereAttachment
+                radius={radius}
+                phi={degToRad(0)}
+                theta={degToRad(45)}
+              >
+                <VRDetailsPanel scale={0.6} />
+              </VRHudSphereAttachment>
 
-              <VRHudSphereAttachment radius={2} phi={-degToRad(15)} theta={0}>
-                <VRTimePanel position={[0, 0, 0]} scale={0.1} />
+              {/** Time Panel. */}
+              <VRHudSphereAttachment
+                radius={radius}
+                phi={degToRad(-25)}
+                theta={degToRad(0)}
+              >
+                <VRTimePanel scale={0.1} />
+              </VRHudSphereAttachment>
+
+              {/** Settings Menu Button. */}
+              <VRHudSphereAttachment
+                radius={radius}
+                phi={degToRad(25)}
+                theta={degToRad(-45)}
+              >
+                <VRSettingsButton size={0.01} />
+              </VRHudSphereAttachment>
+
+              {/** Settings Menu. */}
+              <VRHudSphereAttachment
+                radius={radius}
+                phi={degToRad(5)}
+                theta={degToRad(-45)}
+              >
+                <VRSettingsMenu />
               </VRHudSphereAttachment>
 
               {/* <VROutliner position={[-1, 0, 0]} /> */}
-              <VRSettingsButton position={[-2, 1.25, 0]} size={0.01} />
-              <VRSettingsMenu position={[-1.5, 0, 0.25]} />
+              {/* <VRHudSphere radius={radius} /> */}
             </group>
           </>
         )}
