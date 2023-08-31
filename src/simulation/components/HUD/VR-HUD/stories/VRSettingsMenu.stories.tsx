@@ -35,6 +35,6 @@ export const Default: Story = {
     );
   },
   args: {
-    size: 0.1,
+    size: 0.01,
   },
 };
