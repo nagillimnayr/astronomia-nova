@@ -124,7 +124,7 @@ export const VRSurfaceDialog = ({
   return (
     <>
       <object3D name="surface-dialog-anchor" ref={anchorRef}>
-        <Interactive onMove={dummyFn}>
+        <Interactive onSelect={dummyFn}>
           <animated.group
             visible={visible}
             ref={containerRef}
