@@ -19,8 +19,7 @@ import { type ContextFrom } from 'xstate';
 import { capitalize } from 'lodash';
 import { useFrame } from '@react-three/fiber';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { DefaultOpen } from '../../DetailsPanel/surface-view-dialog/stories/SurfaceViewButton.stories';
-import { Interactive } from '@react-three/xr';
+import { Interactive, useXR } from '@react-three/xr';
 
 const _camWorldPos = new Vector3();
 
@@ -45,6 +44,8 @@ export const VRSurfaceDialog = ({
     cameraActor,
     ({ context }) => context.focusTarget
   );
+
+  const isPresenting = useXR(({ isPresenting }) => isPresenting);
 
   const close = useCallback(() => {
     surfaceDialogActor.send({ type: 'CLOSE' });
