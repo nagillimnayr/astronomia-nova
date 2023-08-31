@@ -59,6 +59,7 @@ export const VRHud = ({
           </>
         )}
       </group>
+      <VRSurfaceDialog />
     </>
   );
 };

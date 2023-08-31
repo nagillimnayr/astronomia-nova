@@ -34,7 +34,6 @@ const Simulation = ({ children }: SimProps) => {
       <ObservationPoint />
       {/* <Projector /> */}
       <KeyPressControl />
-      <VRSurfaceDialog defaultOpen />
     </>
   );
 };
