@@ -203,8 +203,6 @@ export const VRSlider = ({
   const isDragging = useRef<boolean>(false);
   const anchorRef = useRef<Object3D>(null!);
   const controllerRef = useRef<XRController>(null!);
-  const markerRef = useRef<Mesh>(null!);
-  const markerMatRef = useRef<MeshBasicMaterial>(null!);
 
   const handleDrag = useCallback(() => {
     if (!isDragging.current) return;
@@ -222,7 +220,6 @@ export const VRSlider = ({
 
       const ray = controller.controller;
 
-      markerMatRef.current.color.set('#00FF40');
       ray.getWorldPosition(_rayWorldPosition);
       ray.getWorldDirection(_rayWorldDirection);
       _rayWorldDirection.multiplyScalar(-1); // Reverse direction.
@@ -231,7 +228,6 @@ export const VRSlider = ({
     } else {
       // Set raycaster from pointer and camera.
       raycaster.setFromCamera(pointer, camera);
-      markerMatRef.current.color.set('cyan');
     }
     // Get intersection with plane.
     const plane = planeRef.current;
@@ -253,7 +249,6 @@ export const VRSlider = ({
     anchorRef.current.worldToLocal(point); // Get in local coords.
 
     setX(point.x);
-    markerRef.current.position.copy(point);
   }, [getThree, getXR, setX]);
 
   const handleDragStart = useCallback((event?: XRInteractionEvent) => {
@@ -262,11 +257,9 @@ export const VRSlider = ({
       controllerRef.current = event.target;
     }
     isDragging.current = true;
-    markerMatRef.current.color.set('skyblue');
   }, []);
   const handleDragEnd = useCallback(() => {
     isDragging.current = false;
-    markerMatRef.current.color.set('red');
   }, []);
 
   useXREvent('selectend', (event) => {
@@ -287,14 +280,7 @@ export const VRSlider = ({
     <>
       <group position={position}>
         <object3D name="anchor" ref={anchorRef} position-x={startX} />
-        <Sphere
-          visible={false}
-          name="marker"
-          ref={markerRef}
-          scale={thumbRadius * 0.8}
-        >
-          <meshBasicMaterial ref={markerMatRef} color={'white'} />
-        </Sphere>
+
         <VRSliderTrack
           trackColor={trackColor}
           fillColor={fillColor}
