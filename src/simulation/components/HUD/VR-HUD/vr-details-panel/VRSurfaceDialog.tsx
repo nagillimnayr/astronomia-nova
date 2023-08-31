@@ -1,4 +1,4 @@
-import { Group, Object3D, Vector3, Vector3Tuple } from 'three';
+import { type Group, type Object3D, Vector3, type Vector3Tuple } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useActor, useSelector } from '@xstate/react';
 import { useCallback, useEffect, useRef } from 'react';
@@ -14,7 +14,7 @@ import { VRHudButton } from '../vr-ui-components/VRHudButton';
 import { depth } from '../vr-hud-constants';
 import { VRSlider } from '../vr-ui-components/vr-slider/VRSlider';
 import { VRLabel } from '../vr-ui-components/VRLabel';
-import { surfaceMachine } from '@/state/xstate/surface-machine/surface-machine';
+import { type surfaceMachine } from '@/state/xstate/surface-machine/surface-machine';
 import { type ContextFrom } from 'xstate';
 import { capitalize } from 'lodash';
 import { useFrame } from '@react-three/fiber';
@@ -48,7 +48,7 @@ export const VRSurfaceDialog = ({
     ({ context }) => context.focusTarget
   );
 
-  // const isPresenting = useXR(({ isPresenting }) => isPresenting);
+  const isPresenting = useXR(({ isPresenting }) => isPresenting);
 
   const close = useCallback(() => {
     vrSurfaceDialogActor.send({ type: 'DISABLE' });
@@ -76,11 +76,15 @@ export const VRSurfaceDialog = ({
   const containerRef = useRef<Group>(null!);
 
   // Subscribe to actor's state.
-  const isOpen = useSelector(vrSurfaceDialogActor, (state) =>
+  const isActive = useSelector(vrSurfaceDialogActor, (state) =>
     state.matches('active')
   );
 
-  const visible = (Boolean(focusTarget) && isOpen) || defaultOpen;
+  const isOpen =
+    (isActive && isPresenting && Boolean(focusTarget)) || defaultOpen;
+  const [spring, springApi] = useSpring(() => ({
+    scale: 0,
+  }));
 
   const panelWidth = 6;
   const panelHeight = 4;
@@ -94,6 +98,7 @@ export const VRSurfaceDialog = ({
     if (!isOpen || !(focusTarget instanceof KeplerBody)) {
       if (!defaultOpen) {
         anchor.removeFromParent();
+        springApi.start({ scale: 0 });
       }
       return;
     }
@@ -105,10 +110,12 @@ export const VRSurfaceDialog = ({
 
     // Scale and position the container relative to the meanRadius
     const scale = meanRadius / 2;
-    container.scale.setScalar(scale);
+
+    springApi.start({ scale: scale });
+    // container.scale.setScalar(scale);
     const xPos = -meanRadius - scale * (panelWidth * 0.75);
     container.position.set(xPos, 0, 0);
-  }, [defaultOpen, focusTarget, isOpen, vrSurfaceDialogActor]);
+  }, [defaultOpen, focusTarget, isOpen, springApi, vrSurfaceDialogActor]);
 
   useFrame(({ camera }, delta, frame) => {
     // const isClosed = vrSurfaceDialogActor.getSnapshot()!.matches('closed');
@@ -129,7 +136,7 @@ export const VRSurfaceDialog = ({
     <>
       <object3D name="surface-dialog-anchor" ref={anchorRef}>
         <animated.group
-          visible={visible}
+          scale={spring.scale}
           ref={containerRef}
           position={position}
         >
