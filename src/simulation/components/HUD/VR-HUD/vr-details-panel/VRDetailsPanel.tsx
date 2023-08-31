@@ -27,7 +27,10 @@ import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { Interactive } from '@react-three/xr';
 
 const _camWorldPos = new Vector3();
-const FONT_SIZE = 0.05;
+
+const dummyFn = () => {
+  return;
+};
 
 const placeholders = {
   name: 'Name',
@@ -100,7 +103,7 @@ export const VRDetailsPanel = ({
         }}
       >
         {/** Background. */}
-        <Interactive>
+        <Interactive onSelect={dummyFn}>
           {/** Wrap in Interactive so it will catch rays. */}
           <VRPanel width={width} height={height} />
         </Interactive>
