@@ -1,6 +1,6 @@
 import useHover from '@/hooks/useHover';
 import { type ThreeEvent } from '@react-three/fiber';
-import { type XRInteractionEvent } from '@react-three/xr';
+import { Interactive, type XRInteractionEvent } from '@react-three/xr';
 import {
   PropsWithChildren,
   useCallback,
@@ -73,12 +73,19 @@ export const VRHudButton = ({
       <animated.group
         ref={containerRef}
         position={position}
-        onClick={onClick}
         onPointerEnter={hoverEvents.handlePointerEnter}
         onPointerLeave={hoverEvents.handlePointerLeave}
         scale={scale}
       >
-        <VRPanel ref={panelRef} width={widthRef.current} height={height} />
+        <Interactive
+          onSelect={onClick}
+          onHover={hoverEvents.handlePointerEnter}
+          onBlur={hoverEvents.handlePointerLeave}
+        >
+          <object3D onClick={onClick}>
+            <VRPanel ref={panelRef} width={widthRef.current} height={height} />
+          </object3D>
+        </Interactive>
 
         <object3D ref={labelRef}>
           {/* <VRLabel label={label} fontSize={height * 0.5} onSync={handleSync} /> */}
