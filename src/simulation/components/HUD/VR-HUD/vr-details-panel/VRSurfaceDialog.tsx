@@ -108,8 +108,8 @@ export const VRSurfaceDialog = ({
   }, [defaultOpen, focusTarget, isOpen, surfaceDialogActor]);
 
   useFrame(({ camera }, delta, frame) => {
-    const isClosed = surfaceDialogActor.getSnapshot()!.matches('closed');
-    if (isClosed && !defaultOpen) return;
+    // const isClosed = surfaceDialogActor.getSnapshot()!.matches('closed');
+    // if (isClosed && !defaultOpen) return;
     const anchor = anchorRef.current;
     const container = containerRef.current;
     const { controls } = cameraActor.getSnapshot()!.context;
