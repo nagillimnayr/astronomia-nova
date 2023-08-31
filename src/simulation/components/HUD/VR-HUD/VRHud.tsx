@@ -12,7 +12,7 @@ import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { VRSettingsButton } from './vr-settings-menu/VRSettingsButton';
 import { METER } from '@/simulation/utils/constants';
 import { VRSurfaceDialog } from './vr-details-panel/VRSurfaceDialog';
-import { VRHudSphereAttachment } from './vr-projection-sphere/VRHudSphere';
+import { VRHudSphereAttachment } from './vr-projection-sphere/VRHudSphereAttachment';
 import { PI_OVER_SIX } from '../../../utils/constants';
 import { degToRad } from 'three/src/math/MathUtils';
 
