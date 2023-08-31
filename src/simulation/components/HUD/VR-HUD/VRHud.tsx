@@ -54,8 +54,8 @@ export const VRHud = ({
             <VRDetailsPanel position={[1.5, 0, 0]} scale={0.6} />
             <VRTimePanel position={[0, -1, 0]} scale={0.1} />
             {/* <VROutliner position={[-1, 0, 0]} /> */}
-            {/* <VRSettingsButton position={[1, 1.25, 0]} /> */}
-            {/* <VRSettingsMenu position={[0, 0.5, 0.25]} />  */}
+            <VRSettingsButton position={[-2, 1.25, 0]} size={0.01} />
+            <VRSettingsMenu position={[-1.5, 0, 0.25]} />
           </>
         )}
       </group>
