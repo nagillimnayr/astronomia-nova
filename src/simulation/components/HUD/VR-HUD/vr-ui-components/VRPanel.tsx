@@ -11,6 +11,7 @@ import { Panel, PanelInner, PanelOuter } from './classes/Panel';
 import { colors } from '../vr-hud-constants';
 import React from 'react';
 import { Plane } from '@react-three/drei';
+import { useSpring, animated } from '@react-spring/three';
 
 extend({ Panel, PanelInner, PanelOuter });
 
@@ -64,3 +65,5 @@ export const VRPanel = forwardRef<Panel, VRPanelProps>(function VRPanel(
     </>
   );
 });
+
+export const AnimatedVRPanel = animated(VRPanel);
