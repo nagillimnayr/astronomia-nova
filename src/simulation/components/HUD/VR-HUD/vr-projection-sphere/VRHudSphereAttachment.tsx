@@ -33,7 +33,7 @@ export const VRHudSphereAttachment = ({
   const [spring, springApi] = useSpring(() => ({
     radius: clamp(radius, 0.1, 10),
     phi: -clamp(phi, MIN_PHI, MAX_PHI),
-    theta: theta,
+    theta: -theta,
   }));
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export const VRHudSphereAttachment = ({
     springApi.start({
       radius: clamp(radius, 0.1, 10),
       phi: -clamp(phi, MIN_PHI, MAX_PHI),
-      theta: theta,
+      theta: -theta,
     });
   }, [phi, radius, springApi, theta]);
 
