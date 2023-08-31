@@ -84,12 +84,6 @@ export const VRSettingsMenu = ({
   const { scale } = useSpring({ scale: isOpen ? 1 : 0 });
 
   const containerRef = useRef<Group>(null!);
-  useEffect(() => {
-    const { camera } = getThree();
-    const container = containerRef.current;
-    camera.getWorldPosition(_camWorldPos);
-    container.lookAt(_camWorldPos);
-  }, [getThree]);
 
   const width = 1;
   const height = width * GOLDEN_RATIO;

@@ -86,16 +86,6 @@ export const VRDetailsPanel = ({
     siderealRotationPeriod,
   } = selected ?? placeholders;
 
-  useEffect(() => {
-    const container = containerRef.current;
-
-    // Look at camera.
-    const { camera } = getThree();
-    camera.getWorldPosition(_camWorldPos);
-    getLocalUpInWorldCoords(camera, container.up);
-    container.lookAt(_camWorldPos);
-  }, [getThree]);
-
   return (
     <>
       <animated.group

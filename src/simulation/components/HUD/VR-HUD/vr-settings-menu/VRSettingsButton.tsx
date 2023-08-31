@@ -89,12 +89,6 @@ export const VRSettingsButton = ({
   }, [material]);
 
   const containerRef = useRef<Group>(null!);
-  useEffect(() => {
-    const { camera } = getThree();
-    const container = containerRef.current;
-    camera.getWorldPosition(_camWorldPos);
-    container.lookAt(_camWorldPos);
-  }, [getThree]);
 
   return (
     <>
