@@ -130,42 +130,42 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
         onPointerEnter={hoverEvents.handlePointerEnter}
         onPointerLeave={hoverEvents.handlePointerLeave}
       >
-        <Interactive
-          onSelect={handleClick}
-          onHover={hoverEvents.handlePointerEnter}
-          onBlur={hoverEvents.handlePointerLeave}
-        >
-          <group>
+        <group>
+          <Interactive
+            onSelect={handleClick}
+            onHover={hoverEvents.handlePointerEnter}
+            onBlur={hoverEvents.handlePointerLeave}
+          >
             <VRPanel width={width} height={height} radius={radius}></VRPanel>
+          </Interactive>
 
-            <group
-              position={[0.05127 * height, -0.008 * height, depth.xxs]}
-              ref={contentRef}
+          <group
+            position={[0.05127 * height, -0.008 * height, depth.xxs]}
+            ref={contentRef}
+          >
+            {/** Text. */}
+            <Text
+              fontSize={fontSize}
+              position={[textXPos, textYPos, 0]}
+              anchorX={'center'}
+              anchorY={'middle'}
+              textAlign={'center'}
             >
-              {/** Text. */}
-              <Text
-                fontSize={fontSize}
-                position={[textXPos, textYPos, 0]}
-                anchorX={'center'}
-                anchorY={'middle'}
-                textAlign={'center'}
-              >
-                {inSpace ? 'Surface' : 'Space'}
-              </Text>
+              {inSpace ? 'Surface' : 'Space'}
+            </Text>
 
-              {/** Icon. */}
-              <object3D position={[iconXPos, iconYPos, 0]}>
-                <Center>
-                  <Svg
-                    src="icons/MdiTelescope.svg"
-                    fillMaterial={ICON_MATERIAL_BASE}
-                    scale={iconSize}
-                  />
-                </Center>
-              </object3D>
-            </group>
+            {/** Icon. */}
+            <object3D position={[iconXPos, iconYPos, 0]}>
+              <Center>
+                <Svg
+                  src="icons/MdiTelescope.svg"
+                  fillMaterial={ICON_MATERIAL_BASE}
+                  scale={iconSize}
+                />
+              </Center>
+            </object3D>
           </group>
-        </Interactive>
+        </group>
       </animated.group>
     </>
   );
