@@ -2,6 +2,7 @@ import { type ActorRefFrom, assign, createMachine, log, spawn } from 'xstate';
 import { type MutableRefObject } from 'react';
 import { dialogMachine } from './dialog-machine/dialog-machine';
 import { toggleMachine } from '../toggle-machine/toggle-machine';
+import { sendTo } from 'xstate/lib/actions';
 
 type Context = {
   // settingsMenuActor: ActorRefFrom<typeof dialogMachine>;
@@ -68,6 +69,10 @@ export const uiMachine = createMachine(
             name: 'surfaceDialogActor',
             sync: true,
           }),
+      }),
+      // Start closed.
+      sendTo(({ vrSurfaceDialogActor }) => vrSurfaceDialogActor, {
+        type: 'DISABLE',
       }),
     ],
 
