@@ -47,26 +47,26 @@ export const VRHudButton = ({
   const troikaRef = useRef<TextMesh | null>(null);
   const widthRef = useRef<number>(1);
 
-  const handleSync = useCallback(
-    (troika: TextMesh) => {
-      troikaRef.current = troika;
-      const labelObj = labelRef.current;
-      const panel = panelRef.current;
-      if (!label || !panel) return;
+  // const handleSync = useCallback(
+  //   (troika: TextMesh) => {
+  //     troikaRef.current = troika;
+  //     const labelObj = labelRef.current;
+  //     const panel = panelRef.current;
+  //     if (!label || !panel) return;
 
-      // Measure the bounding box of the text.
-      bbox.setFromObject(labelObj);
-      bbox.getSize(bbSize);
+  //     // Measure the bounding box of the text.
+  //     bbox.setFromObject(labelObj);
+  //     bbox.getSize(bbSize);
 
-      // Multiply width by ratio.
-      const newWidth = bbSize.x * HORIZONTAL_RATIO;
+  //     // Multiply width by ratio.
+  //     const newWidth = bbSize.x * HORIZONTAL_RATIO;
 
-      // Set panel width.
-      panel.setWidth(newWidth);
-      widthRef.current = newWidth;
-    },
-    [label]
-  );
+  //     // Set panel width.
+  //     panel.setWidth(newWidth);
+  //     widthRef.current = newWidth;
+  //   },
+  //   [label]
+  // );
 
   return (
     <>
@@ -83,7 +83,7 @@ export const VRHudButton = ({
           onBlur={hoverEvents.handlePointerLeave}
         >
           <object3D onClick={onClick}>
-            <VRPanel ref={panelRef} width={widthRef.current} height={height} />
+            <VRPanel ref={panelRef} width={width} height={height} />
           </object3D>
         </Interactive>
 
@@ -94,7 +94,7 @@ export const VRHudButton = ({
             anchorX={'center'}
             anchorY={'middle'}
             fontSize={height * 0.65}
-            onSync={handleSync}
+            // onSync={handleSync}
           >
             {label}
           </Text>
