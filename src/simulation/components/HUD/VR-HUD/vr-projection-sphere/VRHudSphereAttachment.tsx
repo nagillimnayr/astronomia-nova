@@ -1,9 +1,23 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useSpring, animated } from '@react-spring/three';
+import {
+  useSpring,
+  animated,
+  AnimationResult,
+  SpringValue,
+  Lookup,
+  Controller,
+} from '@react-spring/three';
 import { VRPanel } from '../vr-ui-components/VRPanel';
-import { PropsWithChildren, useEffect, useMemo, useRef } from 'react';
+import {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import {
   DoubleSide,
+  Group,
   Object3D,
   SphereGeometry,
   Spherical,
@@ -18,6 +32,13 @@ import { PI } from '../../../../utils/constants';
 const MIN_PHI = -PI_OVER_TWO + Number.EPSILON;
 const MAX_PHI = PI_OVER_TWO - Number.EPSILON;
 
+type SphericalCoords = {
+  radius: number;
+  phi: number;
+  theta: number;
+};
+type updateFn = (newRadius: number, newPhi: number, newTheta: number) => void;
+
 type VRHudSphereAttachmentProps = PropsWithChildren & {
   radius: number;
   phi: number;
@@ -30,70 +51,112 @@ export const VRHudSphereAttachment = ({
   theta,
 }: VRHudSphereAttachmentProps) => {
   const pivotRef = useRef<Object3D>(null!);
+  const attachmentRef = useRef<Group>(null!);
+
+  const update = useRef<updateFn>(null!);
+  update.current = useCallback(
+    (newRadius: number, newPhi: number, newTheta: number) => {
+      const pivot = pivotRef.current;
+      const attachment = attachmentRef.current;
+      pivot.rotation.set(0, 0, 0, 'YXZ'); // Reset pivot rotation.
+
+      attachment.position.set(0, 0, -newRadius); // Update radius.
+
+      // Update rotation.
+      pivot.rotateY(-newTheta);
+      pivot.rotateX(newPhi);
+    },
+    []
+  );
+  const handleChange = useRef<
+    (result: AnimationResult<SpringValue<Lookup<unknown>>>) => void
+  >(null!);
+  handleChange.current = useCallback(
+    (result: AnimationResult<SpringValue<Lookup<unknown>>>) => {
+      // Destructure updated values.
+      const { radius, phi, theta } = result.value as unknown as SphericalCoords; // Cast to spherical coords.
+      update.current(radius, phi, theta);
+    },
+    []
+  );
+
   const [spring, springApi] = useSpring(() => ({
     radius: clamp(radius, 0.1, 10),
-    phi: -clamp(phi, MIN_PHI, MAX_PHI),
-    theta: -theta,
+    phi: clamp(phi, MIN_PHI, MAX_PHI),
+    theta: theta,
+
+    onChange(result) {
+      handleChange.current(result);
+    },
   }));
 
   useEffect(() => {
-    pivotRef.current.rotation.reorder('YXZ');
-  }, []);
+    // Will run whenever props change.
 
-  useEffect(() => {
+    // Update spring with new values.
     springApi.start({
       radius: clamp(radius, 0.1, 10),
-      phi: -clamp(phi, MIN_PHI, MAX_PHI),
-      theta: -theta,
+      phi: clamp(phi, MIN_PHI, MAX_PHI),
+      theta: theta,
     });
+
+    update.current(radius, phi, theta);
   }, [phi, radius, springApi, theta]);
 
-  // const linePoints = useMemo(() => {
-  //   return [new Vector3(0, 0, 0), new Vector3(0, 0, 1)];
-  // }, []);
+  const linePoints = useMemo(() => {
+    return [new Vector3(0, 0, 0), new Vector3(0, 0, -1)];
+  }, []);
 
-  // const sphereGeometry = useMemo(() => {
-  //   const radius = 1;
-  //   const resolution = 16;
-  //   const geometry = new SphereGeometry(radius, resolution, resolution);
-  //   const nonIndexedGeometry = geometry.toNonIndexed(); // Necessary for wireframe.
-  //   geometry.dispose(); // Cleanup original indexed geometry.
-  //   return nonIndexedGeometry;
-  // }, []);
+  springApi.start();
   return (
     <>
-      <group rotation-y={PI}>
-        <animated.object3D
-          name="pivot"
-          ref={pivotRef}
-          rotation-y={spring.theta}
-          rotation-x={spring.phi}
+      <animated.object3D name="pivot" ref={pivotRef}>
+        <animated.group
+          name={'attachment-point'}
+          ref={attachmentRef}
+          position-z={spring.radius}
         >
-          <animated.group
-            name={'attachment-point'}
-            position-z={spring.radius}
-            rotation-y={PI}
-          >
-            {children}
-          </animated.group>
+          {children}
+        </animated.group>
 
-          {/* <animated.object3D scale={spring.radius}>
+        <animated.object3D scale-z={spring.radius}>
+          <object3D scale-z={-1}>
             <Line points={linePoints} color={'white'} lineWidth={2} />
-          </animated.object3D> */}
+          </object3D>
         </animated.object3D>
-        {/* <animated.object3D scale={spring.radius}>
-          <mesh geometry={sphereGeometry}>
-            <Wireframe
-              simplify
-              fillOpacity={0}
-              colorBackfaces
-              fillMix={1}
-              stroke={'white'}
-              backfaceStroke={'white'}
-            />
-          </mesh>
-        </animated.object3D> */}
-      </group>
+      </animated.object3D>
+    </>
+  );
+};
+
+type VRHudSphereProps = {
+  radius: number;
+};
+export const VRHudSphere = ({ radius }: VRHudSphereProps) => {
+  const sphereGeometry = useMemo(() => {
+    const radius = 1;
+    const resolution = 32;
+    const geometry = new SphereGeometry(radius, resolution, resolution);
+    const nonIndexedGeometry = geometry.toNonIndexed(); // Necessary for wireframe.
+    geometry.dispose(); // Cleanup original indexed geometry.
+    return nonIndexedGeometry;
+  }, []);
+
+  return (
+    <>
+      <animated.object3D scale={radius}>
+        <mesh geometry={sphereGeometry}>
+          <Wireframe
+            simplify
+            fillOpacity={0}
+            colorBackfaces
+            fillMix={1}
+            stroke={'white'}
+            backfaceStroke={'white'}
+            thickness={0.01}
+          />
+        </mesh>
+      </animated.object3D>
     </>
   );
 };
