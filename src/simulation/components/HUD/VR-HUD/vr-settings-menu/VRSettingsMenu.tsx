@@ -22,6 +22,7 @@ import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import {
   Center,
   Circle,
+  Edges,
   MeshDiscardMaterial,
   Plane,
   Svg,
@@ -40,6 +41,7 @@ import { VRLabel } from '../vr-ui-components/VRLabel';
 import { useSpring, animated } from '@react-spring/three';
 import useHover from '@/hooks/useHover';
 import { PI, PI_OVER_TWO } from '@/simulation/utils/constants';
+import { Interactive } from '@react-three/xr';
 
 const _camWorldPos = new Vector3();
 const _containerWorldPos = new Vector3();
@@ -245,13 +247,9 @@ const VRToggleButton = ({
     actor.send({ type });
   }, [actor, defaultSelected, target]);
 
-  const handleClick = useCallback(
-    (event: ThreeEvent<PointerEvent>) => {
-      event.stopPropagation();
-      actor.send({ type: 'TOGGLE' });
-    },
-    [actor]
-  );
+  const handleClick = useCallback(() => {
+    actor.send({ type: 'TOGGLE' });
+  }, [actor]);
 
   const fontSize = 0.05;
   const panelSize = 0.075;
@@ -264,17 +262,20 @@ const VRToggleButton = ({
           onPointerEnter={hoverEvents.handlePointerEnter}
           onPointerLeave={hoverEvents.handlePointerLeave}
         >
-          <VRPanel
-            width={panelSize}
-            height={panelSize}
-            radius={iconSize}
-            borderWidth={iconSize}
-          />
-          <object3D
-            scale={iconSize}
-            position-z={0.0025}
-            onPointerDown={handleClick}
+          <Interactive
+            onSelect={handleClick}
+            onHover={hoverEvents.handlePointerEnter}
+            onBlur={hoverEvents.handlePointerLeave}
           >
+            <VRPanel
+              width={panelSize}
+              height={panelSize}
+              radius={iconSize}
+              borderWidth={iconSize}
+              onPointerDown={handleClick}
+            />
+          </Interactive>
+          <object3D scale={iconSize} position-z={0.0025}>
             <Center>
               <Suspense>
                 <Svg src={iconUrl} fillMaterial={ICON_MATERIAL_BASE} />
@@ -447,9 +448,16 @@ const CloseButton = ({ position, onClick }: CloseButtonProps) => {
         onPointerEnter={hoverEvents.handlePointerEnter}
         onPointerLeave={hoverEvents.handlePointerLeave}
       >
-        <Plane scale={0.075}>
-          <MeshDiscardMaterial />
-        </Plane>
+        <Interactive
+          onSelect={onClick}
+          onHover={hoverEvents.handlePointerEnter}
+          onBlur={hoverEvents.handlePointerLeave}
+        >
+          <Plane scale={0.075}>
+            <MeshDiscardMaterial />
+            <Edges visible={false} scale={1} color={'yellow'} />
+          </Plane>
+        </Interactive>
         <object3D scale={0.005} position-z={0.0025}>
           <Center>
             <Suspense>
