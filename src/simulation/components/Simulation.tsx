@@ -10,6 +10,7 @@ import { ObservationPoint } from './surface-view/observation-point/ObservationPo
 import SolarSystem from './SolarSystem/SolarSystem';
 import { Projector } from './surface-view/projector/Projector';
 import { KeyPressControl } from './KeyPressControl';
+import { VRSurfaceDialog } from './HUD/VR-HUD/vr-details-panel/VRSurfaceDialog';
 
 type SimProps = {
   children: React.ReactNode;
@@ -33,6 +34,7 @@ const Simulation = ({ children }: SimProps) => {
       <ObservationPoint />
       {/* <Projector /> */}
       <KeyPressControl />
+      <VRSurfaceDialog />
     </>
   );
 };
