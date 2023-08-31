@@ -88,6 +88,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         console.error('bodyMesh is invalid. This should not be possible.');
         return;
       }
+      // Get point of intersection.
       let point: Vector3 = null!;
       if ('stopPropagation' in event) {
         event.stopPropagation();
@@ -101,8 +102,6 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       const onSurface = cameraActor.getSnapshot()!.matches('surface');
       if (onSurface) return; // If on surface, do nothing.
 
-      // Get point of intersection.
-      console.log('intersection point', point);
       // Get position relative to the body.
       bodyMesh.worldToLocal(point);
 
