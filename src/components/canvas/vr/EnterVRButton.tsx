@@ -6,7 +6,7 @@ import { useCallback, useRef } from 'react';
 export const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
 
 export const sessionOptions: XRSessionInit = {
-  requiredFeatures: [REF_SPACE_TYPE],
+  requiredFeatures: [REF_SPACE_TYPE, 'hand-tracking'],
 };
 
 export const EnterVRButton = () => {
@@ -17,7 +17,9 @@ export const EnterVRButton = () => {
   const buttonRef = useRef<HTMLButtonElement>(null!);
   const toggleVR = useCallback(async () => {
     console.log('toggleVR clicked');
-    const session = await toggleSession('immersive-vr');
+    const session = await toggleSession('immersive-vr', {
+      sessionInit: sessionOptions,
+    });
   }, []);
 
   const vrActive = useSelector(vrActor, (state) => state.matches('active'));
