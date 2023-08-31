@@ -10,6 +10,7 @@ import {
   useContext,
   useCallback,
   useEffect,
+  useMemo,
 } from 'react';
 import {
   BoxHelper,
@@ -30,6 +31,7 @@ import {
   PI,
   PI_OVER_TWO,
   Y_AXIS,
+  METER,
 } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Poles } from './poles/Poles';
@@ -37,6 +39,7 @@ import { normalizeAngle } from '../../utils/rotation-utils';
 import { PlanetRing } from './planet-ring/PlanetRing';
 import { Interactive, XRInteractionEvent } from '@react-three/xr';
 import useHover from '@/hooks/useHover';
+import { useSelector } from '@xstate/react';
 
 type BodyMeshProps = {
   name: string;
@@ -60,8 +63,10 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   }: BodyMeshProps,
   fwdRef
 ) {
-  const { selectionActor, timeActor, surfaceActor, cameraActor } =
+  const { selectionActor, timeActor, surfaceActor, cameraActor, uiActor } =
     MachineContext.useSelector(({ context }) => context);
+
+  const { surfaceDialogActor } = useSelector(uiActor, ({ context }) => context);
 
   const meshRef = useRef<Mesh>(null!);
 
@@ -103,8 +108,11 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 
       // Set latitude/ longitude from point.
       surfaceActor.send({ type: 'SET_COORDS_FROM_VECTOR', pos: point });
+
+      // Open surface dialog.
+      surfaceDialogActor.send({ type: 'OPEN' });
     },
-    [cameraActor, setHovered, surfaceActor]
+    [cameraActor, setHovered, surfaceActor, surfaceDialogActor]
   );
 
   // Set forwarded ref, the return value of the callback function will be assigned to fwdRef.
@@ -137,16 +145,15 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     return () => subscription.unsubscribe();
   }, [obliquity, siderealRotRate, timeActor]);
 
-  const radius = meanRadius / DIST_MULT;
-  const rotation: Vector3Tuple = [PI_OVER_TWO, 0, degToRad(obliquity)];
+  const radius = meanRadius * METER;
+  const rotation: Vector3Tuple = useMemo(
+    () => [PI_OVER_TWO, 0, degToRad(obliquity)],
+    [obliquity]
+  );
   return (
     <>
       <group>
-        <Interactive
-          onSelect={handleClick}
-          onHover={hoverEvents.handlePointerEnter}
-          onBlur={hoverEvents.handlePointerLeave}
-        >
+        <Interactive onSelect={handleClick}>
           <Sphere
             name={name + '-mesh'}
             rotation={rotation}
