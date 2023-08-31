@@ -40,11 +40,6 @@ const SURFACE_MIN_DIST = METER * 1e-1;
 const SURFACE_MAX_DIST = 1.5 * SURFACE_MIN_DIST;
 const SURFACE_MIN_DIST_FROM_SURFACE = 2 * METER; // 2 meters above ground
 
-// Z position of VR Hud.
-const VR_HUD_Z_NON_IMMERSIVE = -5;
-// const VR_HUD_Z_IMMERSIVE = -2.5;
-const VR_HUD_Z_IMMERSIVE = -3;
-
 // Default FOV.
 const FOV = 50;
 
@@ -311,7 +306,6 @@ export const cameraMachine = createMachine(
         if (vrHud) {
           // Attach vrHud to controls.
           controls.attachToController(vrHud);
-          vrHud.position.setZ(VR_HUD_Z_IMMERSIVE);
         }
       },
       startXRSession: (context, event) => {
@@ -337,14 +331,12 @@ export const cameraMachine = createMachine(
 
         // Position vrHud.
         if (vrHud) {
-          vrHud.position.setZ(VR_HUD_Z_IMMERSIVE);
         }
       },
       endXRSession: (context, event) => {
         const { vrHud, controls, mainCamera, getThree } = context;
         if (vrHud) {
           console.log('VRHUD:', vrHud);
-          // vrHud.position.setZ(VR_HUD_Z_NON_IMMERSIVE);
         }
 
         const { gl } = getThree();
