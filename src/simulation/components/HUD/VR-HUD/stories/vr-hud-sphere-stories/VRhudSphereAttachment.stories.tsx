@@ -1,9 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
-import { VRHudSphereAttachment } from '../../vr-projection-sphere/VRHudSphereAttachment';
+import {
+  VRHudSphere,
+  VRHudSphereAttachment,
+} from '../../vr-projection-sphere/VRHudSphereAttachment';
 import { PI, PI_OVER_TWO, TWO_PI } from '@/simulation/utils/constants';
 import { DoubleSide } from 'three';
-import { CameraControls, Circle } from '@react-three/drei';
+import { Box, CameraControls, Circle, Edges, Plane } from '@react-three/drei';
 
 const meta: Meta<typeof VRHudSphereAttachment> = {
   title: 'VR-UI/vr-hud-sphere/VRHudSphereAttachment',
@@ -34,11 +37,14 @@ const Default: Story = {
       <>
         <CameraControls makeDefault />
         <VRHudSphereAttachment {...args}>
-          <Circle>
+          <Box args={[0.5, 0.5, 0.5]} rotation={[0, 0, 0]}>
             <meshBasicMaterial side={DoubleSide} color={'red'} />
-          </Circle>
+            <Edges color={'yellow'} />
+            <axesHelper />
+          </Box>
         </VRHudSphereAttachment>
         <axesHelper />
+        <VRHudSphere radius={args.radius} />
       </>
     );
   },
