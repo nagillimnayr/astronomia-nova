@@ -66,7 +66,10 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   const { selectionActor, timeActor, surfaceActor, cameraActor, uiActor } =
     MachineContext.useSelector(({ context }) => context);
 
-  const { surfaceDialogActor } = useSelector(uiActor, ({ context }) => context);
+  const { surfaceDialogActor, vrSurfaceDialogActor } = useSelector(
+    uiActor,
+    ({ context }) => context
+  );
 
   const meshRef = useRef<Mesh>(null!);
 
@@ -94,9 +97,13 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         event.stopPropagation();
         setHovered(true);
         point = event.point;
+        // Open surface dialog.
+        surfaceDialogActor.send({ type: 'OPEN' });
       } else {
         if (!event.intersection) return;
         point = event.intersection.point;
+        // Open surface dialog.
+        vrSurfaceDialogActor.send({ type: 'ENABLE' });
       }
       // Check if in surface view mode.
       const onSurface = cameraActor.getSnapshot()!.matches('surface');
@@ -107,11 +114,14 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 
       // Set latitude/ longitude from point.
       surfaceActor.send({ type: 'SET_COORDS_FROM_VECTOR', pos: point });
-
-      // Open surface dialog.
-      surfaceDialogActor.send({ type: 'OPEN' });
     },
-    [cameraActor, setHovered, surfaceActor, surfaceDialogActor]
+    [
+      cameraActor,
+      setHovered,
+      surfaceActor,
+      surfaceDialogActor,
+      vrSurfaceDialogActor,
+    ]
   );
 
   // Set forwarded ref, the return value of the callback function will be assigned to fwdRef.

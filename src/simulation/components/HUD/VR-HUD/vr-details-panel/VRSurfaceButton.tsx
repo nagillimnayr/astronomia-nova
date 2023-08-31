@@ -37,7 +37,10 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
     ({ context }) => context
   );
 
-  const { surfaceDialogActor } = useSelector(uiActor, ({ context }) => context);
+  const vrSurfaceDialogActor = useSelector(
+    uiActor,
+    ({ context }) => context.vrSurfaceDialogActor
+  );
 
   const containerRef = useRef<Group>(null!);
   const contentRef = useRef<Group>(null!);
@@ -82,9 +85,9 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
       });
 
       // Open surface dialog.
-      surfaceDialogActor.send({ type: 'TOGGLE' });
+      vrSurfaceDialogActor.send({ type: 'TOGGLE' });
     },
-    [cameraActor, selectionActor, setHovered, surfaceDialogActor]
+    [cameraActor, selectionActor, setHovered, vrSurfaceDialogActor]
   );
 
   const handleSpaceClick = useCallback(

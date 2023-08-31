@@ -5,8 +5,9 @@ import { toggleMachine } from '../toggle-machine/toggle-machine';
 
 type Context = {
   // settingsMenuActor: ActorRefFrom<typeof dialogMachine>;
-  surfaceDialogActor: ActorRefFrom<typeof dialogMachine>;
   vrSettingsMenuActor: ActorRefFrom<typeof toggleMachine>;
+  surfaceDialogActor: ActorRefFrom<typeof dialogMachine>;
+  vrSurfaceDialogActor: ActorRefFrom<typeof toggleMachine>;
   screenPortalRef: MutableRefObject<HTMLDivElement>;
   camViewPortalRef: MutableRefObject<HTMLDivElement>;
 };
@@ -39,6 +40,7 @@ export const uiMachine = createMachine(
       // settingsMenuActor: null!,
       vrSettingsMenuActor: null!,
       surfaceDialogActor: null!,
+      vrSurfaceDialogActor: null!,
       screenPortalRef: null!,
       camViewPortalRef: null!,
     }),
@@ -58,6 +60,11 @@ export const uiMachine = createMachine(
           }),
         surfaceDialogActor: () =>
           spawn(dialogMachine, {
+            name: 'surfaceDialogActor',
+            sync: true,
+          }),
+        vrSurfaceDialogActor: () =>
+          spawn(toggleMachine, {
             name: 'surfaceDialogActor',
             sync: true,
           }),

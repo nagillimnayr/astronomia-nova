@@ -38,23 +38,26 @@ export const VRSurfaceDialog = ({
   const { uiActor, cameraActor, surfaceActor } = MachineContext.useSelector(
     ({ context }) => context
   );
-  const { surfaceDialogActor } = useSelector(uiActor, ({ context }) => context);
+  const vrSurfaceDialogActor = useSelector(
+    uiActor,
+    ({ context }) => context.vrSurfaceDialogActor
+  );
 
   const focusTarget = useSelector(
     cameraActor,
     ({ context }) => context.focusTarget
   );
 
-  const isPresenting = useXR(({ isPresenting }) => isPresenting);
+  // const isPresenting = useXR(({ isPresenting }) => isPresenting);
 
   const close = useCallback(() => {
-    surfaceDialogActor.send({ type: 'CLOSE' });
-  }, [surfaceDialogActor]);
+    vrSurfaceDialogActor.send({ type: 'DISABLE' });
+  }, [vrSurfaceDialogActor]);
 
   const confirm = useCallback(() => {
-    surfaceDialogActor.send({ type: 'CLOSE' });
+    vrSurfaceDialogActor.send({ type: 'DISABLE' });
     cameraActor.send('TO_SURFACE');
-  }, [cameraActor, surfaceDialogActor]);
+  }, [cameraActor, vrSurfaceDialogActor]);
 
   const handleLatitudeChange = useCallback(
     (newValue: number) => {
@@ -73,8 +76,8 @@ export const VRSurfaceDialog = ({
   const containerRef = useRef<Group>(null!);
 
   // Subscribe to actor's state.
-  const isOpen = useSelector(surfaceDialogActor, (state) =>
-    state.matches('open')
+  const isOpen = useSelector(vrSurfaceDialogActor, (state) =>
+    state.matches('active')
   );
 
   const visible = (Boolean(focusTarget) && isOpen) || defaultOpen;
@@ -85,7 +88,7 @@ export const VRSurfaceDialog = ({
   const buttonHeight = 0.65;
 
   useEffect(() => {
-    // const isClosed = surfaceDialogActor.getSnapshot()!.matches('closed');
+    // const isClosed = vrSurfaceDialogActor.getSnapshot()!.matches('closed');
     const anchor = anchorRef.current;
     const container = containerRef.current;
     if (!isOpen || !(focusTarget instanceof KeplerBody)) {
@@ -105,10 +108,10 @@ export const VRSurfaceDialog = ({
     container.scale.setScalar(scale);
     const xPos = -meanRadius - scale * (panelWidth * 0.75);
     container.position.set(xPos, 0, 0);
-  }, [defaultOpen, focusTarget, isOpen, surfaceDialogActor]);
+  }, [defaultOpen, focusTarget, isOpen, vrSurfaceDialogActor]);
 
   useFrame(({ camera }, delta, frame) => {
-    // const isClosed = surfaceDialogActor.getSnapshot()!.matches('closed');
+    // const isClosed = vrSurfaceDialogActor.getSnapshot()!.matches('closed');
     // if (isClosed && !defaultOpen) return;
     const anchor = anchorRef.current;
     const container = containerRef.current;
