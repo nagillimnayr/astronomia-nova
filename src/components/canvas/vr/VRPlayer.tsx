@@ -37,10 +37,10 @@ export const VRPlayer = () => {
   return (
     <>
       <>
-        <Controllers />
-        <Hands />
-        <VRHoverIndicator handedness="left" />
-        <VRHoverIndicator handedness="right" />
+        {/* <Controllers />
+        <Hands /> */}
+        {/* <VRHoverIndicator handedness="left" />
+        <VRHoverIndicator handedness="right" /> */}
       </>
     </>
   );
