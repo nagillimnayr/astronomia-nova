@@ -14,8 +14,8 @@ const meta: Meta<typeof VRHudSphereAttachment> = {
     phi: {
       control: {
         type: 'range',
-        min: Number.EPSILON,
-        max: PI - Number.EPSILON,
+        min: -PI_OVER_TWO + Number.EPSILON,
+        max: PI_OVER_TWO - Number.EPSILON,
         step: 0.001,
       },
     },
@@ -38,6 +38,7 @@ const Default: Story = {
             <meshBasicMaterial side={DoubleSide} color={'red'} />
           </Circle>
         </VRHudSphereAttachment>
+        <axesHelper />
       </>
     );
   },
