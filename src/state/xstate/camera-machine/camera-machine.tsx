@@ -311,6 +311,7 @@ export const cameraMachine = createMachine(
         if (vrHud) {
           // Attach vrHud to controls.
           controls.attachToController(vrHud);
+          vrHud.position.setZ(VR_HUD_Z_IMMERSIVE);
         }
       },
       startXRSession: (context, event) => {
