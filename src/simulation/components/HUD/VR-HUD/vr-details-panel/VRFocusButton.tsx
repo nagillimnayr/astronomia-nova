@@ -1,11 +1,11 @@
 import { BoxHelper, type Group, type Object3D, type Vector3Tuple } from 'three';
-import { depth } from '../vr-hud-constants';
+import { colors, depth } from '../vr-hud-constants';
 import { Center, Svg, Text, useCursor, useHelper } from '@react-three/drei';
 import { ICON_MATERIAL_BASE } from '../vr-ui-materials';
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import useHover from '@/hooks/useHover';
 import { Interactive, type XRInteractionEvent } from '@react-three/xr';
-import { VRPanel } from '../vr-ui-components/VRPanel';
+import { AnimatedVRPanel, VRPanel } from '../vr-ui-components/VRPanel';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type ThreeEvent } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
@@ -25,9 +25,17 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
-  const { scale } = useSpring({
-    scale: isHovered ? 1.2 : 1,
-  });
+
+  const [spring, springApi] = useSpring(() => ({
+    scale: 1,
+    color: colors.background,
+  }));
+  useEffect(() => {
+    springApi.start({
+      scale: isHovered ? 1.2 : 1,
+      color: isHovered ? colors.hover : colors.background,
+    });
+  }, [isHovered, springApi]);
 
   // Get the currently selected body.
   const selected = useSelector(
@@ -77,44 +85,51 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
         ref={containerRef}
         position={position}
         visible={isOpen}
-        scale={scale}
+        scale={spring.scale}
         onClick={handleClick}
         onPointerEnter={hoverEvents.handlePointerEnter}
         onPointerLeave={hoverEvents.handlePointerLeave}
       >
-        <Interactive
-          onSelect={handleClick}
-          onHover={hoverEvents.handlePointerEnter}
-          onBlur={hoverEvents.handlePointerLeave}
-        >
-          <group>
-            <VRPanel width={width} height={height} radius={radius}></VRPanel>
+        <group>
+          {/* <VRPanel width={width} height={height} radius={radius}></VRPanel> */}
 
-            <group ref={contentRef} position={[0, 0, depth.xxs]}>
-              {/** Text. */}
-              <Text
-                fontSize={fontSize}
-                position={[textXPos, 0, 0]}
-                anchorX={'center'}
-                anchorY={'middle'}
-                textAlign={'center'}
-              >
-                {'Focus'}
-              </Text>
+          <Interactive
+            onSelect={handleClick}
+            onHover={hoverEvents.handlePointerEnter}
+            onBlur={hoverEvents.handlePointerLeave}
+          >
+            <AnimatedVRPanel
+              width={width}
+              height={height}
+              radius={radius}
+              backgroundColor={spring.color}
+            />
+          </Interactive>
 
-              {/** Icon. */}
-              <object3D position={[iconXPos, 0, 0]}>
-                <Center>
-                  <Svg
-                    src="icons/MdiCameraControl.svg"
-                    fillMaterial={ICON_MATERIAL_BASE}
-                    scale={iconSize}
-                  />
-                </Center>
-              </object3D>
-            </group>
+          <group ref={contentRef} position={[0, 0, depth.xxs]}>
+            {/** Text. */}
+            <Text
+              fontSize={fontSize}
+              position={[textXPos, 0, 0]}
+              anchorX={'center'}
+              anchorY={'middle'}
+              textAlign={'center'}
+            >
+              {'Focus'}
+            </Text>
+
+            {/** Icon. */}
+            <object3D position={[iconXPos, 0, 0]}>
+              <Center>
+                <Svg
+                  src="icons/MdiCameraControl.svg"
+                  fillMaterial={ICON_MATERIAL_BASE}
+                  scale={iconSize}
+                />
+              </Center>
+            </object3D>
           </group>
-        </Interactive>
+        </group>
       </animated.group>
     </>
   );

@@ -7,7 +7,7 @@ import {
   Box3,
   Vector3,
 } from 'three';
-import { depth } from '../vr-hud-constants';
+import { colors, depth } from '../vr-hud-constants';
 import {
   Box,
   Center,
@@ -19,10 +19,10 @@ import {
   useHelper,
 } from '@react-three/drei';
 import { ICON_MATERIAL_BASE } from '../vr-ui-materials';
-import { useRef, useCallback, useMemo } from 'react';
+import { useRef, useCallback, useMemo, useEffect } from 'react';
 import useHover from '@/hooks/useHover';
 import { Interactive, type XRInteractionEvent } from '@react-three/xr';
-import { VRPanel } from '../vr-ui-components/VRPanel';
+import { AnimatedVRPanel, VRPanel } from '../vr-ui-components/VRPanel';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type ThreeEvent } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
@@ -47,9 +47,17 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
-  const { scale } = useSpring({
-    scale: isHovered ? 1.2 : 1,
-  });
+
+  const [spring, springApi] = useSpring(() => ({
+    scale: 1,
+    color: colors.background,
+  }));
+  useEffect(() => {
+    springApi.start({
+      scale: isHovered ? 1.2 : 1,
+      color: isHovered ? colors.hover : colors.background,
+    });
+  }, [isHovered, springApi]);
 
   // Get the currently selected body.
   const selected = useSelector(
@@ -128,7 +136,7 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
         ref={containerRef}
         position={position}
         visible={isOpen}
-        scale={scale}
+        scale={spring.scale}
         onClick={handleClick}
         onPointerEnter={hoverEvents.handlePointerEnter}
         onPointerLeave={hoverEvents.handlePointerLeave}
@@ -139,7 +147,13 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
             onHover={hoverEvents.handlePointerEnter}
             onBlur={hoverEvents.handlePointerLeave}
           >
-            <VRPanel width={width} height={height} radius={radius}></VRPanel>
+            {/* <VRPanel width={width} height={height} radius={radius}/> */}
+            <AnimatedVRPanel
+              width={width}
+              height={height}
+              radius={radius}
+              backgroundColor={spring.color}
+            />
           </Interactive>
 
           <group
