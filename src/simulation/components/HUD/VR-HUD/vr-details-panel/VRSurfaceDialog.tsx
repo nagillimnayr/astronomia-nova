@@ -47,7 +47,7 @@ export const VRSurfaceDialog = ({
     cameraActor,
     ({ context }) => context.focusTarget
   );
-
+  const inSpace = useSelector(cameraActor, (state) => state.matches('space'));
   const isPresenting = useXR(({ isPresenting }) => isPresenting);
 
   const close = useCallback(() => {
@@ -81,7 +81,8 @@ export const VRSurfaceDialog = ({
   );
 
   const isOpen =
-    (isActive && isPresenting && Boolean(focusTarget)) || defaultOpen;
+    (isActive && isPresenting && inSpace && Boolean(focusTarget)) ||
+    defaultOpen;
   const [spring, springApi] = useSpring(() => ({
     scale: 0,
   }));
