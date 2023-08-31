@@ -20,8 +20,13 @@ import { capitalize } from 'lodash';
 import { useFrame } from '@react-three/fiber';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { DefaultOpen } from '../../DetailsPanel/surface-view-dialog/stories/SurfaceViewButton.stories';
+import { Interactive } from '@react-three/xr';
 
 const _camWorldPos = new Vector3();
+
+const dummyFn = () => {
+  return;
+};
 
 type VRSurfaceDialogProps = {
   position?: Vector3Tuple;
@@ -119,56 +124,58 @@ export const VRSurfaceDialog = ({
   return (
     <>
       <object3D name="surface-dialog-anchor" ref={anchorRef}>
-        <animated.group
-          visible={visible}
-          ref={containerRef}
-          position={position}
-        >
-          <VRPanel width={panelWidth} height={panelHeight} />
+        <Interactive onMove={dummyFn}>
+          <animated.group
+            visible={visible}
+            ref={containerRef}
+            position={position}
+          >
+            <VRPanel width={panelWidth} height={panelHeight} />
 
-          {/** Sliders. */}
-          <group position-y={0.5} position-z={depth.xs}>
-            {/** Latitude Slider. */}
-            <object3D position-y={0.55}>
-              <CoordinateSlider
-                width={sliderWidth}
-                target={'latitude'}
-                onValueChange={handleLatitudeChange}
-                min={MIN_LATITUDE}
-                max={MAX_LATITUDE}
-              />
-            </object3D>
-            {/** Longitude Slider. */}
-            <object3D position-y={-0.55}>
-              <CoordinateSlider
-                width={sliderWidth}
-                target={'longitude'}
-                onValueChange={handleLongitudeChange}
-                min={MIN_LONGITUDE}
-                max={MAX_LONGITUDE}
-              />
-            </object3D>
-          </group>
+            {/** Sliders. */}
+            <group position-y={0.5} position-z={depth.xs}>
+              {/** Latitude Slider. */}
+              <object3D position-y={0.55}>
+                <CoordinateSlider
+                  width={sliderWidth}
+                  target={'latitude'}
+                  onValueChange={handleLatitudeChange}
+                  min={MIN_LATITUDE}
+                  max={MAX_LATITUDE}
+                />
+              </object3D>
+              {/** Longitude Slider. */}
+              <object3D position-y={-0.55}>
+                <CoordinateSlider
+                  width={sliderWidth}
+                  target={'longitude'}
+                  onValueChange={handleLongitudeChange}
+                  min={MIN_LONGITUDE}
+                  max={MAX_LONGITUDE}
+                />
+              </object3D>
+            </group>
 
-          <group position-y={-1.25} position-z={depth.xs}>
-            {/** Cancel Button. */}
-            <object3D position-x={-1.2}>
-              <VRHudButton
-                label="cancel"
-                onClick={close}
-                height={buttonHeight}
-              />
-            </object3D>
-            {/** Confirm Button. */}
-            <object3D position-x={1.1}>
-              <VRHudButton
-                label="confirm"
-                onClick={confirm}
-                height={buttonHeight}
-              />
-            </object3D>
-          </group>
-        </animated.group>
+            <group position-y={-1.25} position-z={depth.xs}>
+              {/** Cancel Button. */}
+              <object3D position-x={-1.2}>
+                <VRHudButton
+                  label="cancel"
+                  onClick={close}
+                  height={buttonHeight}
+                />
+              </object3D>
+              {/** Confirm Button. */}
+              <object3D position-x={1.1}>
+                <VRHudButton
+                  label="confirm"
+                  onClick={confirm}
+                  height={buttonHeight}
+                />
+              </object3D>
+            </group>
+          </animated.group>
+        </Interactive>
       </object3D>
     </>
   );
