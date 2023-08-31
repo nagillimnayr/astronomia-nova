@@ -6,7 +6,7 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import { GOLDEN_RATIO, colors } from '../vr-hud-constants';
+import { GOLDEN_RATIO, colors, twColors } from '../vr-hud-constants';
 import {
   Object3D,
   type Vector3Tuple,
@@ -256,17 +256,17 @@ const VRToggleButton = ({
     } else if (isActive && isHovered) {
       colorSpringApi.start({
         // @ts-ignore
-        backgroundColor: colors.gray300,
+        backgroundColor: colors.hover,
       });
     } else if (!isActive && isHovered) {
       colorSpringApi.start({
         // @ts-ignore
-        backgroundColor: colors.gray400,
+        backgroundColor: twColors.gray[300],
       });
     } else if (!isActive && !isHovered) {
       colorSpringApi.start({
         // @ts-ignore
-        backgroundColor: colors.gray500,
+        backgroundColor: twColors.gray[500],
       });
     }
   }, [colorSpringApi, isActive, isHovered]);
