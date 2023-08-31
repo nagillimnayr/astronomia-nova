@@ -38,7 +38,7 @@ export const VRHudButton = ({
   label,
   position,
   backgroundColor = colors.background,
-  hoverColor = colors.gray400,
+  hoverColor = colors.hover,
 }: VRHudButtonProps) => {
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
