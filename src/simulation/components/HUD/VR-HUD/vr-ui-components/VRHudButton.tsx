@@ -9,24 +9,27 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import { Box3, type Group, type Object3D, Vector3 } from 'three';
-import { VRPanel, type VRPanelProps } from './VRPanel';
+import {
+  Box3,
+  type Group,
+  type Object3D,
+  Vector3,
+  ColorRepresentation,
+} from 'three';
+import { AnimatedVRPanel, VRPanel, type VRPanelProps } from './VRPanel';
 import { VRLabel } from './VRLabel';
 import { Panel } from './classes/Panel';
 import { TextMesh } from '@/type-declarations/troika-three-text/Text';
 import { Text, useCursor } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
-import { depth } from '../vr-hud-constants';
-
-const bbox = new Box3();
-const bbSize = new Vector3();
-const bbCenter = new Vector3();
+import { colors, depth } from '../vr-hud-constants';
 
 const HORIZONTAL_RATIO = 2 / 1.6;
 
 type VRHudButtonProps = Omit<VRPanelProps, 'onClick'> & {
   onClick?: (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => void;
   label: string;
+  hoverColor?: ColorRepresentation;
 };
 export const VRHudButton = ({
   onClick,
@@ -34,39 +37,31 @@ export const VRHudButton = ({
   height = 1,
   label,
   position,
+  backgroundColor = colors.background,
+  hoverColor = colors.gray400,
 }: VRHudButtonProps) => {
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
+  const [spring, springApi] = useSpring(() => ({
+    scale: 1,
+    backgroundColor: backgroundColor.toString(),
+  }));
   const { scale } = useSpring({
     scale: isHovered ? 1.2 : 1,
+  });
+
+  useEffect(() => {
+    springApi.start({
+      scale: isHovered ? 1.2 : 1,
+      backgroundColor: isHovered
+        ? hoverColor.toString()
+        : backgroundColor.toString(),
+    });
   });
 
   const containerRef = useRef<Group>(null!);
   const panelRef = useRef<Panel>(null!);
   const labelRef = useRef<Object3D>(null!);
-  const troikaRef = useRef<TextMesh | null>(null);
-  const widthRef = useRef<number>(1);
-
-  // const handleSync = useCallback(
-  //   (troika: TextMesh) => {
-  //     troikaRef.current = troika;
-  //     const labelObj = labelRef.current;
-  //     const panel = panelRef.current;
-  //     if (!label || !panel) return;
-
-  //     // Measure the bounding box of the text.
-  //     bbox.setFromObject(labelObj);
-  //     bbox.getSize(bbSize);
-
-  //     // Multiply width by ratio.
-  //     const newWidth = bbSize.x * HORIZONTAL_RATIO;
-
-  //     // Set panel width.
-  //     panel.setWidth(newWidth);
-  //     widthRef.current = newWidth;
-  //   },
-  //   [label]
-  // );
 
   return (
     <>
@@ -84,6 +79,12 @@ export const VRHudButton = ({
         >
           <object3D onClick={onClick}>
             <VRPanel ref={panelRef} width={width} height={height} />
+            <AnimatedVRPanel
+              ref={panelRef}
+              width={width}
+              height={height}
+              backgroundColor={spring.backgroundColor}
+            />
           </object3D>
         </Interactive>
 
@@ -94,7 +95,6 @@ export const VRHudButton = ({
             anchorX={'center'}
             anchorY={'middle'}
             fontSize={height * 0.65}
-            // onSync={handleSync}
           >
             {label}
           </Text>
