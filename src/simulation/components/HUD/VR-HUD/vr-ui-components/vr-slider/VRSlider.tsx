@@ -65,6 +65,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type CameraControls } from 'three-stdlib';
 import { VRIconButton } from '../VRIconButton';
 import { Z_AXIS_NEG } from '../../../../../utils/constants';
+import { useEventListener } from '@react-hooks-library/core';
 
 const _rayWorldPosition = new Vector3();
 const _rayWorldDirection = new Vector3();
@@ -102,6 +103,7 @@ export const VRSlider = ({
   thumbBorderColor = 'black',
   onValueChange,
 }: VRSliderProps) => {
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const getThree = useThree(({ get }) => get);
   const getXR = useXR(({ get }) => get);
   value = clamp(value, min, max);
@@ -251,23 +253,56 @@ export const VRSlider = ({
     setX(point.x);
   }, [getThree, getXR, setX]);
 
-  const handleDragStart = useCallback((event?: XRInteractionEvent) => {
-    if (event) {
-      //If triggered by XR controller, keep track of which controller started the drag.
-      controllerRef.current = event.target;
-    }
-    isDragging.current = true;
-  }, []);
+  const handleDragStart = useCallback(
+    (event?: ThreeEvent<PointerEvent> | XRInteractionEvent) => {
+      if (event && 'stopPropagation' in event) {
+        event.stopPropagation();
+      } else if (event) {
+        //If triggered by XR controller, keep track of which controller started the drag.
+        controllerRef.current = event.target;
+      }
+
+      isDragging.current = true;
+
+      cameraActor.send({ type: 'LOCK_CONTROLS' });
+
+      const controls = getThree().controls as CameraControls;
+      if (
+        controls &&
+        'enabled' in controls &&
+        typeof controls.enabled === 'boolean'
+      ) {
+        controls.enabled = false;
+      }
+    },
+    [cameraActor, getThree]
+  );
   const handleDragEnd = useCallback(() => {
     isDragging.current = false;
-  }, []);
+    cameraActor.send({ type: 'UNLOCK_CONTROLS' });
+    const controls = getThree().controls as CameraControls;
+    if (
+      controls &&
+      'enabled' in controls &&
+      typeof controls.enabled === 'boolean'
+    ) {
+      controls.enabled = true;
+    }
+  }, [cameraActor, getThree]);
+
+  const handlePointerUp = useCallback(() => {
+    if (!isDragging.current) return;
+    handleDragEnd();
+  }, [handleDragEnd]);
 
   useXREvent('selectend', (event) => {
     // End drag if controller ended select.
     if (event.target === controllerRef.current) {
-      handleDragEnd();
+      handlePointerUp();
     }
   });
+
+  useEventListener('pointerup', handlePointerUp);
 
   useFrame(() => {
     handleDrag();
@@ -298,7 +333,7 @@ export const VRSlider = ({
           color={thumbColor}
           borderColor={thumbBorderColor}
           onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
+          onDragEnd={handlePointerUp}
         />
         <VRSliderIntersectionPlane
           ref={planeRef}
@@ -435,56 +470,34 @@ const VRSliderThumb = ({
     scaleApi.start({ scale: 1 });
   }, [scaleApi]);
 
-  const bind = useGesture({
-    onDragStart: (state) => {
-      onDragStart();
-
-      cameraActor.send({ type: 'LOCK_CONTROLS' });
-
-      const controls = getThree().controls as CameraControls;
-      if (
-        controls &&
-        'enabled' in controls &&
-        typeof controls.enabled === 'boolean'
-      ) {
-        controls.enabled = false;
-      }
-    },
-    onDragEnd: () => {
-      onDragEnd();
-      cameraActor.send({ type: 'UNLOCK_CONTROLS' });
-      const controls = getThree().controls as CameraControls;
-      if (
-        controls &&
-        'enabled' in controls &&
-        typeof controls.enabled === 'boolean'
-      ) {
-        controls.enabled = true;
-      }
-    },
-  });
+  // useEventListener('pointerup', handleDragEnd);
 
   return (
     <>
       <group ref={anchorRef} position={[startX, 0, depth.xxs]}>
         <Interactive
-          onHover={handleHover}
-          onBlur={handleHoverEnd}
-          onSelectStart={onDragStart}
+        // onHover={handleHover}
+        // onBlur={handleHoverEnd}
+        // onSelectStart={onDragStart}
         >
-          {/* @ts-ignore */}
           <animated.object3D
             ref={thumbRef}
-            // position-x={spring.x}
             position-x={currentX}
-            {...bind()}
-            onPointerEnter={handleHover}
-            onPointerLeave={handleHoverEnd}
+            // onPointerDown={handleDragStart}
+            // onPointerEnter={handleHover}
+            // onPointerLeave={handleHoverEnd}
           >
             <animated.group scale={scale}>
               <group scale={radius}>
                 <Ring args={ringArgs} material-color={borderColor} />
-                <Circle args={circleArgs}>
+                <Circle
+                  args={circleArgs}
+                  onPointerDown={onDragStart}
+                  onPointerUp={onDragEnd}
+                  onPointerMissed={onDragEnd}
+                  onPointerEnter={handleHover}
+                  onPointerLeave={handleHoverEnd}
+                >
                   <meshBasicMaterial color={color} />
                 </Circle>
               </group>
@@ -515,7 +528,7 @@ const VRSliderIntersectionPlane = forwardRef<
     <>
       <Plane scale={[width, height, 1]} ref={planeRef}>
         <MeshDiscardMaterial />
-        {/* <Edges scale={1} color={'yellow'} /> */}
+        <Edges scale={1} color={'yellow'} />
       </Plane>
     </>
   );
