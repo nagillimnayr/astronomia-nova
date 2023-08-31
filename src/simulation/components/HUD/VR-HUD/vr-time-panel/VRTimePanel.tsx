@@ -9,6 +9,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useThree } from '@react-three/fiber';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { useSelector } from '@xstate/react';
+import { PI } from '../../../../utils/constants';
 
 const _camWorldPos = new Vector3();
 const _camWorldUp = new Vector3();
@@ -37,16 +38,7 @@ export const VRTimePanel = ({
       {/** Its better to put the object3D outside of the Suspense barrier, so as to not delay setting the reference. */}
       <group
         position={position}
-        ref={(container) => {
-          if (!container) return;
-          containerRef.current = container;
-
-          // Look at camera.
-          const { camera } = getThree();
-          camera.getWorldPosition(_camWorldPos);
-          getLocalUpInWorldCoords(camera, container.up);
-          container.lookAt(_camWorldPos);
-        }}
+        ref={containerRef}
         name="vr-time-panel"
         scale={scale}
       >
