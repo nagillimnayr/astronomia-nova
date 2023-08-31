@@ -12,6 +12,9 @@ import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { VRSettingsButton } from './vr-settings-menu/VRSettingsButton';
 import { METER } from '@/simulation/utils/constants';
 import { VRSurfaceDialog } from './vr-details-panel/VRSurfaceDialog';
+import { VRHudSphereAttachment } from './vr-projection-sphere/VRHudSphere';
+import { PI_OVER_SIX } from '../../../utils/constants';
+import { degToRad } from 'three/src/math/MathUtils';
 
 type VRHudProps = {
   position?: Vector3Tuple;
@@ -51,15 +54,20 @@ export const VRHud = ({
       <group name="VR-Hud" ref={groupRef} position={position}>
         {isOpen && (
           <>
-            <VRDetailsPanel position={[1.5, 0, 0]} scale={0.6} />
-            <VRTimePanel position={[0, -1, 0]} scale={0.1} />
-            {/* <VROutliner position={[-1, 0, 0]} /> */}
-            <VRSettingsButton position={[-2, 1.25, 0]} size={0.01} />
-            <VRSettingsMenu position={[-1.5, 0, 0.25]} />
+            <group position-z={0}>
+              <VRDetailsPanel position={[1.5, 0, 0]} scale={0.6} />
+
+              <VRHudSphereAttachment radius={2} phi={-degToRad(15)} theta={0}>
+                <VRTimePanel position={[0, 0, 0]} scale={0.1} />
+              </VRHudSphereAttachment>
+
+              {/* <VROutliner position={[-1, 0, 0]} /> */}
+              <VRSettingsButton position={[-2, 1.25, 0]} size={0.01} />
+              <VRSettingsMenu position={[-1.5, 0, 0.25]} />
+            </group>
           </>
         )}
       </group>
-      <VRSurfaceDialog />
     </>
   );
 };
