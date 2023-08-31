@@ -84,6 +84,16 @@ export const VRDetailsPanel = ({
     siderealRotationPeriod,
   } = selected ?? placeholders;
 
+  useEffect(() => {
+    const container = containerRef.current;
+
+    // Look at camera.
+    const { camera } = getThree();
+    camera.getWorldPosition(_camWorldPos);
+    getLocalUpInWorldCoords(camera, container.up);
+    container.lookAt(_camWorldPos);
+  }, [getThree]);
+
   return (
     <>
       <group
@@ -95,11 +105,11 @@ export const VRDetailsPanel = ({
           if (!container) return;
           containerRef.current = container;
 
-          // Look at camera.
-          const { camera } = getThree();
-          camera.getWorldPosition(_camWorldPos);
-          getLocalUpInWorldCoords(camera, container.up);
-          container.lookAt(_camWorldPos);
+          // // Look at camera.
+          // const { camera } = getThree();
+          // camera.getWorldPosition(_camWorldPos);
+          // getLocalUpInWorldCoords(camera, container.up);
+          // container.lookAt(_camWorldPos);
         }}
       >
         {/** Background. */}
@@ -122,25 +132,6 @@ export const VRDetailsPanel = ({
         <VRFocusButton width={0.6} position={[-0.35, -0.25, depth.xs]} />
         <VRSurfaceButton width={0.6} position={[0.35, -0.25, depth.xs]} />
       </group>
-    </>
-  );
-};
-
-type HeaderProps = {
-  name: string;
-  position?: Vector3Tuple;
-};
-const Header = ({ name, position }: HeaderProps) => {
-  return (
-    <>
-      <Text
-        position={position}
-        fontSize={text.lg}
-        anchorX={'center'}
-        anchorY={'top'}
-      >
-        {name}
-      </Text>
     </>
   );
 };
