@@ -67,9 +67,9 @@ export const VRSurfaceDialog = ({
   const containerRef = useRef<Group>(null!);
 
   // Subscribe to actor's state.
-  const isOpen =
-    useSelector(surfaceDialogActor, (state) => state.matches('open')) ||
-    defaultOpen;
+  const isOpen = useSelector(surfaceDialogActor, (state) =>
+    state.matches('open')
+  );
 
   const visible = (Boolean(focusTarget) && isOpen) || defaultOpen;
 
@@ -99,7 +99,7 @@ export const VRSurfaceDialog = ({
     container.scale.setScalar(scale);
     const xPos = -meanRadius - scale * (panelWidth * 0.75);
     container.position.set(xPos, 0, 0);
-  }, [focusTarget, isOpen, surfaceDialogActor]);
+  }, [defaultOpen, focusTarget, isOpen, surfaceDialogActor]);
 
   useFrame(({ camera }, delta, frame) => {
     const isClosed = surfaceDialogActor.getSnapshot()!.matches('closed');
