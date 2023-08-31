@@ -11,7 +11,7 @@ import {
 } from '@/simulation/utils/constants';
 import { VRPanel } from '../vr-ui-components/VRPanel';
 import { VRHudButton } from '../vr-ui-components/VRHudButton';
-import { depth } from '../vr-hud-constants';
+import { GOLDEN_RATIO, depth } from '../vr-hud-constants';
 import { VRSlider } from '../vr-ui-components/vr-slider/VRSlider';
 import { VRLabel } from '../vr-ui-components/VRLabel';
 import { type surfaceMachine } from '@/state/xstate/surface-machine/surface-machine';
@@ -90,13 +90,16 @@ export const VRSurfaceDialog = ({
   const panelHeight = 4;
   const sliderWidth = 4;
   const buttonHeight = 0.65;
+  const buttonWidth = 1.8;
 
   useEffect(() => {
     // const isClosed = vrSurfaceDialogActor.getSnapshot()!.matches('closed');
     const anchor = anchorRef.current;
     const container = containerRef.current;
     if (!isOpen || !(focusTarget instanceof KeplerBody)) {
-      if (!defaultOpen) {
+      if (defaultOpen) {
+        springApi.start({ scale: 1 });
+      } else {
         anchor.removeFromParent();
         springApi.start({ scale: 0 });
       }
@@ -175,6 +178,7 @@ export const VRSurfaceDialog = ({
                 label="cancel"
                 onClick={close}
                 height={buttonHeight}
+                width={buttonWidth}
               />
             </object3D>
             {/** Confirm Button. */}
@@ -183,6 +187,7 @@ export const VRSurfaceDialog = ({
                 label="confirm"
                 onClick={confirm}
                 height={buttonHeight}
+                width={buttonWidth}
               />
             </object3D>
           </group>
