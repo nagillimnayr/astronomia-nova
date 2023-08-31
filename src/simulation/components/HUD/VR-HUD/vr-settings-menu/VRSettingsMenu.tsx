@@ -10,7 +10,7 @@ import {
   Object3D,
   type Vector3Tuple,
   Vector3,
-  type Group,
+  Group,
   ColorRepresentation,
 } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
@@ -32,7 +32,7 @@ import { type celestialSphereMachine } from '@/state/xstate/visibility-machine/c
 import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
 import { toggleMachine } from '@/state/xstate/toggle-machine/toggle-machine';
 import { depth } from '../vr-hud-constants';
-import { type ThreeEvent } from '@react-three/fiber';
+import { useThree, type ThreeEvent } from '@react-three/fiber';
 import { VRSlider } from '../vr-ui-components/vr-slider/VRSlider';
 import { VRPanel } from '../vr-ui-components/VRPanel';
 import { ICON_MATERIAL_BASE } from '../vr-ui-materials';
@@ -40,6 +40,9 @@ import { VRLabel } from '../vr-ui-components/VRLabel';
 import { useSpring, animated } from '@react-spring/three';
 import useHover from '@/hooks/useHover';
 import { PI, PI_OVER_TWO } from '@/simulation/utils/constants';
+
+const _camWorldPos = new Vector3();
+const _containerWorldPos = new Vector3();
 
 type VRSettingsMenuProps = {
   position?: Vector3Tuple;
@@ -50,12 +53,14 @@ export const VRSettingsMenu = ({
   defaultOpen = false,
 }: VRSettingsMenuProps) => {
   // Get actor from state machine.
-  const { uiActor } = MachineContext.useSelector(({ context }) => context);
+  const { uiActor, cameraActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const vrSettingsMenuActor = useSelector(
     uiActor,
     ({ context }) => context.vrSettingsMenuActor
   );
-
+  const getThree = useThree(({ get }) => get);
   const [state, send] = useActor(vrSettingsMenuActor);
 
   // Close button click handler.
@@ -71,6 +76,14 @@ export const VRSettingsMenu = ({
   const isOpen = state.matches('active');
   const { scale } = useSpring({ scale: isOpen ? 1 : 0 });
 
+  const containerRef = useRef<Group>(null!);
+  useEffect(() => {
+    const { camera } = getThree();
+    const container = containerRef.current;
+    camera.getWorldPosition(_camWorldPos);
+    container.lookAt(_camWorldPos);
+  }, [getThree]);
+
   const width = 1;
   const height = width * GOLDEN_RATIO;
   const padding = 0.05;
@@ -80,7 +93,7 @@ export const VRSettingsMenu = ({
   const halfInnerHeight = innerHeight / 2;
   return (
     <>
-      <animated.group position={position} scale-y={scale}>
+      <animated.group ref={containerRef} position={position} scale-y={scale}>
         <VRPanel
           width={width}
           height={height}

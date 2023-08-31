@@ -49,6 +49,9 @@ import {
 import { VRSettingsMenu } from './VRSettingsMenu';
 import { useSpring, animated } from '@react-spring/three';
 import useHover from '@/hooks/useHover';
+import { useThree } from '@react-three/fiber';
+
+const _camWorldPos = new Vector3();
 
 type VRSettingsButtonProps = {
   position?: Vector3Tuple;
@@ -66,6 +69,8 @@ export const VRSettingsButton = ({
     ({ context }) => context.vrSettingsMenuActor
   );
 
+  const getThree = useThree(({ get }) => get);
+
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
   const { scale } = useSpring({ scale: isHovered ? 1.2 : 1 });
@@ -82,9 +87,18 @@ export const VRSettingsButton = ({
     return () => material.dispose();
   }, [material]);
 
+  const containerRef = useRef<Group>(null!);
+  useEffect(() => {
+    const { camera } = getThree();
+    const container = containerRef.current;
+    camera.getWorldPosition(_camWorldPos);
+    container.lookAt(_camWorldPos);
+  }, [getThree]);
+
   return (
     <>
       <animated.group
+        ref={containerRef}
         position={position}
         scale={scale}
         onPointerEnter={hoverEvents.handlePointerEnter}
