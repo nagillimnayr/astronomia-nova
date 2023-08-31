@@ -15,9 +15,10 @@ const meta: Meta<typeof VRPanel> = {
   decorators: [(storyFn) => <VRCanvasDecorator>{storyFn()}</VRCanvasDecorator>],
   argTypes: {
     height: { control: { type: 'range', min: 0.1, max: 2, step: 0.1 } },
+    width: { control: { type: 'range', min: 0.1, max: 3, step: 0.1 } },
     radius: { control: { type: 'range', min: 0.01, max: 0.5, step: 0.01 } },
     borderWidth: {
-      control: { type: 'range', min: 0.01, max: 0.5, step: 0.01 },
+      control: { type: 'range', min: 0.01, max: 0.5, step: 0.005 },
     },
     backgroundColor: { control: { type: 'color' } },
     borderColor: { control: { type: 'color' } },
@@ -39,8 +40,9 @@ const Default: Story = {
   },
   args: {
     height: 1,
-    radius: 0.25,
-    borderWidth: 0.025,
+    width: 2,
+    radius: 0.2,
+    borderWidth: 0.02,
     backgroundColor: colors.background,
     borderColor: colors.border,
   },
