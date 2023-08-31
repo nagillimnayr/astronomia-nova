@@ -46,6 +46,10 @@ import { Interactive } from '@react-three/xr';
 const _camWorldPos = new Vector3();
 const _containerWorldPos = new Vector3();
 
+const dummyFn = () => {
+  return;
+};
+
 type VRSettingsMenuProps = {
   position?: Vector3Tuple;
   defaultOpen?: boolean;
@@ -96,12 +100,15 @@ export const VRSettingsMenu = ({
   return (
     <>
       <animated.group ref={containerRef} position={position} scale-y={scale}>
-        <VRPanel
-          width={width}
-          height={height}
-          radius={0.05}
-          borderWidth={0.01}
-        />
+        {/** Wrap background panel in Interactive so it will catch rays. */}
+        <Interactive onSelect={dummyFn}>
+          <VRPanel
+            width={width}
+            height={height}
+            radius={0.05}
+            borderWidth={0.01}
+          />
+        </Interactive>
 
         {/** Close button. */}
         <object3D
