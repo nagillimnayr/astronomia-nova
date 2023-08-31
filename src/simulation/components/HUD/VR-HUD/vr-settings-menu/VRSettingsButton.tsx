@@ -50,6 +50,7 @@ import { VRSettingsMenu } from './VRSettingsMenu';
 import { useSpring, animated } from '@react-spring/three';
 import useHover from '@/hooks/useHover';
 import { useThree } from '@react-three/fiber';
+import { Interactive } from '@react-three/xr';
 
 const _camWorldPos = new Vector3();
 
@@ -105,10 +106,16 @@ export const VRSettingsButton = ({
         onPointerLeave={hoverEvents.handlePointerLeave}
       >
         <group scale={size}>
-          <Circle scale={10} onClick={handleClick}>
-            <MeshDiscardMaterial />
-            <Edges visible={debug} scale={1} color={'yellow'} />
-          </Circle>
+          <Interactive
+            onSelect={handleClick}
+            onHover={hoverEvents.handlePointerEnter}
+            onBlur={hoverEvents.handlePointerLeave}
+          >
+            <Circle scale={10} onClick={handleClick}>
+              <MeshDiscardMaterial />
+              <Edges visible={debug} scale={1} color={'yellow'} />
+            </Circle>
+          </Interactive>
           <Center>
             <Suspense>
               <Svg src={'icons/MdiCog.svg'} fillMaterial={material} />
