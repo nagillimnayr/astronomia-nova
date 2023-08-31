@@ -12,31 +12,11 @@ import {
 import { METER, PI_OVER_TWO } from '@/simulation/utils/constants';
 import { Circle, Line, Wireframe } from '@react-three/drei';
 import { useEventListener } from '@react-hooks-library/core';
-import z from 'zod';
 import { clamp } from 'three/src/math/MathUtils';
 import { PI } from '../../../../utils/constants';
 
-const _spherical = new Spherical();
 const MIN_PHI = -PI_OVER_TWO + Number.EPSILON;
 const MAX_PHI = PI_OVER_TWO - Number.EPSILON;
-
-type VRHudSphereProps = {
-  defaultOpen?: boolean;
-};
-export const VRHudSphere = ({ defaultOpen = false }: VRHudSphereProps) => {
-  return (
-    <>
-      <group name="VR-Hud-Sphere">
-        <VRHudSphereAttachment radius={5} phi={PI_OVER_TWO} theta={0}>
-          {/* <VRPanel width={2} height={1} /> */}
-          <Circle>
-            <meshBasicMaterial side={DoubleSide} color={'red'} />
-          </Circle>
-        </VRHudSphereAttachment>
-      </group>
-    </>
-  );
-};
 
 type VRHudSphereAttachmentProps = PropsWithChildren & {
   radius: number;
@@ -50,11 +30,10 @@ export const VRHudSphereAttachment = ({
   theta,
 }: VRHudSphereAttachmentProps) => {
   const pivotRef = useRef<Object3D>(null!);
-  console.log('hello');
   const [spring, springApi] = useSpring(() => ({
     radius: clamp(radius, 0.1, 10),
     phi: -clamp(phi, MIN_PHI, MAX_PHI),
-    theta: _spherical.theta,
+    theta: theta,
   }));
 
   useEffect(() => {
@@ -65,13 +44,13 @@ export const VRHudSphereAttachment = ({
     springApi.start({
       radius: clamp(radius, 0.1, 10),
       phi: -clamp(phi, MIN_PHI, MAX_PHI),
-      theta: _spherical.theta,
+      theta: theta,
     });
   }, [phi, radius, springApi, theta]);
 
-  const linePoints = useMemo(() => {
-    return [new Vector3(0, 0, 0), new Vector3(0, 0, 1)];
-  }, []);
+  // const linePoints = useMemo(() => {
+  //   return [new Vector3(0, 0, 0), new Vector3(0, 0, 1)];
+  // }, []);
 
   // const sphereGeometry = useMemo(() => {
   //   const radius = 1;
