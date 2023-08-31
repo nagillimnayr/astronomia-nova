@@ -528,7 +528,7 @@ const VRSliderIntersectionPlane = forwardRef<
     <>
       <Plane scale={[width, height, 1]} ref={planeRef}>
         <MeshDiscardMaterial />
-        <Edges scale={1} color={'yellow'} />
+        {/* <Edges scale={1} color={'yellow'} /> */}
       </Plane>
     </>
   );
