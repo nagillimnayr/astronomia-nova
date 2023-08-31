@@ -105,12 +105,15 @@ export const VRSurfaceDialog = ({
     const isClosed = surfaceDialogActor.getSnapshot()!.matches('closed');
     if (isClosed) return;
     const anchor = anchorRef.current;
+    const container = containerRef.current;
     const { controls } = cameraActor.getSnapshot()!.context;
     if (!controls) return;
 
     camera.getWorldPosition(_camWorldPos);
     controls.getCameraWorldUp(anchor.up);
+    container.up.copy(anchor.up);
     anchor.lookAt(_camWorldPos); // Look at camera.
+    container.lookAt(_camWorldPos); // Look at camera.
   });
 
   return (
