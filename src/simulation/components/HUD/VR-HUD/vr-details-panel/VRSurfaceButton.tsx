@@ -41,7 +41,6 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
 
   const containerRef = useRef<Group>(null!);
   const contentRef = useRef<Group>(null!);
-  // useHelper(contentRef, BoxHelper);
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
@@ -83,9 +82,7 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
       });
 
       // Open surface dialog.
-      surfaceDialogActor.send({
-        type: 'OPEN',
-      });
+      surfaceDialogActor.send({ type: 'TOGGLE' });
     },
     [cameraActor, selectionActor, setHovered, surfaceDialogActor]
   );
