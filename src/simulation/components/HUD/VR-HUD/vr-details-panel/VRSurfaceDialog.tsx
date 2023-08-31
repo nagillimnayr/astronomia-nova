@@ -124,58 +124,58 @@ export const VRSurfaceDialog = ({
   return (
     <>
       <object3D name="surface-dialog-anchor" ref={anchorRef}>
-        <Interactive onSelect={dummyFn}>
-          <animated.group
-            visible={visible}
-            ref={containerRef}
-            position={position}
-          >
+        <animated.group
+          visible={visible}
+          ref={containerRef}
+          position={position}
+        >
+          <Interactive onSelect={dummyFn}>
             <VRPanel width={panelWidth} height={panelHeight} />
+          </Interactive>
 
-            {/** Sliders. */}
-            <group position-y={0.5} position-z={depth.xs}>
-              {/** Latitude Slider. */}
-              <object3D position-y={0.55}>
-                <CoordinateSlider
-                  width={sliderWidth}
-                  target={'latitude'}
-                  onValueChange={handleLatitudeChange}
-                  min={MIN_LATITUDE}
-                  max={MAX_LATITUDE}
-                />
-              </object3D>
-              {/** Longitude Slider. */}
-              <object3D position-y={-0.55}>
-                <CoordinateSlider
-                  width={sliderWidth}
-                  target={'longitude'}
-                  onValueChange={handleLongitudeChange}
-                  min={MIN_LONGITUDE}
-                  max={MAX_LONGITUDE}
-                />
-              </object3D>
-            </group>
+          {/** Sliders. */}
+          <group position-y={0.5} position-z={depth.xs}>
+            {/** Latitude Slider. */}
+            <object3D position-y={0.55}>
+              <CoordinateSlider
+                width={sliderWidth}
+                target={'latitude'}
+                onValueChange={handleLatitudeChange}
+                min={MIN_LATITUDE}
+                max={MAX_LATITUDE}
+              />
+            </object3D>
+            {/** Longitude Slider. */}
+            <object3D position-y={-0.55}>
+              <CoordinateSlider
+                width={sliderWidth}
+                target={'longitude'}
+                onValueChange={handleLongitudeChange}
+                min={MIN_LONGITUDE}
+                max={MAX_LONGITUDE}
+              />
+            </object3D>
+          </group>
 
-            <group position-y={-1.25} position-z={depth.xs}>
-              {/** Cancel Button. */}
-              <object3D position-x={-1.2}>
-                <VRHudButton
-                  label="cancel"
-                  onClick={close}
-                  height={buttonHeight}
-                />
-              </object3D>
-              {/** Confirm Button. */}
-              <object3D position-x={1.1}>
-                <VRHudButton
-                  label="confirm"
-                  onClick={confirm}
-                  height={buttonHeight}
-                />
-              </object3D>
-            </group>
-          </animated.group>
-        </Interactive>
+          <group position-y={-1.25} position-z={depth.xs}>
+            {/** Cancel Button. */}
+            <object3D position-x={-1.2}>
+              <VRHudButton
+                label="cancel"
+                onClick={close}
+                height={buttonHeight}
+              />
+            </object3D>
+            {/** Confirm Button. */}
+            <object3D position-x={1.1}>
+              <VRHudButton
+                label="confirm"
+                onClick={confirm}
+                height={buttonHeight}
+              />
+            </object3D>
+          </group>
+        </animated.group>
       </object3D>
     </>
   );
