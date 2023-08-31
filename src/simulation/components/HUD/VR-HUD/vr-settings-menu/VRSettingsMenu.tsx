@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   PropsWithoutRef,
   Suspense,
@@ -12,12 +13,12 @@ import {
   Vector3,
   Group,
   ColorRepresentation,
+  Color,
 } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type ContextFrom } from 'xstate';
 import { type visibilityMachine } from '@/state/xstate/visibility-machine/visibility-machine';
 import { useActor, useMachine, useSelector } from '@xstate/react';
-
 import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import {
   Center,
@@ -35,7 +36,7 @@ import { toggleMachine } from '@/state/xstate/toggle-machine/toggle-machine';
 import { depth } from '../vr-hud-constants';
 import { useThree, type ThreeEvent } from '@react-three/fiber';
 import { VRSlider } from '../vr-ui-components/vr-slider/VRSlider';
-import { VRPanel } from '../vr-ui-components/VRPanel';
+import { AnimatedVRPanel, VRPanel } from '../vr-ui-components/VRPanel';
 import { ICON_MATERIAL_BASE } from '../vr-ui-materials';
 import { VRLabel } from '../vr-ui-components/VRLabel';
 import { useSpring, animated } from '@react-spring/three';
@@ -248,6 +249,34 @@ const VRToggleButton = ({
   useCursor(isHovered, 'pointer');
   const { buttonScale } = useSpring({ buttonScale: isHovered ? 1.2 : 1 });
 
+  const [colorSpring, colorSpringApi] = useSpring(() => ({
+    backgroundColor: colors.background,
+  }));
+
+  useEffect(() => {
+    if (isActive && !isHovered) {
+      colorSpringApi.start({
+        // @ts-ignore
+        backgroundColor: colors.background,
+      });
+    } else if (isActive && isHovered) {
+      colorSpringApi.start({
+        // @ts-ignore
+        backgroundColor: colors.gray300,
+      });
+    } else if (!isActive && isHovered) {
+      colorSpringApi.start({
+        // @ts-ignore
+        backgroundColor: colors.gray400,
+      });
+    } else if (!isActive && !isHovered) {
+      colorSpringApi.start({
+        // @ts-ignore
+        backgroundColor: colors.gray500,
+      });
+    }
+  }, [colorSpringApi, isActive, isHovered]);
+
   useEffect(() => {
     // Set starting state in external state machine.
     const type = defaultSelected ? 'ENABLE' : 'DISABLE';
@@ -274,11 +303,12 @@ const VRToggleButton = ({
             onHover={hoverEvents.handlePointerEnter}
             onBlur={hoverEvents.handlePointerLeave}
           >
-            <VRPanel
+            <AnimatedVRPanel
               width={panelSize}
               height={panelSize}
               radius={iconSize}
               borderWidth={iconSize}
+              backgroundColor={colorSpring.backgroundColor}
               onPointerDown={handleClick}
             />
           </Interactive>
