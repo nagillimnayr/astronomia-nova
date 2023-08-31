@@ -25,6 +25,7 @@ import { VRSurfaceButton } from './VRSurfaceButton';
 import { useThree } from '@react-three/fiber';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { Interactive } from '@react-three/xr';
+import { useSpring, animated } from '@react-spring/three';
 
 const _camWorldPos = new Vector3();
 
@@ -59,11 +60,12 @@ export const VRDetailsPanel = ({
     selectionActor,
     ({ context }) => context.selected
   );
+  const getThree = useThree(({ get }) => get);
 
   // Only open if a body is selected.
   const isOpen = Boolean(selected);
 
-  const getThree = useThree(({ get }) => get);
+  const spring = useSpring({ scale: isOpen ? scale : 0 });
 
   // // Subscribe so that component will re-render upon entering VR.
   // const inVR = useSelector(vrActor, (state) => state.matches('active'));
@@ -96,21 +98,11 @@ export const VRDetailsPanel = ({
 
   return (
     <>
-      <group
+      <animated.group
         name="vr-details-panel"
+        ref={containerRef}
         position={position}
-        scale={scale}
-        visible={isOpen}
-        ref={(container) => {
-          if (!container) return;
-          containerRef.current = container;
-
-          // // Look at camera.
-          // const { camera } = getThree();
-          // camera.getWorldPosition(_camWorldPos);
-          // getLocalUpInWorldCoords(camera, container.up);
-          // container.lookAt(_camWorldPos);
-        }}
+        scale={spring.scale}
       >
         {/** Background. */}
         <Interactive onSelect={dummyFn}>
@@ -131,7 +123,7 @@ export const VRDetailsPanel = ({
         {/** Buttons. */}
         <VRFocusButton width={0.6} position={[-0.35, -0.25, depth.xs]} />
         <VRSurfaceButton width={0.6} position={[0.35, -0.25, depth.xs]} />
-      </group>
+      </animated.group>
     </>
   );
 };
