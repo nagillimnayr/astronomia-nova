@@ -493,7 +493,7 @@ const CloseButton = ({ position, onClick }: CloseButtonProps) => {
           </Plane>
         </Interactive>
         <object3D scale={0.005} position-z={0.0025}>
-          <Center>
+          <Center onCentered={dummyFn}>
             <Suspense>
               <Svg src="icons/MdiClose.svg" fillMaterial={ICON_MATERIAL_BASE} />
             </Suspense>
