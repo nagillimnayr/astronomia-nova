@@ -6,6 +6,7 @@ import {
   colors,
   depth,
   text,
+  twColors,
 } from '../vr-hud-constants';
 import {
   BoxHelper,
@@ -14,10 +15,19 @@ import {
   type Vector3Tuple,
   type Group,
   Vector3,
+  MeshBasicMaterial,
 } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { Svg, Text, useHelper } from '@react-three/drei';
+import {
+  Center,
+  Circle,
+  Edges,
+  MeshDiscardMaterial,
+  Svg,
+  Text,
+  useHelper,
+} from '@react-three/drei';
 import { ICON_MATERIAL_BASE } from '../vr-ui-materials';
 import { VRFocusButton } from './VRFocusButton';
 import { VRPanel } from '../vr-ui-components/VRPanel';
@@ -25,7 +35,8 @@ import { VRSurfaceButton } from './VRSurfaceButton';
 import { useThree } from '@react-three/fiber';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { Interactive } from '@react-three/xr';
-import { useSpring, animated } from '@react-spring/three';
+import { useSpring, animated, useSpringRef } from '@react-spring/three';
+import { AnimatedSvg } from '@/simulation/components/animated-components';
 
 const _camWorldPos = new Vector3();
 
@@ -34,14 +45,12 @@ const dummyFn = () => {
 };
 
 const placeholders = {
-  name: 'Name',
+  name: '',
   mass: 0,
   meanRadius: 0,
   siderealRotationRate: 0,
   siderealRotationPeriod: 0,
 };
-
-const pad = text.md;
 
 type VRDetailsPanelProps = {
   position?: Vector3Tuple;
@@ -76,6 +85,13 @@ export const VRDetailsPanel = ({
   // Dimensions of the panel.
   const height = 1;
   const width = height * GOLDEN_RATIO;
+  const padding = 0.1;
+  const halfHeight = height / 2;
+  const halfWidth = width / 2;
+  const innerHeight = height - padding * 2;
+  const innerWidth = width - padding * 2;
+  const halfInnerHeight = innerHeight / 2;
+  const halfInnerWidth = innerWidth / 2;
 
   // Attribute data.
   const {
@@ -85,7 +101,7 @@ export const VRDetailsPanel = ({
     siderealRotationRate,
     siderealRotationPeriod,
   } = selected ?? placeholders;
-
+  const closeButtonSize = 0.0075;
   return (
     <>
       <animated.group
@@ -99,6 +115,14 @@ export const VRDetailsPanel = ({
           {/** Wrap in Interactive so it will catch rays. */}
           <VRPanel width={width} height={height} />
         </Interactive>
+
+        <object3D
+          position-x={halfInnerWidth - closeButtonSize * 10}
+          position-y={halfInnerHeight - closeButtonSize * 10}
+          position-z={depth.xxs}
+        >
+          <CloseButton size={closeButtonSize} />
+        </object3D>
 
         {/** Name. */}
         <Text
@@ -199,23 +223,64 @@ const Attribute = ({ position, label, value }: AttributeProps) => {
   );
 };
 
-const closeBtnSize = text.base;
-const VRCloseButton = () => {
+type CloseButtonProps = {
+  size: number;
+};
+const CloseButton = ({ size }: CloseButtonProps) => {
   // Get actors from root state machine.
   const { selectionActor } = MachineContext.useSelector(
     ({ context }) => context
   );
+
+  const [spring, springRef] = useSpring(() => ({
+    scale: 1,
+    opacity: 0,
+  }));
+
   const handleCloseClick = useCallback(() => {
     // Deselect the currently selected body.
-    selectionActor.send({ type: 'DESELECT' });
+    selectionActor.send({
+      type: 'DESELECT',
+    });
   }, [selectionActor]);
 
-  // Create Object to attach UI component to.
+  const handlePointerEnter = useCallback(() => {
+    springRef.start({
+      scale: 1.2,
+      opacity: 0.5,
+    });
+  }, [springRef]);
+  const handlePointerLeave = useCallback(() => {
+    springRef.start({ scale: 1, opacity: 0 });
+  }, [springRef]);
+
+  const circleScale = 10;
 
   return (
     <>
-      <object3D>
-        <Svg src="icons/MdiClose.svg" fillMaterial={ICON_MATERIAL_BASE} />
+      <object3D scale={size}>
+        <animated.object3D scale={spring.scale}>
+          <animated.mesh
+            scale={circleScale}
+            material-transparent={true}
+            material-opacity={spring.opacity}
+            onClick={handleCloseClick}
+            onPointerEnter={handlePointerEnter}
+            onPointerLeave={handlePointerLeave}
+          >
+            <circleGeometry />
+            {/* <Edges color={'yellow'} /> */}
+          </animated.mesh>
+
+          <Center>
+            <Suspense>
+              <AnimatedSvg
+                src="icons/MdiClose.svg"
+                fillMaterial={ICON_MATERIAL_BASE}
+              />
+            </Suspense>
+          </Center>
+        </animated.object3D>
       </object3D>
     </>
   );
