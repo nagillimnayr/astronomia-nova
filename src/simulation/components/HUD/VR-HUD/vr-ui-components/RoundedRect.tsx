@@ -1,5 +1,17 @@
+import { BufferGeometryNode } from '@react-three/fiber';
+import { extend } from '@react-three/fiber';
 import { RoundedPlaneGeometry } from 'maath/geometry';
 import { useMemo, type ReactNode } from 'react';
+
+extend({ RoundedPlaneGeometry });
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    roundedPlaneGeometry: BufferGeometryNode<
+      RoundedPlaneGeometry,
+      typeof RoundedPlaneGeometry
+    >;
+  }
+}
 
 interface RoundedRectProps {
   width?: number;
