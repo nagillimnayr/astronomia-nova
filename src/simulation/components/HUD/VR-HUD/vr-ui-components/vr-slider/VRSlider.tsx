@@ -33,7 +33,7 @@ import {
   Line,
   ArrowHelper,
 } from 'three';
-import { depth } from '../../vr-hud-constants';
+import { colors, depth, twColors } from '../../vr-hud-constants';
 import useHover from '@/hooks/useHover';
 import {
   useThree,
@@ -84,6 +84,7 @@ export type VRSliderProps = {
   fillColor?: ColorRepresentation;
   thumbColor?: ColorRepresentation;
   thumbBorderColor?: ColorRepresentation;
+  thumbDragColor?: ColorRepresentation;
 
   onValueChange?: (value: number) => void;
 };
@@ -99,8 +100,9 @@ export const VRSlider = ({
   thumbRadius,
   trackColor = 'black',
   fillColor = 'white',
-  thumbColor = 'white',
-  thumbBorderColor = 'black',
+  thumbColor = colors.foreground,
+  thumbBorderColor = colors.border,
+  thumbDragColor = twColors.gray[300],
   onValueChange,
 }: VRSliderProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
@@ -133,12 +135,14 @@ export const VRSlider = ({
     return [startX, minX, maxX, halfWidth];
   }, [max, min, width]);
 
-  const [valueSpring, valueSpringRef] = useSpring(() => ({
-    // Convert value into scene units.
+  const [spring, springRef] = useSpring(() => ({
     value: 0,
+    thumbScale: 1,
+    thumbColor: thumbColor.toString(),
+
     onChange: {
       value: (result: AnimationResult<SpringValue<any>>) => {
-        if (typeof result !== 'number') return; // Type guard.
+        if (typeof result !== 'number') return; // Type narrowing.
 
         // Pass value to onValueChange callback.
         if (onValueChange) {
@@ -150,6 +154,8 @@ export const VRSlider = ({
       },
     },
   }));
+
+  // Convert the value that was passed in as a prop into a spring value.
   const { currentX } = useSpring({
     // Convert value into scene units.
     currentX: value * stepLength.current,
@@ -163,9 +169,9 @@ export const VRSlider = ({
       // newValue =
       //   Math.round(newValue / stepSize.current) * stepSize.current;
 
-      valueSpringRef.start({ value: newValue }); // Set new x target.
+      springRef.start({ value: newValue }); // Set new x target.
     },
-    [max, min, valueSpringRef]
+    [max, min, springRef]
   );
   // Callback for the slider to update the value.
   const setX = useCallback(
@@ -179,13 +185,13 @@ export const VRSlider = ({
   // Callback for the incrementers to increment the value.
   const incrementValue = useCallback(
     (decrement?: boolean) => {
-      const springValue = valueSpring.value.get();
+      const springValue = spring.value.get();
       const newValue =
         springValue + (decrement ? -stepSize.current : stepSize.current);
 
       setValue(newValue);
     },
-    [setValue, valueSpring]
+    [setValue, spring]
   );
 
   // Ref to intersection plane.
@@ -195,12 +201,12 @@ export const VRSlider = ({
 
   // Runs whenever min or max are changed, and clamps the target value.
   useEffect(() => {
-    const springValue = valueSpring.value.get();
+    const springValue = spring.value.get();
     if (springValue < min || springValue > max) {
       const newValue = clamp(springValue, min, max);
-      valueSpringRef.start({ value: newValue });
+      springRef.start({ value: newValue });
     }
-  }, [max, min, valueSpring, valueSpringRef]);
+  }, [max, min, spring, springRef]);
 
   const isDragging = useRef<boolean>(false);
   const anchorRef = useRef<Object3D>(null!);
@@ -264,8 +270,14 @@ export const VRSlider = ({
 
       isDragging.current = true;
 
-      cameraActor.send({ type: 'LOCK_CONTROLS' });
+      // Transition thumb color.
+      springRef.start({
+        thumbColor: thumbDragColor.toString(),
+        thumbScale: 1.25,
+      });
 
+      // lock camera controls while dragging.
+      cameraActor.send({ type: 'LOCK_CONTROLS' });
       const controls = getThree().controls as CameraControls;
       if (
         controls &&
@@ -275,10 +287,18 @@ export const VRSlider = ({
         controls.enabled = false;
       }
     },
-    [cameraActor, getThree]
+    [cameraActor, getThree, springRef, thumbDragColor]
   );
   const handleDragEnd = useCallback(() => {
     isDragging.current = false;
+
+    // Transition thumb color.
+    springRef.start({
+      thumbColor: thumbColor.toString(), // Reset color.
+      thumbScale: 1, // Reset scale.
+    });
+
+    // Unlock camera controls.
     cameraActor.send({ type: 'UNLOCK_CONTROLS' });
     const controls = getThree().controls as CameraControls;
     if (
@@ -288,7 +308,7 @@ export const VRSlider = ({
     ) {
       controls.enabled = true;
     }
-  }, [cameraActor, getThree]);
+  }, [cameraActor, getThree, springRef, thumbColor]);
 
   const handlePointerUp = useCallback(() => {
     if (!isDragging.current) return;
@@ -301,6 +321,21 @@ export const VRSlider = ({
       handlePointerUp();
     }
   });
+
+  const handleHover = useCallback(() => {
+    springRef.start({
+      thumbScale: 1.25,
+      thumbColor: thumbDragColor.toString(),
+    });
+  }, [springRef, thumbDragColor]);
+  const handleHoverEnd = useCallback(() => {
+    // Only reset the scale and color if the thumb is not currently being dragged.
+    isDragging.current ||
+      springRef.start({
+        thumbScale: 1,
+        thumbColor: thumbColor.toString(),
+      });
+  }, [springRef, thumbColor]);
 
   useEventListener('pointerup', handlePointerUp);
 
@@ -330,10 +365,13 @@ export const VRSlider = ({
           startX={startX}
           currentX={currentX}
           radius={thumbRadius}
-          color={thumbColor}
+          scale={spring.thumbScale}
+          color={spring.thumbColor}
           borderColor={thumbBorderColor}
           onDragStart={handleDragStart}
           onDragEnd={handlePointerUp}
+          onHover={handleHover}
+          onHoverEnd={handleHoverEnd}
         />
         <VRSliderIntersectionPlane
           ref={planeRef}
@@ -440,19 +478,25 @@ type VRSliderThumbProps = {
   startX: number;
   currentX: SpringValue<number>;
   radius: number;
-  color: ColorRepresentation;
+  scale: number | SpringValue<number>;
+  color: ColorRepresentation | SpringValue<string>;
   borderColor: ColorRepresentation;
   onDragStart: () => void;
   onDragEnd: () => void;
+  onHover: () => void;
+  onHoverEnd: () => void;
 };
 const VRSliderThumb = ({
   startX,
   currentX,
   radius,
+  scale,
   color,
   borderColor,
   onDragStart,
   onDragEnd,
+  onHover,
+  onHoverEnd,
 }: VRSliderThumbProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const getThree = useThree(({ get }) => get);
@@ -461,14 +505,18 @@ const VRSliderThumb = ({
   const anchorRef = useRef<Group>(null!);
 
   // Spring scale on hover.
-  const [{ scale }, scaleApi] = useSpring(() => ({ scale: 1 }));
+  const [spring, springRef] = useSpring(() => ({
+    scale: 1,
+  }));
 
-  const handleHover = useCallback(() => {
-    scaleApi.start({ scale: 1.25 });
-  }, [scaleApi]);
-  const handleHoverEnd = useCallback(() => {
-    scaleApi.start({ scale: 1 });
-  }, [scaleApi]);
+  // const handleHover = useCallback(() => {
+  //   springRef.start({
+  //     scale: 1.25,
+  //   });
+  // }, [springRef]);
+  // const handleHoverEnd = useCallback(() => {
+  //   springRef.start({ scale: 1 });
+  // }, [springRef]);
 
   // useEventListener('pointerup', handleDragEnd);
 
@@ -479,21 +527,25 @@ const VRSliderThumb = ({
           <animated.group scale={scale}>
             <group scale={radius}>
               <Interactive
-                onHover={handleHover}
-                onBlur={handleHoverEnd}
+                onHover={onHover}
+                onBlur={onHoverEnd}
                 onSelectStart={onDragStart}
               >
-                <Ring args={ringArgs} material-color={borderColor} />
-                <Circle
-                  args={circleArgs}
+                {/** Ring. */}
+                <animated.mesh material-color={borderColor}>
+                  <ringGeometry args={ringArgs} />
+                </animated.mesh>
+                {/** Circle. */}
+                <animated.mesh
+                  material-color={color}
                   onPointerDown={onDragStart}
                   onPointerUp={onDragEnd}
                   onPointerMissed={onDragEnd}
-                  onPointerEnter={handleHover}
-                  onPointerLeave={handleHoverEnd}
+                  onPointerEnter={onHover}
+                  onPointerLeave={onHoverEnd}
                 >
-                  <meshBasicMaterial color={color} />
-                </Circle>
+                  <circleGeometry args={circleArgs} />
+                </animated.mesh>
               </Interactive>
             </group>
           </animated.group>
