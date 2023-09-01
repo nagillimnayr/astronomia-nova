@@ -128,11 +128,11 @@ export const VRSettingsMenu = ({
         {/** Toggle Buttons. */}
         <group
           name="toggle-buttons"
-          position-y={halfInnerHeight - 0.35}
+          position-y={halfInnerHeight - 0.55}
           position-z={depth.xxs}
         >
           <VRSeparator
-            position={[0, 0.23, 0]}
+            position={[0, 0.4, 0]}
             width={innerWidth}
             height={0.01}
             color={colors.border}
@@ -140,7 +140,7 @@ export const VRSettingsMenu = ({
           <group position-x={-halfInnerWidth + 0.1}>
             {/** Trajectories. */}
             <VRToggleButton
-              posY={0.15}
+              posY={0.3}
               label={'Trajectories'}
               target="trajectories"
               iconUrl="icons/MdiOrbit.svg"
@@ -149,7 +149,7 @@ export const VRSettingsMenu = ({
             />
             {/** Annotations. */}
             <VRToggleButton
-              posY={0.05}
+              posY={0.1}
               label={'Annotations'}
               target={'annotations'}
               iconUrl={'icons/MdiTagText.svg'}
@@ -158,7 +158,7 @@ export const VRSettingsMenu = ({
             />
             {/** Markers. */}
             <VRToggleButton
-              posY={-0.05}
+              posY={-0.1}
               label={'Markers'}
               target={'markers'}
               iconUrl={'icons/MdiTarget.svg'}
@@ -167,7 +167,7 @@ export const VRSettingsMenu = ({
             />
             {/** Velocity Arrows. */}
             <VRToggleButton
-              posY={-0.15}
+              posY={-0.3}
               label={'Velocity Arrows'}
               target={'velocityArrows'}
               iconUrl={'icons/MdiArrowTopRightThin.svg'}
@@ -176,7 +176,7 @@ export const VRSettingsMenu = ({
             />
           </group>
           <VRSeparator
-            position={[0, -0.23, 0]}
+            position={[0, -0.4, 0]}
             width={innerWidth}
             height={0.01}
             color={colors.border}
@@ -187,7 +187,7 @@ export const VRSettingsMenu = ({
         <group position-y={-0.2} position-z={depth.xxs}>
           {/** Constellations. */}
           <VROpacitySliders
-            position={[0, 0.1, 0]}
+            position={[0, -0.2, 0]}
             width={innerWidth}
             label="Constellation Opacity"
             target="constellations"
@@ -281,11 +281,11 @@ const VRToggleButton = ({
     actor.send({ type: 'TOGGLE' });
   }, [actor]);
 
-  const fontSize = 0.05;
-  const panelSize = 0.075;
+  const fontSize = 0.06;
+  const panelSize = 0.15;
   return (
     <>
-      <group position-y={posY} position-x={fontSize / 2}>
+      <group position-y={posY} position-x={panelSize}>
         <animated.group
           position-x={-panelSize}
           scale={buttonScale}
@@ -300,7 +300,7 @@ const VRToggleButton = ({
             <AnimatedVRPanel
               width={panelSize}
               height={panelSize}
-              radius={iconSize}
+              radius={panelSize * 0.075}
               borderWidth={iconSize}
               backgroundColor={colorSpring.backgroundColor}
               onPointerDown={handleClick}
@@ -410,8 +410,8 @@ const VROpacitySliders = ({
     [actor]
   );
 
-  const height = 0.025;
-  const thumbRadius = height;
+  const height = 0.04;
+  const thumbRadius = height * 1.2;
   const innerWidth = width - thumbRadius * 2;
   const halfWidth = width / 2;
   const halfInnerWidth = innerWidth / 2;
@@ -442,6 +442,7 @@ const VROpacitySliders = ({
           fillColor={'white'}
           trackColor={'black'}
         />
+        {/** End-caps. */}
         <Circle
           args={[1, 32, PI_OVER_TWO, PI]}
           position-x={-halfInnerWidth}
