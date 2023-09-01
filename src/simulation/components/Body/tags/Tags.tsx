@@ -2,6 +2,7 @@ import KeplerBody from '@/simulation/classes/kepler-body';
 import {
   MutableRefObject,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -16,7 +17,13 @@ import { ThreeEvent, useFrame, useThree } from '@react-three/fiber';
 import { AxesHelper, Group, Mesh, Object3D, Vector3 } from 'three';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import { clamp } from 'lodash';
-import { DIST_MULT, METER, ORIGIN, Y_AXIS } from '@/simulation/utils/constants';
+import {
+  DIST_MULT,
+  EARTH_RADIUS,
+  METER,
+  ORIGIN,
+  Y_AXIS,
+} from '@/simulation/utils/constants';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { Interactive, XRInteractionEvent } from '@react-three/xr';
 import { useCursor } from '@react-three/drei';
@@ -24,7 +31,7 @@ import useHover from '@/hooks/useHover';
 import { useSpring, animated } from '@react-spring/three';
 
 const threshold = 0.02;
-const DIST_TO_CAM_THRESHOLD = 1e8 * METER;
+const DIST_TO_CAM_THRESHOLD = 5e8 * METER;
 
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
@@ -48,16 +55,19 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     return color;
   }, [name]);
 
+  const pivotRef = useRef<Object3D>(null!);
   const groupRef = useRef<Group>(null!);
   const textRef = useRef<Object3D>(null!);
-  const ringRef = useRef<Mesh>(null!);
+  // const ringRef = useRef<Mesh>(null!);
   const circleRef = useRef<Mesh>(null!);
   const markerRef = useRef<Group>(null!);
   const axesRef = useRef<AxesHelper>(null!);
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
-  const { scale } = useSpring({ scale: isHovered ? 1.5 : 1 });
+  const spring = useSpring({
+    scale: isHovered ? 1.5 : 1,
+  });
 
   const handleClick = useCallback(
     (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
@@ -77,8 +87,8 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   useFrame(({ camera, gl }, _, frame) => {
     const body = bodyRef.current;
     if (!body) return;
+    const pivot = pivotRef.current;
     const group = groupRef.current;
-    if (!group) return;
 
     // Get context from state machine.
     const snapshot = cameraActor.getSnapshot()!;
@@ -99,14 +109,14 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     camera.getWorldPosition(_camWorldPos);
 
     // Set the up vector so that it will be oriented correctly when lookAt() is called.
-    controls.getCameraWorldUp(group.up);
+    controls.getCameraWorldUp(pivot.up);
 
     const inVR = frame instanceof XRFrame;
 
     if (inVR) {
       // If in VR session, the tags should look directly at the camera, rather than parallel to the direction of the camera. Because depth.
 
-      group.lookAt(_camWorldPos);
+      pivot.lookAt(_camWorldPos);
     } else {
       // If not in VR, the tags should look in the direction parallel to the direction of the camera.
 
@@ -118,7 +128,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
       _lookPos.addVectors(_bodyWorldPos, _direction);
 
       // Look in direction parallel to the line of sight of the camera.
-      group.lookAt(_lookPos);
+      pivot.lookAt(_lookPos);
     }
 
     // Get distance to camera.
@@ -136,7 +146,8 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     text?.position.set(0, yPos * vrFactor, 0);
 
     const marker = markerRef.current;
-    if (distanceToCamera < DIST_TO_CAM_THRESHOLD) {
+    const radiusRatio = body.meanRadius / EARTH_RADIUS;
+    if (distanceToCamera < DIST_TO_CAM_THRESHOLD * radiusRatio) {
       marker.scale.setScalar(0);
       return;
     }
@@ -168,9 +179,16 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     });
   });
 
+  useEffect(() => {
+    const body = bodyRef.current;
+    if (!body) return;
+    const group = groupRef.current;
+    group.position.set(0, 0, body.meanRadius);
+  }, [bodyRef]);
+
   return (
-    <animated.group scale={scale}>
-      <group ref={groupRef}>
+    <object3D name="pivot" ref={pivotRef}>
+      <animated.group ref={groupRef} scale={spring.scale}>
         <group
           ref={markerRef}
           onClick={handleClick}
@@ -182,17 +200,17 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
             onHover={hoverEvents.handlePointerEnter}
             onBlur={hoverEvents.handlePointerLeave}
           >
-            <RingMarker bodyRef={bodyRef} ref={ringRef} />
+            {/* <RingMarker bodyRef={bodyRef} ref={ringRef} /> */}
             <CircleMarker
+              ref={circleRef}
               bodyRef={bodyRef}
               color={color ?? 'white'}
-              ref={circleRef}
             />
           </Interactive>
         </group>
         {/* <axesHelper args={[10]} ref={axesRef} /> */}
         <Annotation annotation={name} meanRadius={meanRadius} ref={textRef} />
-      </group>
-    </animated.group>
+      </animated.group>
+    </object3D>
   );
 };
