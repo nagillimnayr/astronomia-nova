@@ -18,6 +18,7 @@ import {
 } from './vr-projection-sphere/VRHudSphereAttachment';
 import { PI_OVER_SIX } from '../../../utils/constants';
 import { degToRad } from 'three/src/math/MathUtils';
+import { VRTagProjector } from './vr-projection-sphere/VRTagProjector';
 
 type VRHudProps = {
   position?: Vector3Tuple;
@@ -96,6 +97,7 @@ export const VRHud = ({
                 <VRSettingsMenu />
               </VRHudSphereAttachment>
 
+              <VRTagProjector />
               {/* <VROutliner position={[-1, 0, 0]} /> */}
               {/* <VRHudSphere radius={radius} /> */}
             </group>
