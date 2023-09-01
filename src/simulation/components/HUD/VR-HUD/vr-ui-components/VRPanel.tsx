@@ -97,5 +97,3 @@ export const VRPanel = forwardRef<Mesh, VRPanelProps>(function VRPanel(
     </>
   );
 });
-
-export const AnimatedVRPanel = animated(VRPanel);

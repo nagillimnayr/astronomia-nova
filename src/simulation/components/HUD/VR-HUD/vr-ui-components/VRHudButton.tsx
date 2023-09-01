@@ -16,7 +16,7 @@ import {
   Vector3,
   ColorRepresentation,
 } from 'three';
-import { AnimatedVRPanel, VRPanel, type VRPanelProps } from './VRPanel';
+import { VRPanel, type VRPanelProps } from './VRPanel';
 import { VRLabel } from './VRLabel';
 import { Panel } from './classes/Panel';
 import { TextMesh } from '@/type-declarations/troika-three-text/Text';

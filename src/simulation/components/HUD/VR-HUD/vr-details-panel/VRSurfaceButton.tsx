@@ -22,7 +22,7 @@ import { ICON_MATERIAL_BASE } from '../vr-ui-materials';
 import { useRef, useCallback, useMemo, useEffect } from 'react';
 import useHover from '@/hooks/useHover';
 import { Interactive, type XRInteractionEvent } from '@react-three/xr';
-import { AnimatedVRPanel, VRPanel } from '../vr-ui-components/VRPanel';
+import { VRPanel } from '../vr-ui-components/VRPanel';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type ThreeEvent } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
@@ -148,7 +148,7 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
             onBlur={hoverEvents.handlePointerLeave}
           >
             {/* <VRPanel width={width} height={height} radius={radius}/> */}
-            <AnimatedVRPanel
+            <VRPanel
               width={width}
               height={height}
               radius={radius}

@@ -36,7 +36,7 @@ import { toggleMachine } from '@/state/xstate/toggle-machine/toggle-machine';
 import { depth } from '../vr-hud-constants';
 import { useThree, type ThreeEvent } from '@react-three/fiber';
 import { VRSlider } from '../vr-ui-components/vr-slider/VRSlider';
-import { AnimatedVRPanel, VRPanel } from '../vr-ui-components/VRPanel';
+import { VRPanel } from '../vr-ui-components/VRPanel';
 import { ICON_MATERIAL_BASE } from '../vr-ui-materials';
 import { VRLabel } from '../vr-ui-components/VRLabel';
 import { useSpring, animated } from '@react-spring/three';
@@ -299,7 +299,7 @@ const VRToggleButton = ({
             onHover={hoverEvents.handlePointerEnter}
             onBlur={hoverEvents.handlePointerLeave}
           >
-            <AnimatedVRPanel
+            <VRPanel
               width={panelSize}
               height={panelSize}
               radius={panelSize * 0.075}
