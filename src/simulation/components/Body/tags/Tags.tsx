@@ -29,6 +29,7 @@ import { Interactive, XRInteractionEvent } from '@react-three/xr';
 import { useCursor } from '@react-three/drei';
 import useHover from '@/hooks/useHover';
 import { useSpring, animated } from '@react-spring/three';
+import { SphereMarker } from './marker/SphereMarker';
 
 const threshold = 0.02;
 const DIST_TO_CAM_THRESHOLD = 5e8 * METER;
@@ -59,7 +60,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   const groupRef = useRef<Group>(null!);
   const textRef = useRef<Object3D>(null!);
   // const ringRef = useRef<Mesh>(null!);
-  const circleRef = useRef<Mesh>(null!);
+  const sphereRef = useRef<Mesh>(null!);
   const markerRef = useRef<Group>(null!);
   const axesRef = useRef<AxesHelper>(null!);
 
@@ -179,12 +180,12 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     });
   });
 
-  useEffect(() => {
-    const body = bodyRef.current;
-    if (!body) return;
-    const group = groupRef.current;
-    group.position.set(0, 0, body.meanRadius);
-  }, [bodyRef]);
+  // useEffect(() => {
+  //   const body = bodyRef.current;
+  //   if (!body) return;
+  //   const group = groupRef.current;
+  //   group.position.set(0, 0, body.meanRadius);
+  // }, [bodyRef]);
 
   return (
     <object3D name="pivot" ref={pivotRef}>
@@ -201,8 +202,8 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
             onBlur={hoverEvents.handlePointerLeave}
           >
             {/* <RingMarker bodyRef={bodyRef} ref={ringRef} /> */}
-            <CircleMarker
-              ref={circleRef}
+            <SphereMarker
+              ref={sphereRef}
               bodyRef={bodyRef}
               color={color ?? 'white'}
             />
