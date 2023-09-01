@@ -23,13 +23,25 @@ import { useActor, useSelector } from '@xstate/react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
 import { cn } from '@/lib/cn';
-import { DIST_MULT, X_AXIS } from '@/simulation/utils/constants';
+import { DIST_MULT, METER, X_AXIS } from '@/simulation/utils/constants';
 import { OrbitalPlane } from '../orbital-plane/OrbitalPlane';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { Object3DNode, MaterialNode, extend } from '@react-three/fiber';
+import {
+  Object3DNode,
+  MaterialNode,
+  extend,
+  useFrame,
+} from '@react-three/fiber';
 import { flatten } from 'lodash';
+import { useSpring, animated } from '@react-spring/three';
+import { Line2 } from 'three-stdlib';
+
+const DIST_TO_CAM_THRESHOLD = 1e8 * METER;
 
 const NUM_OF_POINTS = 2 ** 14;
+
+const _bodyWorldPos = new Vector3();
+const _camWorldPos = new Vector3();
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
@@ -79,6 +91,10 @@ export const Trajectory = ({
     ({ context }) => context.focusTarget
   );
 
+  const arrowRef = useRef<ArrowHelper>(null!);
+  const objRef = useRef<Object3D>(null!);
+  const lineRef = useRef<Line2>(null!);
+
   const [showPeriapsis, setShowPeriapsis] = useState<boolean>(false);
 
   // const points = useMemo(() => {
@@ -105,27 +121,31 @@ export const Trajectory = ({
     return points;
   }, [semiMajorAxis, semiMinorAxis, linearEccentricity]);
 
-  const arrowRef = useRef<ArrowHelper>(null!);
-
-  const ref = useRef<Object3D>(null!);
-
   let isVisible = trajectoryVisibilityOn;
   if (bodyRef.current && focusTarget) {
     if (focusTarget === bodyRef.current && surfaceView) {
       isVisible = false;
     }
   }
+
+  useFrame(({ camera }) => {
+    // Get focus target.
+    const { focusTarget } = cameraActor.getSnapshot()!.context;
+    if (!focusTarget) return;
+    if (!Object.is(focusTarget, bodyRef.current)) return;
+
+    // Get distance of body to camera.
+    camera.getWorldPosition(_camWorldPos);
+    focusTarget.getWorldPosition(_bodyWorldPos);
+    const distance = _camWorldPos.distanceTo(_bodyWorldPos);
+    lineRef.current.visible =
+      distance < DIST_TO_CAM_THRESHOLD ? false : isVisible;
+  });
+
   return (
     <>
-      <object3D
-        visible={isVisible}
-        ref={(obj) => {
-          if (!obj) return;
-          if (ref.current === obj) return;
-          ref.current = obj;
-        }}
-      >
-        <Line points={points} color={'white'} lineWidth={2} />
+      <object3D visible={isVisible} ref={objRef}>
+        <Line ref={lineRef} points={points} color={'white'} lineWidth={2} />
         {/* <mesh>
           <meshLineGeometry points={points} />
           <meshLineMaterial
@@ -146,7 +166,7 @@ export const Trajectory = ({
           })}
         </Segments> */}
         {/* Semi-major Axis / Periapsis */}
-        {showPeriapsis ? (
+        {showPeriapsis && (
           <arrowHelper
             ref={(arrow) => {
               if (!arrow) return;
@@ -158,7 +178,7 @@ export const Trajectory = ({
               arrow.setLength(periapsis / DIST_MULT, 1, 0.25);
             }}
           />
-        ) : null}
+        )}
       </object3D>
     </>
   );
