@@ -41,7 +41,7 @@ const SURFACE_MAX_DIST = 1.5 * SURFACE_MIN_DIST;
 const SURFACE_MIN_DIST_FROM_SURFACE = 2 * METER; // 2 meters above ground
 
 // Default FOV.
-const FOV = 50;
+const FOV = 40;
 
 type Context = {
   getThree: () => RootState;
@@ -292,6 +292,7 @@ export const cameraMachine = createMachine(
 
         if (mainCamera) {
           controls.setCamera(mainCamera);
+          mainCamera.fov = FOV;
         }
 
         if (getThree) {
