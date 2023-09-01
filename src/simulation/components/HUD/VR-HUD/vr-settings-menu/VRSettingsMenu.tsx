@@ -92,6 +92,8 @@ export const VRSettingsMenu = ({
   const innerHeight = height - padding * 2;
   const halfInnerWidth = innerWidth / 2;
   const halfInnerHeight = innerHeight / 2;
+
+  const iconScale = 1.8;
   return (
     <>
       <animated.group ref={containerRef} position={position} scale-y={scale}>
@@ -145,7 +147,7 @@ export const VRSettingsMenu = ({
               target="trajectories"
               iconUrl="icons/MdiOrbit.svg"
               defaultSelected
-              iconSize={0.0025}
+              iconSize={0.0025 * iconScale}
             />
             {/** Annotations. */}
             <VRToggleButton
@@ -154,7 +156,7 @@ export const VRSettingsMenu = ({
               target={'annotations'}
               iconUrl={'icons/MdiTagText.svg'}
               defaultSelected
-              iconSize={0.0025}
+              iconSize={0.0025 * iconScale}
             />
             {/** Markers. */}
             <VRToggleButton
@@ -163,7 +165,7 @@ export const VRSettingsMenu = ({
               target={'markers'}
               iconUrl={'icons/MdiTarget.svg'}
               defaultSelected
-              iconSize={0.003}
+              iconSize={0.003 * iconScale}
             />
             {/** Velocity Arrows. */}
             <VRToggleButton
@@ -172,7 +174,7 @@ export const VRSettingsMenu = ({
               target={'velocityArrows'}
               iconUrl={'icons/MdiArrowTopRightThin.svg'}
               defaultSelected={false}
-              iconSize={0.0035}
+              iconSize={0.0035 * iconScale}
             />
           </group>
           <VRSeparator
