@@ -475,20 +475,14 @@ const VRSliderThumb = ({
   return (
     <>
       <group ref={anchorRef} position={[startX, 0, depth.xxs]}>
-        <Interactive
-        // onHover={handleHover}
-        // onBlur={handleHoverEnd}
-        // onSelectStart={onDragStart}
-        >
-          <animated.object3D
-            ref={thumbRef}
-            position-x={currentX}
-            // onPointerDown={handleDragStart}
-            // onPointerEnter={handleHover}
-            // onPointerLeave={handleHoverEnd}
-          >
-            <animated.group scale={scale}>
-              <group scale={radius}>
+        <animated.object3D ref={thumbRef} position-x={currentX}>
+          <animated.group scale={scale}>
+            <group scale={radius}>
+              <Interactive
+                onHover={handleHover}
+                onBlur={handleHoverEnd}
+                onSelectStart={onDragStart}
+              >
                 <Ring args={ringArgs} material-color={borderColor} />
                 <Circle
                   args={circleArgs}
@@ -500,10 +494,10 @@ const VRSliderThumb = ({
                 >
                   <meshBasicMaterial color={color} />
                 </Circle>
-              </group>
-            </animated.group>
-          </animated.object3D>
-        </Interactive>
+              </Interactive>
+            </group>
+          </animated.group>
+        </animated.object3D>
       </group>
     </>
   );
