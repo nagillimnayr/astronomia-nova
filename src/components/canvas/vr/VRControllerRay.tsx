@@ -26,7 +26,6 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
   rotation.set(0, PI, 0);
 
   if (!controller) return;
-  console.log('ray:', controller.controller);
   return createPortal(
     <>
       <Line
