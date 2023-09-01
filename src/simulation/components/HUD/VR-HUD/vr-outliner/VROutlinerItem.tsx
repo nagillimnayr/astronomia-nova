@@ -1,20 +1,4 @@
 import {
-  RootContainer,
-  Container,
-  Text,
-  ContainerNode,
-  Object,
-  SVG,
-  ExtendedThreeEvent,
-} from '@coconut-xr/koestlich';
-import {
-  Button,
-  Glass,
-  IconButton,
-  List,
-  ListItem,
-} from '@coconut-xr/apfel-kruemel';
-import {
   MouseEventHandler,
   Suspense,
   useCallback,
@@ -34,10 +18,12 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { Object3D } from 'three';
-import { VRHudBGMaterial } from '../vr-materials/VRHudBGMaterial';
+import { Group, Object3D } from 'three';
 import { useInteraction } from '@react-three/xr';
 import { type Vector3Tuple } from 'three';
+import { useSpring, animated } from '@react-spring/three';
+import { ThreeEvent } from '@react-three/fiber';
+import { Center, Svg } from '@react-three/drei';
 
 type VROutlinerItemProps = {
   body: KeplerBody;
@@ -57,8 +43,7 @@ export const VROutlinerItem = ({
   // Bind to state changes so that the component will re-render whenever bodyMap is modified.
   useSelector(mapActor, ({ context }) => context.bodyMap);
 
-  // Get ref to container.
-  const containerRef = useRef<ContainerNode>(null!);
+  const containerRef = useRef<Group>(null!);
 
   const handleClick = useCallback(() => {
     selectionActor.send({ type: 'SELECT', selection: body });
@@ -79,104 +64,30 @@ export const VROutlinerItem = ({
 
   return (
     <>
-      <Object object={obj} depth={1}>
-        <Suspense>
-          <Container
-            ref={containerRef}
-            height={'auto'}
-            flexDirection="column"
-            alignItems="stretch"
-            justifyContent="flex-start"
-            gapRow={text.xs}
-            material={VRHudBGMaterial}
-            backgroundColor={colors.background}
-          >
-            <Container
-              flexDirection="row"
-              alignItems="center"
-              gapColumn={text.xs}
-              marginRight={text.base}
-              material={VRHudBGMaterial}
-              backgroundColor={colors.background}
-            >
-              {/* <Object object={buttonObj} depth={1}> */}
-              <Button
-                height={'auto'}
-                flexGrow={1} // Will stretch the button to fill as much space as it can, which will line up the eye icon buttons on the the right side.
-                onClick={handleClick}
-              >
-                <Text fontSize={text.xl}>{body.name}</Text>
-              </Button>
-              {/* </Object> */}
-              <Container
-                material={VRHudBGMaterial}
-                backgroundColor={colors.background}
-              >
-                <VRVisibilityToggleButton />
-              </Container>
-            </Container>
-
-            {body.orbitingBodies.length > 0 && (
-              <List
-                height={'auto'}
-                marginLeft={text.base}
-                paddingLeft={text.base}
-                borderLeft={border.base}
-                borderColor={colors.border}
-                flexDirection="column"
-                alignItems="stretch"
-                justifyContent="center"
-                gapRow={text.xs}
-                material={VRHudBGMaterial}
-                backgroundColor={colors.background}
-              >
-                {body.orbitingBodies.map((child) => {
-                  return <VROutlinerItem key={child.name} body={child} />;
-                })}
-              </List>
-            )}
-          </Container>
-        </Suspense>
-      </Object>
+      <animated.group position={position} ref={containerRef}></animated.group>
     </>
   );
 };
 
 const VRVisibilityToggleButton = () => {
   const [isVisible, setVisible] = useState(true);
-  const handleClick = useCallback((event: ExtendedThreeEvent<MouseEvent>) => {
+  const handleClick = useCallback((event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
     setVisible((isVisible) => !isVisible);
   }, []);
   const iconSize = 20;
+  const iconSrc = isVisible
+    ? 'icons/MdiEyeOutline.svg'
+    : 'icons/MdiEyeOffOutline.svg';
   return (
     <>
-      <IconButton
-        onClick={handleClick}
-        height={'auto'}
-        aspectRatio={1}
-        borderRadius={1000}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        {isVisible ? (
-          <SVG
-            url="icons/MdiEyeOutline.svg"
-            width={iconSize}
-            height={iconSize}
-            aspectRatio={1}
-          ></SVG>
-        ) : (
-          <SVG
-            url="icons/MdiEyeOffOutline.svg"
-            width={iconSize + text.xxs} // Icons are not the exact same size.
-            height={iconSize + text.xxs}
-            aspectRatio={1}
-            translateY={-1} // Needs to be moved down slightly to adjust.
-          ></SVG>
-        )}
-      </IconButton>
+      <animated.object3D onClick={handleClick}>
+        <Center>
+          <Suspense>
+            <Svg src={iconSrc} scale={iconSize} />
+          </Suspense>
+        </Center>
+      </animated.object3D>
     </>
   );
 };
