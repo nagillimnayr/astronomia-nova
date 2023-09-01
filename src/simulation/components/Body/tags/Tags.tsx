@@ -16,7 +16,7 @@ import { ThreeEvent, useFrame, useThree } from '@react-three/fiber';
 import { AxesHelper, Group, Mesh, Object3D, Vector3 } from 'three';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import { clamp } from 'lodash';
-import { DIST_MULT, ORIGIN, Y_AXIS } from '@/simulation/utils/constants';
+import { DIST_MULT, METER, ORIGIN, Y_AXIS } from '@/simulation/utils/constants';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { Interactive, XRInteractionEvent } from '@react-three/xr';
 import { useCursor } from '@react-three/drei';
@@ -24,6 +24,7 @@ import useHover from '@/hooks/useHover';
 import { useSpring, animated } from '@react-spring/three';
 
 const threshold = 0.02;
+const DIST_TO_CAM_THRESHOLD = 1e8 * METER;
 
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
@@ -134,9 +135,13 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // Set position so that the annotation always appears below the body and outside of the marker.
     text?.position.set(0, yPos * vrFactor, 0);
 
+    const marker = markerRef.current;
+    if (distanceToCamera < DIST_TO_CAM_THRESHOLD) {
+      marker.scale.setScalar(0);
+      return;
+    }
     const markerFactor = Math.max(1e-5, distanceToCamera / 75);
 
-    const marker = markerRef.current;
     marker.scale.setScalar(markerFactor * vrFactor);
 
     if (axesRef.current) {
