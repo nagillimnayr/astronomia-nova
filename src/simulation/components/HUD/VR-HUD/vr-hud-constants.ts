@@ -2,6 +2,9 @@ export const GOLDEN_RATIO = 1.618;
 export const PRECISION = 0.1;
 
 export const twColors = Object.freeze({
+  white: '#ffffff',
+  black: '#000000',
+
   purple: {
     '50': '#faf5ff',
     '100': '#f3e8ff',
