@@ -193,12 +193,12 @@ export const VRSettingsMenu = ({
             target="constellations"
           />
           {/** Celestial Grid. */}
-          <VROpacitySliders
+          {/* <VROpacitySliders
             position={[0, -0.1, 0]}
             width={innerWidth}
             label="Celestial Grid Opacity"
             target="celestialGrid"
-          />
+          /> */}
         </group>
         <VRSeparator
           position={[0, -0.65, depth.xxs]}
