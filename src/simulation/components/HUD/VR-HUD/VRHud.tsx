@@ -97,7 +97,7 @@ export const VRHud = ({
                 <VRSettingsMenu />
               </VRHudSphereAttachment>
 
-              <VRTagProjector />
+              {/* <VRTagProjector /> */}
               {/* <VROutliner position={[-1, 0, 0]} /> */}
               {/* <VRHudSphere radius={radius} /> */}
             </group>
