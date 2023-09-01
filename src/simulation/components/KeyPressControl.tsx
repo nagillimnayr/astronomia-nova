@@ -51,7 +51,13 @@ export const KeyPressControl = () => {
       // }
       case 'c': {
         const { camera } = getThree();
-        console.log('default camera:', camera);
+        // console.log('default camera:', camera);
+        const { focusTarget } = cameraActor.getSnapshot()!.context;
+        if (!focusTarget) return;
+        camera.getWorldPosition(_camWorldPos);
+        focusTarget.getWorldPosition(_bodyWorldPos);
+        const distance = _camWorldPos.distanceTo(_bodyWorldPos);
+        console.log('distance to focusTarget:', distance.toExponential());
         break;
       }
     }
