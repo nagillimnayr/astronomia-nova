@@ -32,9 +32,9 @@ import { ICON_MATERIAL_BASE } from '../vr-ui-materials';
 import { VRFocusButton } from './VRFocusButton';
 import { VRPanel } from '../vr-ui-components/VRPanel';
 import { VRSurfaceButton } from './VRSurfaceButton';
-import { useThree } from '@react-three/fiber';
+import { ThreeEvent, useThree } from '@react-three/fiber';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
-import { Interactive } from '@react-three/xr';
+import { Interactive, XRInteractionEvent } from '@react-three/xr';
 import { useSpring, animated, useSpringRef } from '@react-spring/three';
 import { AnimatedSvg } from '@/simulation/components/animated-components';
 
@@ -237,12 +237,18 @@ const CloseButton = ({ size }: CloseButtonProps) => {
     opacity: 0,
   }));
 
-  const handleCloseClick = useCallback(() => {
-    // Deselect the currently selected body.
-    selectionActor.send({
-      type: 'DESELECT',
-    });
-  }, [selectionActor]);
+  const handleCloseClick = useCallback(
+    (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
+      if ('stopPropagation' in event) {
+        event.stopPropagation();
+      }
+      // Deselect the currently selected body.
+      selectionActor.send({
+        type: 'DESELECT',
+      });
+    },
+    [selectionActor]
+  );
 
   const handlePointerEnter = useCallback(() => {
     springRef.start({
@@ -260,17 +266,23 @@ const CloseButton = ({ size }: CloseButtonProps) => {
     <>
       <object3D scale={size}>
         <animated.object3D scale={spring.scale}>
-          <animated.mesh
-            scale={circleScale}
-            material-transparent={true}
-            material-opacity={spring.opacity}
-            onClick={handleCloseClick}
-            onPointerEnter={handlePointerEnter}
-            onPointerLeave={handlePointerLeave}
+          <Interactive
+            onSelect={handleCloseClick}
+            onHover={handlePointerEnter}
+            onBlur={handlePointerLeave}
           >
-            <circleGeometry />
-            {/* <Edges color={'yellow'} /> */}
-          </animated.mesh>
+            <animated.mesh
+              scale={circleScale}
+              material-transparent={true}
+              material-opacity={spring.opacity}
+              onClick={handleCloseClick}
+              onPointerEnter={handlePointerEnter}
+              onPointerLeave={handlePointerLeave}
+            >
+              <circleGeometry />
+              {/* <Edges color={'yellow'} /> */}
+            </animated.mesh>
+          </Interactive>
 
           <Center>
             <Suspense>
