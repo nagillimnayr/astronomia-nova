@@ -36,7 +36,7 @@ import { ThreeEvent, useThree } from '@react-three/fiber';
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { Interactive, XRInteractionEvent } from '@react-three/xr';
 import { useSpring, animated, useSpringRef } from '@react-spring/three';
-import { AnimatedSvg } from '@/simulation/components/animated-components';
+import { anim } from '@/simulation/components/animated-components';
 
 const _camWorldPos = new Vector3();
 
@@ -284,12 +284,9 @@ const CloseButton = ({ size }: CloseButtonProps) => {
             </animated.mesh>
           </Interactive>
 
-          <Center>
+          <Center onCentered={dummyFn}>
             <Suspense>
-              <AnimatedSvg
-                src="icons/MdiClose.svg"
-                fillMaterial={ICON_MATERIAL_BASE}
-              />
+              <Svg src="icons/MdiClose.svg" fillMaterial={ICON_MATERIAL_BASE} />
             </Suspense>
           </Center>
         </animated.object3D>
