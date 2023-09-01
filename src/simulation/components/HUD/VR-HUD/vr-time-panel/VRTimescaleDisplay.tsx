@@ -2,7 +2,6 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { colors, text } from '../vr-hud-constants';
 import { useCallback } from 'react';
-import { VRHudBGMaterial } from '../vr-materials/VRHudBGMaterial';
 import { Text } from '@react-three/drei';
 import { type Vector3Tuple } from 'three';
 
