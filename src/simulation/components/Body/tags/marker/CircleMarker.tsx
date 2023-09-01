@@ -15,6 +15,8 @@ import {
 
 import { useActor, useSelector } from '@xstate/react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { SpringValue, useSpring, animated } from '@react-spring/three';
+import { anim } from '@/simulation/components/animated-components';
 
 type CircleMarkerProps = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
@@ -27,9 +29,9 @@ export const CircleMarker = forwardRef<Mesh, CircleMarkerProps>(
     );
 
     // Check if marker visibility is enabled.
-    const onSurface = useSelector(cameraActor, (state) =>
-      state.matches('surface')
-    );
+    // const onSurface = useSelector(cameraActor, (state) =>
+    //   state.matches('surface')
+    // );
     const markers = useSelector(
       visibilityActor,
       ({ context }) => context.markers
@@ -38,17 +40,20 @@ export const CircleMarker = forwardRef<Mesh, CircleMarkerProps>(
       state.matches('active')
     );
 
-    const materialRef = useRef<MeshBasicMaterial>(null!);
+    const spring = useSpring({
+      opacity: markersEnabled ? 1 : 0,
+    });
 
     return (
       <>
-        <Circle ref={fwdRef} args={[1]} visible={markersEnabled}>
-          <meshBasicMaterial
-            ref={materialRef}
-            side={DoubleSide}
-            color={color}
-          />
-        </Circle>
+        <anim.Circle
+          ref={fwdRef}
+          // visible={markersEnabled}
+          material-color={color}
+          material-side={DoubleSide}
+          material-transparent={true}
+          material-opacity={spring.opacity}
+        />
       </>
     );
   }
