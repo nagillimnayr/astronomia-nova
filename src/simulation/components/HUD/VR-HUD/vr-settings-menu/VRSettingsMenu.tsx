@@ -171,7 +171,7 @@ export const VRSettingsMenu = ({
               label={'Velocity Arrows'}
               target={'velocityArrows'}
               iconUrl={'icons/MdiArrowTopRightThin.svg'}
-              defaultSelected
+              defaultSelected={false}
               iconSize={0.0035}
             />
           </group>
