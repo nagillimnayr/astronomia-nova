@@ -1,4 +1,37 @@
 import { animated } from '@react-spring/three';
-import { Svg } from '@react-three/drei';
+import {
+  Box,
+  Circle,
+  Svg,
+  Sphere,
+  RoundedBox,
+  Plane,
+  Ring,
+  Line,
+  Icosahedron,
+  Dodecahedron,
+  Torus,
+  Octahedron,
+  TorusKnot,
+  Text,
+  Text3D,
+  Edges,
+  MeshReflectorMaterial,
+  MeshWobbleMaterial,
+  MeshDistortMaterial,
+  MeshRefractionMaterial,
+  MeshTransmissionMaterial,
+  PointMaterial,
+  Wireframe,
+  Points,
+} from '@react-three/drei';
 
-export const AnimatedSvg = animated(Svg);
+export const anim = {
+  Svg: animated(Svg),
+  Circle: animated(Circle),
+  Box: animated(Box),
+  Sphere: animated(Sphere),
+  Plane: animated(Plane),
+  Ring: animated(Ring),
+  Text: animated(Text),
+};
