@@ -40,27 +40,25 @@ export const VRHudButton = ({
   backgroundColor = colors.background,
   hoverColor = colors.hover,
 }: VRHudButtonProps) => {
-  const { isHovered, setHovered, hoverEvents } = useHover();
-  useCursor(isHovered, 'pointer');
-  const [spring, springApi] = useSpring(() => ({
+  const [spring, springRef] = useSpring(() => ({
     scale: 1,
     backgroundColor: backgroundColor.toString(),
   }));
-  const { scale } = useSpring({
-    scale: isHovered ? 1.2 : 1,
-  });
 
-  useEffect(() => {
-    springApi.start({
-      scale: isHovered ? 1.2 : 1,
-      backgroundColor: isHovered
-        ? hoverColor.toString()
-        : backgroundColor.toString(),
+  const handlePointerEnter = useCallback(() => {
+    springRef.start({
+      scale: 1.2,
+      backgroundColor: hoverColor.toString(),
     });
-  });
+  }, [hoverColor, springRef]);
+  const handlePointerLeave = useCallback(() => {
+    springRef.start({
+      scale: 1,
+      backgroundColor: backgroundColor.toString(),
+    });
+  }, [backgroundColor, springRef]);
 
   const containerRef = useRef<Group>(null!);
-  const panelRef = useRef<Panel>(null!);
   const labelRef = useRef<Object3D>(null!);
 
   return (
@@ -68,22 +66,21 @@ export const VRHudButton = ({
       <animated.group
         ref={containerRef}
         position={position}
-        onPointerEnter={hoverEvents.handlePointerEnter}
-        onPointerLeave={hoverEvents.handlePointerLeave}
-        scale={scale}
+        scale={spring.scale}
       >
         <Interactive
           onSelect={onClick}
-          onHover={hoverEvents.handlePointerEnter}
-          onBlur={hoverEvents.handlePointerLeave}
+          onHover={handlePointerEnter}
+          onBlur={handlePointerLeave}
         >
-          <object3D onClick={onClick}>
-            <VRPanel ref={panelRef} width={width} height={height} />
-            <AnimatedVRPanel
-              ref={panelRef}
+          <object3D>
+            <VRPanel
               width={width}
               height={height}
               backgroundColor={spring.backgroundColor}
+              onClick={onClick}
+              onPointerEnter={handlePointerEnter}
+              onPointerLeave={handlePointerLeave}
             />
           </object3D>
         </Interactive>

@@ -12,8 +12,9 @@ import { Panel, PanelInner, PanelOuter } from './classes/Panel';
 import { colors, depth } from '../vr-hud-constants';
 import React from 'react';
 import { Plane } from '@react-three/drei';
-import { useSpring, animated } from '@react-spring/three';
+import { useSpring, animated, SpringValue } from '@react-spring/three';
 import { RoundedPlaneGeometry } from 'maath/geometry';
+import { EventHandlers } from '@react-three/fiber/dist/declarations/src/core/events';
 
 extend({ Panel, PanelInner, PanelOuter });
 
@@ -36,15 +37,15 @@ declare module '@react-three/fiber' {
 }
 
 export type VRPanelProps = PropsWithChildren &
-  Omit<PropsWithoutRef<Object3DProps>, 'args'> & {
+  EventHandlers & {
     position?: Vector3Tuple;
     width?: number;
     height?: number;
     radius?: number;
     borderWidth?: number;
     segments?: number;
-    backgroundColor?: ColorRepresentation;
-    borderColor?: ColorRepresentation;
+    backgroundColor?: ColorRepresentation | SpringValue<string>;
+    borderColor?: ColorRepresentation | SpringValue<string>;
   };
 export const VRPanel = forwardRef<Mesh, VRPanelProps>(function VRPanel(
   {
@@ -57,6 +58,9 @@ export const VRPanel = forwardRef<Mesh, VRPanelProps>(function VRPanel(
     segments = 16,
     backgroundColor = colors.background,
     borderColor = colors.border,
+    onClick,
+    onPointerEnter,
+    onPointerLeave,
     ...props
   }: VRPanelProps,
   fwdRef
@@ -65,15 +69,19 @@ export const VRPanel = forwardRef<Mesh, VRPanelProps>(function VRPanel(
     <>
       {/** @ts-ignore */}
       <group position={position}>
-        <mesh ref={fwdRef} position={position}>
+        <animated.mesh
+          ref={fwdRef}
+          position={position}
+          material-color={borderColor}
+        >
           <roundedPlaneGeometry args={[width, height, radius, segments]} />
-          <meshBasicMaterial color={borderColor} />
-        </mesh>
-        <mesh
+        </animated.mesh>
+        <animated.mesh
+          material-color={backgroundColor}
           position-z={0.001}
-          onClick={props.onClick}
-          onPointerEnter={props.onPointerEnter}
-          onPointerLeave={props.onPointerLeave}
+          onClick={onClick}
+          onPointerEnter={onPointerEnter}
+          onPointerLeave={onPointerLeave}
         >
           <roundedPlaneGeometry
             args={[
@@ -83,8 +91,7 @@ export const VRPanel = forwardRef<Mesh, VRPanelProps>(function VRPanel(
               segments,
             ]}
           />
-          <meshBasicMaterial color={backgroundColor} />
-        </mesh>
+        </animated.mesh>
         {children}
       </group>
     </>
