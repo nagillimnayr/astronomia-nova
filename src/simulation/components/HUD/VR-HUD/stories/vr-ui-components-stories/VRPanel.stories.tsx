@@ -48,24 +48,4 @@ const Default: Story = {
   },
 };
 
-const Wireframe: Story = {
-  render: (args) => {
-    return (
-      <>
-        <PerspectiveCamera makeDefault position={[0, 0, 2]} />
-        <VRPanel {...args}>
-          <Wires thickness={0.02} />
-        </VRPanel>
-      </>
-    );
-  },
-  args: {
-    height: 1,
-    radius: 0.25,
-    borderWidth: 0.025,
-    backgroundColor: colors.background,
-    borderColor: colors.border,
-  },
-};
-
-export { Default, Wireframe };
+export { Default };
