@@ -309,7 +309,7 @@ const VRToggleButton = ({
             />
           </Interactive>
           <object3D scale={iconSize} position-z={0.0025}>
-            <Center>
+            <Center onCentered={dummyFn}>
               <Suspense>
                 <Svg src={iconUrl} fillMaterial={ICON_MATERIAL_BASE} />
               </Suspense>
