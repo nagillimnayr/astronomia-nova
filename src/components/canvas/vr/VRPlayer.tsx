@@ -8,6 +8,7 @@ import { Controllers, Hands, useController, useXR } from '@react-three/xr';
 import { useThree } from '@react-three/fiber';
 import { PI, PI_OVER_TWO } from '@/simulation/utils/constants';
 import { VRHoverIndicator } from './VRHoverIndicator';
+import { VRControllerRay } from './VRControllerRay';
 
 const _cameraWorldDirection = new Vector3();
 const _worldPos = new Vector3();
@@ -39,8 +40,9 @@ export const VRPlayer = () => {
       <>
         {/* <Controllers />
         <Hands /> */}
-        {/* <VRHoverIndicator handedness="left" />
-        <VRHoverIndicator handedness="right" /> */}
+        <VRHoverIndicator handedness="left" />
+        <VRHoverIndicator handedness="right" />
+        <VRControllerRay handedness="left" />
       </>
     </>
   );
