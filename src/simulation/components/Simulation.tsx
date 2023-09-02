@@ -11,6 +11,7 @@ import SolarSystem from './SolarSystem/SolarSystem';
 import { Projector } from './surface-view/projector/Projector';
 import { KeyPressControl } from './KeyPressControl';
 import { VRSurfaceDialog } from './HUD/VR-HUD/vr-details-panel/VRSurfaceDialog';
+import { PseudoTrajectory } from './Orbit/Trajectory/PseudoTrajectory';
 
 type SimProps = {
   children: React.ReactNode;
@@ -35,6 +36,7 @@ const Simulation = ({ children }: SimProps) => {
       {/* <Projector /> */}
       <KeyPressControl />
       <VRSurfaceDialog />
+      <PseudoTrajectory />
     </>
   );
 };

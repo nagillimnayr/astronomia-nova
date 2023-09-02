@@ -8,9 +8,10 @@ import { Vector3 } from 'three';
 import { Line2 } from 'three-stdlib';
 
 const _vel = new Vector3();
-const LENGTH = 1e9;
+const LENGTH = 1e5;
 const NUM_OF_SEGMENTS = 1024;
 
+// This line helps to cover up a lot of the flickering of the trajectory when very close to a planet.
 export const PseudoTrajectory = () => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const focusTarget = useSelector(
@@ -41,6 +42,7 @@ export const PseudoTrajectory = () => {
     _vel.copy(body.velocity);
     body.localToWorld(_vel);
     line.lookAt(_vel);
+    line.scale.set(1, 1, body.meanRadius * 6);
   });
 
   if (!focusTarget) return;
@@ -49,7 +51,7 @@ export const PseudoTrajectory = () => {
       <Line
         ref={lineRef}
         points={points}
-        lineWidth={2}
+        lineWidth={2.1}
         scale={scale}
         color={'white'}
       />
