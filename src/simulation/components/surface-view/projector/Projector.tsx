@@ -29,12 +29,12 @@ export const Projector = () => {
 
   const centerRef = useRef<Object3D | null>(null);
 
-  useFrame(() => {
-    const { observer } = cameraActor.getSnapshot()!.context;
-    if (!observer || !centerRef.current || !focusTarget) return;
-    observer.getWorldPosition(_pos);
-    centerRef.current.position.copy(_pos);
-  });
+  // useFrame(() => {
+  //   const { observer } = cameraActor.getSnapshot()!.context;
+  //   if (!observer || !centerRef.current || !focusTarget) return;
+  //   observer.getWorldPosition(_pos);
+  //   centerRef.current.position.copy(_pos);
+  // });
 
   const body = focusTarget instanceof KeplerBody ? focusTarget : null;
   const radius = body
@@ -48,7 +48,7 @@ export const Projector = () => {
               if (body === focusTarget) return;
               return (
                 <ProjectedSphere
-                  key={body.id.toString() + '-projected'}
+                  key={`${body.name}-projected`}
                   body={body}
                   radius={radius}
                 />

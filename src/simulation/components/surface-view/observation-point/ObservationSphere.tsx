@@ -5,11 +5,12 @@ import {
   MeshDiscardMaterial,
   Sphere,
   Wireframe,
+  useTexture,
 } from '@react-three/drei';
 import { WireframeMaterial } from '@react-three/drei/materials/WireframeMaterial';
 import { useSelector } from '@xstate/react';
 import { useContext, useMemo, useRef } from 'react';
-import { SphereGeometry, type Mesh } from 'three';
+import { SphereGeometry, type Mesh, DoubleSide } from 'three';
 
 export const ObservationSphere = () => {
   const { uiActor } = MachineContext.useSelector(({ context }) => context);
@@ -20,6 +21,10 @@ export const ObservationSphere = () => {
   const dialogOpen = useSelector(dialogActor, (state) => state.matches('open'));
 
   const sphereRef = useRef<Mesh>(null!);
+
+  const gridTexture = useTexture(
+    'assets/textures/stars/celestial_grid_16k.jpg'
+  );
 
   const sphereGeometry = useMemo(() => {
     const radius = 0.5e5 * METER;
@@ -36,6 +41,7 @@ export const ObservationSphere = () => {
         name="observation-sphere"
         visible={dialogOpen}
         geometry={sphereGeometry}
+        scale-x={-1}
       >
         <Wireframe
           // geometry={sphereGeometry}
@@ -46,7 +52,12 @@ export const ObservationSphere = () => {
           stroke={'white'}
           backfaceStroke={'white'}
         />
-        <meshBasicMaterial />
+        {/* <meshBasicMaterial
+          color={'white'}
+          alphaMap={gridTexture}
+          side={DoubleSide}
+          transparent
+        /> */}
         {/* <axesHelper args={[1e-1]} /> */}
       </mesh>
     </>

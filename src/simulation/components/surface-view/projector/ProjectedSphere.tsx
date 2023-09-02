@@ -1,12 +1,14 @@
 import type KeplerBody from '@/simulation/classes/kepler-body';
 import { colorMap } from '@/simulation/utils/color-map';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Circle, Sphere } from '@react-three/drei';
+import { Circle, Sphere, Trail } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { MutableRefObject, useRef } from 'react';
 import { type ArrowHelper, type Mesh, type Object3D, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { useSelector } from '@xstate/react';
+import { METER } from '@/simulation/utils/constants';
+import { BodyTrail } from '../../Body/trail/BodyTrail';
 
 const _pos = new Vector3();
 const _otherPos = new Vector3();
@@ -26,8 +28,8 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
     state.matches('surface')
   );
 
-  const ref = useRef<Mesh | null>(null);
-  const centerRef = useRef<Object3D | null>(null);
+  const ref = useRef<Mesh>(null!);
+  const centerRef = useRef<Object3D>(null!);
   const arrowRef = useRef<ArrowHelper>(null!);
 
   useFrame(({ camera }) => {
@@ -58,6 +60,7 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
 
   if (!body) return;
   const color = colorMap.get(body.name);
+  console.log('proj sphere', body.name);
   return (
     <>
       {/* <arrowHelper
@@ -72,10 +75,12 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
         <Circle
           visible={surfaceView} // Should only be visible in surface view.
           ref={ref}
-          args={[1e-3]}
-          position={[0, 0, radius]} // Distance from center point.
+          args={[1, 4]}
+          position-z={radius} // Distance from center point.
+          scale={3e5}
         >
           <meshBasicMaterial color={color} />
+          {/* <axesHelper /> */}
         </Circle>
       </object3D>
     </>
