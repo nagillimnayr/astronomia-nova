@@ -143,7 +143,6 @@ export const Trajectory = ({
       lineWidth: 10,
       sizeAttenuation: 0,
       resolution: new Vector2(size.width, size.height),
-      opacity: 0.2,
     });
     return material;
   }, [getThree]);
