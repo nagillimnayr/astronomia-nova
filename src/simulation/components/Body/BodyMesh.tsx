@@ -1,4 +1,10 @@
-import { Sphere, Trail, useCursor, useHelper } from '@react-three/drei';
+import {
+  MeshDiscardMaterial,
+  Sphere,
+  Trail,
+  useCursor,
+  useHelper,
+} from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { Select } from '@react-three/postprocessing';
 import {
@@ -19,6 +25,7 @@ import {
   type Mesh,
   type Texture,
   Vector3,
+  Object3D,
 } from 'three';
 import type KeplerBody from '@/simulation/classes/kepler-body';
 
@@ -66,63 +73,12 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   const { selectionActor, timeActor, surfaceActor, cameraActor, uiActor } =
     MachineContext.useSelector(({ context }) => context);
 
-  const { surfaceDialogActor, vrSurfaceDialogActor } = useSelector(
-    uiActor,
-    ({ context }) => context
-  );
-
   const meshRef = useRef<Mesh>(null!);
-
-  // const boxHelper = useHelper(meshRef, BoxHelper);
 
   // const [isVisible, setVisible] = useState<boolean>(true);
 
   // const [isSelected, setSelected] = useState<boolean>(false);
   //const [isTrailVisible, setTrailVisibility] = useState<boolean>(false);
-  const { isHovered, setHovered, hoverEvents } = useHover();
-  useCursor(isHovered, 'pointer');
-
-  // event handlers
-  const handleClick = useCallback(
-    (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
-      const bodyMesh = meshRef.current;
-      if (!bodyMesh) {
-        // Should not be possible.
-        console.error('bodyMesh is invalid. This should not be possible.');
-        return;
-      }
-      // Get point of intersection.
-      let point: Vector3 = null!;
-      if ('stopPropagation' in event) {
-        event.stopPropagation();
-        setHovered(true);
-        point = event.point;
-        // Open surface dialog.
-        surfaceDialogActor.send({ type: 'OPEN' });
-      } else {
-        if (!event.intersection) return;
-        point = event.intersection.point;
-        // Open surface dialog.
-        vrSurfaceDialogActor.send({ type: 'ENABLE' });
-      }
-      // Check if in surface view mode.
-      const onSurface = cameraActor.getSnapshot()!.matches('surface');
-      if (onSurface) return; // If on surface, do nothing.
-
-      // Get position relative to the body.
-      bodyMesh.worldToLocal(point);
-
-      // Set latitude/ longitude from point.
-      surfaceActor.send({ type: 'SET_COORDS_FROM_VECTOR', pos: point });
-    },
-    [
-      cameraActor,
-      setHovered,
-      surfaceActor,
-      surfaceDialogActor,
-      vrSurfaceDialogActor,
-    ]
-  );
 
   // Set forwarded ref, the return value of the callback function will be assigned to fwdRef.
   useImperativeHandle(
@@ -162,30 +118,28 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   return (
     <>
       <group>
-        <Interactive onSelect={handleClick}>
-          <Sphere
-            name={name + '-mesh'}
-            rotation={rotation}
-            // visible={isVisible}
-            ref={meshRef}
-            args={[radius, 128, 128]}
-            onPointerDown={handleClick}
-            onPointerEnter={hoverEvents.handlePointerEnter}
-            onPointerLeave={hoverEvents.handlePointerLeave}
-            // onPointerMissed={handleMiss}
-          >
-            <meshBasicMaterial map={texture} />
-            {/* <axesHelper args={[2 * radius]} /> */}
-
-            {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
-          </Sphere>
-        </Interactive>
+        <Sphere
+          name={name + '-mesh'}
+          rotation={rotation}
+          // visible={isVisible}
+          ref={meshRef}
+          args={[radius, 128, 128]}
+          // onPointerDown={handleClick}
+          // onPointerEnter={hoverEvents.handlePointerEnter}
+          // onPointerLeave={hoverEvents.handlePointerLeave}
+          // onPointerMissed={handleMiss}
+        >
+          <meshBasicMaterial map={texture} />
+          {/* <axesHelper args={[2 * radius]} /> */}
+          <InteractionSphere radius={meanRadius} />
+          {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
+        </Sphere>
         {name === 'Saturn' && (
           <PlanetRing
             rotation={rotation}
             innerRadius={(meanRadius + 7e6) / DIST_MULT}
             outerRadius={(meanRadius + 80e6) / DIST_MULT}
-            onPointerDown={handleClick}
+            // onPointerDown={handleClick}
           />
         )}
         <Poles rotation={rotation} length={2 * radius} />
@@ -193,3 +147,69 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     </>
   );
 });
+
+// Invisible sphere for catching XRInteractions.
+type InteractionSphereProps = {
+  radius: number;
+};
+const InteractionSphere = ({ radius }: InteractionSphereProps) => {
+  const { surfaceActor, cameraActor, uiActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
+
+  const { surfaceDialogActor, vrSurfaceDialogActor } = useSelector(
+    uiActor,
+    ({ context }) => context
+  );
+
+  const onSurface = useSelector(cameraActor, (state) =>
+    state.matches('surface')
+  );
+
+  const objRef = useRef<Object3D>(null!);
+  const meshRef = useRef<Mesh>(null!);
+
+  const handleClick = useCallback(
+    (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
+      const mesh = meshRef.current;
+      if (!mesh) {
+        // Should not be possible.
+        console.error('mesh is invalid. This should not be possible.');
+        return;
+      }
+      // Get point of intersection.
+      let point: Vector3 = null!;
+      if ('stopPropagation' in event) {
+        event.stopPropagation();
+        point = event.point;
+      } else {
+        if (!event.intersection) return;
+        point = event.intersection.point;
+      }
+      // Check if in surface view mode.
+      const onSurface = cameraActor.getSnapshot()!.matches('surface');
+      if (onSurface) return; // If on surface, do nothing.
+
+      // Get position relative to the body.
+      mesh.worldToLocal(point);
+
+      // Set latitude/ longitude from point.
+      surfaceActor.send({ type: 'SET_COORDS_FROM_VECTOR', pos: point });
+
+      // Open surface dialog.
+      surfaceDialogActor.send({ type: 'OPEN' });
+      vrSurfaceDialogActor.send({ type: 'ENABLE' });
+    },
+    [cameraActor, surfaceActor, surfaceDialogActor, vrSurfaceDialogActor]
+  );
+
+  return (
+    <object3D ref={objRef} scale={onSurface ? 0 : 1}>
+      <Interactive onSelect={handleClick}>
+        <Sphere ref={meshRef} scale={radius} onClick={handleClick}>
+          <MeshDiscardMaterial />
+        </Sphere>
+      </Interactive>
+    </object3D>
+  );
+};
