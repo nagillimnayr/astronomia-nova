@@ -2,6 +2,7 @@ import { METER, PI_OVER_TWO } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import {
   Edges,
+  Line,
   MeshDiscardMaterial,
   Sphere,
   Wireframe,
@@ -9,7 +10,7 @@ import {
 import { WireframeMaterial } from '@react-three/drei/materials/WireframeMaterial';
 import { useSelector } from '@xstate/react';
 import { useContext, useMemo, useRef } from 'react';
-import { Mesh } from 'three';
+import { Mesh, Vector3 } from 'three';
 
 export const ObservationPointIndicator = () => {
   const { uiActor } = MachineContext.useSelector(({ context }) => context);
@@ -28,6 +29,13 @@ export const ObservationPointIndicator = () => {
     const segments = 32;
     return [innerRadius, outerRadius, segments];
   }, []);
+  const linePoints = useMemo(() => {
+    return [new Vector3(0, 0, 0), new Vector3(0, 0, 1)];
+  }, []);
+  const lineScale = useMemo(() => {
+    return new Vector3(1, 1, 1);
+  }, []);
+  lineScale.set(1, 1, 4);
   return (
     <>
       <mesh
@@ -40,7 +48,13 @@ export const ObservationPointIndicator = () => {
         <ringGeometry args={ringArgs} />
 
         <meshBasicMaterial />
-        {/* <axesHelper args={[1e-1]} /> */}
+        <Line
+          points={linePoints}
+          color={'white'}
+          lineWidth={2}
+          scale={lineScale}
+        />
+        {/* <axesHelper args={[1e1]} /> */}
       </mesh>
     </>
   );
