@@ -23,7 +23,6 @@ const shiftLeft = (collection: Float32Array, steps = 1): Float32Array => {
 };
 
 const resetTrail = (anchor: Object3D, target: Object3D, length: number) => {
-  console.log('resetting trail!');
   // Get relative position of target.
   target.getWorldPosition(_newPos);
   anchor.worldToLocal(_newPos);
