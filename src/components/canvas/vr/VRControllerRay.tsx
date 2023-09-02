@@ -33,7 +33,7 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
         color={'red'}
         scale={scale}
         rotation={rotation}
-        lineWidth={8}
+        lineWidth={2}
       />
     </>,
     controller.controller

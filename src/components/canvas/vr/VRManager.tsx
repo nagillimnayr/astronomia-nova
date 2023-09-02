@@ -30,12 +30,6 @@ export const VRManager = () => {
     <>
       <VRControls />
       <VRPlayer />
-      <Suspense>
-        <Controllers />
-      </Suspense>
-      <Suspense>
-        <Hands />
-      </Suspense>
     </>
   );
 };
