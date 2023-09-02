@@ -13,7 +13,9 @@ import { useContext, useMemo, useRef } from 'react';
 import { Mesh, Vector3 } from 'three';
 
 export const ObservationPointIndicator = () => {
-  const { uiActor } = MachineContext.useSelector(({ context }) => context);
+  const { uiActor, cameraActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const surfaceDialogActor = useSelector(
     uiActor,
     ({ context }) => context.surfaceDialogActor
@@ -28,7 +30,10 @@ export const ObservationPointIndicator = () => {
   const vrDialogOpen = useSelector(vrSurfaceDialogActor, (state) =>
     state.matches('active')
   );
-  const isVisible = dialogOpen || vrDialogOpen;
+
+  const inSpace = useSelector(cameraActor, (state) => state.matches('space'));
+
+  const isVisible: boolean = (dialogOpen || vrDialogOpen) && inSpace;
 
   const ref = useRef<Mesh>(null!);
 
