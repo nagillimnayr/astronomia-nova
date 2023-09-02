@@ -86,7 +86,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                   {/* <Stats /> */}
                   {/* <Perf position={'bottom-left'} /> */}
                   <VRManager />
-                  <VRHud defaultOpen />
+                  <VRHud />
                   {/* <VRDebugPortal position={[0, 0, -1]} scale={0.05} /> */}
                   <Preload all />
                 </Suspense>
