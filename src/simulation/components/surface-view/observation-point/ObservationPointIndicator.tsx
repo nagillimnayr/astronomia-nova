@@ -14,11 +14,21 @@ import { Mesh, Vector3 } from 'three';
 
 export const ObservationPointIndicator = () => {
   const { uiActor } = MachineContext.useSelector(({ context }) => context);
-  const dialogActor = useSelector(
+  const surfaceDialogActor = useSelector(
     uiActor,
     ({ context }) => context.surfaceDialogActor
   );
-  const dialogOpen = useSelector(dialogActor, (state) => state.matches('open'));
+  const vrSurfaceDialogActor = useSelector(
+    uiActor,
+    ({ context }) => context.vrSurfaceDialogActor
+  );
+  const dialogOpen = useSelector(surfaceDialogActor, (state) =>
+    state.matches('open')
+  );
+  const vrDialogOpen = useSelector(vrSurfaceDialogActor, (state) =>
+    state.matches('active')
+  );
+  const isVisible = dialogOpen || vrDialogOpen;
 
   const ref = useRef<Mesh>(null!);
 
@@ -41,7 +51,7 @@ export const ObservationPointIndicator = () => {
       <mesh
         ref={ref}
         name="observation-sphere"
-        visible={dialogOpen}
+        visible={isVisible}
         scale={radius}
         rotation-x={-PI_OVER_TWO}
       >
