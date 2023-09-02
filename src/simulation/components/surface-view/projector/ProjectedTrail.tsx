@@ -105,12 +105,9 @@ export const ProjectedTrail = ({
     return () => subscription.unsubscribe();
   }, [geometry, length, surfaceActor, targetRef]);
 
-  // Update geometry.
+  /**  Update points. */
   useEffect(() => {
-    const subscription = timeActor.subscribe((state) => {
-      if (state.matches('unpaused')) return; // Do nothing if unpaused.
-      // Only update if the last event was a sidereal advancement of time.
-      if (state.event.type !== 'ADVANCE_TIME') return;
+    const updatePosition = () => {
       const anchor = anchorRef.current;
 
       // Get relative position of target.
@@ -121,12 +118,24 @@ export const ProjectedTrail = ({
       shiftLeft(points.current, 3);
       // Add new position to the end of the array.
       points.current.set(_newPos.toArray(), points.current.length - 3);
+
       // Update geometry.
       geometry.setPoints(points.current);
+    };
+    const subscription = timeActor.subscribe((state) => {
+      if (state.matches('unpaused')) return; // Do nothing if unpaused.
+      // Only update if the last event was a sidereal advancement of time.
+      if (state.event.type !== 'ADVANCE_TIME') return;
+      setTimeout(updatePosition, 30);
     });
 
     return () => subscription.unsubscribe();
   }, [geometry, targetRef, timeActor]);
+
+  useFrame(() => {
+    // Update geometry.
+    geometry.setPoints(points.current);
+  });
 
   const material = useMemo(() => {
     const { size } = getThree();
