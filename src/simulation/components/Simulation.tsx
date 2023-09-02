@@ -33,7 +33,6 @@ const Simulation = ({ children }: SimProps) => {
 
       <ambientLight intensity={0.5} />
       <ObservationPoint />
-      {/* <Projector /> */}
       <KeyPressControl />
       <VRSurfaceDialog />
       <PseudoTrajectory />
