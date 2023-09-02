@@ -314,7 +314,7 @@ const VRToggleButton = ({
             />
           </Interactive>
           <object3D position-z={0.0025}>
-            <Center onCentered={centerDummyFn}>
+            <Center onCentered={centerDummyFn} disableZ>
               <Suspense>
                 <Svg
                   src={iconUrl}
