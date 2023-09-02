@@ -95,7 +95,7 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
   return (
     <>
       <group ref={anchorRef}>
-        <axesHelper args={[radius]} />
+        {/* <axesHelper args={[radius]} /> */}
         {/* <arrowHelper
           ref={(arrow) => {
             if (!arrow) return;
