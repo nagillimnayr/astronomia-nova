@@ -46,6 +46,7 @@ export const ObservationSphere = () => {
           stroke={'white'}
           backfaceStroke={'white'}
         />
+        <meshBasicMaterial />
         {/* <axesHelper args={[1e-1]} /> */}
       </mesh>
     </>

@@ -18,6 +18,7 @@ import { SkySphere } from '../sky-sphere/SkySphere';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Compass } from '../compass/Compass';
 import { Sphere } from '@react-three/drei';
+import { ObservationPointIndicator } from './ObservationPointIndicator';
 
 type Props = {
   children?: ReactNode;
@@ -99,7 +100,8 @@ const ObservationPoint = observer(({ children }: Props) => {
               rotation={[0, 0, -PI_OVER_TWO]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
             >
               {/* <axesHelper args={[1e-2]} /> */}
-              <ObservationSphere />
+              {/* <ObservationSphere /> */}
+              <ObservationPointIndicator />
               <Observer />
               <Compass />
               {children}
