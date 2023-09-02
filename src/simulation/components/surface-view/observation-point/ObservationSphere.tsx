@@ -12,7 +12,10 @@ import { useSelector } from '@xstate/react';
 import { useContext, useMemo, useRef } from 'react';
 import { SphereGeometry, type Mesh, DoubleSide } from 'three';
 
-export const ObservationSphere = () => {
+type ObservationSphereProps = {
+  radius: number;
+};
+export const ObservationSphere = ({ radius }: ObservationSphereProps) => {
   const { uiActor } = MachineContext.useSelector(({ context }) => context);
   const dialogActor = useSelector(
     uiActor,
@@ -27,19 +30,19 @@ export const ObservationSphere = () => {
   );
 
   const sphereGeometry = useMemo(() => {
-    const radius = 0.5e5 * METER;
+    // const radius = 0.5e5 * METER;
     const resolution = 16;
     const geometry = new SphereGeometry(radius, resolution, resolution);
     const nonIndexedGeometry = geometry.toNonIndexed(); // Necessary for wireframe.
     geometry.dispose(); // Cleanup original indexed geometry.
     return nonIndexedGeometry;
-  }, []);
+  }, [radius]);
   return (
     <>
       <mesh
         ref={sphereRef}
         name="observation-sphere"
-        visible={dialogOpen}
+        // visible={dialogOpen}
         geometry={sphereGeometry}
         scale-x={-1}
       >
