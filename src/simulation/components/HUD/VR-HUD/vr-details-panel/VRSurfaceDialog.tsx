@@ -73,6 +73,7 @@ export const VRSurfaceDialog = ({
   );
 
   const anchorRef = useRef<Object3D>(null!);
+  const armRef = useRef<Group>(null!);
   const containerRef = useRef<Group>(null!);
 
   // Subscribe to actor's state.
@@ -96,6 +97,7 @@ export const VRSurfaceDialog = ({
   useEffect(() => {
     // const isClosed = vrSurfaceDialogActor.getSnapshot()!.matches('closed');
     const anchor = anchorRef.current;
+    const arm = armRef.current;
     const container = containerRef.current;
     if (!isOpen || !(focusTarget instanceof KeplerBody)) {
       if (defaultOpen) {
@@ -118,7 +120,8 @@ export const VRSurfaceDialog = ({
     springApi.start({ scale: scale });
     // container.scale.setScalar(scale);
     const xPos = -meanRadius - scale * (panelWidth * 0.75);
-    container.position.set(xPos, 0, 0);
+    arm.position.set(xPos, 0, 0);
+    container.position.set(0, 0, meanRadius * 2);
   }, [defaultOpen, focusTarget, isOpen, springApi, vrSurfaceDialogActor]);
 
   useFrame(({ camera }, delta, frame) => {
@@ -139,60 +142,62 @@ export const VRSurfaceDialog = ({
   return (
     <>
       <object3D name="surface-dialog-anchor" ref={anchorRef}>
-        <animated.group
-          scale={spring.scale}
-          ref={containerRef}
-          position={position}
-        >
-          <Interactive onSelect={dummyFn}>
-            <VRPanel width={panelWidth} height={panelHeight} />
-          </Interactive>
+        <group name="surface-dialog-arm" ref={armRef}>
+          <animated.group
+            scale={spring.scale}
+            ref={containerRef}
+            position={position}
+          >
+            <Interactive onSelect={dummyFn}>
+              <VRPanel width={panelWidth} height={panelHeight} />
+            </Interactive>
 
-          {/** Sliders. */}
-          <group position-y={0.5} position-z={depth.xs}>
-            {/** Latitude Slider. */}
-            <object3D position-y={0.55}>
-              <CoordinateSlider
-                width={sliderWidth}
-                target={'latitude'}
-                onValueChange={handleLatitudeChange}
-                min={MIN_LATITUDE}
-                max={MAX_LATITUDE}
-              />
-            </object3D>
-            {/** Longitude Slider. */}
-            <object3D position-y={-0.55}>
-              <CoordinateSlider
-                width={sliderWidth}
-                target={'longitude'}
-                onValueChange={handleLongitudeChange}
-                min={MIN_LONGITUDE}
-                max={MAX_LONGITUDE}
-              />
-            </object3D>
-          </group>
+            {/** Sliders. */}
+            <group position-y={0.5} position-z={depth.xs}>
+              {/** Latitude Slider. */}
+              <object3D position-y={0.55}>
+                <CoordinateSlider
+                  width={sliderWidth}
+                  target={'latitude'}
+                  onValueChange={handleLatitudeChange}
+                  min={MIN_LATITUDE}
+                  max={MAX_LATITUDE}
+                />
+              </object3D>
+              {/** Longitude Slider. */}
+              <object3D position-y={-0.55}>
+                <CoordinateSlider
+                  width={sliderWidth}
+                  target={'longitude'}
+                  onValueChange={handleLongitudeChange}
+                  min={MIN_LONGITUDE}
+                  max={MAX_LONGITUDE}
+                />
+              </object3D>
+            </group>
 
-          <group position-y={-1.25} position-z={depth.xs}>
-            {/** Cancel Button. */}
-            <object3D position-x={-1.2}>
-              <VRHudButton
-                label="cancel"
-                onClick={close}
-                height={buttonHeight}
-                width={buttonWidth}
-              />
-            </object3D>
-            {/** Confirm Button. */}
-            <object3D position-x={1.1}>
-              <VRHudButton
-                label="confirm"
-                onClick={confirm}
-                height={buttonHeight}
-                width={buttonWidth}
-              />
-            </object3D>
-          </group>
-        </animated.group>
+            <group position-y={-1.25} position-z={depth.xs}>
+              {/** Cancel Button. */}
+              <object3D position-x={-1.2}>
+                <VRHudButton
+                  label="cancel"
+                  onClick={close}
+                  height={buttonHeight}
+                  width={buttonWidth}
+                />
+              </object3D>
+              {/** Confirm Button. */}
+              <object3D position-x={1.1}>
+                <VRHudButton
+                  label="confirm"
+                  onClick={confirm}
+                  height={buttonHeight}
+                  width={buttonWidth}
+                />
+              </object3D>
+            </group>
+          </animated.group>
+        </group>
       </object3D>
     </>
   );
