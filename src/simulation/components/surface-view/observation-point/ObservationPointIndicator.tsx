@@ -1,6 +1,7 @@
 import { METER, PI_OVER_TWO } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import {
+  Cylinder,
   Edges,
   Line,
   MeshDiscardMaterial,
@@ -44,33 +45,18 @@ export const ObservationPointIndicator = () => {
     const segments = 32;
     return [innerRadius, outerRadius, segments];
   }, []);
-  const linePoints = useMemo(() => {
-    return [new Vector3(0, 0, 0), new Vector3(0, 0, 1)];
-  }, []);
-  const lineScale = useMemo(() => {
-    return new Vector3(1, 1, 1);
-  }, []);
-  lineScale.set(1, 1, 4);
+
   return (
     <>
-      <mesh
-        ref={ref}
-        name="observation-sphere"
-        visible={isVisible}
-        scale={radius}
-        rotation-x={-PI_OVER_TWO}
-      >
-        <ringGeometry args={ringArgs} />
+      <group name="observation-indicator" scale={radius}>
+        <mesh ref={ref} visible={isVisible} rotation-x={-PI_OVER_TWO}>
+          <ringGeometry args={ringArgs} />
 
-        <meshBasicMaterial />
-        <Line
-          points={linePoints}
-          color={'white'}
-          lineWidth={2}
-          scale={lineScale}
-        />
-        {/* <axesHelper args={[1e1]} /> */}
-      </mesh>
+          <meshBasicMaterial />
+          {/* <axesHelper args={[1e1]} /> */}
+        </mesh>
+        <Cylinder scale-x={0.1} scale-y={5} scale-z={0.075} />
+      </group>
     </>
   );
 };
