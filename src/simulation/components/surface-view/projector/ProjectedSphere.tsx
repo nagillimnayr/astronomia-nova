@@ -3,7 +3,7 @@ import { colorMap } from '@/simulation/utils/color-map';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Circle, Ring, Sphere, Trail } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { MutableRefObject, useRef } from 'react';
+import { MutableRefObject, useCallback, useRef } from 'react';
 import {
   type ArrowHelper,
   type Mesh,
@@ -34,7 +34,9 @@ type Props = {
 };
 
 export const ProjectedSphere = ({ body, radius }: Props) => {
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const { cameraActor, timeActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const surfaceView = useSelector(cameraActor, (state) =>
     state.matches('surface')
   );
@@ -44,7 +46,7 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
   const anchorRef = useRef<Group>(null!);
   const arrowRef = useRef<ArrowHelper>(null!);
 
-  useFrame(() => {
+  const updateRotation = useCallback(() => {
     // if (!surfaceView) return; // Only update if in surface view.
     if (!pivotRef.current || !body) return;
     const anchor = anchorRef.current;
@@ -62,6 +64,10 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
     pivot.rotation.set(0, 0, 0); // Reset rotation.
     pivot.rotateY(theta);
     pivot.rotateX(phi);
+  }, [body]);
+
+  useFrame(() => {
+    updateRotation();
   });
 
   if (!body) return;
@@ -97,11 +103,14 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
             scale={5e4}
             rotation-y={PI}
           >
-            <meshBasicMaterial color={color} side={DoubleSide} />
+            <meshBasicMaterial color={color} />
             {/* <axesHelper /> */}
             <Ring args={[0.8, 1]} position-z={1e-2} scale={1.3}>
-              <meshBasicMaterial color={'white'} />
+              <meshBasicMaterial color={'white'} side={DoubleSide} />
             </Ring>
+            <Circle position-z={1e-2} scale={0.1}>
+              <meshBasicMaterial color={'white'} side={DoubleSide} />
+            </Circle>
           </Circle>
         </object3D>
         <ProjectedTrail targetRef={ref} length={20} color={color} />
