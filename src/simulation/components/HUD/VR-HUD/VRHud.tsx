@@ -19,6 +19,8 @@ import {
 import { PI_OVER_SIX } from '../../../utils/constants';
 import { degToRad } from 'three/src/math/MathUtils';
 import { VRTagProjector } from './vr-projection-sphere/VRTagProjector';
+import { VRTimeDisplay } from './vr-time-panel/vr-time-display/VRTimeDisplay';
+import { VRTimeControls } from './vr-time-panel/vr-time-controls/VRTimeControls';
 
 type VRHudProps = {
   position?: Vector3Tuple;
@@ -70,13 +72,20 @@ export const VRHud = ({
                 <VRDetailsPanel scale={0.6} />
               </VRHudSphereAttachment>
 
-              {/** Time Panel. */}
+              {/** Time Panels. */}
               <VRHudSphereAttachment
                 radius={radius}
                 phi={degToRad(-25)}
                 theta={degToRad(0)}
               >
-                <VRTimePanel scale={0.1} />
+                <VRTimeDisplay scale={0.1} />
+              </VRHudSphereAttachment>
+              <VRHudSphereAttachment
+                radius={radius}
+                phi={degToRad(-30)}
+                theta={degToRad(0)}
+              >
+                <VRTimeControls scale={0.1} />
               </VRHudSphereAttachment>
 
               {/** Settings Menu Button. */}
