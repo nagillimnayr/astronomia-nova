@@ -7,9 +7,10 @@ import { useCallback, useContext, useRef } from 'react';
 import { Object3D, Vector3 } from 'three';
 import { ProjectedSphere } from './ProjectedSphere';
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { EARTH_RADIUS } from '@/simulation/utils/constants';
+import { EARTH_RADIUS, METER } from '@/simulation/utils/constants';
 import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { DIST_MULT } from '@/simulation/utils/constants';
+import { ObservationSphere } from '../observation-point/ObservationSphere';
 
 const _pos = new Vector3();
 const _otherPos = new Vector3();
@@ -37,25 +38,26 @@ export const Projector = () => {
   // });
 
   const body = focusTarget instanceof KeplerBody ? focusTarget : null;
-  const radius = body
-    ? (5 * body.meanRadius) / DIST_MULT
-    : (5 * EARTH_RADIUS) / DIST_MULT;
+  const radius = body ? body.meanRadius * METER : EARTH_RADIUS * METER;
   return (
     <>
-      <object3D ref={centerRef}>
-        {root
-          ? root.orbitingBodies.map((body) => {
-              if (body === focusTarget) return;
-              return (
-                <ProjectedSphere
-                  key={`${body.name}-projected`}
-                  body={body}
-                  radius={radius}
-                />
-              );
-            })
-          : null}
-      </object3D>
+      <group>
+        <object3D ref={centerRef}>
+          {root
+            ? root.orbitingBodies.map((body) => {
+                if (body === focusTarget) return;
+                return (
+                  <ProjectedSphere
+                    key={`${body.name}-projected`}
+                    body={body}
+                    radius={radius}
+                  />
+                );
+              })
+            : null}
+        </object3D>
+        {/* <ObservationSphere radius={radius} /> */}
+      </group>
     </>
   );
 };
