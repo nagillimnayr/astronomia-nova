@@ -153,6 +153,7 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
               height={height}
               radius={radius}
               backgroundColor={spring.color}
+              borderWidth={0.05 * height}
             />
           </Interactive>
 

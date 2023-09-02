@@ -103,6 +103,7 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
               height={height}
               radius={radius}
               backgroundColor={spring.color}
+              borderWidth={0.05 * height}
             />
           </Interactive>
 
