@@ -17,6 +17,7 @@ import { degToRad } from 'three/src/math/MathUtils';
 import { useSelector } from '@xstate/react';
 import { METER, PI, PI_OVER_TWO } from '@/simulation/utils/constants';
 import { BodyTrail } from '../../Body/trail/BodyTrail';
+import { ProjectedTrail } from './ProjectedTrail';
 
 const _pos = new Vector3();
 const _otherPos = new Vector3();
@@ -129,6 +130,7 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
             </Ring>
           </Circle>
         </object3D>
+        <ProjectedTrail targetRef={ref} length={20} color={color} />
       </group>
     </>
   );
