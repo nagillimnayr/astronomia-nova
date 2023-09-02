@@ -84,17 +84,34 @@ export const ProjectedTrail = ({
     });
     return () => subscription.unsubscribe();
   }, [geometry, length, surfaceActor, targetRef]);
+  useEffect(() => {
+    // Subscribe to timeActor, and reset trail whenever time is paused.
+    const subscription = timeActor.subscribe((state) => {
+      if (state.event.type === 'UNPAUSE') {
+        meshRef.current.visible = false;
+      }
+      if (state.event.type !== 'PAUSE') return;
+      // Position of target won't have updated immediately, so reset the trail after a slight delay.
+      meshRef.current.visible = false; // Toggle visibility temporarily, to avoid jank.
+      setTimeout(() => {
+        const anchor = anchorRef.current;
+        const target = targetRef.current;
+        points.current = resetTrail(anchor, target, length);
+        // Update geometry.
+        geometry.setPoints(points.current);
+
+        meshRef.current.visible = true;
+      }, 50);
+    });
+    return () => subscription.unsubscribe();
+  }, [geometry, length, surfaceActor, targetRef]);
 
   // Update geometry.
   useEffect(() => {
     const subscription = timeActor.subscribe((state) => {
+      if (state.matches('unpaused')) return; // Do nothing if unpaused.
       // Only update if the last event was a sidereal advancement of time.
-      if (
-        // state.event.type !== 'UPDATE' &&
-        state.event.type !== 'ADVANCE_TIME'
-      )
-        return;
-
+      if (state.event.type !== 'ADVANCE_TIME') return;
       const anchor = anchorRef.current;
 
       // Get relative position of target.
