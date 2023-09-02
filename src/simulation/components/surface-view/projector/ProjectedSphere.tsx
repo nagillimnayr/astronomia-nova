@@ -44,32 +44,6 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
   const anchorRef = useRef<Group>(null!);
   const arrowRef = useRef<ArrowHelper>(null!);
 
-  // useFrame(({ camera }) => {
-  //   if (!surfaceView) return; // Only update if in surface view.
-  //   if (!ref.current || !centerRef.current || !body) return;
-  //   const center = centerRef.current;
-  //   center.getWorldPosition(_pos);
-  //   body.getWorldPosition(_otherPos);
-  //   _diff.subVectors(_otherPos, _pos);
-  //   _direction.copy(_diff);
-  //   _direction.normalize();
-
-  //   // Local coords.
-  //   _projectedPos.copy(_pos);
-  //   _projectedPos.addScaledVector(_direction, radius);
-
-  //   // Set position of projected sphere.
-  //   center.lookAt(_projectedPos);
-
-  //   // const arrow = arrowRef.current;
-  //   // arrow.setDirection(_direction);
-  //   // arrow.setLength(_diff.length());
-
-  //   // Rotate to face camera.
-  //   camera.getWorldPosition(_cameraPos);
-  //   ref.current.lookAt(_cameraPos);
-  // });
-
   useFrame(() => {
     // if (!surfaceView) return; // Only update if in surface view.
     if (!pivotRef.current || !body) return;
