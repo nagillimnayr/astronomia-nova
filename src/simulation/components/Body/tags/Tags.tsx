@@ -59,7 +59,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   const pivotRef = useRef<Object3D>(null!);
   const groupRef = useRef<Group>(null!);
   const textRef = useRef<Object3D>(null!);
-  // const ringRef = useRef<Mesh>(null!);
+  const ringRef = useRef<Mesh>(null!);
   const sphereRef = useRef<Mesh>(null!);
   const markerRef = useRef<Group>(null!);
   const axesRef = useRef<AxesHelper>(null!);
@@ -201,7 +201,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
             onHover={hoverEvents.handlePointerEnter}
             onBlur={hoverEvents.handlePointerLeave}
           >
-            {/* <RingMarker bodyRef={bodyRef} ref={ringRef} /> */}
+            <RingMarker bodyRef={bodyRef} ref={ringRef} />
             <SphereMarker
               ref={sphereRef}
               bodyRef={bodyRef}
