@@ -98,12 +98,13 @@ export const VRHoverIndicator = ({
         visible={isPresenting}
         name={`hover-indicator-${handedness}`}
         ref={indicatorRef}
+        scale={radius}
       >
         {/* <axesHelper args={[radius * 2]} /> */}
         <Circle
           name={`hover-indicator-circle-${handedness}`}
           ref={circleRef}
-          scale={radius * 0.2}
+          scale={0.2}
         >
           <meshBasicMaterial side={DoubleSide} color={'white'} />
         </Circle>
