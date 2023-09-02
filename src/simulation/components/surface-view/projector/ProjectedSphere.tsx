@@ -113,7 +113,7 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
             </Circle>
           </Circle>
         </object3D>
-        <ProjectedTrail targetRef={ref} length={20} color={color} />
+        <ProjectedTrail targetRef={ref} length={100} color={color} />
       </group>
     </>
   );
