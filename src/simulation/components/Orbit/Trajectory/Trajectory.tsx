@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Line, Segment, Segments } from '@react-three/drei';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import {
@@ -15,6 +16,7 @@ import {
   Vector3,
   type Object3D,
   Vector3Tuple,
+  Vector2,
 } from 'three';
 import { getLinearEccentricityFromAxes } from '@/simulation/math/orbital-elements/LinearEccentricity';
 import { degToRad, generateUUID } from 'three/src/math/MathUtils';
@@ -31,10 +33,12 @@ import {
   MaterialNode,
   extend,
   useFrame,
+  useThree,
 } from '@react-three/fiber';
 import { flatten } from 'lodash';
 import { useSpring, animated } from '@react-spring/three';
 import { Line2 } from 'three-stdlib';
+import { anim } from '../../animated-components';
 
 const DIST_TO_CAM_THRESHOLD = 1e8 * METER;
 
@@ -90,6 +94,8 @@ export const Trajectory = ({
     cameraActor,
     ({ context }) => context.focusTarget
   );
+  const getThree = useThree(({ get }) => get);
+  const size = useThree(({ size }) => size);
 
   const arrowRef = useRef<ArrowHelper>(null!);
   const objRef = useRef<Object3D>(null!);
@@ -97,29 +103,56 @@ export const Trajectory = ({
 
   const [showPeriapsis, setShowPeriapsis] = useState<boolean>(false);
 
-  // const points = useMemo(() => {
-  //   const points = new EllipseCurve(
-  //     -linearEccentricity / DIST_MULT,
-  //     0,
-  //     semiMajorAxis / DIST_MULT,
-  //     semiMinorAxis / DIST_MULT
-  //   )
-  //     .getSpacedPoints(NUM_OF_POINTS)
-  //     .map((vec2) => {
-  //       const vec3Tuple: Vector3Tuple = [vec2.x, vec2.y, 0];
-  //       return vec3Tuple;
-  //     });
-  //   return flatten(points);
-  // }, [semiMajorAxis, semiMinorAxis, linearEccentricity]);
   const points = useMemo(() => {
     const points = new EllipseCurve(
       -linearEccentricity / DIST_MULT,
       0,
       semiMajorAxis / DIST_MULT,
       semiMinorAxis / DIST_MULT
-    ).getSpacedPoints(NUM_OF_POINTS);
-    return points;
+    )
+      .getSpacedPoints(NUM_OF_POINTS)
+      .map((vec2) => {
+        // const vec3Tuple: Vector3Tuple = [vec2.x, 0, vec2.y];
+        const vec3Tuple: Vector3Tuple = [vec2.x, vec2.y, 0];
+        return vec3Tuple;
+      });
+    return flatten(points);
   }, [semiMajorAxis, semiMinorAxis, linearEccentricity]);
+
+  // const points = useMemo(() => {
+  //   const points = new EllipseCurve(
+  //     -linearEccentricity / DIST_MULT,
+  //     0,
+  //     semiMajorAxis / DIST_MULT,
+  //     semiMinorAxis / DIST_MULT
+  //   ).getSpacedPoints(NUM_OF_POINTS);
+  //   return points;
+  // }, [semiMajorAxis, semiMinorAxis, linearEccentricity]);
+
+  const geometry = useMemo(() => {
+    return new MeshLineGeometry();
+  }, []);
+
+  useEffect(() => {
+    geometry.setPoints(points);
+  }, [geometry, points]);
+
+  const material = useMemo(() => {
+    const { size } = getThree();
+    const material = new MeshLineMaterial({
+      lineWidth: 10,
+      sizeAttenuation: 0,
+      resolution: new Vector2(size.width, size.height),
+      opacity: 0.2,
+    });
+    return material;
+  }, [getThree]);
+
+  useEffect(() => {
+    /** @ts-ignore */
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    material.uniforms.resolution!.value.set(size.width, size.height);
+  }, [size, material]);
 
   let isVisible = trajectoryVisibilityOn;
   if (bodyRef.current && focusTarget) {
@@ -128,32 +161,39 @@ export const Trajectory = ({
     }
   }
 
+  const [spring, springRef] = useSpring(() => ({ opacity: 1 }));
+
   useFrame(({ camera }) => {
     // Get focus target.
     const { focusTarget } = cameraActor.getSnapshot()!.context;
     if (!focusTarget) return;
     if (!Object.is(focusTarget, bodyRef.current)) return;
-
+    return;
     // Get distance of body to camera.
-    camera.getWorldPosition(_camWorldPos);
-    focusTarget.getWorldPosition(_bodyWorldPos);
-    const distance = _camWorldPos.distanceTo(_bodyWorldPos);
-    lineRef.current.visible =
-      distance < DIST_TO_CAM_THRESHOLD ? false : isVisible;
+    // const { controls } = cameraActor.getSnapshot()!.context;
+    // if (!controls) return;
+    // const distance = controls.radius;
+    // // If under threshold, set to be invisible.
+    // const opacity = distance < DIST_TO_CAM_THRESHOLD ? 0 : 1;
+    // springRef.start({ opacity: opacity });
+    // lineRef.current.visible =
+    //   distance < DIST_TO_CAM_THRESHOLD ? false : isVisible;
   });
 
   return (
     <>
       <object3D visible={isVisible} ref={objRef}>
-        <Line ref={lineRef} points={points} color={'white'} lineWidth={2} />
-        {/* <mesh>
-          <meshLineGeometry points={points} />
-          <meshLineMaterial
+        {/** @ts-ignore */}
+        {/* <Line ref={lineRef} points={points} color={'white'} lineWidth={2} /> */}
+        <mesh material={material} geometry={geometry}>
+          {/* <meshLineGeometry points={points} /> */}
+          {/* <meshLineMaterial
+          
             color={'white'}
             sizeAttenuation={0}
-            lineWidth={1e-3}
-          />
-        </mesh> */}
+            lineWidth={0.01}
+          /> */}
+        </mesh>
         {/* <Segments limit={NUM_OF_POINTS} lineWidth={2}>
           {points.map((point, index, arr) => {
             const i = index + 1 < arr.length ? index + 1 : 0;
