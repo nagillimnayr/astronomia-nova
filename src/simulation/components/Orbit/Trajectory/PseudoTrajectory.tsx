@@ -44,7 +44,7 @@ export const PseudoTrajectory = () => {
     const line = lineRef.current;
     if (!line) return;
 
-    // Scale the line relative to the circumference of the trajectory.
+    // Scale the line relative to the circumference of the trajectory, as it must be long enough to cover up the flickering but short enough that the tangent line doesn't stray notiveably off of the curve.
     const distanceToOrigin = body.position.length();
     const circumference = TWO_PI * distanceToOrigin;
     const length = circumference / 4096;
@@ -60,7 +60,7 @@ export const PseudoTrajectory = () => {
   return createPortal(
     <>
       <Line
-        visible={onSurface}
+        visible={!onSurface}
         ref={lineRef}
         points={points}
         lineWidth={2.1}
