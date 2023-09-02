@@ -1,7 +1,7 @@
 import { VRControls } from './vr-controls/VRControls';
 import { VRPlayer } from './VRPlayer';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useController, useXR } from '@react-three/xr';
 import { Circle, Ring } from '@react-three/drei';
@@ -85,6 +85,12 @@ export const VRHoverIndicator = ({
 
     return () => subscription.unsubscribe();
   }, [cameraActor, controller, getXR, handedness, rayLength]);
+  const ringArgs: [number, number, number] = useMemo(() => {
+    const outerRadius = 1;
+    const innerRadius = 0.9;
+    const segments = 32;
+    return [innerRadius, outerRadius, segments];
+  }, []);
 
   return (
     <>
@@ -93,20 +99,20 @@ export const VRHoverIndicator = ({
         name={`hover-indicator-${handedness}`}
         ref={indicatorRef}
       >
-        <axesHelper args={[radius * 2]} />
+        {/* <axesHelper args={[radius * 2]} /> */}
         <Circle
           name={`hover-indicator-circle-${handedness}`}
-          args={[radius * 0.2]}
           ref={circleRef}
+          scale={radius * 0.2}
         >
-          <meshBasicMaterial side={DoubleSide} color={'red'} />
+          <meshBasicMaterial side={DoubleSide} color={'white'} />
         </Circle>
         <Ring
           name={`hover-indicator-ring-${handedness}`}
-          args={[radius * 0.9, radius]}
+          args={ringArgs}
           ref={ringRef}
         >
-          <meshBasicMaterial side={DoubleSide} color={'red'} />
+          <meshBasicMaterial side={DoubleSide} color={'white'} />
         </Ring>
       </group>
     </>
