@@ -4,7 +4,6 @@ import { useSelector } from '@xstate/react';
 import { format } from 'date-fns';
 import { Suspense, useEffect, useRef } from 'react';
 import { Object3D, type Vector3Tuple } from 'three';
-import { text } from '../../vr-hud-constants';
 // import { Text as TextMesh } from 'troika-three-text';
 // import { type Text as TextMesh } from 'troika-three-text/src/Text';
 import { type Text as TextMesh } from '@/type-declarations/troika-three-text/Text';
