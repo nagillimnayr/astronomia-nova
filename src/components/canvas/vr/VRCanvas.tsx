@@ -4,7 +4,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 
 import { Suspense, type PropsWithChildren } from 'react';
 import { VRManager } from './VRManager';
-import { VRButton, XR } from '@react-three/xr';
+import { Hands, VRButton, XR } from '@react-three/xr';
 
 const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
 
@@ -51,6 +51,7 @@ export const VRCanvas = ({ children }: PropsWithChildren) => {
             <Suspense fallback={null}>
               {children}
               <VRManager />
+              <Hands />
             </Suspense>
           </XR>
         </Canvas>
