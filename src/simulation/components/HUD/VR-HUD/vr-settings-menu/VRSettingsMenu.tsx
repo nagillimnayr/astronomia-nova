@@ -25,6 +25,7 @@ import {
   Circle,
   Edges,
   MeshDiscardMaterial,
+  OnCenterCallbackProps,
   Plane,
   Svg,
   Text,
@@ -48,6 +49,10 @@ const _camWorldPos = new Vector3();
 const _containerWorldPos = new Vector3();
 
 const dummyFn = () => {
+  return;
+};
+const centerDummyFn = (props: OnCenterCallbackProps) => {
+  // console.log('centered:',props);
   return;
 };
 
@@ -308,10 +313,14 @@ const VRToggleButton = ({
               onPointerDown={handleClick}
             />
           </Interactive>
-          <object3D scale={iconSize} position-z={0.0025}>
-            <Center onCentered={dummyFn}>
+          <object3D position-z={0.0025}>
+            <Center onCentered={centerDummyFn}>
               <Suspense>
-                <Svg src={iconUrl} fillMaterial={ICON_MATERIAL_BASE} />
+                <Svg
+                  src={iconUrl}
+                  scale={iconSize}
+                  fillMaterial={ICON_MATERIAL_BASE}
+                />
               </Suspense>
             </Center>
           </object3D>
