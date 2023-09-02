@@ -31,17 +31,28 @@ const ObservationPoint = observer(({ children }: Props) => {
     cameraActor,
     ({ context }) => context.focusTarget
   );
-  const dialogActor = useSelector(
+  const surfaceDialogActor = useSelector(
     uiActor,
     ({ context }) => context.surfaceDialogActor
   );
-
+  const vrSurfaceDialogActor = useSelector(
+    uiActor,
+    ({ context }) => context.vrSurfaceDialogActor
+  );
   // Check if surface dialog is open.
-  const dialogOpen = useSelector(dialogActor, (state) => state.matches('open'));
+  const dialogOpen = useSelector(surfaceDialogActor, (state) =>
+    state.matches('open')
+  );
+  const vrDialogOpen = useSelector(vrSurfaceDialogActor, (state) =>
+    state.matches('active')
+  );
+
   // Check if in surface view.
   const onSurface = useSelector(cameraActor, (state) =>
     state.matches('surface')
   );
+
+  const isVisible = onSurface || dialogOpen || vrDialogOpen;
 
   const centerRef = useRef<Object3D>(null!);
 
@@ -91,7 +102,7 @@ const ObservationPoint = observer(({ children }: Props) => {
       {body && mesh ? (
         <>
           {/** Pivot point at center of body. */}
-          <object3D ref={centerRef} visible={dialogOpen || onSurface}>
+          <object3D ref={centerRef} visible={isVisible}>
             {/* <axesHelper args={[2 * (body.meanRadius / DIST_MULT)]} /> */}
             {/** Attach group at a distance so that it is on the surface of the body. */}
             <group
