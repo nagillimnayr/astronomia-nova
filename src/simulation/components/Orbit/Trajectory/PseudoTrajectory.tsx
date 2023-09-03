@@ -14,13 +14,22 @@ const NUM_OF_SEGMENTS = 1024;
 
 // This line helps to cover up a lot of the flickering of the trajectory when very close to a planet.
 export const PseudoTrajectory = () => {
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const { cameraActor, visibilityActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const focusTarget = useSelector(
     cameraActor,
     ({ context }) => context.focusTarget
   );
   const onSurface = useSelector(cameraActor, (state) =>
     state.matches('surface')
+  );
+  const trajectories = useSelector(
+    visibilityActor,
+    ({ context }) => context.trajectories
+  );
+  const trajectoryVisibilityOn = useSelector(trajectories, (state) =>
+    state.matches('active')
   );
 
   const points = useMemo(() => {
@@ -44,7 +53,7 @@ export const PseudoTrajectory = () => {
     const line = lineRef.current;
     if (!line) return;
 
-    // Scale the line relative to the circumference of the trajectory, as it must be long enough to cover up the flickering but short enough that the tangent line doesn't stray notiveably off of the curve.
+    // Scale the line relative to the circumference of the trajectory, as it must be long enough to cover up the flickering but short enough that the tangent line doesn't stray noticeably off of the curve.
     const distanceToOrigin = body.position.length();
     const circumference = TWO_PI * distanceToOrigin;
     const length = circumference / 4096;
@@ -56,11 +65,13 @@ export const PseudoTrajectory = () => {
     line.scale.set(1, 1, length);
   });
 
+  const isVisible = trajectoryVisibilityOn && !onSurface;
+
   if (!focusTarget) return;
   return createPortal(
     <>
       <Line
-        visible={!onSurface}
+        visible={isVisible}
         ref={lineRef}
         points={points}
         lineWidth={2.1}
