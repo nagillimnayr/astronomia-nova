@@ -24,9 +24,9 @@ const Observer = () => {
           >
             {/* <axesHelper args={[5 * METER]} /> */}
             <Projector />
-            <Suspense>
+            {/* <Suspense>
               <SkySphere />
-            </Suspense>
+            </Suspense> */}
           </object3D>
           {/* <axesHelper args={[5 * METER]} /> */}
         </object3D>
