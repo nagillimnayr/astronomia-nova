@@ -1,3 +1,5 @@
+import { ThreeEvent } from '@react-three/fiber';
+import { XRInteractionEvent } from '@react-three/xr';
 import { useMemo, useState } from 'react';
 
 function useHover() {
@@ -5,7 +7,14 @@ function useHover() {
 
   const hoverEvents = useMemo(
     () => ({
-      handlePointerEnter: () => setHovered(true),
+      handlePointerEnter: (
+        event: ThreeEvent<MouseEvent> | XRInteractionEvent
+      ) => {
+        if ('stopPropagation' in event) {
+          event.stopPropagation();
+        }
+        setHovered(true);
+      },
       handlePointerLeave: () => setHovered(false),
     }),
     []
