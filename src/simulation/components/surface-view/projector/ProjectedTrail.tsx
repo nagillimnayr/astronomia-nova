@@ -40,12 +40,12 @@ const resetTrail = (anchor: Object3D, target: Object3D, length: number) => {
 };
 
 type ProjectedTrailProps = {
-  targetRef: MutableRefObject<Object3D>;
+  body: KeplerBody;
   color?: ColorRepresentation;
   length: number;
 };
 export const ProjectedTrail = ({
-  targetRef,
+  body,
   color,
   length,
 }: ProjectedTrailProps) => {
@@ -66,13 +66,13 @@ export const ProjectedTrail = ({
   const points = useRef<Float32Array>(null!);
 
   useEffect(() => {
-    if (!targetRef.current) return;
+    // if (!targetRef.current) return;
     const anchor = anchorRef.current;
-    const target = targetRef.current;
-    points.current = resetTrail(anchor, target, length);
+    // const target = targetRef.current;
+    points.current = resetTrail(anchor, body, length);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [length, targetRef, targetRef.current, onSurface]);
+  }, [length, body, onSurface]);
 
   useEffect(() => {
     // Subscribe to surfaceActor, and reset trail whenever coordinates change.
@@ -84,8 +84,7 @@ export const ProjectedTrail = ({
       // meshRef.current.visible = false; // Toggle visibility temporarily, to avoid jank.
       setTimeout(() => {
         const anchor = anchorRef.current;
-        const target = targetRef.current;
-        points.current = resetTrail(anchor, target, length);
+        points.current = resetTrail(anchor, body, length);
         // Update geometry.
         // line.geometry.setPoints(points.current);
         line.geometry.setPositions(points.current);
@@ -95,7 +94,7 @@ export const ProjectedTrail = ({
       }, 50);
     });
     return () => subscription.unsubscribe();
-  }, [length, surfaceActor, targetRef]);
+  }, [length, surfaceActor, body]);
   useEffect(() => {
     // Subscribe to timeActor, and reset trail whenever time is paused.
     const subscription = timeActor.subscribe((state) => {
@@ -110,8 +109,7 @@ export const ProjectedTrail = ({
       line.visible = false; // Toggle visibility temporarily, to avoid jank.
       setTimeout(() => {
         const anchor = anchorRef.current;
-        const target = targetRef.current;
-        points.current = resetTrail(anchor, target, length);
+        points.current = resetTrail(anchor, body, length);
         // Update geometry.
         line.geometry.setPositions(points.current);
 
@@ -119,7 +117,7 @@ export const ProjectedTrail = ({
       }, 50);
     });
     return () => subscription.unsubscribe();
-  }, [length, surfaceActor, targetRef, timeActor]);
+  }, [length, surfaceActor, timeActor, body]);
 
   /**  Update points. */
   useEffect(() => {
@@ -129,7 +127,8 @@ export const ProjectedTrail = ({
       const anchor = anchorRef.current;
 
       // Get relative position of target.
-      targetRef.current.getWorldPosition(_newPos);
+      // targetRef.current.getWorldPosition(_newPos);
+      body.getWorldPosition(_newPos);
       anchor.worldToLocal(_newPos); // Get in local coords.
 
       // Make room for new position.
@@ -148,32 +147,14 @@ export const ProjectedTrail = ({
     });
 
     return () => subscription.unsubscribe();
-  }, [targetRef, timeActor]);
+  }, [timeActor, body]);
 
   useFrame(() => {
     // Update geometry.
     const line = lineRef.current;
     line.geometry.setPositions(points.current);
-    // geometry.setFromPoints(points.current);
   });
 
-  // const material = useMemo(() => {
-  //   const { size } = getThree();
-  //   const material = new MeshLineMaterial({
-  //     color: color,
-  //     lineWidth: 10,
-  //     sizeAttenuation: 0,
-  //     resolution: new Vector2(size.width, size.height),
-  //   });
-  //   return material;
-  // }, [color, getThree]);
-
-  // update resolution.
-  // useEffect(() => {
-  //   /** @ts-ignore */
-  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-  //   material.uniforms.resolution!.value.set(size.width, size.height);
-  // }, [size, material]);
   const arr = useMemo(() => {
     return [0, 0, 0, 0, 0, 0];
   }, []);
@@ -181,16 +162,6 @@ export const ProjectedTrail = ({
     <>
       <group ref={anchorRef}>
         <Line ref={lineRef} points={arr} lineWidth={2} color={color} />
-        {/* <axesHelper args={[1e6]} /> */}
-        {/* <mesh ref={meshRef} material={material} geometry={geometry}> */}
-        {/* <meshLineGeometry points={points} /> */}
-        {/* <meshLineMaterial
-          
-            color={'white'}
-            sizeAttenuation={0}
-            lineWidth={0.01}
-          /> */}
-        {/* </mesh> */}
       </group>
     </>
   );
