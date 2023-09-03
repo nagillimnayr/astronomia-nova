@@ -46,9 +46,14 @@ type Props = {
   meanRadius: number;
 };
 export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
-  const { cameraActor, selectionActor } = MachineContext.useSelector(
+  const { cameraActor, selectionActor, visibilityActor } = MachineContext.useSelector(
     ({ context }) => context
   );
+  
+    const markers = useSelector(
+      visibilityActor,
+      ({ context }) => context.markers
+    );
 
   const getThree = useThree(({ get }) => get);
 
@@ -76,6 +81,8 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   }));
   const handleClick = useCallback(
     (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
+      const markersVisible = markers.getSnapshot()!.matches('active');
+      if (!markersVisible) return;
       if ('stopPropagation' in event) {
         event.stopPropagation();
         setHovered(true);

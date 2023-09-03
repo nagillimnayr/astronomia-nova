@@ -66,7 +66,13 @@ export const SelectionMarker = forwardRef<Mesh, SelectionMarkerProps>(
       Boolean(selected) &&
       Object.is(bodyRef.current, selected);
 
-    const spring = useSpring({ opacity: isVisible ? 1 : 0 });
+    const scale = 1.35;
+    const spring = useSpring({
+      opacity: isVisible ? 1 : 0,
+      scale: isVisible ? scale : 0,
+
+    });
+
     const ringArgs: [number, number, number] = useMemo(() => {
       const outerRadius = 1;
       const innerRadius = 0.9;
@@ -76,7 +82,7 @@ export const SelectionMarker = forwardRef<Mesh, SelectionMarkerProps>(
 
     return (
       <>
-        <group scale={1.35}>
+        <animated.group scale={spring.scale}>
           <Ring ref={fwdRef} args={ringArgs}>
             {/** @ts-ignore */}
             <animated.meshBasicMaterial
@@ -92,7 +98,7 @@ export const SelectionMarker = forwardRef<Mesh, SelectionMarkerProps>(
           <Circle>
             <MeshDiscardMaterial />
           </Circle>
-        </group>
+        </animated.group>
       </>
     );
   }

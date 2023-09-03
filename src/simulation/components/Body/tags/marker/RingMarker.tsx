@@ -69,6 +69,7 @@ export const RingMarker = forwardRef<Mesh, MarkerProps>(function RingMarker(
     opacity: isVisible ? 1 : 0,
     color: isSelected ? 'white' : color.toString(),
   });
+  
   const ringArgs: [number, number, number] = useMemo(() => {
     const outerRadius = 1;
     const innerRadius = 0.9;
