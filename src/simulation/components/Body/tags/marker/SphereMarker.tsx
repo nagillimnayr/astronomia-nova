@@ -17,10 +17,11 @@ import { useActor, useSelector } from '@xstate/react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { SpringValue, useSpring, animated } from '@react-spring/three';
 import { anim } from '@/simulation/components/animated-components';
+import { EARTH_RADIUS } from '@/simulation/utils/constants';
 
 type SphereMarkerProps = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
-  color: ColorRepresentation;
+  color?: ColorRepresentation;
 };
 export const SphereMarker = forwardRef<Mesh, SphereMarkerProps>(
   function SphereMarker({ bodyRef, color }: SphereMarkerProps, fwdRef) {
@@ -44,13 +45,15 @@ export const SphereMarker = forwardRef<Mesh, SphereMarkerProps>(
 
     return (
       <>
-        <anim.Sphere
-          ref={fwdRef}
-          // visible={markersEnabled}
-          material-color={color}
-          material-transparent={true}
-          material-opacity={spring.opacity}
-        />
+        <object3D>
+          <anim.Sphere
+            ref={fwdRef}
+            // visible={markersEnabled}
+            material-color={color}
+            material-transparent={true}
+            material-opacity={spring.opacity}
+          />
+        </object3D>
       </>
     );
   }
