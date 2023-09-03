@@ -73,11 +73,12 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
 
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
-  const spring = useSpring({
+  const hoverSpring = useSpring({
     scale: isHovered ? 1.5 : 1,
   });
   const [hideSpring, hideSpringRef] = useSpring(() => ({
-    scale: 1,
+    markerScale: 1,
+    tagScale: 1
   }));
   const handleClick = useCallback(
     (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
@@ -93,7 +94,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
       const body = bodyRef.current;
       selectionActor.send({ type: 'SELECT', selection: body });
     },
-    [bodyRef, selectionActor, setHovered]
+    [bodyRef, markers, selectionActor, setHovered]
   );
 
   useFrame(({ camera, gl }, _, frame) => {
@@ -161,11 +162,11 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     const radiusRatio = body.meanRadius / EARTH_RADIUS;
     // If too close to camera, hide.
     if (distanceToCamera < DIST_TO_CAM_THRESHOLD * radiusRatio) {
-      hideSpringRef.start({ scale: 0 });
+      hideSpringRef.start({ markerScale: 0 });
       // marker.scale.setScalar(0);
       return;
     } else {
-      hideSpringRef.start({ scale: 1 });
+      hideSpringRef.start({ markerScale: 1 });
     }
     const markerFactor = Math.max(1e-5, distanceToCamera / 75);
 
@@ -174,6 +175,9 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     if (axesRef.current) {
       axesRef.current.scale.setScalar(markerFactor);
     }
+
+
+    /** Check distance of body to its parent, compared to distance to camera. Hide it if it would overlap with its parent. */
 
     // Since the local coordinates will have the parent at the origin, we can use the body's local coords to get the distance to the parent.
     const distanceToParent = body.position.length();
@@ -187,13 +191,14 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // If the ratio of distances is less than the threshold, set to be invisible.
     const shouldBeVisible = ratio > threshold;
 
+    hideSpringRef.start({ tagScale: shouldBeVisible ? 1 : 0 });
     // If visibility is already as it should be, then there is nothing to do.
-    if (marker.visible === shouldBeVisible) return;
-    // Otherwise, set this object and all of its children to the appropriate visibility.
-    // This is so that they don't trigger pointer events.
-    group.traverse((obj) => {
-      obj.visible = shouldBeVisible;
-    });
+    // if (marker.visible === shouldBeVisible) return;
+    // // Otherwise, set this object and all of its children to the appropriate visibility.
+    // // This is so that they don't trigger pointer events.
+    // group.traverse((obj) => {
+    //   obj.visible = shouldBeVisible;
+    // });
   });
 
   const logScale = useMemo(() => {
@@ -205,9 +210,9 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
 
   return (
     <object3D name="pivot" ref={pivotRef}>
-      <group ref={groupRef}>
-        <animated.group scale={spring.scale}>
-          <animated.group scale={hideSpring.scale}>
+      <animated.group ref={groupRef} scale={hideSpring.tagScale}>
+        <animated.group scale={hoverSpring.scale}>
+          <animated.group scale={hideSpring.markerScale}>
             <group
               ref={markerRef}
               scale={logScale}
@@ -237,7 +242,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
         </animated.group>
         {/* <axesHelper args={[10]} ref={axesRef} /> */}
         <Annotation annotation={name} meanRadius={meanRadius} ref={textRef} />
-      </group>
+      </animated.group>
     </object3D>
   );
 };
