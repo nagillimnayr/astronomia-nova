@@ -119,7 +119,7 @@ const ObservationPoint = observer(({ children }: Props) => {
             </group>
           </object3D>
 
-          <SkySphere />
+          {/* <SkySphere /> */}
         </>
       ) : null}
     </>

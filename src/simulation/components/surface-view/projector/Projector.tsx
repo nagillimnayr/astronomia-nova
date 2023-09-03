@@ -1,14 +1,13 @@
 import { makePreOrderTreeTraversalFn } from '@/simulation/systems/keplerTree';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Sphere } from '@react-three/drei';
+import { Sphere, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
 import { useCallback, useContext, useRef } from 'react';
-import { Object3D, Vector3 } from 'three';
+import { DoubleSide, Object3D, Vector3 } from 'three';
 import { ProjectedSphere } from './ProjectedSphere';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS, METER } from '@/simulation/utils/constants';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { DIST_MULT } from '@/simulation/utils/constants';
 import { ObservationSphere } from '../observation-point/ObservationSphere';
 
@@ -29,13 +28,6 @@ export const Projector = () => {
   );
 
   const centerRef = useRef<Object3D | null>(null);
-
-  // useFrame(() => {
-  //   const { observer } = cameraActor.getSnapshot()!.context;
-  //   if (!observer || !centerRef.current || !focusTarget) return;
-  //   observer.getWorldPosition(_pos);
-  //   centerRef.current.position.copy(_pos);
-  // });
 
   const body = focusTarget instanceof KeplerBody ? focusTarget : null;
   const radius = body ? body.meanRadius * METER : EARTH_RADIUS * METER;

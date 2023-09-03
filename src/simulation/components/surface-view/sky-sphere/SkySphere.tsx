@@ -1,10 +1,24 @@
 import KeplerBody from '@/simulation/classes/kepler-body';
-import { DIST_MULT } from '@/simulation/utils/constants';
+import {
+  DIST_MULT,
+  EARTH_RADIUS,
+  METER,
+  PI,
+  PI_OVER_TWO,
+  TWO_PI,
+} from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Edges, Sphere, Wireframe } from '@react-three/drei';
+import { Edges, Sphere, Wireframe, useTexture } from '@react-three/drei';
 import { useSelector } from '@xstate/react';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { Mesh, Object3D } from 'three';
+import {
+  Suspense,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { DoubleSide, Mesh, Object3D, Texture } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 
 export const SkySphere = () => {
@@ -16,47 +30,42 @@ export const SkySphere = () => {
   const [isVisible, setVisible] = useState(false);
   const sphereRef = useRef<Mesh | null>(null);
   const centerRef = useRef<Object3D | null>(null);
+  const textureRef = useRef<Texture>(null!);
+  const gridTexture = useTexture(
+    'assets/textures/stars/celestial_grid_16k.jpg',
+    (texture) => {
+      if (Array.isArray(texture)) return;
+      textureRef.current = texture;
+    }
+  );
 
-  useEffect(() => {
-    if (
-      !centerRef.current ||
-      !focusTarget ||
-      !(focusTarget instanceof KeplerBody)
-    )
-      return;
-    const body = focusTarget;
-    if (!body || !body.meshRef || !body.meshRef.current) return;
-    // Attach to body.
-    body.add(centerRef.current);
-  }, [focusTarget]);
+  const sphereArgs: [number, number, number] = useMemo(() => {
+    const radius = 1;
+    const resolution = 64;
+
+    return [radius, resolution, resolution];
+  }, []);
 
   const body = focusTarget instanceof KeplerBody ? focusTarget : null;
-  if (!body) return;
-  const radius = (5 * body.meanRadius) / DIST_MULT;
+  const radius = body ? body.meanRadius * METER : EARTH_RADIUS * METER;
   return (
     <>
-      <object3D ref={centerRef} rotation={[degToRad(90), 0, 0]}>
-        <Sphere
-          name="sky-sphere"
-          visible={isVisible}
-          ref={sphereRef}
-          args={[radius]}
-          rotation={[0, 0, degToRad(body.obliquity)]}
-        >
-          {/* <Wireframe
-            simplify
-            stroke="white"
-            squeeze
-            fillMix={1}
-            fillOpacity={0}
-            strokeOpacity={0.75}
-            // fill="white"
-          /> */}
-
-          <meshBasicMaterial transparent opacity={0} />
-          <Edges scale={1} color={'white'} threshold={5.5} />
-          {/* <axesHelper args={[1e-1]} /> */}
-        </Sphere>
+      <object3D ref={centerRef} scale={radius} position-y={-3e4}>
+        <Suspense>
+          <Sphere
+            ref={sphereRef}
+            scale-x={-1}
+            scale-y={1}
+            scale-z={1}
+            args={sphereArgs}
+          >
+            <meshBasicMaterial
+              transparent
+              alphaMap={textureRef.current}
+              side={DoubleSide}
+            />
+          </Sphere>
+        </Suspense>
       </object3D>
     </>
   );

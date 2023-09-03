@@ -55,6 +55,7 @@ export const ObservationPointIndicator = () => {
           <meshBasicMaterial />
           {/* <axesHelper args={[1e1]} /> */}
         </mesh>
+
         <Cylinder scale-x={0.1} scale-y={5} scale-z={0.075} />
       </group>
     </>
