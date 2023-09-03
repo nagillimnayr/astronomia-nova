@@ -13,6 +13,7 @@ import {
   Group,
   Mesh,
 } from 'three';
+import { Line2 } from 'three-stdlib';
 
 const _newPos = new Vector3();
 
@@ -21,6 +22,11 @@ const shiftLeft = (collection: Float32Array, steps = 1): Float32Array => {
   collection.fill(-Infinity, -steps);
   return collection;
 };
+// const shiftLeft = (points: number[], steps = 1): number[] => {
+//   const newPoints = points.slice(steps);
+//   newPoints.fill(-Infinity, -steps);
+//   return newPoints;
+// };
 
 const resetTrail = (anchor: Object3D, target: Object3D, length: number) => {
   // Get relative position of target.
@@ -50,7 +56,8 @@ export const ProjectedTrail = ({
   const size = useThree(({ size }) => size);
 
   const anchorRef = useRef<Group>(null!);
-  const meshRef = useRef<Mesh>(null!);
+  // const meshRef = useRef<Mesh>(null!);
+  const lineRef = useRef<Line2>(null!);
   const points = useRef<Float32Array>(null!);
 
   useEffect(() => {
@@ -62,52 +69,62 @@ export const ProjectedTrail = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [length, targetRef, targetRef.current]);
 
-  const geometry = useMemo(() => {
-    return new MeshLineGeometry();
-  }, []);
+  // const geometry = useMemo(() => {
+  //   return new MeshLineGeometry();
+  // }, []);
 
   useEffect(() => {
     // Subscribe to surfaceActor, and reset trail whenever coordinates change.
     const subscription = surfaceActor.subscribe((state) => {
+      const line = lineRef.current;
+      if (!line) return;
       // Position of target won't have updated immediately, so reset the trail after a slight delay.
-      meshRef.current.visible = false; // Toggle visibility temporarily, to avoid jank.
+      line.visible = false; // Toggle visibility temporarily, to avoid jank.
+      // meshRef.current.visible = false; // Toggle visibility temporarily, to avoid jank.
       setTimeout(() => {
         const anchor = anchorRef.current;
         const target = targetRef.current;
         points.current = resetTrail(anchor, target, length);
         // Update geometry.
-        geometry.setPoints(points.current);
+        // line.geometry.setPoints(points.current);
+        line.geometry.setPositions(points.current);
 
-        meshRef.current.visible = true;
+        // meshRef.current.visible = true;
+        line.visible = true;
       }, 50);
     });
     return () => subscription.unsubscribe();
-  }, [geometry, length, surfaceActor, targetRef]);
+  }, [length, surfaceActor, targetRef]);
   useEffect(() => {
     // Subscribe to timeActor, and reset trail whenever time is paused.
     const subscription = timeActor.subscribe((state) => {
+      const line = lineRef.current;
+      if (!line) return;
       if (state.event.type === 'UNPAUSE') {
-        meshRef.current.visible = false;
+        // meshRef.current.visible = false;
+        line.visible = false;
       }
       if (state.event.type !== 'PAUSE') return;
       // Position of target won't have updated immediately, so reset the trail after a slight delay.
-      meshRef.current.visible = false; // Toggle visibility temporarily, to avoid jank.
+      line.visible = false; // Toggle visibility temporarily, to avoid jank.
       setTimeout(() => {
         const anchor = anchorRef.current;
         const target = targetRef.current;
         points.current = resetTrail(anchor, target, length);
         // Update geometry.
-        geometry.setPoints(points.current);
+        line.geometry.setPositions(points.current);
 
-        meshRef.current.visible = true;
+        line.visible = true;
       }, 50);
     });
     return () => subscription.unsubscribe();
-  }, [geometry, length, surfaceActor, targetRef]);
+  }, [length, surfaceActor, targetRef, timeActor]);
 
   /**  Update points. */
   useEffect(() => {
     const updatePosition = () => {
+      const line = lineRef.current;
+      if (!line) return;
       const anchor = anchorRef.current;
 
       // Get relative position of target.
@@ -120,7 +137,7 @@ export const ProjectedTrail = ({
       points.current.set(_newPos.toArray(), points.current.length - 3);
 
       // Update geometry.
-      geometry.setPoints(points.current);
+      line.geometry.setPositions(points.current);
     };
     const subscription = timeActor.subscribe((state) => {
       if (state.matches('unpaused')) return; // Do nothing if unpaused.
@@ -130,44 +147,49 @@ export const ProjectedTrail = ({
     });
 
     return () => subscription.unsubscribe();
-  }, [geometry, targetRef, timeActor]);
+  }, [targetRef, timeActor]);
 
   useFrame(() => {
     // Update geometry.
-    geometry.setPoints(points.current);
+    const line = lineRef.current;
+    line.geometry.setPositions(points.current);
+    // geometry.setFromPoints(points.current);
   });
 
-  const material = useMemo(() => {
-    const { size } = getThree();
-    const material = new MeshLineMaterial({
-      color: color,
-      lineWidth: 10,
-      sizeAttenuation: 0,
-      resolution: new Vector2(size.width, size.height),
-    });
-    return material;
-  }, [color, getThree]);
+  // const material = useMemo(() => {
+  //   const { size } = getThree();
+  //   const material = new MeshLineMaterial({
+  //     color: color,
+  //     lineWidth: 10,
+  //     sizeAttenuation: 0,
+  //     resolution: new Vector2(size.width, size.height),
+  //   });
+  //   return material;
+  // }, [color, getThree]);
 
   // update resolution.
-  useEffect(() => {
-    /** @ts-ignore */
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    material.uniforms.resolution!.value.set(size.width, size.height);
-  }, [size, material]);
-
+  // useEffect(() => {
+  //   /** @ts-ignore */
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+  //   material.uniforms.resolution!.value.set(size.width, size.height);
+  // }, [size, material]);
+  const arr = useMemo(() => {
+    return [0, 0, 0, 0, 0, 0];
+  }, []);
   return (
     <>
       <group ref={anchorRef}>
+        <Line ref={lineRef} points={arr} lineWidth={2} color={color} />
         {/* <axesHelper args={[1e6]} /> */}
-        <mesh ref={meshRef} material={material} geometry={geometry}>
-          {/* <meshLineGeometry points={points} /> */}
-          {/* <meshLineMaterial
+        {/* <mesh ref={meshRef} material={material} geometry={geometry}> */}
+        {/* <meshLineGeometry points={points} /> */}
+        {/* <meshLineMaterial
           
             color={'white'}
             sizeAttenuation={0}
             lineWidth={0.01}
           /> */}
-        </mesh>
+        {/* </mesh> */}
       </group>
     </>
   );
