@@ -30,6 +30,7 @@ import {
   PerspectiveCamera,
   FrontSide,
   BoxHelper,
+  ColorRepresentation,
 } from 'three';
 
 import { useActor, useSelector } from '@xstate/react';
@@ -43,9 +44,10 @@ import { animated, useSpring } from '@react-spring/three';
 
 type MarkerProps = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;
+  color: ColorRepresentation;
 };
 export const RingMarker = forwardRef<Mesh, MarkerProps>(function RingMarker(
-  { children, bodyRef }: MarkerProps,
+  { children, bodyRef, color }: MarkerProps,
   fwdRef
 ) {
   const { visibilityActor, selectionActor } = MachineContext.useSelector(
@@ -60,12 +62,13 @@ export const RingMarker = forwardRef<Mesh, MarkerProps>(function RingMarker(
     ({ context }) => context.selected
   );
 
-  const isVisible =
-    useSelector(markers, (state) => state.matches('active')) &&
-    Boolean(selected) &&
-    Object.is(bodyRef.current, selected);
+  const isVisible = useSelector(markers, (state) => state.matches('active'));
+  const isSelected = Object.is(bodyRef.current, selected);
 
-  const spring = useSpring({ opacity: isVisible ? 1 : 0 });
+  const spring = useSpring({
+    opacity: isVisible ? 1 : 0,
+    color: isSelected ? 'white' : color.toString(),
+  });
   const ringArgs: [number, number, number] = useMemo(() => {
     const outerRadius = 1;
     const innerRadius = 0.9;
@@ -75,17 +78,23 @@ export const RingMarker = forwardRef<Mesh, MarkerProps>(function RingMarker(
 
   return (
     <>
-      <Ring ref={fwdRef} visible={isVisible} args={ringArgs} scale={1.35}>
-        {/** @ts-ignore */}
-        <animated.meshBasicMaterial
-          color={'white'}
-          side={FrontSide}
-          transparent={true}
-          opacity={spring.opacity}
-        />
-        {/* <axesHelper args={[radius * 2]} /> */}
-        {children}
-      </Ring>
+      <group>
+        <Ring ref={fwdRef} visible={isVisible} args={ringArgs} scale={1}>
+          {/** @ts-ignore */}
+          <animated.meshBasicMaterial
+            color={spring.color}
+            side={FrontSide}
+            transparent={true}
+            opacity={spring.opacity}
+          />
+          {/* <axesHelper args={[radius * 2]} /> */}
+          {children}
+        </Ring>
+        {/** Invisible circle to catch pointer events. */}
+        <Circle>
+          <MeshDiscardMaterial />
+        </Circle>
+      </group>
     </>
   );
 });
