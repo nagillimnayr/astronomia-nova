@@ -3,6 +3,7 @@ import KeplerBody from '@/simulation/classes/kepler-body';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Line } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
+import { useSelector } from '@xstate/react';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react';
 import {
@@ -52,6 +53,10 @@ export const ProjectedTrail = ({
     ({ context }) => context
   );
 
+  const onSurface = useSelector(cameraActor, (state) =>
+    state.matches('surface')
+  );
+
   const getThree = useThree(({ get }) => get);
   const size = useThree(({ size }) => size);
 
@@ -67,11 +72,7 @@ export const ProjectedTrail = ({
     points.current = resetTrail(anchor, target, length);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [length, targetRef, targetRef.current]);
-
-  // const geometry = useMemo(() => {
-  //   return new MeshLineGeometry();
-  // }, []);
+  }, [length, targetRef, targetRef.current, onSurface]);
 
   useEffect(() => {
     // Subscribe to surfaceActor, and reset trail whenever coordinates change.
