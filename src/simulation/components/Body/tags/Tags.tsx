@@ -30,6 +30,7 @@ import { useCursor } from '@react-three/drei';
 import useHover from '@/hooks/useHover';
 import { useSpring, animated } from '@react-spring/three';
 import { SphereMarker } from './marker/SphereMarker';
+import { SelectionMarker } from './marker/SelectionMarker';
 
 const threshold = 0.02;
 const DIST_TO_CAM_THRESHOLD = 5e8 * METER;
@@ -60,6 +61,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   const groupRef = useRef<Group>(null!);
   const textRef = useRef<Object3D>(null!);
   const ringRef = useRef<Mesh>(null!);
+  const selectionRef = useRef<Mesh>(null!);
   const sphereRef = useRef<Mesh>(null!);
   const markerRef = useRef<Group>(null!);
   const axesRef = useRef<AxesHelper>(null!);
@@ -181,31 +183,46 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     });
   });
 
+  const logScale = useMemo(() => {
+    if (!bodyRef.current) return;
+    const log = Math.log(bodyRef.current.meanRadius);
+    const logScale = log / 20;
+    return logScale;
+  }, [bodyRef]);
+
   return (
     <object3D name="pivot" ref={pivotRef}>
-      <animated.group ref={groupRef} scale={spring.scale}>
-        <group
-          ref={markerRef}
-          onClick={handleClick}
-          onPointerOver={hoverEvents.handlePointerEnter}
-          onPointerLeave={hoverEvents.handlePointerLeave}
-        >
-          <Interactive
-            onSelect={handleClick}
-            onHover={hoverEvents.handlePointerEnter}
-            onBlur={hoverEvents.handlePointerLeave}
+      <group ref={groupRef}>
+        <animated.group scale={spring.scale}>
+          <group
+            ref={markerRef}
+            scale={logScale}
+            onClick={handleClick}
+            onPointerOver={hoverEvents.handlePointerEnter}
+            onPointerLeave={hoverEvents.handlePointerLeave}
           >
-            <RingMarker bodyRef={bodyRef} ref={ringRef} />
-            <SphereMarker
-              ref={sphereRef}
-              bodyRef={bodyRef}
-              color={color ?? 'white'}
-            />
-          </Interactive>
-        </group>
+            <Interactive
+              onSelect={handleClick}
+              onHover={hoverEvents.handlePointerEnter}
+              onBlur={hoverEvents.handlePointerLeave}
+            >
+              {/* <RingMarker
+                bodyRef={bodyRef}
+                ref={ringRef}
+                color={color ?? 'white'}
+              /> */}
+              <SelectionMarker bodyRef={bodyRef} ref={selectionRef} />
+              <SphereMarker
+                ref={sphereRef}
+                bodyRef={bodyRef}
+                color={color ?? 'white'}
+              />
+            </Interactive>
+          </group>
+        </animated.group>
         {/* <axesHelper args={[10]} ref={axesRef} /> */}
         <Annotation annotation={name} meanRadius={meanRadius} ref={textRef} />
-      </animated.group>
+      </group>
     </object3D>
   );
 };
