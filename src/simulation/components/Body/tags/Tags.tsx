@@ -97,11 +97,11 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
 
     // Check if in surface view.
     const onSurface = snapshot.matches('surface');
-    if (body === focusTarget && onSurface) {
-      // If on surface, hide the tags of the body we're on.
-      group.visible = false;
-      return;
-    }
+    // if (body === focusTarget && onSurface) {
+    //   // If on surface, hide the tags of the body we're on.
+    //   group.visible = false;
+    //   return;
+    // }
     if (!controls) return;
 
     // Get world position of body.
@@ -171,21 +171,16 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
 
     // If the ratio of distances is less than the threshold, set to be invisible.
     const shouldBeVisible = ratio > threshold;
-    // If visibility is already as it should be, then there is nothing to do.
-    if (marker.visible === shouldBeVisible) return;
-    // Otherwise, set this object and all of its children to the appropriate visibility.
-    // This is so that they don't trigger pointer events.
-    group.traverse((obj) => {
-      obj.visible = shouldBeVisible;
-    });
-  });
+    group.visible = shouldBeVisible;
 
-  // useEffect(() => {
-  //   const body = bodyRef.current;
-  //   if (!body) return;
-  //   const group = groupRef.current;
-  //   group.position.set(0, 0, body.meanRadius);
-  // }, [bodyRef]);
+    // If visibility is already as it should be, then there is nothing to do.
+    // if (marker.visible === shouldBeVisible) return;
+    // // Otherwise, set this object and all of its children to the appropriate visibility.
+    // // This is so that they don't trigger pointer events.
+    // group.traverse((obj) => {
+    //   obj.visible = shouldBeVisible;
+    // });
+  });
 
   return (
     <object3D name="pivot" ref={pivotRef}>
