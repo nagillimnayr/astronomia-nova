@@ -76,16 +76,23 @@ export const SelectionMarker = forwardRef<Mesh, SelectionMarkerProps>(
 
     return (
       <>
-        <Ring ref={fwdRef} args={ringArgs} scale={1.35}>
-          {/** @ts-ignore */}
-          <animated.meshBasicMaterial
-            color={'white'}
-            side={FrontSide}
-            transparent={true}
-            opacity={spring.opacity}
-          />
-          {children}
-        </Ring>
+        <group scale={1.35}>
+          <Ring ref={fwdRef} args={ringArgs}>
+            {/** @ts-ignore */}
+            <animated.meshBasicMaterial
+              color={'white'}
+              side={FrontSide}
+              transparent={true}
+              opacity={spring.opacity}
+            />
+            {children}
+          </Ring>
+
+          {/** Invisible circle to catch pointer events. */}
+          <Circle>
+            <MeshDiscardMaterial />
+          </Circle>
+        </group>
       </>
     );
   }
