@@ -3,7 +3,7 @@ import { colorMap } from '@/simulation/utils/color-map';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Circle, Ring, Sphere, Trail } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { MutableRefObject, useCallback, useRef } from 'react';
+import { MutableRefObject, useCallback, useMemo, useRef } from 'react';
 import {
   type ArrowHelper,
   type Mesh,
@@ -41,7 +41,8 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
     state.matches('surface')
   );
 
-  const ref = useRef<Mesh>(null!);
+  const targetRef = useRef<Object3D>(null!);
+  const markerRef = useRef<Mesh>(null!);
   const pivotRef = useRef<Object3D>(null!);
   const anchorRef = useRef<Group>(null!);
   const arrowRef = useRef<ArrowHelper>(null!);
@@ -60,31 +61,29 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
     const { theta } = _spherical;
     phi -= PI_OVER_TWO;
 
-    // pivot.rotation.set(phi, theta, 0, 'YXZ'); // Reset rotation.
-    pivot.rotation.set(0, 0, 0); // Reset rotation.
-    pivot.rotateY(theta);
-    pivot.rotateX(phi);
+    pivot.rotation.set(phi, theta, 0, 'YXZ'); // Reset rotation.
+    // pivot.rotation.set(0, 0, 0); // Reset rotation.
+    // pivot.rotateY(theta);
+    // pivot.rotateX(phi);
   }, [body]);
 
   useFrame(() => {
     updateRotation();
   });
 
+  const circleArgs: [number, number] = useMemo(() => {
+    const radius = 1;
+    const segments = 6;
+    return [radius, segments];
+  }, []);
+
   if (!body) return;
   const color = colorMap.get(body.name);
-  console.log('proj', body.name);
   return (
     <>
       <group ref={anchorRef}>
         {/* <axesHelper args={[radius]} /> */}
-        {/* <arrowHelper
-          ref={(arrow) => {
-            if (!arrow) return;
-            arrowRef.current = arrow;
-            if (!color) return;
-            arrow.setColor(color);
-          }}
-        /> */}
+
         <object3D ref={pivotRef}>
           {/* <Sphere
             visible={true}
@@ -94,26 +93,26 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
           >
             <meshBasicMaterial color={color} side={DoubleSide} />
           </Sphere> */}
-          <Circle
+          {/* <Circle
             // visible={surfaceView} // Should only be visible in surface view.
-            visible={true}
-            ref={ref}
-            args={[1, 6]}
+            visible={false}
+            ref={markerRef}
+            args={circleArgs}
             position-z={radius} // Distance from center point.
-            scale={5e4}
+            scale={radius / 100}
             rotation-y={PI}
-          >
-            <meshBasicMaterial color={color} />
-            {/* <axesHelper /> */}
-            <Ring args={[0.8, 1]} position-z={1e-2} scale={1.3}>
+            material-color={color}
+          > */}
+          {/* <Ring args={[0.8, 1]} position-z={1e-2} scale={1.3}>
               <meshBasicMaterial color={'white'} side={DoubleSide} />
-            </Ring>
-            <Circle position-z={1e-2} scale={0.1}>
+            </Ring> */}
+          {/* <Circle position-z={1e-2} scale={0.1}>
               <meshBasicMaterial color={'white'} side={DoubleSide} />
-            </Circle>
-          </Circle>
+            </Circle> */}
+          {/* </Circle> */}
+          <object3D ref={targetRef} position-z={radius} />
         </object3D>
-        <ProjectedTrail targetRef={ref} length={100} color={color} />
+        <ProjectedTrail targetRef={targetRef} length={100} color={color} />
       </group>
     </>
   );
