@@ -30,7 +30,8 @@ export const Projector = () => {
   const centerRef = useRef<Object3D | null>(null);
 
   const body = focusTarget instanceof KeplerBody ? focusTarget : null;
-  const radius = body ? body.meanRadius * METER : EARTH_RADIUS * METER;
+  const radius = body ? (body.meanRadius * METER) / 2 : EARTH_RADIUS * METER;
+  // const radius = 1e7 * METER;
   return (
     <>
       <group>
