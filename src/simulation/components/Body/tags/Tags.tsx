@@ -71,7 +71,9 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   const spring = useSpring({
     scale: isHovered ? 1.5 : 1,
   });
-
+  const [hideSpring, hideSpringRef] = useSpring(() => ({
+    scale: 1,
+  }));
   const handleClick = useCallback(
     (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
       if ('stopPropagation' in event) {
@@ -150,9 +152,13 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
 
     const marker = markerRef.current;
     const radiusRatio = body.meanRadius / EARTH_RADIUS;
+    // If too close to camera, hide.
     if (distanceToCamera < DIST_TO_CAM_THRESHOLD * radiusRatio) {
-      marker.scale.setScalar(0);
+      hideSpringRef.start({ scale: 0 });
+      // marker.scale.setScalar(0);
       return;
+    } else {
+      hideSpringRef.start({ scale: 1 });
     }
     const markerFactor = Math.max(1e-5, distanceToCamera / 75);
 
@@ -194,31 +200,33 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     <object3D name="pivot" ref={pivotRef}>
       <group ref={groupRef}>
         <animated.group scale={spring.scale}>
-          <group
-            ref={markerRef}
-            scale={logScale}
-            onClick={handleClick}
-            onPointerOver={hoverEvents.handlePointerEnter}
-            onPointerLeave={hoverEvents.handlePointerLeave}
-          >
-            <Interactive
-              onSelect={handleClick}
-              onHover={hoverEvents.handlePointerEnter}
-              onBlur={hoverEvents.handlePointerLeave}
+          <animated.group scale={hideSpring.scale}>
+            <group
+              ref={markerRef}
+              scale={logScale}
+              onClick={handleClick}
+              onPointerOver={hoverEvents.handlePointerEnter}
+              onPointerLeave={hoverEvents.handlePointerLeave}
             >
-              {/* <RingMarker
+              <Interactive
+                onSelect={handleClick}
+                onHover={hoverEvents.handlePointerEnter}
+                onBlur={hoverEvents.handlePointerLeave}
+              >
+                {/* <RingMarker
                 bodyRef={bodyRef}
                 ref={ringRef}
                 color={color ?? 'white'}
               /> */}
-              <SelectionMarker bodyRef={bodyRef} ref={selectionRef} />
-              <SphereMarker
-                ref={sphereRef}
-                bodyRef={bodyRef}
-                color={color ?? 'white'}
-              />
-            </Interactive>
-          </group>
+                <SelectionMarker bodyRef={bodyRef} ref={selectionRef} />
+                <SphereMarker
+                  ref={sphereRef}
+                  bodyRef={bodyRef}
+                  color={color ?? 'white'}
+                />
+              </Interactive>
+            </group>
+          </animated.group>
         </animated.group>
         {/* <axesHelper args={[10]} ref={axesRef} /> */}
         <Annotation annotation={name} meanRadius={meanRadius} ref={textRef} />
