@@ -20,16 +20,9 @@ export const PlanetRing = ({
 }: PlanetRingProps) => {
   // const ringTexture = useTexture('assets/textures/2k_saturn_ring_alpha.png');
 
-  const [isHovered, setHovered] = useState<boolean>(false);
-  useCursor(isHovered, 'pointer');
   return (
     <>
-      <object3D
-        rotation={rotation}
-        {...props}
-        onPointerEnter={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
-      >
+      <object3D rotation={rotation} {...props}>
         <Ring
           args={[innerRadius, outerRadius, 64]}
           rotation={[PI_OVER_TWO, 0, 0]}
