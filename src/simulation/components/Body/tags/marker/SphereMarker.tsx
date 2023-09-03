@@ -43,9 +43,11 @@ export const SphereMarker = forwardRef<Mesh, SphereMarkerProps>(
       opacity: markersEnabled ? 1 : 0,
     });
 
+    const scale = 0.75;
+
     return (
       <>
-        <object3D>
+        <object3D scale={scale}>
           <anim.Sphere
             ref={fwdRef}
             // visible={markersEnabled}
