@@ -163,22 +163,22 @@ export const Trajectory = ({
 
   const [spring, springRef] = useSpring(() => ({ opacity: 1 }));
 
-  useFrame(({ camera }) => {
-    // Get focus target.
-    const { focusTarget } = cameraActor.getSnapshot()!.context;
-    if (!focusTarget) return;
-    if (!Object.is(focusTarget, bodyRef.current)) return;
-    return;
-    // Get distance of body to camera.
-    // const { controls } = cameraActor.getSnapshot()!.context;
-    // if (!controls) return;
-    // const distance = controls.radius;
-    // // If under threshold, set to be invisible.
-    // const opacity = distance < DIST_TO_CAM_THRESHOLD ? 0 : 1;
-    // springRef.start({ opacity: opacity });
-    // lineRef.current.visible =
-    //   distance < DIST_TO_CAM_THRESHOLD ? false : isVisible;
-  });
+  // useFrame(({ camera }) => {
+  //   // Get focus target.
+  //   const { focusTarget } = cameraActor.getSnapshot()!.context;
+  //   if (!focusTarget) return;
+  //   if (!Object.is(focusTarget, bodyRef.current)) return;
+  //   return;
+  //   // Get distance of body to camera.
+  //   // const { controls } = cameraActor.getSnapshot()!.context;
+  //   // if (!controls) return;
+  //   // const distance = controls.radius;
+  //   // // If under threshold, set to be invisible.
+  //   // const opacity = distance < DIST_TO_CAM_THRESHOLD ? 0 : 1;
+  //   // springRef.start({ opacity: opacity });
+  //   // lineRef.current.visible =
+  //   //   distance < DIST_TO_CAM_THRESHOLD ? false : isVisible;
+  // });
 
   return (
     <>
