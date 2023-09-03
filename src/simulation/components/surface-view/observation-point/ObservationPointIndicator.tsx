@@ -48,8 +48,8 @@ export const ObservationPointIndicator = () => {
 
   return (
     <>
-      <group name="observation-indicator" scale={radius}>
-        <mesh ref={ref} visible={isVisible} rotation-x={-PI_OVER_TWO}>
+      <group name="observation-indicator" visible={isVisible} scale={radius}>
+        <mesh ref={ref}  rotation-x={-PI_OVER_TWO}>
           <ringGeometry args={ringArgs} />
 
           <meshBasicMaterial />
