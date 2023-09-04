@@ -62,11 +62,6 @@ type TrajectoryProps = {
   semiMinorAxis: number;
   periapsis: number;
   linearEccentricity: number;
-  // orientation: {
-  //   longitudeOfAscendingNode: number;
-  //   argumentOfPeriapsis: number;
-  //   inclination: number;
-  // };
   bodyRef: MutableRefObject<KeplerBody | null>;
 };
 
@@ -88,9 +83,11 @@ export const Trajectory = ({
   const trajectoryVisibilityOn = useSelector(trajectories, (state) =>
     state.matches('active')
   );
+  // Check if on surface.
   const surfaceView = useSelector(cameraActor, (state) =>
     state.matches('surface')
   );
+  // Check focus target.
   const focusTarget = useSelector(
     cameraActor,
     ({ context }) => context.focusTarget
@@ -104,55 +101,16 @@ export const Trajectory = ({
 
   const [showPeriapsis, setShowPeriapsis] = useState<boolean>(false);
 
-  // const points = useMemo(() => {
-  //   const points = new EllipseCurve(
-  //     -linearEccentricity / DIST_MULT,
-  //     0,
-  //     semiMajorAxis / DIST_MULT,
-  //     semiMinorAxis / DIST_MULT
-  //   )
-  //     .getSpacedPoints(NUM_OF_POINTS)
-  //     .map((vec2) => {
-  //       // const vec3Tuple: Vector3Tuple = [vec2.x, 0, vec2.y];
-  //       const vec3Tuple: Vector3Tuple = [vec2.x, vec2.y, 0];
-  //       return vec3Tuple;
-  //     });
-  //   return flatten(points);
-  // }, [semiMajorAxis, semiMinorAxis, linearEccentricity]);
-
+  // Create points from ellipse.
   const points = useMemo(() => {
     const points = new EllipseCurve(
-      -linearEccentricity / DIST_MULT,
+      -linearEccentricity * METER,
       0,
-      semiMajorAxis / DIST_MULT,
-      semiMinorAxis / DIST_MULT
+      semiMajorAxis * METER,
+      semiMinorAxis * METER
     ).getSpacedPoints(NUM_OF_POINTS);
     return points;
   }, [semiMajorAxis, semiMinorAxis, linearEccentricity]);
-
-  // const geometry = useMemo(() => {
-  //   return new MeshLineGeometry();
-  // }, []);
-
-  // useEffect(() => {
-  //   geometry.setPoints(points);
-  // }, [geometry, points]);
-
-  // const material = useMemo(() => {
-  //   const { size } = getThree();
-  //   const material = new MeshLineMaterial({
-  //     lineWidth: 10,
-  //     sizeAttenuation: 0,
-  //     resolution: new Vector2(size.width, size.height),
-  //   });
-  //   return material;
-  // }, [getThree]);
-
-  // useEffect(() => {
-  //   /** @ts-ignore */
-  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-  //   material.uniforms.resolution!.value.set(size.width, size.height);
-  // }, [size, material]);
 
   let isVisible = trajectoryVisibilityOn;
   if (bodyRef.current && focusTarget) {
@@ -163,6 +121,11 @@ export const Trajectory = ({
 
   const [spring, springRef] = useSpring(() => ({ opacity: 1 }));
 
+  useEffect(() => {
+    springRef.start({ opacity: isVisible ? 1 : 0 });
+  }, [isVisible, springRef]);
+
+  /** Disable visibility if too close to camera. */
   // useFrame(({ camera }) => {
   //   // Get focus target.
   //   const { focusTarget } = cameraActor.getSnapshot()!.context;
@@ -182,29 +145,20 @@ export const Trajectory = ({
 
   return (
     <>
-      <object3D visible={isVisible} ref={objRef}>
+      <object3D
+        // visible={isVisible}
+        ref={objRef}
+      >
         {/** @ts-ignore */}
-        <Line ref={lineRef} points={points} color={'white'} lineWidth={2} />
-        {/* <mesh material={material} geometry={geometry}> */}
-        {/* <meshLineGeometry points={points} /> */}
-        {/* <meshLineMaterial
-          
-            color={'white'}
-            sizeAttenuation={0}
-            lineWidth={0.01}
-          /> */}
-        {/* </mesh> */}
-        {/* <Segments limit={NUM_OF_POINTS} lineWidth={2}>
-          {points.map((point, index, arr) => {
-            const i = index + 1 < arr.length ? index + 1 : 0;
-
-            const start: Vector3Tuple = [...point.toArray(), 0];
-            const endPoint = arr[i];
-            if (!endPoint) return;
-            const end: Vector3Tuple = [...endPoint.toArray(), 0];
-            return <Segment key={index} start={start} end={end} />;
-          })}
-        </Segments> */}
+        <Line ref={lineRef} points={points} color={'white'} lineWidth={2}>
+          {/** @ts-ignore */}
+          <animated.lineBasicMaterial
+            color={'red'}
+            transparent
+            opacity={spring.opacity}
+          />
+        </Line>
+        {/* <line2></line2> */}
         {/* Semi-major Axis / Periapsis */}
         {showPeriapsis && (
           <arrowHelper

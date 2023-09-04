@@ -61,14 +61,11 @@ export const ProjectedTrail = ({
   const size = useThree(({ size }) => size);
 
   const anchorRef = useRef<Group>(null!);
-  // const meshRef = useRef<Mesh>(null!);
   const lineRef = useRef<Line2>(null!);
   const points = useRef<Float32Array>(null!);
 
   useEffect(() => {
-    // if (!targetRef.current) return;
     const anchor = anchorRef.current;
-    // const target = targetRef.current;
     points.current = resetTrail(anchor, body, length);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,17 +78,13 @@ export const ProjectedTrail = ({
       if (!line) return;
       // Position of target won't have updated immediately, so reset the trail after a slight delay.
       line.visible = false; // Toggle visibility temporarily, to avoid jank.
-      // meshRef.current.visible = false; // Toggle visibility temporarily, to avoid jank.
       setTimeout(() => {
         const anchor = anchorRef.current;
         points.current = resetTrail(anchor, body, length);
         // Update geometry.
-        // line.geometry.setPoints(points.current);
         line.geometry.setPositions(points.current);
-
-        // meshRef.current.visible = true;
         line.visible = true;
-      }, 50);
+      }, 30);
     });
     return () => subscription.unsubscribe();
   }, [length, surfaceActor, body]);
@@ -101,7 +94,6 @@ export const ProjectedTrail = ({
       const line = lineRef.current;
       if (!line) return;
       if (state.event.type === 'UNPAUSE') {
-        // meshRef.current.visible = false;
         line.visible = false;
       }
       if (state.event.type !== 'PAUSE') return;
@@ -114,7 +106,7 @@ export const ProjectedTrail = ({
         line.geometry.setPositions(points.current);
 
         line.visible = true;
-      }, 50);
+      }, 30);
     });
     return () => subscription.unsubscribe();
   }, [length, surfaceActor, timeActor, body]);
@@ -127,7 +119,6 @@ export const ProjectedTrail = ({
       const anchor = anchorRef.current;
 
       // Get relative position of target.
-      // targetRef.current.getWorldPosition(_newPos);
       body.getWorldPosition(_newPos);
       anchor.worldToLocal(_newPos); // Get in local coords.
 
