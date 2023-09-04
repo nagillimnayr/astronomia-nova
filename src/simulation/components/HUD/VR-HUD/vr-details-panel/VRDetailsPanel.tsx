@@ -74,7 +74,10 @@ export const VRDetailsPanel = ({
   // Only open if a body is selected.
   const isOpen = Boolean(selected);
 
-  const spring = useSpring({ scale: isOpen ? scale : 0 });
+  const [spring, springRef] = useSpring(() => ({ scale: 0 }));
+  useEffect(() => {
+    springRef.start({ scale: isOpen ? 1 : 0 });
+  }, [isOpen, springRef]);
 
   // // Subscribe so that component will re-render upon entering VR.
   // const inVR = useSelector(vrActor, (state) => state.matches('active'));
