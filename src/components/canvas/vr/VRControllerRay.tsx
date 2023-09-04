@@ -43,8 +43,6 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
     indicatorScale: 1,
   }));
 
-  const prevIntersection = useRef<{ obj: Object3D; normal: Vector3 }>(null!);
-
   useFrame(({ gl }, _, frame) => {
     if (!(frame instanceof XRFrame)) return;
     const line = lineRef.current;
@@ -82,18 +80,6 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
       if (controls && controls.isMoving) return;
 
       const normal = face.normal;
-
-      const prev = prevIntersection.current;
-      if (prev && Object.is(prev.obj, obj) && normal.equals(prev.normal)) {
-        // if (handedness === 'right') {
-        //   console.log('same object and normal');
-        // }
-        // If intersection hasn't changed, no need to do anything.
-        return;
-      } else {
-        // New intersection.
-        prevIntersection.current = { obj, normal };
-      }
 
       obj.getWorldPosition(_objWorldPos);
       _worldNormal.copy(normal);
