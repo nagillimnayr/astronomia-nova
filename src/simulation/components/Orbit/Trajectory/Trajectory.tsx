@@ -84,7 +84,7 @@ export const Trajectory = ({
     state.matches('active')
   );
   // Check if on surface.
-  const surfaceView = useSelector(cameraActor, (state) =>
+  const onSurface = useSelector(cameraActor, (state) =>
     state.matches('surface')
   );
   // Check focus target.
@@ -114,14 +114,47 @@ export const Trajectory = ({
 
   let isVisible = trajectoryVisibilityOn;
   if (bodyRef.current && focusTarget) {
-    if (focusTarget === bodyRef.current && surfaceView) {
+    if (focusTarget === bodyRef.current && onSurface) {
       isVisible = false;
     }
   }
 
-  const [spring, springRef] = useSpring(() => ({ opacity: 1 }));
+  const [spring, springRef] = useSpring(() => ({
+    opacity: 1,
+    onChange: (result) => {
+      if (typeof result.value.opacity !== 'number') {
+        console.log('not number', result);
+        return;
+      }
+      const line = lineRef.current;
+      if (!line) return;
+      line.material.opacity = result.value.opacity;
+    },
+
+    onRest: (result, ctrl, item) => {
+      console.log('onRest:', result);
+      if (typeof result.value.opacity !== 'number') {
+        console.log('not number', result);
+        return;
+      }
+
+      const opacity = result.value.opacity;
+      const line = lineRef.current;
+      line.visible = opacity > Number.EPSILON;
+    },
+    onStart: (result) => {
+      console.log('onStart:', result);
+      if (typeof result.value.opacity !== 'number') {
+        console.log('not number', result);
+        return;
+      }
+      const line = lineRef.current;
+      line.visible = true;
+    },
+  }));
 
   useEffect(() => {
+    console.log('isVisible:', isVisible);
     springRef.start({ opacity: isVisible ? 1 : 0 });
   }, [isVisible, springRef]);
 
@@ -150,14 +183,13 @@ export const Trajectory = ({
         ref={objRef}
       >
         {/** @ts-ignore */}
-        <Line ref={lineRef} points={points} color={'white'} lineWidth={2}>
-          {/** @ts-ignore */}
-          <animated.lineBasicMaterial
-            color={'red'}
-            transparent
-            opacity={spring.opacity}
-          />
-        </Line>
+        <Line
+          ref={lineRef}
+          points={points}
+          color={'white'}
+          lineWidth={2}
+          transparent
+        />
         {/* <line2></line2> */}
         {/* Semi-major Axis / Periapsis */}
         {showPeriapsis && (
