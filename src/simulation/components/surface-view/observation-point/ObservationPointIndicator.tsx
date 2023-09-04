@@ -1,6 +1,7 @@
 import { METER, PI_OVER_TWO } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import {
+  Circle,
   Cylinder,
   Edges,
   Line,
@@ -11,9 +12,14 @@ import {
 import { WireframeMaterial } from '@react-three/drei/materials/WireframeMaterial';
 import { useSelector } from '@xstate/react';
 import { useContext, useMemo, useRef } from 'react';
-import { Mesh, Vector3 } from 'three';
+import { DoubleSide, Group, Mesh, Vector3 } from 'three';
 import { useSpring, animated } from '@react-spring/three';
 import { useXR } from '@react-three/xr';
+import { useFrame } from '@react-three/fiber';
+import { clamp } from 'three/src/math/MathUtils';
+
+const _camWorldPos = new Vector3();
+const _worldPos = new Vector3();
 
 export const ObservationPointIndicator = () => {
   const { uiActor, cameraActor } = MachineContext.useSelector(
@@ -33,7 +39,8 @@ export const ObservationPointIndicator = () => {
   const vrDialogOpen = useSelector(vrSurfaceDialogActor, (state) =>
     state.matches('active')
   );
-  const isPresenting = useXR(({ isPresenting }) => isPresenting);
+  // const isPresenting = useXR(({ isPresenting }) => isPresenting);
+  const getXR = useXR(({ get }) => get);
 
   const inSpace = useSelector(cameraActor, (state) => state.matches('space'));
 
@@ -49,20 +56,38 @@ export const ObservationPointIndicator = () => {
     return [innerRadius, outerRadius, segments];
   }, []);
 
-  // Increase size if in VR, to help with visibility.
-  const scale = radius * (isPresenting ? 1.5 : 1);
+  const indicatorRef = useRef<Group>(null!);
+
+  useFrame(({ camera }) => {
+    const indicator = indicatorRef.current;
+    if (!indicator) return;
+    // Scale relative to distance from camera.
+    camera.getWorldPosition(_camWorldPos);
+    indicator.getWorldPosition(_worldPos);
+    const distance = _worldPos.distanceTo(_camWorldPos);
+    const { isPresenting } = getXR();
+    // Increase size if in VR, to help with visibility.
+    let scale = (distance * (isPresenting ? 1.5 : 1)) / 100;
+    scale = clamp(scale, 0.5e5, 3e5);
+    indicator.scale.setScalar(scale);
+  });
 
   return (
     <>
-      <group name="observation-indicator" visible={isVisible} scale={scale}>
+      <group
+        name="observation-indicator"
+        visible={isVisible}
+        ref={indicatorRef}
+      >
         <mesh ref={ref} rotation-x={-PI_OVER_TWO}>
           <ringGeometry args={ringArgs} />
 
-          <meshBasicMaterial />
+          <meshBasicMaterial side={DoubleSide} />
           {/* <axesHelper args={[1e1]} /> */}
         </mesh>
-
-        <Cylinder scale-x={0.1} scale-y={5} scale-z={0.075} />
+        <object3D scale-y={0.1}>
+          <Cylinder position-y={0.5} scale-x={0.1} scale-z={0.1} />
+        </object3D>
       </group>
     </>
   );
