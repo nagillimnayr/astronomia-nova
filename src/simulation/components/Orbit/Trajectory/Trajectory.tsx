@@ -130,7 +130,7 @@ export const Trajectory = ({
       if (!line) return;
       line.material.opacity = result.value.opacity;
     },
-
+    // Opacity for the line doesn't completely work and will leave black artifacts, so set the visibility to false once the animation has completed.
     onRest: (result, ctrl, item) => {
       // console.log('onRest:', result);
       if (typeof result.value.opacity !== 'number') {
@@ -154,7 +154,6 @@ export const Trajectory = ({
   }));
 
   useEffect(() => {
-    console.log('isVisible:', isVisible);
     springRef.start({ opacity: isVisible ? 1 : 0 });
   }, [isVisible, springRef]);
 
