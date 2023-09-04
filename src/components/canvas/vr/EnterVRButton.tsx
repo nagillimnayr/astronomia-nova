@@ -31,7 +31,7 @@ export const EnterVRButton = () => {
         className="select-none rounded-lg border-2 border-white p-2 transition-all hover:bg-subtle hover:bg-opacity-20"
         onClick={toggleVR}
       >
-        {vrActive ? 'Exit VR!' : 'Enter VR!'}
+        {vrActive ? 'Exit VR' : 'Enter VR'}
       </button>
     </>
   );
