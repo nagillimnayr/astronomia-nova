@@ -74,7 +74,8 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
   const hoverSpring = useSpring({
-    scale: isHovered ? 1.5 : 1,
+    ringScale: isHovered ? 1.25 : 1,
+    markerScale: isHovered ? 1.5 : 1,
   });
   const [hideSpring, hideSpringRef] = useSpring(() => ({
     markerScale: 1,
@@ -96,6 +97,15 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     },
     [bodyRef, markers, selectionActor, setHovered]
   );
+
+  const logScale = useRef<number>(0);
+ logScale.current = useMemo(() => {
+    if (!bodyRef.current) return 0;
+    const log = Math.log(bodyRef.current.meanRadius);
+   const logScale = log / 20;
+    return logScale;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bodyRef, bodyRef.current]);
 
   useFrame(({ camera, gl }, _, frame) => {
     const body = bodyRef.current;
@@ -154,7 +164,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // Scale the annotation so that it maintains its screen-size.
     text?.scale.setScalar(textFactor * vrFactor);
     // Clamp the y-position of the annotation so that it doesn't go inside of the body.
-    const yPos = clamp(-1.25 * textFactor, -(meanRadius / DIST_MULT) * 1.5);
+    const yPos = clamp(-1.25 * textFactor * logScale.current, -(meanRadius * METER) * 1.5 );
     // Set position so that the annotation always appears below the body and outside of the marker.
     text?.position.set(0, yPos * vrFactor, 0);
 
@@ -191,31 +201,22 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // If the ratio of distances is less than the threshold, set to be invisible.
     const shouldBeVisible = ratio > threshold;
 
+    // Setting scale to zero solves the issue of descendants still catching pointer events, and it can be animated more easily, as it doesn't require animating the materials of each descendant.
     hideSpringRef.start({ tagScale: shouldBeVisible ? 1 : 0 });
-    // If visibility is already as it should be, then there is nothing to do.
-    // if (marker.visible === shouldBeVisible) return;
-    // // Otherwise, set this object and all of its children to the appropriate visibility.
-    // // This is so that they don't trigger pointer events.
-    // group.traverse((obj) => {
-    //   obj.visible = shouldBeVisible;
-    // });
+  
   });
 
-  const logScale = useMemo(() => {
-    if (!bodyRef.current) return;
-    const log = Math.log(bodyRef.current.meanRadius);
-    const logScale = log / 20;
-    return logScale;
-  }, [bodyRef]);
+ 
+  
+
 
   return (
     <object3D name="pivot" ref={pivotRef}>
       <animated.group ref={groupRef} scale={hideSpring.tagScale}>
-        <animated.group scale={hoverSpring.scale}>
+            <group scale={logScale.current}>
           <animated.group scale={hideSpring.markerScale}>
             <group
               ref={markerRef}
-              scale={logScale}
               onClick={handleClick}
               onPointerOver={hoverEvents.handlePointerEnter}
               onPointerLeave={hoverEvents.handlePointerLeave}
@@ -230,16 +231,22 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
                 ref={ringRef}
                 color={color ?? 'white'}
               /> */}
+                  <animated.object3D scale={hoverSpring.ringScale}>
+
                 <SelectionMarker bodyRef={bodyRef} ref={selectionRef} />
+                  </animated.object3D>
+                  <animated.object3D scale={hoverSpring.markerScale}>
+
                 <SphereMarker
                   ref={sphereRef}
                   bodyRef={bodyRef}
                   color={color ?? 'white'}
-                />
+                  />
+                  </animated.object3D>
               </Interactive>
-            </group>
+              </group>
           </animated.group>
-        </animated.group>
+              </group>
         {/* <axesHelper args={[10]} ref={axesRef} /> */}
         <Annotation annotation={name} meanRadius={meanRadius} ref={textRef} />
       </animated.group>
