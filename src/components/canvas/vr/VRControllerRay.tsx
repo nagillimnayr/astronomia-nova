@@ -78,10 +78,12 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
 
     const face = intersection.face;
     if (face) {
+      const { controls } = cameraActor.getSnapshot()!.context;
+      if (controls && controls.isMoving) return;
+
       const normal = face.normal;
 
       const prev = prevIntersection.current;
-
       if (prev && Object.is(prev.obj, obj) && normal.equals(prev.normal)) {
         // if (handedness === 'right') {
         //   console.log('same object and normal');
@@ -102,7 +104,6 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
       // Add the direction to the point of intersection to get the position to look at.
       _lookPos.addVectors(point, _worldNormal);
       if (handedness === 'right') {
-        const { controls } = cameraActor.getSnapshot()!.context;
         // console.log('camera isMoving?:', controls?.isMoving);
         // console.log('intersection:', intersection);
         // console.log('intersection face:', face);
