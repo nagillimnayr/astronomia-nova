@@ -284,12 +284,7 @@ const VRToggleButton = ({
   return (
     <>
       <group position-y={posY} position-x={panelSize}>
-        <animated.group
-          position-x={-panelSize}
-          scale={buttonScale}
-          onPointerEnter={hoverEvents.handlePointerEnter}
-          onPointerLeave={hoverEvents.handlePointerLeave}
-        >
+        <animated.group position-x={-panelSize} scale={buttonScale}>
           <Interactive
             onSelect={handleClick}
             onHover={hoverEvents.handlePointerEnter}
@@ -302,6 +297,8 @@ const VRToggleButton = ({
               borderWidth={iconSize}
               backgroundColor={colorSpring.backgroundColor}
               onPointerDown={handleClick}
+              onPointerEnter={hoverEvents.handlePointerEnter}
+              onPointerLeave={hoverEvents.handlePointerLeave}
             />
           </Interactive>
           <object3D position-z={0.0025}>
