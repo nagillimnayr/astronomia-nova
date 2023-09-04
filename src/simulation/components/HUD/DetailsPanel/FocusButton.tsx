@@ -18,10 +18,6 @@ export const FocusButton = ({ children, className }: Props) => {
     selectionActor,
     ({ context }) => context.selected
   );
-  // Only show button when in space view.
-  const inSurfaceView = useSelector(cameraActor, (state) =>
-    state.matches('space')
-  );
 
   // Go to space view on click
   const handleClick = useCallback(() => {
@@ -32,7 +28,7 @@ export const FocusButton = ({ children, className }: Props) => {
     });
   }, [cameraActor, selected]);
 
-  return inSurfaceView ? (
+  return (
     <>
       <button
         onClick={handleClick}
@@ -45,5 +41,5 @@ export const FocusButton = ({ children, className }: Props) => {
         <span className="icon-[mdi--camera-control]" />
       </button>
     </>
-  ) : null;
+  );
 };

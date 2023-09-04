@@ -130,15 +130,6 @@ const DetailsPanel = () => {
                 {(selected.siderealRotationPeriod / HOUR).toLocaleString() +
                   ' hr'}
               </AttributeDetails>
-
-              {orbit ? (
-                <>
-                  {/** Orbital Period */}
-                  <AttributeDetails name={'Orbital Period'}>
-                    {(orbit.orbitalPeriod / DAY).toLocaleString() + ' Days'}
-                  </AttributeDetails>
-                </>
-              ) : null}
             </div>
             <div className="flex w-full flex-col items-start justify-start"></div>
           </div>
@@ -147,8 +138,6 @@ const DetailsPanel = () => {
       <div className="mt-auto flex w-full flex-row items-start justify-between">
         {/** Camera focus button. */}
         <FocusButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
-
-        <TracePathButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
 
         <SurfaceViewButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
 
