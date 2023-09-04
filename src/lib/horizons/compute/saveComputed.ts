@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { kebabCase } from 'lodash';
+import _ from 'lodash';
 import {
   type ComputedEphemerides,
   type ComputedPhysicalData,
@@ -12,7 +12,7 @@ export async function saveComputedEphemerides(
   const name = ephemerides.name;
 
   // create file path
-  const fileName = kebabCase(name + '-computed');
+  const fileName = _.kebabCase(name + '-computed');
 
   const pathToNewFile = path.resolve(
     'json',
@@ -30,7 +30,7 @@ export async function saveComputedEphemerides(
 export async function saveComputedPhysicalData(data: ComputedPhysicalData) {
   const name = data.name;
 
-  const fileName = kebabCase(name + '-computed-physical');
+  const fileName = _.kebabCase(name + '-computed-physical');
   const pathToNewFile = path.resolve(
     'json',
     path.join('computed', 'physical-data', `${fileName}.json`)

@@ -106,12 +106,13 @@ export async function computePhysicalData(
 ): Promise<ComputedPhysicalData> {
   const physicalData = await loadPhysicalData(name);
   const { id, table } = physicalData;
-  const { siderealRotRate } = table;
+  const siderealRotRate = Math.abs(table.siderealRotRate);
 
   const siderealRotationPeriod = TWO_PI / siderealRotRate; // Seconds to make one full rotation about the body's polar axis.
 
   const computedTable: ComputedPhysicalDataTable = {
     ...table,
+    siderealRotRate,
     siderealRotationPeriod,
   };
   const computed: ComputedPhysicalData = {
