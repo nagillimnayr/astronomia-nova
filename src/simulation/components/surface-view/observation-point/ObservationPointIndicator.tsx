@@ -12,6 +12,8 @@ import { WireframeMaterial } from '@react-three/drei/materials/WireframeMaterial
 import { useSelector } from '@xstate/react';
 import { useContext, useMemo, useRef } from 'react';
 import { Mesh, Vector3 } from 'three';
+import { useSpring, animated } from '@react-spring/three';
+import { useXR } from '@react-three/xr';
 
 export const ObservationPointIndicator = () => {
   const { uiActor, cameraActor } = MachineContext.useSelector(
@@ -31,6 +33,7 @@ export const ObservationPointIndicator = () => {
   const vrDialogOpen = useSelector(vrSurfaceDialogActor, (state) =>
     state.matches('active')
   );
+  const isPresenting = useXR(({ isPresenting }) => isPresenting);
 
   const inSpace = useSelector(cameraActor, (state) => state.matches('space'));
 
@@ -46,10 +49,13 @@ export const ObservationPointIndicator = () => {
     return [innerRadius, outerRadius, segments];
   }, []);
 
+  // Increase size if in VR, to help with visibility.
+  const scale = radius * (isPresenting ? 1.5 : 1);
+
   return (
     <>
-      <group name="observation-indicator" visible={isVisible} scale={radius}>
-        <mesh ref={ref}  rotation-x={-PI_OVER_TWO}>
+      <group name="observation-indicator" visible={isVisible} scale={scale}>
+        <mesh ref={ref} rotation-x={-PI_OVER_TWO}>
           <ringGeometry args={ringArgs} />
 
           <meshBasicMaterial />
