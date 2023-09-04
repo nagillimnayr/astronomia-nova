@@ -86,7 +86,7 @@ export const VRHoverIndicator = ({
           name={`hover-indicator-${handedness}`}
           ref={indicatorRef}
           scale={radius}
-          position-z={radius * 0.01} // Slight offset to avoid clipping.
+          position-z={0.01} // Slight offset to avoid clipping.
         >
           {/* <axesHelper args={[radius * 2]} /> */}
           <Circle
