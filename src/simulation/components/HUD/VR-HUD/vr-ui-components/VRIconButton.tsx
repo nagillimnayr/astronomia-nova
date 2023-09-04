@@ -4,9 +4,14 @@ import { Interactive, type XRInteractionEvent } from '@react-three/xr';
 import { Center, Circle, Svg, useCursor } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
 import { type Group, type Vector3Tuple } from 'three';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { colors, depth, icons } from '../vr-hud-constants';
 import { ICON_MATERIAL_BASE } from '../vr-ui-materials';
+import { anim } from '../../../animated-components';
+
+const dummyFn = () => {
+  return;
+};
 
 type VRIconButtonProps = {
   position?: Vector3Tuple;
@@ -25,9 +30,16 @@ export const VRIconButton = ({
 }: VRIconButtonProps) => {
   const { isHovered, setHovered, hoverEvents } = useHover();
   useCursor(isHovered, 'pointer');
-  const { scale } = useSpring({
-    scale: isHovered ? 1.2 : 1,
-  });
+  const [spring, springRef] = useSpring(() => ({
+    scale: 1,
+    bgColor: colors.icon.bg.base,
+  }));
+  useEffect(() => {
+    springRef.start({
+      scale: isHovered ? 1.2 : 1,
+      bgColor: isHovered ? colors.icon.bg.hover : colors.icon.bg.base,
+    });
+  }, [isHovered, springRef]);
 
   const iconRef = useRef<Group>(null!);
 
@@ -48,26 +60,21 @@ export const VRIconButton = ({
   return (
     <>
       <group position={position}>
-        <animated.group
-          scale={scale}
-          onClick={handleClick}
-          onPointerEnter={hoverEvents.handlePointerEnter}
-          onPointerLeave={hoverEvents.handlePointerLeave}
-        >
+        <animated.group scale={spring.scale}>
           <Interactive
             onSelect={handleClick}
             onHover={hoverEvents.handlePointerEnter}
             onBlur={hoverEvents.handlePointerLeave}
           >
-            <Circle args={[radius]} material-color={colors.icon.bg.base}>
-              <Center
-                disableZ
-                position={[0, 0, depth.xs]}
-                onCentered={(props) => {
-                  // This is just to force the Center component to re-center each time the component is re-rendered.
-                  // console.log('centered', props);
-                }}
-              >
+            <anim.Circle
+              args={[radius]}
+              material-color={spring.bgColor}
+              onClick={handleClick}
+              onPointerEnter={hoverEvents.handlePointerEnter}
+              onPointerLeave={hoverEvents.handlePointerLeave}
+            ></anim.Circle>
+            <object3D position-z={depth.xxs}>
+              <Center disableZ onCentered={dummyFn}>
                 <Svg
                   ref={iconRef}
                   src={iconSrc}
@@ -75,7 +82,7 @@ export const VRIconButton = ({
                   scale={iconSize * icons.base * radius}
                 />
               </Center>
-            </Circle>
+            </object3D>
           </Interactive>
         </animated.group>
       </group>
