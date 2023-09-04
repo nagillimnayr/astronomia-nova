@@ -41,7 +41,7 @@ export const VRTimescaleSlider = ({
           incrementers
           width={8}
           height={0.5}
-          thumbRadius={0.4}
+          thumbRadius={0.45}
           value={timescale}
           min={minTimescale}
           max={maxTimescale}
