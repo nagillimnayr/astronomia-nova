@@ -3,10 +3,11 @@ import { VRPlayer } from './VRPlayer';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { useController, useXR } from '@react-three/xr';
+import { useController, useXR, useXREvent } from '@react-three/xr';
 import { Circle, Ring } from '@react-three/drei';
 import { DoubleSide, Group, Intersection, Line, Mesh, Vector3 } from 'three';
 import { Y_AXIS } from '@/simulation/utils/constants';
+import { useSpring, animated } from '@react-spring/three';
 
 const _camWorldPos = new Vector3();
 const _worldPos = new Vector3();
@@ -41,11 +42,32 @@ export const VRHoverIndicator = ({
     const indicator = indicatorRef.current;
     if (!indicator) return;
 
+    // Scale relative to distance from camera.
     camera.getWorldPosition(_camWorldPos);
     indicator.getWorldPosition(_worldPos);
     const distance = _worldPos.distanceTo(_camWorldPos);
     indicator.scale.setScalar(radius * distance);
   });
+
+  const [spring, springRef] = useSpring(() => ({
+    scale: 1,
+  }));
+
+  // Decrease radius on select.
+  useXREvent(
+    'selectstart',
+    () => {
+      springRef.start({ scale: 0.5 });
+    },
+    { handedness: handedness }
+  );
+  useXREvent(
+    'selectend',
+    () => {
+      springRef.start({ scale: 1 });
+    },
+    { handedness: handedness }
+  );
 
   const ringArgs: [number, number, number] = useMemo(() => {
     const outerRadius = 1;
@@ -56,29 +78,31 @@ export const VRHoverIndicator = ({
 
   return (
     <>
-      <group
-        visible={isPresenting}
-        name={`hover-indicator-${handedness}`}
-        ref={indicatorRef}
-        scale={radius}
-        position-z={radius * 0.01} // Slight offset to avoid clipping.
-      >
-        {/* <axesHelper args={[radius * 2]} /> */}
-        <Circle
-          name={`hover-indicator-circle-${handedness}`}
-          ref={circleRef}
-          scale={0.2}
+      <animated.object3D scale={spring.scale}>
+        <group
+          visible={isPresenting}
+          name={`hover-indicator-${handedness}`}
+          ref={indicatorRef}
+          scale={radius}
+          position-z={radius * 0.01} // Slight offset to avoid clipping.
         >
-          <meshBasicMaterial side={DoubleSide} color={'white'} />
-        </Circle>
-        <Ring
-          name={`hover-indicator-ring-${handedness}`}
-          args={ringArgs}
-          ref={ringRef}
-        >
-          <meshBasicMaterial side={DoubleSide} color={'white'} />
-        </Ring>
-      </group>
+          {/* <axesHelper args={[radius * 2]} /> */}
+          <Circle
+            name={`hover-indicator-circle-${handedness}`}
+            ref={circleRef}
+            scale={0.2}
+          >
+            <meshBasicMaterial side={DoubleSide} color={'white'} />
+          </Circle>
+          <Ring
+            name={`hover-indicator-ring-${handedness}`}
+            args={ringArgs}
+            ref={ringRef}
+          >
+            <meshBasicMaterial side={DoubleSide} color={'white'} />
+          </Ring>
+        </group>
+      </animated.object3D>
     </>
   );
 };
