@@ -86,9 +86,6 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
         position={position}
         visible={isOpen}
         scale={spring.scale}
-        onClick={handleClick}
-        onPointerEnter={hoverEvents.handlePointerEnter}
-        onPointerLeave={hoverEvents.handlePointerLeave}
       >
         <group>
           {/* <VRPanel width={width} height={height} radius={radius}></VRPanel> */}
@@ -104,6 +101,9 @@ export const VRFocusButton = ({ position, width }: VRFocusButtonProps) => {
               radius={radius}
               backgroundColor={spring.color}
               borderWidth={0.05 * height}
+              onClick={handleClick}
+              onPointerEnter={hoverEvents.handlePointerEnter}
+              onPointerLeave={hoverEvents.handlePointerLeave}
             />
           </Interactive>
 

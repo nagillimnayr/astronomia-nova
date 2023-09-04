@@ -137,9 +137,6 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
         position={position}
         visible={isOpen}
         scale={spring.scale}
-        onClick={handleClick}
-        onPointerEnter={hoverEvents.handlePointerEnter}
-        onPointerLeave={hoverEvents.handlePointerLeave}
       >
         <group>
           <Interactive
@@ -154,6 +151,9 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
               radius={radius}
               backgroundColor={spring.color}
               borderWidth={0.05 * height}
+              onClick={handleClick}
+              onPointerEnter={hoverEvents.handlePointerEnter}
+              onPointerLeave={hoverEvents.handlePointerLeave}
             />
           </Interactive>
 
