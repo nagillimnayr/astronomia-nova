@@ -1,4 +1,5 @@
 import {
+  Circle,
   MeshDiscardMaterial,
   Sphere,
   Trail,
@@ -26,6 +27,7 @@ import {
   type Texture,
   Vector3,
   Object3D,
+  DoubleSide,
 } from 'three';
 import type KeplerBody from '@/simulation/classes/kepler-body';
 
@@ -47,6 +49,9 @@ import { PlanetRing } from './planet-ring/PlanetRing';
 import { Interactive, XRInteractionEvent } from '@react-three/xr';
 import useHover from '@/hooks/useHover';
 import { useSelector } from '@xstate/react';
+import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
+
+const _centralWorldPos = new Vector3();
 
 type BodyMeshProps = {
   name: string;
@@ -73,6 +78,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   const { selectionActor, timeActor, surfaceActor, cameraActor, uiActor } =
     MachineContext.useSelector(({ context }) => context);
 
+  const objRef = useRef<Object3D>(null!);
   const meshRef = useRef<Mesh>(null!);
 
   // const [isVisible, setVisible] = useState<boolean>(true);
@@ -103,12 +109,29 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       const axialRotation = normalizeAngle(siderealRotRate * timeElapsed);
 
       // Rotate the body around its rotational axis.
-      mesh.rotation.set(PI_OVER_TWO, 0, degToRad(obliquity)); // Reset rotation.
-      mesh.rotateY(axialRotation); // Rotate around local y-axis.
+      mesh.rotation.set(0, axialRotation, 0); // Rotate around local y-axis.
+      // mesh.rotateY(axialRotation); // Rotate around local y-axis.
     });
 
     return () => subscription.unsubscribe();
   }, [obliquity, siderealRotRate, timeActor]);
+
+  useEffect(() => {
+    // Make the prime meridian face the central body.
+    const body = bodyRef.current;
+    if (!body) return;
+    const parent = body.parent;
+    if (!(parent instanceof KeplerOrbit)) return;
+    const centralBody = parent.centralBodyRef.current;
+    if (!centralBody) return;
+    // _centralWorldPos.set(0, 0, 0);
+    centralBody.getWorldPosition(_centralWorldPos);
+    // body.localToWorld(_centralWorldPos);
+    const obj = objRef.current;
+    obj.lookAt(_centralWorldPos);
+    obj.rotateZ(-PI_OVER_TWO);
+    obj.rotateY(-PI_OVER_TWO);
+  }, [bodyRef]);
 
   const radius = meanRadius * METER;
   const rotation: Vector3Tuple = useMemo(
@@ -117,33 +140,35 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   );
   return (
     <>
-      <group>
-        <Sphere
-          name={name + '-mesh'}
-          rotation={rotation}
-          // visible={isVisible}
-          ref={meshRef}
-          args={[radius, 128, 128]}
-          // onPointerDown={handleClick}
-          // onPointerEnter={hoverEvents.handlePointerEnter}
-          // onPointerLeave={hoverEvents.handlePointerLeave}
-          // onPointerMissed={handleMiss}
-        >
-          <meshBasicMaterial map={texture} />
-          {/* <axesHelper args={[2 * radius]} /> */}
-          <InteractionSphere radius={meanRadius} />
-          {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
-        </Sphere>
-        {name === 'Saturn' && (
-          <PlanetRing
-            rotation={rotation}
-            innerRadius={(meanRadius + 7e6) / DIST_MULT}
-            outerRadius={(meanRadius + 80e6) / DIST_MULT}
-            // onPointerDown={handleClick}
-          />
-        )}
-        <Poles rotation={rotation} length={2 * radius} />
-      </group>
+      <object3D ref={objRef}>
+        {/* <axesHelper args={[3 * radius]} /> */}
+        <group rotation={rotation}>
+          {/* <axesHelper args={[3 * radius]} /> */}
+          <Sphere
+            name={name + '-mesh'}
+            // rotation={rotation}
+            // visible={isVisible}
+            ref={meshRef}
+            args={[radius, 128, 128]}
+          >
+            <meshBasicMaterial map={texture} />
+            <InteractionSphere radius={meanRadius} />
+            {/* <axesHelper args={[3 * radius]} /> */}
+            {/* <Circle scale={radius * 2}>
+              <meshBasicMaterial side={DoubleSide} />
+            </Circle> */}
+            {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
+          </Sphere>
+          {name === 'Saturn' && (
+            <PlanetRing
+              rotation={rotation}
+              innerRadius={(meanRadius + 7e6) / DIST_MULT}
+              outerRadius={(meanRadius + 80e6) / DIST_MULT}
+            />
+          )}
+          <Poles length={2 * radius} />
+        </group>
+      </object3D>
     </>
   );
 });
