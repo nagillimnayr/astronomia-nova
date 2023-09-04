@@ -6,6 +6,7 @@ import { useMemo, useRef } from 'react';
 import { Euler, Intersection, Object3D, Vector3 } from 'three';
 import { Line2 } from 'three-stdlib';
 import { VRHoverIndicator } from './VRHoverIndicator';
+import { useSpring, animated } from '@react-spring/three';
 
 const RAY_LENGTH = 1e3;
 
@@ -36,6 +37,10 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
   }, []);
   rotation.set(0, PI, 0);
 
+  const [spring, springRef] = useSpring(() => ({
+    indicatorScale: 1,
+  }));
+
   useFrame(({ gl }, _, frame) => {
     if (!(frame instanceof XRFrame)) return;
     const line = lineRef.current;
@@ -52,8 +57,10 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
 
     if (!intersection) {
       line.scale.setZ(RAY_LENGTH);
+      springRef.start({ indicatorScale: 0 });
       return;
     }
+    springRef.start({ indicatorScale: 1 });
     const distance = intersection.distance;
     // Set ray length and indicator position.
     line.scale.setZ(distance);
@@ -95,9 +102,9 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
           scale={scale}
           lineWidth={2}
         />
-        <object3D ref={indicatorRef}>
+        <animated.object3D ref={indicatorRef} scale={spring.indicatorScale}>
           <VRHoverIndicator handedness={handedness} />
-        </object3D>
+        </animated.object3D>
       </group>
     </>,
     controller.controller
