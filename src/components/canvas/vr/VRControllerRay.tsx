@@ -36,13 +36,12 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
   }, []);
   rotation.set(0, PI, 0);
 
-
   useFrame(({ gl }, _, frame) => {
     if (!(frame instanceof XRFrame)) return;
     const line = lineRef.current;
     const indicator = indicatorRef.current;
+    if (!line || !indicator) return;
 
-    
     // Get hover state.
     const hoverState = getXR().hoverState[handedness];
 
@@ -64,46 +63,43 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
     const obj = intersection.object;
     // Get point of intersection.
     const point = intersection.point;
-    
-      const face = intersection.face;
-if (face) {
-        const normal = face.normal;
-        obj.getWorldPosition(_objWorldPos);
-        _worldNormal.copy(normal);
-        // Get the normal in world coordinates.
-        obj.localToWorld(_worldNormal);
-        // Subtract object's world position so that we just get the direction.
-        _worldNormal.sub(_objWorldPos);
-        // Add the direction to the point of intersection to get the position to look at.
-        _lookPos.addVectors(point, _worldNormal);
-        indicator.translateZ(0.01); // Slight offset to prevent z-fighting.
-      } else if(controller) {
-        controller.controller.getWorldPosition(_lookPos);
-      }
-    
-    
-      // Look in direction of the normal.
-      indicator.lookAt(_lookPos);
-    
+
+    const face = intersection.face;
+    if (face) {
+      const normal = face.normal;
+      obj.getWorldPosition(_objWorldPos);
+      _worldNormal.copy(normal);
+      // Get the normal in world coordinates.
+      obj.localToWorld(_worldNormal);
+      // Subtract object's world position so that we just get the direction.
+      _worldNormal.sub(_objWorldPos);
+      // Add the direction to the point of intersection to get the position to look at.
+      _lookPos.addVectors(point, _worldNormal);
+      indicator.translateZ(0.01); // Slight offset to prevent z-fighting.
+    } else if (controller) {
+      controller.controller.getWorldPosition(_lookPos);
+    }
+
+    // Look in direction of the normal.
+    indicator.lookAt(_lookPos);
   });
 
   if (!controller) return;
   return createPortal(
     <>
       <group>
-
-      <Line
-        ref={lineRef}
-        points={points}
-        color={'red'}
-        scale={scale}
-        rotation={rotation}
-        lineWidth={2}
+        <Line
+          ref={lineRef}
+          points={points}
+          color={'red'}
+          scale={scale}
+          rotation={rotation}
+          lineWidth={2}
         />
         <object3D ref={indicatorRef}>
-        <VRHoverIndicator handedness={handedness} />
+          <VRHoverIndicator handedness={handedness} />
         </object3D>
-        </group>
+      </group>
     </>,
     controller.controller
   );
