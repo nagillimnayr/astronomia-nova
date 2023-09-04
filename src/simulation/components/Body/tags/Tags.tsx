@@ -46,7 +46,7 @@ type Props = {
   meanRadius: number;
 };
 export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
-  const { cameraActor, selectionActor, visibilityActor } = MachineContext.useSelector(
+  const { cameraActor, selectionActor, visibilityActor, mapActor } = MachineContext.useSelector(
     ({ context }) => context
   );
   
@@ -54,6 +54,9 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
       visibilityActor,
       ({ context }) => context.markers
     );
+  
+  // Subscribe to state so that the component will re-render upon updates.
+  useSelector(mapActor, ({ context }) => context.bodyMap);
 
   const getThree = useThree(({ get }) => get);
 
@@ -100,9 +103,12 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
 
   const logScale = useRef<number>(0);
  logScale.current = useMemo(() => {
-    if (!bodyRef.current) return 0;
+   if (!bodyRef.current) {
+     return 0;
+   }
     const log = Math.log(bodyRef.current.meanRadius);
    const logScale = log / 20;
+  //  console.log(bodyRef.current.name, logScale)
     return logScale;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bodyRef, bodyRef.current]);
