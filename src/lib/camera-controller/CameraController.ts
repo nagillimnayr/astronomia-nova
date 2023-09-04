@@ -21,8 +21,8 @@ import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
 import { gsap } from 'gsap';
 import { normalizeAngle } from '../../simulation/utils/rotation-utils';
 
-// const EPSILON = 1e-7;
-const EPSILON = 1e-14;
+const EPSILON = 1e-3;
+// const EPSILON = 1e-14;
 
 const MIN_RADIUS_BOUND = Number.EPSILON;
 const MAX_RADIUS_BOUND = Infinity;
@@ -76,8 +76,11 @@ export class CameraController extends Object3D {
 
   private _locked = false;
 
+  private _isMoving = false;
+
   update(deltaTime: number) {
-    // if (!this._needsUpdate && !force) return;
+    this._isMoving = false;
+
     this.updateRadius(deltaTime);
     this.updatePolarAngle(deltaTime);
     this.updateAzimuthalAngle(deltaTime);
@@ -103,6 +106,8 @@ export class CameraController extends Object3D {
     const azimuthalAngleTarget = this._sphericalTarget.theta;
     if (approxZero(azimuthalAngleTarget - azimuthalAngle)) return;
 
+    this._isMoving = true;
+
     const [newValue, newVelocity] = smoothCritDamp(
       azimuthalAngle,
       azimuthalAngleTarget,
@@ -119,6 +124,8 @@ export class CameraController extends Object3D {
     const polarAngleTarget = this._sphericalTarget.phi;
     if (approxZero(polarAngleTarget - polarAngle)) return;
 
+    this._isMoving = true;
+
     const [newValue, newVelocity] = smoothCritDamp(
       polarAngle,
       polarAngleTarget,
@@ -133,6 +140,8 @@ export class CameraController extends Object3D {
     const radius = this._spherical.radius;
     const radiusTarget = this._sphericalTarget.radius;
     if (approxZero(radiusTarget - radius)) return;
+
+    this._isMoving = true;
 
     const [newValue, newVelocity] = smoothCritDamp(
       radius,
@@ -443,6 +452,10 @@ export class CameraController extends Object3D {
   unlock() {
     this._locked = false;
     this.connectEventListeners();
+  }
+
+  get isMoving() {
+    return this._isMoving;
   }
 
   private _onPointerDown(event: PointerEvent) {
