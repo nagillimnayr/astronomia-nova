@@ -150,7 +150,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
               {body.name}
             </span>
           </button>
-          <VisibilityToggleButton name={body.name} />
+          {/* <VisibilityToggleButton name={body.name} /> */}
         </div>
 
         {/** Subtree of orbiting bodies. */}
