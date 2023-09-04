@@ -87,13 +87,12 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
   if (!controller) return;
   return createPortal(
     <>
-      <group>
+      <group rotation={rotation}>
         <Line
           ref={lineRef}
           points={points}
-          color={'red'}
+          color={'white'}
           scale={scale}
-          rotation={rotation}
           lineWidth={2}
         />
         <object3D ref={indicatorRef}>
