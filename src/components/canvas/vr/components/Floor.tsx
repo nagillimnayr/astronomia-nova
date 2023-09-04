@@ -9,21 +9,17 @@ import {
 import { type Object3DProps } from '@react-three/fiber';
 import { Interactive, XRInteractionEvent } from '@react-three/xr';
 
+const dummyFn = () => {
+  return;
+};
+
 type Props = GridProps & Object3DProps;
 export const Floor = ({ position = [0, 0, 0], ...props }: Props) => {
   const { vrActor } = MachineContext.useSelector(({ context }) => context);
   return (
     <>
-      <Interactive
-        onHover={(event: XRInteractionEvent) => {
-          //
-          if (!event.intersection) return;
-
-          // event.intersection.point;
-        }}
-      >
-        <group position={position}>
-          <Grid infiniteGrid />
+      <group position={position}>
+        <Interactive onSelect={dummyFn}>
           <Plane
             name="floor-mesh"
             args={[1000, 1000]}
@@ -31,8 +27,9 @@ export const Floor = ({ position = [0, 0, 0], ...props }: Props) => {
           >
             <MeshDiscardMaterial />
           </Plane>
-        </group>
-      </Interactive>
+        </Interactive>
+        <Grid infiniteGrid />
+      </group>
     </>
   );
 };
