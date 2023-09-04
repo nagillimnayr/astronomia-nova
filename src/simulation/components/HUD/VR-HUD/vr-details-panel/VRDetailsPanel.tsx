@@ -138,8 +138,8 @@ export const VRDetailsPanel = ({
         </Text>
 
         {/** Buttons. */}
-        <VRFocusButton width={0.6} position={[-0.35, -0.25, depth.xs]} />
-        <VRSurfaceButton width={0.6} position={[0.35, -0.25, depth.xs]} />
+        <VRFocusButton width={0.6} position={[-0.35, -0.25, depth.xxs]} />
+        <VRSurfaceButton width={0.6} position={[0.35, -0.25, depth.xxs]} />
       </animated.group>
     </>
   );
@@ -286,11 +286,16 @@ const CloseButton = ({ size }: CloseButtonProps) => {
             </animated.mesh>
           </Interactive>
 
-          <Center onCentered={dummyFn}>
-            <Suspense>
-              <Svg src="icons/MdiClose.svg" fillMaterial={ICON_MATERIAL_BASE} />
-            </Suspense>
-          </Center>
+          <object3D position-z={depth.xxs}>
+            <Center onCentered={dummyFn} disableZ>
+              <Suspense>
+                <Svg
+                  src="icons/MdiClose.svg"
+                  fillMaterial={ICON_MATERIAL_BASE}
+                />
+              </Suspense>
+            </Center>
+          </object3D>
         </animated.object3D>
       </object3D>
     </>
