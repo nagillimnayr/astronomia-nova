@@ -67,7 +67,7 @@ export const VRHud = ({
               <VRHudSphereAttachment
                 radius={radius}
                 phi={degToRad(0)}
-                theta={degToRad(45)}
+                theta={degToRad(30)}
               >
                 <VRDetailsPanel scale={0.6} />
               </VRHudSphereAttachment>
@@ -92,7 +92,7 @@ export const VRHud = ({
               <VRHudSphereAttachment
                 radius={radius}
                 phi={degToRad(25)}
-                theta={degToRad(-45)}
+                theta={degToRad(-30)}
               >
                 <VRSettingsButton size={0.01} />
               </VRHudSphereAttachment>
@@ -101,7 +101,7 @@ export const VRHud = ({
               <VRHudSphereAttachment
                 radius={radius}
                 phi={degToRad(5)}
-                theta={degToRad(-45)}
+                theta={degToRad(-30)}
               >
                 <VRSettingsMenu />
               </VRHudSphereAttachment>
