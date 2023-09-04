@@ -8,6 +8,7 @@ import { Circle, Ring } from '@react-three/drei';
 import { DoubleSide, Group, Intersection, Line, Mesh, Vector3 } from 'three';
 import { Y_AXIS } from '@/simulation/utils/constants';
 import { useSpring, animated } from '@react-spring/three';
+import { anim } from '../../../simulation/components/animated-components';
 
 const _camWorldPos = new Vector3();
 const _worldPos = new Vector3();
@@ -51,20 +52,21 @@ export const VRHoverIndicator = ({
 
   const [spring, springRef] = useSpring(() => ({
     scale: 1,
+    opacity: 0,
   }));
 
   // Decrease radius on select.
   useXREvent(
     'selectstart',
     () => {
-      springRef.start({ scale: 0.5 });
+      springRef.start({ scale: 0.5, opacity: 0.35 });
     },
     { handedness: handedness }
   );
   useXREvent(
     'selectend',
     () => {
-      springRef.start({ scale: 1 });
+      springRef.start({ scale: 1, opacity: 0 });
     },
     { handedness: handedness }
   );
@@ -100,6 +102,10 @@ export const VRHoverIndicator = ({
             ref={ringRef}
           >
             <meshBasicMaterial side={DoubleSide} color={'white'} />
+            <anim.Circle
+              material-transparent={true}
+              material-opacity={spring.opacity}
+            />
           </Ring>
         </group>
       </animated.object3D>
