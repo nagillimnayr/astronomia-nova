@@ -103,8 +103,9 @@ export const VRSlider = ({
   fillColor = 'white',
   thumbColor = colors.foreground,
   thumbBorderColor = colors.border,
-  thumbDragColor = twColors.gray[300],
-  thumbBorderDragColor = twColors.gray[100],
+  // thumbDragColor = twColors.gray[300],
+  thumbDragColor = twColors.indigo[300],
+  thumbBorderDragColor = twColors.indigo[200],
   onValueChange,
 }: VRSliderProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
