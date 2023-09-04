@@ -257,8 +257,8 @@ export const colors = Object.freeze({
       disabled: '#d1d5db',
     },
     bg: {
-      base: '#6b7280',
-      hover: '#4b5563',
+      base: twColors.gray[500],
+      hover: twColors.gray[400],
       disabled: '#9ca3af',
     },
   },
