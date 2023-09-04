@@ -237,7 +237,7 @@ const CloseButton = ({ size }: CloseButtonProps) => {
 
   const [spring, springRef] = useSpring(() => ({
     scale: 1,
-    opacity: 0,
+    bgColor: colors.background,
   }));
 
   const handleCloseClick = useCallback(
@@ -256,11 +256,11 @@ const CloseButton = ({ size }: CloseButtonProps) => {
   const handlePointerEnter = useCallback(() => {
     springRef.start({
       scale: 1.2,
-      opacity: 0.5,
+      bgColor: colors.hover,
     });
   }, [springRef]);
   const handlePointerLeave = useCallback(() => {
-    springRef.start({ scale: 1, opacity: 0 });
+    springRef.start({ scale: 1, bgColor: colors.background });
   }, [springRef]);
 
   const circleScale = 10;
@@ -276,8 +276,7 @@ const CloseButton = ({ size }: CloseButtonProps) => {
           >
             <animated.mesh
               scale={circleScale}
-              material-transparent={true}
-              material-opacity={spring.opacity}
+              material-color={spring.bgColor}
               onClick={handleCloseClick}
               onPointerEnter={handlePointerEnter}
               onPointerLeave={handlePointerLeave}
