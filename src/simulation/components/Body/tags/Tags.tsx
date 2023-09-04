@@ -33,7 +33,8 @@ import { SphereMarker } from './marker/SphereMarker';
 import { SelectionMarker } from './marker/SelectionMarker';
 
 const threshold = 0.02;
-const DIST_TO_CAM_THRESHOLD = 5e8 * METER;
+// const DIST_TO_CAM_THRESHOLD = 5e8 * METER;
+const DIST_TO_CAM_THRESHOLD = 1e9 * METER;
 
 const _bodyWorldPos = new Vector3();
 const _camWorldPos = new Vector3();
@@ -46,15 +47,14 @@ type Props = {
   meanRadius: number;
 };
 export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
-  const { cameraActor, selectionActor, visibilityActor, mapActor } = MachineContext.useSelector(
-    ({ context }) => context
+  const { cameraActor, selectionActor, visibilityActor, mapActor } =
+    MachineContext.useSelector(({ context }) => context);
+
+  const markers = useSelector(
+    visibilityActor,
+    ({ context }) => context.markers
   );
-  
-    const markers = useSelector(
-      visibilityActor,
-      ({ context }) => context.markers
-    );
-  
+
   // Subscribe to state so that the component will re-render upon updates.
   useSelector(mapActor, ({ context }) => context.bodyMap);
 
@@ -82,7 +82,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   });
   const [hideSpring, hideSpringRef] = useSpring(() => ({
     markerScale: 1,
-    tagScale: 1
+    tagScale: 1,
   }));
   const handleClick = useCallback(
     (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
@@ -102,15 +102,15 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   );
 
   const logScale = useRef<number>(0);
- logScale.current = useMemo(() => {
-   if (!bodyRef.current) {
-     return 0;
-   }
+  logScale.current = useMemo(() => {
+    if (!bodyRef.current) {
+      return 0;
+    }
     const log = Math.log(bodyRef.current.meanRadius);
-   const logScale = log / 20;
-  //  console.log(bodyRef.current.name, logScale)
+    const logScale = log / 20;
+    //  console.log(bodyRef.current.name, logScale)
     return logScale;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bodyRef, bodyRef.current]);
 
   useFrame(({ camera, gl }, _, frame) => {
@@ -151,7 +151,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
 
       // Get world direction of camera.
       controls.getCameraWorldDirection(_direction);
-      _direction.multiplyScalar(-1);
+      _direction.multiplyScalar(-1); // Reverse direction.
 
       // Add the direction to the position of the body.
       _lookPos.addVectors(_bodyWorldPos, _direction);
@@ -170,7 +170,10 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // Scale the annotation so that it maintains its screen-size.
     text?.scale.setScalar(textFactor * vrFactor);
     // Clamp the y-position of the annotation so that it doesn't go inside of the body.
-    const yPos = clamp(-1.25 * textFactor * logScale.current, -(meanRadius * METER) * 1.5 );
+    const yPos = clamp(
+      -1.25 * textFactor * logScale.current,
+      -(meanRadius * METER) * 1.5
+    );
     // Set position so that the annotation always appears below the body and outside of the marker.
     text?.position.set(0, yPos * vrFactor, 0);
 
@@ -192,7 +195,6 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
       axesRef.current.scale.setScalar(markerFactor);
     }
 
-
     /** Check distance of body to its parent, compared to distance to camera. Hide it if it would overlap with its parent. */
 
     // Since the local coordinates will have the parent at the origin, we can use the body's local coords to get the distance to the parent.
@@ -209,17 +211,12 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
 
     // Setting scale to zero solves the issue of descendants still catching pointer events, and it can be animated more easily, as it doesn't require animating the materials of each descendant.
     hideSpringRef.start({ tagScale: shouldBeVisible ? 1 : 0 });
-  
   });
-
- 
-  
-
 
   return (
     <object3D name="pivot" ref={pivotRef}>
       <animated.group ref={groupRef} scale={hideSpring.tagScale}>
-            <group scale={logScale.current}>
+        <group scale={logScale.current}>
           <animated.group scale={hideSpring.markerScale}>
             <group
               ref={markerRef}
@@ -237,22 +234,20 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
                 ref={ringRef}
                 color={color ?? 'white'}
               /> */}
-                  <animated.object3D scale={hoverSpring.ringScale}>
-
-                <SelectionMarker bodyRef={bodyRef} ref={selectionRef} />
-                  </animated.object3D>
-                  <animated.object3D scale={hoverSpring.markerScale}>
-
-                <SphereMarker
-                  ref={sphereRef}
-                  bodyRef={bodyRef}
-                  color={color ?? 'white'}
+                <animated.object3D scale={hoverSpring.ringScale}>
+                  <SelectionMarker bodyRef={bodyRef} ref={selectionRef} />
+                </animated.object3D>
+                <animated.object3D scale={hoverSpring.markerScale}>
+                  <SphereMarker
+                    ref={sphereRef}
+                    bodyRef={bodyRef}
+                    color={color ?? 'white'}
                   />
-                  </animated.object3D>
+                </animated.object3D>
               </Interactive>
-              </group>
+            </group>
           </animated.group>
-              </group>
+        </group>
         {/* <axesHelper args={[10]} ref={axesRef} /> */}
         <Annotation annotation={name} meanRadius={meanRadius} ref={textRef} />
       </animated.group>
