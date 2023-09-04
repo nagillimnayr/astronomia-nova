@@ -67,7 +67,7 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
     const distance = intersection.distance;
     // Set ray length and indicator position.
     line.scale.setZ(distance);
-    indicator.position.set(0, 0, distance);
+    indicator.position.set(0, 0, distance - 0.02);
 
     // Get intersection object.
     const obj = intersection.object;
@@ -95,8 +95,8 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
         // console.log('intersection face:', face);
         // console.log('intersection normal:', normal);
         // console.log('intersection object:', obj);
+        // console.log(indicator.position.toArray());
       }
-      // indicator.translateZ(0.01); // Slight offset to prevent z-fighting.
     } else if (controller) {
       controller.controller.getWorldPosition(_lookPos);
     }
