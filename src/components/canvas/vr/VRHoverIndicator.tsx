@@ -8,6 +8,7 @@ import { Circle, Ring } from '@react-three/drei';
 import { DoubleSide, Group, Intersection, Line, Mesh, Vector3 } from 'three';
 import { Y_AXIS } from '@/simulation/utils/constants';
 
+const _camWorldPos = new Vector3();
 const _worldPos = new Vector3();
 const _objWorldPos = new Vector3();
 const _worldNormal = new Vector3();
@@ -35,57 +36,16 @@ export const VRHoverIndicator = ({
   const circleRef = useRef<Mesh>(null!);
   const ringRef = useRef<Mesh>(null!);
 
-  // useEffect(() => {
-  //   const subscription = cameraActor.subscribe((state) => {
-  //     if (state.event.type !== 'UPDATE') return;
-  //     if (!controller) return;
-  //     const indicator = indicatorRef.current;
+  useFrame(({ camera }, _, frame) => {
+    if (!(frame instanceof XRFrame)) return;
+    const indicator = indicatorRef.current;
+    if (!indicator) return;
 
-  //     // Get hover state.
-  //     const hoverState = getXR().hoverState[handedness];
-
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  //     const intersection: Intersection = hoverState.values().next().value;
-
-  //     if (!intersection) {
-  //       const ray = controller.controller.children[0];
-  //       if (!(ray instanceof Line)) return;
-
-  //       ray.scale.setZ(rayLength);
-  //       indicator.visible = false;
-  //       return;
-  //     }
-
-  //     indicator.visible = true;
-  //     const obj = intersection.object;
-
-  //     const point = intersection.point;
-  //     indicator.position.copy(point);
-
-  //     const face = intersection.face;
-  //     if (face) {
-  //       const normal = face.normal;
-  //       obj.getWorldPosition(_objWorldPos);
-  //       _worldNormal.copy(normal);
-  //       // Get the normal in world coordinates.
-  //       obj.localToWorld(_worldNormal);
-  //       // Subtract object's world position so that we just get the direction.
-  //       _worldNormal.sub(_objWorldPos);
-  //       // Add the direction to the point of intersection to get the position to look at.
-  //       _lookPos.addVectors(point, _worldNormal);
-  //       indicator.translateZ(0.01); // Slight offset to prevent z-fighting.
-  //     } else {
-  //       controller.controller.getWorldPosition(_lookPos);
-  //       //
-  //     }
-
-  //     // Look in direction of the normal.
-  //     indicator.lookAt(_lookPos);
-  //   });
-
-  //   return () => subscription.unsubscribe();
-  // }, [cameraActor, controller, getXR, handedness, rayLength]);
-
+    camera.getWorldPosition(_camWorldPos);
+    indicator.getWorldPosition(_worldPos);
+    const distance = _worldPos.distanceTo(_camWorldPos);
+    indicator.scale.setScalar(radius * distance);
+  });
 
   const ringArgs: [number, number, number] = useMemo(() => {
     const outerRadius = 1;
