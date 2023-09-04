@@ -2,11 +2,12 @@ import { PI, PI_OVER_TWO } from '@/simulation/utils/constants';
 import { Line } from '@react-three/drei';
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { useController, useXR } from '@react-three/xr';
-import { useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { Euler, Intersection, Object3D, Vector3 } from 'three';
 import { Line2 } from 'three-stdlib';
 import { VRHoverIndicator } from './VRHoverIndicator';
 import { useSpring, animated } from '@react-spring/three';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 
 const RAY_LENGTH = 1e3;
 
@@ -18,6 +19,7 @@ type VRControllerRayProps = {
   handedness: XRHandedness;
 };
 export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const getThree = useThree(({ get }) => get);
   const getXR = useXR(({ get }) => get);
   const controller = useController(handedness);
@@ -41,6 +43,8 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
     indicatorScale: 1,
   }));
 
+  const prevIntersection = useRef<{ obj: Object3D; normal: Vector3 }>(null!);
+
   useFrame(({ gl }, _, frame) => {
     if (!(frame instanceof XRFrame)) return;
     const line = lineRef.current;
@@ -60,6 +64,7 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
       springRef.start({ indicatorScale: 0 });
       return;
     }
+
     springRef.start({ indicatorScale: 1 });
     const distance = intersection.distance;
     // Set ray length and indicator position.
@@ -74,6 +79,20 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
     const face = intersection.face;
     if (face) {
       const normal = face.normal;
+
+      const prev = prevIntersection.current;
+
+      if (prev && Object.is(prev.obj, obj) && normal.equals(prev.normal)) {
+        // if (handedness === 'right') {
+        //   console.log('same object and normal');
+        // }
+        // If intersection hasn't changed, no need to do anything.
+        return;
+      } else {
+        // New intersection.
+        prevIntersection.current = { obj, normal };
+      }
+
       obj.getWorldPosition(_objWorldPos);
       _worldNormal.copy(normal);
       // Get the normal in world coordinates.
@@ -82,7 +101,15 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
       _worldNormal.sub(_objWorldPos);
       // Add the direction to the point of intersection to get the position to look at.
       _lookPos.addVectors(point, _worldNormal);
-      indicator.translateZ(0.01); // Slight offset to prevent z-fighting.
+      if (handedness === 'right') {
+        const { controls } = cameraActor.getSnapshot()!.context;
+        // console.log('camera isMoving?:', controls?.isMoving);
+        // console.log('intersection:', intersection);
+        // console.log('intersection face:', face);
+        // console.log('intersection normal:', normal);
+        // console.log('intersection object:', obj);
+      }
+      // indicator.translateZ(0.01); // Slight offset to prevent z-fighting.
     } else if (controller) {
       controller.controller.getWorldPosition(_lookPos);
     }
