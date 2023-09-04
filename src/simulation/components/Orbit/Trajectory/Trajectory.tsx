@@ -40,6 +40,7 @@ import { useSpring, animated } from '@react-spring/three';
 import { Line2 } from 'three-stdlib';
 import { anim } from '../../animated-components';
 import { useXR } from '@react-three/xr';
+import { useRootStore } from '@/simulation/state/zustand/root-store';
 
 const DIST_TO_CAM_THRESHOLD = 1e8 * METER;
 
@@ -94,6 +95,8 @@ export const Trajectory = ({
   );
   // const getThree = useThree(({ get }) => get);
   // const size = useThree(({ size }) => size);
+
+  const isPresenting = useXR(({ isPresenting }) => isPresenting);
 
   const arrowRef = useRef<ArrowHelper>(null!);
   const objRef = useRef<Object3D>(null!);
@@ -175,6 +178,11 @@ export const Trajectory = ({
   //   //   distance < DIST_TO_CAM_THRESHOLD ? false : isVisible;
   // });
 
+  const thickness = useRootStore(
+    ({ trajectoryThickness }) => trajectoryThickness
+  );
+  const lineWidth = thickness * (isPresenting ? 0.75 : 1);
+
   return (
     <>
       <object3D
@@ -186,7 +194,7 @@ export const Trajectory = ({
           ref={lineRef}
           points={points}
           color={'white'}
-          lineWidth={2}
+          lineWidth={lineWidth}
           transparent
         />
         {/* <line2></line2> */}

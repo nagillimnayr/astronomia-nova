@@ -1,8 +1,10 @@
 import KeplerBody from '@/simulation/classes/kepler-body';
+import { useRootStore } from '@/simulation/state/zustand/root-store';
 import { TWO_PI } from '@/simulation/utils/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Line } from '@react-three/drei';
 import { createPortal, useFrame } from '@react-three/fiber';
+import { useXR } from '@react-three/xr';
 import { useSelector } from '@xstate/react';
 import { distance } from 'mathjs';
 import { useEffect, useMemo, useRef } from 'react';
@@ -32,6 +34,8 @@ export const PseudoTrajectory = () => {
     state.matches('active')
   );
 
+  const isPresenting = useXR(({ isPresenting }) => isPresenting);
+
   const points = useMemo(() => {
     const points: Vector3[] = [];
     for (let i = 0; i < NUM_OF_SEGMENTS + 1; i++) {
@@ -56,7 +60,8 @@ export const PseudoTrajectory = () => {
     // Scale the line relative to the circumference of the trajectory, as it must be long enough to cover up the flickering but short enough that the tangent line doesn't stray noticeably off of the curve.
     const distanceToOrigin = body.position.length();
     const circumference = TWO_PI * distanceToOrigin;
-    const length = circumference / 4096;
+
+    const length = 0.77 * (circumference / 8192);
 
     _vel.copy(body.velocity);
     body.localToWorld(_vel);
@@ -67,6 +72,11 @@ export const PseudoTrajectory = () => {
 
   const isVisible = trajectoryVisibilityOn && !onSurface;
 
+  const thickness = useRootStore(
+    ({ trajectoryThickness }) => trajectoryThickness
+  );
+  const lineWidth = thickness * (isPresenting ? 0.75 : 1) * 1.1;
+
   if (!focusTarget) return;
   return createPortal(
     <>
@@ -74,7 +84,7 @@ export const PseudoTrajectory = () => {
         visible={isVisible}
         ref={lineRef}
         points={points}
-        lineWidth={2.1}
+        lineWidth={lineWidth}
         scale={scale}
         color={'white'}
       />

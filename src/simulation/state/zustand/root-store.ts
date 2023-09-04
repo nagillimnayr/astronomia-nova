@@ -10,7 +10,7 @@ type Actions = {
 };
 
 const initialState: State = {
-  trajectoryThickness: 1.5,
+  trajectoryThickness: 2,
 };
 
 type RootStore = State & Actions;
