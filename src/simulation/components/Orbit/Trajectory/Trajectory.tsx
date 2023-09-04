@@ -132,7 +132,7 @@ export const Trajectory = ({
     },
 
     onRest: (result, ctrl, item) => {
-      console.log('onRest:', result);
+      // console.log('onRest:', result);
       if (typeof result.value.opacity !== 'number') {
         console.log('not number', result);
         return;
@@ -143,7 +143,7 @@ export const Trajectory = ({
       line.visible = opacity > Number.EPSILON;
     },
     onStart: (result) => {
-      console.log('onStart:', result);
+      // console.log('onStart:', result);
       if (typeof result.value.opacity !== 'number') {
         console.log('not number', result);
         return;
