@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import Body from '../Body/Body';
 import { useTexture } from '@react-three/drei';
-
 import { Orbit } from '../Orbit/Orbit';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { trpc } from '@/lib/trpc/trpc';
