@@ -8,6 +8,12 @@ import { Text } from '@react-three/drei';
 import { type Vector3Tuple } from 'three';
 import { VRTimescaleIncrementButton } from './VRTimescaleIncrementButton';
 import { VRPanel } from '../../vr-ui-components/VRPanel';
+import { Interactive } from '@react-three/xr';
+
+// Dummy function for passing to Interactive so it will catch intersections.
+const dummyFn = () => {
+  return;
+};
 
 type VRTimeControlProps = {
   position?: Vector3Tuple;
@@ -22,9 +28,11 @@ export const VRTimeControls = ({
   return (
     <>
       <group position={position} scale={scale}>
-        <object3D scale={4}>
-          <VRPanel width={3} height={1.2} />
-        </object3D>
+        <Interactive onSelect={dummyFn}>
+          <object3D scale={4}>
+            <VRPanel width={3} height={1.2} />
+          </object3D>
+        </Interactive>
         <group position-z={depth.xxs}>
           <group position-y={1} scale={0.8}>
             {/** Sidereal Day Reverse Button. */}
