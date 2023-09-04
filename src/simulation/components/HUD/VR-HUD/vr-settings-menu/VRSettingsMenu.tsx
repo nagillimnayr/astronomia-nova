@@ -86,7 +86,10 @@ export const VRSettingsMenu = ({
   }, [vrSettingsMenuActor, defaultOpen]);
 
   const isOpen = state.matches('active');
-  const { scale } = useSpring({ scale: isOpen ? 1 : 0 });
+  const [spring, springRef] = useSpring(() => ({ scale: 0 }));
+  useEffect(() => {
+    springRef.start({ scale: isOpen ? 1 : 0 });
+  }, [isOpen, springRef]);
 
   const containerRef = useRef<Group>(null!);
 
@@ -101,7 +104,11 @@ export const VRSettingsMenu = ({
   const iconScale = 1.8;
   return (
     <>
-      <animated.group ref={containerRef} position={position} scale-y={scale}>
+      <animated.group
+        ref={containerRef}
+        position={position}
+        scale-y={spring.scale}
+      >
         {/** Wrap background panel in Interactive so it will catch rays. */}
         <Interactive onSelect={dummyFn}>
           <VRPanel
@@ -199,13 +206,6 @@ export const VRSettingsMenu = ({
             label="Constellation Opacity"
             target="constellations"
           />
-          {/** Celestial Grid. */}
-          {/* <VROpacitySliders
-            position={[0, -0.1, 0]}
-            width={innerWidth}
-            label="Celestial Grid Opacity"
-            target="celestialGrid"
-          /> */}
         </group>
         <VRSeparator
           position={[0, -0.65, depth.xxs]}
