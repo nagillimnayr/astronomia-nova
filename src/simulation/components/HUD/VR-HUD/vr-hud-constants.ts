@@ -264,7 +264,7 @@ export const colors = Object.freeze({
   },
 
   // border: '#2a2a2a',
-  border: '#6b7280', // gray500
+  border: twColors.gray[500],
   input: '#282829',
 });
 
