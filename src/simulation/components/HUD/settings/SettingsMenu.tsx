@@ -92,13 +92,7 @@ export const SettingsMenu = ({ defaultOpen }: Props) => {
           </SettingsToggleButton>
           <span className={'min-w-fit whitespace-nowrap'}>Markers</span>
         </div>
-        {/** Velocity Arrows. */}
-        <div className="flex h-fit w-full min-w-fit flex-row items-center justify-start gap-2">
-          <SettingsToggleButton target={'velocityArrows'} defaultOff>
-            <span className="icon-[mdi--arrow-top-right-thin]" />
-          </SettingsToggleButton>
-          <span className={'min-w-fit whitespace-nowrap'}>Velocity Arrows</span>
-        </div>
+
         <Separator />
         {/** Opacity Sliders. */}
         <OpacitySliders direction="vertical" />
@@ -106,7 +100,7 @@ export const SettingsMenu = ({ defaultOpen }: Props) => {
         {/** Other options. */}
         <div className="flex h-full w-full flex-col items-start justify-start gap-1">
           <SettingsCheckbox label="Polar Axes" target="polarAxes" defaultOff />
-          <SettingsCheckbox label="Equinoxes" target="equinoxes" defaultOff />
+          {/* <SettingsCheckbox label="Equinoxes" target="equinoxes" defaultOff /> */}
         </div>
       </div>
     </>

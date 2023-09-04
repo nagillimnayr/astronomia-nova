@@ -179,27 +179,18 @@ export const VRSettingsMenu = ({
               defaultSelected
               iconSize={0.003 * iconScale}
             />
-            {/** Velocity Arrows. */}
-            <VRToggleButton
-              posY={-0.3}
-              label={'Velocity Arrows'}
-              target={'velocityArrows'}
-              iconUrl={'icons/MdiArrowTopRightThin.svg'}
-              defaultSelected={false}
-              iconSize={0.0035 * iconScale}
-            />
           </group>
           <VRSeparator
-            position={[0, -0.4, 0]}
+            position={[0, -0.2, 0]}
             width={innerWidth}
             height={0.01}
             color={colors.border}
           />
         </group>
 
-        {/** Opacity Sliders. */}
-        <group position-y={-0.2} position-z={depth.xxs}>
-          {/** Constellations. */}
+        {/** Sliders. */}
+        <group position-y={0} position-z={depth.xxs}>
+          {/** Constellation Opacity. */}
           <VROpacitySliders
             position={[0, -0.2, 0]}
             width={innerWidth}
