@@ -85,6 +85,7 @@ export type VRSliderProps = {
   thumbColor?: ColorRepresentation;
   thumbBorderColor?: ColorRepresentation;
   thumbDragColor?: ColorRepresentation;
+  thumbBorderDragColor?: ColorRepresentation;
 
   onValueChange?: (value: number) => void;
 };
@@ -103,6 +104,7 @@ export const VRSlider = ({
   thumbColor = colors.foreground,
   thumbBorderColor = colors.border,
   thumbDragColor = twColors.gray[300],
+  thumbBorderDragColor = twColors.gray[100],
   onValueChange,
 }: VRSliderProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
@@ -139,6 +141,7 @@ export const VRSlider = ({
     value: 0,
     thumbScale: 1,
     thumbColor: thumbColor.toString(),
+    thumbBorderColor: thumbBorderColor.toString(),
 
     onChange: {
       value: (result: AnimationResult<SpringValue<any>>) => {
@@ -273,6 +276,7 @@ export const VRSlider = ({
       // Transition thumb color.
       springRef.start({
         thumbColor: thumbDragColor.toString(),
+        thumbBorderColor: thumbBorderDragColor.toString(),
         thumbScale: 1.25,
       });
 
@@ -287,7 +291,7 @@ export const VRSlider = ({
         controls.enabled = false;
       }
     },
-    [cameraActor, getThree, springRef, thumbDragColor]
+    [cameraActor, getThree, springRef, thumbBorderDragColor, thumbDragColor]
   );
   const handleDragEnd = useCallback(() => {
     isDragging.current = false;
@@ -295,6 +299,7 @@ export const VRSlider = ({
     // Transition thumb color.
     springRef.start({
       thumbColor: thumbColor.toString(), // Reset color.
+      thumbBorderColor: thumbBorderColor.toString(), // Reset color.
       thumbScale: 1, // Reset scale.
     });
 
@@ -326,6 +331,7 @@ export const VRSlider = ({
     springRef.start({
       thumbScale: 1.25,
       thumbColor: thumbDragColor.toString(),
+      thumbBorderColor: thumbBorderDragColor.toString(),
     });
   }, [springRef, thumbDragColor]);
   const handleHoverEnd = useCallback(() => {
@@ -334,6 +340,7 @@ export const VRSlider = ({
       springRef.start({
         thumbScale: 1,
         thumbColor: thumbColor.toString(),
+        thumbBorderColor: thumbBorderColor.toString(),
       });
   }, [springRef, thumbColor]);
 
@@ -367,7 +374,7 @@ export const VRSlider = ({
           radius={thumbRadius}
           scale={spring.thumbScale}
           color={spring.thumbColor}
-          borderColor={thumbBorderColor}
+          borderColor={spring.thumbBorderColor}
           onDragStart={handleDragStart}
           onDragEnd={handlePointerUp}
           onHover={handleHover}
@@ -480,7 +487,7 @@ type VRSliderThumbProps = {
   radius: number;
   scale: number | SpringValue<number>;
   color: ColorRepresentation | SpringValue<string>;
-  borderColor: ColorRepresentation;
+  borderColor: ColorRepresentation | SpringValue<string>;
   onDragStart: () => void;
   onDragEnd: () => void;
   onHover: () => void;
@@ -503,22 +510,6 @@ const VRSliderThumb = ({
 
   const thumbRef = useRef<Object3D>(null!);
   const anchorRef = useRef<Group>(null!);
-
-  // Spring scale on hover.
-  const [spring, springRef] = useSpring(() => ({
-    scale: 1,
-  }));
-
-  // const handleHover = useCallback(() => {
-  //   springRef.start({
-  //     scale: 1.25,
-  //   });
-  // }, [springRef]);
-  // const handleHoverEnd = useCallback(() => {
-  //   springRef.start({ scale: 1 });
-  // }, [springRef]);
-
-  // useEventListener('pointerup', handleDragEnd);
 
   return (
     <>
