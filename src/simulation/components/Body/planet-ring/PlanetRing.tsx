@@ -10,6 +10,7 @@ import {
   Object3D,
   RingGeometry,
   Texture,
+  Vector2,
   Vector3,
   Vector3Tuple,
 } from 'three';
@@ -28,6 +29,7 @@ export const PlanetRing = ({
   ...props
 }: PlanetRingProps) => {
   const ringTexture = useTexture('assets/textures/2k_saturn_ring_alpha.png');
+
   const geometry = useRef<RingGeometry>(null!);
   geometry.current = useMemo(() => {
     if (geometry.current) {
@@ -36,16 +38,15 @@ export const PlanetRing = ({
     const ringGeometry = new RingGeometry(innerRadius, outerRadius, 128);
 
     const positions = ringGeometry.getAttribute('position');
-    const vec = new Vector3();
+    const uvs = ringGeometry.getAttribute('uv');
+    const pos = new Vector3();
     console.log('attributes:', ringGeometry.attributes);
-    const uvs = new Float32Array(positions.count * 2);
+    if (!(uvs instanceof BufferAttribute)) return geometry.current;
     const midRadius = innerRadius + (outerRadius - innerRadius) / 2;
-    for (let i = 0; i < positions.count; i++) {
-      vec.fromBufferAttribute(positions, i);
-      uvs[i] = vec.length() < midRadius ? 0 : 1;
-      uvs[i + 1] = 1;
+    for (let i = 0; i < uvs.count; i++) {
+      pos.fromBufferAttribute(positions, i);
+      uvs.setXY(i, pos.length() < midRadius ? 0 : 1, 1);
     }
-    ringGeometry.setAttribute('uv', new BufferAttribute(uvs, 2));
 
     return ringGeometry;
   }, [innerRadius, outerRadius]);
@@ -54,10 +55,10 @@ export const PlanetRing = ({
       <object3D rotation={rotation} {...props}>
         <mesh geometry={geometry.current} rotation={[PI_OVER_TWO, 0, 0]}>
           <meshBasicMaterial
+            transparent
             map={ringTexture}
-            // alphaMap={ringTexture}
+            alphaMap={ringTexture}
             side={DoubleSide}
-            // map={texture}
           />
         </mesh>
       </object3D>
