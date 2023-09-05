@@ -129,7 +129,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
           />
 
           <Tags name={name} bodyRef={bodyRef} meanRadius={meanRadius} />
-          {/* <axesHelper args={[1.5 * (meanRadius / DIST_MULT)]} /> */}
+          {/* <axesHelper args={[1.5 * meanRadius]} /> */}
           {/* <VelocityArrow /> */}
         </KeplerTreeContext.Provider>
       </keplerBody>

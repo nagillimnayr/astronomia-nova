@@ -129,13 +129,13 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     // body.localToWorld(_centralWorldPos);
     const obj = objRef.current;
     obj.lookAt(_centralWorldPos);
-    obj.rotateZ(-PI_OVER_TWO);
     obj.rotateY(-PI_OVER_TWO);
+    // obj.rotateZ(-PI_OVER_TWO);
   }, [bodyRef]);
 
   const radius = meanRadius * METER;
   const rotation: Vector3Tuple = useMemo(
-    () => [PI_OVER_TWO, 0, degToRad(obliquity)],
+    () => [0, 0, degToRad(obliquity)],
     [obliquity]
   );
   return (

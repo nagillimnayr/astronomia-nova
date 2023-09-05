@@ -28,18 +28,18 @@ const Simulation = ({ children }: SimProps) => {
     <>
       <group>
         <group>
-      <CelestialSphere />
-      <group rotation-x={-PI_OVER_TWO}>
-        {children}
-      </group>
-</group>
+          <CelestialSphere />
+          {/* <group rotation-x={-PI_OVER_TWO}> */}
+          {children}
+          {/* </group> */}
+        </group>
 
-      <ambientLight intensity={0.5} />
-      <ObservationPoint />
-      <KeyPressControl />
-      <VRSurfaceDialog />
-      <PseudoTrajectory />
-    </group>
+        <ambientLight intensity={0.5} />
+        <ObservationPoint />
+        <KeyPressControl />
+        <VRSurfaceDialog />
+        <PseudoTrajectory />
+      </group>
     </>
   );
 };

@@ -115,7 +115,9 @@ export const Trajectory = ({
       semiMajorAxis * METER,
       semiMinorAxis * METER
     ).getSpacedPoints(NUM_OF_POINTS);
-    return points;
+    return points.map((vec2) => {
+      return new Vector3(vec2.x, 0, -vec2.y);
+    });
   }, [semiMajorAxis, semiMinorAxis, linearEccentricity]);
 
   let isVisible = trajectoryVisibilityOn;
@@ -208,7 +210,6 @@ export const Trajectory = ({
           lineWidth={lineWidth}
           transparent
         />
-        {/* <line2></line2> */}
         {/* Semi-major Axis / Periapsis */}
         {showPeriapsis && (
           <arrowHelper

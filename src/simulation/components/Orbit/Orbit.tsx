@@ -7,7 +7,13 @@ import {
   calculateOrbitFromPeriapsis,
   calculateOrbitFromStateVectors,
 } from '@/simulation/math/orbit/calculateOrbit';
-import { DIST_MULT, TIME_MULT, DAY } from '@/simulation/utils/constants';
+import {
+  DIST_MULT,
+  TIME_MULT,
+  DAY,
+  X_AXIS,
+  Z_AXIS,
+} from '@/simulation/utils/constants';
 import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
 import {
   ColorRepresentation,
@@ -142,9 +148,12 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
 
         // To orient the orbit correctly, we need to perform three intrinsic rotations. (Intrinsic meaning that the rotations are performed in the local coordinate space, such that when we rotate around the axes in the order z-x-z, the last z-axis rotation is around a different world-space axis than the first one, as the x-axis rotation changes the orientation of the object's local z-axis. For clarity, the rotations will be in the order z-x'-z'', where x' is the new local x-axis after the first rotation and z'' is the object's new local z-axis after the second rotation.)
         orbit.rotation.set(0, 0, 0); // Reset the rotation before we perform the intrinsic rotations.
-        orbit.rotateZ(degToRad(longitudeOfAscendingNode));
+        orbit.getWorldPosition(_pos);
+        _pos.add(Z_AXIS);
+        orbit.lookAt(_pos);
+        orbit.rotateY(degToRad(longitudeOfAscendingNode));
         orbit.rotateX(degToRad(inclination));
-        orbit.rotateZ(degToRad(argumentOfPeriapsis));
+        orbit.rotateY(degToRad(argumentOfPeriapsis));
       }}
       orbitingBodyRef={orbitingBodyRef}
       centralBodyRef={centralBodyRef}
@@ -162,6 +171,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
         },
       ]}
     >
+      {/* <axesHelper scale={1e12} /> */}
       <Body ref={orbitingBodyRef} params={bodyParams} texture={texture}>
         {children}
       </Body>

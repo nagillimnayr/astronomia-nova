@@ -83,8 +83,8 @@ export async function computeEphemerides(name: string) {
     semiMinorAxis,
     semiLatusRectum,
     linearEccentricity,
-    initialPosition: _pos.toArray(),
-    initialVelocity: _vel.toArray(),
+    initialPosition: [_pos.x, 0, -_pos.y],
+    initialVelocity: [_vel.x, 0, -_vel.y],
   } as ComputedEphemerisTable;
 
   const { id, centerId, centerName, epoch } = elements;
