@@ -5,9 +5,11 @@ import {
   MachineContext,
   // RootMachineContext,
 } from '@/state/xstate/MachineProviders';
+import { useSpring } from '@react-spring/core';
+import { animated } from '@react-spring/three';
 import { Center, Text, Text3D } from '@react-three/drei';
 import { useActor, useSelector } from '@xstate/react';
-import { forwardRef, useContext, useRef } from 'react';
+import { forwardRef, useContext, useEffect, useRef } from 'react';
 import { type Object3D, Vector3 } from 'three';
 
 type AnnotationProps = {
@@ -29,14 +31,24 @@ const Annotation = forwardRef<Object3D, AnnotationProps>(function Annotation(
     state.matches('active')
   );
 
+  const textScale = 0.5;
+
+  const [spring, springRef] = useSpring(() => ({
+    scale: textScale,
+  }));
+
+  useEffect(() => {
+    console.log('toggle vis');
+    springRef.start({ scale: isVisible ? textScale : 0 });
+  }, [isVisible, springRef]);
+
   const fontURL = 'fonts/Roboto_Regular.json';
   return (
     <>
       <object3D>
-        <object3D
+        <animated.object3D
           ref={fwdRef}
           position={[0, -(meanRadius * METER), 0]}
-          // position={[0, -10, 0]}
         >
           {/* <Text
             visible={isVisible}
@@ -53,14 +65,18 @@ const Annotation = forwardRef<Object3D, AnnotationProps>(function Annotation(
             {annotation}
           </Text> */}
 
-          <object3D scale={0.5} scale-z={1e-5}>
+          <animated.object3D
+            scale-x={spring.scale}
+            scale-y={spring.scale}
+            scale-z={1e-5}
+          >
             <Center bottom>
-              <Text3D visible={isVisible} font={fontURL} letterSpacing={0.15}>
+              <Text3D font={fontURL} letterSpacing={0.15}>
                 {annotation}
               </Text3D>
             </Center>
-          </object3D>
-        </object3D>
+          </animated.object3D>
+        </animated.object3D>
       </object3D>
     </>
   );
