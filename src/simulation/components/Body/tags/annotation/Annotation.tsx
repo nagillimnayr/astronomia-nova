@@ -1,11 +1,11 @@
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
-import { DIST_MULT, EARTH_RADIUS } from '@/simulation/utils/constants';
+import { DIST_MULT, EARTH_RADIUS, METER } from '@/simulation/utils/constants';
 import {
   MachineContext,
   // RootMachineContext,
 } from '@/state/xstate/MachineProviders';
-import { Text } from '@react-three/drei';
+import { Center, Text, Text3D } from '@react-three/drei';
 import { useActor, useSelector } from '@xstate/react';
 import { forwardRef, useContext, useRef } from 'react';
 import { type Object3D, Vector3 } from 'three';
@@ -29,15 +29,16 @@ const Annotation = forwardRef<Object3D, AnnotationProps>(function Annotation(
     state.matches('active')
   );
 
+  const fontURL = 'fonts/Roboto_Regular.json';
   return (
     <>
       <object3D>
         <object3D
           ref={fwdRef}
-          position={[0, -(meanRadius / DIST_MULT), 0]}
+          position={[0, -(meanRadius * METER), 0]}
           // position={[0, -10, 0]}
         >
-          <Text
+          {/* <Text
             visible={isVisible}
             color={'white'}
             anchorX={'center'}
@@ -50,7 +51,15 @@ const Annotation = forwardRef<Object3D, AnnotationProps>(function Annotation(
             strokeOpacity={1}
           >
             {annotation}
-          </Text>
+          </Text> */}
+
+          <object3D scale={0.5}>
+            <Center bottom>
+              <Text3D font={fontURL} letterSpacing={0.15}>
+                {annotation}
+              </Text3D>
+            </Center>
+          </object3D>
         </object3D>
       </object3D>
     </>
