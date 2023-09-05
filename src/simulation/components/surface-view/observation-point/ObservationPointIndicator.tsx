@@ -51,7 +51,7 @@ export const ObservationPointIndicator = () => {
   const radius = 0.5e5;
   const ringArgs: [number, number, number] = useMemo(() => {
     const outerRadius = 1;
-    const innerRadius = 0.9;
+    const innerRadius = 0.75;
     const segments = 32;
     return [innerRadius, outerRadius, segments];
   }, []);
@@ -67,8 +67,8 @@ export const ObservationPointIndicator = () => {
     const distance = _worldPos.distanceTo(_camWorldPos);
     const { isPresenting } = getXR();
     // Increase size if in VR, to help with visibility.
-    let scale = (distance * (isPresenting ? 1.5 : 1)) / 100;
-    scale = clamp(scale, 0.5e5, 3e5);
+    let scale = distance / 100;
+    scale = clamp(scale, 1e5, 1e6) * (isPresenting ? 1.5 : 1);
     indicator.scale.setScalar(scale);
   });
 
@@ -86,7 +86,7 @@ export const ObservationPointIndicator = () => {
           {/* <axesHelper args={[1e1]} /> */}
         </mesh>
         <object3D scale-y={0.1}>
-          <Cylinder position-y={0.5} scale-x={0.1} scale-z={0.1} />
+          <Cylinder position-y={0.5} scale-x={0.15} scale-z={0.15} />
         </object3D>
       </group>
     </>
