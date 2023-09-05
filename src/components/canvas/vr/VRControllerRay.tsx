@@ -11,6 +11,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 
 const RAY_LENGTH = 1e3;
 
+const _indicatorWorldPos = new Vector3();
 const _objWorldPos = new Vector3();
 const _worldNormal = new Vector3();
 const _lookPos = new Vector3();
@@ -76,8 +77,8 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
 
     const face = intersection.face;
     if (face) {
-      const { controls } = cameraActor.getSnapshot()!.context;
-      if (controls && controls.isMoving) return;
+      // const { controls } = cameraActor.getSnapshot()!.context;
+      // if (controls && controls.isMoving) return;
 
       const normal = face.normal;
 
@@ -87,8 +88,11 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
       obj.localToWorld(_worldNormal);
       // Subtract object's world position so that we just get the direction.
       _worldNormal.sub(_objWorldPos);
-      // Add the direction to the point of intersection to get the position to look at.
-      _lookPos.addVectors(point, _worldNormal);
+
+      // Add the direction to the indicator's world position to get the position to look at.
+      indicator.getWorldPosition(_indicatorWorldPos);
+      _lookPos.addVectors(_indicatorWorldPos, _worldNormal);
+
       if (handedness === 'right') {
         // console.log('camera isMoving?:', controls?.isMoving);
         // console.log('intersection:', intersection);
