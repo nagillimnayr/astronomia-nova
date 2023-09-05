@@ -76,7 +76,7 @@ export const VRHoverIndicator = ({
       >
         <Sphere scale={0.2} />
         {/* <axesHelper args={[radius * 2]} scale={200} /> */}
-        <arrowHelper args={[Z_AXIS, ORIGIN, 10, 'cyan']} />
+        {/* <arrowHelper args={[Z_AXIS, ORIGIN, 10, 'cyan']} /> */}
         <group position-z={0.1}>
           <anim.Ring
             name={`hover-indicator-ring-${handedness}`}
