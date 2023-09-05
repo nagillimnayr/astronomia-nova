@@ -28,7 +28,7 @@ export const VRControls = () => {
 
   const pollXRButtons = useCallback(() => {
     // cameraActor.send({ type: 'POLL_XR_BUTTONS' });
-
+    // console.log('poll XR Buttons');
     const { gl } = getThree();
     const { xr } = gl;
     if (!xr.enabled || !xr.isPresenting) return;
@@ -36,6 +36,8 @@ export const VRControls = () => {
     if (!session) return;
 
     const { leftGamepad, rightGamepad } = getGamepads(session);
+    // console.log('left gamepad:', leftGamepad);
+    // console.log('right gamepad:', rightGamepad);
 
     // Poll left gamepad.
     if (leftGamepad) {

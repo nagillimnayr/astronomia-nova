@@ -14,13 +14,9 @@ export function getGamepads(session: XRSession): {
   let leftInputSource: XRInputSource | undefined = undefined;
   let rightInputSource: XRInputSource | undefined = undefined;
   for (const source of session.inputSources) {
-    if (!leftInputSource && source.handedness === 'left' && !source.hand) {
+    if (!leftInputSource && source.handedness === 'left') {
       leftInputSource = source;
-    } else if (
-      !rightInputSource &&
-      source.handedness === 'right' &&
-      !source.hand
-    ) {
+    } else if (!rightInputSource && source.handedness === 'right') {
       rightInputSource = source;
     }
   }
