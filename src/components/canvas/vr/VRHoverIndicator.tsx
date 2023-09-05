@@ -103,10 +103,10 @@ export const VRHoverIndicator = ({
             ref={ringRef}
           >
             <meshBasicMaterial side={DoubleSide} color={'white'} />
-            <anim.Circle
+            {/* <anim.Circle
               material-transparent={true}
               material-opacity={spring.opacity}
-            />
+            /> */}
           </Ring>
         </group>
       </animated.object3D>
