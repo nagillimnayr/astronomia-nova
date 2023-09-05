@@ -68,7 +68,7 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
     const distance = intersection.distance;
     // Set ray length and indicator position.
     line.scale.setZ(distance);
-    indicator.position.set(0, 0, distance - 0.02);
+    indicator.position.set(0, 0, distance);
 
     // Get intersection object.
     const obj = intersection.object;

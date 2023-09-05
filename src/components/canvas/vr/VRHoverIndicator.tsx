@@ -4,7 +4,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useController, useXR, useXREvent } from '@react-three/xr';
-import { Circle, Ring } from '@react-three/drei';
+import { Circle, Ring, Sphere } from '@react-three/drei';
 import { DoubleSide, Group, Intersection, Line, Mesh, Vector3 } from 'three';
 import { ORIGIN, Y_AXIS, Z_AXIS } from '@/simulation/utils/constants';
 import { useSpring, animated } from '@react-spring/three';
@@ -80,36 +80,30 @@ export const VRHoverIndicator = ({
 
   return (
     <>
-      <animated.object3D scale={spring.scale}>
-        <group
-          visible={isPresenting}
-          name={`hover-indicator-${handedness}`}
-          ref={indicatorRef}
-          scale={radius}
-          position-z={0.01} // Slight offset to avoid clipping.
-        >
-          {/* <axesHelper args={[radius * 2]} scale={200} /> */}
-          {/* <arrowHelper args={[Z_AXIS, ORIGIN, 10, 'cyan']} /> */}
-          <Circle
-            name={`hover-indicator-circle-${handedness}`}
-            ref={circleRef}
-            scale={0.2}
-          >
-            <meshBasicMaterial side={DoubleSide} color={'white'} />
-          </Circle>
-          <Ring
+      <group
+        visible={isPresenting}
+        name={`hover-indicator-${handedness}`}
+        ref={indicatorRef}
+        scale={radius}
+      >
+        <Sphere scale={0.2} />
+        {/* <axesHelper args={[radius * 2]} scale={200} /> */}
+        <arrowHelper args={[Z_AXIS, ORIGIN, 10, 'cyan']} />
+        <group position-z={0.1}>
+          <anim.Ring
             name={`hover-indicator-ring-${handedness}`}
             args={ringArgs}
             ref={ringRef}
+            scale={spring.scale}
           >
             <meshBasicMaterial side={DoubleSide} color={'white'} />
             {/* <anim.Circle
               material-transparent={true}
               material-opacity={spring.opacity}
             /> */}
-          </Ring>
+          </anim.Ring>
         </group>
-      </animated.object3D>
+      </group>
     </>
   );
 };
