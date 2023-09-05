@@ -34,6 +34,7 @@ export const VRControls = () => {
     if (!xr.enabled || !xr.isPresenting) return;
     const session = xr.getSession();
     if (!session) return;
+    const onSurface = cameraActor.getSnapshot()!.matches('surface');
 
     const { leftGamepad, rightGamepad } = getGamepads(session);
     // console.log('left gamepad:', leftGamepad);
@@ -44,6 +45,7 @@ export const VRControls = () => {
       const [buttonX, buttonY] = getXRButtons(leftGamepad);
       if (buttonX && buttonX.pressed) {
         console.log('button X');
+        if (!onSurface) return;
         rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
       }
 
@@ -63,6 +65,7 @@ export const VRControls = () => {
       const [buttonA, buttonB] = getXRButtons(rightGamepad);
       if (buttonA && buttonA.pressed) {
         console.log('button A');
+        if (!onSurface) return;
         rootActor.send({ type: 'ADVANCE_DAY' });
       }
 
@@ -71,7 +74,7 @@ export const VRControls = () => {
       }
     }
   }, [cameraActor, getThree, rootActor]);
-  useInterval(pollXRButtons, 250); // Poll buttons every 0.25 seconds.
+  useInterval(pollXRButtons, 100); // Poll buttons every 0.25 seconds.
 
   useEventListener('keypress', (event) => {
     // console.log(event.key);
