@@ -89,7 +89,7 @@ export const VRHoverIndicator = ({
           position-z={0.01} // Slight offset to avoid clipping.
         >
           {/* <axesHelper args={[radius * 2]} scale={200} /> */}
-          <arrowHelper args={[Z_AXIS, ORIGIN, 10, 'cyan']} />
+          {/* <arrowHelper args={[Z_AXIS, ORIGIN, 10, 'cyan']} /> */}
           <Circle
             name={`hover-indicator-circle-${handedness}`}
             ref={circleRef}
