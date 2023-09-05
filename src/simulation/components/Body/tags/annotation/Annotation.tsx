@@ -55,7 +55,7 @@ const Annotation = forwardRef<Object3D, AnnotationProps>(function Annotation(
 
           <object3D scale={0.5}>
             <Center bottom>
-              <Text3D font={fontURL} letterSpacing={0.15}>
+              <Text3D visible={isVisible} font={fontURL} letterSpacing={0.15}>
                 {annotation}
               </Text3D>
             </Center>
