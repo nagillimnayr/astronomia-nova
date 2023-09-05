@@ -161,7 +161,6 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
           </Sphere>
           {name === 'Saturn' && (
             <PlanetRing
-              rotation={rotation}
               innerRadius={(meanRadius + 7e6) / DIST_MULT}
               outerRadius={(meanRadius + 80e6) / DIST_MULT}
             />
