@@ -44,22 +44,17 @@ export const VRControls = () => {
       const [buttonX, buttonY] = getXRButtons(leftGamepad);
       if (buttonX && buttonX.pressed) {
         console.log('button X');
-
-        const vrHud = cameraActor.getSnapshot()!.context.vrHud;
-
-        // Move vrHud closer.
-        if (!vrHud) return;
-        vrHud.translateZ(0.1);
+        rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
       }
 
       if (buttonY && buttonY.pressed) {
         console.log('button Y');
 
-        const vrHud = cameraActor.getSnapshot()!.context.vrHud;
+        // const vrHud = cameraActor.getSnapshot()!.context.vrHud;
 
-        // Move vrHud back.
-        if (!vrHud) return;
-        vrHud.translateZ(-0.1);
+        // // Move vrHud back.
+        // if (!vrHud) return;
+        // vrHud.translateZ(-0.1);
       }
     }
 
@@ -73,7 +68,6 @@ export const VRControls = () => {
 
       if (buttonB && buttonB.pressed) {
         console.log('button B');
-        rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
       }
     }
   }, [cameraActor, getThree, rootActor]);
