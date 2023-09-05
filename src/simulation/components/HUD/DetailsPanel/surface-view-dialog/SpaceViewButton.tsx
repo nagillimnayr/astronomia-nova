@@ -10,11 +10,17 @@ type Props = {
 };
 
 export const SpaceViewButton = ({ children, className }: Props) => {
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const { cameraActor, visibilityActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
 
   // Only show button when in surface view.
   const inSurfaceView = useSelector(cameraActor, (state) =>
     state.matches('surface')
+  );
+  const trajectories = useSelector(
+    visibilityActor,
+    ({ context }) => context.trajectories
   );
 
   // Go to space view on click
@@ -22,6 +28,7 @@ export const SpaceViewButton = ({ children, className }: Props) => {
     cameraActor.send({
       type: 'TO_SPACE',
     });
+    trajectories.send({ type: 'ENABLE' });
   }, [cameraActor]);
 
   return inSurfaceView ? (

@@ -48,7 +48,7 @@ const SurfaceViewDialog = () => {
     cameraActor.send('TO_SURFACE');
     surfaceDialogActor.send({ type: 'CLOSE' });
     trajectories.send({ type: 'DISABLE' });
-  }, [cameraActor, surfaceDialogActor]);
+  }, [cameraActor, surfaceDialogActor, trajectories]);
 
   const [state, send] = useActor(surfaceDialogActor);
 
