@@ -249,6 +249,20 @@ export class CameraController extends Object3D {
     this.addPolarRotation(polarRotation);
   }
 
+  get azimuthalAngle() {
+    return this._spherical.theta;
+  }
+  get azimuthalAngleTarget() {
+    return this._sphericalTarget.theta;
+  }
+
+  get polarAngle() {
+    return this._spherical.phi;
+  }
+  get polarAngleTarget() {
+    return this._sphericalTarget.phi;
+  }
+
   setCamera(camera: PerspectiveCamera) {
     if (camera === this._camera) {
       return;
