@@ -11,10 +11,12 @@ import {
 import { useContext, useEffect, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
+import { PI } from '@/simulation/utils/constants';
 import {
   AU,
   DIST_MULT,
   METER,
+  PI_OVER_TWO,
   SIMULATION_RADIUS,
   SOLAR_SYSTEM_RADIUS,
 } from '@/simulation/utils/constants';
@@ -79,26 +81,28 @@ export const CelestialSphere = () => {
 
   return (
     <>
-      {/** Scale x by -1 to flip uvs. */}
-      <Sphere
-        args={[SIMULATION_RADIUS, 128, 128]}
-        scale={[-1, 1, 1]}
-        rotation={[degToRad(23.44), 0, 0]}
-      >
-        {starmap && celestialGridTexture && constellationTexture ? (
-          <celestialSphereMaterial
-            key={CelestialSphereMaterial.key}
-            ref={materialRef}
-            name="celestial-sphere-material"
-            starMap={starmap}
-            gridMap={celestialGridTexture}
-            figureMap={constellationTexture}
-            gridOpacity={0}
-            figureOpacity={0}
-            side={BackSide}
-          />
-        ) : null}
-      </Sphere>
+      <object3D rotation-y={PI}>
+        {/** Scale x by -1 to flip uvs. */}
+        <Sphere
+          args={[SIMULATION_RADIUS, 128, 128]}
+          scale={[-1, 1, 1]}
+          rotation-x={degToRad(23.44)}
+        >
+          {starmap && celestialGridTexture && constellationTexture ? (
+            <celestialSphereMaterial
+              key={CelestialSphereMaterial.key}
+              ref={materialRef}
+              name="celestial-sphere-material"
+              starMap={starmap}
+              gridMap={celestialGridTexture}
+              figureMap={constellationTexture}
+              gridOpacity={0}
+              figureOpacity={0}
+              side={BackSide}
+            />
+          ) : null}
+        </Sphere>
+      </object3D>
     </>
   );
 };
