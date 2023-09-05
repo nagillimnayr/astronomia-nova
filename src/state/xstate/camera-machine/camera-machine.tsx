@@ -388,8 +388,15 @@ export const cameraMachine = createMachine(
         const { controls, observer, focusTarget } = context;
         if (!controls || !observer || !focusTarget) return;
 
+        console.log('azimuthal:', controls.azimuthalAngle);
+        console.log('azimuthalTarget:', controls.azimuthalAngle);
+        console.log('polar:', controls.polarAngle);
+        console.log('polarTarget:', controls.polarAngle);
         // Set polar angle to be horizontal relative to the surface.
-        controls.setPolarAngleTarget(PI_OVER_TWO);
+        controls.setPolarAngleTarget(0);
+        setTimeout(() => {
+          controls.setPolarAngleTarget(PI_OVER_TWO);
+        }, 1000);
       },
       updateSurfaceView: (context, event) => {
         const { controls, observer } = context;
