@@ -17,14 +17,17 @@ import {
 } from '@/simulation/utils/constants';
 
 const SurfaceViewDialog = () => {
-  const { uiActor, cameraActor, surfaceActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
+  const { uiActor, cameraActor, surfaceActor, visibilityActor } =
+    MachineContext.useSelector(({ context }) => context);
   const { surfaceDialogActor } = useSelector(uiActor, ({ context }) => context);
 
   const { latitude, longitude } = useSelector(
     surfaceActor,
     ({ context }) => context
+  );
+  const trajectories = useSelector(
+    visibilityActor,
+    ({ context }) => context.trajectories
   );
 
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -44,6 +47,7 @@ const SurfaceViewDialog = () => {
   const confirm = useCallback(() => {
     cameraActor.send('TO_SURFACE');
     surfaceDialogActor.send({ type: 'CLOSE' });
+    trajectories.send({ type: 'DISABLE' });
   }, [cameraActor, surfaceDialogActor]);
 
   const [state, send] = useActor(surfaceDialogActor);

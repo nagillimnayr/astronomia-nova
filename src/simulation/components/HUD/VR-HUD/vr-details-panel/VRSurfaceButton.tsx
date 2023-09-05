@@ -33,13 +33,16 @@ type VRSurfaceButtonProps = {
   position?: Vector3Tuple;
 };
 export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
-  const { cameraActor, selectionActor, uiActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
+  const { cameraActor, selectionActor, uiActor, visibilityActor } =
+    MachineContext.useSelector(({ context }) => context);
 
   const vrSurfaceDialogActor = useSelector(
     uiActor,
     ({ context }) => context.vrSurfaceDialogActor
+  );
+  const trajectories = useSelector(
+    visibilityActor,
+    ({ context }) => context.trajectories
   );
 
   const containerRef = useRef<Group>(null!);
@@ -109,8 +112,9 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
       cameraActor.send({
         type: 'TO_SPACE',
       });
+      trajectories.send({ type: 'ENABLE' });
     },
-    [cameraActor, setHovered]
+    [cameraActor, setHovered, trajectories]
   );
 
   const handleClick = inSpace ? handleSurfaceClick : handleSpaceClick;
