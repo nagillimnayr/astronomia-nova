@@ -6,7 +6,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useController, useXR, useXREvent } from '@react-three/xr';
 import { Circle, Ring } from '@react-three/drei';
 import { DoubleSide, Group, Intersection, Line, Mesh, Vector3 } from 'three';
-import { Y_AXIS } from '@/simulation/utils/constants';
+import { ORIGIN, Y_AXIS, Z_AXIS } from '@/simulation/utils/constants';
 import { useSpring, animated } from '@react-spring/three';
 import { anim } from '../../../simulation/components/animated-components';
 
@@ -88,7 +88,8 @@ export const VRHoverIndicator = ({
           scale={radius}
           position-z={0.01} // Slight offset to avoid clipping.
         >
-          {/* <axesHelper args={[radius * 2]} /> */}
+          {/* <axesHelper args={[radius * 2]} scale={200} /> */}
+          <arrowHelper args={[Z_AXIS, ORIGIN, 10, 'cyan']} />
           <Circle
             name={`hover-indicator-circle-${handedness}`}
             ref={circleRef}
