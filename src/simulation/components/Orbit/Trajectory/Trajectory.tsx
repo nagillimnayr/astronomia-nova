@@ -17,6 +17,7 @@ import {
   type Object3D,
   Vector3Tuple,
   Vector2,
+  ColorRepresentation,
 } from 'three';
 import { getLinearEccentricityFromAxes } from '@/simulation/math/orbital-elements/LinearEccentricity';
 import { degToRad, generateUUID } from 'three/src/math/MathUtils';
@@ -41,6 +42,7 @@ import { Line2 } from 'three-stdlib';
 import { anim } from '../../animated-components';
 import { useXR } from '@react-three/xr';
 import { useRootStore } from '@/simulation/state/zustand/root-store';
+import { colorMap } from '@/simulation/utils/color-map';
 
 const DIST_TO_CAM_THRESHOLD = 1e8 * METER;
 
@@ -93,6 +95,7 @@ export const Trajectory = ({
     cameraActor,
     ({ context }) => context.focusTarget
   );
+
   // const getThree = useThree(({ get }) => get);
   // const size = useThree(({ size }) => size);
 
@@ -178,6 +181,14 @@ export const Trajectory = ({
   //   //   distance < DIST_TO_CAM_THRESHOLD ? false : isVisible;
   // });
 
+  const trajectoryColor = useRootStore(
+    ({ trajectoryColor }) => trajectoryColor
+  );
+  let color: ColorRepresentation = 'white';
+  if (bodyRef.current && trajectoryColor) {
+    color = colorMap.get(bodyRef.current.name) ?? 'white';
+  }
+
   const thickness = useRootStore(
     ({ trajectoryThickness }) => trajectoryThickness
   );
@@ -193,7 +204,7 @@ export const Trajectory = ({
         <Line
           ref={lineRef}
           points={points}
-          color={'white'}
+          color={color}
           lineWidth={lineWidth}
           transparent
         />
