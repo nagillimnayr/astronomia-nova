@@ -128,41 +128,41 @@ export const Trajectory = ({
   }
 
   const [spring, springRef] = useSpring(() => ({
-    opacity: 1,
-    onChange: (result) => {
-      if (typeof result.value.opacity !== 'number') {
-        console.log('not number', result);
-        return;
-      }
-      const line = lineRef.current;
-      if (!line) return;
-      line.material.opacity = result.value.opacity;
-    },
+    scale: 1,
+    // onChange: (result) => {
+    //   if (typeof result.value.opacity !== 'number') {
+    //     console.log('not number', result);
+    //     return;
+    //   }
+    //   const line = lineRef.current;
+    //   if (!line) return;
+    //   line.material.opacity = result.value.opacity;
+    // },
     // Opacity for the line doesn't completely work and will leave black artifacts, so set the visibility to false once the animation has completed.
-    onRest: (result, ctrl, item) => {
-      // console.log('onRest:', result);
-      if (typeof result.value.opacity !== 'number') {
-        console.log('not number', result);
-        return;
-      }
+    // onRest: (result, ctrl, item) => {
+    //   // console.log('onRest:', result);
+    //   if (typeof result.value.scale !== 'number') {
+    //     console.log('not number', result);
+    //     return;
+    //   }
 
-      const opacity = result.value.opacity;
-      const line = lineRef.current;
-      line.visible = opacity > Number.EPSILON;
-    },
-    onStart: (result) => {
-      // console.log('onStart:', result);
-      if (typeof result.value.opacity !== 'number') {
-        console.log('not number', result);
-        return;
-      }
-      const line = lineRef.current;
-      line.visible = true;
-    },
+    //   // const opacity = result.value.opacity;
+    //   const line = lineRef.current;
+    //   // line.visible = opacity > Number.EPSILON;
+    // },
+    // onStart: (result) => {
+    //   // console.log('onStart:', result);
+    //   if (typeof result.value.opacity !== 'number') {
+    //     console.log('not number', result);
+    //     return;
+    //   }
+    //   const line = lineRef.current;
+    //   line.visible = true;
+    // },
   }));
 
   useEffect(() => {
-    springRef.start({ opacity: isVisible ? 1 : 0 });
+    springRef.start({ scale: isVisible ? 1 : 0 });
   }, [isVisible, springRef]);
 
   /** Disable visibility if too close to camera. */
@@ -198,9 +198,10 @@ export const Trajectory = ({
 
   return (
     <>
-      <object3D
-        // visible={isVisible}
+      <animated.object3D
+        visible={isVisible}
         ref={objRef}
+        // scale={spring.scale}
       >
         {/** @ts-ignore */}
         <Line
@@ -208,7 +209,7 @@ export const Trajectory = ({
           points={points}
           color={color}
           lineWidth={lineWidth}
-          transparent
+          // transparent
         />
         {/* Semi-major Axis / Periapsis */}
         {showPeriapsis && (
@@ -224,7 +225,7 @@ export const Trajectory = ({
             }}
           />
         )}
-      </object3D>
+      </animated.object3D>
     </>
   );
 };

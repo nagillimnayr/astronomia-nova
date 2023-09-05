@@ -38,13 +38,12 @@ export const SphereMarker = forwardRef<Mesh, SphereMarkerProps>(
     const markersEnabled = useSelector(markers, (state) =>
       state.matches('active')
     );
-    
+
     const scale = 0.75;
     const spring = useSpring({
       opacity: markersEnabled ? 1 : 0,
-      scale: markersEnabled? scale : 0,
+      scale: markersEnabled ? scale : 0,
     });
-
 
     return (
       <>
@@ -53,8 +52,8 @@ export const SphereMarker = forwardRef<Mesh, SphereMarkerProps>(
             ref={fwdRef}
             // visible={markersEnabled}
             material-color={color}
-            material-transparent={true}
-            material-opacity={spring.opacity}
+            // material-transparent={true}
+            // material-opacity={spring.opacity}
           />
         </animated.object3D>
       </>

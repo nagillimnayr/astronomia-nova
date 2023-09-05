@@ -44,6 +44,7 @@ const Annotation = forwardRef<Object3D, AnnotationProps>(function Annotation(
             anchorY={'top'}
             outlineColor={'black'}
             outlineWidth={0.005}
+            material-transparent={false}
           >
             {annotation}
           </Text>

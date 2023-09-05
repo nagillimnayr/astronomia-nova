@@ -70,7 +70,6 @@ export const SelectionMarker = forwardRef<Mesh, SelectionMarkerProps>(
     const spring = useSpring({
       opacity: isVisible ? 1 : 0,
       scale: isVisible ? scale : 0,
-
     });
 
     const ringArgs: [number, number, number] = useMemo(() => {
@@ -88,8 +87,8 @@ export const SelectionMarker = forwardRef<Mesh, SelectionMarkerProps>(
             <animated.meshBasicMaterial
               color={'white'}
               side={FrontSide}
-              transparent={true}
-              opacity={spring.opacity}
+              // transparent={true}
+              // opacity={spring.opacity}
             />
             {children}
           </Ring>
