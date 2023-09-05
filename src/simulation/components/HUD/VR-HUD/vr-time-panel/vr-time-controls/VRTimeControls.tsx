@@ -33,7 +33,7 @@ export const VRTimeControls = ({
             <VRPanel width={3} height={1.2} />
           </object3D>
         </Interactive>
-        <group position-z={depth.xxs}>
+        <group position-z={depth.xs}>
           <group position-y={1} scale={0.8}>
             {/** Sidereal Day Reverse Button. */}
             <VRAdvanceTimeButton position={[-2.5, 0, 0]} reverse />
@@ -44,7 +44,7 @@ export const VRTimeControls = ({
             {/** Sidereal Day Advance Button. */}
             <VRAdvanceTimeButton position={[2.5, 0, 0]} />
           </group>
-          <group position-y={-0.75}>
+          <group position-y={-0.75} position-z={depth.xs}>
             <VRTimescaleSlider />
           </group>
         </group>

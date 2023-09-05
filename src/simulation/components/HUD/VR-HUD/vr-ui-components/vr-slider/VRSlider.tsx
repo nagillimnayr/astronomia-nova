@@ -389,19 +389,21 @@ export const VRSlider = ({
         {/** Conditionally render increment buttons. */}
         {incrementers && (
           <>
-            {/** Decrement button. */}
-            <VRSliderIncrementer
-              decrement
-              position={[-incrementerPos, 0, depth.xxs]}
-              height={height}
-              incrementValue={incrementValue}
-            />
-            {/** Increment button. */}
-            <VRSliderIncrementer
-              position={[incrementerPos, 0, depth.xxs]}
-              height={height}
-              incrementValue={incrementValue}
-            />
+            <group position-z={depth.xs}>
+              {/** Decrement button. */}
+              <VRSliderIncrementer
+                decrement
+                position={[-incrementerPos, 0, 0]}
+                height={height}
+                incrementValue={incrementValue}
+              />
+              {/** Increment button. */}
+              <VRSliderIncrementer
+                position={[incrementerPos, 0, 0]}
+                height={height}
+                incrementValue={incrementValue}
+              />
+            </group>
           </>
         )}
       </group>
