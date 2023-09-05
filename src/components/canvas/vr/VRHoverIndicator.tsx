@@ -38,18 +38,6 @@ export const VRHoverIndicator = ({
   const circleRef = useRef<Mesh>(null!);
   const ringRef = useRef<Mesh>(null!);
 
-  useFrame(({ camera }, _, frame) => {
-    if (!(frame instanceof XRFrame)) return;
-    const indicator = indicatorRef.current;
-    if (!indicator) return;
-
-    // Scale relative to distance from camera.
-    camera.getWorldPosition(_camWorldPos);
-    indicator.getWorldPosition(_worldPos);
-    const distance = _worldPos.distanceTo(_camWorldPos);
-    indicator.scale.setScalar(radius * distance);
-  });
-
   const [spring, springRef] = useSpring(() => ({
     scale: 1,
     opacity: 0,

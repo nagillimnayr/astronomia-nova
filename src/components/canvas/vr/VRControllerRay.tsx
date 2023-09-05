@@ -11,6 +11,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 
 const RAY_LENGTH = 1e3;
 
+const _camWorldPos = new Vector3();
 const _indicatorWorldPos = new Vector3();
 const _objWorldPos = new Vector3();
 const _worldNormal = new Vector3();
@@ -27,6 +28,7 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
 
   const lineRef = useRef<Line2>(null!);
   const indicatorRef = useRef<Object3D>(null!);
+  const objRef = useRef<Object3D>(null!);
 
   const points = useMemo(() => {
     return [new Vector3(0, 0, 0), new Vector3(0, 0, 1)];
@@ -44,11 +46,14 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
     indicatorScale: 1,
   }));
 
-  useFrame(({ gl }, _, frame) => {
+  const indicatorRadius = 0.02;
+
+  useFrame(({ camera, gl }, _, frame) => {
     if (!(frame instanceof XRFrame)) return;
     const line = lineRef.current;
     const indicator = indicatorRef.current;
-    if (!line || !indicator) return;
+    const scaleObj = objRef.current; // For modifying scale based on distance to camera.
+    if (!line || !indicator || !scaleObj) return;
 
     // Get hover state.
     const hoverState = getXR().hoverState[handedness];
@@ -107,6 +112,12 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
 
     // Look in direction of the normal.
     indicator.lookAt(_lookPos);
+
+    camera.getWorldPosition(_camWorldPos);
+
+    // Scale relative to distance from camera.
+    const distanceToCamera = _indicatorWorldPos.distanceTo(_camWorldPos);
+    scaleObj.scale.setScalar(distanceToCamera);
   });
 
   if (!controller) return;
@@ -121,7 +132,12 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
           lineWidth={2}
         />
         <animated.object3D ref={indicatorRef} scale={spring.indicatorScale}>
-          <VRHoverIndicator handedness={handedness} />
+          <object3D ref={objRef}>
+            <VRHoverIndicator
+              handedness={handedness}
+              radius={indicatorRadius}
+            />
+          </object3D>
         </animated.object3D>
       </group>
     </>,
