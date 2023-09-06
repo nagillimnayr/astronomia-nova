@@ -8,7 +8,6 @@ import {
 import { useFrame } from '@react-three/fiber';
 
 // Scaling factors for controlling strength of VR controller inputs.
-// const ZOOM_FACTOR = 1/4;
 const ZOOM_FACTOR = 1 / 8;
 const POLAR_FACTOR = 2;
 const AZIMUTH_FACTOR = 2;
@@ -20,10 +19,7 @@ const AZIMUTH_FACTOR = 2;
  * @date Sep/06/2023
  */
 export function useVRThumbstickControls() {
-  const rootActor = MachineContext.useActorRef();
-  const { vrActor, cameraActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
   useFrame((state, delta, frame) => {
     if (!(frame instanceof XRFrame)) return;
