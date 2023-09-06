@@ -35,7 +35,8 @@ export const VRThumbstickControls = () => {
 
       if (leftAxisY) {
         // Radial zoom.
-        const zoom = leftAxisY * ZOOM_FACTOR;
+        let zoom = leftAxisY * ZOOM_FACTOR;
+        zoom *= zoom > 0 ? 2 : 1;
         cameraActor.send({ type: 'ZOOM', deltaZoom: zoom });
       }
     }
