@@ -1,4 +1,3 @@
-import { floor } from 'mathjs';
 export default class FixedTimeStep {
   private _timeStep: number;
   private _stepsPerSecond: number;
@@ -24,7 +23,7 @@ export default class FixedTimeStep {
     const numOfStepsFloat = this._stepsPerSecond * deltaTime + this._remainder;
     // this value will likely be a floating point number, so
     // we must truncate it to an integer
-    const numOfStepsInt = floor(numOfStepsFloat);
+    const numOfStepsInt = Math.floor(numOfStepsFloat);
 
     // Save the truncated part to add it on during the next update
     this._remainder = numOfStepsFloat - numOfStepsInt;
@@ -58,7 +57,7 @@ export function makeFixedUpdateFn<Type>(
     // determine how many updates we need to do for this frame
     const numOfStepsFloat = stepsPerSecond * Math.abs(deltaTime) + remainder;
     // This value will likely be a floating point number, so we must truncate it to an integer.
-    const numOfStepsInt = floor(numOfStepsFloat);
+    const numOfStepsInt = Math.floor(numOfStepsFloat);
 
     // Save the truncated part to add it on during the next update.
     remainder = numOfStepsFloat - numOfStepsInt;
