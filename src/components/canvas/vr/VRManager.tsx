@@ -1,4 +1,4 @@
-import { VRControls } from './vr-controls/VRControls';
+import { VRControls, useVRControls } from './vr-controls/VRControls';
 import { VRPlayer } from './VRPlayer';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Suspense, useEffect } from 'react';
@@ -26,9 +26,11 @@ export const VRManager = () => {
     vrActor.send({ type: 'UPDATE', frame });
   });
 
+  useVRControls();
+
   return (
     <>
-      <VRControls />
+      {/* <VRControls /> */}
       <VRPlayer />
     </>
   );

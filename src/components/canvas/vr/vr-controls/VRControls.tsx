@@ -14,7 +14,8 @@ import { degToRad } from 'three/src/math/MathUtils';
 import { useSelector } from '@xstate/react';
 import { getGamepads, getXRButtons } from '@/lib/xr/pollXRInputSources';
 import { VRInputListener } from './VRInputListener';
-import { VRThumbstickControls } from './VRThumbstickControls';
+import { useVRThumbstickControls } from './VRThumbstickControls';
+import { useVRButtonControls } from './useVRButtonControls';
 
 export const VRControls = () => {
   const rootActor = MachineContext.useActorRef();
@@ -26,55 +27,57 @@ export const VRControls = () => {
   // const getXR = useXR(({ get }) => get);
   const getThree = useThree(({ get }) => get);
 
-  const pollXRButtons = useCallback(() => {
-    // cameraActor.send({ type: 'POLL_XR_BUTTONS' });
-    // console.log('poll XR Buttons');
-    const { gl } = getThree();
-    const { xr } = gl;
-    if (!xr.enabled || !xr.isPresenting) return;
-    const session = xr.getSession();
-    if (!session) return;
-    const onSurface = cameraActor.getSnapshot()!.matches('surface');
+  // const pollXRButtons = useCallback(() => {
+  //   // cameraActor.send({ type: 'POLL_XR_BUTTONS' });
+  //   // console.log('poll XR Buttons');
+  //   const { gl } = getThree();
+  //   const { xr } = gl;
+  //   if (!xr.enabled || !xr.isPresenting) return;
+  //   const session = xr.getSession();
+  //   if (!session) return;
+  //   const onSurface = cameraActor.getSnapshot()!.matches('surface');
 
-    const { leftGamepad, rightGamepad } = getGamepads(session);
-    // console.log('left gamepad:', leftGamepad);
-    // console.log('right gamepad:', rightGamepad);
+  //   const { leftGamepad, rightGamepad } = getGamepads(session);
+  //   // console.log('left gamepad:', leftGamepad);
+  //   // console.log('right gamepad:', rightGamepad);
 
-    // Poll left gamepad.
-    if (leftGamepad) {
-      const [buttonX, buttonY] = getXRButtons(leftGamepad);
-      if (buttonX && buttonX.pressed) {
-        console.log('button X');
-        if (!onSurface) return;
-        rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
-      }
+  //   // Poll left gamepad.
+  //   if (leftGamepad) {
+  //     const [buttonX, buttonY] = getXRButtons(leftGamepad);
+  //     if (buttonX && buttonX.pressed) {
+  //       console.log('button X');
+  //       if (!onSurface) return;
+  //       rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
+  //     }
 
-      if (buttonY && buttonY.pressed) {
-        console.log('button Y');
+  //     if (buttonY && buttonY.pressed) {
+  //       console.log('button Y');
 
-        // const vrHud = cameraActor.getSnapshot()!.context.vrHud;
+  //       // const vrHud = cameraActor.getSnapshot()!.context.vrHud;
 
-        // // Move vrHud back.
-        // if (!vrHud) return;
-        // vrHud.translateZ(-0.1);
-      }
-    }
+  //       // // Move vrHud back.
+  //       // if (!vrHud) return;
+  //       // vrHud.translateZ(-0.1);
+  //     }
+  //   }
 
-    // Poll right gamepad.
-    if (rightGamepad) {
-      const [buttonA, buttonB] = getXRButtons(rightGamepad);
-      if (buttonA && buttonA.pressed) {
-        console.log('button A');
-        if (!onSurface) return;
-        rootActor.send({ type: 'ADVANCE_DAY' });
-      }
+  //   // Poll right gamepad.
+  //   if (rightGamepad) {
+  //     const [buttonA, buttonB] = getXRButtons(rightGamepad);
+  //     if (buttonA && buttonA.pressed) {
+  //       console.log('button A');
+  //       if (!onSurface) return;
+  //       rootActor.send({ type: 'ADVANCE_DAY' });
+  //     }
 
-      if (buttonB && buttonB.pressed) {
-        console.log('button B');
-      }
-    }
-  }, [cameraActor, getThree, rootActor]);
-  useInterval(pollXRButtons, 100); // Poll buttons every 0.25 seconds.
+  //     if (buttonB && buttonB.pressed) {
+  //       console.log('button B');
+  //     }
+  //   }
+  // }, [cameraActor, getThree, rootActor]);
+  // useInterval(pollXRButtons, 100); // Poll buttons every 0.25 seconds.
+  useVRButtonControls();
+  useVRThumbstickControls();
 
   useEventListener('keypress', (event) => {
     // console.log(event.key);
@@ -196,46 +199,17 @@ export const VRControls = () => {
     }
   });
 
-  const deltaNear = 0.01;
-  const deltaFar = 100;
-  // useXREvent(
-  //   'squeeze',
-  //   (event) => {
-  //     vrActor.send({ type: 'INCREASE_NEAR', value: -deltaNear });
-  //   },
-  //   { handedness: 'left' }
-  // );
-
-  // useXREvent(
-  //   'squeeze',
-  //   (event) => {
-  //     vrActor.send({ type: 'INCREASE_NEAR', value: deltaNear });
-  //   },
-  //   { handedness: 'right' }
-  // );
-
-  // useXREvent(
-  //   'select',
-  //   (event) => {
-  //     vrActor.send({ type: 'INCREASE_FAR', value: -deltaFar });
-  //   },
-  //   { handedness: 'left' }
-  // );
-
-  // useXREvent(
-  //   'select',
-  //   (event) => {
-  //     vrActor.send({ type: 'INCREASE_FAR', value: deltaFar });
-  //   },
-  //   { handedness: 'right' }
-  // );
-
   return (
     <>
       <>
-        <VRThumbstickControls />
+        {/* <VRThumbstickControls /> */}
         {/* <VRInputListener /> */}
       </>
     </>
   );
 };
+
+export function useVRControls() {
+  useVRButtonControls();
+  useVRThumbstickControls();
+}

@@ -13,7 +13,69 @@ const ZOOM_FACTOR = 1 / 8;
 const POLAR_FACTOR = 2;
 const AZIMUTH_FACTOR = 2;
 
-export const VRThumbstickControls = () => {
+/**
+ * @description Uses the 'useFrame' hook form '@react-three/fiber' to poll the VR Controller's thumbsticks for input. It passes that input to the cameraActor state machine to pass to the camera controller.
+ *
+ * @author Ryan Milligan
+ * @date Sep/06/2023
+ * @param
+ */
+// export const VRThumbstickControls = () => {
+//   const rootActor = MachineContext.useActorRef();
+//   const { vrActor, cameraActor } = MachineContext.useSelector(
+//     ({ context }) => context
+//   );
+
+//   useFrame((state, delta, frame) => {
+//     if (!(frame instanceof XRFrame)) return;
+
+//     // Get gamepads.
+//     const { leftGamepad, rightGamepad } = getGamepads(frame.session);
+
+//     // Check if in surface view mode.
+//     const onSurface = cameraActor.getSnapshot()!.matches('surface');
+
+//     // Poll left thumbstick.
+//     if (!onSurface && leftGamepad) {
+//       // Disable zoom if on surface.
+//       const [leftAxisX, leftAxisY] = getXRThumbstickAxes(leftGamepad);
+
+//       if (leftAxisY) {
+//         // Radial zoom.
+//         let zoom = leftAxisY * ZOOM_FACTOR;
+//         zoom *= zoom > 0 ? 2 : 1;
+//         cameraActor.send({ type: 'ZOOM', deltaZoom: zoom });
+//       }
+//     }
+//     // Poll right thumbstick.
+//     if (rightGamepad) {
+//       const [rightAxisX, rightAxisY] = getXRThumbstickAxes(rightGamepad);
+
+//       if (rightAxisX) {
+//         // Azimuthal rotation.
+//         let azimuthal = rightAxisX * AZIMUTH_FACTOR;
+//         // Reverse direction of rotation if on surface.
+//         onSurface && (azimuthal *= -1);
+//         cameraActor.send({ type: 'ROTATE_AZIMUTHAL', deltaAngle: azimuthal });
+//       }
+
+//       // If on surface, disable polar rotation.
+//       if (!onSurface && rightAxisY) {
+//         // Polar rotation.
+//         const polar = rightAxisY * POLAR_FACTOR;
+//         cameraActor.send({ type: 'ROTATE_POLAR', deltaAngle: polar });
+//       }
+//     }
+//   });
+
+//   return (
+//     <>
+//       <></>
+//     </>
+//   );
+// };
+
+export function useVRThumbstickControls() {
   const rootActor = MachineContext.useActorRef();
   const { vrActor, cameraActor } = MachineContext.useSelector(
     ({ context }) => context
@@ -60,10 +122,4 @@ export const VRThumbstickControls = () => {
       }
     }
   });
-
-  return (
-    <>
-      <></>
-    </>
-  );
-};
+}
