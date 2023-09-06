@@ -6,27 +6,19 @@ import { useCallback } from 'react';
 
 export function useVRButtonControls() {
   const rootActor = MachineContext.useActorRef();
-  const { vrActor, cameraActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
-  // const session = useXR(({ session }) => session);
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
-  // const getXR = useXR(({ get }) => get);
   const getThree = useThree(({ get }) => get);
 
   const pollXRButtons = useCallback(() => {
-    // cameraActor.send({ type: 'POLL_XR_BUTTONS' });
-    // console.log('poll XR Buttons');
     const { gl } = getThree();
     const { xr } = gl;
-    if (!xr.enabled || !xr.isPresenting) return;
+    if (!xr.isPresenting) return;
     const session = xr.getSession();
     if (!session) return;
     const onSurface = cameraActor.getSnapshot()!.matches('surface');
 
     const { leftGamepad, rightGamepad } = getGamepads(session);
-    // console.log('left gamepad:', leftGamepad);
-    // console.log('right gamepad:', rightGamepad);
 
     // Poll left gamepad.
     if (leftGamepad) {
@@ -39,12 +31,6 @@ export function useVRButtonControls() {
 
       if (buttonY && buttonY.pressed) {
         console.log('button Y');
-
-        // const vrHud = cameraActor.getSnapshot()!.context.vrHud;
-
-        // // Move vrHud back.
-        // if (!vrHud) return;
-        // vrHud.translateZ(-0.1);
       }
     }
 
@@ -62,5 +48,5 @@ export function useVRButtonControls() {
       }
     }
   }, [cameraActor, getThree, rootActor]);
-  useInterval(pollXRButtons, 100); // Poll buttons every 0.25 seconds.
+  useInterval(pollXRButtons, 100); // Poll buttons on interval.
 }
