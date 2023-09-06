@@ -1,60 +1,25 @@
-export default class FixedTimeStep {
-  private _timeStep: number;
-  private _stepsPerSecond: number;
-  private _remainder: number;
-  private _updateFn: (timeStep: number) => void; // update function
-
-  constructor(stepsPerSecond: number, updateFn: (timeStep: number) => void) {
-    this._stepsPerSecond = stepsPerSecond;
-    this._timeStep = 1 / stepsPerSecond;
-    this._remainder = 0;
-    this._updateFn = updateFn;
-  }
-
-  public get timeStep(): number {
-    return this._timeStep;
-  }
-  public get stepsPerSecond(): number {
-    return this.stepsPerSecond;
-  }
-
-  update(deltaTime: number) {
-    // determine how many updates we need to do for this frame
-    const numOfStepsFloat = this._stepsPerSecond * deltaTime + this._remainder;
-    // this value will likely be a floating point number, so
-    // we must truncate it to an integer
-    const numOfStepsInt = Math.floor(numOfStepsFloat);
-
-    // Save the truncated part to add it on during the next update
-    this._remainder = numOfStepsFloat - numOfStepsInt;
-
-    // Call the update function the requisite number of times
-    for (let i = 0; i < numOfStepsInt; i++) {
-      this._updateFn(this._timeStep);
-    }
-  }
-}
+type UpdateFunction<Type> = (obj: Type, timeStep: number) => void;
 
 /**
  * @description Function factory to create update functions which implement
  * a fixed time-step.
  *
  * @author Ryan Milligan
- * @date 01/06/2023
+ * @date Sep/06/2023
  * @export
- * @param {number} stepsPerSecond
- * @param {(timeStep: number) => void} updateFn
- * @returns {*}
+ * @param {UpdateFunction<Type>} updateFn - The update function which will be called for each update step.
+ * @param {number} stepsPerSecond - The number of updates to perform each second.
+ * @returns {UpdateFunction<Type>}
  */
 export function makeFixedUpdateFn<Type>(
-  updateFn: (obj: Type, timeStep: number) => void,
+  updateFn: UpdateFunction<Type>,
   stepsPerSecond: number
-) {
+): UpdateFunction<Type> {
   let remainder = 0; // Will be captured in closure.
   const timeStep = 1 / stepsPerSecond; // constant time step between updates.
 
   const update = (obj: Type, deltaTime: number) => {
-    // determine how many updates we need to do for this frame
+    // Determine how many updates we need to do for this frame.
     const numOfStepsFloat = stepsPerSecond * Math.abs(deltaTime) + remainder;
     // This value will likely be a floating point number, so we must truncate it to an integer.
     const numOfStepsInt = Math.floor(numOfStepsFloat);
@@ -70,8 +35,6 @@ export function makeFixedUpdateFn<Type>(
     }
     // If time reversed:
     else {
-      // NOTE: The remainder being added on shouldn't be an issue, as the size of the time-steps are constant in either direction.
-
       // Call the update function the requisite number of times.
       for (let i = 0; i < numOfStepsInt; i++) {
         updateFn(obj, -timeStep);
@@ -81,40 +44,3 @@ export function makeFixedUpdateFn<Type>(
 
   return update;
 }
-
-/**
- * @description Function factory to create update functions which implement
- * a fixed time-step.
- *
- * @author Ryan Milligan
- * @date 01/06/2023
- * @export
- * @param {number} stepsPerSecond
- * @param {(timeStep: number) => void} updateFn
- * @returns {*}
- */
-// export function makeFixedUpdateFn(
-//   updateFn: (timeStep: number) => void,
-//   stepsPerSecond: number
-// ) {
-//   let remainder = 0; // Will be captured in closure
-//   const timeStep = 1 / stepsPerSecond; // constant time step between updates
-
-//   const update = (deltaTime: number) => {
-//     // determine how many updates we need to do for this frame
-//     const numOfStepsFloat = stepsPerSecond * deltaTime + remainder;
-//     // this value will likely be a floating point number, so
-//     // we must truncate it to an integer
-//     const numOfStepsInt = floor(numOfStepsFloat);
-
-//     // Save the truncated part to add it on during the next update
-//     remainder = numOfStepsFloat - numOfStepsInt;
-
-//     // Call the update function the requisite number of times
-//     for (let i = 0; i < numOfStepsInt; i++) {
-//       updateFn(timeStep);
-//     }
-//   };
-
-//   return update;
-// }
