@@ -12,7 +12,6 @@ import {
   METER,
   PI_OVER_TWO,
 } from '@/simulation/utils/constants';
-import { observer } from 'mobx-react-lite';
 import { ObservationSphere } from './ObservationSphere';
 import { SkySphere } from '../sky-sphere/SkySphere';
 import { MachineContext } from '@/state/xstate/MachineProviders';
@@ -23,7 +22,7 @@ import { ObservationPointIndicator } from './ObservationPointIndicator';
 type Props = {
   children?: ReactNode;
 };
-const ObservationPoint = observer(({ children }: Props) => {
+const ObservationPoint = ({ children }: Props) => {
   const { cameraActor, surfaceActor, uiActor } = MachineContext.useSelector(
     ({ context }) => context
   );
@@ -124,6 +123,6 @@ const ObservationPoint = observer(({ children }: Props) => {
       ) : null}
     </>
   );
-});
+};
 
 export { ObservationPoint };
