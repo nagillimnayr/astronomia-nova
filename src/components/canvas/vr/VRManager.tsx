@@ -1,4 +1,4 @@
-import { VRControls, useVRControls } from './vr-controls/VRControls';
+import { useVRControls } from './vr-controls/VRControls';
 import { VRPlayer } from './VRPlayer';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Suspense, useEffect } from 'react';
@@ -30,7 +30,6 @@ export const VRManager = () => {
 
   return (
     <>
-      {/* <VRControls /> */}
       <VRPlayer />
     </>
   );

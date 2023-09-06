@@ -1,5 +1,4 @@
 import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
-import { useInputSources } from '@coconut-xr/natuerlich/react';
 import { Box, Text } from '@react-three/drei';
 import { Object3DProps, useFrame } from '@react-three/fiber';
 import {
@@ -26,7 +25,6 @@ type Props = PropsWithChildren & {
   position?: Vector3Tuple;
 };
 export const RotatingObject = ({ children, position = [0, 0, 0] }: Props) => {
-  const inputSources = useInputSources();
   const groupRef = useRef<Group>(null!);
   const objRef = useRef<Object3D>(null!);
   const textCenterRef = useRef<Object3D>(null!);
