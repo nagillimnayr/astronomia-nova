@@ -53,7 +53,7 @@ export function useVRButtonControls() {
           console.log('button B');
         }
       }
-    }, 30);
+    }, 10);
     return pollXRButtons;
   }, [cameraActor, getThree, rootActor]);
   // useInterval(pollXRButtons, 100); // Poll buttons on interval.
