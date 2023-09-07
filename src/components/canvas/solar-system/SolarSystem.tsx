@@ -38,7 +38,9 @@ export const SolarSystem = () => {
   );
 
   // Load physical data for the Sun.
-  const physicalDataQuery = trpc.loadPhysicalData.useQuery({ name: 'Sun' });
+  const physicalDataQuery = trpc.loadComputedPhysicalData.useQuery({
+    name: 'Sun',
+  });
   if (physicalDataQuery.isError) {
     console.error(physicalDataQuery.error);
     return;
@@ -56,13 +58,12 @@ export const SolarSystem = () => {
         rootRef.current = root;
         keplerTreeActor.send({ type: 'ASSIGN_ROOT', root });
       }}
-      params={{
-        name: 'Sun',
-        mass: sunParams.mass,
-        color: 0xfdee00,
-        meanRadius: sunParams.meanRadius,
-        siderealRotRate: sunParams.siderealRotRate,
-      }}
+      name={'Sun'}
+      mass={sunParams.mass}
+      color={0xfdee00}
+      meanRadius={sunParams.meanRadius}
+      siderealRotationRate={sunParams.siderealRotRate}
+      siderealRotationPeriod={sunParams.siderealRotationPeriod}
       texture={sunTexture}
     >
       <Orbit name={'Mercury'} texture={mercuryTexture}></Orbit>
