@@ -2,7 +2,6 @@ import { format } from 'date-fns';
 import { useContext, useEffect, useRef } from 'react';
 import { useSelector } from '@xstate/react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 const DateDisplay = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 

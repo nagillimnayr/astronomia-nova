@@ -1,19 +1,8 @@
 import * as RadixSlider from '@radix-ui/react-slider';
-import {
-  FormEvent,
-  FormEventHandler,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { useSnapshot } from 'valtio';
-import TimescaleTooltip from '../TimescaleTooltip';
-import { useTimeStore } from '../../../state/zustand/time-store';
+import { useCallback, useState } from 'react';
+
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 export const TimescaleSlider = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);

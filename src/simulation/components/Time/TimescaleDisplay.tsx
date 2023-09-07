@@ -1,9 +1,5 @@
-import { useSnapshot } from 'valtio';
-import { useTimeStore } from '@/simulation/state/zustand/time-store';
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 
 const TimescaleDisplay = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);

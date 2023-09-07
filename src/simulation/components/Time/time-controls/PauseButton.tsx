@@ -1,6 +1,4 @@
-import { useCallback, useContext, useState } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { timeMachine } from '../../../../state/xstate/time-machine/time-machine';
 import { useSelector } from '@xstate/react';
 import { cn } from '@/lib/cn';
 import { type ClassNameValue } from 'tailwind-merge';

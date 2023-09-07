@@ -1,16 +1,6 @@
-import { Slider } from '@/components/gui/slider/Slider';
 import { TimescaleSlider } from './TimescaleSlider';
-
 import PauseButton from './PauseButton';
-import Icon from '@mdi/react';
-import { mdiMenuLeft, mdiMenuRight } from '@mdi/js';
-import { useTimeStore } from '@/simulation/state/zustand/time-store';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useContext } from 'react';
-import { useSelector } from '@xstate/react';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
-import { DAY, HOUR, TIME_MULT } from '@/simulation/utils/constants';
-import KeplerBody from '@/simulation/classes/kepler-body';
 import { AdvanceTimeButton } from './AdvanceTimeButton';
 
 const TimeControls = () => {
