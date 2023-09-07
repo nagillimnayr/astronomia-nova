@@ -20,12 +20,12 @@ import {
 } from 'react';
 import {
   BoxHelper,
-  Vector3Tuple,
+  type Vector3Tuple,
   type ColorRepresentation,
   type Mesh,
   type Texture,
   Vector3,
-  Object3D,
+  type Object3D,
   DoubleSide,
 } from 'three';
 import type KeplerBody from '@/simulation/classes/kepler-body';
@@ -45,7 +45,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Poles } from './poles/Poles';
 import { normalizeAngle } from '../../utils/rotation-utils';
 import { PlanetRing } from './planet-ring/PlanetRing';
-import { Interactive, XRInteractionEvent } from '@react-three/xr';
+import { Interactive, type XRInteractionEvent } from '@react-three/xr';
 import useHover from '@/hooks/useHover';
 import { useSelector } from '@xstate/react';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
@@ -80,11 +80,6 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   const objRef = useRef<Object3D>(null!);
   const meshRef = useRef<Mesh>(null!);
 
-  // const [isVisible, setVisible] = useState<boolean>(true);
-
-  // const [isSelected, setSelected] = useState<boolean>(false);
-  //const [isTrailVisible, setTrailVisibility] = useState<boolean>(false);
-
   // Set forwarded ref, the return value of the callback function will be assigned to fwdRef.
   useImperativeHandle(
     fwdRef,
@@ -109,7 +104,6 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 
       // Rotate the body around its rotational axis.
       mesh.rotation.set(0, axialRotation, 0); // Rotate around local y-axis.
-      // mesh.rotateY(axialRotation); // Rotate around local y-axis.
     });
 
     return () => subscription.unsubscribe();
@@ -123,13 +117,10 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     if (!(parent instanceof KeplerOrbit)) return;
     const centralBody = parent.centralBodyRef.current;
     if (!centralBody) return;
-    // _centralWorldPos.set(0, 0, 0);
     centralBody.getWorldPosition(_centralWorldPos);
-    // body.localToWorld(_centralWorldPos);
     const obj = objRef.current;
     obj.lookAt(_centralWorldPos);
     obj.rotateY(-PI_OVER_TWO);
-    // obj.rotateZ(-PI_OVER_TWO);
   }, [bodyRef]);
 
   const radius = meanRadius * METER;
@@ -143,13 +134,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
         {/* <axesHelper args={[3 * radius]} /> */}
         <group rotation={rotation}>
           {/* <axesHelper args={[3 * radius]} /> */}
-          <Sphere
-            name={name + '-mesh'}
-            // rotation={rotation}
-            // visible={isVisible}
-            ref={meshRef}
-            args={[radius, 128, 128]}
-          >
+          <Sphere name={name + '-mesh'} ref={meshRef} args={[radius, 128, 128]}>
             <meshBasicMaterial map={texture} />
             <InteractionSphere radius={meanRadius} />
             {/* <axesHelper args={[3 * radius]} /> */}
@@ -160,8 +145,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
           </Sphere>
           {name === 'Saturn' && (
             <PlanetRing
-              innerRadius={(meanRadius + 7e6) / DIST_MULT}
-              outerRadius={(meanRadius + 80e6) / DIST_MULT}
+              innerRadius={(meanRadius + 7e6) * METER}
+              outerRadius={(meanRadius + 80e6) * METER}
             />
           )}
           <Poles length={2 * radius} />
