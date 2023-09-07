@@ -1,4 +1,4 @@
-import { assign, createMachine, log } from 'xstate';
+import { assign, createMachine } from 'xstate';
 import { type Object3D, type PerspectiveCamera, Vector3 } from 'three';
 import KeplerBody from '@/components/canvas/body/kepler-body';
 import {
@@ -283,8 +283,6 @@ export const cameraMachine = createMachine(
         const { controls, mainCamera, getThree, vrHud } = context;
         if (!controls) return;
 
-        console.log('initializing controls!', event);
-
         if (mainCamera) {
           controls.setCamera(mainCamera);
           mainCamera.fov = FOV;
@@ -317,7 +315,6 @@ export const cameraMachine = createMachine(
         setTimeout(() => {
           const xrCamera = xr.getCamera();
           if (xrCamera && xrCamera.name !== 'xr-camera') {
-            console.log('xrCamera:', xrCamera);
             xrCamera.name = 'xr-camera';
             const [xrCam1, xrCam2] = xrCamera.cameras;
             xrCam1.name = 'xrCam1';
@@ -332,24 +329,19 @@ export const cameraMachine = createMachine(
       endXRSession: (context, event) => {
         const { vrHud, controls, mainCamera, getThree } = context;
         if (vrHud) {
-          console.log('VRHUD:', vrHud);
         }
 
         const { gl } = getThree();
         const xrCamera = gl.xr.getCamera();
-        console.log('gl.xr camera:', gl.xr.getCamera());
 
         if (mainCamera) {
           // Need to reset the FOV because it gets messed up for some reason.
           mainCamera.rotation.set(0, 0, 0);
           mainCamera.fov = FOV;
-          console.log('mainCamera:', mainCamera);
         }
         if (xrCamera) {
-          console.log('xr camera:', xrCamera);
           controls?.attachToController(xrCamera);
           xrCamera.rotation.set(0, 0, 0);
-          console.log('xr camera:', xrCamera);
         }
       },
 
@@ -383,10 +375,6 @@ export const cameraMachine = createMachine(
         const { controls, observer, focusTarget } = context;
         if (!controls || !observer || !focusTarget) return;
 
-        console.log('azimuthal:', controls.azimuthalAngle);
-        console.log('azimuthalTarget:', controls.azimuthalAngle);
-        console.log('polar:', controls.polarAngle);
-        console.log('polarTarget:', controls.polarAngle);
         // Set polar angle to be horizontal relative to the surface.
         controls.setPolarAngleTarget(0);
         setTimeout(() => {
@@ -428,10 +416,9 @@ export const cameraMachine = createMachine(
         const body = context.focusTarget as KeplerBody; // Cast to KeplerBody.
         if (body && controls) {
           const radius = body.meanRadius / DIST_MULT;
-          const minDistance = SPACE_MIN_DIST_FROM_SURFACE + radius;
 
           // Set min distance relative to focus targets radius.
-          controls.minDistance = minDistance;
+          controls.minDistance = SPACE_MIN_DIST_FROM_SURFACE + radius;
           controls.camera.near = NEAR_CLIP;
         }
       },

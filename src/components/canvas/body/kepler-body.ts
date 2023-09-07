@@ -1,6 +1,6 @@
 import { type Mesh, type Vector3Tuple } from 'three';
 import { DynamicBody } from '@/classes/dynamics';
-import { DIST_MULT, EARTH_RADIUS } from '../../../constants/constants';
+import { DIST_MULT, EARTH_RADIUS } from '@/constants';
 import { type MutableRefObject } from 'react';
 
 type Params = {

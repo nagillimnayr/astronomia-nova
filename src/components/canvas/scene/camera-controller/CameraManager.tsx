@@ -1,5 +1,4 @@
 import { degToRad } from 'three/src/math/MathUtils';
-
 import { useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { extend, type Object3DNode, useThree } from '@react-three/fiber';
@@ -29,7 +28,6 @@ export const CameraManager = () => {
       <cameraController
         args={[undefined, startRadius, startAzimuth, startPolar]}
         ref={(controller) => {
-          console.log('CameraManager:', controller);
           if (!controller) return;
           if (controllerRef.current === controller) return;
           controllerRef.current = controller;
