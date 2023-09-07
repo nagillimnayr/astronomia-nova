@@ -6,10 +6,9 @@ import { Line } from '@react-three/drei';
 import { createPortal, useFrame } from '@react-three/fiber';
 import { useXR } from '@react-three/xr';
 import { useSelector } from '@xstate/react';
-import { distance } from 'mathjs';
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Vector3 } from 'three';
-import { Line2 } from 'three-stdlib';
+import { type Line2 } from 'three-stdlib';
 
 const _vel = new Vector3();
 const NUM_OF_SEGMENTS = 1024;

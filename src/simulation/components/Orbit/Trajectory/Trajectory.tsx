@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Line, Segment, Segments } from '@react-three/drei';
+import { Line } from '@react-three/drei';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import {
-  MutableRefObject,
-  useContext,
+  type MutableRefObject,
   useEffect,
   useMemo,
   useRef,
@@ -12,34 +11,21 @@ import {
 import {
   type ArrowHelper,
   EllipseCurve,
-  Euler,
   Vector3,
   type Object3D,
-  Vector3Tuple,
-  Vector2,
-  ColorRepresentation,
+  type ColorRepresentation,
 } from 'three';
-import { getLinearEccentricityFromAxes } from '@/simulation/math/orbital-elements/LinearEccentricity';
-import { degToRad, generateUUID } from 'three/src/math/MathUtils';
-
-import { useActor, useSelector } from '@xstate/react';
+import { useSelector } from '@xstate/react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
-import { cn } from '@/lib/cn';
 import { DIST_MULT, METER, X_AXIS } from '@/simulation/utils/constants';
-import { OrbitalPlane } from '../orbital-plane/OrbitalPlane';
-import KeplerBody from '@/simulation/classes/kepler-body';
+import type KeplerBody from '@/simulation/classes/kepler-body';
 import {
-  Object3DNode,
-  MaterialNode,
+  type Object3DNode,
+  type MaterialNode,
   extend,
-  useFrame,
-  useThree,
 } from '@react-three/fiber';
-import { flatten } from 'lodash';
 import { useSpring, animated } from '@react-spring/three';
-import { Line2 } from 'three-stdlib';
-import { anim } from '../../animated-components';
+import { type Line2 } from 'three-stdlib';
 import { useXR } from '@react-three/xr';
 import { useRootStore } from '@/simulation/state/zustand/root-store';
 import { colorMap } from '@/simulation/utils/color-map';
