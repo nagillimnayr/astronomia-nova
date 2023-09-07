@@ -7,7 +7,6 @@ import { useCallback, useContext, useMemo, useRef } from 'react';
 import { Object3D, SphereGeometry, Vector3 } from 'three';
 import KeplerBody from '@/simulation/classes/kepler-body';
 import { EARTH_RADIUS } from '@/simulation/utils/constants';
-import { RootStoreContext } from '@/state/mobx/root/root-store-context';
 import { DIST_MULT } from '@/simulation/utils/constants';
 import { VRProjectedTag } from './VRProjectedTag';
 

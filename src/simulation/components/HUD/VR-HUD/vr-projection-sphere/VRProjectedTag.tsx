@@ -1,34 +1,19 @@
-import KeplerBody from '@/simulation/classes/kepler-body';
-import {
-  MutableRefObject,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { Annotation } from '@/simulation/components/Body/tags/annotation/Annotation';
-import { RingMarker } from '@/simulation/components/Body/tags/marker/RingMarker';
-import { CircleMarker } from '@/simulation/components/Body/tags/marker/CircleMarker';
+import type KeplerBody from '@/simulation/classes/kepler-body';
+import { useCallback, useMemo, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
 import { colorMap } from '@/simulation/utils/color-map';
-import { ThreeEvent, useFrame, useThree } from '@react-three/fiber';
-import { AxesHelper, Group, Mesh, Object3D, Spherical, Vector3 } from 'three';
-import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
-import { clamp } from 'lodash';
+import { type ThreeEvent, useFrame, useThree } from '@react-three/fiber';
 import {
-  DIST_MULT,
-  METER,
-  ORIGIN,
-  PI_OVER_TWO,
-  Y_AXIS,
-} from '@/simulation/utils/constants';
-import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
-import { Interactive, XRInteractionEvent } from '@react-three/xr';
-import { Text, useCursor } from '@react-three/drei';
-import useHover from '@/hooks/useHover';
+  type Group,
+  type Mesh,
+  type Object3D,
+  Spherical,
+  Vector3,
+} from 'three';
+import { METER, PI_OVER_TWO } from '@/simulation/utils/constants';
+import { Interactive, type XRInteractionEvent } from '@react-three/xr';
+import { Text } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
-import { VRHudSphereAttachment } from './VRHudSphereAttachment';
 import { PI } from '../../../../utils/constants';
 
 const threshold = 0.02;
