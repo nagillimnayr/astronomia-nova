@@ -7,7 +7,6 @@ import {
   useHelper,
 } from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
-import { Select } from '@react-three/postprocessing';
 import {
   type MutableRefObject,
   forwardRef,
