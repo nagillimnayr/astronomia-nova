@@ -14,7 +14,7 @@ import { useContext, useRef } from 'react';
 import { type Texture, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import Body, { type BodyParams } from '../body/Body';
-import { Trajectory } from './trajectroy/Trajectory';
+import { Trajectory } from './trajectory/Trajectory';
 import { TrueAnomalyArrow } from './TrueAnomalyArrow';
 
 const _pos = new Vector3();

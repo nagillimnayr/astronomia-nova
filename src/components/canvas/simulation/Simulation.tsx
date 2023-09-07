@@ -1,5 +1,5 @@
 import { CelestialSphere } from '@/components/canvas/celestial-sphere/CelestialSphere';
-import { PseudoTrajectory } from '@/components/canvas/orbit/trajectroy/PseudoTrajectory';
+import { PseudoTrajectory } from '@/components/canvas/orbit/trajectory/PseudoTrajectory';
 import { ObservationPoint } from '@/components/canvas/surface-view/observation-point/ObservationPoint';
 import { VRSurfaceDialog } from '@/components/canvas/vr/vr-hud/vr-details-panel/VRSurfaceDialog';
 
