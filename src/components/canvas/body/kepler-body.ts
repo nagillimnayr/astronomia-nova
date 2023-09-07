@@ -13,15 +13,42 @@ type Params = {
   siderealRotationPeriod?: number;
 };
 
+/**
+ * @description Class representing astronomical bodies, such as stars, planets, dwarf planets.
+ * @author Ryan Milligan
+ * @date Sep/07/2023
+ * @class KeplerBody
+ * @extends {DynamicBody}
+ */
 class KeplerBody extends DynamicBody {
+  /** Array of bodies that orbit this body. */
   private _orbitingBodies: KeplerBody[];
+  /** The mean volumetric radius of the body in meters. */
   private _meanRadius: number;
+  /** The obliquity to the body's orbital plane, otherwise known as axial tilt. The angle in degrees between the body's rotational axis and the line perpendicular to its orbital plane. */
   private _obliquity: number;
+  /** The rate in radians per second that the body rotates around its rotational axis. */
   private _siderealRotationRate: number;
+  /** The time in seconds that it takes the body to make one full rotation about its rotational axis. */
   private _siderealRotationPeriod: number;
-
+  /** Reference to the mesh of the object. */
   private _meshRef: MutableRefObject<Mesh | null> = null!;
 
+  /**
+   * Creates an instance of KeplerBody.
+   * @author Ryan Milligan
+   * @date Sep/07/2023
+   * @param {Params} {
+   *     mass = 0,
+   *     initialPosition = [0, 0, 0],
+   *     initialVelocity = [0, 0, 0],
+   *     meanRadius = EARTH_RADIUS,
+   *     obliquity = 0,
+   *     siderealRotationRate = 0,
+   *     siderealRotationPeriod = 0,
+   *   }
+   * @memberof KeplerBody
+   */
   constructor({
     mass = 0,
     initialPosition = [0, 0, 0],
@@ -32,9 +59,6 @@ class KeplerBody extends DynamicBody {
     siderealRotationPeriod = 0,
   }: Params) {
     super(mass, initialPosition, initialVelocity);
-
-    this.position.divideScalar(DIST_MULT);
-    this.velocity.divideScalar(DIST_MULT);
 
     this._orbitingBodies = [];
 
@@ -84,10 +108,10 @@ class KeplerBody extends DynamicBody {
 
   addOrbitingBody(body: KeplerBody) {
     if (!this._orbitingBodies.includes(body)) {
-      console.log(`adding ${body.name} as orbiter of ${this.name}`);
+      console.log(`Adding ${body.name} as orbiter of ${this.name}.`);
       this._orbitingBodies.push(body);
     } else {
-      console.log(`${body.name} is already an orbiter of ${this.name}`);
+      console.warn(`${body.name} is already an orbiter of ${this.name}.`);
     }
   }
 
@@ -98,7 +122,7 @@ class KeplerBody extends DynamicBody {
     });
   }
 
-  // Recursively count the number of sub-nodes.
+  /**  Recursively count the number of sub-nodes. (The number of bodies which orbit this body, and all of their orbiting bodies... etc.) */
   countSubNodes() {
     let count = this._orbitingBodies.length;
     for (const body of this._orbitingBodies) {
