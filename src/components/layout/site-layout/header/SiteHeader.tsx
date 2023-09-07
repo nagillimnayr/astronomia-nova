@@ -1,11 +1,8 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-
 import { useCallback, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
-
-import NavBar from '../Navigation/nav-menu/NavBar';
 import { type ClassNameValue } from 'tailwind-merge';
 
 type Props = {
@@ -52,8 +49,6 @@ const SiteHeader = ({ className }: Props) => {
             </h2>
           </Link>
         </div>
-
-        {/* <NavBar className="mr-auto" /> */}
       </header>
     </>
   );
