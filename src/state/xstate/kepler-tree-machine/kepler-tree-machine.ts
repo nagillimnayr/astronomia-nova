@@ -1,11 +1,8 @@
 import { assign, createMachine, log } from 'xstate';
-import type KeplerBody from '@/simulation/classes/kepler-body';
-import { makeFixedUpdateFn } from '@/simulation/systems/FixedTimeStep';
-import { traverseKeplerTree } from '@/simulation/systems/keplerTree';
-import {
-  TIME_MULT,
-  UPDATES_PER_REAL_SECOND,
-} from '@/simulation/utils/constants';
+import type KeplerBody from '@/components/canvas/body/kepler-body';
+import { makeFixedUpdateFn } from '@/helpers/fixed-time-step';
+import { traverseKeplerTree } from '@/helpers/kepler-tree';
+import { TIME_MULT, UPDATES_PER_REAL_SECOND } from '@/constants/constants';
 
 type Context = {
   root: KeplerBody | null;

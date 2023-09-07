@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Color, Object3D } from 'three';
-import { Object3DNode, extend } from '@react-three/fiber';
 
 export type BlockOptions = {
   width: number;

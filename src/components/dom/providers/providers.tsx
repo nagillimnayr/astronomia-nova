@@ -2,11 +2,7 @@
 import { MDXProvider } from '@mdx-js/react';
 import { ThemeProvider } from './theme-provider';
 import { type PropsWithChildren } from 'react';
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MachineProviders } from '@/state/xstate/MachineProviders';
 
 const components = {};

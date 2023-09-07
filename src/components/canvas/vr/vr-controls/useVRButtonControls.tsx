@@ -1,9 +1,8 @@
-import { getGamepads, getXRButtons } from '@/lib/xr/pollXRInputSources';
-import { makeFixedUpdateFn } from '@/simulation/systems/FixedTimeStep';
+import { getGamepads, getXRButtons } from '@/helpers/xr/pollXRInputSources';
+import { makeFixedUpdateFn } from '@/helpers/fixed-time-step';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useInterval } from '@react-hooks-library/core';
 import { useFrame, useThree } from '@react-three/fiber';
-import { useCallback, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 export function useVRButtonControls() {
   const rootActor = MachineContext.useActorRef();

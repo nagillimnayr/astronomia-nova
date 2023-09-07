@@ -1,5 +1,5 @@
 import { EventDispatcher } from 'three';
-import { assign, createMachine, log } from 'xstate';
+import { createMachine } from 'xstate';
 
 type Context = {
   eventDispatcher: EventDispatcher;

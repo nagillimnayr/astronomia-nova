@@ -1,4 +1,4 @@
-import { type ActorRefFrom, assign, createMachine, log, spawn } from 'xstate';
+import { type ActorRefFrom, assign, createMachine, spawn } from 'xstate';
 import { type MutableRefObject } from 'react';
 import { dialogMachine } from './dialog-machine/dialog-machine';
 import { toggleMachine } from '../toggle-machine/toggle-machine';

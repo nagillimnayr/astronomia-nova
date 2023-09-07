@@ -1,16 +1,12 @@
 import {
-  PI,
-  PI_OVER_TWO,
-  RADS_TO_DEG,
-  TWO_PI,
-  MIN_LATITUDE,
   MAX_LATITUDE,
-  MIN_LONGITUDE,
   MAX_LONGITUDE,
-} from '@/simulation/utils/constants';
-import { Object3D, Spherical, Vector3 } from 'three';
+  MIN_LATITUDE,
+  MIN_LONGITUDE,
+  RADS_TO_DEG,
+} from '@/constants/constants';
+import { Spherical, Vector3 } from 'three';
 import { assign, createMachine, log } from 'xstate';
-import { radToDeg } from 'three/src/math/MathUtils';
 
 const _pos = new Vector3();
 const _spherical = new Spherical();

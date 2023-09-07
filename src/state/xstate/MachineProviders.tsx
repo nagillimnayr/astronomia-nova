@@ -1,4 +1,4 @@
-import { useRef, type PropsWithChildren, useEffect } from 'react';
+import { type PropsWithChildren } from 'react';
 import { createActorContext } from '@xstate/react';
 
 import { rootMachine } from './root-machine/root-machine';

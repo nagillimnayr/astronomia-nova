@@ -1,4 +1,4 @@
-import type KeplerBody from '@/simulation/classes/kepler-body';
+import type KeplerBody from '@/components/canvas/body/kepler-body';
 import { assign, createMachine } from 'xstate';
 
 type Context = {

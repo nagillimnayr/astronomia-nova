@@ -1,6 +1,6 @@
 'use client';
-import { cn } from '@/lib/cn';
-import { orbitron, roboto } from '@/lib/fonts';
+import { cn } from '@/helpers/cn';
+import { orbitron, roboto } from '@/helpers/fonts';
 import SiteHeader from '@/components/dom/layout/header/SiteHeader';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 

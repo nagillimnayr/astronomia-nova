@@ -1,15 +1,10 @@
 import useHover from '@/hooks/useHover';
-import { useSpring, animated } from '@react-spring/three';
+import { animated, useSpring } from '@react-spring/three';
 import { Box as Cube } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { RayGrab } from '@react-three/xr';
 import { useRef } from 'react';
-import {
-  type ColorRepresentation,
-  type Mesh,
-  Object3D,
-  type Vector3Tuple,
-} from 'three';
+import { type ColorRepresentation, type Mesh, type Vector3Tuple } from 'three';
 
 const rotRate = -0.05;
 

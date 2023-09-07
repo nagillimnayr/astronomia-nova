@@ -1,4 +1,4 @@
-import { TIME_MULT, J2000 } from '@/simulation/utils/constants';
+import { J2000, TIME_MULT } from '@/constants/constants';
 import { addSeconds } from 'date-fns';
 import { assign, createMachine, log } from 'xstate';
 

@@ -2,8 +2,6 @@ import {
   type ActorRefFrom,
   assign,
   createMachine,
-  log,
-  send,
   sendTo,
   spawn,
 } from 'xstate';

@@ -1,13 +1,6 @@
-import { FAR_CLIP, NEAR_CLIP } from '@/components/canvas/scene-constants';
 import { type RootState } from '@react-three/fiber';
-import { type XRState, type XRController } from '@react-three/xr';
-import {
-  Object3D,
-  type Group,
-  Vector3,
-  type WebXRManager,
-  Vector3Tuple,
-} from 'three';
+import { type XRState } from '@react-three/xr';
+import { Object3D, Vector3Tuple } from 'three';
 import { assign, createMachine, log } from 'xstate';
 
 const EPSILON = 1e-16;

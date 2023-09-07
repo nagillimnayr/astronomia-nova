@@ -3,7 +3,7 @@ import { withThemeByClassName } from '@storybook/addon-styling';
 import * as React from 'react';
 
 import '../src/styles/globals.css';
-import { cn } from '../src/lib/cn';
+import { cn } from '@/helpers/cn';
 import { Storybook } from './storybook';
 import Providers from '@/components/dom/providers/providers';
 

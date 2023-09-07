@@ -1,5 +1,5 @@
 import useHover from '@/hooks/useHover';
-import { useSpring, animated } from '@react-spring/three';
+import { animated, useSpring } from '@react-spring/three';
 import { type PropsWithChildren } from 'react';
 import { type Vector3Tuple } from 'three';
 

@@ -3,7 +3,7 @@ import '@/styles/globals.css';
 
 import Providers from '@/components/dom/providers/providers';
 import SiteLayout from '@/components/dom/layout/SiteLayout';
-import { trpc } from '@/lib/trpc/trpc';
+import { trpc } from '@/helpers/trpc/trpc';
 import { StrictMode } from 'react';
 
 const MyApp: AppType = ({ Component, pageProps }) => {

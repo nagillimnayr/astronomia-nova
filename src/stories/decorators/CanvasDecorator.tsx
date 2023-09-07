@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { Vector3 } from 'three';
+import { useRef } from 'react';
 import { Canvas, type Props as CanvasProps } from '@react-three/fiber';
 import { CameraControls } from '@react-three/drei';
-import { useRef } from 'react';
 import { degToRad } from 'three/src/math/MathUtils';
 
 type Props = React.PropsWithChildren<CanvasProps>;

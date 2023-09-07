@@ -1,31 +1,15 @@
-import {
-  CameraControls,
-  Cylinder,
-  Dodecahedron,
-  Grid,
-  Icosahedron,
-  PerspectiveCamera,
-  Tetrahedron,
-  useHelper,
-} from '@react-three/drei';
-import { RotatingObject } from './components/RotatingObject';
-import { useEffect, useRef } from 'react';
+import { Cylinder, useHelper } from '@react-three/drei';
+import { useRef } from 'react';
 import { type DirectionalLight, DirectionalLightHelper } from 'three';
-import { VRManager } from './VRManager';
 import { Floor } from './components/Floor';
-import { VRHud } from '@/simulation/components/HUD/VR-HUD/VRHud';
-import { CameraManager } from '@/simulation/components/camera-controller/CameraManager';
-import { PI_OVER_TWO } from '@/simulation/utils/constants';
+import { VRHud } from '@/components/canvas/vr/vr-hud/VRHud';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useFrame, useThree } from '@react-three/fiber';
 import { VRCameraManager } from './VRCameraManager';
 import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
-import { VRStats } from './VRStats';
-import { VRDebugPortal } from '@/simulation/components/HUD/VR-HUD/vr-debug/VRDebugDisplay';
-import { KeyPressControl } from '@/simulation/components/KeyPressControl';
+import { KeyPressControl } from '@/components/canvas/KeyPressControl';
 import { Controllers } from '@react-three/xr';
 import { VRGrabbable } from './components/VRGrabbable';
-import { SpringScaleObject } from './components/SpringScaleObject';
 import { randFloat } from 'three/src/math/MathUtils';
 
 const LOW_X = -15;

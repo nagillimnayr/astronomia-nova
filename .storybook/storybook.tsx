@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { cn } from '@/lib/cn';
+import { cn } from '@/helpers/cn';
 import { PropsWithChildren } from 'react';
-import * as fonts from '../src/lib/fonts';
+import * as fonts from '@/helpers/fonts';
 
 const fontVariables = [fonts.orbitron.variable, fonts.roboto.variable];
 

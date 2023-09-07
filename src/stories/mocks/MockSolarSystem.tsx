@@ -1,4 +1,4 @@
-import KeplerBody from '@/simulation/classes/kepler-body';
+import KeplerBody from '@/components/canvas/body/kepler-body';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEffect, useMemo } from 'react';
 

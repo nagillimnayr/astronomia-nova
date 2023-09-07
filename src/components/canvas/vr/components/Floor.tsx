@@ -1,13 +1,13 @@
-import { PI_OVER_TWO } from '@/simulation/utils/constants';
+import { PI_OVER_TWO } from '@/constants/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import {
   Grid,
-  Plane,
   type GridProps,
   MeshDiscardMaterial,
+  Plane,
 } from '@react-three/drei';
 import { type Object3DProps } from '@react-three/fiber';
-import { Interactive, XRInteractionEvent } from '@react-three/xr';
+import { Interactive } from '@react-three/xr';
 
 const dummyFn = () => {
   return;

@@ -3,95 +3,96 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: #09090b;
-    --foreground: #ffffff;
+    :root {
+        --background: #09090b;
+        --foreground: #ffffff;
 
-    --background-200: 17 17 17;
+        --background-200: 17 17 17;
 
-    --muted: #18181b;
-    --muted-foreground: #ffffff;
+        --muted: #18181b;
+        --muted-foreground: #ffffff;
 
-    --subtle: #2c2c30;
-    --subtle-foreground: #ffffff;
+        --subtle: #2c2c30;
+        --subtle-foreground: #ffffff;
 
-    --popover: #18181b;
-    --popover-foreground: #ffffff;
+        --popover: #18181b;
+        --popover-foreground: #ffffff;
 
-    --card: #2c2c30;
-    --card-foreground: #ffffff;
+        --card: #2c2c30;
+        --card-foreground: #ffffff;
 
-    --border: #2a2a2a;
-    --input: #282829;
+        --border: #2a2a2a;
+        --input: #282829;
 
-    --primary: #295fe0;
-    --primary-foreground: #ffffff;
-    --primary-focus: #2750ce;
+        --primary: #295fe0;
+        --primary-foreground: #ffffff;
+        --primary-focus: #2750ce;
 
-    --secondary: #afdbf5;
-    --secondary-foreground: #ffffff;
+        --secondary: #afdbf5;
+        --secondary-foreground: #ffffff;
 
-    --accent: #afdbf5;
-    --accent-foreground: #ffffff;
+        --accent: #afdbf5;
+        --accent-foreground: #ffffff;
 
-    --destructive: 237 41 57;
-    --destructive-foreground: #ffffff;
-    --destructive-border: 237 41 57;
-    --destructive-bg: 205 52 56;
-    --destructive-muted: 241 84 97;
+        --destructive: 237 41 57;
+        --destructive-foreground: #ffffff;
+        --destructive-border: 237 41 57;
+        --destructive-bg: 205 52 56;
+        --destructive-muted: 241 84 97;
 
-    --ring: #4997d0;
+        --ring: #4997d0;
 
-    /* --shadow: ; */
+        /* --shadow: ; */
 
-    --radius: 0.5rem;
-  }
+        --radius: 0.5rem;
+    }
 
-  /* .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* .dark {
+      --background: 222.2 84% 4.9%;
+      --foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+      --muted: 217.2 32.6% 17.5%;
+      --muted-foreground: 215 20.2% 65.1%;
 
-    --popover: 217.2 32.6% 17.5%;
-    --popover-foreground: 210 40% 98%;
+      --popover: 217.2 32.6% 17.5%;
+      --popover-foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+      --card: 222.2 84% 4.9%;
+      --card-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+      --border: 217.2 32.6% 17.5%;
+      --input: 217.2 32.6% 17.5%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+      --primary: 210 40% 98%;
+      --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+      --secondary: 217.2 32.6% 17.5%;
+      --secondary-foreground: 210 40% 98%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+      --accent: 217.2 32.6% 17.5%;
+      --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 0 85.7% 97.3%;
 
-    --ring: 217.2 32.6% 17.5%;
-  } */
+      --ring: 217.2 32.6% 17.5%;
+    } */
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
 }
 
 @layer utilities {
-  /* position the dropdown such that its center
-    aligns with that of its parent */
-  .dropdown-center {
-    @apply absolute left-[50%] top-full -translate-x-1/2;
-  }
+    /* position the dropdown such that its center
+      aligns with that of its parent */
+    .dropdown-center {
+        @apply absolute left-[50%] top-full -translate-x-1/2;
+    }
 }

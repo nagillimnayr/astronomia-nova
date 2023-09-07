@@ -1,4 +1,4 @@
-import { type ActorRefFrom, assign, createMachine, log, spawn } from 'xstate';
+import { type ActorRefFrom, assign, createMachine, spawn } from 'xstate';
 import { opacityMachine } from './opacity-machine';
 
 type Context = {

@@ -1,5 +1,4 @@
-import { cn } from '@/lib/cn';
-import styles from './fallback.module.css';
+import { cn } from '@/helpers/cn';
 import { ClassNameValue } from 'tailwind-merge';
 
 type FallbackProps = {

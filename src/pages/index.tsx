@@ -4,7 +4,9 @@ import Head from 'next/head';
 
 const SolarSystemScene = dynamic(
   () =>
-    import('@/components/canvas/scene/SolarSystemScene').then((mod) => mod.default),
+    import('@/components/canvas/scene/SolarSystemScene').then(
+      (mod) => mod.default
+    ),
   {
     ssr: false,
   }

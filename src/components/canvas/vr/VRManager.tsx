@@ -1,11 +1,8 @@
 import { useVRControls } from './vr-controls/useVRControls';
 import { VRPlayer } from './VRPlayer';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { VRCameraManager } from './VRCameraManager';
-import { VRHoverIndicator } from './VRHoverIndicator';
-import { Controllers, Hands } from '@react-three/xr';
 
 export const VRManager = () => {
   const { cameraActor, vrActor } = MachineContext.useSelector(

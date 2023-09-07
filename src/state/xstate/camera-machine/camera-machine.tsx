@@ -1,28 +1,17 @@
 import { assign, createMachine, log } from 'xstate';
-import {
-  type Object3D,
-  Vector3,
-  type PerspectiveCamera,
-  Scene,
-  Group,
-  ArrayCamera,
-} from 'three';
-import KeplerBody from '@/simulation/classes/kepler-body';
+import { type Object3D, type PerspectiveCamera, Vector3 } from 'three';
+import KeplerBody from '@/components/canvas/body/kepler-body';
 import {
   DIST_MULT,
-  SUN_RADIUS,
   METER,
   PI_OVER_TWO,
   SIMULATION_RADIUS,
-} from '@/simulation/utils/constants';
-import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
+  SUN_RADIUS,
+} from '@/constants/constants';
+import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
 import { type RootState } from '@react-three/fiber';
-import { type CameraController } from '@/lib/camera-controller/CameraController';
-import {
-  FAR_CLIP,
-  NEAR_CLIP,
-  SURFACE_NEAR_CLIP,
-} from '@/components/canvas/scene-constants';
+import { type CameraController } from '@/components/canvas/scene/camera-controller/CameraController';
+import { NEAR_CLIP, SURFACE_NEAR_CLIP } from '@/constants/scene-constants';
 import { type XRState } from '@react-three/xr';
 
 const _observerUp = new Vector3();

@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useCallback, useRef, useState } from 'react';
-import { cn } from '@/lib/cn';
+import { useRef } from 'react';
+import { cn } from '@/helpers/cn';
 import { type ClassNameValue } from 'tailwind-merge';
 
 type Props = {

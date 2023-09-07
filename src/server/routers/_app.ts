@@ -3,11 +3,11 @@ import { procedure, router } from '../trpc';
 import {
   loadEphemerides,
   loadPhysicalData,
-} from '@/lib/horizons/loadEphemerides';
+} from '@/helpers/horizons/loadEphemerides';
 import {
   loadComputedEphemerides,
   loadComputedPhysicalData,
-} from '@/lib/horizons/compute/loadComputed';
+} from '@/helpers/horizons/compute/loadComputed';
 
 export const appRouter = router({
   // Load ephemerides procedure. (Query)

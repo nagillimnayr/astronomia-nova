@@ -1,12 +1,10 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useEffect, useMemo, useRef } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useMemo, useRef } from 'react';
 import { useController, useXR, useXREvent } from '@react-three/xr';
-import { Circle, Ring, Sphere } from '@react-three/drei';
-import { DoubleSide, Group, Intersection, Line, Mesh, Vector3 } from 'three';
-import { ORIGIN, Y_AXIS, Z_AXIS } from '@/simulation/utils/constants';
-import { useSpring, animated } from '@react-spring/three';
-import { anim } from '../../../simulation/components/animated-components';
+import { Sphere } from '@react-three/drei';
+import { DoubleSide, Group, Mesh, Vector3 } from 'three';
+import { useSpring } from '@react-spring/three';
+import { anim } from '../animated-components';
 
 const _camWorldPos = new Vector3();
 const _worldPos = new Vector3();

@@ -1,13 +1,7 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useEffect, useMemo, useRef } from 'react';
-import { Vector3, type Object3D, Line } from 'three';
-import { useSelector } from '@xstate/react';
-import { degToRad } from 'three/src/math/MathUtils';
-import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
-import { Controllers, Hands, useController, useXR } from '@react-three/xr';
-import { useThree } from '@react-three/fiber';
-import { PI, PI_OVER_TWO } from '@/simulation/utils/constants';
-import { VRHoverIndicator } from './VRHoverIndicator';
+import { useEffect } from 'react';
+import { Vector3 } from 'three';
+import { Controllers, useXR } from '@react-three/xr';
 import { VRControllerRay } from './VRControllerRay';
 
 const _cameraWorldDirection = new Vector3();
@@ -40,7 +34,6 @@ export const VRPlayer = () => {
       <>
         <Controllers />
         {/* <Hands /> */}
-   
 
         <VRControllerRay handedness="left" />
         <VRControllerRay handedness="right" />

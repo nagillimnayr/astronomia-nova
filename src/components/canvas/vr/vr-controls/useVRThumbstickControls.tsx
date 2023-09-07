@@ -1,11 +1,6 @@
-import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
-import {
-  getGamepads,
-  getXRButtons,
-  getXRThumbstickAxes,
-} from '@/lib/xr/pollXRInputSources';
-import { useFrame } from '@react-three/fiber';
+import {MachineContext} from '@/state/xstate/MachineProviders';
+import {getGamepads, getXRThumbstickAxes,} from '@/helpers/xr/pollXRInputSources';
+import {useFrame} from '@react-three/fiber';
 
 // Scaling factors for controlling strength of VR controller inputs.
 const ZOOM_SPEED = 4;

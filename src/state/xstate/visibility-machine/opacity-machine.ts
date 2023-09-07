@@ -1,4 +1,4 @@
-import { assign, createMachine, log } from 'xstate';
+import { assign, createMachine } from 'xstate';
 
 type Context = {
   opacity: number;

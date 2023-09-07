@@ -1,5 +1,5 @@
-import KeplerBody from '@/simulation/classes/kepler-body';
-import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
+import KeplerBody from '@/components/canvas/body/kepler-body';
+import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
 import { assign, createMachine, log } from 'xstate';
 
 type Context = {

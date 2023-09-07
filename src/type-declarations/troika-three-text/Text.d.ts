@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  type BufferGeometry,
+  type Material,
   Mesh,
   type MeshBasicMaterial,
-  type Vector2,
-  type BufferGeometry,
   type NormalBufferAttributes,
-  type Material,
+  type Vector2,
 } from 'three';
 
 /**
@@ -19,6 +19,7 @@ export class Text extends Mesh<
   Material | Material[]
 > {
   constructor();
+
   /**
    * @member {string} text
    * The string of text to be rendered.
@@ -40,8 +41,10 @@ export class Text extends Mesh<
    * 'top', 'top-baseline', 'top-cap', 'top-ex', 'middle', 'bottom-baseline', or 'bottom'.
    */
   anchorY: number;
+
   set curveRadius(arg: any);
   get curveRadius(): any;
+
   /**
    * @member {string} direction
    * Sets the base direction for the text. The default value of "auto" will choose a direction based
@@ -118,8 +121,10 @@ export class Text extends Mesh<
    * manually break lines, making it behave more like `'pre-wrap'` does in CSS.
    */
   whiteSpace: string;
+
   set material(arg: any);
   get material(): any;
+
   /**
    * @member {string|number|THREE.Color} color
    * This is a shortcut for setting the `color` of the text's material. You can use this
@@ -238,8 +243,10 @@ export class Text extends Mesh<
    * top toward negative z and facing positive y.
    */
   orientation: string;
+
   set glyphGeometryDetail(arg: any);
   get glyphGeometryDetail(): any;
+
   /**
    * @member {number|null} sdfGlyphSize
    * The size of each glyph's SDF (signed distance field) used for rendering. This must be a
@@ -259,6 +266,7 @@ export class Text extends Mesh<
    */
   gpuAccelerateSDF: boolean;
   debugSDF: boolean;
+
   /**
    * Updates the text rendering according to the current text-related configuration properties.
    * This is an async process, so you can pass in a callback function to be executed when it
@@ -267,10 +275,12 @@ export class Text extends Mesh<
    */
   // eslint-disable-next-line @typescript-eslint/ban-types
   sync(callback?: Function): void;
+
   _needsSync: boolean;
   _queuedSyncs: any[];
   _isSyncing: boolean;
   _textRenderInfo: any;
+
   /**
    * Initiate a sync if needed - note it won't complete until next frame at the
    * earliest so if possible it's a good idea to call sync() manually as soon as
@@ -285,6 +295,7 @@ export class Text extends Mesh<
     material: any,
     group: any
   ): void;
+
   onAfterRender(
     renderer: any,
     scene: any,
@@ -293,6 +304,7 @@ export class Text extends Mesh<
     material: any,
     group: any
   ): void;
+
   /**
    * Shortcut to dispose the geometry specific to this instance.
    * Note: we don't also dispose the derived material here because if anything else is
@@ -301,6 +313,7 @@ export class Text extends Mesh<
    * and we'll also dispose the derived material at that time.
    */
   dispose(): void;
+
   /**
    * @property {TroikaTextRenderInfo|null} textRenderInfo
    * @readonly
@@ -309,28 +322,39 @@ export class Text extends Mesh<
    * the asynchrous `sync()` process completes.
    */
   get textRenderInfo(): any;
+
   _defaultMaterial: MeshBasicMaterial;
   _derivedMaterial: any;
   _baseMaterial: any;
+
   get customDepthMaterial(): any;
+
   get customDistanceMaterial(): any;
+
   _prepareForRender(material: any): void;
+
   _parsePercent(value: any): any;
+
   /**
    * Translate a point in local space to an x/y in the text plane.
    */
   localPositionToTextCoords(position: any, target?: Vector2): Vector2;
+
   /**
    * Translate a point in world space to an x/y in the text plane.
    */
   worldPositionToTextCoords(position: any, target?: Vector2): Vector2;
+
   /**
    * @override Custom raycasting to test against the whole text block's max rectangular bounds
    * TODO is there any reason to make this more granular, like within individual line or glyph rects?
    */
   override raycast(raycaster: any, intersects: any): void;
+
   copy(source: any): this;
+
   clone(): any;
 }
+
 type TextMesh = Text;
 export { TextMesh };

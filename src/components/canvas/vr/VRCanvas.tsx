@@ -1,6 +1,6 @@
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Suspense, type PropsWithChildren } from 'react';
+import { type PropsWithChildren, Suspense } from 'react';
 import { VRManager } from './VRManager';
 import { Hands, VRButton, XR } from '@react-three/xr';
 

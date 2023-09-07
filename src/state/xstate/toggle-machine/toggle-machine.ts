@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
-import { createMachine, log } from 'xstate';
+import {createMachine} from 'xstate';
 
 type Context = {};
 

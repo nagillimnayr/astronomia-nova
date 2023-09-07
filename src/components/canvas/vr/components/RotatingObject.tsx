@@ -1,21 +1,7 @@
-import { getLocalUpInWorldCoords } from '@/simulation/utils/vector-utils';
-import { Box, Text } from '@react-three/drei';
-import { Object3DProps, useFrame } from '@react-three/fiber';
-import {
-  Interactive,
-  RayGrab,
-  XRInteractionEvent,
-  XRInteractionHandler,
-} from '@react-three/xr';
-import { PropsWithChildren, useCallback, useRef, useState } from 'react';
-import {
-  ColorRepresentation,
-  Group,
-  Mesh,
-  Object3D,
-  Vector3,
-  Vector3Tuple,
-} from 'three';
+import { useFrame } from '@react-three/fiber';
+import { RayGrab } from '@react-three/xr';
+import { PropsWithChildren, useRef, useState } from 'react';
+import { Group, Object3D, Vector3, Vector3Tuple } from 'three';
 
 const rotRate = 0.2;
 

@@ -10,8 +10,8 @@ import { surfaceMachine } from '../surface-machine/surface-machine';
 import { uiMachine } from '../ui-machine/ui-machine';
 import { vrMachine } from '../vr-machine/vr-machine';
 import { sendTo } from 'xstate/lib/actions';
-import { TIME_MULT } from '@/simulation/utils/constants';
-import KeplerBody from '@/simulation/classes/kepler-body';
+import { TIME_MULT } from '@/constants/constants';
+import KeplerBody from '@/components/canvas/body/kepler-body';
 
 type Context = {
   timeActor: ActorRefFrom<typeof timeMachine>;

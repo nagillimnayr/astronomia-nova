@@ -1,19 +1,9 @@
-import { CameraController } from '@/lib/camera-controller/CameraController';
+import { CameraController } from '@/components/canvas/scene/camera-controller/CameraController';
 
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { type Object3DNode, extend, useThree } from '@react-three/fiber';
+import { extend, type Object3DNode, useThree } from '@react-three/fiber';
 import { useRef } from 'react';
-import {
-  type Vector3Tuple,
-  PerspectiveCamera,
-  Group,
-  Vector3,
-  Scene,
-} from 'three';
-import { PerspectiveCamera as PerspectiveCam } from '@react-three/drei';
-
-import { useSelector } from '@xstate/react';
-import { VRStats } from './VRStats';
+import { PerspectiveCamera, Vector3, type Vector3Tuple } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 
 const _camWorldPos = new Vector3();

@@ -1,12 +1,12 @@
-import { PI, PI_OVER_TWO } from '@/simulation/utils/constants';
+import { PI } from '@/constants/constants';
 import { Line } from '@react-three/drei';
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { useController, useXR } from '@react-three/xr';
-import { useCallback, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Euler, Intersection, Object3D, Vector3 } from 'three';
 import { Line2 } from 'three-stdlib';
 import { VRHoverIndicator } from './VRHoverIndicator';
-import { useSpring, animated } from '@react-spring/three';
+import { animated, useSpring } from '@react-spring/three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 
 const RAY_LENGTH = 1e3;

@@ -1,11 +1,7 @@
 import * as React from 'react';
-import { Canvas, Props as CanvasProps, useFrame } from '@react-three/fiber';
+import { Props as CanvasProps, useFrame } from '@react-three/fiber';
 import { VRCanvas } from '@/components/canvas/vr/VRCanvas';
 import { Floor } from '@/components/canvas/vr/components/Floor';
-import { colors } from '../../simulation/components/HUD/VR-HUD/vr-hud-constants';
-import { CameraControls, PerspectiveCamera } from '@react-three/drei';
-import { VRCameraManager } from '@/components/canvas/vr/VRCameraManager';
-import { VRManager } from '@/components/canvas/vr/VRManager';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 
 type Props = React.PropsWithChildren<CanvasProps>;

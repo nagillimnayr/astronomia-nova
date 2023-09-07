@@ -1,6 +1,6 @@
 import React from 'react';
 import * as RadixSlider from '@radix-ui/react-slider';
-import { cn } from '@/lib/cn';
+import { cn } from '@/helpers/cn';
 import { SliderTooltip } from './SliderTooltip';
 
 type Props = RadixSlider.SliderProps & {
