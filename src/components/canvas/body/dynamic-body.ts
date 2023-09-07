@@ -2,7 +2,7 @@ import PointMass from '@/interfaces/point-mass';
 import { Object3D, Vector3, Vector3Tuple } from 'three';
 
 /**
- * @description Base class for an object with velocity and acceleration.
+ * @description Base class for an object with mass, velocity, and acceleration.
  *
  * @author Ryan Milligan
  * @date Sep/07/2023
