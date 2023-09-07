@@ -36,7 +36,8 @@ export const PlanetRing = ({
     const positions = ringGeometry.getAttribute('position');
     const uvs = ringGeometry.getAttribute('uv');
     const pos = new Vector3();
-    console.log('attributes:', ringGeometry.attributes);
+
+    // Recreate UVs.
     if (!(uvs instanceof BufferAttribute)) return geometry.current;
     const midRadius = innerRadius + (outerRadius - innerRadius) / 2;
     for (let i = 0; i < uvs.count; i++) {
