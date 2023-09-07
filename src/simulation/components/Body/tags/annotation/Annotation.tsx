@@ -1,16 +1,13 @@
-import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
-import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
-import { DIST_MULT, EARTH_RADIUS, METER } from '@/simulation/utils/constants';
+import { METER } from '@/simulation/utils/constants';
 import {
   MachineContext,
-  // RootMachineContext,
 } from '@/state/xstate/MachineProviders';
 import { useSpring } from '@react-spring/core';
 import { animated } from '@react-spring/three';
-import { Center, Text, Text3D } from '@react-three/drei';
-import { useActor, useSelector } from '@xstate/react';
-import { forwardRef, useContext, useEffect, useRef } from 'react';
-import { type Object3D, Vector3 } from 'three';
+import { Center, Text3D } from '@react-three/drei';
+import { useSelector } from '@xstate/react';
+import { forwardRef, useEffect } from 'react';
+import { type Object3D } from 'three';
 
 type AnnotationProps = {
   annotation: string;
@@ -20,7 +17,7 @@ const Annotation = forwardRef<Object3D, AnnotationProps>(function Annotation(
   { annotation, meanRadius }: AnnotationProps,
   fwdRef
 ) {
-  const { visibilityActor, cameraActor } = MachineContext.useSelector(
+  const { visibilityActor} = MachineContext.useSelector(
     ({ context }) => context
   );
   const annotations = useSelector(
@@ -37,8 +34,9 @@ const Annotation = forwardRef<Object3D, AnnotationProps>(function Annotation(
     scale: textScale,
   }));
 
+  // Effect will run whenever isVisible changes.
   useEffect(() => {
-    console.log('toggle vis');
+    // Animate scale to hide the object.
     springRef.start({ scale: isVisible ? textScale : 0 });
   }, [isVisible, springRef]);
 
@@ -50,21 +48,6 @@ const Annotation = forwardRef<Object3D, AnnotationProps>(function Annotation(
           ref={fwdRef}
           position={[0, -(meanRadius * METER), 0]}
         >
-          {/* <Text
-            visible={isVisible}
-            color={'white'}
-            anchorX={'center'}
-            anchorY={'top'}
-            outlineColor={'black'}
-            outlineWidth={0.005}
-            material-transparent={false}
-            fillOpacity={1}
-            outlineOpacity={1}
-            strokeOpacity={1}
-          >
-            {annotation}
-          </Text> */}
-
           <animated.object3D
             scale-x={spring.scale}
             scale-y={spring.scale}
