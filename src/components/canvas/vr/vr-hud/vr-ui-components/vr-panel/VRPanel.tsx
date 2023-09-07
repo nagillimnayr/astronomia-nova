@@ -1,22 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import {BufferGeometryNode, extend, type Object3DNode,} from '@react-three/fiber';
-import React, {forwardRef, type PropsWithChildren} from 'react';
-import {type ColorRepresentation, Mesh, type Vector3Tuple} from 'three';
-import {Panel, PanelInner, PanelOuter,} from '@/components/canvas/vr/vr-hud/vr-ui-components/classes/Panel';
-import {colors} from '../../../../../../constants/vr-hud-constants';
-import {animated, SpringValue} from '@react-spring/three';
-import {RoundedPlaneGeometry} from 'maath/geometry';
-import {EventHandlers} from '@react-three/fiber/dist/declarations/src/core/events';
-
-extend({ Panel, PanelInner, PanelOuter });
-
-declare module '@react-three/fiber' {
-  interface ThreeElements {
-    panel: Object3DNode<Panel, typeof Panel>;
-    panelInner: Object3DNode<PanelInner, typeof PanelInner>;
-    panelOuter: Object3DNode<PanelOuter, typeof PanelOuter>;
-  }
-}
+import { BufferGeometryNode, extend } from '@react-three/fiber';
+import React, { forwardRef, type PropsWithChildren } from 'react';
+import { type ColorRepresentation, Mesh, type Vector3Tuple } from 'three';
+import { colors } from '@/constants';
+import { animated, SpringValue } from '@react-spring/three';
+import { RoundedPlaneGeometry } from 'maath/geometry';
+import { EventHandlers } from '@react-three/fiber/dist/declarations/src/core/events';
 
 extend({ RoundedPlaneGeometry });
 declare module '@react-three/fiber' {

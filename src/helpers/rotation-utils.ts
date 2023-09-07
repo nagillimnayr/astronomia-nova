@@ -1,4 +1,4 @@
-import {TWO_PI} from '../constants/constants';
+import { TWO_PI } from '@/constants/constants';
 
 /**
  * @description Adjust the angle to be within the range [0, 2PI).

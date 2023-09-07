@@ -1,9 +1,7 @@
 import type KeplerBody from '@/components/canvas/body/kepler-body';
 import calculateGravitation from '../motion/gravitation';
-import {Vector3} from 'three';
-
-// The central body will always be at the zero vector of the local coordinate space of the orbiting body, so we can simply use a zero vector.
-const _origin = Object.freeze(new Vector3());
+import { Vector3 } from 'three';
+import { ORIGIN } from '@/constants/constants';
 
 const _pos0 = new Vector3();
 const _pos1 = new Vector3();
@@ -28,7 +26,7 @@ export function eulerMethod(
   _vel0.copy(body.velocity);
   _vel1.copy(body.velocity);
 
-  _acc0.set(...calculateGravitation(_pos0, _origin, centralMass));
+  _acc0.set(...calculateGravitation(_pos0, ORIGIN, centralMass));
 
   // Update velocity and position
   _vel1.addScaledVector(_acc0, deltaTime);
@@ -50,7 +48,8 @@ export function endpointMethod(
   _vel0.copy(body.velocity);
   _vel1.copy(body.velocity);
 
-  _acc0.set(...calculateGravitation(_pos0, _origin, centralMass));
+  // The central body will always be at the zero vector of the local coordinate space of the orbiting body, so we can simply use a zero vector.
+  _acc0.set(...calculateGravitation(_pos0, ORIGIN, centralMass));
 
   // Update velocity and position
   _vel1.addScaledVector(_acc0, deltaTime);
@@ -72,7 +71,8 @@ export function midpointMethod(
   _vel0.copy(body.velocity);
   _vel1.copy(body.velocity);
 
-  _acc0.set(...calculateGravitation(_pos0, _origin, centralMass));
+  // The central body will always be at the zero vector of the local coordinate space of the orbiting body, so we can simply use a zero vector.
+  _acc0.set(...calculateGravitation(_pos0, ORIGIN, centralMass));
 
   // Update velocity and position
   _vel1.addScaledVector(_acc0, deltaTime); // New velocity
@@ -97,14 +97,15 @@ export function eulerRichardsonMethod(
   _vel1.copy(body.velocity);
   _velMid.copy(body.velocity);
 
-  _acc0.set(...calculateGravitation(_pos0, _origin, centralMass));
+  // The central body will always be at the zero vector of the local coordinate space of the orbiting body, so we can simply use a zero vector.
+  _acc0.set(...calculateGravitation(_pos0, ORIGIN, centralMass));
 
   // Calculate midpoint.
   _velMid.addScaledVector(_acc0, deltaTime / 2);
   _posMid.addScaledVector(_vel0, deltaTime / 2);
 
   // Calculate acceleration at the midpoint.
-  _accMid.set(...calculateGravitation(_posMid, _origin, centralMass));
+  _accMid.set(...calculateGravitation(_posMid, ORIGIN, centralMass));
 
   _vel1.addScaledVector(_accMid, deltaTime);
   _pos1.addScaledVector(_velMid, deltaTime);
@@ -125,13 +126,14 @@ export function velocityVerletIntegration(
   _vel0.copy(body.velocity);
   _vel1.copy(body.velocity);
 
-  _acc0.set(...calculateGravitation(_pos0, _origin, centralMass));
+  // The central body will always be at the zero vector of the local coordinate space of the orbiting body, so we can simply use a zero vector.
+  _acc0.set(...calculateGravitation(_pos0, ORIGIN, centralMass));
 
   _pos1
     .addScaledVector(_vel0, deltaTime)
     .addScaledVector(_acc0, 0.5 * deltaTime ** 2);
 
-  _acc1.set(...calculateGravitation(_pos1, _origin, centralMass));
+  _acc1.set(...calculateGravitation(_pos1, ORIGIN, centralMass));
   _accAvg.addVectors(_acc0, _acc1).multiplyScalar(0.5);
 
   _vel1.addScaledVector(_accAvg, deltaTime);
