@@ -1,4 +1,4 @@
-import { useVRControls } from './vr-controls/VRControls';
+import { useVRControls } from './vr-controls/useVRControls';
 import { VRPlayer } from './VRPlayer';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Suspense, useEffect } from 'react';

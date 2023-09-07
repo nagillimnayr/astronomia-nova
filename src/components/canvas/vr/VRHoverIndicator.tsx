@@ -1,5 +1,3 @@
-import { VRControls } from './vr-controls/VRControls';
-import { VRPlayer } from './VRPlayer';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
