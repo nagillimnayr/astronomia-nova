@@ -1,6 +1,6 @@
 import KeplerBody from '@/components/canvas/body/kepler-body';
-import KeplerTreeContext from '@/context/KeplerTreeContext';
 import { DIST_MULT } from '@/constants/constants';
+import KeplerTreeContext from '@/context/KeplerTreeContext';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 
 import { useFrame } from '@react-three/fiber';

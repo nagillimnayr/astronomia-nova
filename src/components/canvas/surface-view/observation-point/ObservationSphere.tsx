@@ -25,7 +25,8 @@ export const ObservationSphere = ({ radius }: ObservationSphereProps) => {
     // const radius = 0.5e5 * METER;
     const resolution = 16;
     const geometry = new SphereGeometry(radius, resolution, resolution);
-    const nonIndexedGeometry = geometry.toNonIndexed(); // Necessary for wireframe.
+    const nonIndexedGeometry = geometry.toNonIndexed(); // Necessary for
+    // wireframe.
     geometry.dispose(); // Cleanup original indexed geometry.
     return nonIndexedGeometry;
   }, [radius]);
@@ -48,11 +49,11 @@ export const ObservationSphere = ({ radius }: ObservationSphereProps) => {
           backfaceStroke={'white'}
         />
         {/* <meshBasicMaterial
-          color={'white'}
-          alphaMap={gridTexture}
-          side={DoubleSide}
-          transparent
-        /> */}
+         color={'white'}
+         alphaMap={gridTexture}
+         side={DoubleSide}
+         transparent
+         /> */}
         {/* <axesHelper args={[1e-1]} /> */}
       </mesh>
     </>

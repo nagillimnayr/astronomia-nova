@@ -1,8 +1,8 @@
-import { useEffect, useMemo } from 'react';
-import { colors } from '../../../../../constants/vr-hud-constants';
-import { ColorRepresentation, MeshBasicMaterial, Vector3Tuple } from 'three';
-import { Circle, Plane } from '@react-three/drei';
 import { PI, PI_OVER_TWO } from '@/constants/constants';
+import { Circle, Plane } from '@react-three/drei';
+import { useEffect, useMemo } from 'react';
+import { ColorRepresentation, MeshBasicMaterial, Vector3Tuple } from 'three';
+import { colors } from '../../../../../constants/vr-hud-constants';
 
 type VRSeparatorProps = {
   // direction?: 'horizontal' | 'vertical';

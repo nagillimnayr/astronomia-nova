@@ -1,5 +1,6 @@
 /**
- * @description Retrieves the left and right XR Gamepads, or undefined if they cannot be found.
+ * @description Retrieves the left and right XR Gamepads, or undefined if they
+ *   cannot be found.
  *
  * @author Ryan Milligan
  * @date 24/08/2023
@@ -29,7 +30,8 @@ export function getGamepads(session: XRSession): {
 }
 
 /**
- * @description Polls the XR Gamepad for thumbstick input and returns an array containing the X and Y axis values, or undefined if the axes don't exist.
+ * @description Polls the XR Gamepad for thumbstick input and returns an array
+ *   containing the X and Y axis values, or undefined if the axes don't exist.
  *
  * @author Ryan Milligan
  * @date 24/08/2023
@@ -99,7 +101,8 @@ export function getAllXRButtons(gamepad: Gamepad) {
 }
 
 /**
- * @description Returns an array containing the primary GamepadButtons. Only retrieves the primary buttons (['A', 'B'] | ['X', 'Y']).
+ * @description Returns an array containing the primary GamepadButtons. Only
+ *   retrieves the primary buttons (['A', 'B'] | ['X', 'Y']).
  *
  * @author Ryan Milligan
  * @date 24/08/2023

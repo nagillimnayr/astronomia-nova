@@ -1,6 +1,29 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import {MeshDiscardMaterial, Plane,} from '@react-three/drei';
-import {forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef,} from 'react';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { useEventListener } from '@react-hooks-library/core';
+import {
+  animated,
+  type AnimationResult,
+  type SpringValue,
+  useSpring,
+} from '@react-spring/three';
+import { MeshDiscardMaterial, Plane } from '@react-three/drei';
+import { type ThreeEvent, useFrame, useThree } from '@react-three/fiber';
+import {
+  Interactive,
+  useXR,
+  useXREvent,
+  type XRController,
+  type XRInteractionEvent,
+} from '@react-three/xr';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react';
 import {
   type ColorRepresentation,
   DoubleSide,
@@ -10,22 +33,22 @@ import {
   Vector3,
   type Vector3Tuple,
 } from 'three';
-import {colors, depth, twColors,} from '../../../../../../constants/vr-hud-constants';
-import {type ThreeEvent, useFrame, useThree,} from '@react-three/fiber';
-import {Interactive, useXR, useXREvent, type XRController, type XRInteractionEvent,} from '@react-three/xr';
-import {animated, type AnimationResult, type SpringValue, useSpring,} from '@react-spring/three';
-import {clamp} from 'three/src/math/MathUtils';
-import {MachineContext} from '@/state/xstate/MachineProviders';
-import {type CameraControls} from 'three-stdlib';
-import {VRIconButton} from '../VRIconButton';
-import {useEventListener} from '@react-hooks-library/core';
+import { type CameraControls } from 'three-stdlib';
+import { clamp } from 'three/src/math/MathUtils';
+import {
+  colors,
+  depth,
+  twColors,
+} from '../../../../../../constants/vr-hud-constants';
+import { VRIconButton } from '../VRIconButton';
 
 const _rayWorldPosition = new Vector3();
 const _rayWorldDirection = new Vector3();
 
 export type VRSliderProps = {
   position?: Vector3Tuple;
-  incrementers?: boolean; // Whether or not to add incrementer buttons to the side of the slider.
+  incrementers?: boolean; // Whether or not to add incrementer buttons to the
+  // side of the slider.
   value: number;
   min: number;
   max: number;
@@ -67,7 +90,8 @@ export const VRSlider = ({
   value = clamp(value, min, max);
   const stepSize = useRef<number>(0); // Size of step increments.
   const stepLength = useRef<number>(0); // Length in scene units per step.
-  stepSize.current = step; // Store in ref so that updates to the value will be accessible in callbacks.
+  stepSize.current = step; // Store in ref so that updates to the value will be
+  // accessible in callbacks.
 
   // Compute measurements based on width of slider and range of values.
   const [startX, minX, maxX, halfWidth] = useMemo(() => {
@@ -75,13 +99,16 @@ export const VRSlider = ({
       console.error('Error: max is less than or equal to min.');
     }
     const range = max - min; // Size of the range of values from min to max.
-    stepLength.current = width / range; // Length in scene units between each value in the range.
+    stepLength.current = width / range; // Length in scene units between each
+    // value in the range.
 
     const halfWidth = width / 2;
 
-    let startX = -halfWidth; // X position of either zero, or the min value if greater than zero.
-    // If min value is zero or positive, start of slider fill range will be the left end of the slider.
-    // If min is negative, the slider fill range will start at zero.
+    let startX = -halfWidth; // X position of either zero, or the min value if
+    // greater than zero.
+    // If min value is zero or positive, start of slider fill range will be the
+    // left end of the slider. If min is negative, the slider fill range will
+    // start at zero.
     if (min < 0) {
       startX += Math.abs(min) * stepLength.current;
     }
@@ -221,7 +248,8 @@ export const VRSlider = ({
       if (event && 'stopPropagation' in event) {
         event.stopPropagation();
       } else if (event) {
-        //If triggered by XR controller, keep track of which controller started the drag.
+        //If triggered by XR controller, keep track of which controller started
+        // the drag.
         controllerRef.current = event.target;
       }
 
@@ -289,7 +317,8 @@ export const VRSlider = ({
     });
   }, [springRef, thumbDragColor]);
   const handleHoverEnd = useCallback(() => {
-    // Only reset the scale and color if the thumb is not currently being dragged.
+    // Only reset the scale and color if the thumb is not currently being
+    // dragged.
     isDragging.current ||
       springRef.start({
         thumbScale: 1,

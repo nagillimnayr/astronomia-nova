@@ -1,15 +1,14 @@
-import type { ElementCode } from './elementCodes';
-import type { VectorCode } from './vectorCodes';
-
 import type { ElementTable } from '@/helpers/horizons/types/ElementTable';
-import type { VectorTable } from '@/helpers/horizons/types/VectorTable';
-import _ from 'lodash';
 import { type Ephemeris } from '@/helpers/horizons/types/Ephemeris';
 import {
   type PhysicalData,
   type PhysicalDataTable,
 } from '@/helpers/horizons/types/PhysicalData';
+import type { VectorTable } from '@/helpers/horizons/types/VectorTable';
+import _ from 'lodash';
 import { DAY, TWO_PI } from '../../constants/constants';
+import type { ElementCode } from './elementCodes';
+import type { VectorCode } from './vectorCodes';
 
 const KM_TO_M = 1000;
 
@@ -93,22 +92,28 @@ export function parseEphemerisName(
    * '\S' = character class escape for matching non-whitespace characters
    * '\d' = character escape class for matching digits (0 - 9)
    * '.' = wildcard, matches any character except line terminators
-   * '()' = capture group, records any substring that matches the pattern inside of the parentheses
+   * '()' = capture group, records any substring that matches the pattern
+   * inside of the parentheses
    * '\(' and '\)' = character escapes for literal parentheses characters
    * '+' = quantifier for (1 - infinity) occurrences
    * '*' = quantifier for (0 - infinity) occurrences
    *
-   * the '\s*(.+)\s' pattern will capture a substring between whitespace characters
-   * We must take into consideration that some bodies have names which contain numbers and/or spaces, or ids which contain letters and/or spaces (i.e. 1999 Hirayama (1973 DR))
-   * the \((.+)\) pattern will capture a substring between parentheses
-   * '/Target body name:\s*(.+)\s*\((.+)\)/' will capture the substring in-between 'Target body name: ' and ' (' and then capture the substring between the parentheses.
+   * the '\s*(.+)\s' pattern will capture a substring between whitespace
+   * characters We must take into consideration that some bodies have names
+   * which contain numbers and/or spaces, or ids which contain letters and/or
+   * spaces (i.e. 1999 Hirayama (1973 DR)) the \((.+)\) pattern will capture a
+   * substring between parentheses
+   * '/Target body name:\s*(.+)\s*\((.+)\)/' will capture the substring
+   * in-between 'Target body name: ' and ' (' and then capture the substring
+   * between the parentheses.
    * */
   const regexStr = `${target} body name:\\s*(.+)\\s*\\((.+)\\)`;
   // const regexp = /Target body name:\s*(.+)\s*\((.+)\)/;
   const regexp = new RegExp(regexStr);
   const matches = text.match(regexp);
 
-  // the captured substrings start at index 1, so the length of the array should be 3
+  // the captured substrings start at index 1, so the length of the array
+  // should be 3
   if (!matches || matches.length < 3 || !matches[1] || !matches[2]) {
     console.error('text:', text);
     console.error('matches:', matches);
@@ -226,7 +231,9 @@ export function parseVectors(text: Readonly<string>): Ephemeris {
 
 export function parsePhysicalData(text: Readonly<string>): PhysicalData {
   // Get the substring that contains the physical data.
-  // NOTE: For the Earth, 'PHYSICAL DATA' is replaced with 'GEOPHYSICAL PROPERTIES'. For the Moon, 'GEOPHYSICAL PROPERTIES' is replaced with 'GEOPHYSICAL DATA'.
+  // NOTE: For the Earth, 'PHYSICAL DATA' is replaced with 'GEOPHYSICAL
+  // PROPERTIES'. For the Moon, 'GEOPHYSICAL PROPERTIES' is replaced with
+  // 'GEOPHYSICAL DATA'.
   const regexp =
     /(?:(?:PHYSICAL|GEOPHYSICAL)\s*(?:PROPERTIES|DATA))(?<physData>[^]*)\s*(?:Hill|Perihelion|(?:\*{5,}))/i;
   const matches = text.match(regexp);
@@ -243,13 +250,17 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
     throw new Error(errorMsg);
   }
 
-  // Unfortunately, there are significant inconsistencies with how the data is presented, depending on the body. (i.e. capitalization, the exponent of the scientific notation, etc.) So we need to match and capture this data separately.
+  // Unfortunately, there are significant inconsistencies with how the data is
+  // presented, depending on the body. (i.e. capitalization, the exponent of
+  // the scientific notation, etc.) So we need to match and capture this data
+  // separately.
   const massExponent = getMassExponent(substr);
 
   const table: PhysicalDataTable = {
     meanRadius: capturePhysicalProperty(substr, 'mean radius') * KM_TO_M, // (m)
     mass: capturePhysicalProperty(substr, 'Mass') * massExponent, // (kg)
-    // siderealRotPeriod: capturePhysicalProperty(substr, 'Sidereal rot. period'), // (hrs)
+    // siderealRotPeriod: capturePhysicalProperty(substr, 'Sidereal rot.
+    // period'), // (hrs)
     siderealRotRate: getRotationRate(substr), // (deg/s)
     gravParameter: capturePhysicalProperty(substr, 'GM') * KM_TO_M, // (m^3/s^2)
     obliquity: capturePhysicalProperty(substr, 'Obliquity'), // axial tilt (deg)
@@ -270,8 +281,12 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
 }
 
 function capturePhysicalProperty(text: string, property: string) {
-  // Skip everything after the property name until an '=', then skip any whitespace after the '=', capture everything from the first non-whitespace character until the next whitespace character or a '+'.
-  // NOTE: For whatever reason, the casing of property names is inconsistent between tables for different bodies. Adding the 'i' flag when constructing the RegExp object makes the pattern case-insensitive.
+  // Skip everything after the property name until an '=', then skip any
+  // whitespace after the '=', capture everything from the first non-whitespace
+  // character until the next whitespace character or a '+'. NOTE: For whatever
+  // reason, the casing of property names is inconsistent between tables for
+  // different bodies. Adding the 'i' flag when constructing the RegExp object
+  // makes the pattern case-insensitive.
 
   const regexStr = `${property}[^=]*=\\s*~*([^\\s]*)[\\s\\+]`;
   const regexp = new RegExp(regexStr, 'i');
@@ -294,12 +309,17 @@ function capturePhysicalProperty(text: string, property: string) {
 }
 
 function getMassExponent(text: string) {
-  // Get the exponent of the scientific notation for the mass. (e.g. The line for the mass of Saturn looks like: `Mass x10^26 (kg)      = 5.6834` and we want to capture the `26`)
-  // NOTE: For some god-forsaken reason, the mass for Jupiter is given in grams, despite Jupiter being the most massive planet.
-  // i.e.: Mass x 10^22 (g)      = 189818722 +- 8817
-  // It's like they want to make this as annoying as possible. I'm seriously considering emailing the author to complain.
+  // Get the exponent of the scientific notation for the mass. (e.g. The line
+  // for the mass of Saturn looks like: `Mass x10^26 (kg)      = 5.6834` and we
+  // want to capture the `26`) NOTE: For some god-forsaken reason, the mass for
+  // Jupiter is given in grams, despite Jupiter being the most massive planet.
+  // i.e.: Mass x 10^22 (g)      = 189818722 +- 8817 It's like they want to
+  // make this as annoying as possible. I'm seriously considering emailing the
+  // author to complain.
 
-  // NOTE: There may or may not be a comma after Mass, there may or may not be an x or a space between x and 10. There may or may not be parentheses around the unit.
+  // NOTE: There may or may not be a comma after Mass, there may or may not be
+  // an x or a space between x and 10. There may or may not be parentheses
+  // around the unit.
   const regexp =
     /Mass{1},?\s*x?\s*10\^(?<exponent>[\d]*)\s*\(?(?<unit>kg|g){1}\)?/i;
   const matches = text.match(regexp);
@@ -328,7 +348,8 @@ function getMassExponent(text: string) {
 }
 
 function getRotationRate(text: string) {
-  // NOTE: The physical data for the Sun does not include rotation rate, but it does include rotation period.
+  // NOTE: The physical data for the Sun does not include rotation rate, but it
+  // does include rotation period.
 
   // Attempt to get the rotation rate.
   const property = 'rot. rate';

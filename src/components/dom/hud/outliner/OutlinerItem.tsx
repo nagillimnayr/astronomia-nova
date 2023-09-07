@@ -1,9 +1,9 @@
 import type KeplerBody from '@/components/canvas/body/kepler-body';
-import { gsap } from 'gsap';
-import { useCallback, useEffect, useRef } from 'react';
 import { cn } from '@/helpers/cn';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useMachine, useSelector } from '@xstate/react';
+import { gsap } from 'gsap';
+import { useCallback, useEffect, useRef } from 'react';
 import { outlinerItemMachine } from './outliner-item-machine/outliner-item-machine';
 
 type OutlinerItemProps = {
@@ -15,7 +15,8 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
     ({ context }) => context
   );
 
-  // Bind to state changes so that the component will re-render whenever bodyMap is modified.
+  // Bind to state changes so that the component will re-render whenever
+  // bodyMap is modified.
   useSelector(mapActor, ({ context }) => context.bodyMap);
 
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -30,8 +31,9 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
       // Save current height value.
       const fromHeight = window.getComputedStyle(content).height;
 
-      // 'fit-content' is not an animatable property, so we must get the computed value to use in the animation.
-      // Get the computed value of height at fit-content.
+      // 'fit-content' is not an animatable property, so we must get the
+      // computed value to use in the animation. Get the computed value of
+      // height at fit-content.
       content.style.height = 'fit-content';
       const toHeight = window.getComputedStyle(content).height;
 
@@ -45,8 +47,9 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
         // ease: 'power2.out',
         ease: 'power2.inOut',
         onComplete: () => {
-          // For whatever reason, onComplete seems to get called before the animation finishes.
-          // Timeout so that it doesn't immediately snap to full height.
+          // For whatever reason, onComplete seems to get called before the
+          // animation finishes. Timeout so that it doesn't immediately snap to
+          // full height.
           setTimeout(() => {
             content.style.height = 'fit-content';
             resolve(null);
@@ -61,8 +64,9 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
       const content = contentRef.current;
       if (!content) return;
 
-      // 'fit-content' is not an animatable property, so we must get the computed value to use in the animation.
-      // Get the computed value of the elements height.
+      // 'fit-content' is not an animatable property, so we must get the
+      // computed value to use in the animation. Get the computed value of the
+      // elements height.
       const fromHeight = window.getComputedStyle(content).height;
       content.style.height = fromHeight;
 
@@ -73,8 +77,9 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
         ease: 'power2.inOut',
         // ease: 'none',
         onComplete: () => {
-          // For whatever reason, onComplete seems to get called before the animation finishes.
-          // Timeout so that it doesn't immediately snap to full height.
+          // For whatever reason, onComplete seems to get called before the
+          // animation finishes. Timeout so that it doesn't immediately snap to
+          // full height.
           setTimeout(() => {
             resolve(null);
           }, 300);
@@ -106,7 +111,9 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
   }, [body, isOpen, mapActor, send]);
 
   useEffect(() => {
-    // This should only run when mounting and when the orbiting bodies are updated, which is necessary since the outliner will likely load before the orbiting planets.
+    // This should only run when mounting and when the orbiting bodies are
+    // updated, which is necessary since the outliner will likely load before
+    // the orbiting planets.
     if (defaultOpen && body.orbitingBodies.length > 0) {
       actor.send({ type: 'OPEN' });
     }

@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import {Suspense, useCallback, useEffect, useRef,} from 'react';
-import {colors, depth, GOLDEN_RATIO, twColors,} from '../../../../../constants/vr-hud-constants';
-import {Group, Vector3, type Vector3Tuple,} from 'three';
-import {MachineContext} from '@/state/xstate/MachineProviders';
-import {type ContextFrom} from 'xstate';
-import {type visibilityMachine} from '@/state/xstate/visibility-machine/visibility-machine';
-import {useActor, useSelector} from '@xstate/react';
-import {VRSeparator} from '../vr-ui-components/VRSeparator';
+import {
+  VRSlider
+} from '@/components/canvas/vr/vr-hud/vr-ui-components/vr-slider/VRSlider';
+import { PI, PI_OVER_TWO } from '@/constants/constants';
+import useHover from '@/hooks/useHover';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import {
+  type celestialSphereMachine
+} from '@/state/xstate/visibility-machine/celestial-sphere-machine';
+import {
+  type visibilityMachine
+} from '@/state/xstate/visibility-machine/visibility-machine';
+import { animated, useSpring } from '@react-spring/three';
 import {
   Center,
   Circle,
@@ -18,16 +23,22 @@ import {
   Text,
   useCursor,
 } from '@react-three/drei';
-import {type celestialSphereMachine} from '@/state/xstate/visibility-machine/celestial-sphere-machine';
-import {useThree} from '@react-three/fiber';
-import {VRSlider} from '@/components/canvas/vr/vr-hud/vr-ui-components/vr-slider/VRSlider';
-import {VRPanel} from '../vr-ui-components/vr-panel/VRPanel';
-import {ICON_MATERIAL_BASE} from '../../../../../constants/vr-ui-materials';
-import {VRLabel} from '../vr-ui-components/VRLabel';
-import {animated, useSpring} from '@react-spring/three';
-import useHover from '@/hooks/useHover';
-import {PI, PI_OVER_TWO} from '@/constants/constants';
-import {Interactive} from '@react-three/xr';
+import { useThree } from '@react-three/fiber';
+import { Interactive } from '@react-three/xr';
+import { useActor, useSelector } from '@xstate/react';
+import { Suspense, useCallback, useEffect, useRef } from 'react';
+import { Group, Vector3, type Vector3Tuple } from 'three';
+import { type ContextFrom } from 'xstate';
+import {
+  colors,
+  depth,
+  GOLDEN_RATIO,
+  twColors,
+} from '../../../../../constants/vr-hud-constants';
+import { ICON_MATERIAL_BASE } from '../../../../../constants/vr-ui-materials';
+import { VRPanel } from '../vr-ui-components/vr-panel/VRPanel';
+import { VRLabel } from '../vr-ui-components/VRLabel';
+import { VRSeparator } from '../vr-ui-components/VRSeparator';
 
 const _camWorldPos = new Vector3();
 const _containerWorldPos = new Vector3();
@@ -298,8 +309,8 @@ const VRToggleButton = ({
           </object3D>
         </animated.group>
         {/* <Text fontSize={fontSize} anchorX="left" anchorY="middle">
-          {label}
-        </Text> */}
+         {label}
+         </Text> */}
         <object3D position-z={-depth.xs}>
           <VRLabel
             fontSize={fontSize}
@@ -352,10 +363,10 @@ const VRSettingsCheckbox = ({
       <>
         <group position={position}>
           {/* <Checkbox
-            defaultSelected={defaultSelected}
-            selected={isActive}
-            onSelectedChange={handleSelectedChange}
-          /> */}
+           defaultSelected={defaultSelected}
+           selected={isActive}
+           onSelectedChange={handleSelectedChange}
+           /> */}
           <Text fontSize={0.075}>{label}</Text>
         </group>
       </>

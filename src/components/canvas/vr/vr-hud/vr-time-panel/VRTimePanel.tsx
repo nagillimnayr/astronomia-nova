@@ -1,10 +1,10 @@
-import { useRef } from 'react';
-import { GOLDEN_RATIO } from '../../../../../constants/vr-hud-constants';
-import { VRDateDisplay } from '@/components/canvas/vr/vr-hud/vr-time-panel/vr-time-display/VRDateDisplay';
 import { VRTimeControls } from '@/components/canvas/vr/vr-hud/vr-time-panel/vr-time-controls/VRTimeControls';
-import { Group, Vector3, Vector3Tuple } from 'three';
+import { VRDateDisplay } from '@/components/canvas/vr/vr-hud/vr-time-panel/vr-time-display/VRDateDisplay';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useThree } from '@react-three/fiber';
+import { useRef } from 'react';
+import { Group, Vector3, Vector3Tuple } from 'three';
+import { GOLDEN_RATIO } from '../../../../../constants/vr-hud-constants';
 
 const _camWorldPos = new Vector3();
 const _camWorldUp = new Vector3();

@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
-import { MockEarthSelect } from '@/stories/mocks/MockEarthSelect';
 import { VRSurfaceDialog } from '@/components/canvas/vr/vr-hud/vr-details-panel/VRSurfaceDialog';
 import { VRCameraManager } from '@/components/canvas/vr/VRCameraManager';
+import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
+import { MockEarthSelect } from '@/stories/mocks/MockEarthSelect';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof VRSurfaceDialog> = {
   title: 'VR-UI/vr-details-panel/VRSurfaceDialog',

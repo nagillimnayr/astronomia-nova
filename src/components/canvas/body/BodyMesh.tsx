@@ -1,5 +1,14 @@
+import type KeplerBody from '@/components/canvas/body/kepler-body';
+import { PlanetRing } from '@/components/canvas/body/planet-ring/PlanetRing';
+import { Poles } from '@/components/canvas/body/poles/Poles';
+import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
+// import { CoordinateSphere } from '../surface-view/CoordinateSphere';
+import { METER, PI_OVER_TWO } from '@/constants/constants';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { MeshDiscardMaterial, Sphere } from '@react-three/drei';
 import { type ThreeEvent } from '@react-three/fiber';
+import { Interactive, type XRInteractionEvent } from '@react-three/xr';
+import { useSelector } from '@xstate/react';
 import {
   forwardRef,
   type MutableRefObject,
@@ -17,18 +26,9 @@ import {
   Vector3,
   type Vector3Tuple,
 } from 'three';
-import type KeplerBody from '@/components/canvas/body/kepler-body';
 
 import { degToRad } from 'three/src/math/MathUtils';
-// import { CoordinateSphere } from '../surface-view/CoordinateSphere';
-import { METER, PI_OVER_TWO } from '@/constants/constants';
-import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Poles } from '@/components/canvas/body/poles/Poles';
 import { normalizeAngle } from '../../../helpers/rotation-utils';
-import { PlanetRing } from '@/components/canvas/body/planet-ring/PlanetRing';
-import { Interactive, type XRInteractionEvent } from '@react-three/xr';
-import { useSelector } from '@xstate/react';
-import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
 
 const _centralWorldPos = new Vector3();
 
@@ -60,7 +60,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   const objRef = useRef<Object3D>(null!);
   const meshRef = useRef<Mesh>(null!);
 
-  // Set forwarded ref, the return value of the callback function will be assigned to fwdRef.
+  // Set forwarded ref, the return value of the callback function will be
+  // assigned to fwdRef.
   useImperativeHandle(
     fwdRef,
     () => {
@@ -78,7 +79,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       // Only relevant if time has changed.
       if (eventType !== 'UPDATE' && eventType !== 'ADVANCE_TIME') return;
 
-      // Rotation rate is constant, so the current rotation can be found as a simple function of time.
+      // Rotation rate is constant, so the current rotation can be found as a
+      // simple function of time.
       const timeElapsed = state.context.timeElapsed;
       const axialRotation = normalizeAngle(siderealRotRate * timeElapsed);
 
@@ -119,8 +121,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
             <InteractionSphere radius={meanRadius} />
             {/* <axesHelper args={[3 * radius]} /> */}
             {/* <Circle scale={radius * 2}>
-              <meshBasicMaterial side={DoubleSide} />
-            </Circle> */}
+             <meshBasicMaterial side={DoubleSide} />
+             </Circle> */}
             {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
           </Sphere>
           {name === 'Saturn' && (

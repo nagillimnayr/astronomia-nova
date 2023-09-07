@@ -1,8 +1,8 @@
-import { Canvas } from '@react-three/fiber';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { Canvas } from '@react-three/fiber';
+import { Hands, VRButton, XR } from '@react-three/xr';
 import { type PropsWithChildren, Suspense } from 'react';
 import { VRManager } from './VRManager';
-import { Hands, VRButton, XR } from '@react-three/xr';
 
 const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
 

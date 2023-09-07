@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
+import type { Meta, StoryObj } from '@storybook/react';
 import { colors } from '../../../../../../constants/vr-hud-constants';
 import { VRHudButton } from '../VRHudButton';
 

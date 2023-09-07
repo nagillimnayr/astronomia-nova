@@ -1,8 +1,8 @@
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { useFrame, useThree } from '@react-three/fiber';
+import { useEffect } from 'react';
 import { useVRControls } from './vr-controls/useVRControls';
 import { VRPlayer } from './VRPlayer';
-import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useEffect } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
 
 export const VRManager = () => {
   const { cameraActor, vrActor } = MachineContext.useSelector(

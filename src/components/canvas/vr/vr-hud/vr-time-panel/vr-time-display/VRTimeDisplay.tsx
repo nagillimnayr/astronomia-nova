@@ -1,6 +1,6 @@
 import { Vector3Tuple } from 'three';
-import { VRTimescaleDisplay } from './VRTimescaleDisplay';
 import { VRDateDisplay } from './VRDateDisplay';
+import { VRTimescaleDisplay } from './VRTimescaleDisplay';
 
 type VRTimeDisplayProps = {
   position?: Vector3Tuple;

@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { CanvasDecorator } from '@/stories/decorators/CanvasDecorator';
-import Body from '../Body';
 import { DIST_MULT } from '@/constants/constants';
+import { CanvasDecorator } from '@/stories/decorators/CanvasDecorator';
 import { Grid, useTexture } from '@react-three/drei';
+import type { Meta, StoryObj } from '@storybook/react';
 import { degToRad } from 'three/src/math/MathUtils';
+import Body from '../Body';
 
 const meta: Meta<typeof Body> = {
   title: 'KeplerBody/Body',

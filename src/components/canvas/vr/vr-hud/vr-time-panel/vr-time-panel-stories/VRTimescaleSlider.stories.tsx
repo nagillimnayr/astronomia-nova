@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
-import { MachineContext } from '@/state/xstate/MachineProviders';
 import { VRTimescaleSlider } from '@/components/canvas/vr/vr-hud/vr-time-panel/vr-time-controls/VRTimescaleSlider';
 import { VRCameraManager } from '@/components/canvas/vr/VRCameraManager';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof VRTimescaleSlider> = {
   title: 'VR-UI/vr-time-panel/VRTimescaleSlider',
@@ -31,7 +31,7 @@ const VRTimescaleSliderStory = () => {
   return (
     <>
       {/* <PerspectiveCamera makeDefault position={[0, 0, 15]} />
-      <CameraControls makeDefault /> */}
+       <CameraControls makeDefault /> */}
       <VRCameraManager />
       <VRTimescaleSlider position={[0, 0, 0]} />
     </>

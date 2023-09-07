@@ -1,11 +1,11 @@
+import { animated, useSpring } from '@react-spring/three';
+import { Text } from '@react-three/drei';
 import { type ThreeEvent } from '@react-three/fiber';
 import { Interactive, type XRInteractionEvent } from '@react-three/xr';
 import { useCallback, useRef } from 'react';
 import { ColorRepresentation, type Group, type Object3D } from 'three';
-import { VRPanel, type VRPanelProps } from './vr-panel/VRPanel';
-import { Text } from '@react-three/drei';
-import { animated, useSpring } from '@react-spring/three';
 import { colors, depth } from '../../../../../constants/vr-hud-constants';
+import { VRPanel, type VRPanelProps } from './vr-panel/VRPanel';
 
 const HORIZONTAL_RATIO = 2 / 1.6;
 

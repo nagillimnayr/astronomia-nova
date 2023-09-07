@@ -1,5 +1,5 @@
-import { Vector3 } from 'three';
 import { GRAV_CONST } from '@/constants/constants';
+import { Vector3 } from 'three';
 
 export function getEccentricityFromLinearEccentricity(
   semiMajorAxis: number,

@@ -1,7 +1,7 @@
 import z from 'zod';
 import { ElementTableSchema } from './ElementTable';
-import { VectorTableSchema } from './VectorTable';
 import { PhysicalDataSchema } from './PhysicalData';
+import { VectorTableSchema } from './VectorTable';
 
 export const EphemerisSchema = z.object({
   id: z.string(),

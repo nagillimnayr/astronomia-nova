@@ -1,11 +1,11 @@
 import { PI_OVER_TWO } from '@/constants/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Cylinder } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber';
+import { useXR } from '@react-three/xr';
 import { useSelector } from '@xstate/react';
 import { useMemo, useRef } from 'react';
 import { DoubleSide, Group, Mesh, Vector3 } from 'three';
-import { useXR } from '@react-three/xr';
-import { useFrame } from '@react-three/fiber';
 import { clamp } from 'three/src/math/MathUtils';
 
 const _camWorldPos = new Vector3();

@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import {Circle, MeshDiscardMaterial, Ring} from '@react-three/drei';
 import type KeplerBody from '@/components/canvas/body/kepler-body';
-import {forwardRef, type MutableRefObject, type PropsWithChildren, useMemo,} from 'react';
-import {type ColorRepresentation, FrontSide, type Mesh} from 'three';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { animated, useSpring } from '@react-spring/three';
+import { Circle, MeshDiscardMaterial, Ring } from '@react-three/drei';
 
-import {useSelector} from '@xstate/react';
-import {MachineContext} from '@/state/xstate/MachineProviders';
-import {animated, useSpring} from '@react-spring/three';
+import { useSelector } from '@xstate/react';
+import {
+  forwardRef,
+  type MutableRefObject,
+  type PropsWithChildren,
+  useMemo,
+} from 'react';
+import { type ColorRepresentation, FrontSide, type Mesh } from 'three';
 
 type MarkerProps = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;

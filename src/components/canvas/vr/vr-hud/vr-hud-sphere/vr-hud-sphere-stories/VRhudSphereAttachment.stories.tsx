@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
 import {
   VRHudSphere,
   VRHudSphereAttachment,
 } from '@/components/canvas/vr/vr-hud/vr-hud-sphere/VRHudSphereAttachment';
 import { PI_OVER_TWO, TWO_PI } from '@/constants/constants';
-import { DoubleSide } from 'three';
+import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
 import { Box, CameraControls, Edges } from '@react-three/drei';
+import type { Meta, StoryObj } from '@storybook/react';
+import { DoubleSide } from 'three';
 
 const meta: Meta<typeof VRHudSphereAttachment> = {
   title: 'VR-UI/vr-hud-sphere/VRHudSphereAttachment',

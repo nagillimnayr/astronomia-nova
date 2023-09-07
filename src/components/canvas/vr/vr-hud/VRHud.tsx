@@ -1,14 +1,14 @@
 import { VRDetailsPanel } from '@/components/canvas/vr/vr-hud/vr-details-panel/VRDetailsPanel';
-import { Group, type Vector3Tuple } from 'three';
-import { useEffect, useRef } from 'react';
+import { VRHudSphereAttachment } from '@/components/canvas/vr/vr-hud/vr-hud-sphere/VRHudSphereAttachment';
+import { VRSettingsButton } from '@/components/canvas/vr/vr-hud/vr-settings-menu/VRSettingsButton';
+import { VRSettingsMenu } from '@/components/canvas/vr/vr-hud/vr-settings-menu/VRSettingsMenu';
+import { VRTimeControls } from '@/components/canvas/vr/vr-hud/vr-time-panel/vr-time-controls/VRTimeControls';
+import { VRTimeDisplay } from '@/components/canvas/vr/vr-hud/vr-time-panel/vr-time-display/VRTimeDisplay';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { VRSettingsMenu } from '@/components/canvas/vr/vr-hud/vr-settings-menu/VRSettingsMenu';
-import { VRSettingsButton } from '@/components/canvas/vr/vr-hud/vr-settings-menu/VRSettingsButton';
-import { VRHudSphereAttachment } from '@/components/canvas/vr/vr-hud/vr-hud-sphere/VRHudSphereAttachment';
+import { useEffect, useRef } from 'react';
+import { Group, type Vector3Tuple } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
-import { VRTimeDisplay } from '@/components/canvas/vr/vr-hud/vr-time-panel/vr-time-display/VRTimeDisplay';
-import { VRTimeControls } from '@/components/canvas/vr/vr-hud/vr-time-panel/vr-time-controls/VRTimeControls';
 
 type VRHudProps = {
   position?: Vector3Tuple;

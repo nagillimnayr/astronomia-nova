@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
-import { VRPanel } from '../vr-panel/VRPanel';
+import type { Meta, StoryObj } from '@storybook/react';
 import { colors } from '../../../../../../constants/vr-hud-constants';
+import { VRPanel } from '../vr-panel/VRPanel';
 
 const meta: Meta<typeof VRPanel> = {
   title: 'VR-UI/components/VRPanel',

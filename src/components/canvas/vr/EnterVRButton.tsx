@@ -1,6 +1,6 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
 import { toggleSession } from '@react-three/xr';
+import { useSelector } from '@xstate/react';
 import { useCallback, useRef } from 'react';
 
 export const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';

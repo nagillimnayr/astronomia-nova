@@ -1,8 +1,8 @@
-import { type ActorRefFrom, assign, createMachine, spawn } from 'xstate';
 import { type MutableRefObject } from 'react';
-import { dialogMachine } from './dialog-machine/dialog-machine';
-import { toggleMachine } from '../toggle-machine/toggle-machine';
+import { type ActorRefFrom, assign, createMachine, spawn } from 'xstate';
 import { sendTo } from 'xstate/lib/actions';
+import { toggleMachine } from '../toggle-machine/toggle-machine';
+import { dialogMachine } from './dialog-machine/dialog-machine';
 
 type Context = {
   // settingsMenuActor: ActorRefFrom<typeof dialogMachine>;
@@ -79,29 +79,13 @@ export const uiMachine = createMachine(
     // Context assignment events:
     // on: {
     //   ASSIGN_SCREEN_PORTAL_REF: {
-    //     actions: ['assignScreenPortalRef', log('Assigning screen portal ref')],
-    //   },
-    //   SET_SCREEN_PORTAL: {
-    //     actions: [
-    //       (context, event) => {
-    //         context.screenPortalRef.current = event.screenPortal;
-    //       },
-    //     ],
-    //   },
-    //   ASSIGN_CAM_VIEW_PORTAL_REF: {
-    //     actions: [
-    //       'assignCamViewPortalRef',
-    //       log('Assigning cam view portal ref'),
-    //     ],
-    //   },
-    //   SET_CAM_VIEW_PORTAL: {
-    //     actions: [
-    //       (context, event) => {
-    //         context.camViewPortalRef.current = event.camViewPortal;
-    //       },
-    //     ],
-    //   },
-    // },
+    //     actions: ['assignScreenPortalRef', log('Assigning screen portal
+    // ref')], }, SET_SCREEN_PORTAL: { actions: [ (context, event) => {
+    // context.screenPortalRef.current = event.screenPortal; }, ], },
+    // ASSIGN_CAM_VIEW_PORTAL_REF: { actions: [ 'assignCamViewPortalRef',
+    // log('Assigning cam view portal ref'), ], }, SET_CAM_VIEW_PORTAL: {
+    // actions: [ (context, event) => { context.camViewPortalRef.current =
+    // event.camViewPortal; }, ], }, },
   },
   {
     actions: {

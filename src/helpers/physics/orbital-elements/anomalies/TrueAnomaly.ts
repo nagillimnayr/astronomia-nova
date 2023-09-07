@@ -1,9 +1,10 @@
-import {type Vector3} from 'three';
-import {radToDeg} from 'three/src/math/MathUtils';
+import { type Vector3 } from 'three';
+import { radToDeg } from 'three/src/math/MathUtils';
 
 /**
  * @description
- * $$ \displaystyle \nu = \arccos{\left(\frac{\vec{r}\cdot\vec{e}}{re}  \right)} $$
+ * $$ \displaystyle \nu = \arccos{\left(\frac{\vec{r}\cdot\vec{e}}{re}
+ *   \right)} $$
  *
  * @author Ryan Milligan
  * @date 25/07/2023

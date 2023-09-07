@@ -1,10 +1,10 @@
+import KeplerBody from '@/components/canvas/body/kepler-body';
+import { trpc } from '@/helpers/trpc/trpc';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { useTexture } from '@react-three/drei';
 import { useRef } from 'react';
 import Body from '../body/Body';
-import { useTexture } from '@react-three/drei';
 import { Orbit } from '../orbit/Orbit';
-import { MachineContext } from '@/state/xstate/MachineProviders';
-import { trpc } from '@/helpers/trpc/trpc';
-import KeplerBody from '@/components/canvas/body/kepler-body';
 
 export const SolarSystem = () => {
   // Load textures.

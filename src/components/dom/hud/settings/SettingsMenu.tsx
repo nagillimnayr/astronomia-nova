@@ -1,11 +1,11 @@
 import { Separator } from '@/components/dom/ui/Separator';
-import { SettingsToggleButton } from './SettingsToggleButton';
-import { OpacitySliders } from '../opacity/OpacitySliders';
+import { cn } from '@/helpers/cn';
+import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
 import { useMachine } from '@xstate/react';
 import { useCallback, useEffect, useRef } from 'react';
-import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
-import { cn } from '@/helpers/cn';
+import { OpacitySliders } from '../opacity/OpacitySliders';
 import { SettingsCheckbox } from './SettingsCheckbox';
+import { SettingsToggleButton } from './SettingsToggleButton';
 
 type Props = {
   defaultOpen?: boolean;

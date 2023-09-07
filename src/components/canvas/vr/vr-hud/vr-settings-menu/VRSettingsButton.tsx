@@ -1,12 +1,6 @@
-import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react';
-import {
-  type Group,
-  MeshBasicMaterial,
-  Vector3,
-  type Vector3Tuple,
-} from 'three';
+import useHover from '@/hooks/useHover';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
+import { animated, useSpring } from '@react-spring/three';
 import {
   Center,
   Circle,
@@ -15,10 +9,16 @@ import {
   Svg,
   useCursor,
 } from '@react-three/drei';
-import { animated, useSpring } from '@react-spring/three';
-import useHover from '@/hooks/useHover';
 import { useThree } from '@react-three/fiber';
 import { Interactive } from '@react-three/xr';
+import { useSelector } from '@xstate/react';
+import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react';
+import {
+  type Group,
+  MeshBasicMaterial,
+  Vector3,
+  type Vector3Tuple,
+} from 'three';
 
 const _camWorldPos = new Vector3();
 

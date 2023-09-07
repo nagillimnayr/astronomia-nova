@@ -1,7 +1,7 @@
 import type KeplerBody from '@/components/canvas/body/kepler-body';
-import calculateGravitation from '../motion/gravitation';
-import { Vector3 } from 'three';
 import { ORIGIN } from '@/constants/constants';
+import { Vector3 } from 'three';
+import calculateGravitation from '../motion/gravitation';
 
 const _pos0 = new Vector3();
 const _pos1 = new Vector3();
@@ -48,7 +48,8 @@ export function endpointMethod(
   _vel0.copy(body.velocity);
   _vel1.copy(body.velocity);
 
-  // The central body will always be at the zero vector of the local coordinate space of the orbiting body, so we can simply use a zero vector.
+  // The central body will always be at the zero vector of the local coordinate
+  // space of the orbiting body, so we can simply use a zero vector.
   _acc0.set(...calculateGravitation(_pos0, ORIGIN, centralMass));
 
   // Update velocity and position
@@ -71,7 +72,8 @@ export function midpointMethod(
   _vel0.copy(body.velocity);
   _vel1.copy(body.velocity);
 
-  // The central body will always be at the zero vector of the local coordinate space of the orbiting body, so we can simply use a zero vector.
+  // The central body will always be at the zero vector of the local coordinate
+  // space of the orbiting body, so we can simply use a zero vector.
   _acc0.set(...calculateGravitation(_pos0, ORIGIN, centralMass));
 
   // Update velocity and position
@@ -97,7 +99,8 @@ export function eulerRichardsonMethod(
   _vel1.copy(body.velocity);
   _velMid.copy(body.velocity);
 
-  // The central body will always be at the zero vector of the local coordinate space of the orbiting body, so we can simply use a zero vector.
+  // The central body will always be at the zero vector of the local coordinate
+  // space of the orbiting body, so we can simply use a zero vector.
   _acc0.set(...calculateGravitation(_pos0, ORIGIN, centralMass));
 
   // Calculate midpoint.
@@ -126,7 +129,8 @@ export function velocityVerletIntegration(
   _vel0.copy(body.velocity);
   _vel1.copy(body.velocity);
 
-  // The central body will always be at the zero vector of the local coordinate space of the orbiting body, so we can simply use a zero vector.
+  // The central body will always be at the zero vector of the local coordinate
+  // space of the orbiting body, so we can simply use a zero vector.
   _acc0.set(...calculateGravitation(_pos0, ORIGIN, centralMass));
 
   _pos1

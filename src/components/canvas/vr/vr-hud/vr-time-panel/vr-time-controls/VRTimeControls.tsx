@@ -1,10 +1,10 @@
-import {depth,} from '../../../../../../constants/vr-hud-constants';
-import {VRPauseButton} from './VRPauseButton';
-import {VRTimescaleSlider} from './VRTimescaleSlider';
-import {VRAdvanceTimeButton} from './VRAdvanceTimeButton';
-import {type Vector3Tuple} from 'three';
-import {VRPanel} from '../../vr-ui-components/vr-panel/VRPanel';
-import {Interactive} from '@react-three/xr';
+import { Interactive } from '@react-three/xr';
+import { type Vector3Tuple } from 'three';
+import { depth } from '../../../../../../constants/vr-hud-constants';
+import { VRPanel } from '../../vr-ui-components/vr-panel/VRPanel';
+import { VRAdvanceTimeButton } from './VRAdvanceTimeButton';
+import { VRPauseButton } from './VRPauseButton';
+import { VRTimescaleSlider } from './VRTimescaleSlider';
 
 // Dummy function for passing to Interactive so it will catch intersections.
 const dummyFn = () => {

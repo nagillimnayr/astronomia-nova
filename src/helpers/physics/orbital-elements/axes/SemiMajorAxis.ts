@@ -1,4 +1,4 @@
-import {GRAV_CONST, PI_SQUARED} from '../../../../constants/constants';
+import { GRAV_CONST, PI_SQUARED } from '../../../../constants/constants';
 
 /**
  * @description
@@ -53,7 +53,8 @@ export function getSemiMajorAxisFromSpecificOrbitalEnergy(
 }
 
 /**
- * @summary Calculate the semi-major axis from the orbital period and the mass of the central body.
+ * @summary Calculate the semi-major axis from the orbital period and the mass
+ *   of the central body.
  *
  * @description
  * $\displaystyle a = \sqrt[3]{\frac{GM T^2}{4\pi^2}}$

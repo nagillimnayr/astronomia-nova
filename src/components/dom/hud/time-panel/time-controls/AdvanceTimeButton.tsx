@@ -11,7 +11,8 @@ export const AdvanceTimeButton = ({ reverse, className }: Props) => {
   const rootActor = MachineContext.useActorRef();
 
   const handleClick = useCallback(() => {
-    // Advance time by the sidereal rotation period of the reference body. This way, the body will maintain its orientation relative to the fixed stars.
+    // Advance time by the sidereal rotation period of the reference body. This
+    // way, the body will maintain its orientation relative to the fixed stars.
 
     rootActor.send({
       type: 'ADVANCE_DAY',

@@ -1,7 +1,9 @@
 import type KeplerBody from '@/components/canvas/body/kepler-body';
+import { PI_OVER_TWO } from '@/constants/constants';
 import { colorMap } from '@/helpers/color-map';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useFrame } from '@react-three/fiber';
+import { useSelector } from '@xstate/react';
 import { useCallback, useMemo, useRef } from 'react';
 import {
   type ArrowHelper,
@@ -11,8 +13,6 @@ import {
   Spherical,
   Vector3,
 } from 'three';
-import { useSelector } from '@xstate/react';
-import { PI_OVER_TWO } from '@/constants/constants';
 import { ProjectedTrail } from './ProjectedTrail';
 
 const _pos = new Vector3();
@@ -49,7 +49,8 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
     const anchor = anchorRef.current;
     const pivot = pivotRef.current;
     body.getWorldPosition(_bodyPos); // Get world position of the body.
-    anchor.worldToLocal(_bodyPos); // Get position relative to center of projection sphere.
+    anchor.worldToLocal(_bodyPos); // Get position relative to center of
+    // projection sphere.
     _spherical.setFromVector3(_bodyPos); // Get spherical coords.
     _spherical.makeSafe();
 
@@ -82,29 +83,29 @@ export const ProjectedSphere = ({ body, radius }: Props) => {
 
         <object3D ref={pivotRef}>
           {/* <Sphere
-            visible={true}
-            ref={ref}
-            position-z={-radius} // Distance from center point.
-            scale={3e5}
-          >
-            <meshBasicMaterial color={color} side={DoubleSide} />
-          </Sphere> */}
+           visible={true}
+           ref={ref}
+           position-z={-radius} // Distance from center point.
+           scale={3e5}
+           >
+           <meshBasicMaterial color={color} side={DoubleSide} />
+           </Sphere> */}
           {/* <Circle
-            // visible={surfaceView} // Should only be visible in surface view.
-            visible={false}
-            ref={markerRef}
-            args={circleArgs}
-            position-z={radius} // Distance from center point.
-            scale={radius / 100}
-            rotation-y={PI}
-            material-color={color}
-          > */}
+           // visible={surfaceView} // Should only be visible in surface view.
+           visible={false}
+           ref={markerRef}
+           args={circleArgs}
+           position-z={radius} // Distance from center point.
+           scale={radius / 100}
+           rotation-y={PI}
+           material-color={color}
+           > */}
           {/* <Ring args={[0.8, 1]} position-z={1e-2} scale={1.3}>
-              <meshBasicMaterial color={'white'} side={DoubleSide} />
-            </Ring> */}
+           <meshBasicMaterial color={'white'} side={DoubleSide} />
+           </Ring> */}
           {/* <Circle position-z={1e-2} scale={0.1}>
-              <meshBasicMaterial color={'white'} side={DoubleSide} />
-            </Circle> */}
+           <meshBasicMaterial color={'white'} side={DoubleSide} />
+           </Circle> */}
           {/* </Circle> */}
           <object3D ref={targetRef} position-z={radius} />
         </object3D>

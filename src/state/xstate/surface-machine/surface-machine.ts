@@ -6,7 +6,7 @@ import {
   RADS_TO_DEG,
 } from '@/constants/constants';
 import { Spherical, Vector3 } from 'three';
-import { assign, createMachine, log } from 'xstate';
+import { assign, createMachine } from 'xstate';
 
 const _pos = new Vector3();
 const _spherical = new Spherical();

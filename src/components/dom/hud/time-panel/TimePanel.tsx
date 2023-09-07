@@ -1,5 +1,6 @@
+import TimeControls
+  from '@/components/dom/hud/time-panel/time-controls/TimeControls';
 import DateDisplay from './DateDisplay';
-import TimeControls from '@/components/dom/hud/time-panel/time-controls/TimeControls';
 import TimescaleDisplay from './TimescaleDisplay';
 //type TimePanelProps = {};
 const TimePanel = () => {

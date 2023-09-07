@@ -1,8 +1,8 @@
+import { cn } from '@/helpers/cn';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { useSelector } from '@xstate/react';
 import { useCallback } from 'react';
 import { ClassNameValue } from 'tailwind-merge';
-import { useSelector } from '@xstate/react';
-import { cn } from '@/helpers/cn';
 
 type Props = {
   children?: React.ReactNode;

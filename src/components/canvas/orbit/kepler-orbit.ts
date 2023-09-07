@@ -1,6 +1,6 @@
+import { type MutableRefObject } from 'react';
 import { Object3D } from 'three';
 import type KeplerBody from '../body/kepler-body';
-import { type MutableRefObject } from 'react';
 
 type OrbitalElements = {
   semiMajorAxis: number;

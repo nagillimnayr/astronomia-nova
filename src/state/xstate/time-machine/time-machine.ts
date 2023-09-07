@@ -1,6 +1,6 @@
 import { J2000, TIME_MULT } from '@/constants/constants';
 import { addSeconds } from 'date-fns';
-import { assign, createMachine, log } from 'xstate';
+import { assign, createMachine } from 'xstate';
 
 const MIN_TIMESCALE = -100;
 const MAX_TIMESCALE = 100;
@@ -25,7 +25,8 @@ type Events =
   | { type: 'SET_TIMESCALE'; timescale: number }
   | { type: 'PAUSE' }
   | { type: 'UNPAUSE' }
-  | { type: 'ADVANCE_TIME'; deltaTime: number }; // Advances time by a specific amount, no time scaling.
+  | { type: 'ADVANCE_TIME'; deltaTime: number }; // Advances time by a specific
+// amount, no time scaling.
 
 export const timeMachine = createMachine(
   {
@@ -106,7 +107,8 @@ export const timeMachine = createMachine(
         },
       }),
 
-      // Computes the current date based on the timeElapsed relative to the start date (refDate).
+      // Computes the current date based on the timeElapsed relative to the
+      // start date (refDate).
       updateDate: assign({
         date: ({ refDate, timeElapsed }) => {
           return addSeconds(refDate, timeElapsed);

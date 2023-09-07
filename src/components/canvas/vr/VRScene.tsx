@@ -1,16 +1,16 @@
-import { Cylinder, useHelper } from '@react-three/drei';
-import { useRef } from 'react';
-import { type DirectionalLight, DirectionalLightHelper } from 'three';
-import { Floor } from './components/Floor';
+import { KeyPressControl } from '@/components/canvas/KeyPressControl';
 import { VRHud } from '@/components/canvas/vr/vr-hud/VRHud';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useFrame, useThree } from '@react-three/fiber';
-import { VRCameraManager } from './VRCameraManager';
 import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
-import { KeyPressControl } from '@/components/canvas/KeyPressControl';
+import { Cylinder, useHelper } from '@react-three/drei';
+import { useFrame, useThree } from '@react-three/fiber';
 import { Controllers } from '@react-three/xr';
-import { VRGrabbable } from './components/VRGrabbable';
+import { useRef } from 'react';
+import { type DirectionalLight, DirectionalLightHelper } from 'three';
 import { randFloat } from 'three/src/math/MathUtils';
+import { Floor } from './components/Floor';
+import { VRGrabbable } from './components/VRGrabbable';
+import { VRCameraManager } from './VRCameraManager';
 
 const LOW_X = -15;
 const HIGH_X = 15;

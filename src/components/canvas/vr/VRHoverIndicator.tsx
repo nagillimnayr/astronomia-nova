@@ -1,9 +1,9 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useMemo, useRef } from 'react';
-import { useController, useXR, useXREvent } from '@react-three/xr';
-import { Sphere } from '@react-three/drei';
-import { DoubleSide, Group, Mesh, Vector3 } from 'three';
 import { useSpring } from '@react-spring/three';
+import { Sphere } from '@react-three/drei';
+import { useController, useXR, useXREvent } from '@react-three/xr';
+import { useMemo, useRef } from 'react';
+import { DoubleSide, Group, Mesh, Vector3 } from 'three';
 import { anim } from '../animated-components';
 
 const _camWorldPos = new Vector3();
@@ -82,9 +82,9 @@ export const VRHoverIndicator = ({
           >
             <meshBasicMaterial side={DoubleSide} color={'white'} />
             {/* <anim.Circle
-              material-transparent={true}
-              material-opacity={spring.opacity}
-            /> */}
+             material-transparent={true}
+             material-opacity={spring.opacity}
+             /> */}
           </anim.Ring>
         </group>
       </group>

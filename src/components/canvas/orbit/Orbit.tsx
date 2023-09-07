@@ -1,21 +1,21 @@
-import { Trajectory } from './trajectroy/Trajectory';
-import { useContext, useRef } from 'react';
-import Body, { type BodyParams } from '../body/Body';
 import type KeplerBody from '@/components/canvas/body/kepler-body';
-import KeplerTreeContext from '@/context/KeplerTreeContext';
-
-import { Z_AXIS } from '@/constants/constants';
-import { TrueAnomalyArrow } from './TrueAnomalyArrow';
-import { type Texture, Vector3 } from 'three';
-import { degToRad } from 'three/src/math/MathUtils';
-
-import { extend, type Object3DNode } from '@react-three/fiber';
-import { type BodyKey } from '@/helpers/horizons/BodyKey';
-import { trpc } from '@/helpers/trpc/trpc';
 
 import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
+
+import { Z_AXIS } from '@/constants/constants';
+import KeplerTreeContext from '@/context/KeplerTreeContext';
 import { colorMap } from '@/helpers/color-map';
+import { type BodyKey } from '@/helpers/horizons/BodyKey';
+import { trpc } from '@/helpers/trpc/trpc';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+
+import { extend, type Object3DNode } from '@react-three/fiber';
+import { useContext, useRef } from 'react';
+import { type Texture, Vector3 } from 'three';
+import { degToRad } from 'three/src/math/MathUtils';
+import Body, { type BodyParams } from '../body/Body';
+import { Trajectory } from './trajectroy/Trajectory';
+import { TrueAnomalyArrow } from './TrueAnomalyArrow';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
@@ -115,8 +115,17 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
         orbitRef.current = orbit;
         mapActor.send({ type: 'ADD_ORBIT', orbit }); // Add to map.
 
-        // To orient the orbit correctly, we need to perform three intrinsic rotations. (Intrinsic meaning that the rotations are performed in the local coordinate space, such that when we rotate around the axes in the order z-x-z, the last z-axis rotation is around a different world-space axis than the first one, as the x-axis rotation changes the orientation of the object's local z-axis. For clarity, the rotations will be in the order z-x'-z'', where x' is the new local x-axis after the first rotation and z'' is the object's new local z-axis after the second rotation.)
-        orbit.rotation.set(0, 0, 0); // Reset the rotation before we perform the intrinsic rotations.
+        // To orient the orbit correctly, we need to perform three intrinsic
+        // rotations. (Intrinsic meaning that the rotations are performed in
+        // the local coordinate space, such that when we rotate around the axes
+        // in the order z-x-z, the last z-axis rotation is around a different
+        // world-space axis than the first one, as the x-axis rotation changes
+        // the orientation of the object's local z-axis. For clarity, the
+        // rotations will be in the order z-x'-z'', where x' is the new local
+        // x-axis after the first rotation and z'' is the object's new local
+        // z-axis after the second rotation.)
+        orbit.rotation.set(0, 0, 0); // Reset the rotation before we perform
+        // the intrinsic rotations.
         orbit.getWorldPosition(_pos);
         _pos.add(Z_AXIS);
         orbit.lookAt(_pos);
@@ -145,11 +154,11 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
         {children}
       </Body>
       {/* <BodyTrail
-        bodyRef={orbitingBodyRef}
-        orbitalPeriod={orbitalPeriod}
-        color={color}
-        lineWidth={meanRadius / DIST_MULT}
-      /> */}
+       bodyRef={orbitingBodyRef}
+       orbitalPeriod={orbitalPeriod}
+       color={color}
+       lineWidth={meanRadius / DIST_MULT}
+       /> */}
 
       <Trajectory
         semiMajorAxis={semiMajorAxis}

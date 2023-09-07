@@ -1,4 +1,6 @@
 import { PI } from '@/constants/constants';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { animated, useSpring } from '@react-spring/three';
 import { Line } from '@react-three/drei';
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { useController, useXR } from '@react-three/xr';
@@ -6,8 +8,6 @@ import { useMemo, useRef } from 'react';
 import { Euler, Intersection, Object3D, Vector3 } from 'three';
 import { Line2 } from 'three-stdlib';
 import { VRHoverIndicator } from './VRHoverIndicator';
-import { animated, useSpring } from '@react-spring/three';
-import { MachineContext } from '@/state/xstate/MachineProviders';
 
 const RAY_LENGTH = 1e3;
 
@@ -58,7 +58,8 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
     if (!(frame instanceof XRFrame)) return;
     const line = lineRef.current;
     const indicator = indicatorRef.current;
-    const scaleObj = objRef.current; // For modifying scale based on distance to camera.
+    const scaleObj = objRef.current; // For modifying scale based on distance
+    // to camera.
     if (!line || !indicator || !scaleObj) return;
 
     // Get hover state.
@@ -100,7 +101,8 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
       // Subtract object's world position so that we just get the direction.
       _worldNormal.sub(_objWorldPos);
 
-      // Add the direction to the indicator's world position to get the position to look at.
+      // Add the direction to the indicator's world position to get the
+      // position to look at.
       indicator.getWorldPosition(_indicatorWorldPos);
       _lookPos.addVectors(_indicatorWorldPos, _worldNormal);
 

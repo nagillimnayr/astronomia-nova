@@ -1,6 +1,6 @@
-import { GRAV_CONST } from '../../../constants/constants';
 import { Vector3, Vector3Tuple } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
+import { GRAV_CONST } from '../../../constants/constants';
 
 const _velocity = new Vector3();
 
@@ -9,7 +9,7 @@ const _velocity = new Vector3();
  *
  * @description
  * https://orbital-mechanics.space/classical-orbital-elements/orbital-elements-and-the-state-vector.html?highlight=velocity
- * https://orbital-mechanics.space/classical-orbital-elements/perifocal-frame.html?highlight=velocity#velocity-vector
+ *   https://orbital-mechanics.space/classical-orbital-elements/perifocal-frame.html?highlight=velocity#velocity-vector
  *
  * @author Ryan Milligan
  * @date 15/07/2023

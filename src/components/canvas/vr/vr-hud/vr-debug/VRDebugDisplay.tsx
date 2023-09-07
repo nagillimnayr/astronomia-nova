@@ -1,7 +1,7 @@
-import { type Vector3Tuple } from 'three';
-import { createPortal, useThree } from '@react-three/fiber';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { createPortal, useThree } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
+import { type Vector3Tuple } from 'three';
 import { VRDebugEventDisplay } from './VRDebugEventDisplay';
 
 type VRDebugDisplayProps = {

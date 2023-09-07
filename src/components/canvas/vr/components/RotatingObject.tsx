@@ -57,10 +57,10 @@ export const RotatingObject = ({ children, position = [0, 0, 0] }: Props) => {
           <object3D ref={objRef}>{children}</object3D>
 
           {/* <object3D ref={textCenterRef}>
-            <Text ref={textRef} position={[0, 0, 1]}>
-              {text}
-            </Text>
-          </object3D> */}
+           <Text ref={textRef} position={[0, 0, 1]}>
+           {text}
+           </Text>
+           </object3D> */}
         </group>
       </RayGrab>
     </>

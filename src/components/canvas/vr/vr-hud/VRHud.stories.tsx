@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
-import { useFrame } from '@react-three/fiber';
-import { MachineContext } from '@/state/xstate/MachineProviders';
-import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
-import { VRHud } from './VRHud';
-import { MockEarthSelect } from '@/stories/mocks/MockEarthSelect';
-import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 import { VRManager } from '@/components/canvas/vr/VRManager';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
+import { MockEarthSelect } from '@/stories/mocks/MockEarthSelect';
+import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
+import { CameraControls, PerspectiveCamera } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber';
+import type { Meta, StoryObj } from '@storybook/react';
+import { VRHud } from './VRHud';
 
 const meta: Meta<typeof VRHud> = {
   title: 'VR-UI/VRHud',

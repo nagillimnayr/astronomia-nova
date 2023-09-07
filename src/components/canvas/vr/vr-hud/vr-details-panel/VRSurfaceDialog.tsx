@@ -1,25 +1,25 @@
-import { type Group, type Object3D, Vector3, type Vector3Tuple } from 'three';
-import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
-import { useCallback, useEffect, useRef } from 'react';
-import { animated, useSpring } from '@react-spring/three';
+import KeplerBody from '@/components/canvas/body/kepler-body';
+import { VRSlider } from '@/components/canvas/vr/vr-hud/vr-ui-components/vr-slider/VRSlider';
 import {
   MAX_LATITUDE,
   MAX_LONGITUDE,
   MIN_LATITUDE,
   MIN_LONGITUDE,
 } from '@/constants/constants';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { type surfaceMachine } from '@/state/xstate/surface-machine/surface-machine';
+import { animated, useSpring } from '@react-spring/three';
+import { useFrame } from '@react-three/fiber';
+import { Interactive, useXR } from '@react-three/xr';
+import { useSelector } from '@xstate/react';
+import { capitalize } from 'lodash';
+import { useCallback, useEffect, useRef } from 'react';
+import { type Group, type Object3D, Vector3, type Vector3Tuple } from 'three';
+import { type ContextFrom } from 'xstate';
+import { depth } from '../../../../../constants/vr-hud-constants';
 import { VRPanel } from '../vr-ui-components/vr-panel/VRPanel';
 import { VRHudButton } from '../vr-ui-components/VRHudButton';
-import { depth } from '../../../../../constants/vr-hud-constants';
-import { VRSlider } from '@/components/canvas/vr/vr-hud/vr-ui-components/vr-slider/VRSlider';
 import { VRLabel } from '../vr-ui-components/VRLabel';
-import { type surfaceMachine } from '@/state/xstate/surface-machine/surface-machine';
-import { type ContextFrom } from 'xstate';
-import { capitalize } from 'lodash';
-import { useFrame } from '@react-three/fiber';
-import KeplerBody from '@/components/canvas/body/kepler-body';
-import { Interactive, useXR } from '@react-three/xr';
 
 const _camWorldPos = new Vector3();
 

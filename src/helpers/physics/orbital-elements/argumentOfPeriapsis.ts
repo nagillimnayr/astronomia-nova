@@ -1,9 +1,10 @@
-import {type Vector3} from 'three';
-import {radToDeg} from 'three/src/math/MathUtils';
+import { type Vector3 } from 'three';
+import { radToDeg } from 'three/src/math/MathUtils';
 
 /**
  * @description
- * $$ \displaystyle \omega = \arccos{\left(\frac{\vec{n}\cdot\vec{e}}{ne}  \right)} $$
+ * $$ \displaystyle \omega = \arccos{\left(\frac{\vec{n}\cdot\vec{e}}{ne}
+ *   \right)} $$
  *
  * @author Ryan Milligan
  * @date 25/07/2023

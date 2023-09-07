@@ -1,9 +1,9 @@
+import { TextMesh } from '@/type-declarations/troika-three-text/Text';
 import { Edges, MeshDiscardMaterial, Plane, Text } from '@react-three/drei';
 // import useHover from '@/hooks/useHover';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { Box3, Group, Mesh, Object3D, Vector3, Vector3Tuple } from 'three';
 import { depth } from '../../../../../constants/vr-hud-constants';
-import { TextMesh } from '@/type-declarations/troika-three-text/Text';
 
 const bbox = new Box3();
 const bbSize = new Vector3();
@@ -61,11 +61,14 @@ export const VRLabel = forwardRef<TextMesh, VRLabelProps>(function VRLabel(
 
         <object3D
           ref={textRef}
-          position={[0, -0.125 * adjustedSize, depth.xs]} // Move the text down slightly to center the bounding box.
+          position={[0, -0.125 * adjustedSize, depth.xs]} // Move the text down
+          // slightly to center
+          // the bounding box.
         >
           <Text
             ref={troikaRef}
-            lineHeight={0.5} // Adjust bounds so that lower bound is flush with bottom of text.
+            lineHeight={0.5} // Adjust bounds so that lower bound is flush with
+            // bottom of text.
             fontSize={adjustedSize}
             onSync={onSync}
             anchorX={anchorX}

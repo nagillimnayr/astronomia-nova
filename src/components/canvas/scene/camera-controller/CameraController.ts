@@ -1,5 +1,3 @@
-import { Object3D, type PerspectiveCamera, Spherical, Vector3 } from 'three';
-import { clamp } from 'three/src/math/MathUtils';
 import {
   DEG_TO_RADS,
   PI,
@@ -8,9 +6,11 @@ import {
   TWO_PI,
   Y_AXIS,
 } from '@/constants/constants';
-import { smoothCritDamp } from './smoothing';
-import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
 import { normalizeAngle } from '@/helpers/rotation-utils';
+import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
+import { Object3D, type PerspectiveCamera, Spherical, Vector3 } from 'three';
+import { clamp } from 'three/src/math/MathUtils';
+import { smoothCritDamp } from './smoothing';
 
 const EPSILON = 1e-3;
 // const EPSILON = 1e-14;
@@ -78,15 +78,18 @@ export class CameraController extends Object3D {
     const pivotPoint = this._pivotPoint;
     const attachPoint = this._attachPoint;
     pivotPoint.rotation.set(0, 0, 0); // Reset rotations.
-    attachPoint.position.set(0, 0, this._spherical.radius); // Set position of camera.
+    attachPoint.position.set(0, 0, this._spherical.radius); // Set position of
+    // camera.
     this._camera?.position.set(0, 0, 0);
 
     const azimuthalAngle = this._spherical.theta;
     const polarAngle = this._spherical.phi;
 
-    // Rotations are intrinsic, so the order matters. Rotation around local y-axis must be done first in order to preserve the local up-vector.
+    // Rotations are intrinsic, so the order matters. Rotation around local
+    // y-axis must be done first in order to preserve the local up-vector.
     pivotPoint.rotateY(azimuthalAngle); // Rotate around local y-axis.
-    pivotPoint.rotateX(-(PI_OVER_TWO - polarAngle)); // Rotate around local x-axis.
+    pivotPoint.rotateX(-(PI_OVER_TWO - polarAngle)); // Rotate around local
+    // x-axis.
 
     this._camera?.updateProjectionMatrix();
   }
@@ -148,9 +151,11 @@ export class CameraController extends Object3D {
     this._spherical.radius = newValue;
   }
 
-  // Set radius without clamping to min/max. This allows setting the min/max distance to trigger a transition to the clamped value.
+  // Set radius without clamping to min/max. This allows setting the min/max
+  // distance to trigger a transition to the clamped value.
   private _setRadius(radius: number) {
-    this._spherical.radius = Math.max(radius, 0); // We still don't want it to be negative though.
+    this._spherical.radius = Math.max(radius, 0); // We still don't want it to
+    // be negative though.
   }
 
   setRadius(radius: number) {
@@ -429,7 +434,8 @@ export class CameraController extends Object3D {
     return getLocalUpInWorldCoords(this);
   }
 
-  // Adjust the orientation of the controller so that the local up vector is parallel with the world y-axis.
+  // Adjust the orientation of the controller so that the local up vector is
+  // parallel with the world y-axis.
   applyWorldUp() {
     // Get the world position of the point 1 unit from the object in the z-axis.
     this.getWorldPosition(_v1);
@@ -445,7 +451,8 @@ export class CameraController extends Object3D {
     obj.add(this);
   }
 
-  // Attach the controller to the object but maintain its current position and orientation.
+  // Attach the controller to the object but maintain its current position and
+  // orientation.
   attachToWithoutMoving(obj: Object3D) {
     // Get world position of camera.
     this.camera.getWorldPosition(_v1);

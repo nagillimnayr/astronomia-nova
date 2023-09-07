@@ -1,7 +1,7 @@
-import { TimescaleSlider } from './TimescaleSlider';
-import PauseButton from './PauseButton';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { AdvanceTimeButton } from './AdvanceTimeButton';
+import PauseButton from './PauseButton';
+import { TimescaleSlider } from './TimescaleSlider';
 
 const TimeControls = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);

@@ -1,14 +1,24 @@
-import React, {forwardRef, useContext, useImperativeHandle, useRef,} from 'react';
-import {extend, type Object3DNode} from '@react-three/fiber';
-
-import {type ColorRepresentation, type Mesh, type Texture, type Vector3Tuple,} from 'three';
 import KeplerTreeContext from '@/context/KeplerTreeContext';
+
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { extend, type Object3DNode } from '@react-three/fiber';
+import React, {
+  forwardRef,
+  useContext,
+  useImperativeHandle,
+  useRef,
+} from 'react';
+
+import {
+  type ColorRepresentation,
+  type Mesh,
+  type Texture,
+  type Vector3Tuple,
+} from 'three';
+
+import { BodyMesh } from './BodyMesh';
 import KeplerBody from './kepler-body';
-
-import {BodyMesh} from './BodyMesh';
-
-import {MachineContext} from '@/state/xstate/MachineProviders';
-import {Tags} from './tags/Tags';
+import { Tags } from './tags/Tags';
 
 // Extend KeplerBody so the reconciler is aware of it.
 extend({ KeplerBody });
@@ -61,7 +71,8 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
   const bodyRef = useRef<KeplerBody>(null!);
   const meshRef = useRef<Mesh>(null!);
 
-  // Set forwarded ref. The return value of the callback function will be assigned to fwdRef.
+  // Set forwarded ref. The return value of the callback function will be
+  // assigned to fwdRef.
   useImperativeHandle(
     fwdRef,
     () => {

@@ -2,7 +2,8 @@
  * @summary Critically damped smoothing.
  *
  * @description Damped smoothing, mainly for smoothing the camera movement.
- * Adapted from 'Game Programming Gems 4', chapter 1.10 Critically Damped Ease-In/Ease-Out Smoothing.
+ * Adapted from 'Game Programming Gems 4', chapter 1.10 Critically Damped
+ *   Ease-In/Ease-Out Smoothing.
  *
  *
  * @author Ryan Milligan

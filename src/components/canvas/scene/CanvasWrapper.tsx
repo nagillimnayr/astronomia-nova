@@ -1,12 +1,12 @@
-import { Canvas } from '@react-three/fiber';
-import { type PropsWithChildren, Suspense, useRef } from 'react';
+import { VRHud } from '@/components/canvas/vr/vr-hud/VRHud';
 import { HUD } from '@/components/dom/hud/HUD';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import Scene from './Scene';
-import { VRManager } from '../vr/VRManager';
 import { Loader, Preload } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
 import { XR } from '@react-three/xr';
-import { VRHud } from '@/components/canvas/vr/vr-hud/VRHud';
+import { type PropsWithChildren, Suspense, useRef } from 'react';
+import { VRManager } from '../vr/VRManager';
+import Scene from './Scene';
 
 export const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
 
@@ -40,7 +40,8 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
               linear /* Textures will appear washed out unless this is set. */
               flat
               onCreated={(state) => {
-                // Filter intersections so that invisible objects don't trigger pointer events.
+                // Filter intersections so that invisible objects don't trigger
+                // pointer events.
                 state.setEvents({
                   filter: (intersections) =>
                     intersections.filter((i) => i.object.visible),

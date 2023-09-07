@@ -6,7 +6,8 @@ export function getRadiusAtTrueAnomaly(
   semiMajorAxis: number,
   eccentricity: number
 ) {
-  // Calculates the radius at a particular angle, using the elliptical formula in polar form, relative to the right focus
+  // Calculates the radius at a particular angle, using the elliptical formula
+  // in polar form, relative to the right focus
   const semiLatusRectum = getSemiLatusRectumFromEccentricity(
     semiMajorAxis,
     eccentricity

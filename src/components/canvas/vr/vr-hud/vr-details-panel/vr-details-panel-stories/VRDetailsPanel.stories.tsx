@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { VRDetailsPanel } from '@/components/canvas/vr/vr-hud/vr-details-panel/VRDetailsPanel';
-import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
 import { MockEarthSelect } from '@/stories/mocks/MockEarthSelect';
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof VRDetailsPanel> = {
   title: 'VR-UI/vr-details-panel/VRDetailsPanel',

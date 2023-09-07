@@ -1,6 +1,6 @@
+import { MockEarthSelect } from '@/stories/mocks/MockEarthSelect';
 import type { Meta, StoryObj } from '@storybook/react';
 import { DetailsPanel } from '../DetailsPanel';
-import { MockEarthSelect } from '@/stories/mocks/MockEarthSelect';
 
 const meta: Meta<typeof DetailsPanel> = {
   title: 'HUD/DetailsPanel',

@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { useEffect, useRef } from 'react';
 
 const TimescaleDisplay = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
@@ -10,7 +10,8 @@ const TimescaleDisplay = () => {
   const plural = Math.abs(timescale) === 1 ? 's' : '';
   const text = `${timescale} Hour${plural} / Second`;
 
-  // Subscribe to state changes in useEffect so that the component wont rerender on state change, but we can update the view directly
+  // Subscribe to state changes in useEffect so that the component wont
+  // rerender on state change, but we can update the view directly
   useEffect(() => {
     const subscription = timeActor.subscribe(({ context }) => {
       if (!spanRef.current) return;

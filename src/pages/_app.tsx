@@ -1,9 +1,9 @@
-import { type AppType } from 'next/dist/shared/lib/utils';
-import '@/styles/globals.css';
+import SiteLayout from '@/components/dom/layout/SiteLayout';
 
 import Providers from '@/components/dom/providers/providers';
-import SiteLayout from '@/components/dom/layout/SiteLayout';
 import { trpc } from '@/helpers/trpc/trpc';
+import '@/styles/globals.css';
+import { type AppType } from 'next/dist/shared/lib/utils';
 import { StrictMode } from 'react';
 
 const MyApp: AppType = ({ Component, pageProps }) => {

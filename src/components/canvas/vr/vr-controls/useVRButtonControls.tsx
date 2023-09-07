@@ -1,5 +1,5 @@
-import { getGamepads, getXRButtons } from '@/helpers/xr/pollXRInputSources';
 import { makeFixedUpdateFn } from '@/helpers/fixed-time-step';
+import { getGamepads, getXRButtons } from '@/helpers/xr/pollXRInputSources';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';

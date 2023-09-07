@@ -1,8 +1,8 @@
 import { Label } from '@/components/dom/ui/label';
 import { Slider } from '@/components/dom/ui/slider/Slider';
+import { cn } from '@/helpers/cn';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { cn } from '@/helpers/cn';
 import { ClassNameValue } from 'tailwind-merge';
 
 type Props = {
@@ -57,18 +57,18 @@ export const OpacitySliders = ({
               }}
             />
             {/* <Input
-                className="h-6 w-16 text-sm"
-                type="number"
-                value={constellationOpacity}
-                min={0}
-                max={1}
-                step={0.01}
-                onChange={(event) => {
-                  const value = parseFloat(event.target.value);
-                  if (!value && value !== 0) return;
-                  constellations.send({ type: 'SET_OPACITY', opacity: value });
-                }}
-              /> */}
+             className="h-6 w-16 text-sm"
+             type="number"
+             value={constellationOpacity}
+             min={0}
+             max={1}
+             step={0.01}
+             onChange={(event) => {
+             const value = parseFloat(event.target.value);
+             if (!value && value !== 0) return;
+             constellations.send({ type: 'SET_OPACITY', opacity: value });
+             }}
+             /> */}
           </div>
         </Label>
         <Label className="inline-flex w-full flex-col gap-1">
@@ -89,18 +89,18 @@ export const OpacitySliders = ({
               }}
             />
             {/* <Input
-                className="h-6 w-16 text-sm"
-                type="number"
-                value={celestialGridOpacity}
-                min={0}
-                max={1}
-                step={0.01}
-                onChange={(event) => {
-                  const value = parseFloat(event.target.value);
-                  if (!value && value !== 0) return;
-                  celestialGrid.send({ type: 'SET_OPACITY', opacity: value });
-                }}
-              /> */}
+             className="h-6 w-16 text-sm"
+             type="number"
+             value={celestialGridOpacity}
+             min={0}
+             max={1}
+             step={0.01}
+             onChange={(event) => {
+             const value = parseFloat(event.target.value);
+             if (!value && value !== 0) return;
+             celestialGrid.send({ type: 'SET_OPACITY', opacity: value });
+             }}
+             /> */}
           </div>
         </Label>
       </div>

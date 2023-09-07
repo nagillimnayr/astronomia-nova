@@ -33,7 +33,10 @@ export const CompassMarker = ({ children, position }: Props) => {
           if (!parent) return;
 
           // Get the object's up vector in world coords.
-          obj.up.set(...getLocalUpInWorldCoords(obj)); // Set the up vector so that it will be properly oriented after rotating it.
+          obj.up.set(...getLocalUpInWorldCoords(obj)); // Set the up vector so
+          // that it will be
+          // properly oriented
+          // after rotating it.
 
           // Rotate object to face its parent's origin.
           parent.getWorldPosition(_parentWorldPos);

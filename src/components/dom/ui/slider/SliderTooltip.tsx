@@ -1,9 +1,9 @@
 import { cn } from '@/helpers/cn';
+import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
+import { useMachine } from '@xstate/react';
+import { gsap } from 'gsap';
 
 import { type PropsWithChildren, useCallback, useRef } from 'react';
-import { useMachine } from '@xstate/react';
-import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
-import { gsap } from 'gsap';
 
 type Props = PropsWithChildren;
 export const SliderTooltip = ({ children }: Props) => {

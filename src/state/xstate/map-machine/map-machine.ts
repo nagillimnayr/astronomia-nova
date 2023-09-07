@@ -55,7 +55,8 @@ export const mapMachine = createMachine(
     },
   },
   {
-    // Construct a new map each time so that the changes will trigger re-renders.
+    // Construct a new map each time so that the changes will trigger
+    // re-renders.
     actions: {
       addBody: assign({
         bodyMap: ({ bodyMap }, { body }) =>

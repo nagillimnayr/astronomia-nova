@@ -1,7 +1,7 @@
+import { CameraControls } from '@react-three/drei';
+import { Canvas, type Props as CanvasProps } from '@react-three/fiber';
 import * as React from 'react';
 import { useRef } from 'react';
-import { Canvas, type Props as CanvasProps } from '@react-three/fiber';
-import { CameraControls } from '@react-three/drei';
 import { degToRad } from 'three/src/math/MathUtils';
 
 type Props = React.PropsWithChildren<CanvasProps>;

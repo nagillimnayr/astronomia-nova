@@ -1,8 +1,8 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useEffect, useRef } from 'react';
-import { Text } from '@react-three/drei';
-import { type Vector3Tuple } from 'three';
 import { type TextMesh } from '@/type-declarations/troika-three-text/Text';
+import { Text } from '@react-three/drei';
+import { useEffect, useRef } from 'react';
+import { type Vector3Tuple } from 'three';
 
 type VRTimescaleDisplayProps = {
   position?: Vector3Tuple;
@@ -18,7 +18,8 @@ export const VRTimescaleDisplay = ({
   const text = `${timescale} Hour${plural} / Second`;
   const textRef = useRef<TextMesh>(null!);
 
-  // Subscribe to state changes in useEffect so that the component wont rerender on state change, but we can update the view directly
+  // Subscribe to state changes in useEffect so that the component wont
+  // rerender on state change, but we can update the view directly
   useEffect(() => {
     const subscription = timeActor.subscribe(({ context }) => {
       const timescale = context.timescale;

@@ -25,8 +25,9 @@ export function getLinearEccentricityFromApsis(
   semiMajorAxis: number,
   apsis: number
 ) {
-  // Linear eccentricity is the distance between the center of the ellipse and either of the foci, it can be
-  // calculated either from (semiMajorAxis - periapsis) or from (apoapsis - semiMajorAxis)
+  // Linear eccentricity is the distance between the center of the ellipse and
+  // either of the foci, it can be calculated either from (semiMajorAxis -
+  // periapsis) or from (apoapsis - semiMajorAxis)
   return semiMajorAxis > apsis ? semiMajorAxis - apsis : apsis - semiMajorAxis;
 }
 

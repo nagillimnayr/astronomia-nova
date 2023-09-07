@@ -1,9 +1,9 @@
+import { VRSlider } from '@/components/canvas/vr/vr-hud/vr-ui-components/vr-slider/VRSlider';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { colors } from '../../../../../../constants/vr-hud-constants';
 import { useCallback } from 'react';
 import { type Vector3Tuple } from 'three';
-import { VRSlider } from '@/components/canvas/vr/vr-hud/vr-ui-components/vr-slider/VRSlider';
+import { colors } from '../../../../../../constants/vr-hud-constants';
 
 type VRTimescaleSliderProps = {
   position?: Vector3Tuple;

@@ -1,12 +1,12 @@
-import React from 'react';
-import { useFrame } from '@react-three/fiber';
+import { CelestialSphere } from '@/components/canvas/celestial-sphere/CelestialSphere';
+import { PseudoTrajectory } from '@/components/canvas/orbit/trajectroy/PseudoTrajectory';
+import { ObservationPoint } from '@/components/canvas/surface-view/observation-point/ObservationPoint';
+import { VRSurfaceDialog } from '@/components/canvas/vr/vr-hud/vr-details-panel/VRSurfaceDialog';
 
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { ObservationPoint } from '@/components/canvas/surface-view/observation-point/ObservationPoint';
+import { useFrame } from '@react-three/fiber';
+import React from 'react';
 import { KeyPressControl } from '../KeyPressControl';
-import { VRSurfaceDialog } from '@/components/canvas/vr/vr-hud/vr-details-panel/VRSurfaceDialog';
-import { PseudoTrajectory } from '@/components/canvas/orbit/trajectroy/PseudoTrajectory';
-import { CelestialSphere } from '@/components/canvas/celestial-sphere/CelestialSphere';
 
 type SimProps = {
   children: React.ReactNode;

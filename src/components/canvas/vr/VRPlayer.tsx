@@ -1,7 +1,7 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { Controllers, useXR } from '@react-three/xr';
 import { useEffect } from 'react';
 import { Vector3 } from 'three';
-import { Controllers, useXR } from '@react-three/xr';
 import { VRControllerRay } from './VRControllerRay';
 
 const _cameraWorldDirection = new Vector3();

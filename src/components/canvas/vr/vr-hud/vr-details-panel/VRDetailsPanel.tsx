@@ -1,21 +1,21 @@
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { animated, useSpring } from '@react-spring/three';
+import { Center, Svg, Text, useHelper } from '@react-three/drei';
+import { ThreeEvent, useThree } from '@react-three/fiber';
+import { Interactive, XRInteractionEvent } from '@react-three/xr';
+import { useSelector } from '@xstate/react';
 import { Suspense, useCallback, useEffect, useRef } from 'react';
+import { BoxHelper, type Group, Vector3, type Vector3Tuple } from 'three';
 import {
   colors,
   depth,
   GOLDEN_RATIO,
   text,
 } from '../../../../../constants/vr-hud-constants';
-import { BoxHelper, type Group, Vector3, type Vector3Tuple } from 'three';
-import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
-import { Center, Svg, Text, useHelper } from '@react-three/drei';
 import { ICON_MATERIAL_BASE } from '../../../../../constants/vr-ui-materials';
-import { VRFocusButton } from './VRFocusButton';
 import { VRPanel } from '../vr-ui-components/vr-panel/VRPanel';
+import { VRFocusButton } from './VRFocusButton';
 import { VRSurfaceButton } from './VRSurfaceButton';
-import { ThreeEvent, useThree } from '@react-three/fiber';
-import { Interactive, XRInteractionEvent } from '@react-three/xr';
-import { animated, useSpring } from '@react-spring/three';
 
 const _camWorldPos = new Vector3();
 
@@ -138,21 +138,21 @@ const AttributeList = ({ position, height }: AttributeListProps) => {
 
       {/** Mean Radius. */}
       {/* <Attribute
-        label={'Mean Radius'}
-        value={meanRadius.toExponential(3) + ' m'}
-      /> */}
+       label={'Mean Radius'}
+       value={meanRadius.toExponential(3) + ' m'}
+       /> */}
 
       {/** Sidereal Rotation Rate. */}
       {/* <Attribute
-        label={'Sidereal Rotation Rate'}
-        value={siderealRotationRate.toExponential(3) + ' rad/s'}
-      /> */}
+       label={'Sidereal Rotation Rate'}
+       value={siderealRotationRate.toExponential(3) + ' rad/s'}
+       /> */}
 
       {/** Sidereal Rotation Period. */}
       {/* <Attribute
-        label={'Sidereal Rotation Period'}
-        value={(siderealRotationPeriod / HOUR).toLocaleString() + ' hr'}
-      /> */}
+       label={'Sidereal Rotation Period'}
+       value={(siderealRotationPeriod / HOUR).toLocaleString() + ' hr'}
+       /> */}
     </>
   );
 };

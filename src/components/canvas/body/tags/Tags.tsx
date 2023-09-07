@@ -1,20 +1,20 @@
 import KeplerBody from '@/components/canvas/body/kepler-body';
-import { MutableRefObject, useCallback, useMemo, useRef } from 'react';
 import { Annotation } from '@/components/canvas/body/tags/annotation/Annotation';
-import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
-import { colorMap } from '@/helpers/color-map';
-import { ThreeEvent, useFrame } from '@react-three/fiber';
-import { AxesHelper, Group, Mesh, Object3D, Vector3 } from 'three';
 import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
-import { clamp } from 'lodash';
 import { EARTH_RADIUS, METER } from '@/constants/constants';
-import { Interactive, XRInteractionEvent } from '@react-three/xr';
-import { useCursor } from '@react-three/drei';
+import { colorMap } from '@/helpers/color-map';
 import useHover from '@/hooks/useHover';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { animated, useSpring } from '@react-spring/three';
-import { SphereMarker } from './marker/SphereMarker';
+import { useCursor } from '@react-three/drei';
+import { ThreeEvent, useFrame } from '@react-three/fiber';
+import { Interactive, XRInteractionEvent } from '@react-three/xr';
+import { useSelector } from '@xstate/react';
+import { clamp } from 'lodash';
+import { MutableRefObject, useCallback, useMemo, useRef } from 'react';
+import { AxesHelper, Group, Mesh, Object3D, Vector3 } from 'three';
 import { SelectionMarker } from './marker/SelectionMarker';
+import { SphereMarker } from './marker/SphereMarker';
 
 const threshold = 0.02;
 const DIST_TO_CAM_THRESHOLD = 1e9 * METER;
@@ -117,17 +117,20 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     // Get world position of camera.
     camera.getWorldPosition(_camWorldPos);
 
-    // Set the up vector so that it will be oriented correctly when lookAt() is called.
+    // Set the up vector so that it will be oriented correctly when lookAt() is
+    // called.
     controls.getCameraWorldUp(pivot.up);
 
     const inVR = frame instanceof XRFrame;
 
     if (inVR) {
-      // If in VR session, the tags should look directly at the camera, rather than parallel to the direction of the camera. Because depth.
+      // If in VR session, the tags should look directly at the camera, rather
+      // than parallel to the direction of the camera. Because depth.
 
       pivot.lookAt(_camWorldPos);
     } else {
-      // If not in VR, the tags should look in the direction parallel to the direction of the camera.
+      // If not in VR, the tags should look in the direction parallel to the
+      // direction of the camera.
 
       // Get world direction of camera.
       controls.getCameraWorldDirection(_direction);
@@ -149,12 +152,14 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     const textFactor = Math.max(1e-5, distanceToCamera / 60);
     // Scale the annotation so that it maintains its screen-size.
     text?.scale.setScalar(textFactor * vrFactor);
-    // Clamp the y-position of the annotation so that it doesn't go inside of the body.
+    // Clamp the y-position of the annotation so that it doesn't go inside of
+    // the body.
     const yPos = clamp(
       -1.25 * textFactor * logScale.current,
       -(meanRadius * METER) * 1.5
     );
-    // Set position so that the annotation always appears below the body and outside of the marker.
+    // Set position so that the annotation always appears below the body and
+    // outside of the marker.
     text?.position.set(0, yPos * vrFactor, 0);
 
     const marker = markerRef.current;
@@ -177,7 +182,8 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
 
     /** Check distance of body to its parent, compared to distance to camera. Hide it if it would overlap with its parent. */
 
-    // Since the local coordinates will have the parent at the origin, we can use the body's local coords to get the distance to the parent.
+    // Since the local coordinates will have the parent at the origin, we can
+    // use the body's local coords to get the distance to the parent.
     const distanceToParent = body.position.length();
     // Check the ratio of the distances to the parent and the camera.
     const ratio = distanceToParent / distanceToCamera;
@@ -186,10 +192,13 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
     const isOrbiter = body.parent instanceof KeplerOrbit;
     if (!isOrbiter) return;
 
-    // If the ratio of distances is less than the threshold, set to be invisible.
+    // If the ratio of distances is less than the threshold, set to be
+    // invisible.
     const shouldBeVisible = ratio > threshold;
 
-    // Setting scale to zero solves the issue of descendants still catching pointer events, and it can be animated more easily, as it doesn't require animating the materials of each descendant.
+    // Setting scale to zero solves the issue of descendants still catching
+    // pointer events, and it can be animated more easily, as it doesn't
+    // require animating the materials of each descendant.
     hideSpringRef.start({ tagScale: shouldBeVisible ? 1 : 0 });
   });
 
@@ -210,10 +219,10 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
                 onBlur={hoverEvents.handlePointerLeave}
               >
                 {/* <RingMarker
-                bodyRef={bodyRef}
-                ref={ringRef}
-                color={color ?? 'white'}
-              /> */}
+                 bodyRef={bodyRef}
+                 ref={ringRef}
+                 color={color ?? 'white'}
+                 /> */}
                 <animated.object3D scale={hoverSpring.ringScale}>
                   <SelectionMarker bodyRef={bodyRef} ref={selectionRef} />
                 </animated.object3D>

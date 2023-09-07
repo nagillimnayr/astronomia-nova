@@ -1,14 +1,17 @@
-import {Sphere, useTexture} from '@react-three/drei';
-import {extend, useLoader} from '@react-three/fiber';
-import {BackSide, type ShaderMaterial} from 'three';
+import { PI, SIMULATION_RADIUS } from '@/constants/constants';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { Sphere, useTexture } from '@react-three/drei';
+import { extend, useLoader } from '@react-three/fiber';
+import { useSelector } from '@xstate/react';
+import { useEffect, useRef } from 'react';
+import { BackSide, type ShaderMaterial } from 'three';
 
-import {EXRLoader} from 'three/examples/jsm/loaders/EXRLoader.js';
-import {degToRad} from 'three/src/math/MathUtils';
-import {CelestialSphereMaterial, type CelestialSphereMaterialImpl,} from './celestial-sphere-material';
-import {useEffect, useRef} from 'react';
-import {MachineContext} from '@/state/xstate/MachineProviders';
-import {useSelector} from '@xstate/react';
-import {PI, SIMULATION_RADIUS} from '@/constants/constants';
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
+import { degToRad } from 'three/src/math/MathUtils';
+import {
+  CelestialSphereMaterial,
+  type CelestialSphereMaterialImpl,
+} from './celestial-sphere-material';
 
 // Extend the shader material.
 extend({ CelestialSphereMaterial });

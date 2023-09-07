@@ -1,14 +1,14 @@
+import { anim } from '@/components/canvas/animated-components';
 import type KeplerBody from '@/components/canvas/body/kepler-body';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { animated, useSpring } from '@react-spring/three';
+import { useSelector } from '@xstate/react';
 import {
   forwardRef,
   type MutableRefObject,
   type PropsWithChildren,
 } from 'react';
 import { type ColorRepresentation, type Mesh } from 'three';
-import { useSelector } from '@xstate/react';
-import { MachineContext } from '@/state/xstate/MachineProviders';
-import { animated, useSpring } from '@react-spring/three';
-import { anim } from '@/components/canvas/animated-components';
 
 type SphereMarkerProps = PropsWithChildren & {
   bodyRef: MutableRefObject<KeplerBody>;

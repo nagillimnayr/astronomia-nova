@@ -1,12 +1,12 @@
+import { J2000 } from '@/constants/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+// import { Text as TextMesh } from 'troika-three-text';
+// import { type Text as TextMesh } from 'troika-three-text/src/Text';
+import { type Text as TextMesh } from '@/type-declarations/troika-three-text/Text';
 import { Text } from '@react-three/drei';
 import { format } from 'date-fns';
 import { Suspense, useEffect, useRef } from 'react';
 import { type Vector3Tuple } from 'three';
-// import { Text as TextMesh } from 'troika-three-text';
-// import { type Text as TextMesh } from 'troika-three-text/src/Text';
-import { type Text as TextMesh } from '@/type-declarations/troika-three-text/Text';
-import { J2000 } from '@/constants/constants';
 
 const FONT_SIZE = 1;
 

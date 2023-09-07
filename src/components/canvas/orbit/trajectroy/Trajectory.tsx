@@ -1,18 +1,34 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import {Line} from '@react-three/drei';
-import {MeshLineGeometry, MeshLineMaterial} from 'meshline';
-import {type MutableRefObject, useEffect, useMemo, useRef, useState,} from 'react';
-import {type ArrowHelper, type ColorRepresentation, EllipseCurve, type Object3D, Vector3,} from 'three';
-import {useSelector} from '@xstate/react';
-import {MachineContext} from '@/state/xstate/MachineProviders';
-import {DIST_MULT, METER, X_AXIS} from '@/constants/constants';
 import type KeplerBody from '@/components/canvas/body/kepler-body';
-import {extend, type MaterialNode, type Object3DNode,} from '@react-three/fiber';
-import {animated, useSpring} from '@react-spring/three';
-import {type Line2} from 'three-stdlib';
-import {useXR} from '@react-three/xr';
-import {useRootStore} from '@/state/root-store';
-import {colorMap} from '@/helpers/color-map';
+import { DIST_MULT, METER, X_AXIS } from '@/constants/constants';
+import { colorMap } from '@/helpers/color-map';
+import { useRootStore } from '@/state/root-store';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { animated, useSpring } from '@react-spring/three';
+import { Line } from '@react-three/drei';
+import {
+  extend,
+  type MaterialNode,
+  type Object3DNode,
+} from '@react-three/fiber';
+import { useXR } from '@react-three/xr';
+import { useSelector } from '@xstate/react';
+import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
+import {
+  type MutableRefObject,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import {
+  type ArrowHelper,
+  type ColorRepresentation,
+  EllipseCurve,
+  type Object3D,
+  Vector3,
+} from 'three';
+import { type Line2 } from 'three-stdlib';
 
 const DIST_TO_CAM_THRESHOLD = 1e8 * METER;
 
@@ -108,13 +124,11 @@ export const Trajectory = ({
     //   if (!line) return;
     //   line.material.opacity = result.value.opacity;
     // },
-    // Opacity for the line doesn't completely work and will leave black artifacts, so set the visibility to false once the animation has completed.
-    // onRest: (result, ctrl, item) => {
-    //   // console.log('onRest:', result);
-    //   if (typeof result.value.scale !== 'number') {
-    //     console.log('not number', result);
-    //     return;
-    //   }
+    // Opacity for the line doesn't completely work and will leave black
+    // artifacts, so set the visibility to false once the animation has
+    // completed. onRest: (result, ctrl, item) => { // console.log('onRest:',
+    // result); if (typeof result.value.scale !== 'number') { console.log('not
+    // number', result); return; }
 
     //   // const opacity = result.value.opacity;
     //   const line = lineRef.current;

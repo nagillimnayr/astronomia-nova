@@ -1,5 +1,5 @@
-import { Object3D, Vector3, Vector3Tuple } from 'three';
 import PointMass from '@/interfaces/point-mass';
+import { Object3D, Vector3, Vector3Tuple } from 'three';
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();

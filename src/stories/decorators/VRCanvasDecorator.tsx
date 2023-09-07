@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { Props as CanvasProps, useFrame } from '@react-three/fiber';
-import { VRCanvas } from '@/components/canvas/vr/VRCanvas';
 import { Floor } from '@/components/canvas/vr/components/Floor';
+import { VRCanvas } from '@/components/canvas/vr/VRCanvas';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { Props as CanvasProps, useFrame } from '@react-three/fiber';
+import * as React from 'react';
 
 type Props = React.PropsWithChildren<CanvasProps>;
 export const VRCanvasDecorator = ({ children, ...props }: Props) => {

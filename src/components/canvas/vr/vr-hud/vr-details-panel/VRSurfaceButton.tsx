@@ -1,15 +1,15 @@
+import useHover from '@/hooks/useHover';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { animated, useSpring } from '@react-spring/three';
+import { Center, Svg, Text, useCursor } from '@react-three/drei';
+import { type ThreeEvent } from '@react-three/fiber';
+import { Interactive, type XRInteractionEvent } from '@react-three/xr';
+import { useSelector } from '@xstate/react';
+import { useCallback, useEffect, useRef } from 'react';
 import { type Group, type Vector3Tuple } from 'three';
 import { colors, depth } from '../../../../../constants/vr-hud-constants';
-import { Center, Svg, Text, useCursor } from '@react-three/drei';
 import { ICON_MATERIAL_BASE } from '../../../../../constants/vr-ui-materials';
-import { useCallback, useEffect, useRef } from 'react';
-import useHover from '@/hooks/useHover';
-import { Interactive, type XRInteractionEvent } from '@react-three/xr';
 import { VRPanel } from '../vr-ui-components/vr-panel/VRPanel';
-import { MachineContext } from '@/state/xstate/MachineProviders';
-import { type ThreeEvent } from '@react-three/fiber';
-import { useSelector } from '@xstate/react';
-import { animated, useSpring } from '@react-spring/three';
 
 type VRSurfaceButtonProps = {
   width: number;
@@ -60,13 +60,15 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
     (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
       if ('stopPropagation' in event) {
         event.stopPropagation();
-        // Stopping propagation will call onPointerLeave, so we need to reset isHovered.
+        // Stopping propagation will call onPointerLeave, so we need to reset
+        // isHovered.
         setHovered(true);
       }
       // Get current selection.
       const { selected } = selectionActor.getSnapshot()!.context;
       if (!selected) {
-        // it shouldn't be possible to click the button if nothing is selected. So something has gone wrong.
+        // it shouldn't be possible to click the button if nothing is selected.
+        // So something has gone wrong.
         const err = 'Error! no body selected. This should not be possible.';
         console.error(err);
         throw new Error(err);
@@ -88,7 +90,8 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
     (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
       if ('stopPropagation' in event) {
         event.stopPropagation();
-        // Stopping propagation will call onPointerLeave, so we need to reset isHovered.
+        // Stopping propagation will call onPointerLeave, so we need to reset
+        // isHovered.
         setHovered(true);
       }
       // Set focus target to selected.

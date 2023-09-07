@@ -1,9 +1,9 @@
 'use client';
-import { MDXProvider } from '@mdx-js/react';
-import { ThemeProvider } from './theme-provider';
-import { type PropsWithChildren } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MachineProviders } from '@/state/xstate/MachineProviders';
+import { MDXProvider } from '@mdx-js/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { type PropsWithChildren } from 'react';
+import { ThemeProvider } from './theme-provider';
 
 const components = {};
 

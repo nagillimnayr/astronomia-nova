@@ -1,10 +1,10 @@
 import useHover from '@/hooks/useHover';
+import { animated, useSpring } from '@react-spring/three';
+import { Center, Svg, useCursor } from '@react-three/drei';
 import { type ThreeEvent } from '@react-three/fiber';
 import { Interactive, type XRInteractionEvent } from '@react-three/xr';
-import { Center, Svg, useCursor } from '@react-three/drei';
-import { animated, useSpring } from '@react-spring/three';
-import { type Group, type Vector3Tuple } from 'three';
 import { useCallback, useEffect, useRef } from 'react';
+import { type Group, type Vector3Tuple } from 'three';
 import {
   colors,
   depth,
@@ -51,7 +51,8 @@ export const VRIconButton = ({
     (event: ThreeEvent<MouseEvent> | XRInteractionEvent) => {
       if ('stopPropagation' in event) {
         event.stopPropagation();
-        // Stopping propagation will call onPointerLeave, so we need to reset isHovered.
+        // Stopping propagation will call onPointerLeave, so we need to reset
+        // isHovered.
         setHovered(true);
       }
       if (onClick) {

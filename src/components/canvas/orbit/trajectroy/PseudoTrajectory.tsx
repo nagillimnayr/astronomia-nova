@@ -1,6 +1,6 @@
 import KeplerBody from '@/components/canvas/body/kepler-body';
-import { useRootStore } from '@/state/root-store';
 import { TWO_PI } from '@/constants/constants';
+import { useRootStore } from '@/state/root-store';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Line } from '@react-three/drei';
 import { createPortal, useFrame } from '@react-three/fiber';
@@ -13,7 +13,8 @@ import { type Line2 } from 'three-stdlib';
 const _vel = new Vector3();
 const NUM_OF_SEGMENTS = 1024;
 
-// This line helps to cover up a lot of the flickering of the trajectory when very close to a planet.
+// This line helps to cover up a lot of the flickering of the trajectory when
+// very close to a planet.
 export const PseudoTrajectory = () => {
   const { cameraActor, visibilityActor } = MachineContext.useSelector(
     ({ context }) => context
@@ -56,7 +57,9 @@ export const PseudoTrajectory = () => {
     const line = lineRef.current;
     if (!line) return;
 
-    // Scale the line relative to the circumference of the trajectory, as it must be long enough to cover up the flickering but short enough that the tangent line doesn't stray noticeably off of the curve.
+    // Scale the line relative to the circumference of the trajectory, as it
+    // must be long enough to cover up the flickering but short enough that the
+    // tangent line doesn't stray noticeably off of the curve.
     const distanceToOrigin = body.position.length();
     const circumference = TWO_PI * distanceToOrigin;
 

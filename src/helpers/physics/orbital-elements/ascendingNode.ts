@@ -14,7 +14,8 @@ export function calculateAscendingNode(
 
 /**
  * @description
- * $$ \displaystyle \Omega = \arccos{\left(\frac{\vec{n}\cdot\vec{X}}{n}  \right)} $$
+ * $$ \displaystyle \Omega = \arccos{\left(\frac{\vec{n}\cdot\vec{X}}{n}
+ *   \right)} $$
  *
  * @author Ryan Milligan
  * @date 25/07/2023

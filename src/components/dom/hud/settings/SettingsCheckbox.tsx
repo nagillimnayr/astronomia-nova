@@ -1,10 +1,10 @@
 import { Label } from '@/components/dom/ui/label';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type visibilityMachine } from '@/state/xstate/visibility-machine/visibility-machine';
-import { useSelector } from '@xstate/react';
-import { type ContextFrom } from 'xstate';
 import * as Checkbox from '@radix-ui/react-checkbox';
+import { useSelector } from '@xstate/react';
 import { useCallback, useEffect } from 'react';
+import { type ContextFrom } from 'xstate';
 
 type CheckboxProps = {
   label: string;

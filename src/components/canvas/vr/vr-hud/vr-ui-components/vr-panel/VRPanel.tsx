@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { BufferGeometryNode, extend } from '@react-three/fiber';
-import React, { forwardRef, type PropsWithChildren } from 'react';
-import { type ColorRepresentation, Mesh, type Vector3Tuple } from 'three';
 import { colors } from '@/constants';
 import { animated, SpringValue } from '@react-spring/three';
+import { BufferGeometryNode, extend } from '@react-three/fiber';
+import {
+  EventHandlers
+} from '@react-three/fiber/dist/declarations/src/core/events';
 import { RoundedPlaneGeometry } from 'maath/geometry';
-import { EventHandlers } from '@react-three/fiber/dist/declarations/src/core/events';
+import React, { forwardRef, type PropsWithChildren } from 'react';
+import { type ColorRepresentation, Mesh, type Vector3Tuple } from 'three';
 
 extend({ RoundedPlaneGeometry });
 declare module '@react-three/fiber' {

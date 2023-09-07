@@ -1,16 +1,16 @@
-import { Slider } from '@/components/dom/ui/slider/Slider';
 import { Input } from '@/components/dom/ui/input';
 import { Label } from '@/components/dom/ui/label';
-import { MachineContext } from '@/state/xstate/MachineProviders';
-
-import { useCallback, useEffect, useRef } from 'react';
-import { useActor, useSelector } from '@xstate/react';
+import { Slider } from '@/components/dom/ui/slider/Slider';
 import {
   MAX_LATITUDE,
   MAX_LONGITUDE,
   MIN_LATITUDE,
   MIN_LONGITUDE,
 } from '@/constants/constants';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { useActor, useSelector } from '@xstate/react';
+
+import { useCallback, useEffect, useRef } from 'react';
 
 const SurfaceViewDialog = () => {
   const { uiActor, cameraActor, surfaceActor, visibilityActor } =

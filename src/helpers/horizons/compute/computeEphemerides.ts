@@ -1,5 +1,3 @@
-import { TWO_PI } from '../../../constants/constants';
-import { loadEphemeris, loadPhysicalData } from '../loadEphemerides';
 import {
   type ComputedEphemerides,
   type ComputedEphemerisTable,
@@ -9,14 +7,16 @@ import {
 import { ElementTableSchema } from '@/helpers/horizons/types/ElementTable';
 import { getSemiLatusRectumFromEccentricity } from '@/helpers/physics/orbital-elements/axes/SemiLatusRectum';
 import { getSemiMinorAxisFromSemiLatusRectum } from '@/helpers/physics/orbital-elements/axes/SemiMinorAxis';
-import { getLinearEccentricityFromAxes } from '../../physics/orbital-elements/LinearEccentricity';
 import { Vector3 } from 'three';
-import { getPosition } from '../../physics/orbital-elements/Position';
+import { TWO_PI } from '../../../constants/constants';
+import { getLinearEccentricityFromAxes } from '../../physics/orbital-elements/LinearEccentricity';
 import { getRadiusAtTrueAnomaly } from '../../physics/orbital-elements/OrbitalRadius';
+import { getPosition } from '../../physics/orbital-elements/Position';
 import {
   getOrbitalSpeedFromRadius,
   getVelocityDirectionFromOrbitalElements,
 } from '../../physics/orbital-elements/Velocity';
+import { loadEphemeris, loadPhysicalData } from '../loadEphemerides';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
@@ -60,7 +60,10 @@ export async function computeEphemerides(name: string) {
     eccentricity
   );
 
-  // The Horizons ephemeris data for Jupiter seems to result in it wobbling a bit on its orbit. Using the Vis-Viva equation to re-calculate the velocity seems to fix it though. It also appears to have fixed some wobble with the moon.
+  // The Horizons ephemeris data for Jupiter seems to result in it wobbling a
+  // bit on its orbit. Using the Vis-Viva equation to re-calculate the velocity
+  // seems to fix it though. It also appears to have fixed some wobble with the
+  // moon.
 
   // Load the physical data for the central body.
   const centralBodyPhysicalData = await loadPhysicalData(elements.centerName);
@@ -108,7 +111,10 @@ export async function computePhysicalData(
   const { id, table } = physicalData;
   const siderealRotRate = Math.abs(table.siderealRotRate);
 
-  const siderealRotationPeriod = TWO_PI / siderealRotRate; // Seconds to make one full rotation about the body's polar axis.
+  const siderealRotationPeriod = TWO_PI / siderealRotRate; // Seconds to make
+  // one full rotation
+  // about the body's
+  // polar axis.
 
   const computedTable: ComputedPhysicalDataTable = {
     ...table,

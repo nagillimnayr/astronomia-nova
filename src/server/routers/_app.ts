@@ -1,13 +1,13 @@
-import { z } from 'zod';
-import { procedure, router } from '../trpc';
-import {
-  loadEphemerides,
-  loadPhysicalData,
-} from '@/helpers/horizons/loadEphemerides';
 import {
   loadComputedEphemerides,
   loadComputedPhysicalData,
 } from '@/helpers/horizons/compute/loadComputed';
+import {
+  loadEphemerides,
+  loadPhysicalData,
+} from '@/helpers/horizons/loadEphemerides';
+import { z } from 'zod';
+import { procedure, router } from '../trpc';
 
 export const appRouter = router({
   // Load ephemerides procedure. (Query)

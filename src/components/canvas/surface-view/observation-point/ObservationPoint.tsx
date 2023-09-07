@@ -1,12 +1,12 @@
-import { type ReactNode, useEffect, useRef } from 'react';
-import { type Object3D } from 'three';
-import { Observer } from '../observer/Observer';
-// import { GlobalStateContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
 import KeplerBody from '@/components/canvas/body/kepler-body';
 import { DEG_TO_RADS, METER, PI_OVER_TWO } from '@/constants/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+// import { GlobalStateContext } from '@/state/xstate/MachineProviders';
+import { useSelector } from '@xstate/react';
+import { type ReactNode, useEffect, useRef } from 'react';
+import { type Object3D } from 'three';
 import { Compass } from '../compass/Compass';
+import { Observer } from '../observer/Observer';
 import { ObservationPointIndicator } from './ObservationPointIndicator';
 
 type Props = {
@@ -68,7 +68,8 @@ const ObservationPoint = ({ children }: Props) => {
       // Reset rotation.
       centerRef.current.rotation.set(0, 0, 0);
 
-      // Rotate around the local Y-axis first, which will be the polar axis of the body..
+      // Rotate around the local Y-axis first, which will be the polar axis of
+      // the body..
       centerRef.current.rotateY(longitude * DEG_TO_RADS);
       // We then rotate around the new local Z-axis after the first rotation.
       centerRef.current.rotateZ(latitude * DEG_TO_RADS);
@@ -97,7 +98,9 @@ const ObservationPoint = ({ children }: Props) => {
             <group
               name="observation-point"
               position={[body.meanRadius * METER, 0, 0]} // Position on surface.
-              rotation={[0, 0, -PI_OVER_TWO]} // Rotate so that the pole of the sphere is perpendicular to the surface of the body.
+              rotation={[0, 0, -PI_OVER_TWO]} // Rotate so that the pole of the
+              // sphere is perpendicular to the
+              // surface of the body.
             >
               {/* <axesHelper args={[1e-2]} /> */}
               {/* <ObservationSphere /> */}

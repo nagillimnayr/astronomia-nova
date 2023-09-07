@@ -1,7 +1,7 @@
-import {METER, PI_OVER_TWO} from '@/constants/constants';
-import {Ring} from '@react-three/drei';
-import {useMemo} from 'react';
-import {CompassMarker} from './CompassMarker';
+import { METER, PI_OVER_TWO } from '@/constants/constants';
+import { Ring } from '@react-three/drei';
+import { useMemo } from 'react';
+import { CompassMarker } from './CompassMarker';
 
 // Raise off the ground a little to prevent clipping
 const DIST_OFF_GROUND: Readonly<number> = METER * 5e-1;

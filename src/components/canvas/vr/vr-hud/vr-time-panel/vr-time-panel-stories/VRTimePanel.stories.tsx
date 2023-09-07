@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
-import { VRTimePanel } from '../VRTimePanel';
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
+import type { Meta, StoryObj } from '@storybook/react';
+import { VRTimePanel } from '../VRTimePanel';
 
 const meta: Meta<typeof VRTimePanel> = {
   title: 'VR-UI/vr-time-panel/VRTimePanel',

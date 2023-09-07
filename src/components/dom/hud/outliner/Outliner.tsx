@@ -1,14 +1,15 @@
-import { OutlinerItem } from './OutlinerItem';
 import { LoadingFallback } from '@/components/dom/fallback/LoadingFallback';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
+import { OutlinerItem } from './OutlinerItem';
 
 const Outliner = () => {
   const { keplerTreeActor, mapActor } = MachineContext.useSelector(
     ({ context }) => context
   );
   const root = useSelector(keplerTreeActor, ({ context }) => context.root);
-  // Bind to state changes so that the component will re-render whenever bodyMap is modified.
+  // Bind to state changes so that the component will re-render whenever
+  // bodyMap is modified.
   useSelector(mapActor, ({ context }) => context.bodyMap);
 
   if (!root) {

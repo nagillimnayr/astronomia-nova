@@ -1,5 +1,6 @@
 /**
- * @summary Calculate orbital radius at periapsis from the Semi-major axis and the Eccentricity.
+ * @summary Calculate orbital radius at periapsis from the Semi-major axis and
+ *   the Eccentricity.
  *
  * @description
  *
@@ -17,7 +18,8 @@ export function getPeriapsisFromEccentricity(
 }
 
 /**
- * @summary The length of the orbital radius at periapsis is the length of the major axis - the length of the radius at apoapsis.
+ * @summary The length of the orbital radius at periapsis is the length of the
+ *   major axis - the length of the radius at apoapsis.
  *
  * @description
  * @author Ryan Milligan

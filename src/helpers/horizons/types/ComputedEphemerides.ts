@@ -1,7 +1,7 @@
 import z from 'zod';
 import { ElementTableSchema } from './ElementTable';
-import { Vector3TupleSchema } from './VectorTable';
 import { PhysicalDataTableSchema } from './PhysicalData';
+import { Vector3TupleSchema } from './VectorTable';
 
 const IdSchema = z.object({
   id: z.string(),
@@ -13,14 +13,16 @@ const EphemerisIdSchema = IdSchema.extend({
   epoch: z.string(),
 });
 
-// Additional elements which must be computed, as they are not provided by Horizons.
+// Additional elements which must be computed, as they are not provided by
+// Horizons.
 export const ComputedElementTableSchema = ElementTableSchema.extend({
   semiMinorAxis: z.number(),
   semiLatusRectum: z.number(),
   linearEccentricity: z.number(),
 });
 
-// Horizons' vector tables cause issues, so the initial orbital state vectors must be re-computed from the orbital elements.
+// Horizons' vector tables cause issues, so the initial orbital state vectors
+// must be re-computed from the orbital elements.
 export const ComputedVectorTableSchema = z.object({
   initialPosition: Vector3TupleSchema,
   initialVelocity: Vector3TupleSchema,

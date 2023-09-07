@@ -1,16 +1,16 @@
-import { useCallback, useEffect, useRef } from 'react';
-import { Separator } from '@/components/dom/ui/Separator';
-import { SurfaceViewButton } from '../surface-dialog/SurfaceViewButton';
-import { MachineContext } from '@/state/xstate/MachineProviders';
-import { HOUR } from '@/constants/constants';
-import { useMachine, useSelector } from '@xstate/react';
 import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
-import { SpaceViewButton } from '../surface-dialog/SpaceViewButton';
+import { Separator } from '@/components/dom/ui/Separator';
+import { HOUR } from '@/constants/constants';
 import { cn } from '@/helpers/cn';
-import { FocusButton } from './FocusButton';
-import { gsap } from 'gsap';
+import { MachineContext } from '@/state/xstate/MachineProviders';
 import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
+import { useMachine, useSelector } from '@xstate/react';
+import { gsap } from 'gsap';
+import { useCallback, useEffect, useRef } from 'react';
+import { SpaceViewButton } from '../surface-dialog/SpaceViewButton';
+import { SurfaceViewButton } from '../surface-dialog/SurfaceViewButton';
 import { AttributeDetails } from './AttributeDetails';
+import { FocusButton } from './FocusButton';
 
 const DetailsPanel = () => {
   const { selectionActor } = MachineContext.useSelector(

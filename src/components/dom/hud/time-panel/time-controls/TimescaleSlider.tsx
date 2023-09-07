@@ -1,8 +1,7 @@
-import * as RadixSlider from '@radix-ui/react-slider';
-import { useCallback, useState } from 'react';
-
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import * as RadixSlider from '@radix-ui/react-slider';
 import { useSelector } from '@xstate/react';
+import { useCallback, useState } from 'react';
 
 export const TimescaleSlider = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);

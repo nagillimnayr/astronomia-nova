@@ -1,10 +1,22 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import {animated, AnimationResult, Lookup, SpringValue, useSpring,} from '@react-spring/three';
-import {PropsWithChildren, useCallback, useEffect, useMemo, useRef,} from 'react';
-import {Group, Object3D, SphereGeometry, Vector3,} from 'three';
-import {PI_OVER_TWO} from '@/constants/constants';
-import {Line, Wireframe} from '@react-three/drei';
-import {clamp} from 'three/src/math/MathUtils';
+import { PI_OVER_TWO } from '@/constants/constants';
+import {
+  animated,
+  AnimationResult,
+  Lookup,
+  SpringValue,
+  useSpring,
+} from '@react-spring/three';
+import { Line, Wireframe } from '@react-three/drei';
+import {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
+import { Group, Object3D, SphereGeometry, Vector3 } from 'three';
+import { clamp } from 'three/src/math/MathUtils';
 
 const MIN_PHI = -PI_OVER_TWO + Number.EPSILON;
 const MAX_PHI = PI_OVER_TWO - Number.EPSILON;
@@ -114,7 +126,8 @@ export const VRHudSphere = ({ radius }: VRHudSphereProps) => {
     const radius = 1;
     const resolution = 32;
     const geometry = new SphereGeometry(radius, resolution, resolution);
-    const nonIndexedGeometry = geometry.toNonIndexed(); // Necessary for wireframe.
+    const nonIndexedGeometry = geometry.toNonIndexed(); // Necessary for
+    // wireframe.
     geometry.dispose(); // Cleanup original indexed geometry.
     return nonIndexedGeometry;
   }, []);

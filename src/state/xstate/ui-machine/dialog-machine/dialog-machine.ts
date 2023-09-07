@@ -1,6 +1,6 @@
+import { gsap } from 'gsap';
 import { type MutableRefObject } from 'react';
 import { assign, createMachine, log } from 'xstate';
-import { gsap } from 'gsap';
 
 type Context = {
   dialogRef: MutableRefObject<HTMLDivElement | null> | null;

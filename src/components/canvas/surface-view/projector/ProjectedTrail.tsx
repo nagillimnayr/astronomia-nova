@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import KeplerBody from '@/components/canvas/body/kepler-body';
-import {MachineContext} from '@/state/xstate/MachineProviders';
-import {Line} from '@react-three/drei';
-import {useFrame, useThree} from '@react-three/fiber';
-import {useSelector} from '@xstate/react';
-import {useEffect, useMemo, useRef} from 'react';
-import {type ColorRepresentation, Group, type Object3D, Vector3,} from 'three';
-import {Line2} from 'three-stdlib';
+import { MachineContext } from '@/state/xstate/MachineProviders';
+import { Line } from '@react-three/drei';
+import { useFrame, useThree } from '@react-three/fiber';
+import { useSelector } from '@xstate/react';
+import { useEffect, useMemo, useRef } from 'react';
+import { type ColorRepresentation, Group, type Object3D, Vector3 } from 'three';
+import { Line2 } from 'three-stdlib';
 
 const _newPos = new Vector3();
 
@@ -71,7 +71,8 @@ export const ProjectedTrail = ({
     const subscription = surfaceActor.subscribe((state) => {
       const line = lineRef.current;
       if (!line) return;
-      // Position of target won't have updated immediately, so reset the trail after a slight delay.
+      // Position of target won't have updated immediately, so reset the trail
+      // after a slight delay.
       line.visible = false; // Toggle visibility temporarily, to avoid jank.
       setTimeout(() => {
         const anchor = anchorRef.current;
@@ -92,7 +93,8 @@ export const ProjectedTrail = ({
         line.visible = false;
       }
       if (state.event.type !== 'PAUSE') return;
-      // Position of target won't have updated immediately, so reset the trail after a slight delay.
+      // Position of target won't have updated immediately, so reset the trail
+      // after a slight delay.
       line.visible = false; // Toggle visibility temporarily, to avoid jank.
       setTimeout(() => {
         const anchor = anchorRef.current;

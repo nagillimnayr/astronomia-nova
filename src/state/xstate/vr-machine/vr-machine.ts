@@ -1,7 +1,7 @@
 import { type RootState } from '@react-three/fiber';
 import { type XRState } from '@react-three/xr';
 import { Object3D, Vector3Tuple } from 'three';
-import { assign, createMachine, log } from 'xstate';
+import { assign, createMachine } from 'xstate';
 
 const EPSILON = 1e-16;
 const MIN_NEAR = EPSILON;
@@ -167,11 +167,16 @@ export const vrMachine = createMachine(
         // Create rigid transform from the pose position.
         const offsetTransform = new XRRigidTransform(position);
 
-        // Create offset reference space from position. Leave orientation undefined.
+        // Create offset reference space from position. Leave orientation
+        // undefined.
         const offsetRefSpace =
           refSpace.getOffsetReferenceSpace(offsetTransform);
 
-        // Set new reference space with offset. This will negate the translation component of the transformation matrix of the headset's spatially tracked position relative to the session origin, but without affecting the spatially tracked orientation, which we want to preserve.
+        // Set new reference space with offset. This will negate the
+        // translation component of the transformation matrix of the headset's
+        // spatially tracked position relative to the session origin, but
+        // without affecting the spatially tracked orientation, which we want
+        // to preserve.
         xr.setReferenceSpace(offsetRefSpace);
       },
 

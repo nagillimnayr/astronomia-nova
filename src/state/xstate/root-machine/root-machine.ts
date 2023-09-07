@@ -1,17 +1,17 @@
-import { type ActorRefFrom, assign, createMachine, log, spawn } from 'xstate';
-import { cameraMachine } from '../camera-machine/camera-machine';
-import { selectionMachine } from '../selection-machine/selection-machine';
-import { visibilityMachine } from '../visibility-machine/visibility-machine';
-import { timeMachine } from '../time-machine/time-machine';
-import { keplerTreeMachine } from '../kepler-tree-machine/kepler-tree-machine';
-import { celestialSphereMachine } from '../visibility-machine/celestial-sphere-machine';
-import { mapMachine } from '../map-machine/map-machine';
-import { surfaceMachine } from '../surface-machine/surface-machine';
-import { uiMachine } from '../ui-machine/ui-machine';
-import { vrMachine } from '../vr-machine/vr-machine';
-import { sendTo } from 'xstate/lib/actions';
-import { TIME_MULT } from '@/constants/constants';
 import KeplerBody from '@/components/canvas/body/kepler-body';
+import { TIME_MULT } from '@/constants/constants';
+import { type ActorRefFrom, assign, createMachine, log, spawn } from 'xstate';
+import { sendTo } from 'xstate/lib/actions';
+import { cameraMachine } from '../camera-machine/camera-machine';
+import { keplerTreeMachine } from '../kepler-tree-machine/kepler-tree-machine';
+import { mapMachine } from '../map-machine/map-machine';
+import { selectionMachine } from '../selection-machine/selection-machine';
+import { surfaceMachine } from '../surface-machine/surface-machine';
+import { timeMachine } from '../time-machine/time-machine';
+import { uiMachine } from '../ui-machine/ui-machine';
+import { celestialSphereMachine } from '../visibility-machine/celestial-sphere-machine';
+import { visibilityMachine } from '../visibility-machine/visibility-machine';
+import { vrMachine } from '../vr-machine/vr-machine';
 
 type Context = {
   timeActor: ActorRefFrom<typeof timeMachine>;
@@ -174,7 +174,11 @@ export const rootMachine = createMachine(
         ({ keplerTreeActor }) => keplerTreeActor,
         (context, { deltaTime }) => ({
           type: 'UPDATE',
-          deltaTime: deltaTime / TIME_MULT, // Since deltaTime is already in seconds, it must be divided by TIME_MULT, as it will be multiplied by TIME_MULT when passed to the update function.
+          deltaTime: deltaTime / TIME_MULT, // Since deltaTime is already in
+          // seconds, it must be divided by
+          // TIME_MULT, as it will be
+          // multiplied by TIME_MULT when
+          // passed to the update function.
         })
       ),
       advanceDay: (context, { reverse }) => {
@@ -187,7 +191,10 @@ export const rootMachine = createMachine(
 
         timeActor.send({ type: 'ADVANCE_TIME', deltaTime });
 
-        deltaTime /= TIME_MULT; // Since deltaTime is already in seconds, it must be divided by TIME_MULT, as it will be multiplied by TIME_MULT when passed to the update function.
+        deltaTime /= TIME_MULT; // Since deltaTime is already in seconds, it
+        // must be divided by TIME_MULT, as it will be
+        // multiplied by TIME_MULT when passed to the
+        // update function.
         keplerTreeActor.send({ type: 'UPDATE', deltaTime });
       },
       logTimeActor: log((context) => context.timeActor),

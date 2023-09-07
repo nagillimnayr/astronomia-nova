@@ -1,10 +1,10 @@
-import { degToRad } from 'three/src/math/MathUtils';
-import { useRef } from 'react';
+import { CameraController } from '@/components/canvas/scene/camera-controller/CameraController';
+import { FAR_CLIP, NEAR_CLIP } from '@/constants/scene-constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { extend, type Object3DNode, useThree } from '@react-three/fiber';
-import { CameraController } from '@/components/canvas/scene/camera-controller/CameraController';
+import { useRef } from 'react';
 import { PerspectiveCamera } from 'three';
-import { FAR_CLIP, NEAR_CLIP } from '@/constants/scene-constants';
+import { degToRad } from 'three/src/math/MathUtils';
 
 const startRadius = 2e11;
 const startPolar = degToRad(75);

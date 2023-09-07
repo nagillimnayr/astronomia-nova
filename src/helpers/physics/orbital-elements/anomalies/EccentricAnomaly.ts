@@ -22,7 +22,8 @@ const getEccentricAnomalyNewtonsMethod = (
   } // Set initial guess to E_0 = M(t)
   else eccentricAnomaly = meanAnomaly;
 
-  // Iteratively apply Newton's Method until an arbitrary level of accuracy is reached
+  // Iteratively apply Newton's Method until an arbitrary level of accuracy is
+  // reached
   for (let i = 0; i < maxIter; i++) {
     // E_i+1 = E_i - (E_i - e*sin(E_i) - M)
     const derivative = 1 - eccentricity * Math.cos(eccentricAnomaly);

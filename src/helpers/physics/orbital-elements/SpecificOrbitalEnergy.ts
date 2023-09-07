@@ -1,4 +1,4 @@
-import {GRAV_CONST} from '../../../constants/constants';
+import { GRAV_CONST } from '../../../constants/constants';
 
 /**
  * @description

@@ -20,9 +20,9 @@ export const DebugPanel = () => {
     <>
       <div className="m-4 flex h-full w-full flex-col items-center justify-center rounded-md border-transparent bg-transparent text-foreground">
         {/* <span>{'camera rotation:'}</span>
-        <span>
-          {`{ x: ${x.toFixed(2)},   y: ${y.toFixed(2)},   z: ${z.toFixed(2)} }`}
-        </span> */}
+         <span>
+         {`{ x: ${x.toFixed(2)},   y: ${y.toFixed(2)},   z: ${z.toFixed(2)} }`}
+         </span> */}
       </div>
     </>
   );

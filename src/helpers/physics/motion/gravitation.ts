@@ -1,5 +1,5 @@
-import {Vector3, Vector3Tuple} from 'three';
-import {DIST_MULT, GRAV_CONST} from '@/constants/constants';
+import { DIST_MULT, GRAV_CONST } from '@/constants/constants';
+import { Vector3, Vector3Tuple } from 'three';
 
 /**
  * @summary

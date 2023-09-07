@@ -1,16 +1,18 @@
-// The velocity of the orbiting body can be determined with the 'vis-viva' equation
-// $$ \displaystyle |\vec{v}| = \sqrt{GM \left( \frac{2}{r} - \frac{1}{a} \right)} $$
+// The velocity of the orbiting body can be determined with the 'vis-viva'
+// equation $$ \displaystyle |\vec{v}| = \sqrt{GM \left( \frac{2}{r} -
+// \frac{1}{a} \right)} $$
 
-import {degToRad} from 'three/src/math/MathUtils';
-import {GRAV_CONST} from '../../../constants/constants';
-import {Vector3} from 'three';
+import { Vector3 } from 'three';
+import { degToRad } from 'three/src/math/MathUtils';
+import { GRAV_CONST } from '../../../constants/constants';
 
 /**
  * @summary
  *
  * @description
  * Vis-viva equation:
- * $$ \displaystyle |\vec{v}| = \sqrt{GM \left( \frac{2}{r} - \frac{1}{a} \right)} $$
+ * $$ \displaystyle |\vec{v}| = \sqrt{GM \left( \frac{2}{r} - \frac{1}{a}
+ *   \right)} $$
  *
  * @author Ryan Milligan
  * @date 26/06/2023
@@ -45,7 +47,8 @@ export function getVelocityDirectionAtRadius(
   const x = radius * Math.cos(radians);
   const y = radius * Math.sin(radians);
 
-  // get the direction vector of the tangent line of the ellipse at the point (x, y)
+  // get the direction vector of the tangent line of the ellipse at the point
+  // (x, y)
   const dirX = -y * semiMajorAxis ** 2;
   const dirY = x * semiMinorAxis ** 2;
 
@@ -66,7 +69,7 @@ export function getVelocityDirectionAtRadius(
  *
  * @description
  * https://orbital-mechanics.space/classical-orbital-elements/perifocal-frame.html#equation-eq-perifocal-simplified-velocity-vector#equation-eq-perifocal-simplified-velocity-vector
- * The velocity is the derivative of the position.
+ *   The velocity is the derivative of the position.
  *
  *
  * @author Ryan Milligan

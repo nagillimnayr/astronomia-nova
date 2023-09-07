@@ -1,7 +1,7 @@
-import { Vector3Tuple } from 'three';
-import { Text } from '@react-three/drei';
 import { MachineContext } from '@/state/xstate/MachineProviders';
+import { Text } from '@react-three/drei';
 import { useSelector } from '@xstate/react';
+import { Vector3Tuple } from 'three';
 
 type VRDebugDisplayProps = {
   position?: Vector3Tuple;

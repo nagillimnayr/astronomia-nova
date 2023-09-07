@@ -1,12 +1,12 @@
+import { EnterVRButton } from '@/components/canvas/vr/EnterVRButton';
 import { cn } from '@/helpers/cn';
-import TimePanel from './time-panel/TimePanel';
+import { ClassNameValue } from 'tailwind-merge';
 import { DetailsPanel } from './details-panel/DetailsPanel';
 import DouglasLogo from './DouglasLogo';
 import Outliner from './outliner/Outliner';
 import { SettingsMenu } from './settings/SettingsMenu';
 import { SurfaceViewDialog } from './surface-dialog/SurfaceViewDialog';
-import { ClassNameValue } from 'tailwind-merge';
-import { EnterVRButton } from '@/components/canvas/vr/EnterVRButton';
+import TimePanel from './time-panel/TimePanel';
 
 type Props = {
   className?: ClassNameValue;
@@ -31,9 +31,9 @@ export const HUD = ({ className }: Props) => {
 
         {/** Settings Menu */}
         {/* <div className="relative z-50 col-end-[-2] row-start-2 h-full w-full">
-          <div className="pointer-events-auto absolute right-1/2 top-0 m-0 inline-flex h-fit w-fit translate-x-1/2 items-center justify-center p-0"></div>
-          <SettingsMenu />
-        </div> */}
+         <div className="pointer-events-auto absolute right-1/2 top-0 m-0 inline-flex h-fit w-fit translate-x-1/2 items-center justify-center p-0"></div>
+         <SettingsMenu />
+         </div> */}
 
         {/** Outliner. */}
         <div className={'relative col-start-2 row-start-[3] row-end-[-3]'}>
@@ -84,10 +84,10 @@ export const HUD = ({ className }: Props) => {
 
         {/** Debug Panel */}
         {/* <div className={'relative col-start-[4] col-end-[5] row-end-[3]'}>
-          <div className="pointer-events-auto flex h-full w-full flex-col items-center justify-center">
-            <DebugPanel />
-          </div>
-        </div> */}
+         <div className="pointer-events-auto flex h-full w-full flex-col items-center justify-center">
+         <DebugPanel />
+         </div>
+         </div> */}
       </div>
     </>
   );

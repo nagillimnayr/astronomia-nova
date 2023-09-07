@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import { VRSettingsButton } from '@/components/canvas/vr/vr-hud/vr-settings-menu/VRSettingsButton';
+import { VRSettingsMenu } from '@/components/canvas/vr/vr-hud/vr-settings-menu/VRSettingsMenu';
 import { VRCanvasDecorator } from '@/stories/decorators/VRCanvasDecorator';
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
-import { VRSettingsMenu } from '@/components/canvas/vr/vr-hud/vr-settings-menu/VRSettingsMenu';
-import { VRSettingsButton } from '@/components/canvas/vr/vr-hud/vr-settings-menu/VRSettingsButton';
+import type { Meta, StoryObj } from '@storybook/react';
 
 type Props = React.ComponentProps<typeof VRSettingsMenu> & { size: number };
 const meta: Meta<Props> = {

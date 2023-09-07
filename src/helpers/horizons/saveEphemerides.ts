@@ -1,9 +1,9 @@
+import { type Ephemeris } from '@/helpers/horizons/types/Ephemeris';
+import { type PhysicalData } from '@/helpers/horizons/types/PhysicalData';
 import fs from 'fs-extra';
-import path from 'path';
-import {fileURLToPath} from 'url';
 import _ from 'lodash';
-import {type Ephemeris} from '@/helpers/horizons/types/Ephemeris';
-import {type PhysicalData} from '@/helpers/horizons/types/PhysicalData';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Save individual ephemeris table.
 export async function saveEphemeris(ephemeris: Ephemeris) {
