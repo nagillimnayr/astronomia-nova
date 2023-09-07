@@ -14,7 +14,6 @@ type SimProps = {
 const Simulation = ({ children }: SimProps) => {
   const rootActor = MachineContext.useActorRef();
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
-  console.log('render Simulation');
 
   useFrame(({ clock, camera }, delta) => {
     // Update simulation.
