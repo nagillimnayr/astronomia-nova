@@ -51,20 +51,6 @@ export const CameraManager = () => {
           }
         }}
       />
-      {/* <MainCamera /> */}
-      {/* <CameraLogger /> */}
-    </>
-  );
-};
-
-const CameraLogger = () => {
-  const camera = useThree(({ camera }) => camera);
-
-  console.log('useThree().camera:', camera);
-
-  return (
-    <>
-      <></>
     </>
   );
 };

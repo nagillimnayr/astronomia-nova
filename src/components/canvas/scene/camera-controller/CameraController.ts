@@ -10,7 +10,7 @@ import {
 } from '@/constants/constants';
 import { smoothCritDamp } from './smoothing';
 import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
-import { normalizeAngle } from '../../../../helpers/rotation-utils';
+import { normalizeAngle } from '@/helpers/rotation-utils';
 
 const EPSILON = 1e-3;
 // const EPSILON = 1e-14;
@@ -271,7 +271,7 @@ export class CameraController extends Object3D {
     if (camera === this._camera) {
       return;
     }
-    console.log('Setting camera in camera controller!', camera);
+    // console.log('Setting camera in camera controller!', camera);
     this._camera = camera;
     // const parent = camera.parent;
     this.attachToController(camera);
@@ -329,7 +329,7 @@ export class CameraController extends Object3D {
   }
 
   set minDistance(minDistance: number) {
-    console.log('set minDistance');
+    // console.log('set minDistance');
     this.setMinRadius(minDistance);
   }
 
@@ -338,7 +338,7 @@ export class CameraController extends Object3D {
   }
 
   set maxRadius(maxRadius: number) {
-    console.log('set minDistance');
+    // console.log('set minDistance');
     this.setMaxRadius(maxRadius);
   }
 
@@ -666,7 +666,7 @@ export class CameraController extends Object3D {
   }
 
   setDomElement(domElement: HTMLElement) {
-    console.log('setting dom element');
+    // console.log('setting dom element');
     if (this._domElement) {
       // Disconnect event listeners before setting new dom element.
       this.disconnectEventListeners();
