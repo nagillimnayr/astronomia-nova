@@ -1,8 +1,6 @@
 import {
-  DIST_MULT,
   METER,
   SIMULATION_RADIUS,
-  SOLAR_SYSTEM_RADIUS,
 } from '@/simulation/utils/constants';
 
 export const NEAR_CLIP = 1e-2 * METER;

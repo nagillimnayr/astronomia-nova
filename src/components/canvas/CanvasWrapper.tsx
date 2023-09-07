@@ -1,23 +1,15 @@
 import { Canvas } from '@react-three/fiber';
-
-import { Perf } from 'r3f-perf';
-
 import {
   type PropsWithChildren,
   Suspense,
-  useContext,
   useRef,
-  useCallback,
 } from 'react';
-import { LoadingFallback } from '../fallback/LoadingFallback';
-
 import { HUD } from '@/simulation/components/HUD/HUD';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import Scene from './Scene';
 import { VRManager } from './vr/VRManager';
-import { Hud, Loader, Preload, Stats } from '@react-three/drei';
-import { VRDebugPortal } from '@/simulation/components/HUD/VR-HUD/vr-debug/VRDebugDisplay';
-import { Controllers, XR } from '@react-three/xr';
+import { Loader, Preload,  } from '@react-three/drei';
+import {  XR } from '@react-three/xr';
 import { VRHud } from '@/simulation/components/HUD/VR-HUD/VRHud';
 
 export const REF_SPACE_TYPE: Readonly<XRReferenceSpaceType> = 'local-floor';
