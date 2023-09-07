@@ -8,9 +8,9 @@ import {
 import { useFrame } from '@react-three/fiber';
 
 // Scaling factors for controlling strength of VR controller inputs.
-const ZOOM_FACTOR = 1 / 8;
-const POLAR_FACTOR = 2;
-const AZIMUTH_FACTOR = 2;
+const ZOOM_SPEED = 4;
+const POLAR_SPEED = 2 ** 7;
+const AZIMUTH_SPEED = 2 ** 7;
 
 /**
  * @description Uses the 'useFrame' hook form '@react-three/fiber' to poll the VR Controller's thumbsticks for input. It passes that input to the cameraActor state machine to pass to the camera controller.
@@ -37,7 +37,7 @@ export function useVRThumbstickControls() {
 
       if (leftAxisY) {
         // Radial zoom.
-        let zoom = leftAxisY * ZOOM_FACTOR;
+        let zoom = leftAxisY * ZOOM_SPEED * delta;
         zoom *= zoom > 0 ? 2 : 1;
         cameraActor.send({ type: 'ZOOM', deltaZoom: zoom });
       }
@@ -48,7 +48,7 @@ export function useVRThumbstickControls() {
 
       if (rightAxisX) {
         // Azimuthal rotation.
-        let azimuthal = rightAxisX * AZIMUTH_FACTOR;
+        let azimuthal = rightAxisX * AZIMUTH_SPEED * delta;
         // Reverse direction of rotation if on surface.
         onSurface && (azimuthal *= -1);
         cameraActor.send({ type: 'ROTATE_AZIMUTHAL', deltaAngle: azimuthal });
@@ -57,7 +57,7 @@ export function useVRThumbstickControls() {
       // If on surface, disable polar rotation.
       if (!onSurface && rightAxisY) {
         // Polar rotation.
-        const polar = rightAxisY * POLAR_FACTOR;
+        const polar = rightAxisY * POLAR_SPEED * delta;
         cameraActor.send({ type: 'ROTATE_POLAR', deltaAngle: polar });
       }
     }
