@@ -1,4 +1,4 @@
-import { DynamicBody } from '@/classes/dynamics';
+import { DynamicBody } from '@/components/canvas/body/dynamic-body';
 import { DIST_MULT, EARTH_RADIUS } from '@/constants';
 import { type MutableRefObject } from 'react';
 import { type Mesh, type Vector3Tuple } from 'three';
