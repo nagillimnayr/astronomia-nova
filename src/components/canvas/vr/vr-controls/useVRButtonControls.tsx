@@ -30,13 +30,13 @@ export function useVRButtonControls() {
       if (leftGamepad) {
         const [buttonX, buttonY] = getXRButtons(leftGamepad);
         if (buttonX && buttonX.pressed) {
-          console.log('button X');
+          // console.log('button X');
           if (!onSurface) return;
           rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
         }
 
         if (buttonY && buttonY.pressed) {
-          console.log('button Y');
+          // console.log('button Y');
         }
       }
 
@@ -44,13 +44,13 @@ export function useVRButtonControls() {
       if (rightGamepad) {
         const [buttonA, buttonB] = getXRButtons(rightGamepad);
         if (buttonA && buttonA.pressed) {
-          console.log('button A');
+          // console.log('button A');
           if (!onSurface) return;
           rootActor.send({ type: 'ADVANCE_DAY' });
         }
 
         if (buttonB && buttonB.pressed) {
-          console.log('button B');
+          // console.log('button B');
         }
       }
     }, 10);
