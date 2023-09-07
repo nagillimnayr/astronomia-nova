@@ -1,6 +1,5 @@
 import { useCallback, useContext, useEffect, useRef } from 'react';
 import { Separator } from '@/components/gui/Separator';
-import { observer } from 'mobx-react-lite';
 import { SurfaceViewButton } from './surface-view-dialog/SurfaceViewButton';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { DAY, DIST_MULT, HOUR } from '@/simulation/utils/constants';
