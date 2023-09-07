@@ -1,4 +1,4 @@
-import { assign, createMachine, log } from 'xstate';
+import { assign, createMachine } from 'xstate';
 import type KeplerBody from '@/components/canvas/body/kepler-body';
 import { makeFixedUpdateFn } from '@/helpers/fixed-time-step';
 import { traverseKeplerTree } from '@/helpers/kepler-tree';
@@ -35,7 +35,7 @@ export const keplerTreeMachine = createMachine(
         cond: (context, event) => {
           return context.root !== event.root;
         },
-        actions: ['assignRoot', log((_, event) => event)],
+        actions: ['assignRoot'],
       },
       UPDATE: {
         cond: (context) => (context.root ? true : false),

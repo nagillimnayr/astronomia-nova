@@ -132,7 +132,10 @@ export const vrMachine = createMachine(
   {
     actions: {
       // Other actions:
-      logEvent: log((_, event) => event),
+      // logEvent: log((_, event) => event),
+      logEvent: () => {
+        return;
+      },
       startSession: ({ getThree }, event) => {
         //
       },

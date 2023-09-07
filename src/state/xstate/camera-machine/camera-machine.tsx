@@ -27,7 +27,6 @@ const SPACE_MIN_DIST_FROM_SURFACE = 1e-3;
 // Surface view constants:
 const SURFACE_MIN_DIST = METER * 1e-1;
 const SURFACE_MAX_DIST = 1.5 * SURFACE_MIN_DIST;
-const SURFACE_MIN_DIST_FROM_SURFACE = 2 * METER; // 2 meters above ground
 
 // Default FOV.
 const FOV = 40;
@@ -93,12 +92,16 @@ export const cameraMachine = createMachine(
         cond: (context, event) => {
           return context.controls !== event.controls;
         },
-        actions: ['logEvent', 'assignControls', 'initializeControls'],
+        actions: [
+          // 'logEvent',
+          'assignControls',
+          'initializeControls',
+        ],
       },
       ASSIGN_CAMERA: {
         actions: [
           assign({ mainCamera: (_, event) => event.camera }),
-          'logEvent',
+          // 'logEvent',
           'setCamera',
           'initializeControls',
         ],
@@ -109,13 +112,13 @@ export const cameraMachine = createMachine(
         },
         actions: [
           assign({ observer: (_, event) => event.observer }),
-          'logEvent',
+          // 'logEvent',
         ],
       },
 
       ASSIGN_VR_HUD: {
         actions: [
-          'logEvent',
+          // 'logEvent',
           assign({
             vrHud: (_, { vrHud }) => vrHud,
           }),
@@ -252,7 +255,10 @@ export const cameraMachine = createMachine(
   {
     // Action implementations:
     actions: {
-      logEvent: log((_, event) => event),
+      // logEvent: log((_, event) => event),
+      logEvent: () => {
+        return;
+      },
 
       assignGetThree: assign({
         getThree: (_, { getThree }) => getThree,

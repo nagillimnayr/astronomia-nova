@@ -54,7 +54,10 @@ export const surfaceMachine = createMachine(
   },
   {
     actions: {
-      logEvent: log((_, event) => event),
+      // logEvent: log((_, event) => event),
+      logEvent: () => {
+        return;
+      },
 
       setLatitude: assign({
         latitude: (_, { value }) => value,

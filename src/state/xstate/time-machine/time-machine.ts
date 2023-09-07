@@ -119,7 +119,10 @@ export const timeMachine = createMachine(
         },
       }),
 
-      logEvent: log((_, event) => event),
+      // logEvent: log((_, event) => event),
+      logEvent: () => {
+        return;
+      },
       // logTimer: log((context) => context.timeElapsed),
     },
     guards: {

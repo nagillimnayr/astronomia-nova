@@ -1,6 +1,6 @@
 import KeplerBody from '@/components/canvas/body/kepler-body';
 import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
-import { assign, createMachine, log } from 'xstate';
+import { assign, createMachine } from 'xstate';
 
 type Context = {
   bodyMap: Map<string, KeplerBody>;
@@ -34,23 +34,23 @@ export const mapMachine = createMachine(
     on: {
       ADD_BODY: {
         cond: 'validateAddBody',
-        actions: ['addBody', log((_, event) => event)],
+        actions: ['addBody'],
       },
       ADD_ORBIT: {
         cond: 'validateAddOrbit',
-        actions: ['addOrbit', log((_, event) => event)],
+        actions: ['addOrbit'],
       },
       REMOVE_BODY: {
         cond: 'validateRemoveBody',
-        actions: ['removeBody', log((_, event) => event)],
+        actions: ['removeBody'],
       },
       REMOVE_ORBIT: {
         cond: 'validateRemoveOrbit',
-        actions: ['removeOrbit', log((_, event) => event)],
+        actions: ['removeOrbit'],
       },
       REMOVE: {
         cond: 'validateRemoveBody',
-        actions: ['removeBody', 'removeOrbit', log((_, event) => event)],
+        actions: ['removeBody', 'removeOrbit'],
       },
     },
   },

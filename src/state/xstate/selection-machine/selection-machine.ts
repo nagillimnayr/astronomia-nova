@@ -26,20 +26,10 @@ export const selectionMachine = createMachine({
       cond: (context, event) => {
         return context.selected !== event.selection;
       },
-      actions: [
-        assign({ selected: (_, event) => event.selection }),
-        (context) => {
-          console.log('new selection:', context.selected);
-        },
-      ],
+      actions: [assign({ selected: (_, event) => event.selection })],
     },
     DESELECT: {
-      actions: [
-        assign({ selected: () => null }),
-        (context) => {
-          console.log('deselect!:', context.selected);
-        },
-      ],
+      actions: [assign({ selected: () => null })],
     },
   },
 
