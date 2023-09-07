@@ -1,8 +1,7 @@
 import { Separator } from '@/components/gui/Separator';
 import { SettingsToggleButton } from './SettingsToggleButton';
 import { OpacitySliders } from '../opacity/OpacitySliders';
-import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useActor, useSelector, useMachine } from '@xstate/react';
+import {useMachine } from '@xstate/react';
 import { useCallback, useEffect, useRef } from 'react';
 import { dialogMachine } from '@/state/xstate/ui-machine/dialog-machine/dialog-machine';
 import { cn } from '@/lib/cn';
@@ -44,7 +43,6 @@ export const SettingsMenu = ({ defaultOpen }: Props) => {
   return (
     <>
       {/** Open button. */}
-
       <button
         className="pointer-events-auto relative right-0 top-0 m-0 inline-flex items-center justify-center rounded-full bg-clip-text p-0"
         onClick={handleOpenClick}
