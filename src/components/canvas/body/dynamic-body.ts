@@ -14,6 +14,15 @@ class DynamicBody extends Object3D implements PointMass {
   private _acceleration: Vector3;
   private _mass: number;
 
+  /**
+   * Creates an instance of DynamicBody.
+   * @author Ryan Milligan
+   * @date Sep/07/2023
+   * @param {number} [mass]
+   * @param {Vector3Tuple} [initialPosition]
+   * @param {Vector3Tuple} [initialVelocity]
+   * @memberof DynamicBody
+   */
   constructor(
     mass?: number,
     initialPosition?: Vector3Tuple,
