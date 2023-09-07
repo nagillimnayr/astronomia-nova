@@ -24,18 +24,9 @@ import {
   MeshBasicMaterial,
 } from 'three';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Checkbox, IconButton, Slider } from '@coconut-xr/apfel-kruemel';
 import { type ContextFrom } from 'xstate';
 import { type visibilityMachine } from '@/state/xstate/visibility-machine/visibility-machine';
 import { useSelector } from '@xstate/react';
-import {
-  Container,
-  ContainerProperties,
-  ExtendedThreeEvent,
-  RootContainer,
-  SVG,
-  Text,
-} from '@coconut-xr/koestlich';
 import { VRSeparator } from '../vr-ui-components/VRSeparator';
 import {
   Center,
