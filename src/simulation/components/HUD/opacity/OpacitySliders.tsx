@@ -1,6 +1,6 @@
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/gui/slider/Slider';
-import { Input } from '@/components/ui/input';
+import { Label } from '@/components/dom/ui/label';
+import { Slider } from '@/components/dom/ui/slider/Slider';
+import { Input } from '@/components/dom/ui/input';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { cn } from '@/lib/cn';

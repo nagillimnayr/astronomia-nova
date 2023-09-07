@@ -1,11 +1,8 @@
 'use client';
 import { cn } from '@/lib/cn';
 import { orbitron, roboto } from '@/lib/fonts';
-import SiteHeader from './header/SiteHeader';
-import { BottomToolbar } from '../BottomToolbar';
-import { useEffect, useRef } from 'react';
+import SiteHeader from '@/components/dom/layout/header/SiteHeader';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
 
 const fontVariables = [orbitron.variable, roboto.variable];
 

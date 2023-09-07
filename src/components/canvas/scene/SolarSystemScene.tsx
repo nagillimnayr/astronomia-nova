@@ -1,5 +1,5 @@
 import { SolarSystem } from '@/simulation/components/SolarSystem/SolarSystem';
-import CanvasWrapper from '../canvas/CanvasWrapper';
+import CanvasWrapper from '../CanvasWrapper';
 
 const SolarSystemScene = () => {
   return (

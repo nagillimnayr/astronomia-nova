@@ -1,4 +1,4 @@
-import { Label } from '@/components/ui/label';
+import { Label } from '@/components/dom/ui/label';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { type visibilityMachine } from '@/state/xstate/visibility-machine/visibility-machine';
 import { useSelector } from '@xstate/react';

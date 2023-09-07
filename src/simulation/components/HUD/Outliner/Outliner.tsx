@@ -1,5 +1,5 @@
 import { OutlinerItem } from './OutlinerItem';
-import { LoadingFallback } from '@/components/fallback/LoadingFallback';
+import { LoadingFallback } from '@/components/dom/fallback/LoadingFallback';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 

@@ -1,6 +1,6 @@
-import { Slider } from '@/components/gui/slider/Slider';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/dom/ui/slider/Slider';
+import { Input } from '@/components/dom/ui/input';
+import { Label } from '@/components/dom/ui/label';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 
 import { useCallback, useEffect, useRef } from 'react';

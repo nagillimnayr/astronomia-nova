@@ -20,6 +20,12 @@ const _lookPos = new Vector3();
 type VRControllerRayProps = {
   handedness: XRHandedness;
 };
+/**
+ *
+ * @param handedness
+ * @constructor
+ * @return {JSX.Element}
+ */
 export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const getThree = useThree(({ get }) => get);

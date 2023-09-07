@@ -1,4 +1,4 @@
-import { Separator } from '@/components/gui/Separator';
+import { Separator } from '@/components/dom/ui/Separator';
 import { SettingsToggleButton } from './SettingsToggleButton';
 import { OpacitySliders } from '../opacity/OpacitySliders';
 import {useMachine } from '@xstate/react';

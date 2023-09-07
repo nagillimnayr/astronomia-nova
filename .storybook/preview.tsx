@@ -5,7 +5,7 @@ import * as React from 'react';
 import '../src/styles/globals.css';
 import { cn } from '../src/lib/cn';
 import { Storybook } from './storybook';
-import Providers from '@/components/layout/site-layout/providers/providers';
+import Providers from '@/components/dom/providers/providers';
 
 const preview: Preview = {
   parameters: {
