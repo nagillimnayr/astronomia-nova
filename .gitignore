@@ -43,3 +43,5 @@ yarn-error.log*
 
 # XState typegen generated files
 *.typegen.ts
+
+.idea
