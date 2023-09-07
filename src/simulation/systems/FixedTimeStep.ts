@@ -1,4 +1,4 @@
-type UpdateFunction<Type> = (obj: Type, timeStep: number) => void;
+type UpdateFunction = (timeStep: number) => void;
 
 /**
  * @description Function factory to create update functions which implement
@@ -11,14 +11,14 @@ type UpdateFunction<Type> = (obj: Type, timeStep: number) => void;
  * @param {number} stepsPerSecond - The number of updates to perform each second.
  * @returns {UpdateFunction<Type>}
  */
-export function makeFixedUpdateFn<Type>(
-  updateFn: UpdateFunction<Type>,
+export function makeFixedUpdateFn(
+  updateFn: UpdateFunction,
   stepsPerSecond: number
-): UpdateFunction<Type> {
+): UpdateFunction {
   let remainder = 0; // Will be captured in closure.
   const timeStep = 1 / stepsPerSecond; // constant time step between updates.
 
-  const update = (obj: Type, deltaTime: number) => {
+  const update = (deltaTime: number) => {
     // Determine how many updates we need to do for this frame.
     const numOfStepsFloat = stepsPerSecond * Math.abs(deltaTime) + remainder;
     // This value will likely be a floating point number, so we must truncate it to an integer.
@@ -30,14 +30,14 @@ export function makeFixedUpdateFn<Type>(
     if (deltaTime >= 0) {
       // Call the update function the requisite number of times.
       for (let i = 0; i < numOfStepsInt; i++) {
-        updateFn(obj, timeStep);
+        updateFn(timeStep);
       }
     }
     // If time reversed:
     else {
       // Call the update function the requisite number of times.
       for (let i = 0; i < numOfStepsInt; i++) {
-        updateFn(obj, -timeStep);
+        updateFn(-timeStep);
       }
     }
   };

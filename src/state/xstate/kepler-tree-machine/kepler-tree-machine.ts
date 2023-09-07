@@ -7,15 +7,9 @@ import {
   UPDATES_PER_REAL_SECOND,
 } from '@/simulation/utils/constants';
 
-const updateSimulation = makeFixedUpdateFn<KeplerBody>(
-  (root: KeplerBody, timeStep: number) => {
-    traverseKeplerTree(root, timeStep * TIME_MULT);
-  },
-  UPDATES_PER_REAL_SECOND
-);
-
 type Context = {
   root: KeplerBody | null;
+  fixedUpdate: (deltaTime: number) => void;
 };
 
 type Events =
@@ -36,6 +30,7 @@ export const keplerTreeMachine = createMachine(
 
     context: () => ({
       root: null,
+      fixedUpdate: null!,
     }),
 
     on: {
@@ -74,9 +69,14 @@ export const keplerTreeMachine = createMachine(
     actions: {
       assignRoot: assign({
         root: (_, event) => event.root,
+        fixedUpdate: (_, event) =>
+          makeFixedUpdateFn((timeStep: number) => {
+            traverseKeplerTree(event.root, timeStep * TIME_MULT);
+          }, UPDATES_PER_REAL_SECOND),
       }),
-      updateSimulation: ({ root }, { deltaTime }) => {
-        updateSimulation(root!, deltaTime);
+      updateSimulation: ({ fixedUpdate, root }, { deltaTime }) => {
+        if (!fixedUpdate || !root) return;
+        fixedUpdate(deltaTime);
       },
     },
   }
