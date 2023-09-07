@@ -1,52 +1,21 @@
 import { Trajectory } from './Trajectory/Trajectory';
-import { useCallback, useContext, useMemo, useRef } from 'react';
+import { useContext, useRef } from 'react';
 import Body, { type BodyParams } from '../Body/Body';
 import type KeplerBody from '@/simulation/classes/kepler-body';
 import KeplerTreeContext from '@/simulation/context/KeplerTreeContext';
-import {
-  calculateOrbitFromPeriapsis,
-  calculateOrbitFromStateVectors,
-} from '@/simulation/math/orbit/calculateOrbit';
-import {
-  DIST_MULT,
-  TIME_MULT,
-  DAY,
-  X_AXIS,
-  Z_AXIS,
-} from '@/simulation/utils/constants';
+
+import { Z_AXIS } from '@/simulation/utils/constants';
 import { TrueAnomalyArrow } from './arrows/TrueAnomalyArrow';
-import {
-  ColorRepresentation,
-  type Texture,
-  Vector3,
-  Vector3Tuple,
-} from 'three';
+import { type Texture, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
-import { RetrogradeContext } from '../Retrograde/RetrogradeContext';
-import { retrogradeState } from '../Retrograde/retrogradeState';
-import { getRadiusAtTrueAnomaly } from '@/simulation/math/orbital-elements/OrbitalRadius';
-import {
-  getOrbitalSpeedFromRadius,
-  getVelocityDirectionFromOrbitalElements,
-} from '@/simulation/math/orbital-elements/Velocity';
-import { getPosition } from '@/simulation/math/orbital-elements/Position';
-import { Object3DNode, extend, useFrame } from '@react-three/fiber';
+
+import { type Object3DNode, extend } from '@react-three/fiber';
 import { type BodyKey } from '@/lib/horizons/BodyKey';
 import { trpc } from '@/lib/trpc/trpc';
-import {
-  getSemiMinorAxisFromApsides,
-  getSemiMinorAxisFromSemiLatusRectum,
-} from '@/simulation/math/orbital-elements/axes/SemiMinorAxis';
-import { getSemiLatusRectumFromEccentricity } from '@/simulation/math/orbital-elements/axes/SemiLatusRectum';
 
-import { getLinearEccentricityFromAxes } from '../../math/orbital-elements/LinearEccentricity';
 import { KeplerOrbit } from '@/simulation/classes/kepler-orbit';
 import { colorMap } from '@/simulation/utils/color-map';
-import { Trail } from '../Body/trail/Trail';
-import { BodyTrail } from '../Body/trail/BodyTrail';
-import { calculateOrbitalPeriod } from '@/simulation/math/orbital-elements/OrbitalPeriod';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSelector } from '@xstate/react';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
