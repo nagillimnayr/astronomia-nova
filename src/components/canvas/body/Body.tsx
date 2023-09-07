@@ -36,17 +36,16 @@ export type BodyParams = {
   obliquity?: number;
   initialPosition?: Vector3Tuple;
   initialVelocity?: Vector3Tuple;
-  siderealRotRate?: number;
+  siderealRotationRate?: number;
   siderealRotationPeriod?: number;
 };
 type BodyProps = {
   children?: React.ReactNode;
-  params: BodyParams;
   texture?: Texture;
-};
+} & BodyParams;
 
 const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
-  { params, children, texture }: BodyProps,
+  { children, texture, ...props }: BodyProps,
   fwdRef
 ) {
   const { mapActor } = MachineContext.useSelector(({ context }) => context);
@@ -60,9 +59,9 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
     obliquity,
     initialPosition,
     initialVelocity,
-    siderealRotRate,
+    siderealRotationRate: siderealRotRate,
     siderealRotationPeriod,
-  } = params;
+  } = props;
 
   // Get central body from context.
   const centralBodyRef = useContext(KeplerTreeContext);
@@ -99,17 +98,11 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
           centralBody.addOrbitingBody(body);
         }}
         name={name ?? ''}
-        args={[
-          {
-            mass,
-            initialPosition,
-            initialVelocity,
-            meanRadius,
-            obliquity,
-            siderealRotationPeriod,
-            siderealRotationRate: siderealRotRate,
-          },
-        ]}
+        args={[mass, initialPosition, initialVelocity]}
+        meanRadius={meanRadius}
+        obliquity={obliquity}
+        siderealRotationRate={siderealRotRate}
+        siderealRotationPeriod={siderealRotationPeriod}
       >
         {/* Make self available to children through context. */}
         <KeplerTreeContext.Provider value={bodyRef}>

@@ -1,16 +1,13 @@
 import type KeplerBody from '@/components/canvas/body/kepler-body';
-
 import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
-
 import { Z_AXIS } from '@/constants/constants';
 import KeplerTreeContext from '@/context/KeplerTreeContext';
 import { colorMap } from '@/helpers/color-map';
 import { type BodyKey } from '@/helpers/horizons/BodyKey';
 import { trpc } from '@/helpers/trpc/trpc';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-
 import { extend, type Object3DNode } from '@react-three/fiber';
-import { useContext, useRef } from 'react';
+import { useContext, useMemo, useRef } from 'react';
 import { type Texture, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import Body, { type BodyParams } from '../body/Body';
@@ -37,13 +34,12 @@ type OrbitProps = {
 export const Orbit = ({ children, name, texture }: OrbitProps) => {
   const { mapActor } = MachineContext.useSelector(({ context }) => context);
 
-  // Ref to KeplerOrbit.
+  // Refs.
   const orbitRef = useRef<KeplerOrbit | null>(null);
-  // Reference to orbiting body.
   const orbitingBodyRef = useRef<KeplerBody | null>(null);
-
   const centralBodyRef = useContext(KeplerTreeContext);
 
+  // Load data.
   const ephemeridesQuery = trpc.loadComputedEphemerides.useQuery({
     name: name,
   });
@@ -55,7 +51,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
 
   // Get Central mass from parent.
   if (!centralBodyRef?.current) {
-    console.log('centralBodyRef.current is null');
+    console.error('centralBodyRef.current is null');
     return;
   }
 
@@ -91,7 +87,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     obliquity,
     initialPosition,
     initialVelocity,
-    siderealRotRate,
+    siderealRotationRate: siderealRotRate,
     siderealRotationPeriod,
   };
 
@@ -103,12 +99,6 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
       name={name}
       ref={(orbit) => {
         if (!orbit) {
-          // if (orbitRef.current) {
-          //   mapActor.send({
-          //     type: 'REMOVE_ORBIT',
-          //     name: orbitRef.current.name,
-          //   }); // Remove from map.
-          // }
           return;
         }
         if (orbitRef.current === orbit) return;
@@ -135,30 +125,31 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
       }}
       orbitingBodyRef={orbitingBodyRef}
       centralBodyRef={centralBodyRef}
-      args={[
-        {
-          semiMajorAxis,
-          semiMinorAxis,
-          semiLatusRectum,
-          linearEccentricity,
-          eccentricity,
-          longitudeOfAscendingNode,
-          argumentOfPeriapsis,
-          inclination,
-          orbitalPeriod: siderealOrbitPeriod,
-        },
-      ]}
+      semiMajorAxis={semiMajorAxis}
+      semiMinorAxis={semiMinorAxis}
+      semiLatusRectum={semiLatusRectum}
+      linearEccentricity={linearEccentricity}
+      eccentricity={eccentricity}
+      inclination={inclination}
+      longitudeOfAscendingNode={longitudeOfAscendingNode}
+      argumentOfPeriapsis={argumentOfPeriapsis}
+      orbitalPeriod={siderealOrbitPeriod}
     >
-      {/* <axesHelper scale={1e12} /> */}
-      <Body ref={orbitingBodyRef} params={bodyParams} texture={texture}>
+      <Body
+        ref={orbitingBodyRef}
+        color={color}
+        name={name}
+        initialPosition={initialPosition}
+        initialVelocity={initialVelocity}
+        obliquity={obliquity}
+        siderealRotationRate={siderealRotRate}
+        siderealRotationPeriod={siderealRotationPeriod}
+        mass={mass}
+        meanRadius={meanRadius}
+        texture={texture}
+      >
         {children}
       </Body>
-      {/* <BodyTrail
-       bodyRef={orbitingBodyRef}
-       orbitalPeriod={orbitalPeriod}
-       color={color}
-       lineWidth={meanRadius / DIST_MULT}
-       /> */}
 
       <Trajectory
         semiMajorAxis={semiMajorAxis}

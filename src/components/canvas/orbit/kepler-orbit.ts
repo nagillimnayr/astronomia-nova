@@ -1,6 +1,6 @@
 import { type MutableRefObject } from 'react';
 import { Object3D } from 'three';
-import type KeplerBody from '../body/kepler-body';
+import KeplerBody from '../body/kepler-body';
 
 type OrbitalElements = {
   semiMajorAxis: number;
@@ -8,75 +8,101 @@ type OrbitalElements = {
   semiLatusRectum: number;
   linearEccentricity: number;
   eccentricity: number;
-
   inclination: number;
   longitudeOfAscendingNode: number;
   argumentOfPeriapsis: number;
-
   orbitalPeriod: number;
 };
 
+/**
+ * @description Represents an idealized 2-body orbital system that neglects perturbing forces besides the gravitational attraction of the central body.
+ * @author Ryan Milligan
+ * @date Sep/07/2023
+ * @export
+ * @class KeplerOrbit
+ * @extends {Object3D}
+ */
 export class KeplerOrbit extends Object3D {
   private _centralBodyRef: MutableRefObject<KeplerBody | null> = null!;
   private _orbitingBodyRef: MutableRefObject<KeplerBody | null> = null!;
 
-  private _semiMajorAxis: number;
-  private _semiMinorAxis: number;
-  private _semiLatusRectum: number;
-  private _linearEccentricity: number;
-  private _eccentricity: number;
+  /** Half the length of the longest axis of symmetry of the ellipse. */
+  private _semiMajorAxis = 0;
+  /** Half the length of the shortest axis of symmetry of the ellipse. */
+  private _semiMinorAxis = 0;
+  private _semiLatusRectum = 0;
+  private _linearEccentricity = 0;
+  private _eccentricity = 0;
 
-  private _inclination: number;
-  private _longitudeOfAscendingNode: number;
-  private _argumentOfPeriapsis: number;
+  private _inclination = 0;
+  private _longitudeOfAscendingNode = 0;
+  private _argumentOfPeriapsis = 0;
 
-  private _orbitalPeriod: number;
+  private _orbitalPeriod = 0;
 
-  constructor(elements: OrbitalElements) {
+  /**
+   * Creates an instance of KeplerOrbit.
+   * @author Ryan Milligan
+   * @date Sep/07/2023
+   * @memberof KeplerOrbit
+   */
+  constructor() {
     super();
-    this._semiMajorAxis = elements.semiMajorAxis;
-    this._semiMinorAxis = elements.semiMinorAxis;
-    this._semiLatusRectum = elements.semiLatusRectum;
-    this._linearEccentricity = elements.linearEccentricity;
-    this._eccentricity = elements.eccentricity;
-
-    this._inclination = elements.inclination;
-    this._longitudeOfAscendingNode = elements.longitudeOfAscendingNode;
-    this._argumentOfPeriapsis = elements.argumentOfPeriapsis;
-
-    this._orbitalPeriod = elements.orbitalPeriod;
   }
 
   get semiMajorAxis() {
     return this._semiMajorAxis;
   }
+  set semiMajorAxis(value: number) {
+    this._semiMajorAxis = value;
+  }
 
   get semiMinorAxis() {
     return this._semiMinorAxis;
   }
-
+  set semiMinorAxis(value: number) {
+    this._semiMinorAxis = value;
+  }
   get semiLatusRectum() {
     return this._semiLatusRectum;
+  }
+  set semiLatusRectum(value: number) {
+    this._semiLatusRectum = value;
   }
 
   get linearEccentricity() {
     return this._linearEccentricity;
   }
+  set linearEccentricity(value: number) {
+    this._linearEccentricity = value;
+  }
 
   get eccentricity() {
     return this._eccentricity;
+  }
+  set eccentricity(value: number) {
+    this._eccentricity = value;
   }
 
   get inclination() {
     return this._inclination;
   }
+  set inclination(value: number) {
+    this._inclination = value;
+  }
 
   get longitudeOfAscendingNode() {
     return this._longitudeOfAscendingNode;
   }
+  set longitudeOfAscendingNode(value: number) {
+    this._longitudeOfAscendingNode = value;
+  }
 
   get argumentOfPeriapsis() {
     return this._argumentOfPeriapsis;
+  }
+  set argumentOfPeriapsis(value: number) {
+    this._argumentOfPeriapsis = value;
   }
 
   get orbitingBodyRef() {
@@ -111,5 +137,8 @@ export class KeplerOrbit extends Object3D {
 
   get orbitalPeriod() {
     return this._orbitalPeriod;
+  }
+  set orbitalPeriod(orbitalPeriod: number) {
+    this._orbitalPeriod = orbitalPeriod;
   }
 }

@@ -49,15 +49,15 @@ class KeplerBody extends DynamicBody {
    *   }
    * @memberof KeplerBody
    */
-  constructor({
+  constructor(
     mass = 0,
-    initialPosition = [0, 0, 0],
-    initialVelocity = [0, 0, 0],
+    initialPosition: Vector3Tuple = [0, 0, 0],
+    initialVelocity: Vector3Tuple = [0, 0, 0],
     meanRadius = EARTH_RADIUS,
     obliquity = 0,
     siderealRotationRate = 0,
-    siderealRotationPeriod = 0,
-  }: Params) {
+    siderealRotationPeriod = 0
+  ) {
     super(mass, initialPosition, initialVelocity);
 
     this._orbitingBodies = [];
@@ -75,23 +75,34 @@ class KeplerBody extends DynamicBody {
   get meanRadius() {
     return this._meanRadius;
   }
+  set meanRadius(meanRadius: number) {
+    this._meanRadius = meanRadius;
+  }
 
   get obliquity() {
     return this._obliquity;
+  }
+  set obliquity(obliquity: number) {
+    this._obliquity = obliquity;
   }
 
   get siderealRotationRate() {
     return this._siderealRotationRate;
   }
+  set siderealRotationRate(siderealRotationRate: number) {
+    this._siderealRotationRate = siderealRotationRate;
+  }
 
   get siderealRotationPeriod() {
     return this._siderealRotationPeriod;
+  }
+  set siderealRotationPeriod(siderealRotationPeriod: number) {
+    this._siderealRotationPeriod = siderealRotationPeriod;
   }
 
   get meshRef(): MutableRefObject<Mesh | null> {
     return this._meshRef;
   }
-
   set meshRef(meshRef: MutableRefObject<Mesh | null>) {
     this.setMeshRef(meshRef);
   }
