@@ -2,10 +2,15 @@ import KeplerBody from '@/components/canvas/body/kepler-body';
 import { trpc } from '@/helpers/trpc/trpc';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useTexture } from '@react-three/drei';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Body } from '../body';
 import { Orbit } from '../orbit/Orbit';
 import { colorMap } from '@/helpers/color-map';
+import {
+  MeshBasicMaterial,
+  MeshLambertMaterial,
+  MeshStandardMaterial,
+} from 'three';
 
 export const SolarSystem = () => {
   // Load textures.
@@ -42,6 +47,18 @@ export const SolarSystem = () => {
     ({ context }) => context
   );
 
+  const sunParams = data.sun.table;
+  const sunColor = colorMap.get('Sun');
+  const sunMaterial = useMemo(() => {
+    return new MeshLambertMaterial({
+      color: sunColor,
+      map: sunTexture,
+      emissive: 'white',
+      emissiveMap: sunTexture,
+      emissiveIntensity: 1.5,
+    });
+  }, [sunColor, sunTexture]);
+
   if (dataQuery.isError) {
     console.error(dataQuery.error);
     return;
@@ -49,10 +66,6 @@ export const SolarSystem = () => {
   // If data hasn't loaded yet, return and wait until it has.
   if (dataQuery.isLoading) return;
   if (!dataQuery.data) return;
-
-  const sunParams = data.sun.table;
-  const sunColor = colorMap.get('Sun');
-
   return (
     <Body
       ref={(root) => {
@@ -68,6 +81,7 @@ export const SolarSystem = () => {
       siderealRotationRate={sunParams.siderealRotRate}
       siderealRotationPeriod={sunParams.siderealRotationPeriod}
       texture={sunTexture}
+      material={sunMaterial}
     >
       <Orbit
         name={'Mercury'}
