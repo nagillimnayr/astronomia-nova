@@ -7,14 +7,17 @@ import React, {
   useContext,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
 } from 'react';
 
 import {
+  Material,
   type ColorRepresentation,
   type Mesh,
   type Texture,
   type Vector3Tuple,
+  MeshBasicMaterial,
 } from 'three';
 
 import { BodyMesh } from './BodyMesh';
@@ -43,10 +46,11 @@ export type BodyParams = {
 type BodyProps = {
   children?: React.ReactNode;
   texture?: Texture;
+  material?: Material;
 } & BodyParams;
 
 export const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
-  { children, texture, ...props }: BodyProps,
+  { children, texture, material, ...props }: BodyProps,
   fwdRef
 ) {
   const { mapActor } = MachineContext.useSelector(({ context }) => context);
@@ -80,6 +84,17 @@ export const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
     },
     [bodyRef]
   );
+
+  // If material is undefined, create one.
+  material = useMemo(() => {
+    return (
+      material ??
+      new MeshBasicMaterial({
+        color: color,
+        map: texture,
+      })
+    );
+  }, [color, material, texture]);
 
   useEffect(() => {
     const body = bodyRef.current;
@@ -115,11 +130,10 @@ export const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
             name={name}
             meanRadius={meanRadius}
             obliquity={obliquity ?? 0}
-            color={color}
-            texture={texture}
+            material={material}
             bodyRef={bodyRef}
             ref={meshRef}
-            siderealRotRate={siderealRotationRate ?? 0}
+            siderealRotationRate={siderealRotationRate ?? 0}
           />
 
           <Tags name={name} bodyRef={bodyRef} meanRadius={meanRadius} />

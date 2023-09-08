@@ -1,8 +1,6 @@
 import type KeplerBody from '@/components/canvas/body/kepler-body';
 import { PlanetRing } from '@/components/canvas/body/planet-ring/PlanetRing';
 import { Poles } from '@/components/canvas/body/poles/Poles';
-import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
-// import { CoordinateSphere } from '../surface-view/CoordinateSphere';
 import { METER, PI_OVER_TWO } from '@/constants/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { MeshDiscardMaterial, Sphere } from '@react-three/drei';
@@ -25,10 +23,11 @@ import {
   type Texture,
   Vector3,
   type Vector3Tuple,
+  Material,
 } from 'three';
 
 import { degToRad } from 'three/src/math/MathUtils';
-import { normalizeAngle } from '../../../helpers/rotation-utils';
+import { normalizeAngle } from '@/helpers/rotation-utils';
 
 const _centralWorldPos = new Vector3();
 
@@ -37,20 +36,17 @@ type BodyMeshProps = {
   bodyRef: MutableRefObject<KeplerBody>;
   meanRadius: number;
   obliquity: number;
-  texture?: Texture;
-  color?: ColorRepresentation;
-  siderealRotRate: number;
+  material?: Material;
+  siderealRotationRate: number;
 };
-
 export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   {
     name,
     bodyRef,
     meanRadius,
     obliquity,
-    texture,
-    color,
-    siderealRotRate,
+    material,
+    siderealRotationRate,
   }: BodyMeshProps,
   fwdRef
 ) {
@@ -82,14 +78,14 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
       // Rotation rate is constant, so the current rotation can be found as a
       // simple function of time.
       const timeElapsed = state.context.timeElapsed;
-      const axialRotation = normalizeAngle(siderealRotRate * timeElapsed);
+      const axialRotation = normalizeAngle(siderealRotationRate * timeElapsed);
 
       // Rotate the body around its rotational axis.
       mesh.rotation.set(0, axialRotation, 0); // Rotate around local y-axis.
     });
 
     return () => subscription.unsubscribe();
-  }, [obliquity, siderealRotRate, timeActor]);
+  }, [obliquity, siderealRotationRate, timeActor]);
 
   useEffect(() => {
     // Make the prime meridian face the central body.
@@ -109,20 +105,21 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     () => [0, 0, degToRad(obliquity)],
     [obliquity]
   );
+  const sphereArgs = useMemo(() => {
+    const args: [number, number, number] = [radius, 128, 128];
+    return args;
+  }, [radius]);
   return (
     <>
       <object3D ref={objRef}>
-        {/* <axesHelper args={[3 * radius]} /> */}
         <group rotation={rotation}>
-          {/* <axesHelper args={[3 * radius]} /> */}
-          <Sphere name={name + '-mesh'} ref={meshRef} args={[radius, 128, 128]}>
-            <meshBasicMaterial map={texture} />
+          <Sphere
+            name={name + '-mesh'}
+            ref={meshRef}
+            args={sphereArgs}
+            material={material}
+          >
             <InteractionSphere radius={meanRadius} />
-            {/* <axesHelper args={[3 * radius]} /> */}
-            {/* <Circle scale={radius * 2}>
-             <meshBasicMaterial side={DoubleSide} />
-             </Circle> */}
-            {/* <Trail target={meshRef} color={'white'} width={150} length={100} /> */}
           </Sphere>
           {name === 'Saturn' && (
             <PlanetRing
