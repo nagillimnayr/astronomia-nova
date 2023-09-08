@@ -13,5 +13,6 @@
     "meshline",
     "milkyway",
     "VRHUD"
-  ]
+  ],
+  "docwriter.style": "JSDoc"
 }
