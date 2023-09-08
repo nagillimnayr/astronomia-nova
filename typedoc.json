@@ -1,6 +1,8 @@
 {
   // Comments are supported, like tsconfig.json
-  "entryPoints": ["src/pages/index.tsx"],
+  "entryPoints": ["./src"],
+  "entryPointStrategy": "expand",
   "out": "docs",
-  "exclude": ["**/*.js", "**/*.json", "**/*.mjs", "**/*.cjs"]
+  "exclude": ["**/*.js", "**/*.json", "**/*.mjs", "**/*.cjs"],
+  "plugin": ["typedoc-plugin-markdown", "typedoc-plugin-extras"]
 }
