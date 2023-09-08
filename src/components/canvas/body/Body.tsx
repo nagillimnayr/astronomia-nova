@@ -59,7 +59,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
     obliquity,
     initialPosition,
     initialVelocity,
-    siderealRotationRate: siderealRotRate,
+    siderealRotationRate,
     siderealRotationPeriod,
   } = props;
 
@@ -101,7 +101,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
         args={[mass, initialPosition, initialVelocity]}
         meanRadius={meanRadius}
         obliquity={obliquity}
-        siderealRotationRate={siderealRotRate}
+        siderealRotationRate={siderealRotationRate}
         siderealRotationPeriod={siderealRotationPeriod}
       >
         {/* Make self available to children through context. */}
@@ -115,7 +115,7 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
             texture={texture}
             bodyRef={bodyRef}
             ref={meshRef}
-            siderealRotRate={siderealRotRate ?? 0}
+            siderealRotRate={siderealRotationRate ?? 0}
           />
 
           <Tags name={name} bodyRef={bodyRef} meanRadius={meanRadius} />
