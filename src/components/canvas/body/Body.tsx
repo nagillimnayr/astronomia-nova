@@ -5,6 +5,7 @@ import { extend, type Object3DNode } from '@react-three/fiber';
 import React, {
   forwardRef,
   useContext,
+  useEffect,
   useImperativeHandle,
   useRef,
 } from 'react';
@@ -44,7 +45,7 @@ type BodyProps = {
   texture?: Texture;
 } & BodyParams;
 
-const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
+export const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
   { children, texture, ...props }: BodyProps,
   fwdRef
 ) {
@@ -80,23 +81,26 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
     [bodyRef]
   );
 
+  useEffect(() => {
+    const body = bodyRef.current;
+    if (!body) return;
+    mapActor.send({ type: 'ADD_BODY', body: body });
+  }, [mapActor]);
+  useEffect(() => {
+    const body = bodyRef.current;
+    if (!body) return;
+    // Add self to tree.
+    if (!centralBodyRef) return;
+    const centralBody = centralBodyRef.current;
+    if (!centralBody) return;
+    centralBody.addOrbitingBody(body);
+  }, [centralBodyRef]);
+
   return (
     <>
       <keplerBody
         meshRef={meshRef}
-        ref={(body: KeplerBody) => {
-          if (!body) return;
-
-          if (bodyRef.current === body) return;
-          bodyRef.current = body;
-          mapActor.send({ type: 'ADD_BODY', body: body });
-
-          // Add self to tree.
-          if (!centralBodyRef) return;
-          const centralBody = centralBodyRef.current;
-          if (!centralBody) return;
-          centralBody.addOrbitingBody(body);
-        }}
+        ref={bodyRef}
         name={name ?? ''}
         args={[mass, initialPosition, initialVelocity]}
         meanRadius={meanRadius}
@@ -119,12 +123,9 @@ const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
           />
 
           <Tags name={name} bodyRef={bodyRef} meanRadius={meanRadius} />
-          {/* <axesHelper args={[1.5 * meanRadius]} /> */}
           {/* <VelocityArrow /> */}
         </KeplerTreeContext.Provider>
       </keplerBody>
     </>
   );
 });
-
-export default Body;
