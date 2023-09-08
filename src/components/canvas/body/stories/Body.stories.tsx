@@ -1,4 +1,3 @@
-import { DIST_MULT } from '@/constants/constants';
 import { CanvasDecorator } from '@/stories/decorators/CanvasDecorator';
 import { Grid, useTexture } from '@react-three/drei';
 import type { Meta, StoryObj } from '@storybook/react';
