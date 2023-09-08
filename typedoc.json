@@ -14,5 +14,9 @@
     "**/*.d.ts",
     "/src/type-declarations"
   ],
-  "plugin": ["typedoc-plugin-markdown", "typedoc-plugin-extras"]
+  "plugin": [
+    "typedoc-plugin-markdown",
+    "typedoc-plugin-extras",
+    "typedoc-plugin-zod"
+  ]
 }
