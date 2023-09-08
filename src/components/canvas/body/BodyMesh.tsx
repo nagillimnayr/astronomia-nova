@@ -95,11 +95,10 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     // Make the prime meridian face the central body.
     const body = bodyRef.current;
     if (!body) return;
-    const parent = body.parent;
-    if (!(parent instanceof KeplerOrbit)) return;
-    const centralBody = parent.centralBodyRef.current;
-    if (!centralBody) return;
-    centralBody.getWorldPosition(_centralWorldPos);
+
+    // Central body will be at local zero-vector.
+    _centralWorldPos.set(0, 0, 0);
+    body.localToWorld(_centralWorldPos);
     const obj = objRef.current;
     obj.lookAt(_centralWorldPos);
     obj.rotateY(-PI_OVER_TWO);
