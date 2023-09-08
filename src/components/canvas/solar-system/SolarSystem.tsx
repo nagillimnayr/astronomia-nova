@@ -5,6 +5,7 @@ import { useTexture } from '@react-three/drei';
 import { useRef } from 'react';
 import { Body } from '../body';
 import { Orbit } from '../orbit/Orbit';
+import { colorMap } from '@/helpers/color-map';
 
 export const SolarSystem = () => {
   // Load textures.
@@ -50,6 +51,8 @@ export const SolarSystem = () => {
   if (!dataQuery.data) return;
 
   const sunParams = data.sun.table;
+  const sunColor = colorMap.get('Sun');
+
   return (
     <Body
       ref={(root) => {
@@ -60,7 +63,7 @@ export const SolarSystem = () => {
       }}
       name={'Sun'}
       mass={sunParams.mass}
-      color={0xfdee00}
+      color={sunColor ?? 'white'}
       meanRadius={sunParams.meanRadius}
       siderealRotationRate={sunParams.siderealRotRate}
       siderealRotationPeriod={sunParams.siderealRotationPeriod}
