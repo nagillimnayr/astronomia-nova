@@ -2,18 +2,6 @@ import { type MutableRefObject } from 'react';
 import { Object3D } from 'three';
 import KeplerBody from '../body/kepler-body';
 
-type OrbitalElements = {
-  semiMajorAxis: number;
-  semiMinorAxis: number;
-  semiLatusRectum: number;
-  linearEccentricity: number;
-  eccentricity: number;
-  inclination: number;
-  longitudeOfAscendingNode: number;
-  argumentOfPeriapsis: number;
-  orbitalPeriod: number;
-};
-
 /**
  * @description Represents an idealized 2-body orbital system that neglects perturbing forces besides the gravitational attraction of the central body.
  * @author Ryan Milligan
