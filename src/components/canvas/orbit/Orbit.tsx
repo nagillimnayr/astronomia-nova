@@ -4,15 +4,15 @@ import { Z_AXIS } from '@/constants/constants';
 import KeplerTreeContext from '@/context/KeplerTreeContext';
 import { colorMap } from '@/helpers/color-map';
 import { type BodyKey } from '@/helpers/horizons/BodyKey';
-import { trpc } from '@/helpers/trpc/trpc';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { extend, type Object3DNode } from '@react-three/fiber';
-import { useContext, useMemo, useRef } from 'react';
+import { useContext, useEffect, useMemo, useRef } from 'react';
 import { type Texture, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import Body, { type BodyParams } from '../body/Body';
 import { Trajectory } from './trajectory/Trajectory';
 import { TrueAnomalyArrow } from './TrueAnomalyArrow';
+import { ComputedEphemerides } from '@/helpers/horizons/types/ComputedEphemerides';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
@@ -29,9 +29,10 @@ type OrbitProps = {
   children?: React.ReactNode;
   name: BodyKey;
   texture?: Texture;
+  ephemerides: ComputedEphemerides;
 };
 
-export const Orbit = ({ children, name, texture }: OrbitProps) => {
+export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
   const { mapActor } = MachineContext.useSelector(({ context }) => context);
 
   // Refs.
@@ -39,23 +40,7 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
   const orbitingBodyRef = useRef<KeplerBody | null>(null);
   const centralBodyRef = useContext(KeplerTreeContext);
 
-  // Load data.
-  const ephemeridesQuery = trpc.loadComputedEphemerides.useQuery({
-    name: name,
-  });
-
-  // If data hasn't loaded yet, return and wait until it has.
-  if (!ephemeridesQuery.data) {
-    return;
-  }
-
-  // Get Central mass from parent.
-  if (!centralBodyRef?.current) {
-    console.error('centralBodyRef.current is null');
-    return;
-  }
-
-  const { ephemerisTable, physicalDataTable } = ephemeridesQuery.data;
+  const { ephemerisTable, physicalDataTable } = ephemerides;
 
   const {
     semiMajorAxis,
@@ -69,6 +54,9 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     siderealOrbitPeriod,
     initialPosition,
     initialVelocity,
+    longitudeOfAscendingNode,
+    argumentOfPeriapsis,
+    inclination,
   } = ephemerisTable;
 
   const color = colorMap.get(name) ?? 'white';
@@ -79,52 +67,41 @@ export const Orbit = ({ children, name, texture }: OrbitProps) => {
     siderealRotRate,
     siderealRotationPeriod,
   } = physicalDataTable;
-  const bodyParams: BodyParams = {
-    name,
-    color,
-    mass,
-    meanRadius,
-    obliquity,
-    initialPosition,
-    initialVelocity,
-    siderealRotationRate: siderealRotRate,
-    siderealRotationPeriod,
-  };
 
-  // Destructure the orientation elements.
-  const { longitudeOfAscendingNode, argumentOfPeriapsis, inclination } =
-    ephemerisTable;
+  useEffect(() => {
+    const orbit = orbitRef.current;
+    if (!orbit) return;
+
+    // To orient the orbit correctly, we need to perform three intrinsic
+    // rotations. (Intrinsic meaning that the rotations are performed in
+    // the local coordinate space, such that when we rotate around the axes
+    // in the order y-x-y, the last y-axis rotation is around a different
+    // world-space axis than the first one, as the x-axis rotation changes
+    // the orientation of the object's local y-axis. For clarity, the
+    // rotations will be in the order y-x'-y'', where x' is the new local
+    // x-axis after the first rotation and y'' is the object's new local
+    // y-axis after the second rotation.)
+    orbit.rotation.set(0, 0, 0); // Reset the rotation before we perform
+    // the intrinsic rotations.
+    orbit.getWorldPosition(_pos);
+    _pos.add(Z_AXIS);
+    orbit.lookAt(_pos);
+    orbit.rotateY(degToRad(longitudeOfAscendingNode));
+    orbit.rotateX(degToRad(inclination));
+    orbit.rotateY(degToRad(argumentOfPeriapsis));
+  }, [argumentOfPeriapsis, inclination, longitudeOfAscendingNode]);
+
+  useEffect(() => {
+    const orbit = orbitRef.current;
+    if (!orbit) return;
+
+    mapActor.send({ type: 'ADD_ORBIT', orbit }); // Add to map.
+  }, [mapActor]);
+
   return (
     <keplerOrbit
       name={name}
-      ref={(orbit) => {
-        if (!orbit) {
-          return;
-        }
-        if (orbitRef.current === orbit) return;
-        orbitRef.current = orbit;
-        mapActor.send({ type: 'ADD_ORBIT', orbit }); // Add to map.
-
-        // To orient the orbit correctly, we need to perform three intrinsic
-        // rotations. (Intrinsic meaning that the rotations are performed in
-        // the local coordinate space, such that when we rotate around the axes
-        // in the order z-x-z, the last z-axis rotation is around a different
-        // world-space axis than the first one, as the x-axis rotation changes
-        // the orientation of the object's local z-axis. For clarity, the
-        // rotations will be in the order z-x'-z'', where x' is the new local
-        // x-axis after the first rotation and z'' is the object's new local
-        // z-axis after the second rotation.)
-        orbit.rotation.set(0, 0, 0); // Reset the rotation before we perform
-        // the intrinsic rotations.
-        orbit.getWorldPosition(_pos);
-        _pos.add(Z_AXIS);
-        orbit.lookAt(_pos);
-        orbit.rotateY(degToRad(longitudeOfAscendingNode));
-        orbit.rotateX(degToRad(inclination));
-        orbit.rotateY(degToRad(argumentOfPeriapsis));
-      }}
-      orbitingBodyRef={orbitingBodyRef}
-      centralBodyRef={centralBodyRef}
+      ref={orbitRef}
       semiMajorAxis={semiMajorAxis}
       semiMinorAxis={semiMinorAxis}
       semiLatusRectum={semiLatusRectum}
