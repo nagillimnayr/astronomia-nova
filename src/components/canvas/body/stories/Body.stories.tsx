@@ -3,7 +3,7 @@ import { CanvasDecorator } from '@/stories/decorators/CanvasDecorator';
 import { Grid, useTexture } from '@react-three/drei';
 import type { Meta, StoryObj } from '@storybook/react';
 import { degToRad } from 'three/src/math/MathUtils';
-import Body from '../Body';
+import { Body } from '../Body';
 
 const meta: Meta<typeof Body> = {
   title: 'KeplerBody/Body',
@@ -18,13 +18,12 @@ export const NoTexture = () => {
     <>
       <object3D rotation={[degToRad(-90), 0, 0]}>
         <Body
-              name={'Earth'}
-              color={'white'}
-              mass={0}
-              meanRadius={0.5}
-              initialPosition={[0, 0, 0]}
-              initialVelocity={[0, 0, 0]}
-
+          name={'Earth'}
+          color={'white'}
+          mass={0}
+          meanRadius={0.5}
+          initialPosition={[0, 0, 0]}
+          initialVelocity={[0, 0, 0]}
         />
       </object3D>
       <Grid infiniteGrid position={[0, -0.5, 0]} />
@@ -38,12 +37,12 @@ const EarthStory = () => {
     <>
       <object3D rotation={[degToRad(-90), 0, 0]}>
         <Body
-            name={'Earth'}
-            color={'white'}
-            mass={0}
-            meanRadius={0.5}
-            initialPosition={[0, 0, 0]}
-            initialVelocity={[0, 0, 0]}
+          name={'Earth'}
+          color={'white'}
+          mass={0}
+          meanRadius={0.5}
+          initialPosition={[0, 0, 0]}
+          initialVelocity={[0, 0, 0]}
           texture={earthTexture}
         />
       </object3D>

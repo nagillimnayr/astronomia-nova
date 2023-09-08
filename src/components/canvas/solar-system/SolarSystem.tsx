@@ -3,7 +3,7 @@ import { trpc } from '@/helpers/trpc/trpc';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useTexture } from '@react-three/drei';
 import { useRef } from 'react';
-import Body from '../body/Body';
+import { Body } from '../body';
 import { Orbit } from '../orbit/Orbit';
 
 export const SolarSystem = () => {
