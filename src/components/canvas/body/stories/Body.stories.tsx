@@ -18,14 +18,13 @@ export const NoTexture = () => {
     <>
       <object3D rotation={[degToRad(-90), 0, 0]}>
         <Body
-          params={{
-            name: 'body',
-            color: 'white',
-            mass: 0,
-            meanRadius: 0.5,
-            initialPosition: [0, 0.5 * DIST_MULT, 0],
-            initialVelocity: [0, 0, 0],
-          }}
+              name={'Earth'}
+              color={'white'}
+              mass={0}
+              meanRadius={0.5}
+              initialPosition={[0, 0, 0]}
+              initialVelocity={[0, 0, 0]}
+
         />
       </object3D>
       <Grid infiniteGrid position={[0, -0.5, 0]} />
@@ -39,14 +38,12 @@ const EarthStory = () => {
     <>
       <object3D rotation={[degToRad(-90), 0, 0]}>
         <Body
-          params={{
-            name: 'Earth',
-            color: 'white',
-            mass: 0,
-            meanRadius: 0.5,
-            initialPosition: [0, 0, 0],
-            initialVelocity: [0, 0, 0],
-          }}
+            name={'Earth'}
+            color={'white'}
+            mass={0}
+            meanRadius={0.5}
+            initialPosition={[0, 0, 0]}
+            initialVelocity={[0, 0, 0]}
           texture={earthTexture}
         />
       </object3D>

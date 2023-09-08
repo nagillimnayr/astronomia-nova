@@ -17,7 +17,7 @@ export const MockEarthSelect = () => {
 
   useEffect(() => {
     // Instantiate KeplerBody.
-    const body = new KeplerBody(params);
+    const body = new KeplerBody(params.mass);
     body.name = params.name;
     // Select the newly create body.
     selectionActor.send({ type: 'SELECT', selection: body });
