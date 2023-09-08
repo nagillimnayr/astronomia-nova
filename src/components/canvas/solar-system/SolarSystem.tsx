@@ -31,30 +31,30 @@ export const SolarSystem = () => {
     'assets/textures/2k_uranus.jpg',
     'assets/textures/2k_neptune.jpg',
   ]);
+
+  // Load data.
+  const [data, dataQuery] = trpc.loadAllComputedData.useSuspenseQuery();
+
   const rootRef = useRef<KeplerBody>(null!);
 
   const { keplerTreeActor } = MachineContext.useSelector(
     ({ context }) => context
   );
 
-  // Load physical data for the Sun.
-  const physicalDataQuery = trpc.loadComputedPhysicalData.useQuery({
-    name: 'Sun',
-  });
-  if (physicalDataQuery.isError) {
-    console.error(physicalDataQuery.error);
+  if (dataQuery.isError) {
+    console.error(dataQuery.error);
     return;
   }
   // If data hasn't loaded yet, return and wait until it has.
-  if (physicalDataQuery.isLoading) return;
-  if (!physicalDataQuery.data) return;
+  if (dataQuery.isLoading) return;
+  if (!dataQuery.data) return;
 
-  const sunParams = physicalDataQuery.data.table;
-
+  const sunParams = data.sun.table;
   return (
     <Body
       ref={(root) => {
         if (!root) return;
+        if (rootRef.current === root) return;
         rootRef.current = root;
         keplerTreeActor.send({ type: 'ASSIGN_ROOT', root });
       }}
@@ -66,16 +66,48 @@ export const SolarSystem = () => {
       siderealRotationPeriod={sunParams.siderealRotationPeriod}
       texture={sunTexture}
     >
-      <Orbit name={'Mercury'} texture={mercuryTexture}></Orbit>
-      <Orbit name={'Venus'} texture={venusTexture}></Orbit>
-      <Orbit name={'Earth'} texture={earthTexture}>
-        <Orbit name={'Moon'} texture={moonTexture}></Orbit>
+      <Orbit
+        name={'Mercury'}
+        texture={mercuryTexture}
+        ephemerides={data.mercury}
+      ></Orbit>
+      <Orbit
+        name={'Venus'}
+        texture={venusTexture}
+        ephemerides={data.venus}
+      ></Orbit>
+      <Orbit name={'Earth'} texture={earthTexture} ephemerides={data.earth}>
+        <Orbit
+          name={'Moon'}
+          texture={moonTexture}
+          ephemerides={data.moon}
+        ></Orbit>
       </Orbit>
-      <Orbit name={'Mars'} texture={marsTexture}></Orbit>
-      <Orbit name={'Jupiter'} texture={jupiterTexture}></Orbit>
-      <Orbit name={'Saturn'} texture={saturnTexture}></Orbit>
-      <Orbit name={'Uranus'} texture={uranusTexture}></Orbit>
-      <Orbit name={'Neptune'} texture={neptuneTexture}></Orbit>
+      <Orbit
+        name={'Mars'}
+        texture={marsTexture}
+        ephemerides={data.mars}
+      ></Orbit>
+      <Orbit
+        name={'Jupiter'}
+        texture={jupiterTexture}
+        ephemerides={data.jupiter}
+      ></Orbit>
+      <Orbit
+        name={'Saturn'}
+        texture={saturnTexture}
+        ephemerides={data.saturn}
+      ></Orbit>
+      <Orbit
+        name={'Uranus'}
+        texture={uranusTexture}
+        ephemerides={data.uranus}
+      ></Orbit>
+      <Orbit
+        name={'Neptune'}
+        texture={neptuneTexture}
+        ephemerides={data.neptune}
+      ></Orbit>
     </Body>
   );
 };
