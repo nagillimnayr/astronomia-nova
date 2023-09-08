@@ -6,11 +6,7 @@ import { useMemo, useRef } from 'react';
 import { Body } from '../body';
 import { Orbit } from '../orbit/Orbit';
 import { colorMap } from '@/helpers/color-map';
-import {
-  MeshBasicMaterial,
-  MeshLambertMaterial,
-  MeshStandardMaterial,
-} from 'three';
+import { MeshLambertMaterial } from 'three';
 
 export const SolarSystem = () => {
   // Load textures.
