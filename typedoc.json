@@ -3,6 +3,6 @@
   "entryPoints": ["./src"],
   "entryPointStrategy": "expand",
   "out": "docs",
-  "exclude": ["**/*.js", "**/*.json", "**/*.mjs", "**/*.cjs"],
+  "exclude": ["**/*.js", "**/*.json", "**/*.mjs", "**/*.cjs", "**/*.stories.*", "**/*.typegen.*"],
   "plugin": ["typedoc-plugin-markdown", "typedoc-plugin-extras"]
 }
