@@ -9,6 +9,7 @@
     "**/*.mjs",
     "**/*.cjs",
     "**/*.stories.*",
+    "**/stories/**",
     "**/*.typegen.*",
     "**/*.d.ts",
     "/src/type-declarations"
