@@ -47,3 +47,4 @@ yarn-error.log*
 .idea
 
 /docs
+docs/modules.md
