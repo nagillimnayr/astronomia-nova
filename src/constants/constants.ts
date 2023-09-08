@@ -1,6 +1,7 @@
 import { Vector3 } from 'three';
 
 export const ORIGIN: Readonly<Vector3> = new Vector3(0, 0, 0);
+export const ZERO_VECTOR: Readonly<Vector3> = ORIGIN; // Alias for ORIGIN.
 export const X_AXIS: Readonly<Vector3> = new Vector3(1, 0, 0);
 export const Y_AXIS: Readonly<Vector3> = new Vector3(0, 1, 0);
 export const Z_AXIS: Readonly<Vector3> = new Vector3(0, 0, 1);
