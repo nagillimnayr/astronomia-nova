@@ -1,14 +1,19 @@
-import KeplerBody from '@/components/canvas/body/kepler-body';
+import { KeplerBody } from '@/components/canvas/body';
 import { trpc } from '@/helpers/trpc/trpc';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useTexture } from '@react-three/drei';
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, JSX } from 'react';
 import { Body } from '../body';
 import { Orbit } from '../orbit/Orbit';
 import { colorMap } from '@/helpers/color-map';
 import { MeshLambertMaterial } from 'three';
 
-export const SolarSystem = () => {
+/**
+ * @description Component representing the Solar System
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export const SolarSystem = (): JSX.Element => {
   // Load textures.
   const [
     sunTexture,
@@ -57,16 +62,16 @@ export const SolarSystem = () => {
 
   if (dataQuery.isError) {
     console.error(dataQuery.error);
-    return;
+    return <></>;
   }
   // If data hasn't loaded yet, return and wait until it has.
-  if (dataQuery.isLoading) return;
-  if (!dataQuery.data) return;
+  if (dataQuery.isLoading) return <></>;
+  if (!dataQuery.data) return <></>;
   return (
     <Body
-      ref={(root) => {
+      ref={(root: KeplerBody) => {
         if (!root) return;
-        if (rootRef.current === root) return;
+        if (rootRef.current === root) return <></>;
         rootRef.current = root;
         keplerTreeActor.send({ type: 'ASSIGN_ROOT', root });
       }}
