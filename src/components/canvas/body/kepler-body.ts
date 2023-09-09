@@ -12,15 +12,15 @@ import { type Mesh, type Vector3Tuple } from 'three';
  */
 export class KeplerBody extends DynamicBody {
   /** Array of bodies that orbit this body. */
-  private _orbitingBodies: KeplerBody[];
+  private _orbitingBodies: KeplerBody[] = [];
   /** The mean volumetric radius of the body in meters. */
-  private _meanRadius: number;
+  private _meanRadius: number = EARTH_RADIUS;
   /** The obliquity to the body's orbital plane, otherwise known as axial tilt. The angle in degrees between the body's rotational axis and the line perpendicular to its orbital plane. */
-  private _obliquity: number;
+  private _obliquity: number = 0;
   /** The rate in radians per second that the body rotates around its rotational axis. */
-  private _siderealRotationRate: number;
+  private _siderealRotationRate: number = 0;
   /** The time in seconds that it takes the body to make one full rotation about its rotational axis. */
-  private _siderealRotationPeriod: number;
+  private _siderealRotationPeriod: number = 0;
   /** Reference to the mesh of the object. */
   private _meshRef: MutableRefObject<Mesh | null> = null!;
 
@@ -28,34 +28,18 @@ export class KeplerBody extends DynamicBody {
    * Creates an instance of KeplerBody.
    * @author Ryan Milligan
    * @date Sep/07/2023
-   * @param {Params} {
-   *     mass = 0,
-   *     initialPosition = [0, 0, 0],
-   *     initialVelocity = [0, 0, 0],
-   *     meanRadius = EARTH_RADIUS,
-   *     obliquity = 0,
-   *     siderealRotationRate = 0,
-   *     siderealRotationPeriod = 0,
-   *   }
+   *
    * @memberof KeplerBody
+   * @param {number} mass
+   * @param {Vector3Tuple} initialPosition
+   * @param {Vector3Tuple} initialVelocity
    */
   constructor(
-    mass = 0,
+    mass: number = 0,
     initialPosition: Vector3Tuple = [0, 0, 0],
-    initialVelocity: Vector3Tuple = [0, 0, 0],
-    meanRadius = EARTH_RADIUS,
-    obliquity = 0,
-    siderealRotationRate = 0,
-    siderealRotationPeriod = 0
+    initialVelocity: Vector3Tuple = [0, 0, 0]
   ) {
     super(mass, initialPosition, initialVelocity);
-
-    this._orbitingBodies = [];
-
-    this._meanRadius = meanRadius;
-    this._obliquity = obliquity;
-    this._siderealRotationRate = siderealRotationRate;
-    this._siderealRotationPeriod = siderealRotationPeriod;
   }
 
   get orbitingBodies() {

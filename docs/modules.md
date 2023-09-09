@@ -197,7 +197,6 @@
 - [helpers/vector-utils](modules/helpers_vector_utils.md)
 - [helpers/xr/pollXRInputSources](modules/helpers_xr_pollXRInputSources.md)
 - [hooks/useHover](modules/hooks_useHover.md)
-- [interfaces/point-mass](modules/interfaces_point_mass.md)
 - [pages](modules/pages.md)
 - [pages/\_app](modules/pages__app.md)
 - [pages/\_document](modules/pages__document.md)
