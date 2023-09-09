@@ -6,7 +6,7 @@ import { colorMap } from '@/helpers/color-map';
 import { type BodyKey } from '@/helpers/horizons/BodyKey';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { extend, type Object3DNode } from '@react-three/fiber';
-import { useContext, useEffect, useRef } from 'react';
+import { type PropsWithChildren, useContext, useEffect, useRef } from 'react';
 import { type Texture, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { Body } from '@/components/canvas/body';
@@ -24,13 +24,19 @@ declare module '@react-three/fiber' {
   }
 }
 
-export type OrbitProps = {
-  children?: React.ReactNode;
-  name: BodyKey;
+export type OrbitProps = PropsWithChildren & {
+  name: string;
   texture?: Texture;
   ephemerides: ComputedEphemerides;
 };
 
+/**
+ * @param {string} name
+ * @param {Texture | undefined} texture
+ * @param {ComputedEphemerides} ephemerides
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
   const { mapActor } = MachineContext.useSelector(({ context }) => context);
 
@@ -63,7 +69,7 @@ export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
     mass,
     meanRadius,
     obliquity,
-    siderealRotRate,
+    siderealRotationRate,
     siderealRotationPeriod,
   } = physicalDataTable;
 
@@ -118,7 +124,7 @@ export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
         initialPosition={initialPosition}
         initialVelocity={initialVelocity}
         obliquity={obliquity}
-        siderealRotationRate={siderealRotRate}
+        siderealRotationRate={siderealRotationRate}
         siderealRotationPeriod={siderealRotationPeriod}
         mass={mass}
         meanRadius={meanRadius}
