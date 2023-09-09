@@ -1,6 +1,5 @@
 import { type MutableRefObject } from 'react';
 import { Object3D } from 'three';
-import KeplerBody from '../body/kepler-body';
 
 /**
  * @description Represents an idealized 2-body orbital system that neglects perturbing forces besides the gravitational attraction of the central body.
