@@ -13,7 +13,6 @@ import { clamp } from 'three/src/math/MathUtils';
 import { smoothCritDamp } from './smoothing';
 
 const EPSILON = 1e-3;
-// const EPSILON = 1e-14;
 
 const MIN_RADIUS_BOUND = Number.EPSILON;
 const MAX_RADIUS_BOUND = Infinity;
@@ -31,13 +30,19 @@ const DEFAULT_POLAR = PI_OVER_THREE;
 const _v1 = new Vector3();
 const _v2 = new Vector3();
 const _v3 = new Vector3();
-const _v4 = new Vector3();
-const _v5 = new Vector3();
 
 function approxZero(num: number, epsilon = EPSILON) {
   return Math.abs(num) <= epsilon;
 }
 
+/**
+ * @description Controller to manage the camera, handle inputs, and smooth the camera motions.
+ * @author Ryan Milligan
+ * @date Sep/09/2023
+ * @export
+ * @class CameraController
+ * @extends {Object3D}
+ */
 export class CameraController extends Object3D {
   private _camera: PerspectiveCamera | null = null;
   private _domElement: HTMLElement | null = null;
@@ -69,6 +74,13 @@ export class CameraController extends Object3D {
 
   private _isMoving = false;
 
+  /**
+   * @description Updates the camera. Should be called inside of the render loop each frame.
+   * @author Ryan Milligan
+   * @date Sep/09/2023
+   * @param {number} deltaTime
+   * @memberof CameraController
+   */
   update(deltaTime: number) {
     this._isMoving = false;
 
@@ -78,8 +90,7 @@ export class CameraController extends Object3D {
     const pivotPoint = this._pivotPoint;
     const attachPoint = this._attachPoint;
     pivotPoint.rotation.set(0, 0, 0); // Reset rotations.
-    attachPoint.position.set(0, 0, this._spherical.radius); // Set position of
-    // camera.
+    attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
     this._camera?.position.set(0, 0, 0);
 
     const azimuthalAngle = this._spherical.theta;
@@ -151,11 +162,13 @@ export class CameraController extends Object3D {
     this._spherical.radius = newValue;
   }
 
-  // Set radius without clamping to min/max. This allows setting the min/max
-  // distance to trigger a transition to the clamped value.
+  /**
+   * Sets the radius without clamping to min/max. This allows setting the min/max distance to trigger a transition to the clamped value.
+   * @param {number} radius
+   * @private
+   */
   private _setRadius(radius: number) {
-    this._spherical.radius = Math.max(radius, 0); // We still don't want it to
-    // be negative though.
+    this._spherical.radius = Math.max(radius, 0); // Still don't want it to be negative though.
   }
 
   setRadius(radius: number) {
@@ -171,7 +184,10 @@ export class CameraController extends Object3D {
     );
   }
 
-  // Alias for setRadiusTarget.
+  /**
+   * Alias for setRadiusTarget.
+   * @param {number} radiusTarget
+   */
   setTargetRadius(radiusTarget: number) {
     this.setRadiusTarget(radiusTarget);
   }
@@ -185,7 +201,6 @@ export class CameraController extends Object3D {
   }
 
   get radius() {
-    // return this._radius;
     return this._spherical.radius;
   }
 
@@ -195,12 +210,11 @@ export class CameraController extends Object3D {
 
   setPolarAngle(polarAngle: number) {
     // Adjust angle to be within min/max range.
-    const adjustedAngle = clamp(
+    this._spherical.phi = clamp(
       polarAngle,
       this._minPolarAngle,
       this._maxPolarAngle
     );
-    this._spherical.phi = adjustedAngle;
   }
 
   setPolarAngleTarget(polarAngleTarget: number) {
@@ -276,13 +290,8 @@ export class CameraController extends Object3D {
     if (camera === this._camera) {
       return;
     }
-    // console.log('Setting camera in camera controller!', camera);
     this._camera = camera;
-    // const parent = camera.parent;
     this.attachToController(camera);
-    // if (parent && parent !== this._attachPoint) {
-    //   parent.add(this);
-    // }
   }
 
   set camera(camera: PerspectiveCamera) {
@@ -326,7 +335,6 @@ export class CameraController extends Object3D {
     this._minRadius = clamp(minRadius, MIN_RADIUS_BOUND, this._maxRadius);
 
     this._clampRadiusTarget();
-    // this._clampRadius();
   }
 
   get minDistance() {
@@ -334,7 +342,6 @@ export class CameraController extends Object3D {
   }
 
   set minDistance(minDistance: number) {
-    // console.log('set minDistance');
     this.setMinRadius(minDistance);
   }
 
@@ -343,7 +350,6 @@ export class CameraController extends Object3D {
   }
 
   set maxRadius(maxRadius: number) {
-    // console.log('set minDistance');
     this.setMaxRadius(maxRadius);
   }
 
@@ -351,7 +357,6 @@ export class CameraController extends Object3D {
     this._maxRadius = clamp(maxRadius, this._minRadius, MAX_RADIUS_BOUND);
 
     this._clampRadiusTarget();
-    // this._clampRadius();
   }
 
   get maxDistance() {
@@ -434,8 +439,12 @@ export class CameraController extends Object3D {
     return getLocalUpInWorldCoords(this);
   }
 
-  // Adjust the orientation of the controller so that the local up vector is
-  // parallel with the world y-axis.
+  /**
+   * @description Adjust the orientation of the controller so that the local up vector is parallel with the world y-axis.
+   * @author Ryan Milligan
+   * @date Sep/09/2023
+   * @memberof CameraController
+   */
   applyWorldUp() {
     // Get the world position of the point 1 unit from the object in the z-axis.
     this.getWorldPosition(_v1);
@@ -447,12 +456,22 @@ export class CameraController extends Object3D {
     this.lookAt(_v3);
   }
 
+  /**
+   * @description Attach the controller to the object.
+   * @author Ryan Milligan
+   * @date Sep/09/2023
+   * @param {Object3D} obj
+   * @memberof CameraController
+   */
   attachControllerTo(obj: Object3D) {
     obj.add(this);
   }
 
-  // Attach the controller to the object but maintain its current position and
-  // orientation.
+  /**
+   * @description Attach the controller to the object but maintain its current position.
+   * @param {Object3D} obj
+   * @memberof CameraController
+   */
   attachToWithoutMoving(obj: Object3D) {
     // Get world position of camera.
     this.camera.getWorldPosition(_v1);
@@ -465,22 +484,13 @@ export class CameraController extends Object3D {
     this._sphericalTarget.theta = this._spherical.theta;
     this._sphericalTarget.phi = this._spherical.phi;
 
-    // Set radius.
+    // Set radius with distance to new target.
     const radius = _v3.length();
     this._setRadius(radius);
     this.setTargetRadius(radius);
 
-    // this._pivotPoint.getWorldPosition(_v1);
-
     // Attach to the object.
     obj.add(this);
-
-    // Maintain look direction.
-    // this.applyWorldUp();
-    // this._attachPoint.up = this.up;
-    // this._camera.up = this.up;
-    // this._attachPoint.rotateY(PI);
-    // this._camera?.lookAt(_v1);
   }
 
   attachToController(obj: Object3D) {
@@ -491,11 +501,19 @@ export class CameraController extends Object3D {
     return this._locked;
   }
 
+  /**
+   * @description Disable controls.
+   * @memberof CameraController
+   */
   lock() {
     this._locked = true;
     this.disconnectEventListeners();
   }
 
+  /**
+   * @description Enable controls.
+   * @memberof CameraController
+   */
   unlock() {
     this._locked = false;
     this.connectEventListeners();
