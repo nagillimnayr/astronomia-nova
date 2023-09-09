@@ -57,8 +57,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   const objRef = useRef<Object3D>(null!);
   const meshRef = useRef<Mesh>(null!);
 
-  // Set forwarded ref, the return value of the callback function will be
-  // assigned to fwdRef.
+  // Set forwarded ref, the return value of the callback function will be assigned to fwdRef.
   useImperativeHandle(
     fwdRef,
     () => {
