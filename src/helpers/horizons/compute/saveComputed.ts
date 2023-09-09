@@ -20,8 +20,6 @@ export async function saveComputedEphemerides(
   );
   console.log('pathToNewFile:', pathToNewFile);
 
-  // const { id, centerId, centerName, epoch } = ephemeris;
-
   await fs.writeJSON(pathToNewFile, ephemerides);
 
   return { path: pathToNewFile };
