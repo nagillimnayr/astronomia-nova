@@ -37,6 +37,10 @@ type BodyMeshProps = {
   material?: Material;
   siderealRotationRate: number;
 };
+/**
+ * Component which manages the visual logic of the associated body. Renders the body's mesh, and handles the sidereal rotation.
+ * @returns {JSX.Element}
+ */
 export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   {
     name,
@@ -135,6 +139,13 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 type InteractionSphereProps = {
   radius: number;
 };
+/**
+ * @description Invisible sphere mesh to manage interaction events.
+ * @author Ryan Milligan
+ * @date Sep/09/2023
+ * @param  {number} [radius] The radius of the sphere mesh.
+ * @returns {JSX.Element}
+ */
 const InteractionSphere = ({ radius }: InteractionSphereProps) => {
   const { surfaceActor, cameraActor, uiActor } = MachineContext.useSelector(
     ({ context }) => context
