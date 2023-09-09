@@ -1,4 +1,4 @@
-import KeplerBody from '@/components/canvas/body/kepler-body';
+import { KeplerBody } from '@/components/canvas/body/kepler-body';
 import { TWO_PI } from '@/constants/constants';
 import { useRootStore } from '@/state/root-store';
 import { MachineContext } from '@/state/xstate/MachineProviders';

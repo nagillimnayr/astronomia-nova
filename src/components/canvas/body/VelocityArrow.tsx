@@ -1,11 +1,10 @@
-import KeplerBody from '@/components/canvas/body/kepler-body';
+import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { DIST_MULT } from '@/constants/constants';
-import KeplerTreeContext from '@/context/KeplerTreeContext';
+import { KeplerTreeContext } from '@/context/KeplerTreeContext';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-
 import { useFrame } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
-import { MutableRefObject, useContext, useRef } from 'react';
+import { type MutableRefObject, useContext, useRef } from 'react';
 import { type ArrowHelper, Vector3 } from 'three';
 
 const _vel = new Vector3();

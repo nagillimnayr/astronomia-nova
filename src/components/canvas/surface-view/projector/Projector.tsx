@@ -1,13 +1,10 @@
-import KeplerBody from '@/components/canvas/body/kepler-body';
+import { KeplerBody } from '@/components/canvas/body/kepler-body';
 import { EARTH_RADIUS, METER } from '@/constants/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { useRef } from 'react';
-import { Object3D, Vector3 } from 'three';
+import { type Object3D } from 'three';
 import { ProjectedSphere } from './ProjectedSphere';
-
-const _pos = new Vector3();
-const _otherPos = new Vector3();
 
 export const Projector = () => {
   const { keplerTreeActor, cameraActor } = MachineContext.useSelector(

@@ -1,4 +1,4 @@
-import KeplerBody from '@/components/canvas/body/kepler-body';
+import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { Annotation } from '@/components/canvas/body/tags/annotation/Annotation';
 import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
 import { EARTH_RADIUS, METER } from '@/constants/constants';
@@ -7,12 +7,18 @@ import useHover from '@/hooks/useHover';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { animated, useSpring } from '@react-spring/three';
 import { useCursor } from '@react-three/drei';
-import { ThreeEvent, useFrame } from '@react-three/fiber';
-import { Interactive, XRInteractionEvent } from '@react-three/xr';
+import { type ThreeEvent, useFrame } from '@react-three/fiber';
+import { Interactive, type XRInteractionEvent } from '@react-three/xr';
 import { useSelector } from '@xstate/react';
 import { clamp } from 'lodash';
-import { MutableRefObject, useCallback, useMemo, useRef } from 'react';
-import { AxesHelper, Group, Mesh, Object3D, Vector3 } from 'three';
+import { type MutableRefObject, useCallback, useMemo, useRef } from 'react';
+import {
+  type AxesHelper,
+  type Group,
+  type Mesh,
+  type Object3D,
+  Vector3,
+} from 'three';
 import { SelectionMarker } from './marker/SelectionMarker';
 import { SphereMarker } from './marker/SphereMarker';
 

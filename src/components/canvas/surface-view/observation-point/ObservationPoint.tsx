@@ -1,7 +1,6 @@
-import KeplerBody from '@/components/canvas/body/kepler-body';
+import { KeplerBody } from '@/components/canvas/body/kepler-body';
 import { DEG_TO_RADS, METER, PI_OVER_TWO } from '@/constants/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-// import { GlobalStateContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
 import { type ReactNode, useEffect, useRef } from 'react';
 import { type Object3D } from 'three';

@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import KeplerBody from '@/components/canvas/body/kepler-body';
+import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Line } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
 import { useEffect, useMemo, useRef } from 'react';
-import { type ColorRepresentation, Group, type Object3D, Vector3 } from 'three';
-import { Line2 } from 'three-stdlib';
+import {
+  type ColorRepresentation,
+  type Group,
+  type Object3D,
+  Vector3,
+} from 'three';
+import { type Line2 } from 'three-stdlib';
 
 const _newPos = new Vector3();
 

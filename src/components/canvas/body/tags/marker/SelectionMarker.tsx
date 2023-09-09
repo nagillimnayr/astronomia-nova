@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import type KeplerBody from '@/components/canvas/body/kepler-body';
+import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { animated, useSpring } from '@react-spring/three';
 import { Circle, MeshDiscardMaterial, Ring } from '@react-three/drei';

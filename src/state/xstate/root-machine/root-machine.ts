@@ -1,4 +1,4 @@
-import KeplerBody from '@/components/canvas/body/kepler-body';
+import { KeplerBody } from '@/components/canvas/body/kepler-body';
 import { TIME_MULT } from '@/constants/constants';
 import { type ActorRefFrom, assign, createMachine, log, spawn } from 'xstate';
 import { sendTo } from 'xstate/lib/actions';

@@ -1,4 +1,4 @@
-import type KeplerBody from '@/components/canvas/body/kepler-body';
+import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { PI_OVER_TWO } from '@/constants/constants';
 import { colorMap } from '@/helpers/color-map';
 import { MachineContext } from '@/state/xstate/MachineProviders';
@@ -7,7 +7,7 @@ import { useSelector } from '@xstate/react';
 import { useCallback, useMemo, useRef } from 'react';
 import {
   type ArrowHelper,
-  Group,
+  type Group,
   type Mesh,
   type Object3D,
   Spherical,

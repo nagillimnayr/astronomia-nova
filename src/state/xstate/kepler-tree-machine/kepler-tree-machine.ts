@@ -1,4 +1,4 @@
-import type KeplerBody from '@/components/canvas/body/kepler-body';
+import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { TIME_MULT, UPDATES_PER_REAL_SECOND } from '@/constants/constants';
 import { makeFixedUpdateFn } from '@/helpers/fixed-time-step';
 import { traverseKeplerTree } from '@/helpers/kepler-tree';

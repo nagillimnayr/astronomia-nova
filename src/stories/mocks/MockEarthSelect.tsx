@@ -1,4 +1,4 @@
-import KeplerBody from '@/components/canvas/body/kepler-body';
+import { KeplerBody } from '@/components/canvas/body';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEffect } from 'react';
 

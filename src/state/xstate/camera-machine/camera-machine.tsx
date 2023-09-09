@@ -1,4 +1,4 @@
-import KeplerBody from '@/components/canvas/body/kepler-body';
+import { KeplerBody } from '@/components/canvas/body/kepler-body';
 import { type CameraController } from '@/components/canvas/scene/camera-controller/CameraController';
 import {
   DIST_MULT,

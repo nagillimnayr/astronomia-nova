@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import type KeplerBody from '@/components/canvas/body/kepler-body';
+import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { DIST_MULT, METER, X_AXIS } from '@/constants/constants';
 import { colorMap } from '@/helpers/color-map';
 import { useRootStore } from '@/state/root-store';
@@ -33,9 +33,6 @@ import { type Line2 } from 'three-stdlib';
 const DIST_TO_CAM_THRESHOLD = 1e8 * METER;
 
 const NUM_OF_POINTS = 2 ** 14;
-
-const _bodyWorldPos = new Vector3();
-const _camWorldPos = new Vector3();
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 

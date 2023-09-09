@@ -1,4 +1,4 @@
-import KeplerBody from '@/components/canvas/body/kepler-body';
+import { KeplerBody } from '@/components/canvas/body/kepler-body';
 import { VRSlider } from '@/components/canvas/vr/vr-hud/vr-ui-components/vr-slider/VRSlider';
 import {
   MAX_LATITUDE,

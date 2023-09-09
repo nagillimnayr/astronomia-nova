@@ -1,8 +1,6 @@
-import {
-  velocityVerletIntegration
-} from '@/helpers/physics/integration/integration-methods';
+import { velocityVerletIntegration } from '@/helpers/physics/integration/integration-methods';
 import { Vector3 } from 'three';
-import type KeplerBody from '../components/canvas/body/kepler-body';
+import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 
 /**
  * @summary Function factory that takes in an update function and returns an

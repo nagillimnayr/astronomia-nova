@@ -1,5 +1,5 @@
 import { anim } from '@/components/canvas/animated-components';
-import type KeplerBody from '@/components/canvas/body/kepler-body';
+import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSpring } from '@react-spring/three';
 import { useSelector } from '@xstate/react';

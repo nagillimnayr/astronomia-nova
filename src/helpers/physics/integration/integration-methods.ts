@@ -1,4 +1,4 @@
-import type KeplerBody from '@/components/canvas/body/kepler-body';
+import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { ORIGIN } from '@/constants/constants';
 import { Vector3 } from 'three';
 import calculateGravitation from '../motion/gravitation';

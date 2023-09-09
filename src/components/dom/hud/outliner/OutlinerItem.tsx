@@ -1,4 +1,4 @@
-import type KeplerBody from '@/components/canvas/body/kepler-body';
+import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { cn } from '@/helpers/cn';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useMachine, useSelector } from '@xstate/react';

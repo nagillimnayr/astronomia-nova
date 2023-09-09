@@ -1,10 +1,10 @@
-import KeplerBody from '@/components/canvas/body/kepler-body';
+import { KeplerBody } from '@/components/canvas/body/kepler-body';
 import { EARTH_RADIUS, METER } from '@/constants/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Sphere, useTexture } from '@react-three/drei';
 import { useSelector } from '@xstate/react';
 import { Suspense, useMemo, useRef, useState } from 'react';
-import { DoubleSide, Mesh, Object3D, Texture } from 'three';
+import { DoubleSide, type Mesh, type Object3D, type Texture } from 'three';
 
 export const SkySphere = () => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
