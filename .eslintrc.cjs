@@ -39,6 +39,9 @@ const config = {
         argsIgnorePattern: '^_',
       },
     ],
+    '@typescript-eslint/no-inferrable-types': [
+      'off',
+    ],
     '@typescript-eslint/no-misused-promises': [
       2,
       {
