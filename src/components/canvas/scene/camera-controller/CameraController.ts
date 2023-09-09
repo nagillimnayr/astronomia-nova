@@ -523,7 +523,7 @@ export class CameraController extends Object3D {
     return this._isMoving;
   }
 
-  private _onPointerDown(event: PointerEvent) {
+  private _onPointerDown = (event: PointerEvent) => {
     const button = event.button;
     if (!this._domElement) return;
     event.preventDefault();
@@ -534,31 +534,28 @@ export class CameraController extends Object3D {
       case 0: {
         this._domElement.addEventListener(
           'pointermove',
-          this.onPointerMoveLeft
+          this._onPointerMoveLeft
         );
         break;
       }
       case 1: {
         this._domElement.addEventListener(
           'pointermove',
-          this.onPointerMoveMiddle
+          this._onPointerMoveMiddle
         );
         break;
       }
       case 2: {
         this._domElement.addEventListener(
           'pointermove',
-          this.onPointerMoveRight
+          this._onPointerMoveRight
         );
         break;
       }
     }
-  }
+  };
 
-  // Bind instance's 'this' to the function so it can be passed as a callback.
-  onPointerDown = this._onPointerDown.bind(this);
-
-  private _onPointerUp(event: PointerEvent) {
+  private _onPointerUp = (event: PointerEvent) => {
     const button = event.button;
     if (!this._domElement) return;
     event.preventDefault();
@@ -567,37 +564,34 @@ export class CameraController extends Object3D {
       case 0: {
         this._domElement.removeEventListener(
           'pointermove',
-          this.onPointerMoveLeft
+          this._onPointerMoveLeft
         );
         break;
       }
       case 1: {
         this._domElement.removeEventListener(
           'pointermove',
-          this.onPointerMoveMiddle
+          this._onPointerMoveMiddle
         );
         break;
       }
       case 2: {
         this._domElement.removeEventListener(
           'pointermove',
-          this.onPointerMoveRight
+          this._onPointerMoveRight
         );
         event;
         event.stopPropagation();
         break;
       }
     }
-  }
+  };
 
-  // Bind instance's 'this' to the function so it can be passed as a callback.
-  onPointerUp = this._onPointerUp.bind(this);
-
-  private _onPointerMoveLeft(event: PointerEvent) {
+  private _onPointerMoveLeft = (event: PointerEvent) => {
     if (event.buttons % 2 === 0) {
       this._domElement?.removeEventListener(
         'pointermove',
-        this.onPointerMoveLeft
+        this._onPointerMoveLeft
       );
       return;
     }
@@ -607,78 +601,60 @@ export class CameraController extends Object3D {
     const deltaY = -event.movementY;
 
     this.addRotation(deltaX, deltaY);
-  }
+  };
 
-  // Bind instance's 'this' to the function so it can be passed as a callback.
-  onPointerMoveLeft = this._onPointerMoveLeft.bind(this);
-
-  private _onPointerMoveMiddle(event: PointerEvent) {
+  private _onPointerMoveMiddle = (event: PointerEvent) => {
     event.preventDefault();
     const deltaY = event.movementY / 50;
     this.addRadialZoom(deltaY);
-  }
+  };
 
-  // Bind instance's 'this' to the function so it can be passed as a callback.
-  onPointerMoveMiddle = this._onPointerMoveMiddle.bind(this);
-
-  private _onPointerMoveRight(event: PointerEvent) {
+  private _onPointerMoveRight = (event: PointerEvent) => {
     event.preventDefault();
     const deltaY = event.movementY / 50;
     this.addRadialZoom(deltaY);
-  }
+  };
 
-  // Bind instance's 'this' to the function so it can be passed as a callback.
-  onPointerMoveRight = this._onPointerMoveRight.bind(this);
-
-  private _onPointerWheel(event: WheelEvent) {
+  private _onPointerWheel = (event: WheelEvent) => {
     event.preventDefault();
     // deltaY will be between -100 and 100.
     const zoom = event.deltaY / 100;
     this.addRadialZoom(zoom);
-  }
+  };
 
-  // Bind instance's 'this' to the function so it can be passed as a callback.
-  onPointerWheel = this._onPointerWheel.bind(this);
-
-  onContextMenu = (event: MouseEvent) => {
+  private _onContextMenu = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
   };
 
-  // private onGamepadConnected: (event: GamepadEvent)=>void = (event) => {
-  //   const gamepad = event.gamepad;
-
-  // }
-
   connectEventListeners() {
     if (!this._domElement) return;
-    this._domElement.addEventListener('pointerdown', this.onPointerDown);
-    this._domElement.addEventListener('pointerup', this.onPointerUp);
-    this._domElement.addEventListener('wheel', this.onPointerWheel);
-    this._domElement.addEventListener('contextmenu', this.onContextMenu);
-
-    // if (window !== undefined) {
-    //     window.addEventListener('gamepadconnected', )
-    //   }
+    this._domElement.addEventListener('pointerdown', this._onPointerDown);
+    this._domElement.addEventListener('pointerup', this._onPointerUp);
+    this._domElement.addEventListener('wheel', this._onPointerWheel);
+    this._domElement.addEventListener('contextmenu', this._onContextMenu);
   }
 
   disconnectEventListeners() {
     if (!this._domElement) return;
-    this._domElement.removeEventListener('pointerdown', this.onPointerDown);
-    this._domElement.removeEventListener('pointerup', this.onPointerUp);
-    this._domElement.removeEventListener('wheel', this.onPointerWheel);
-    this._domElement.removeEventListener('contextmenu', this.onContextMenu);
-
-    this._domElement.removeEventListener('pointermove', this.onPointerMoveLeft);
+    this._domElement.removeEventListener('pointerdown', this._onPointerDown);
+    this._domElement.removeEventListener('pointerup', this._onPointerUp);
+    this._domElement.removeEventListener('wheel', this._onPointerWheel);
+    this._domElement.removeEventListener('contextmenu', this._onContextMenu);
 
     this._domElement.removeEventListener(
       'pointermove',
-      this.onPointerMoveMiddle
+      this._onPointerMoveLeft
     );
 
     this._domElement.removeEventListener(
       'pointermove',
-      this.onPointerMoveRight
+      this._onPointerMoveMiddle
+    );
+
+    this._domElement.removeEventListener(
+      'pointermove',
+      this._onPointerMoveRight
     );
   }
 
@@ -691,7 +667,6 @@ export class CameraController extends Object3D {
   }
 
   setDomElement(domElement: HTMLElement) {
-    // console.log('setting dom element');
     if (this._domElement) {
       // Disconnect event listeners before setting new dom element.
       this.disconnectEventListeners();
@@ -703,9 +678,9 @@ export class CameraController extends Object3D {
 
   constructor(
     camera?: PerspectiveCamera,
-    radius?: number,
-    azimuthalAngle?: number,
-    polarAngle?: number
+    radius: number = DEFAULT_RADIUS,
+    azimuthalAngle: number = DEFAULT_AZIMUTH,
+    polarAngle: number = DEFAULT_POLAR
   ) {
     super();
     this.add(this._pivotPoint);
@@ -723,15 +698,12 @@ export class CameraController extends Object3D {
       }
     }
 
-    radius = radius ?? DEFAULT_RADIUS;
     this.setRadiusTarget(radius);
     this.setRadius(radius);
 
-    azimuthalAngle = azimuthalAngle ?? DEFAULT_AZIMUTH;
     this.setAzimuthalAngleTarget(azimuthalAngle);
     this.setAzimuthalAngle(azimuthalAngle);
 
-    polarAngle = polarAngle ?? DEFAULT_POLAR;
     this.setPolarAngleTarget(polarAngle);
     this.setPolarAngle(polarAngle);
   }
