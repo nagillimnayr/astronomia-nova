@@ -1,5 +1,4 @@
-import PointMass from '@/interfaces/point-mass';
-import { Object3D, Vector3, Vector3Tuple } from 'three';
+import { Object3D, Vector3, type Vector3Tuple } from 'three';
 
 /**
  * @description Base class for an object with mass, velocity, and acceleration.
@@ -9,7 +8,7 @@ import { Object3D, Vector3, Vector3Tuple } from 'three';
  * @class DynamicBody
  * @extends {Object3D}
  */
-class DynamicBody extends Object3D implements PointMass {
+class DynamicBody extends Object3D {
   private _velocity: Vector3;
   private _acceleration: Vector3;
   private _mass: number;
