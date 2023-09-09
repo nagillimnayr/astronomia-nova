@@ -12,22 +12,24 @@ const meta: Meta<typeof Body> = {
 export default meta;
 type Story = StoryObj<typeof Body>;
 
-export const NoTexture = () => {
-  return (
-    <>
-      <object3D rotation={[degToRad(-90), 0, 0]}>
-        <Body
-          name={'Earth'}
-          color={'white'}
-          mass={0}
-          meanRadius={0.5}
-          initialPosition={[0, 0, 0]}
-          initialVelocity={[0, 0, 0]}
-        />
-      </object3D>
-      <Grid infiniteGrid position={[0, -0.5, 0]} />
-    </>
-  );
+export const NoTexture: Story = {
+  render: () => {
+    return (
+      <>
+        <object3D rotation={[degToRad(-90), 0, 0]}>
+          <Body
+            name={'Earth'}
+            color={'white'}
+            mass={0}
+            meanRadius={0.5}
+            initialPosition={[0, 0, 0]}
+            initialVelocity={[0, 0, 0]}
+          />
+        </object3D>
+        <Grid infiniteGrid position={[0, -0.5, 0]} />
+      </>
+    );
+  },
 };
 
 const EarthStory = () => {
@@ -49,6 +51,8 @@ const EarthStory = () => {
     </>
   );
 };
-export const Earth = () => {
-  return <EarthStory />;
+export const Earth: Story = {
+  render: () => {
+    return <EarthStory />;
+  },
 };
