@@ -1,3 +1,4 @@
+import { DAY, TWO_PI } from '@/constants';
 import type { ElementTable } from '@/helpers/horizons/types/ElementTable';
 import { type Ephemeris } from '@/helpers/horizons/types/Ephemeris';
 import {
@@ -5,8 +6,6 @@ import {
   type PhysicalDataTable,
 } from '@/helpers/horizons/types/PhysicalData';
 import type { VectorTable } from '@/helpers/horizons/types/VectorTable';
-import _ from 'lodash';
-import { DAY, TWO_PI } from '../../constants/constants';
 import type { ElementCode } from './elementCodes';
 import type { VectorCode } from './vectorCodes';
 
@@ -61,15 +60,15 @@ export function parseEphemerisDate(text: Readonly<string>) {
   const dateStr = matches[1];
 
   // split the date substring on ' ' into year-month-day / time
-  const [yearMonthDay, time] = _.split(dateStr, /\s/);
+  // const [yearMonthDay, time] = _.split(dateStr, /\s/);
 
   // split the year/month/day on '-'
-  const [year, month, day] = _.split(yearMonthDay, /\-/);
+  // const [year, month, day] = _.split(yearMonthDay, /\-/);
 
   // Todo: Convert to numbers.
 
   // construct a date object
-  const date = new Date();
+  // const date = new Date();
 
   return dateStr;
 }
@@ -149,7 +148,6 @@ export function parseElements(text: Readonly<string>): Ephemeris {
     throw new Error('invalid id/name');
   }
 
-  const date = parseEphemerisDate(substr);
   const elementTable: ElementTable = {
     eccentricity: parseEphemerisTable(substr, 'EC'),
     periapsis: parseEphemerisTable(substr, 'QR') * KM_TO_M,
@@ -165,7 +163,7 @@ export function parseElements(text: Readonly<string>): Ephemeris {
     siderealOrbitPeriod: parseEphemerisTable(substr, 'PR'),
   };
 
-  const ephemeris: Ephemeris = {
+  return {
     id,
     name,
     centerId,
@@ -174,7 +172,6 @@ export function parseElements(text: Readonly<string>): Ephemeris {
     ephemerisType: 'ELEMENTS',
     table: elementTable,
   };
-  return ephemeris;
 }
 
 export function parseVectors(text: Readonly<string>): Ephemeris {
@@ -216,7 +213,7 @@ export function parseVectors(text: Readonly<string>): Ephemeris {
     rangeRate,
   };
 
-  const ephemeris: Ephemeris = {
+  return {
     id,
     name,
     centerId,
@@ -225,8 +222,6 @@ export function parseVectors(text: Readonly<string>): Ephemeris {
     ephemerisType: 'VECTORS',
     table: vectorTable,
   };
-
-  return ephemeris;
 }
 
 export function parsePhysicalData(text: Readonly<string>): PhysicalData {
@@ -259,9 +254,8 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
   const table: PhysicalDataTable = {
     meanRadius: capturePhysicalProperty(substr, 'mean radius') * KM_TO_M, // (m)
     mass: capturePhysicalProperty(substr, 'Mass') * massExponent, // (kg)
-    // siderealRotPeriod: capturePhysicalProperty(substr, 'Sidereal rot.
-    // period'), // (hrs)
-    siderealRotRate: getRotationRate(substr), // (deg/s)
+
+    siderealRotationRate: getRotationRate(substr), // (deg/s)
     gravParameter: capturePhysicalProperty(substr, 'GM') * KM_TO_M, // (m^3/s^2)
     obliquity: capturePhysicalProperty(substr, 'Obliquity'), // axial tilt (deg)
   };
@@ -271,13 +265,11 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
     throw new Error('invalid id/name');
   }
 
-  const physicalData = {
+  return {
     id,
     name,
     table,
   };
-
-  return physicalData;
 }
 
 function capturePhysicalProperty(text: string, property: string) {
