@@ -1,4 +1,3 @@
-import { type MutableRefObject } from 'react';
 import { Object3D } from 'three';
 
 /**
