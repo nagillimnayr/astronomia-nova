@@ -1,5 +1,4 @@
-import KeplerTreeContext from '@/context/KeplerTreeContext';
-
+import { KeplerTreeContext } from '@/context/KeplerTreeContext';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { extend, type Object3DNode } from '@react-three/fiber';
 import React, {
@@ -10,18 +9,16 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-
 import {
-  Material,
+  type Material,
   type ColorRepresentation,
   type Mesh,
   type Texture,
   type Vector3Tuple,
   MeshBasicMaterial,
 } from 'three';
-
 import { BodyMesh } from './BodyMesh';
-import KeplerBody from './kepler-body';
+import { KeplerBody } from './kepler-body';
 import { Tags } from './tags/Tags';
 
 // Extend KeplerBody so the reconciler is aware of it.
