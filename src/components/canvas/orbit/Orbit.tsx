@@ -1,4 +1,4 @@
-import type KeplerBody from '@/components/canvas/body/kepler-body';
+import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
 import { Z_AXIS } from '@/constants/constants';
 import KeplerTreeContext from '@/context/KeplerTreeContext';
@@ -9,14 +9,12 @@ import { extend, type Object3DNode } from '@react-three/fiber';
 import { useContext, useEffect, useMemo, useRef } from 'react';
 import { type Texture, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
-import { type BodyParams } from '../body/Body';
 import { Body } from '../body';
 import { Trajectory } from './trajectory/Trajectory';
 import { TrueAnomalyArrow } from './TrueAnomalyArrow';
-import { ComputedEphemerides } from '@/helpers/horizons/types/ComputedEphemerides';
+import { type ComputedEphemerides } from '@/helpers/horizons/types/ComputedEphemerides';
 
 const _pos = new Vector3();
-const _vel = new Vector3();
 
 // Extend KeplerOrbit so the reconciler is aware of it.
 extend({ KeplerOrbit });
