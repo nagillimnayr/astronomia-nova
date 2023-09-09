@@ -4,14 +4,11 @@ import { KeplerTreeContext } from '@/context/KeplerTreeContext';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useFrame } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
-import { type MutableRefObject, useContext, useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { type ArrowHelper, Vector3 } from 'three';
 
 const _vel = new Vector3();
 
-type VelocityArrowRefs = {
-  bodyRef: MutableRefObject<KeplerBody>;
-};
 const VelocityArrow = () => {
   const { visibilityActor } = MachineContext.useSelector(
     ({ context }) => context
@@ -46,7 +43,6 @@ const VelocityArrow = () => {
     arrowRef.current.setDirection(direction);
     const length = 2 * (bodyRef.current.meanRadius / DIST_MULT);
     arrowRef.current.setLength(length, 0.1 * length, 0.05 * length);
-    // console.log(length);
   });
 
   if (!bodyRef || !bodyRef.current) return;
