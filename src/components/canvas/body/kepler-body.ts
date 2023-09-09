@@ -10,7 +10,7 @@ import { type Mesh, type Vector3Tuple } from 'three';
  * @class KeplerBody
  * @extends {DynamicBody}
  */
-class KeplerBody extends DynamicBody {
+export class KeplerBody extends DynamicBody {
   /** Array of bodies that orbit this body. */
   private _orbitingBodies: KeplerBody[];
   /** The mean volumetric radius of the body in meters. */
@@ -132,5 +132,3 @@ class KeplerBody extends DynamicBody {
     return count;
   }
 }
-
-export default KeplerBody;
