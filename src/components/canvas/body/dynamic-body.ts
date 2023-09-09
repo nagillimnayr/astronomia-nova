@@ -23,20 +23,18 @@ class DynamicBody extends Object3D {
    * @memberof DynamicBody
    */
   constructor(
-    mass?: number,
-    initialPosition?: Vector3Tuple,
-    initialVelocity?: Vector3Tuple
+    mass: number = 0,
+    initialPosition: Vector3Tuple = [0, 0, 0],
+    initialVelocity: Vector3Tuple = [0, 0, 0]
   ) {
     super();
 
     if (initialPosition) {
       this.position.set(...initialPosition);
     }
-    this._velocity = initialVelocity
-      ? new Vector3(...initialVelocity)
-      : new Vector3(0, 0, 0);
+    this._velocity = new Vector3(...initialVelocity);
     this._acceleration = new Vector3(0, 0, 0);
-    this._mass = mass ?? 0;
+    this._mass = mass;
   }
   get velocity(): Vector3 {
     return this._velocity;
