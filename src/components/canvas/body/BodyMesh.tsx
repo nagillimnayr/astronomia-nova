@@ -1,4 +1,4 @@
-import type KeplerBody from '@/components/canvas/body/kepler-body';
+import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { PlanetRing } from '@/components/canvas/body/planet-ring/PlanetRing';
 import { Poles } from '@/components/canvas/body/poles/Poles';
 import { METER, PI_OVER_TWO } from '@/constants/constants';
