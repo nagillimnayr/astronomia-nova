@@ -1,9 +1,9 @@
 import { PI, Y_AXIS } from '@/constants/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-import { Vector3Tuple } from 'three';
+import { type Vector3Tuple } from 'three';
 
-type PoleProps = {
+export type PoleProps = {
   length: number;
   rotation?: Vector3Tuple;
 };

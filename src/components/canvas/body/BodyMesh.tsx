@@ -29,7 +29,7 @@ import { normalizeAngle } from '@/helpers/rotation-utils';
 
 const _centralWorldPos = new Vector3();
 
-type BodyMeshProps = {
+export type BodyMeshProps = {
   name: string;
   bodyRef: MutableRefObject<KeplerBody>;
   meanRadius: number;

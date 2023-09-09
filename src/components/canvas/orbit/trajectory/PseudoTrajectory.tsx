@@ -13,8 +13,11 @@ import { type Line2 } from 'three-stdlib';
 const _vel = new Vector3();
 const NUM_OF_SEGMENTS = 1024;
 
-// This line helps to cover up a lot of the flickering of the trajectory when
-// very close to a planet.
+/**
+ * @description This line object helps to cover up a lot of the flickering of the trajectory when very close to a planet.
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const PseudoTrajectory = () => {
   const { cameraActor, visibilityActor } = MachineContext.useSelector(
     ({ context }) => context

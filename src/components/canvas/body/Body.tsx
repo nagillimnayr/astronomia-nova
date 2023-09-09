@@ -3,6 +3,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { extend, type Object3DNode } from '@react-three/fiber';
 import React, {
   forwardRef,
+  memo,
   useContext,
   useEffect,
   useImperativeHandle,
@@ -29,7 +30,10 @@ declare module '@react-three/fiber' {
   }
 }
 
-export type BodyParams = {
+export type BodyProps = {
+  children?: React.ReactNode;
+  texture?: Texture;
+  material?: Material;
   name: string;
   color: ColorRepresentation;
   mass: number;
@@ -40,103 +44,103 @@ export type BodyParams = {
   siderealRotationRate?: number;
   siderealRotationPeriod?: number;
 };
-type BodyProps = {
-  children?: React.ReactNode;
-  texture?: Texture;
-  material?: Material;
-} & BodyParams;
 
-export const Body = forwardRef<KeplerBody | null, BodyProps>(function Body(
-  { children, texture, material, ...props }: BodyProps,
-  fwdRef
-) {
-  const { mapActor } = MachineContext.useSelector(({ context }) => context);
+/**
+ * Component wrapper around the {@link KeplerBody} class.
+ * @Component
+ */
+export const Body = memo(
+  forwardRef<KeplerBody | null, BodyProps>(function Body(
+    { children, texture, material, ...props }: BodyProps,
+    fwdRef
+  ) {
+    const { mapActor } = MachineContext.useSelector(({ context }) => context);
 
-  // Destructure parameters.
-  const {
-    name,
-    color,
-    mass,
-    meanRadius,
-    obliquity,
-    initialPosition,
-    initialVelocity,
-    siderealRotationRate,
-    siderealRotationPeriod,
-  } = props;
+    // Destructure parameters.
+    const {
+      name,
+      color,
+      mass,
+      meanRadius,
+      obliquity,
+      initialPosition,
+      initialVelocity,
+      siderealRotationRate,
+      siderealRotationPeriod,
+    } = props;
 
-  // Get central body from context.
-  const centralBodyRef = useContext(KeplerTreeContext);
+    // Get central body from context.
+    const centralBodyRef = useContext(KeplerTreeContext);
 
-  // Get refs.
-  const bodyRef = useRef<KeplerBody>(null!);
-  const meshRef = useRef<Mesh>(null!);
+    // Get refs.
+    const bodyRef = useRef<KeplerBody>(null!);
+    const meshRef = useRef<Mesh>(null!);
 
-  // Set forwarded ref. The return value of the callback function will be
-  // assigned to fwdRef.
-  useImperativeHandle(
-    fwdRef,
-    () => {
-      return bodyRef.current;
-    },
-    [bodyRef]
-  );
-
-  // If material is undefined, create one.
-  material = useMemo(() => {
-    return (
-      material ??
-      new MeshBasicMaterial({
-        color: color,
-        map: texture,
-      })
+    // Set forwarded ref. The return value of the callback function will be assigned to fwdRef.
+    useImperativeHandle(
+      fwdRef,
+      () => {
+        return bodyRef.current;
+      },
+      [bodyRef]
     );
-  }, [color, material, texture]);
 
-  useEffect(() => {
-    const body = bodyRef.current;
-    if (!body) return;
-    mapActor.send({ type: 'ADD_BODY', body: body });
-  }, [mapActor]);
-  useEffect(() => {
-    const body = bodyRef.current;
-    if (!body) return;
-    // Add self to tree.
-    if (!centralBodyRef) return;
-    const centralBody = centralBodyRef.current;
-    if (!centralBody) return;
-    centralBody.addOrbitingBody(body);
-  }, [centralBodyRef]);
+    // If material is undefined, create one.
+    material = useMemo(() => {
+      return (
+        material ??
+        new MeshBasicMaterial({
+          color: color,
+          map: texture,
+        })
+      );
+    }, [color, material, texture]);
 
-  return (
-    <>
-      <keplerBody
-        meshRef={meshRef}
-        ref={bodyRef}
-        name={name ?? ''}
-        args={[mass, initialPosition, initialVelocity]}
-        meanRadius={meanRadius}
-        obliquity={obliquity}
-        siderealRotationRate={siderealRotationRate}
-        siderealRotationPeriod={siderealRotationPeriod}
-      >
-        {/* Make self available to children through context. */}
-        <KeplerTreeContext.Provider value={bodyRef}>
-          {children}
-          <BodyMesh
-            name={name}
-            meanRadius={meanRadius}
-            obliquity={obliquity ?? 0}
-            material={material}
-            bodyRef={bodyRef}
-            ref={meshRef}
-            siderealRotationRate={siderealRotationRate ?? 0}
-          />
+    useEffect(() => {
+      const body = bodyRef.current;
+      if (!body) return;
+      mapActor.send({ type: 'ADD_BODY', body: body });
+    }, [mapActor]);
+    useEffect(() => {
+      const body = bodyRef.current;
+      if (!body) return;
+      // Add self to tree.
+      if (!centralBodyRef) return;
+      const centralBody = centralBodyRef.current;
+      if (!centralBody) return;
+      centralBody.addOrbitingBody(body);
+    }, [centralBodyRef]);
 
-          <Tags name={name} bodyRef={bodyRef} meanRadius={meanRadius} />
-          {/* <VelocityArrow /> */}
-        </KeplerTreeContext.Provider>
-      </keplerBody>
-    </>
-  );
-});
+    return (
+      <>
+        <keplerBody
+          meshRef={meshRef}
+          ref={bodyRef}
+          name={name ?? ''}
+          args={[mass, initialPosition, initialVelocity]}
+          meanRadius={meanRadius}
+          obliquity={obliquity}
+          siderealRotationRate={siderealRotationRate}
+          siderealRotationPeriod={siderealRotationPeriod}
+        >
+          {/* Make self available to children through context. */}
+          <KeplerTreeContext.Provider value={bodyRef}>
+            {children}
+            <BodyMesh
+              name={name}
+              meanRadius={meanRadius}
+              obliquity={obliquity ?? 0}
+              material={material}
+              bodyRef={bodyRef}
+              ref={meshRef}
+              siderealRotationRate={siderealRotationRate ?? 0}
+            />
+
+            <Tags name={name} bodyRef={bodyRef} meanRadius={meanRadius} />
+            {/* <VelocityArrow /> */}
+          </KeplerTreeContext.Provider>
+        </keplerBody>
+      </>
+    );
+  })
+);

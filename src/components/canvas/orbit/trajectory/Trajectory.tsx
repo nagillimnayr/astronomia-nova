@@ -43,7 +43,7 @@ declare module '@react-three/fiber' {
   }
 }
 
-type TrajectoryProps = {
+export type TrajectoryProps = {
   semiMajorAxis: number;
   semiMinorAxis: number;
   periapsis: number;
@@ -51,13 +51,23 @@ type TrajectoryProps = {
   bodyRef: MutableRefObject<KeplerBody | null>;
 };
 
+/**
+ *
+ * @param {number} semiMajorAxis
+ * @param {number} semiMinorAxis
+ * @param {number} linearEccentricity
+ * @param {number} periapsis
+ * @param {React.MutableRefObject<KeplerBody | null>} bodyRef
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const Trajectory = ({
   semiMajorAxis,
   semiMinorAxis,
   linearEccentricity,
   periapsis,
   bodyRef,
-}: TrajectoryProps) => {
+}: TrajectoryProps): JSX.Element => {
   // Check if trajectory visibility is on.
   const { visibilityActor, cameraActor } = MachineContext.useSelector(
     ({ context }) => context
@@ -110,42 +120,6 @@ export const Trajectory = ({
     }
   }
 
-  const [spring, springRef] = useSpring(() => ({
-    scale: 1,
-    // onChange: (result) => {
-    //   if (typeof result.value.opacity !== 'number') {
-    //     console.log('not number', result);
-    //     return;
-    //   }
-    //   const line = lineRef.current;
-    //   if (!line) return;
-    //   line.material.opacity = result.value.opacity;
-    // },
-    // Opacity for the line doesn't completely work and will leave black
-    // artifacts, so set the visibility to false once the animation has
-    // completed. onRest: (result, ctrl, item) => { // console.log('onRest:',
-    // result); if (typeof result.value.scale !== 'number') { console.log('not
-    // number', result); return; }
-
-    //   // const opacity = result.value.opacity;
-    //   const line = lineRef.current;
-    //   // line.visible = opacity > Number.EPSILON;
-    // },
-    // onStart: (result) => {
-    //   // console.log('onStart:', result);
-    //   if (typeof result.value.opacity !== 'number') {
-    //     console.log('not number', result);
-    //     return;
-    //   }
-    //   const line = lineRef.current;
-    //   line.visible = true;
-    // },
-  }));
-
-  useEffect(() => {
-    springRef.start({ scale: isVisible ? 1 : 0 });
-  }, [isVisible, springRef]);
-
   /** Disable visibility if too close to camera. */
   // useFrame(({ camera }) => {
   //   // Get focus target.
@@ -179,18 +153,13 @@ export const Trajectory = ({
 
   return (
     <>
-      <animated.object3D
-        visible={isVisible}
-        ref={objRef}
-        // scale={spring.scale}
-      >
+      <animated.object3D visible={isVisible} ref={objRef}>
         {/** @ts-ignore */}
         <Line
           ref={lineRef}
           points={points}
           color={color}
           lineWidth={lineWidth}
-          // transparent
         />
         {/* Semi-major Axis / Periapsis */}
         {showPeriapsis && (
@@ -199,9 +168,7 @@ export const Trajectory = ({
               if (!arrow) return;
               arrowRef.current = arrow;
               arrow.setColor('red');
-              // arrow.position.set(-linearEccentricity  / DIST_MULT, 0, 0);
               arrow.setDirection(X_AXIS);
-              // arrow.setLength(semiMajorAxis  / DIST_MULT, 1, 0.25);
               arrow.setLength(periapsis / DIST_MULT, 1, 0.25);
             }}
           />

@@ -24,7 +24,7 @@ declare module '@react-three/fiber' {
   }
 }
 
-type OrbitProps = {
+export type OrbitProps = {
   children?: React.ReactNode;
   name: BodyKey;
   texture?: Texture;

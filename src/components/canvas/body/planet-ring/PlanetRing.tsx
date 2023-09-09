@@ -1,17 +1,17 @@
 import { PI_OVER_TWO } from '@/constants/constants';
 import { useTexture } from '@react-three/drei';
-import { Object3DNode } from '@react-three/fiber';
-import { PropsWithoutRef, useMemo, useRef } from 'react';
+import { type Object3DNode } from '@react-three/fiber';
+import { type PropsWithoutRef, useMemo, useRef } from 'react';
 import {
   BufferAttribute,
   DoubleSide,
-  Object3D,
+  type Object3D,
   RingGeometry,
   Vector3,
-  Vector3Tuple,
+  type Vector3Tuple,
 } from 'three';
 
-type PlanetRingProps = PropsWithoutRef<
+export type PlanetRingProps = PropsWithoutRef<
   Object3DNode<Object3D, typeof Object3D>
 > & {
   innerRadius: number;
