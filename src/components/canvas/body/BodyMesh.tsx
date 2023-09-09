@@ -17,13 +17,11 @@ import {
   useRef,
 } from 'react';
 import {
-  type ColorRepresentation,
   type Mesh,
   type Object3D,
-  type Texture,
   Vector3,
   type Vector3Tuple,
-  Material,
+  type Material,
 } from 'three';
 
 import { degToRad } from 'three/src/math/MathUtils';
@@ -50,8 +48,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   }: BodyMeshProps,
   fwdRef
 ) {
-  const { selectionActor, timeActor, surfaceActor, cameraActor, uiActor } =
-    MachineContext.useSelector(({ context }) => context);
+  const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
   const objRef = useRef<Object3D>(null!);
   const meshRef = useRef<Mesh>(null!);
