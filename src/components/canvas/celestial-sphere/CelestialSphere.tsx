@@ -5,7 +5,6 @@ import { extend, useLoader } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
 import { useEffect, useRef } from 'react';
 import { BackSide, type ShaderMaterial } from 'three';
-
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
 import { degToRad } from 'three/src/math/MathUtils';
 import {
@@ -26,17 +25,13 @@ declare global {
 }
 
 export const CelestialSphere = () => {
-  const [starmap, hiptyc, milkyway] = useLoader(EXRLoader, [
+  const [starmap] = useLoader(EXRLoader, [
     'assets/textures/stars/starmap_2020_4k.exr',
-    'assets/textures/stars/hiptyc_2020_4k.exr',
-    'assets/textures/stars/milkyway_2020_4k.exr',
   ]);
-  const [celestialGridTexture, constellationTexture, boundsTexture] =
-    useTexture([
-      'assets/textures/stars/celestial_grid_16k.jpg',
-      'assets/textures/stars/constellation_figures_8k.jpg',
-      'assets/textures/stars/constellation_bounds_8k.jpg',
-    ]);
+  const [celestialGridTexture, constellationTexture] = useTexture([
+    'assets/textures/stars/celestial_grid_16k.jpg',
+    'assets/textures/stars/constellation_figures_8k.jpg',
+  ]);
 
   const materialRef = useRef<ShaderMaterial | null>(null);
 
