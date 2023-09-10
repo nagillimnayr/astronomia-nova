@@ -2,20 +2,15 @@ import { CelestialSphere } from '@/components/canvas/celestial-sphere/CelestialS
 import { PseudoTrajectory } from '@/components/canvas/orbit/trajectory/PseudoTrajectory';
 import { ObservationPoint } from '@/components/canvas/surface-view/observation-point/ObservationPoint';
 import { VRSurfaceDialog } from '@/components/canvas/vr/vr-hud/vr-details-panel/VRSurfaceDialog';
-
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useFrame } from '@react-three/fiber';
-import React from 'react';
-import { KeyPressControl } from '../KeyPressControl';
+import React, { type PropsWithChildren } from 'react';
 
-type SimProps = {
-  children: React.ReactNode;
-};
-const Simulation = ({ children }: SimProps) => {
+const Simulation = ({ children }: PropsWithChildren) => {
   const rootActor = MachineContext.useActorRef();
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
-  useFrame(({ clock, camera }, delta) => {
+  useFrame((_, delta) => {
     // Update simulation.
     rootActor.send({ type: 'UPDATE', deltaTime: delta });
     // Update camera.
@@ -34,7 +29,6 @@ const Simulation = ({ children }: SimProps) => {
 
         <ambientLight intensity={0.5} />
         <ObservationPoint />
-        <KeyPressControl />
         <VRSurfaceDialog />
         <PseudoTrajectory />
       </group>
