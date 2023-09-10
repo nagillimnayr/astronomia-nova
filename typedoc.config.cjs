@@ -22,7 +22,7 @@ module.exports = {
     '/src/helpers/react-spring-utils',
   ],
   plugin: [
-    // 'typedoc-plugin-markdown',
+    'typedoc-plugin-markdown',
     'typedoc-plugin-extras',
     'typedoc-plugin-zod',
   ],
