@@ -5,16 +5,13 @@
  * Adapted from 'Game Programming Gems 4', chapter 1.10 Critically Damped
  *   Ease-In/Ease-Out Smoothing.
  *
- *
- * @author Ryan Milligan
- * @date 23/08/2023
  * @export
  * @param {number} from
  * @param {number} to
  * @param {number} velocity
  * @param {number} smoothTime
  * @param {number} deltaTime
- * @returns {*}  {[number, number]}
+ * @returns {[number, number]}  {[number, number]} [newValue, newVelocity]
  */
 export function smoothCritDamp(
   from: number,
