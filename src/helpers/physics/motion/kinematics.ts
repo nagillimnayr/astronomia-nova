@@ -1,4 +1,4 @@
-import { Vector3, Vector3Tuple } from 'three';
+import { Vector3, type Vector3Tuple } from 'three';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
