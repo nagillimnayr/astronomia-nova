@@ -26,7 +26,7 @@ import {
 } from '../orbital-elements/eccentricity';
 import { calculateInclination } from '../orbital-elements/inclination';
 import { getLinearEccentricityFromApsis } from '../orbital-elements/linear-eccentricity';
-import { getPosition } from '../orbital-state-vectors/position';
+import { getPositionAtTrueAnomaly } from '../orbital-state-vectors/position';
 import { calculateSpecificAngularMomentum } from '../orbital-elements/specific-angular-momentum';
 import { getSpecificOrbitalEnergy } from '../orbital-elements/specific-orbital-energy';
 import {
@@ -181,7 +181,9 @@ export const calculateOrbitFromStateVectors = (
     _eccentricityVector
   );
 
-  _pos.set(...getPosition(trueAnomaly, semiMajorAxis, eccentricity));
+  _pos.set(
+    ...getPositionAtTrueAnomaly(trueAnomaly, semiMajorAxis, eccentricity)
+  );
 
   _vel
     .copy(getVelocityDirectionFromOrbitalElements(trueAnomaly, eccentricity))

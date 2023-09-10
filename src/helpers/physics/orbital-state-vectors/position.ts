@@ -14,7 +14,7 @@ export function getPositionFromRadius(
   return [x, y, 0];
 }
 
-export function getPosition(
+export function getPositionAtTrueAnomaly(
   trueAnomaly: number,
   semiMajorAxis: number,
   eccentricity: number
