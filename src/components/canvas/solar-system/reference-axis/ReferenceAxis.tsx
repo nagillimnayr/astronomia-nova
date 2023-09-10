@@ -1,8 +1,7 @@
 import { X_AXIS } from '@/constants/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSelector } from '@xstate/react';
-
-import { type ColorRepresentation, Vector3 } from 'three';
+import { type ColorRepresentation, type Vector3 } from 'three';
 
 type Props = {
   color?: ColorRepresentation;
