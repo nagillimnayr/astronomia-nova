@@ -26,4 +26,5 @@ module.exports = {
     'typedoc-plugin-extras',
     'typedoc-plugin-zod',
   ],
+  hideInPageTOC: true,
 };
