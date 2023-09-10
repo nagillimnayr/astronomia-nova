@@ -1,9 +1,7 @@
 import { DIST_MULT, GRAV_CONST } from '@/constants/constants';
-import { Vector3, Vector3Tuple } from 'three';
+import { Vector3, type Vector3Tuple } from 'three';
 
 /**
- * @summary
- *
  * @description
  * $$ \displaystyle a = \frac{GM}{r^2} = \frac{F_g}{m} $$
  *
@@ -14,7 +12,7 @@ import { Vector3, Vector3Tuple } from 'three';
  * @param {Vector3} position
  * @param {Vector3} otherPosition
  * @param {number} otherMass
- * @returns {*}  {Vector3}
+ * @returns {Vector3}  {Vector3}
  */
 export default function calculateGravitation(
   position: Vector3,
