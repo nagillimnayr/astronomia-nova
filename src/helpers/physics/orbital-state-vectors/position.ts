@@ -6,7 +6,7 @@ export function getPositionFromRadius(
   radius: number,
   trueAnomaly: number
 ): Vector3Tuple {
-  // convert polar coordinates to cartesian coordinates
+  // Convert polar coordinates to cartesian coordinates.
   const radians = degToRad(trueAnomaly);
   const x = radius * Math.cos(radians);
   const y = radius * Math.sin(radians);
