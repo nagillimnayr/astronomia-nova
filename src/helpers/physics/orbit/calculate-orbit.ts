@@ -1,4 +1,4 @@
-import { GRAV_CONST } from '@/constants/constants';
+import { GRAV_CONST, X_AXIS, Z_AXIS } from '@/constants/constants';
 import { Vector3 } from 'three';
 import { calculateTrueAnomaly } from '../orbital-elements/anomalies/true-anomaly';
 import {
@@ -100,9 +100,6 @@ export const calculateOrbitFromPeriapsis = (
   };
 };
 
-const _xAxis = Object.freeze(new Vector3(1, 0, 0));
-const _yAxis = Object.freeze(new Vector3(0, 1, 0));
-const _zAxis = Object.freeze(new Vector3(0, 0, 1));
 const _pos = new Vector3();
 const _vel = new Vector3();
 const _specificAngularMomentum = new Vector3();
@@ -132,7 +129,7 @@ export const calculateOrbitFromStateVectors = (
 
   // Calculate ascending node.
   _ascendingNode.set(
-    ...calculateAscendingNode(_specificAngularMomentum, _zAxis)
+    ...calculateAscendingNode(_specificAngularMomentum, Z_AXIS)
   );
 
   // Calculate eccentricity vector.
@@ -163,12 +160,12 @@ export const calculateOrbitFromStateVectors = (
   );
 
   // Calculate the inclination.
-  const inclination = calculateInclination(_specificAngularMomentum, _zAxis);
+  const inclination = calculateInclination(_specificAngularMomentum, Z_AXIS);
 
   // Calculate the longitude of the ascending node.
   const longitudeOfAscendingNode = calculateLongitudeOfAscendingNode(
     _ascendingNode,
-    _xAxis
+    X_AXIS
   );
 
   // Calculate the argument of periapsis.
