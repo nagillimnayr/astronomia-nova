@@ -1,4 +1,4 @@
-import { anim } from '@/components/canvas/animated-components';
+import { anim } from '@/helpers/react-spring-utils/animated-components';
 import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useSpring } from '@react-spring/three';

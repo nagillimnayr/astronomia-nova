@@ -11,7 +11,7 @@ import {
   icons,
 } from '../../../../../constants/vr-hud-constants';
 import { ICON_MATERIAL_BASE } from '../../../../../constants/vr-ui-materials';
-import { anim } from '../../../animated-components';
+import { anim } from '../../../../../helpers/react-spring-utils/animated-components';
 
 const dummyFn = () => {
   return;

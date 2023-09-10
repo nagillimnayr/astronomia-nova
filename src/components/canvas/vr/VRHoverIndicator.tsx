@@ -4,7 +4,7 @@ import { Sphere } from '@react-three/drei';
 import { useController, useXR, useXREvent } from '@react-three/xr';
 import { useMemo, useRef } from 'react';
 import { DoubleSide, Group, Mesh, Vector3 } from 'three';
-import { anim } from '../animated-components';
+import { anim } from '../../../helpers/react-spring-utils/animated-components';
 
 const _camWorldPos = new Vector3();
 const _worldPos = new Vector3();
