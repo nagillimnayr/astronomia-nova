@@ -181,28 +181,16 @@ export const calculateOrbitFromStateVectors = (
     _eccentricityVector
   );
 
-  _pos.set(
-    ...getPositionAtTrueAnomaly(trueAnomaly, semiMajorAxis, eccentricity)
+  getPositionAtTrueAnomaly(trueAnomaly, semiMajorAxis, eccentricity, _pos);
+
+  getVelocityDirectionFromOrbitalElements(
+    trueAnomaly,
+    eccentricity,
+    _vel
+  ).multiplyScalar(
+    getOrbitalSpeedFromRadius(_pos.length(), centralMass, semiMajorAxis)
   );
 
-  _vel
-    .copy(getVelocityDirectionFromOrbitalElements(trueAnomaly, eccentricity))
-    .multiplyScalar(
-      getOrbitalSpeedFromRadius(_pos.length(), centralMass, semiMajorAxis)
-    );
-  // _vel.set(
-  //   ...getVelocityVector(
-  //     centralMass,
-  //     orbitingMass,
-  //     _specificAngularMomentum.length(),
-  //     trueAnomaly,
-  //     eccentricity
-  //   )
-  // );
-
-  console.log('position_0:', position.toArray());
-  console.log('position_1:', _pos.toArray());
-  console.log('velocity_0:', velocity.toArray());
   console.log('velocity_1:', _vel.toArray());
 
   // Calculate apsides.
@@ -210,8 +198,8 @@ export const calculateOrbitFromStateVectors = (
   const apoapsis = getApoapsisFromEccentricity(semiMajorAxis, eccentricity);
 
   return {
-    position: _pos.toArray(),
-    velocity: _vel.toArray(),
+    initialPosition: _pos.toArray(),
+    initialVelocity: _vel.toArray(),
 
     eccentricity,
     semiMajorAxis,
