@@ -1,15 +1,25 @@
+/**
+ *
+ * @param {number} semiMajorAxis
+ * @param {number} eccentricity
+ * @returns {number} apoapsis
+ */
 export function getApoapsisFromEccentricity(
   semiMajorAxis: number,
   eccentricity: number
-) {
-  const apoapsis = (1.0 + eccentricity) * semiMajorAxis;
-  return apoapsis;
+): number {
+  return (1.0 + eccentricity) * semiMajorAxis;
 }
 
+/**
+ *
+ * @param {number} semiMajorAxis
+ * @param {number} periapsis
+ * @returns {number} apoapsis
+ */
 export function getApoapsisFromPeriapsis(
   semiMajorAxis: number,
   periapsis: number
-) {
-  const apoapsis = 2.0 * semiMajorAxis - periapsis;
-  return apoapsis;
+): number {
+  return 2.0 * semiMajorAxis - periapsis;
 }
