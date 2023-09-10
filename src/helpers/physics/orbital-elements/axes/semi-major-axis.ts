@@ -12,9 +12,7 @@ export function getFromPeriapsis(
   eccentricity: number,
   periapsis: number
 ): number {
-  const semiMajorAxis = periapsis / (1 - eccentricity);
-
-  return semiMajorAxis;
+  return periapsis / (1 - eccentricity);
 }
 
 /**
@@ -29,9 +27,7 @@ export function getSemiMajorAxisFromApoapsis(
   eccentricity: number,
   apoapsis: number
 ): number {
-  const semiMajorAxis = apoapsis / (1 + eccentricity);
-
-  return semiMajorAxis;
+  return apoapsis / (1 + eccentricity);
 }
 
 export function getSemiMajorAxisFromLinearEccentricity(
@@ -45,11 +41,8 @@ export function getSemiMajorAxisFromSpecificOrbitalEnergy(
   centralMass: number,
   specificOrbitalEnergy: number
 ) {
-  const semiMajorAxis = -(
-    GRAV_CONST *
-    (centralMass / (2.0 * specificOrbitalEnergy))
-  ); //scale distance
-  return semiMajorAxis;
+  //scale distance
+  return -(GRAV_CONST * (centralMass / (2.0 * specificOrbitalEnergy)));
 }
 
 /**
@@ -70,11 +63,10 @@ export function getSemiMajorAxisFromPeriod(
   centralMass: number
 ): number {
   // cube root of (G*M * T^2) / (4PI^2)
-  const semiMajorAxis = Math.pow(
+  return Math.pow(
     (GRAV_CONST * centralMass * period ** 2) / (4.0 * PI_SQUARED),
     1 / 3
   );
-  return semiMajorAxis;
 }
 
 /**
@@ -101,11 +93,11 @@ export function getSemiMajorAxisFromApsides(
  * @export
  * @param {number} semiLatusRectum
  * @param {number} eccentricity
- * @returns {*}
+ * @returns {number} semi-major axis
  */
 export function getSemiMajorAxisFromSemiLatusRectum(
   semiLatusRectum: number,
   eccentricity: number
-) {
+): number {
   return semiLatusRectum / (1 - eccentricity ** 2);
 }
