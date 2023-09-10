@@ -6,7 +6,7 @@ const EPSILON: Readonly<number> = 1e-12;
  * The solution to E can be approximated using Numerical Analysis, such as with Newton's Method.
  * At Higher eccentricities, the convergence slows down, and for hyperbolic trajectories, a different equation  must be used.
  */
-// ! Try caching the previous value of E to seed Newton's method
+// NOTE Try caching the previous value of E to seed Newton's method
 const getEccentricAnomalyNewtonsMethod = (
   meanAnomaly: number,
   eccentricity: number

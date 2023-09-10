@@ -1,11 +1,11 @@
 import { GRAV_CONST } from '@/constants/constants';
 import { Vector3 } from 'three';
-import { calculateTrueAnomaly } from '../orbital-elements/anomalies/TrueAnomaly';
+import { calculateTrueAnomaly } from '../orbital-elements/anomalies/true-anomaly';
 import {
   getApoapsisFromEccentricity,
   getApoapsisFromPeriapsis,
-} from '../orbital-elements/apsides/Apoapsis';
-import { getPeriapsisFromEccentricity } from '../orbital-elements/apsides/Periapsis';
+} from '../orbital-elements/apsides/apoapsis';
+import { getPeriapsisFromEccentricity } from '../orbital-elements/apsides/periapsis';
 import { calculateArgumentOfPeriapsis } from '../orbital-elements/argumentOfPeriapsis';
 import {
   calculateAscendingNode,
@@ -14,25 +14,25 @@ import {
 import {
   getSemiLatusRectumFromAngularMomentum,
   getSemiLatusRectumFromEccentricity,
-} from '../orbital-elements/axes/SemiLatusRectum';
+} from '../orbital-elements/axes/semi-latus-rectum';
 import {
   getSemiMajorAxisFromSemiLatusRectum,
   getSemiMajorAxisFromSpecificOrbitalEnergy,
-} from '../orbital-elements/axes/SemiMajorAxis';
-import { getSemiMinorAxisFromSemiLatusRectum } from '../orbital-elements/axes/SemiMinorAxis';
+} from '../orbital-elements/axes/semi-major-axis';
+import { getSemiMinorAxisFromSemiLatusRectum } from '../orbital-elements/axes/semi-minor-axis';
 import {
   calculateEccentricityVector,
   getEccentricityFromLinearEccentricity,
-} from '../orbital-elements/Eccentricity';
+} from '../orbital-elements/eccentricity';
 import { calculateInclination } from '../orbital-elements/inclination';
-import { getLinearEccentricityFromApsis } from '../orbital-elements/LinearEccentricity';
-import { getPosition } from '../orbital-state-vectors/Position';
-import { calculateSpecificAngularMomentum } from '../orbital-elements/specificAngularMomentum';
-import { getSpecificOrbitalEnergy } from '../orbital-elements/SpecificOrbitalEnergy';
+import { getLinearEccentricityFromApsis } from '../orbital-elements/linear-eccentricity';
+import { getPosition } from '../orbital-state-vectors/position';
+import { calculateSpecificAngularMomentum } from '../orbital-elements/specific-angular-momentum';
+import { getSpecificOrbitalEnergy } from '../orbital-elements/specific-orbital-energy';
 import {
   getOrbitalSpeedFromRadius,
   getVelocityDirectionFromOrbitalElements,
-} from '../orbital-state-vectors/Velocity';
+} from '../orbital-state-vectors/velocity';
 
 export const calculateOrbitFromPeriapsis = (
   periapsis: number,

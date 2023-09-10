@@ -1,5 +1,5 @@
 import { degToRad } from 'three/src/math/MathUtils';
-import { getSemiLatusRectumFromEccentricity } from './axes/SemiLatusRectum';
+import { getSemiLatusRectumFromEccentricity } from './axes/semi-latus-rectum';
 
 export function getRadiusAtTrueAnomaly(
   trueAnomaly: number,

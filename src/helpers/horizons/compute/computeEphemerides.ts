@@ -6,16 +6,16 @@ import {
   type ComputedPhysicalDataTable,
 } from '@/helpers/horizons/types/ComputedEphemerides';
 import { ElementTableSchema } from '@/helpers/horizons/types/ElementTable';
-import { getSemiLatusRectumFromEccentricity } from '@/helpers/physics/orbital-elements/axes/SemiLatusRectum';
-import { getSemiMinorAxisFromSemiLatusRectum } from '@/helpers/physics/orbital-elements/axes/SemiMinorAxis';
-import { getLinearEccentricityFromAxes } from '@/helpers/physics/orbital-elements/LinearEccentricity';
-import { getRadiusAtTrueAnomaly } from '@/helpers/physics/orbital-elements/OrbitalRadius';
-import { getPosition } from '@/helpers/physics/orbital-state-vectors/Position';
+import { getSemiLatusRectumFromEccentricity } from '@/helpers/physics/orbital-elements/axes/semi-latus-rectum';
+import { getSemiMinorAxisFromSemiLatusRectum } from '@/helpers/physics/orbital-elements/axes/semi-minor-axis';
+import { getLinearEccentricityFromAxes } from '@/helpers/physics/orbital-elements/linear-eccentricity';
+import { getRadiusAtTrueAnomaly } from '@/helpers/physics/orbital-elements/orbital-radius';
+import { getPosition } from '@/helpers/physics/orbital-state-vectors/position';
 import { Vector3 } from 'three';
 import {
   getOrbitalSpeedFromRadius,
   getVelocityDirectionFromOrbitalElements,
-} from '@/helpers/physics/orbital-state-vectors/Velocity';
+} from '@/helpers/physics/orbital-state-vectors/velocity';
 import { loadEphemeris, loadPhysicalData } from '../loadEphemerides';
 
 const _pos = new Vector3();
