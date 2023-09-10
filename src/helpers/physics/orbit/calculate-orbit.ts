@@ -6,7 +6,7 @@ import {
   getApoapsisFromPeriapsis,
 } from '../orbital-elements/apsides/apoapsis';
 import { getPeriapsisFromEccentricity } from '../orbital-elements/apsides/periapsis';
-import { calculateArgumentOfPeriapsis } from '../orbital-elements/argumentOfPeriapsis';
+import { calculateArgumentOfPeriapsis } from '../orbital-elements/argument-of-periapsis';
 import {
   calculateAscendingNode,
   calculateLongitudeOfAscendingNode,
