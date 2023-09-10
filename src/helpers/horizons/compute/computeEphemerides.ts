@@ -10,7 +10,10 @@ import { getSemiLatusRectumFromEccentricity } from '@/helpers/physics/orbital-el
 import { getSemiMinorAxisFromSemiLatusRectum } from '@/helpers/physics/orbital-elements/axes/semi-minor-axis';
 import { getLinearEccentricityFromAxes } from '@/helpers/physics/orbital-elements/linear-eccentricity';
 import { getRadiusAtTrueAnomaly } from '@/helpers/physics/orbital-elements/orbital-radius';
-import { getPositionAtTrueAnomaly } from '@/helpers/physics/orbital-state-vectors/position';
+import {
+  getPositionAtTrueAnomaly,
+  getPositionFromRadius,
+} from '@/helpers/physics/orbital-state-vectors/position';
 import { Vector3 } from 'three';
 import {
   getOrbitalSpeedFromRadius,
@@ -53,14 +56,12 @@ export async function computeEphemerides(name: string) {
     semiMinorAxis
   );
 
-  _pos.set(
-    ...getPositionAtTrueAnomaly(trueAnomaly, semiMajorAxis, eccentricity)
-  );
   const radius = getRadiusAtTrueAnomaly(
     trueAnomaly,
     semiMajorAxis,
     eccentricity
   );
+  getPositionFromRadius(radius, trueAnomaly, _pos);
 
   // The Horizons ephemeris data for Jupiter seems to result in it wobbling a
   // bit on its orbit. Re-computing the velocity fixes the issue.

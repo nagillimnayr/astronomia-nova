@@ -1,28 +1,33 @@
-import { type Vector3Tuple } from 'three';
+import { type Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { getRadiusAtTrueAnomaly } from '../orbital-elements/orbital-radius';
 
 export function getPositionFromRadius(
   radius: number,
-  trueAnomaly: number
-): Vector3Tuple {
+  trueAnomaly: number,
+  outVector: Vector3
+): Vector3 {
   // Convert polar coordinates to cartesian coordinates.
   const radians = degToRad(trueAnomaly);
   const x = radius * Math.cos(radians);
   const y = radius * Math.sin(radians);
 
-  return [x, y, 0];
+  // Swizzle the vector so that it lies in the XZ plane, rather than the XY plane.
+  outVector.set(x, 0, -y);
+  return outVector;
 }
 
 export function getPositionAtTrueAnomaly(
   trueAnomaly: number,
   semiMajorAxis: number,
-  eccentricity: number
-): Vector3Tuple {
+  eccentricity: number,
+  outVector: Vector3
+): Vector3 {
+  // Compute the radius at the true anomaly.
   const radius = getRadiusAtTrueAnomaly(
     trueAnomaly,
     semiMajorAxis,
     eccentricity
   );
-  return getPositionFromRadius(radius, trueAnomaly);
+  return getPositionFromRadius(radius, trueAnomaly, outVector);
 }
