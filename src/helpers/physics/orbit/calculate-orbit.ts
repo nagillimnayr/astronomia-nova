@@ -14,12 +14,12 @@ import {
 import {
   getSemiLatusRectumFromAngularMomentum,
   getSemiLatusRectumFromEccentricity,
-} from '../orbital-elements/axes/semi-latus-rectum';
+} from '../orbital-elements/axes/semi-latus-rectum/semi-latus-rectum';
 import {
   getSemiMajorAxisFromSemiLatusRectum,
   getSemiMajorAxisFromSpecificOrbitalEnergy,
-} from '../orbital-elements/axes/semi-major-axis';
-import { getSemiMinorAxisFromSemiLatusRectum } from '../orbital-elements/axes/semi-minor-axis';
+} from '../orbital-elements/axes/semi-major-axis/semi-major-axis';
+import { getSemiMinorAxisFromSemiLatusRectum } from '../orbital-elements/axes/semi-minor-axis/semi-minor-axis';
 import {
   calculateEccentricityVector,
   getEccentricityFromLinearEccentricity,
