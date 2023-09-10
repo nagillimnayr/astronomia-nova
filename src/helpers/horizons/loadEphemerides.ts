@@ -69,7 +69,7 @@ export async function loadEphemeris(
   return ephemeris;
 }
 
-export async function loadPhysicalData(name: string) {
+export async function loadPhysicalData(name: string): Promise<PhysicalData> {
   // Create file path.
   const fileName = _.kebabCase(name + '-physical');
   const jsonDirectory = path.join(process.cwd(), 'json');
@@ -91,6 +91,5 @@ export async function loadPhysicalData(name: string) {
     throw new Error(validationError.toString());
   }
 
-  const physicalData: PhysicalData = result.data;
-  return physicalData;
+  return result.data;
 }
