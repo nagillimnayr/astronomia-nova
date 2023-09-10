@@ -71,21 +71,22 @@ export function getVelocityDirectionAtRadius(
  * https://orbital-mechanics.space/classical-orbital-elements/perifocal-frame.html#equation-eq-perifocal-simplified-velocity-vector#equation-eq-perifocal-simplified-velocity-vector
  *   The velocity is the derivative of the position.
  *
- *
- * @author Ryan Milligan
- * @date 29/06/2023
  * @export
  * @param {number} trueAnomaly
  * @param {number} eccentricity
- * @returns {*}  {Vector3}
+ * @param {Vector3} outVector
+ * @returns {Vector3} {Vector3}
  */
 export function getVelocityDirectionFromOrbitalElements(
   trueAnomaly: number,
-  eccentricity: number
+  eccentricity: number,
+  outVector: Vector3
 ): Vector3 {
   const trueAnomalyRadians = degToRad(trueAnomaly);
   const vx = -Math.sin(trueAnomalyRadians);
   const vy = eccentricity + Math.cos(trueAnomalyRadians);
 
-  return new Vector3(vx, vy, 0).normalize();
+  // Swizzle the vector so that it is in the XZ plane.
+  outVector.set(vx, 0, -vy);
+  return outVector.normalize();
 }

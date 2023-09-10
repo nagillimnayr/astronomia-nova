@@ -78,8 +78,7 @@ export async function computeEphemerides(name: string) {
   );
 
   // Compute the direction of the velocity vector.
-  _vel.copy(getVelocityDirectionFromOrbitalElements(trueAnomaly, eccentricity));
-  _vel.normalize();
+  getVelocityDirectionFromOrbitalElements(trueAnomaly, eccentricity, _vel);
   _vel.multiplyScalar(orbitalSpeed);
 
   const ephemerisTable: ComputedEphemerisTable = {
@@ -87,8 +86,8 @@ export async function computeEphemerides(name: string) {
     semiMinorAxis,
     semiLatusRectum,
     linearEccentricity,
-    initialPosition: [_pos.x, 0, -_pos.y],
-    initialVelocity: [_vel.x, 0, -_vel.y],
+    initialPosition: _pos.toArray(),
+    initialVelocity: _vel.toArray(),
   } as ComputedEphemerisTable;
 
   const { id, centerId, centerName, epoch } = elements;
