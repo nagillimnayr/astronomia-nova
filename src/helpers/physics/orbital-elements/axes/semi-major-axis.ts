@@ -1,9 +1,7 @@
-import { GRAV_CONST, PI_SQUARED } from '../../../../constants/constants';
+import { GRAV_CONST, PI_SQUARED } from '@/constants';
 
 /**
  * @description
- * @author Ryan Milligan
- * @date 14/06/2023
  * @param {number} eccentricity
  * @param {number} periapsis
  * @returns {number} {number} semiMajorAxis
@@ -17,8 +15,6 @@ export function getFromPeriapsis(
 
 /**
  * @description
- * @author Ryan Milligan
- * @date 14/06/2023
  * @param {number} eccentricity
  * @param {number} apoapsis
  * @returns {number} {number} semiMajorAxis
@@ -33,14 +29,14 @@ export function getSemiMajorAxisFromApoapsis(
 export function getSemiMajorAxisFromLinearEccentricity(
   eccentricity: number,
   linearEccentricity: number
-) {
+): number {
   return linearEccentricity / eccentricity;
 }
 
 export function getSemiMajorAxisFromSpecificOrbitalEnergy(
   centralMass: number,
   specificOrbitalEnergy: number
-) {
+): number {
   //scale distance
   return -(GRAV_CONST * (centralMass / (2.0 * specificOrbitalEnergy)));
 }
@@ -51,9 +47,6 @@ export function getSemiMajorAxisFromSpecificOrbitalEnergy(
  *
  * @description
  * $\displaystyle a = \sqrt[3]{\frac{GM T^2}{4\pi^2}}$
- *
- * @author Ryan Milligan
- * @date 14/06/2023
  * @param {number} period
  * @param {number} centralMass
  * @returns {*}  {number} semiMajorAxis
@@ -71,8 +64,6 @@ export function getSemiMajorAxisFromPeriod(
 
 /**
  * @description
- * @author Ryan Milligan
- * @date 14/06/2023
  * @param {number} apoapsis
  * @param {number} periapsis
  * @returns {*} {number} semiMajorAxis
@@ -86,10 +77,6 @@ export function getSemiMajorAxisFromApsides(
 
 /**
  * @description
- *
- *
- * @author Ryan Milligan
- * @date 25/07/2023
  * @export
  * @param {number} semiLatusRectum
  * @param {number} eccentricity
