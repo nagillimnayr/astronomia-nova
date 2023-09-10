@@ -1,7 +1,6 @@
 /**
- * @description
- * @author Ryan Milligan
- * @date 16/06/2023
+ * @description $\displaystyle b = \sqrt{a\ell}$
+ *
  * @param {number} semiMajorAxis (meters)
  * @param {number} semiLatusRectum (meters)
  * @returns {*}  {number} semiMinorAxis (m)
@@ -15,8 +14,7 @@ export function getSemiMinorAxisFromSemiLatusRectum(
 
 /**
  * @description
- * @author Ryan Milligan
- * @date 16/06/2023
+ *
  * @param {number} apoapsis (meters)
  * @param {number} periapsis (meters)
  * @returns {*}  {number} semiMinorAxis (m)

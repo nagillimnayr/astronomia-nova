@@ -76,7 +76,7 @@ export function getSemiMajorAxisFromApsides(
 }
 
 /**
- * @description
+ * @description $\displaystyle a = \frac{\ell}{\left( 1 - e^2 \right)}$
  * @export
  * @param {number} semiLatusRectum
  * @param {number} eccentricity
