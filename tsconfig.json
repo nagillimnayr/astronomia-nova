@@ -46,6 +46,7 @@
   "exclude": ["node_modules"],
   "ts-node": {
     "esm": true,
-    "experimentalSpecifierResolution": "node"
+    "experimentalSpecifierResolution": "node",
+    "require": ["tsconfig-paths/register"]
   }
 }
