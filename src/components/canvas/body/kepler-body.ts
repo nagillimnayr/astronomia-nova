@@ -5,8 +5,6 @@ import { type Mesh, type Vector3Tuple } from 'three';
 
 /**
  * @description Class representing astronomical bodies, such as stars, planets, dwarf planets.
- * @author Ryan Milligan
- * @date Sep/07/2023
  * @class KeplerBody
  * @extends {DynamicBody}
  */
@@ -25,9 +23,7 @@ export class KeplerBody extends DynamicBody {
   private _meshRef: MutableRefObject<Mesh | null> = null!;
 
   /**
-   * Creates an instance of KeplerBody.
-   * @author Ryan Milligan
-   * @date Sep/07/2023
+   * @summary Creates an instance of KeplerBody.
    *
    * @memberof KeplerBody
    * @param {number} mass
