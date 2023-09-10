@@ -1,7 +1,7 @@
 /** @type {import('typedoc').TypeDocOptions} */
 module.exports = {
-  entryPoints: ['./src'],
-  entryPointStrategy: 'expand',
+  entryPoints: ['./src/*'],
+  entryPointStrategy: 'Expand',
   out: 'docs',
   tsconfig: 'tsconfig.json',
   compilerOptions: {
