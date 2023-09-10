@@ -1,8 +1,8 @@
-import { KeplerBody } from '@/components/canvas/body';
+import { type KeplerBody } from '@/components/canvas/body';
 import { trpc } from '@/helpers/trpc/trpc';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useTexture } from '@react-three/drei';
-import { useMemo, useRef, JSX } from 'react';
+import { useMemo, useRef, type JSX } from 'react';
 import { Body } from '../body';
 import { Orbit } from '../orbit/Orbit';
 import { colorMap } from '@/helpers/color-map';
@@ -79,7 +79,7 @@ export const SolarSystem = (): JSX.Element => {
       mass={sunParams.mass}
       color={sunColor ?? 'white'}
       meanRadius={sunParams.meanRadius}
-      siderealRotationRate={sunParams.siderealRotRate}
+      siderealRotationRate={sunParams.siderealRotationRate}
       siderealRotationPeriod={sunParams.siderealRotationPeriod}
       texture={sunTexture}
       material={sunMaterial}
