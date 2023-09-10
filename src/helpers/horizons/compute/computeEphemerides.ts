@@ -10,12 +10,12 @@ import { getSemiLatusRectumFromEccentricity } from '@/helpers/physics/orbital-el
 import { getSemiMinorAxisFromSemiLatusRectum } from '@/helpers/physics/orbital-elements/axes/SemiMinorAxis';
 import { getLinearEccentricityFromAxes } from '@/helpers/physics/orbital-elements/LinearEccentricity';
 import { getRadiusAtTrueAnomaly } from '@/helpers/physics/orbital-elements/OrbitalRadius';
-import { getPosition } from '@/helpers/physics/orbital-elements/Position';
+import { getPosition } from '@/helpers/physics/orbital-state-vectors/Position';
 import { Vector3 } from 'three';
 import {
   getOrbitalSpeedFromRadius,
   getVelocityDirectionFromOrbitalElements,
-} from '@/helpers/physics/orbital-elements/Velocity';
+} from '@/helpers/physics/orbital-state-vectors/Velocity';
 import { loadEphemeris, loadPhysicalData } from '../loadEphemerides';
 
 const _pos = new Vector3();

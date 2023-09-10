@@ -1,6 +1,6 @@
 import { type Vector3Tuple } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
-import { getRadiusAtTrueAnomaly } from './OrbitalRadius';
+import { getRadiusAtTrueAnomaly } from '../orbital-elements/OrbitalRadius';
 
 export function getPositionFromRadius(
   radius: number,

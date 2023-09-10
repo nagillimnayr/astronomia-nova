@@ -26,13 +26,13 @@ import {
 } from '../orbital-elements/Eccentricity';
 import { calculateInclination } from '../orbital-elements/inclination';
 import { getLinearEccentricityFromApsis } from '../orbital-elements/LinearEccentricity';
-import { getPosition } from '../orbital-elements/Position';
+import { getPosition } from '../orbital-state-vectors/Position';
 import { calculateSpecificAngularMomentum } from '../orbital-elements/specificAngularMomentum';
 import { getSpecificOrbitalEnergy } from '../orbital-elements/SpecificOrbitalEnergy';
 import {
   getOrbitalSpeedFromRadius,
   getVelocityDirectionFromOrbitalElements,
-} from '../orbital-elements/Velocity';
+} from '../orbital-state-vectors/Velocity';
 
 export const calculateOrbitFromPeriapsis = (
   periapsis: number,
