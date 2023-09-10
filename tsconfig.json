@@ -41,7 +41,8 @@
     "**/*.mdx",
     "next.config.mjs",
     ".next/types/**/*.ts",
-    ".storybook/**/*"
+    ".storybook/**/*",
+    "jest.config"
   ],
   "exclude": ["node_modules"],
   "ts-node": {
