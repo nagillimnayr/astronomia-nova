@@ -1,6 +1,4 @@
 {
-  "kepler": "Kepler",
-
   "about": {
     "title": "About",
     "type": "page"
@@ -8,5 +6,12 @@
   "equations": {
     "title": "Equations",
     "type": "page"
+  },
+  "kepler": {
+    "title": "Kepler",
+    "type": "page"
+  },
+  "docs": {
+    "title": "Docs"
   }
 }

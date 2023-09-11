@@ -2,7 +2,7 @@
 module.exports = {
   entryPoints: ['./src/*'],
   entryPointStrategy: 'Expand',
-  out: 'docs',
+  out: './src/pages/docs',
   tsconfig: 'tsconfig.json',
   compilerOptions: {
     tsx: 'react',
