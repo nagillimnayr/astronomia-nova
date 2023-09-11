@@ -1,7 +1,7 @@
 import { Floor } from '@/components/canvas/vr/components/Floor';
 import { VRCanvas } from '@/components/canvas/vr/VRCanvas';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { Props as CanvasProps, useFrame } from '@react-three/fiber';
+import { type Props as CanvasProps, useFrame } from '@react-three/fiber';
 import * as React from 'react';
 
 type Props = React.PropsWithChildren<CanvasProps>;
