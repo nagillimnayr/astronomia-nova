@@ -1,3 +1,6 @@
+/**
+ * @module getEphemerides
+ */
 import { type Ephemeris } from '@/helpers/horizons/types/Ephemeris';
 import { z } from 'zod';
 import horizonsURL from './horizonsURL';
