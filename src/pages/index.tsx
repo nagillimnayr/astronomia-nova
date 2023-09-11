@@ -1,3 +1,4 @@
+import { MainLayout } from '@/components/dom/layout/MainLayout';
 import { type NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
@@ -20,9 +21,11 @@ const Home: NextPage = () => {
         <meta name="description" content="" />
       </Head>
 
-      <main className="h-full w-full">
-        <SolarSystemScene />
-      </main>
+      <MainLayout>
+        <main className="h-full w-full">
+          <SolarSystemScene />
+        </main>
+      </MainLayout>
     </>
   );
 };
