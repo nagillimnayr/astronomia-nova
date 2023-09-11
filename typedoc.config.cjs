@@ -3,6 +3,7 @@ module.exports = {
   name: 'Astronomia Nova',
   entryPoints: ['./src/helpers/horizons/', './src/helpers/physics/'],
   entryPointStrategy: 'Expand',
+  readme: './README.md',
   out: './src/pages/docs',
   tsconfig: 'tsconfig.json',
   compilerOptions: {
