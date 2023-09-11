@@ -53,7 +53,7 @@ export const SiteHeader = ({ className }: SiteHeaderProps) => {
         {/** Documentation Link. */}
         <div className="ml-auto mr-5 flex items-center justify-center transition-colors hover:text-indigo-400">
           <Link
-            href={'/docs/README'}
+            href={'/info/docs/README'}
             className="flex items-center justify-between gap-1"
           >
             <span>Documentation</span>

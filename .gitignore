@@ -46,5 +46,4 @@ yarn-error.log*
 
 .idea
 
-/docs
-src/pages/docs/
+**/**/docs

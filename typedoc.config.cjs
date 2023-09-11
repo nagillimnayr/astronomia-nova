@@ -5,7 +5,7 @@ module.exports = {
     './src/helpers/physics/index.ts',
   ],
   entryPointStrategy: 'Expand',
-  out: './src/pages/docs',
+  out: './src/pages/info/docs',
   tsconfig: 'tsconfig.json',
   compilerOptions: {
     tsx: 'react',
