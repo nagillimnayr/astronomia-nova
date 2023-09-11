@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRef } from 'react';
 import { type ClassNameValue } from 'tailwind-merge';
 
-export type SiteHeaderProps = {
+type SiteHeaderProps = {
   className?: ClassNameValue;
 };
 export const SiteHeader = ({ className }: SiteHeaderProps) => {
