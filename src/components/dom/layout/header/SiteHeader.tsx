@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { useRef } from 'react';
 import { type ClassNameValue } from 'tailwind-merge';
 
-type Props = {
+export type SiteHeaderProps = {
   className?: ClassNameValue;
 };
-const SiteHeader = ({ className }: Props) => {
+export const SiteHeader = ({ className }: SiteHeaderProps) => {
   const headerRef = useRef<HTMLElement>(null!);
 
   return (
@@ -53,5 +53,3 @@ const SiteHeader = ({ className }: Props) => {
     </>
   );
 };
-
-export default SiteHeader;
