@@ -1,7 +1,6 @@
-import { MouseEventHandler } from 'react';
+import { type MouseEventHandler, type PropsWithChildren } from 'react';
 
-type IconBtnProps = {
-  children: React.ReactNode;
+type IconBtnProps = PropsWithChildren & {
   onClick: MouseEventHandler<HTMLButtonElement>;
 };
 
