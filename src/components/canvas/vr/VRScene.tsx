@@ -1,4 +1,3 @@
-import { KeyPressControl } from '@/components/canvas/KeyPressControl';
 import { VRHud } from '@/components/canvas/vr/vr-hud/VRHud';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { MockSolarSystem } from '@/stories/mocks/MockSolarSystem';
@@ -20,13 +19,11 @@ const LOW_Z = -15;
 const HIGH_Z = 15;
 
 export const VRScene = () => {
-  const rootActor = MachineContext.useActorRef();
   const { cameraActor, timeActor } = MachineContext.useSelector(
     ({ context }) => context
   );
   const dirLightRef = useRef<DirectionalLight>(null!);
   useHelper(dirLightRef, DirectionalLightHelper);
-  const getThree = useThree(({ get }) => get);
 
   useFrame((state, delta) => {
     cameraActor.send({ type: 'UPDATE', deltaTime: delta });
@@ -176,7 +173,6 @@ export const VRScene = () => {
       <Controllers />
       <VRHud />
       {/* <VRDebugPortal position={[0, 0.5, -2]} scale={0.05} /> */}
-      <KeyPressControl />
     </>
   );
 };
