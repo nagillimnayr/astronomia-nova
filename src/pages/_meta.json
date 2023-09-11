@@ -1,0 +1,12 @@
+{
+  "kepler": "Kepler",
+
+  "about": {
+    "title": "About",
+    "type": "page"
+  },
+  "equations": {
+    "title": "Equations",
+    "type": "page"
+  }
+}

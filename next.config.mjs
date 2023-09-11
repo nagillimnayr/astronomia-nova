@@ -13,8 +13,16 @@ import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
 import rehypeCitation from 'rehype-citation';
 
+import nextra from 'nextra';
+
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
+});
+
+const withNextra = nextra({
+  theme: 'nextra-theme-docs',
+  themeConfig: './theme.config.tsx',
+  latex: true,
 });
 
 const withMDX = mdx({
@@ -81,4 +89,4 @@ const nextConfig = {
   },
 };
 
-export default withMDX(nextConfig);
+export default withNextra(nextConfig);
