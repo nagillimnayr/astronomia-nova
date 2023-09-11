@@ -47,10 +47,7 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
   // Subscribe to state so that the component will re-render upon updates.
   useSelector(mapActor, ({ context }) => context.bodyMap);
 
-  const color = useMemo(() => {
-    const color = colorMap.get(name);
-    return color;
-  }, [name]);
+  const color = colorMap.get(name);
 
   const pivotRef = useRef<Object3D>(null!);
   const groupRef = useRef<Group>(null!);
@@ -93,24 +90,22 @@ export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
       return 0;
     }
     const log = Math.log(bodyRef.current.meanRadius);
-    const logScale = log / 20;
     //  console.log(bodyRef.current.name, logScale)
-    return logScale;
+    return log / 20;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bodyRef, bodyRef.current]);
 
-  useFrame(({ camera, gl }, _, frame) => {
+  useFrame(({ camera }, _, frame) => {
     const body = bodyRef.current;
     if (!body) return;
     const pivot = pivotRef.current;
-    const group = groupRef.current;
 
     // Get context from state machine.
     const snapshot = cameraActor.getSnapshot()!;
     const { controls, focusTarget } = snapshot.context;
 
     // Check if in surface view.
-    const onSurface = snapshot.matches('surface');
+    // const onSurface = snapshot.matches('surface');
     // if (body === focusTarget && onSurface) {
     //   // If on surface, hide the tags of the body we're on.
     //   group.visible = false;
