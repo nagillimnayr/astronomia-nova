@@ -1,17 +1,13 @@
 {
+  "docs": "Docs",
   "about": {
     "title": "About",
     "type": "page"
   },
   "equations": {
-    "title": "Equations",
-    "type": "page"
+    "title": "Equations"
   },
   "kepler": {
-    "title": "Kepler",
-    "type": "page"
-  },
-  "docs": {
-    "title": "Docs"
+    "title": "Kepler"
   }
 }
