@@ -6,9 +6,6 @@ import { assign, createMachine } from 'xstate';
 const EPSILON = 1e-16;
 const MIN_NEAR = EPSILON;
 const MIN_FAR = 10;
-const DEFAULT_NEAR = 0.1;
-const DEFAULT_FAR = 1000;
-const MAX_NEAR = DEFAULT_NEAR;
 
 const DEFAULT_HUD_POS: Vector3Tuple = [0, 0, -5];
 
