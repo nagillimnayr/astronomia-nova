@@ -1,9 +1,7 @@
 /** @type {import('typedoc').TypeDocOptions} */
 module.exports = {
-  entryPoints: [
-    './src/helpers/horizons/index.ts',
-    './src/helpers/physics/index.ts',
-  ],
+  name: 'Astronomia Nova',
+  entryPoints: ['./src/helpers/horizons/', './src/helpers/physics/'],
   entryPointStrategy: 'Expand',
   out: './src/pages/docs',
   tsconfig: 'tsconfig.json',
