@@ -1,4 +1,4 @@
-import { ColorRepresentation } from 'three';
+import { type ColorRepresentation } from 'three';
 
 export const colorMap: ReadonlyMap<string, ColorRepresentation> = new Map<
   string,

@@ -1,5 +1,5 @@
-import { ThreeEvent } from '@react-three/fiber';
-import { XRInteractionEvent } from '@react-three/xr';
+import { type ThreeEvent } from '@react-three/fiber';
+import { type XRInteractionEvent } from '@react-three/xr';
 import { useMemo, useState } from 'react';
 
 function useHover() {

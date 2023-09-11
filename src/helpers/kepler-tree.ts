@@ -49,7 +49,7 @@ export function makePreOrderTreeTraversalFn(
 
 // The central body will always be at the zero vector of the local coordinate
 // space of the orbiting body, so we can simply use a zero vector.
-const _centralPos = new Vector3();
+
 // This function will traverse the tree and for each node, it will iterate over
 // their orbiting bodies and update them.
 export const traverseKeplerTree = makePreOrderTreeTraversalFn(

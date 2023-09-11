@@ -1,7 +1,6 @@
 /**
  * @module getEphemerides
  */
-import { type Ephemeris } from '@/helpers/horizons/types/Ephemeris';
 import { z } from 'zod';
 import horizonsURL from './horizonsURL';
 import {
@@ -12,7 +11,7 @@ import {
 
 const J2000 = `'2000-Jan-01 12:00:00'`;
 const SUN_CENTER = '500@10';
-const SOLAR_SYSTEM_BARYCENTER = '500@0';
+// const SOLAR_SYSTEM_BARYCENTER = '500@0';
 const DEFAULT_CENTER = SUN_CENTER;
 
 const horizonsSchema = z.object({
@@ -49,18 +48,17 @@ async function fetchEphemerides(
   console.log('url:', urlQuery);
   // Fetch ephemeris data from Horizons API.
   const horizonsResponse = await fetch(urlQuery);
-  const text = await horizonsResponse.text();
 
   // Parse the JSON string and return the text result.
-  const parsedData = horizonsSchema.safeParse(JSON.parse(text));
+  const parsedData = horizonsSchema.safeParse(
+    JSON.parse((await horizonsResponse.text()) as string)
+  );
   if (!parsedData.success) {
     console.error('error:', parsedData.error);
     throw new Error('error: parsing failed');
-  } else {
-    // Get the string containing the ephemeris data and return it.
-    const result = parsedData.data.result;
-    return result;
   }
+  // Get the string containing the ephemeris data and return it.
+  return parsedData.data.result;
 }
 
 export async function getElementTable(
@@ -72,9 +70,7 @@ export async function getElementTable(
   const text = await fetchEphemerides(id, centerId, referencePlane, 'ELEMENTS');
 
   // Parse the string to extract the element data.
-  const ephemeris: Ephemeris = parseElements(text);
-
-  return ephemeris;
+  return parseElements(text);
 }
 
 export async function getVectorTable(
@@ -86,8 +82,7 @@ export async function getVectorTable(
   const text = await fetchEphemerides(id, centerId, referencePlane, 'VECTORS');
 
   // Parse the string to extract the element data.
-  const ephemeris: Ephemeris = parseVectorTable(text);
-  return ephemeris;
+  return parseVectorTable(text);
 }
 
 export async function getPhysicalData(
@@ -99,8 +94,7 @@ export async function getPhysicalData(
   const text = await fetchEphemerides(id, centerId, referencePlane, 'PHYSICAL');
 
   // Parse physical data.
-  const physicalData = parsePhysicalData(text);
-  return physicalData;
+  return parsePhysicalData(text);
 }
 
 export async function getEphemerides(

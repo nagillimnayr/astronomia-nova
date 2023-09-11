@@ -9,8 +9,8 @@ import {
 import { z } from 'zod';
 import { procedure, router } from '../trpc';
 import {
-  ComputedEphemerides,
-  ComputedPhysicalData,
+  type ComputedEphemerides,
+  type ComputedPhysicalData,
 } from '@/helpers/horizons/types/ComputedEphemerides';
 
 export const appRouter = router({

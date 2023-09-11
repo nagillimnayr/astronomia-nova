@@ -3,24 +3,19 @@ import { type PhysicalData } from '@/helpers/horizons/types/PhysicalData';
 import fs from 'fs-extra';
 import _ from 'lodash';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
 // Save individual ephemeris table.
 export async function saveEphemeris(ephemeris: Ephemeris) {
   const name = ephemeris.name;
-  const date = ephemeris.epoch;
   const type = ephemeris.ephemerisType;
   // create file path
   const fileName = _.kebabCase(name + type);
-  const __filename = fileURLToPath(import.meta.url);
 
   const pathToNewFile = path.resolve(
     'json',
     path.join('horizons', _.toLower(type), `${fileName}.json`)
   );
   console.log('pathToNewFile:', pathToNewFile);
-
-  // const { id, centerId, centerName, epoch } = ephemeris;
 
   await fs.writeJSON(pathToNewFile, ephemeris);
 

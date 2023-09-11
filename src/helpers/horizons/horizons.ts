@@ -10,7 +10,7 @@ import { getEphemerides, getPhysicalData } from './getEphemerides';
 import { saveEphemerides, savePhysicalData } from './saveEphemerides';
 
 const SUN_CENTER = '500@10';
-const SOLAR_SYSTEM_BARYCENTER = '500@0';
+// const SOLAR_SYSTEM_BARYCENTER = '500@0';
 const DEFAULT_CENTER = SUN_CENTER;
 
 const idSets = [
