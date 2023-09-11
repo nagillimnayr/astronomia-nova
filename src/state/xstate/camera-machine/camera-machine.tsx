@@ -15,8 +15,6 @@ import { type Object3D, type PerspectiveCamera, Vector3 } from 'three';
 import { assign, createMachine } from 'xstate';
 
 const _observerUp = new Vector3();
-const _xrCam1WorldPos = new Vector3();
-const _xrCam2WorldPos = new Vector3();
 
 const NEPTUNE_APOAPSIS = 4553758200000 * METER;
 
@@ -65,6 +63,7 @@ type Events =
 export const cameraMachine = createMachine(
   {
     predictableActionArguments: true,
+    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./camera-machine.typegen').Typegen0,
     schema: {
       context: {} as Context,
@@ -274,12 +273,12 @@ export const cameraMachine = createMachine(
           return event.focusTarget;
         },
       }),
-      setCamera(context, event, meta) {
+      setCamera(context, event) {
         const { controls } = context;
         const { camera } = event;
         controls?.setCamera(camera);
       },
-      initializeControls: (context, event) => {
+      initializeControls: (context) => {
         const { controls, mainCamera, getThree, vrHud } = context;
         if (!controls) return;
 
@@ -302,7 +301,7 @@ export const cameraMachine = createMachine(
           controls.attachToController(vrHud);
         }
       },
-      startXRSession: (context, event) => {
+      startXRSession: (context) => {
         const { getThree, controls, vrHud } = context;
         if (!controls) {
           console.error('error initializing xr session. Controls are null.');
@@ -326,7 +325,7 @@ export const cameraMachine = createMachine(
         if (vrHud) {
         }
       },
-      endXRSession: (context, event) => {
+      endXRSession: (context) => {
         const { vrHud, controls, mainCamera, getThree } = context;
         if (vrHud) {
         }
@@ -345,14 +344,14 @@ export const cameraMachine = createMachine(
         }
       },
 
-      attachToTarget: (context, event) => {
+      attachToTarget: (context) => {
         const { controls, focusTarget } = context;
         if (!focusTarget || !controls) return;
         // controls.attachControllerTo(focusTarget);
         controls.attachToWithoutMoving(focusTarget);
         controls.applyWorldUp();
       },
-      attachToObserver: (context, event) => {
+      attachToObserver: (context) => {
         const { controls, observer } = context;
         if (!controls || !observer) return;
         controls.attachControllerTo(observer);
@@ -371,7 +370,7 @@ export const cameraMachine = createMachine(
         controls.update(event.deltaTime);
       },
 
-      enterSurfaceView: (context, event) => {
+      enterSurfaceView: (context) => {
         const { controls, observer, focusTarget } = context;
         if (!controls || !observer || !focusTarget) return;
 
@@ -381,7 +380,7 @@ export const cameraMachine = createMachine(
           controls.setPolarAngleTarget(PI_OVER_TWO);
         }, 1000);
       },
-      updateSurfaceView: (context, event) => {
+      updateSurfaceView: (context) => {
         const { controls, observer } = context;
         if (!controls || !observer) return;
       },

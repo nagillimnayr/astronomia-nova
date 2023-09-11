@@ -13,7 +13,7 @@ type Context = {
   camViewPortalRef: MutableRefObject<HTMLDivElement>;
 };
 
-type Events = {};
+// type Events = {};
 // | { type: 'TOGGLE' }
 // | {
 //     type: 'ASSIGN_SCREEN_PORTAL_REF';
