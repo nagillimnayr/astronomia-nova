@@ -1,7 +1,7 @@
 
 # Astronomia Nova
 
-Astronomia Nova is a VR Solar System simulation created for the Douglas College Physics and Astronomy Department to be used as an educational tool. The web application allows users to view the positions of planets in the sky from the perspective of the surface of any planet in the Solar System. Its main purpose is to visualize the apparent retrograde motion of planets from the perspective of planets other than the Earth.
+Astronomia Nova is a VR Solar System simulation created to be used as an educational tool. The web application allows users to view the positions of planets in the sky from the point-of-view of the surface of any planet in the Solar System. Its main purpose is to visualize the apparent retrograde motion of planets from the perspective of planets other than the Earth.
 
 ## 'Astronomia Nova ΑΙΤΙΟΛΟΓΗΤΟΣ seu physica coelestis, tradita commentariis de motibus stellae Martis ex observationibus G.V. Tychonis Brahe'
 
