@@ -9,7 +9,7 @@ const fontVariables = [orbitron.variable, roboto.variable];
 type SiteLayoutProps = {
   children: React.ReactNode;
 };
-const SiteLayout = ({ children }: SiteLayoutProps) => {
+export const SiteLayout = ({ children }: SiteLayoutProps) => {
   const { uiActor } = MachineContext.useSelector(({ context }) => context);
 
   return (
@@ -35,5 +35,3 @@ const SiteLayout = ({ children }: SiteLayoutProps) => {
     </div>
   );
 };
-
-export default SiteLayout;

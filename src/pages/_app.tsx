@@ -1,5 +1,4 @@
-import SiteLayout from '@/components/dom/layout/SiteLayout';
-
+import { SiteLayout } from '@/components/dom/layout/SiteLayout';
 import Providers from '@/components/dom/providers/providers';
 import { trpc } from '@/helpers/trpc/trpc';
 import '@/styles/globals.css';
