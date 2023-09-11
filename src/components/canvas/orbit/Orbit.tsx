@@ -3,7 +3,6 @@ import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
 import { Z_AXIS } from '@/constants/constants';
 import { KeplerTreeContext } from '@/context/KeplerTreeContext';
 import { colorMap } from '@/helpers/color-map';
-import { type BodyKey } from '@/helpers/horizons/BodyKey';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { extend, type Object3DNode } from '@react-three/fiber';
 import { type PropsWithChildren, useContext, useEffect, useRef } from 'react';
