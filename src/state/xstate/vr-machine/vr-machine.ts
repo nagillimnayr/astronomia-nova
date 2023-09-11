@@ -1,6 +1,6 @@
 import { type RootState } from '@react-three/fiber';
 import { type XRState } from '@react-three/xr';
-import { Object3D, Vector3Tuple } from 'three';
+import { type Object3D, type Vector3Tuple } from 'three';
 import { assign, createMachine } from 'xstate';
 
 const EPSILON = 1e-16;
@@ -133,10 +133,10 @@ export const vrMachine = createMachine(
       logEvent: () => {
         return;
       },
-      startSession: ({ getThree }, event) => {
+      startSession: () => {
         //
       },
-      endSession(context, event, meta) {
+      endSession() {
         //
       },
 
@@ -158,8 +158,8 @@ export const vrMachine = createMachine(
           return;
         }
 
-        // Get position and orientation from pose.
-        const { position, orientation } = pose.transform;
+        // Get position from pose.
+        const { position } = pose.transform;
 
         // Create rigid transform from the pose position.
         const offsetTransform = new XRRigidTransform(position);
@@ -169,37 +169,15 @@ export const vrMachine = createMachine(
         const offsetRefSpace =
           refSpace.getOffsetReferenceSpace(offsetTransform);
 
-        // Set new reference space with offset. This will negate the
-        // translation component of the transformation matrix of the headset's
-        // spatially tracked position relative to the session origin, but
-        // without affecting the spatially tracked orientation, which we want
-        // to preserve.
+        /* Set new reference space with offset. This will negate the
+         translation component of the transformation matrix of the headset's
+         spatially tracked position relative to the session origin, but
+         without affecting the spatially tracked orientation, which we want
+         to preserve. */
         xr.setReferenceSpace(offsetRefSpace);
       },
 
-      // adjustRefSpaceToPose: (context) => {
-      //   const { getThree, pose, refSpaceOrigin } = context;
-      //   // if (!pose || !refSpaceOrigin) return;
-      //   if (!pose) return;
-      //   const { gl } = getThree();
-      //   const { xr } = gl;
-      //   if (!xr.isPresenting) return;
-      //   if (!pose) return;
-      //   const refSpace = xr.getReferenceSpace();
-
-      //   // Get position and orientation from pose.
-      //   const pos = pose.transform.position;
-      //   const orientation = pose.transform.orientation;
-
-      //   // Negate the translation but preserve the orientation.
-      //   const offsetTransform = new XRRigidTransform(pos);
-
-      //   const offsetRefSpace =
-      //     refSpace.getOffsetReferenceSpace(offsetTransform);
-
-      //   xr.setReferenceSpace(offsetRefSpace);
-      // },
-      increaseNear({ getXR }, { value }, meta) {
+      increaseNear({ getXR }, { value }) {
         const { session } = getXR();
         if (!session) return;
         const { depthNear, depthFar } = session.renderState;
@@ -211,7 +189,7 @@ export const vrMachine = createMachine(
           depthNear: near,
         });
       },
-      increaseFar({ getXR }, { value }, meta) {
+      increaseFar({ getXR }, { value }) {
         const { session } = getXR();
         if (!session) return;
         const { depthNear, depthFar } = session.renderState;
@@ -223,9 +201,9 @@ export const vrMachine = createMachine(
           depthFar: far,
         });
       },
-      resetFrustum({ getXR }, event, meta) {
-        const { session } = getXR();
-        if (!session) return;
+      resetFrustum({ getXR }) {
+        const { isPresenting } = getXR();
+        if (!isPresenting) return;
 
         // Reset frustum.
         // void session.updateRenderState({
@@ -233,19 +211,19 @@ export const vrMachine = createMachine(
         //   depthFar: DEFAULT_FAR,
         // });
       },
-      resetHud({ vrHud }, event, meta) {
+      resetHud({ vrHud }) {
         if (!vrHud) return;
         vrHud.position.set(...DEFAULT_HUD_POS);
       },
-      increaseHudX({ vrHud }, { value }, meta) {
+      increaseHudX({ vrHud }, { value }) {
         if (!vrHud) return;
         vrHud.translateX(value);
       },
-      increaseHudY({ vrHud }, { value }, meta) {
+      increaseHudY({ vrHud }, { value }) {
         if (!vrHud) return;
         vrHud.translateY(value);
       },
-      increaseHudZ({ vrHud }, { value }, meta) {
+      increaseHudZ({ vrHud }, { value }) {
         if (!vrHud) return;
         vrHud.translateZ(value);
       },
