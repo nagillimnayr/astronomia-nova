@@ -1,7 +1,6 @@
 import { cn } from '@/helpers/cn';
 import * as RadixSlider from '@radix-ui/react-slider';
 import React from 'react';
-import { SliderTooltip } from './SliderTooltip';
 
 type Props = RadixSlider.SliderProps & {
   tooltip?: boolean;
@@ -22,9 +21,7 @@ export const Slider = ({ className, tooltip, ...props }: Props) => {
         className={
           'focus-outline flex aspect-square h-fit w-4 items-center justify-center  rounded-full bg-white shadow-lg  shadow-black transition-all duration-500 hover:bg-black hover:shadow-lg hover:outline hover:outline-1 hover:outline-white focus:bg-black focus:shadow-lg focus:shadow-black focus:outline focus:outline-1 focus:outline-white'
         }
-      >
-        {tooltip && <SliderTooltip>{props.value}</SliderTooltip>}
-      </RadixSlider.Thumb>
+      />
     </RadixSlider.Root>
   );
 };
