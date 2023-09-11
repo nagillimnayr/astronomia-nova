@@ -159,6 +159,7 @@
     "tsx": "^3.12.8",
     "typedoc": "^0.24.8",
     "typedoc-github-wiki-theme": "^1.1.0",
+    "typedoc-neo-theme": "^1.1.1",
     "typedoc-plugin-extras": "^2.3.3",
     "typedoc-plugin-markdown": "^3.15.3",
     "typedoc-plugin-mdn-links": "^3.0.3",
