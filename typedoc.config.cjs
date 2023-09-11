@@ -1,7 +1,7 @@
 /** @type {import('typedoc').TypeDocOptions} */
 module.exports = {
   name: 'Astronomia Nova',
-  entryPoints: ['./src/helpers/horizons/', './src/helpers/physics/'],
+  entryPoints: ['./src/'],
   entryPointStrategy: 'Expand',
   readme: './README.md',
   out: './src/pages/docs',
