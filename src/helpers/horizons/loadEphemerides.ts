@@ -14,7 +14,7 @@ import path from 'path';
 import { fromZodError } from 'zod-validation-error';
 
 export async function loadEphemerides(name: string) {
-  // create file path
+  // Create file path.
   const fileName = _.kebabCase(name);
 
   const jsonDirectory = path.join(process.cwd(), 'json');
