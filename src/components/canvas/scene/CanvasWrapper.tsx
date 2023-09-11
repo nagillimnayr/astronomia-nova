@@ -22,7 +22,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
   const container = useRef<HTMLDivElement>(null!);
 
   return (
-    <div className="relative z-0 flex h-full w-full flex-col justify-center border">
+    <div className="relative z-0 flex h-full w-full flex-col justify-center border-none">
       <Suspense fallback={null}>
         <HUD className="z-10" />
         {/** Wrap the canvas in a div to create a separate stacking context. This is necessary because the <Html> components from Drei and portalled out of the canvas and become sibling elements of the canvas. They have an absurdly large z-index, so they will be rendered over top of any of their siblings. Wrapping the canvas in this way ensures that they share a stacking context only with each other and the canvas, and prevents them from clipping through the HUD or the rest of the UI. */}
