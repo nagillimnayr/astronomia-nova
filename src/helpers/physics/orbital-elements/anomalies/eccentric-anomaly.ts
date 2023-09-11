@@ -7,7 +7,7 @@ const EPSILON: Readonly<number> = 1e-12;
  * At Higher eccentricities, the convergence slows down, and for hyperbolic trajectories, a different equation  must be used.
  */
 // NOTE Try caching the previous value of E to seed Newton's method
-const getEccentricAnomalyNewtonsMethod = (
+export const getEccentricAnomalyNewtonsMethod = (
   meanAnomaly: number,
   eccentricity: number
 ) => {
@@ -22,13 +22,12 @@ const getEccentricAnomalyNewtonsMethod = (
   } // Set initial guess to E_0 = M(t)
   else eccentricAnomaly = meanAnomaly;
 
-  // Iteratively apply Newton's Method until an arbitrary level of accuracy is
-  // reached
+  // Iteratively apply Newton's Method until an arbitrary level of accuracy is reached.
   for (let i = 0; i < maxIter; i++) {
     // E_i+1 = E_i - (E_i - e*sin(E_i) - M)
     const derivative = 1 - eccentricity * Math.cos(eccentricAnomaly);
 
-    // dont divide by zero
+    // Don't divide by zero.
     if (Math.abs(derivative) < EPSILON) {
       break;
     }
