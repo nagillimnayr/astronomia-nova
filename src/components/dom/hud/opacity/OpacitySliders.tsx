@@ -43,7 +43,6 @@ export const OpacitySliders = ({
           Constellation Opacity
           <div className="inline-flex h-fit w-full flex-row items-center justify-start gap-2">
             <Slider
-              tooltip
               className={'w-full'}
               value={[constellationOpacity]}
               name="constellation-opacity-slider"
@@ -75,7 +74,6 @@ export const OpacitySliders = ({
           Grid Opacity
           <div className="inline-flex h-fit w-full flex-row items-center justify-start gap-2">
             <Slider
-              tooltip
               className={'w-full'}
               value={[celestialGridOpacity]}
               name="celestial-grid-opacity-slider"

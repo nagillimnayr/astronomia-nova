@@ -2,10 +2,8 @@ import { cn } from '@/helpers/cn';
 import * as RadixSlider from '@radix-ui/react-slider';
 import React from 'react';
 
-type Props = RadixSlider.SliderProps & {
-  tooltip?: boolean;
-};
-export const Slider = ({ className, tooltip, ...props }: Props) => {
+type SliderProps = RadixSlider.SliderProps;
+export const Slider = ({ className, ...props }: SliderProps) => {
   return (
     <RadixSlider.Root
       className={cn(
