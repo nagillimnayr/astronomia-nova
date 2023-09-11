@@ -47,4 +47,4 @@ yarn-error.log*
 .idea
 
 /docs
-docs/modules.md
+src/pages/docs/
