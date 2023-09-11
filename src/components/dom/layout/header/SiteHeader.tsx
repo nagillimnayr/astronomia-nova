@@ -16,11 +16,11 @@ export const SiteHeader = ({ className }: SiteHeaderProps) => {
       <header
         ref={headerRef}
         className={cn(
-          `relative z-40 flex h-full w-full min-w-full translate-y-[0%] flex-row items-center justify-start border-b bg-muted py-4 pl-6 pr-36 text-muted-foreground transition-transform duration-300 ease-in`,
-          `data-[state=closed]:-translate-y-[100%]`,
+          `relative z-40 flex h-full w-full min-w-full translate-y-[0%] flex-row items-center justify-start border-b bg-muted py-4 pl-6 pr-36 text-muted-foreground`,
           className
         )}
       >
+        {/** Title. */}
         <div className="flex-start my-2 mr-auto flex flex-row items-center">
           <Link
             className="flex h-full w-full items-center justify-center"
@@ -47,6 +47,17 @@ export const SiteHeader = ({ className }: SiteHeaderProps) => {
                 Nova
               </span>
             </h2>
+          </Link>
+        </div>
+
+        {/** Documentation Link. */}
+        <div className="ml-auto mr-5 flex items-center justify-center transition-colors hover:text-indigo-400">
+          <Link
+            href={'/docs/README'}
+            className="flex items-center justify-between gap-1"
+          >
+            <span>Documentation</span>
+            <span className="icon-[mdi--file-document]" />
           </Link>
         </div>
       </header>
