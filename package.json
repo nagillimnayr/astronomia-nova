@@ -11,7 +11,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "postinstall": "xstate typegen \"./src/**/*.ts?(x)\"",
-    "doc": "npx typedoc && bash ./shell/organize-docs.sh"
+    "doc": "python ./scripts/doc.py"
   },
   "dependencies": {
     "@datastructures-js/queue": "github:datastructures-js/queue",
