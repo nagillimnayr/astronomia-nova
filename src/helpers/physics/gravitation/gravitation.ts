@@ -5,10 +5,6 @@ import { Vector3, type Vector3Tuple } from 'three';
  * @description
  * $$ \displaystyle a = \frac{GM}{r^2} = \frac{F_g}{m} $$
  *
- *
- * @author Ryan Milligan
- * @date 22/06/2023
- * @export
  * @param {Vector3} position
  * @param {Vector3} otherPosition
  * @param {number} otherMass
