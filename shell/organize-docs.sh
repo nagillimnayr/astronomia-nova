@@ -72,10 +72,21 @@ do
     # Get the new size of the array.
     size="${#arr[@]}"
 
-    filePath=
-    echo "$path" >
+    dirPath="${OUTPUT_DIR}"
+    for item in "${arr[@]}"
+    do
+      dirPath="${dirPath}${item}/"
+    done
+    filePath="${OUTPUT_DIR}${path}.mdx"
+    echo "dirPath: ${dirPath}"
 
-    # TODO: use split substrings to create directory hierarchy.
+    # Create directory, -p creates parent directories as needed.
+    mkdir -p "${dirPath}" && echo "successfully created ${dirPath}"
+
+    echo "filePath: ${filePath}"
+    # Copy file to new directory, -f (force) to overwrite contents of destination.
+    cp -f "$file" "$filePath"
+
 
     echo
     }
