@@ -1,7 +1,7 @@
 import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { ORIGIN } from '@/constants/constants';
 import { Vector3 } from 'three';
-import calculateGravitation from '@/helpers/physics/gravitation/gravitation';
+import calculateGravitation from '@/helpers/physics/forces/gravitation';
 
 const _pos0 = new Vector3();
 const _pos1 = new Vector3();

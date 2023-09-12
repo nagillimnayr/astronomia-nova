@@ -6,8 +6,8 @@ import {
   type ComputedPhysicalDataTable,
 } from '@/helpers/horizons/types/ComputedEphemerides';
 import { ElementTableSchema } from '@/helpers/horizons/types/ElementTable';
-import { getSemiLatusRectumFromEccentricity } from '@/helpers/physics/orbital-elements/axes/semi-latus-rectum/semi-latus-rectum';
-import { getSemiMinorAxisFromSemiLatusRectum } from '@/helpers/physics/orbital-elements/axes/semi-minor-axis/semi-minor-axis';
+import { getSemiLatusRectumFromEccentricity } from '@/helpers/physics/orbital-elements/axes/semi-latus-rectum';
+import { getSemiMinorAxisFromSemiLatusRectum } from '@/helpers/physics/orbital-elements/axes/semi-minor-axis';
 import { getLinearEccentricityFromAxes } from '@/helpers/physics/orbital-elements/linear-eccentricity';
 import { getRadiusAtTrueAnomaly } from '@/helpers/physics/orbital-elements/orbital-radius';
 import { getPositionFromRadius } from '@/helpers/physics/orbital-state-vectors/position';
