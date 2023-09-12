@@ -10,7 +10,8 @@
     "start": "next start",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "postinstall": "xstate typegen \"./src/**/*.ts?(x)\""
+    "postinstall": "xstate typegen \"./src/**/*.ts?(x)\"",
+    "doc": "npx typedoc && bash ./shell/organize-docs.sh"
   },
   "dependencies": {
     "@datastructures-js/queue": "github:datastructures-js/queue",
