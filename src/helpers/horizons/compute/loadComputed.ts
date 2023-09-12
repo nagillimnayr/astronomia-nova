@@ -33,8 +33,7 @@ export async function loadComputedEphemerides(
     throw new Error(validationError.toString());
   }
 
-  const ephemerides: ComputedEphemerides = result.data;
-  return ephemerides;
+  return result.data;
 }
 
 export async function loadComputedPhysicalData(
@@ -61,6 +60,5 @@ export async function loadComputedPhysicalData(
     throw new Error(validationError.toString());
   }
 
-  const physicalData: ComputedPhysicalData = result.data;
-  return physicalData;
+  return result.data;
 }
