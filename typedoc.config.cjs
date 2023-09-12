@@ -1,10 +1,13 @@
 /** @type {import('typedoc').TypeDocOptions} */
 module.exports = {
   name: 'Astronomia Nova',
-  entryPoints: ['./src/'],
+  entryPoints: [
+    './src/helpers/horizons',
+    './src/helpers/physics',
+  ],
   entryPointStrategy: 'Expand',
   readme: './README.md',
-  out: './src/pages/docs',
+  out: './docs/',
   tsconfig: 'tsconfig.json',
   compilerOptions: {
     tsx: 'react',
@@ -24,9 +27,10 @@ module.exports = {
     '/src/helpers/react-spring-utils',
   ],
   plugin: [
-    'typedoc-plugin-markdown',
     'typedoc-plugin-extras',
     'typedoc-plugin-zod',
+    'typedoc-plugin-mdn-links',
+    'typedoc-plugin-markdown',
   ],
   hideInPageTOC: true,
 };
