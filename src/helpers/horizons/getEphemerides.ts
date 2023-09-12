@@ -2,12 +2,14 @@
  * @module getEphemerides
  */
 import { z } from 'zod';
-import horizonsURL from './horizonsURL';
 import {
   parseElements,
   parsePhysicalData,
   parseVectors as parseVectorTable,
 } from './parseEphemerides';
+
+const horizonsURL: Readonly<string> =
+  'https://ssd.jpl.nasa.gov/api/horizons.api';
 
 const J2000 = `'2000-Jan-01 12:00:00'`;
 const SUN_CENTER = '500@10';
