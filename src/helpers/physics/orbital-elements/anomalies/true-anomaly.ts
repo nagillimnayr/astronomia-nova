@@ -6,9 +6,6 @@ import { radToDeg } from 'three/src/math/MathUtils';
  * $$ \displaystyle \nu = \arccos{\left(\frac{\vec{r}\cdot\vec{e}}{re}
  *   \right)} $$
  *
- * @author Ryan Milligan
- * @date 25/07/2023
- * @export
  * @param {Vector3} position
  * @param {Vector3} velocity
  * @param {Vector3} eccentricityVector

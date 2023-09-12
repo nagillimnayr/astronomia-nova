@@ -6,7 +6,6 @@ import { radToDeg } from 'three/src/math/MathUtils';
  * $$ \displaystyle \omega = \arccos{\left(\frac{\vec{n}\cdot\vec{e}}{ne}
  *   \right)} $$
  *
- * @export
  * @param {Vector3} ascendingNode
  * @param {Vector3} eccentricityVector
  * @returns {number}
