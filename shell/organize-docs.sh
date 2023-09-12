@@ -77,15 +77,13 @@ do
     do
       dirPath="${dirPath}${item}/"
     done
-    filePath="${OUTPUT_DIR}${path}.mdx"
-    echo "dirPath: ${dirPath}"
+    filePath="${OUTPUT_DIR}${path}.md"
 
     # Create directory, -p creates parent directories as needed.
-    mkdir -p "${dirPath}" && echo "successfully created ${dirPath}"
+    mkdir -p "${dirPath}"
 
-    echo "filePath: ${filePath}"
     # Copy file to new directory, -f (force) to overwrite contents of destination.
-    cp -f "$file" "$filePath"
+    cp -f "$file" "$filePath" && echo "filePath: ${filePath}"
 
 
     echo
