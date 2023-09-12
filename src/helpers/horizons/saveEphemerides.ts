@@ -60,7 +60,7 @@ export async function saveEphemerides(ephemerides: Ephemerides) {
 
   const { id, name, centerId, centerName, epoch } = elements;
 
-  // Create file path.
+  // create file path
   const fileName = _.kebabCase(name);
 
   const jsonDirectory = path.join(process.cwd(), 'json');

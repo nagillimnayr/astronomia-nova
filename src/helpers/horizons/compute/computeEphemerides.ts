@@ -16,7 +16,7 @@ import {
   getOrbitalSpeedFromRadius,
   getVelocityDirectionFromOrbitalElements,
 } from '@/helpers/physics/orbital-state-vectors/velocity';
-import { loadEphemeris, loadPhysicalData } from './loadEphemerides';
+import { loadEphemeris, loadPhysicalData } from '../loadEphemerides';
 
 const _pos = new Vector3();
 const _vel = new Vector3();

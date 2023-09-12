@@ -1,11 +1,11 @@
 import {
   computeEphemerides,
   computePhysicalData,
-} from '@/helpers/horizons/computeEphemerides';
+} from '@/helpers/horizons/compute/computeEphemerides';
 import {
   saveComputedEphemerides,
   saveComputedPhysicalData,
-} from '@/helpers/horizons/saveComputed';
+} from '@/helpers/horizons/compute/saveComputed';
 import { getEphemerides, getPhysicalData } from './getEphemerides';
 import { saveEphemerides, savePhysicalData } from './saveEphemerides';
 

@@ -1,7 +1,7 @@
 import {
   loadComputedEphemerides,
   loadComputedPhysicalData,
-} from '@/helpers/horizons/loadComputed';
+} from '@/helpers/horizons/compute/loadComputed';
 import {
   loadEphemerides,
   loadPhysicalData,
