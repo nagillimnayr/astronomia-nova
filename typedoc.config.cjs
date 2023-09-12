@@ -2,8 +2,7 @@
 module.exports = {
   name: 'Astronomia Nova',
   entryPoints: [
-    './src/helpers/horizons',
-    './src/helpers/physics',
+    './src/'
   ],
   entryPointStrategy: 'Expand',
   readme: './README.md',
@@ -33,4 +32,5 @@ module.exports = {
     'typedoc-plugin-markdown',
   ],
   hideInPageTOC: true,
+  categoryOrder: ["Props", "Components", "*"],
 };
