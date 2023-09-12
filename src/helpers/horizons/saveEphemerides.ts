@@ -8,7 +8,7 @@ import path from 'path';
 export async function saveEphemeris(ephemeris: Ephemeris) {
   const name = ephemeris.name;
   const type = ephemeris.ephemerisType;
-  // create file path
+  // Create file path.
   const fileName = _.kebabCase(name + type);
 
   const pathToNewFile = path.resolve(
