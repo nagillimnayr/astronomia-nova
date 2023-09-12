@@ -6,8 +6,8 @@ import {
   type PhysicalDataTable,
 } from '@/helpers/horizons/types/PhysicalData';
 import type { VectorTable } from '@/helpers/horizons/types/VectorTable';
-import type { ElementCode } from './elementCodes';
-import type { VectorCode } from './VectorCodes';
+import type { ElementCode } from './ElementCodes';
+import type { VectorCode } from './types/VectorCodes';
 
 const KM_TO_M = 1000;
 
