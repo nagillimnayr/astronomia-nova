@@ -3,7 +3,7 @@ set -e
 # Path to raw docs directory.
 INPUT_DIR="./docs/"
 # Path to organized docs directory.
-OUTPUT_DIR="./src/pages/docs/"
+OUTPUT_DIR="./src/pages/info/docs/"
 
 # Clear the output directory.
 rm -rf "$OUTPUT_DIR"
