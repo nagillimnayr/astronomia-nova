@@ -23,6 +23,11 @@ import { BodyMesh } from './BodyMesh';
 import { KeplerBody } from './kepler-body';
 import { Tags } from './tags/Tags';
 
+/**
+ * @module Body
+ * @mergeTarget
+ */
+
 // Extend KeplerBody so the reconciler is aware of it.
 extend({ KeplerBody });
 declare module '@react-three/fiber' {

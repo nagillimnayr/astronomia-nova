@@ -1,5 +1,5 @@
 import { type KeplerBody } from '@/components/canvas/body/kepler-body';
-import { Annotation } from '@/components/canvas/body/tags/annotation/Annotation';
+import { Annotation } from '@/components/canvas/body/tags/Annotation';
 import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
 import { EARTH_RADIUS, METER } from '@/constants/constants';
 import { colorMap } from '@/helpers/color-map';
@@ -19,8 +19,8 @@ import {
   type Object3D,
   Vector3,
 } from 'three';
-import { SelectionMarker } from './marker/SelectionMarker';
-import { SphereMarker } from './marker/SphereMarker';
+import { SelectionMarker } from './SelectionMarker';
+import { SphereMarker } from './SphereMarker';
 
 const threshold = 0.02;
 const DIST_TO_CAM_THRESHOLD = 1e9 * METER;

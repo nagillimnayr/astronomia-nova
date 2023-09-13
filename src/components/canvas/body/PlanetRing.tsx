@@ -11,6 +11,11 @@ import {
   type Vector3Tuple,
 } from 'three';
 
+/**
+ * @module Body
+ * @mergeTarget
+ */
+
 export type PlanetRingProps = PropsWithoutRef<
   Object3DNode<Object3D, typeof Object3D>
 > & {

@@ -25,6 +25,11 @@ import {
 import { degToRad } from 'three/src/math/MathUtils';
 import { normalizeAngle } from '@/helpers/rotation-utils';
 
+/**
+ * @module Body
+ * @mergeTarget
+ */
+
 const _centralWorldPos = new Vector3();
 
 /**

@@ -1,6 +1,11 @@
 import { Object3D, Vector3, type Vector3Tuple } from 'three';
 
 /**
+ * @module Body
+ * @mergeTarget
+ */
+
+/**
  * Base class for an object with mass, velocity, and acceleration.
  *
  * @class DynamicBody
