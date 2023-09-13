@@ -23,9 +23,8 @@ export class KeplerBody extends DynamicBody {
   private _meshRef: MutableRefObject<Mesh | null> = null!;
 
   /**
-   * @summary Creates an instance of KeplerBody.
+   * Creates an instance of KeplerBody.
    *
-   * @memberof KeplerBody
    * @param {number} mass
    * @param {Vector3Tuple} initialPosition
    * @param {Vector3Tuple} initialVelocity
