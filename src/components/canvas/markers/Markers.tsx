@@ -1,5 +1,5 @@
 import { type KeplerBody } from '@/components/canvas/body/kepler-body';
-import { Annotation } from '@/components/canvas/body/tags/Annotation';
+import { Annotation } from '@/components/canvas/markers/Annotation';
 import { KeplerOrbit } from '@/components/canvas/orbit/kepler-orbit';
 import { EARTH_RADIUS, METER } from '@/constants/constants';
 import { colorMap } from '@/helpers/color-map';
@@ -35,7 +35,7 @@ type Props = {
   bodyRef: MutableRefObject<KeplerBody>;
   meanRadius: number;
 };
-export const Tags = ({ name, bodyRef, meanRadius }: Props) => {
+export const Markers = ({ name, bodyRef, meanRadius }: Props) => {
   const { cameraActor, selectionActor, visibilityActor, mapActor } =
     MachineContext.useSelector(({ context }) => context);
 

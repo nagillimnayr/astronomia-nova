@@ -21,7 +21,7 @@ import {
 } from 'three';
 import { BodyMesh } from './BodyMesh';
 import { KeplerBody } from './kepler-body';
-import { Tags } from './tags/Tags';
+import { Markers } from '@/components/canvas/markers/Markers';
 
 /**
  * @module Body
@@ -146,7 +146,7 @@ export const Body = memo(
               siderealRotationRate={siderealRotationRate ?? 0}
             />
 
-            <Tags name={name} bodyRef={bodyRef} meanRadius={meanRadius} />
+            <Markers name={name} bodyRef={bodyRef} meanRadius={meanRadius} />
             {/* <VelocityArrow /> */}
           </KeplerTreeContext.Provider>
         </keplerBody>
