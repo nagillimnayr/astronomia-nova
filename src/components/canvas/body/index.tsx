@@ -1,3 +1,4 @@
+/** @module Body */
 export * from './Body';
 export * from './kepler-body';
 export * from './dynamic-body';
