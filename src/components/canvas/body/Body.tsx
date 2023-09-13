@@ -9,6 +9,7 @@ import React, {
   useImperativeHandle,
   useMemo,
   useRef,
+  type ReactNode,
 } from 'react';
 import {
   type Material,
@@ -30,8 +31,12 @@ declare module '@react-three/fiber' {
   }
 }
 
+/**
+ * The props type for {@link Body}
+ * @category Props
+ */
 export type BodyProps = {
-  children?: React.ReactNode;
+  children?: ReactNode;
   texture?: Texture;
   material?: Material;
   name: string;
@@ -47,17 +52,14 @@ export type BodyProps = {
 
 /**
  * Component wrapper around the {@link KeplerBody} class.
- * @Component
+ * @category Component
  */
 export const Body = memo(
-  forwardRef<KeplerBody | null, BodyProps>(function Body(
-    { children, texture, material, ...props }: BodyProps,
-    fwdRef
-  ) {
-    const { mapActor } = MachineContext.useSelector(({ context }) => context);
-
-    // Destructure parameters.
-    const {
+  forwardRef<KeplerBody, BodyProps>(function Body(
+    {
+      children,
+      texture,
+      material,
       name,
       color,
       mass,
@@ -67,7 +69,10 @@ export const Body = memo(
       initialVelocity,
       siderealRotationRate,
       siderealRotationPeriod,
-    } = props;
+    }: BodyProps,
+    fwdRef: React.ForwardedRef<KeplerBody>
+  ): ReactNode {
+    const { mapActor } = MachineContext.useSelector(({ context }) => context);
 
     // Get central body from context.
     const centralBodyRef = useContext(KeplerTreeContext);
