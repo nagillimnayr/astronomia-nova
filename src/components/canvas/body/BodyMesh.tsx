@@ -1,6 +1,5 @@
 import { type KeplerBody } from '@/components/canvas/body/kepler-body';
-import { PlanetRing } from '@/components/canvas/body/planet-ring/PlanetRing';
-import { Poles } from '@/components/canvas/body/poles/Poles';
+import { PlanetRing } from '@/components/canvas/body/PlanetRing';
 import { METER, PI_OVER_TWO } from '@/constants/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { MeshDiscardMaterial, Sphere } from '@react-three/drei';
@@ -23,12 +22,15 @@ import {
   type Vector3Tuple,
   type Material,
 } from 'three';
-
 import { degToRad } from 'three/src/math/MathUtils';
 import { normalizeAngle } from '@/helpers/rotation-utils';
 
 const _centralWorldPos = new Vector3();
 
+/**
+ * The props type for {@link BodyMesh}
+ * @category Props
+ */
 export type BodyMeshProps = {
   name: string;
   bodyRef: MutableRefObject<KeplerBody>;
@@ -38,8 +40,8 @@ export type BodyMeshProps = {
   siderealRotationRate: number;
 };
 /**
- * Component which manages the visual logic of the associated body. Renders the body's mesh, and handles the sidereal rotation.
- * @returns {JSX.Element}
+ * Component that manages the visual logic of the associated body. Renders the body's mesh, and handles the sidereal rotation.
+ * @category Component
  */
 export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   {
@@ -127,7 +129,6 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
               outerRadius={(meanRadius + 80e6) * METER}
             />
           )}
-          <Poles length={2 * radius} />
         </group>
       </object3D>
     </>
