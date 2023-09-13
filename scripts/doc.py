@@ -24,7 +24,7 @@ def main():
 
     subprocess.call(f"touch {docDir}/_meta.json", shell=True)
 
-    meta = {"modules": "Sub-modules", "classes": "Classes"}
+    meta = {"modules": "Modules", "classes": "Classes"}
 
     # Write json data to _meta.json.
     meta_file = open(f"{docDir}/_meta.json", "w")
