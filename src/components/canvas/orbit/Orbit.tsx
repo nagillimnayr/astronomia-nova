@@ -9,7 +9,7 @@ import { type PropsWithChildren, useContext, useEffect, useRef } from 'react';
 import { type Texture, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { Body } from '@/components/canvas/body';
-import { Trajectory } from './trajectory/Trajectory';
+import { Trajectory } from './Trajectory';
 import { type ComputedEphemerides } from '@/helpers/horizons/types/ComputedEphemerides';
 
 const _pos = new Vector3();
