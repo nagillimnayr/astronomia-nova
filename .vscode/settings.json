@@ -14,5 +14,13 @@
     "milkyway",
     "VRHUD"
   ],
-  "docwriter.style": "JSDoc"
+  "docwriter.style": "JSDoc",
+  "editor.formatOnSave": true,
+  "python.analysis.autoFormatStrings": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.completeFunctionParens": true,
+  "python.analysis.inlayHints.callArgumentNames": false,
+  "python.analysis.inlayHints.variableTypes": false,
+  "python.analysis.inlayHints.pytestParameters": false,
+  "python.analysis.typeCheckingMode": "strict"
 }
