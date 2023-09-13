@@ -1,10 +1,11 @@
 import { Object3D, Vector3, type Vector3Tuple } from 'three';
 
 /**
- * @description Base class for an object with mass, velocity, and acceleration.
+ * Base class for an object with mass, velocity, and acceleration.
  *
  * @class DynamicBody
  * @extends {Object3D}
+ *
  */
 class DynamicBody extends Object3D {
   private _velocity: Vector3;
