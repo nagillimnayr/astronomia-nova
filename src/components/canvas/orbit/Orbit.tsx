@@ -10,7 +10,6 @@ import { type Texture, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { Body } from '@/components/canvas/body';
 import { Trajectory } from './trajectory/Trajectory';
-import { TrueAnomalyArrow } from './TrueAnomalyArrow';
 import { type ComputedEphemerides } from '@/helpers/horizons/types/ComputedEphemerides';
 
 const _pos = new Vector3();
@@ -139,7 +138,6 @@ export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
         periapsis={periapsis}
         bodyRef={orbitingBodyRef}
       />
-      <TrueAnomalyArrow color={'#ffffff'} target={orbitingBodyRef} />
     </keplerOrbit>
   );
 };
