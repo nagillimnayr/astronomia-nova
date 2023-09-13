@@ -1,10 +1,8 @@
 /** @type {import('typedoc').TypeDocOptions} */
 module.exports = {
   name: 'Astronomia Nova',
-  entryPoints: [
-    './src/'
-  ],
-  entryPointStrategy: 'Expand',
+  entryPoints: ['./src/'],
+  entryPointStrategy: 'Resolve',
   readme: './README.md',
   out: './docs/',
   tsconfig: 'tsconfig.json',
@@ -30,9 +28,7 @@ module.exports = {
     'typedoc-plugin-zod',
     'typedoc-plugin-mdn-links',
     'typedoc-plugin-markdown',
-    'typedoc-plugin-merge-modules',
   ],
   hideInPageTOC: true,
-  categoryOrder: ["Props", "Components", "*"],
-  mergeModulesMergeMode: "module"
+  categoryOrder: ['Props', 'Components', 'Classes', '*'],
 };
