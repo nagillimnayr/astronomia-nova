@@ -30,7 +30,9 @@ module.exports = {
     'typedoc-plugin-zod',
     'typedoc-plugin-mdn-links',
     'typedoc-plugin-markdown',
+    'typedoc-plugin-merge-modules',
   ],
   hideInPageTOC: true,
   categoryOrder: ["Props", "Components", "*"],
+  mergeModulesMergeMode: "module"
 };
