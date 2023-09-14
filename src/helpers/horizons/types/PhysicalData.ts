@@ -4,6 +4,7 @@ export const PhysicalDataTableSchema = z.object({
   meanRadius: z.number(),
   mass: z.number(),
   siderealRotationRate: z.number(), // (rad/s)
+  siderealRotationPeriod: z.number(), // (Days)
   gravParameter: z.number(),
   obliquity: z.number(), // axial tilt (deg)
 });

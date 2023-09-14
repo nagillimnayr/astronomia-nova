@@ -174,56 +174,6 @@ export function parseElements(text: Readonly<string>): Ephemeris {
   };
 }
 
-export function parseVectors(text: Readonly<string>): Ephemeris {
-  // Get text with vector data.
-  // Todo: use named capture groups.
-  const regexp = /SOE\n([^]*)\$\$EOE/;
-  const matches = text.match(/SOE\n([^]*)\$\$EOE/);
-  if (!matches || matches.length < 2) {
-    console.log(`error! no match found for { ${regexp.source} } in:`, text);
-    throw new Error('no match found!');
-  }
-
-  // get the substring that contains the ephemeris data
-  const substr = matches[1];
-  if (!substr) {
-    const errorMsg = 'error: no vector data found';
-    throw new Error(errorMsg);
-  }
-
-  const x = parseEphemerisTable(substr, 'X') * KM_TO_M; // (m)
-  const y = parseEphemerisTable(substr, 'Y') * KM_TO_M; // (m)
-  const z = parseEphemerisTable(substr, 'Z') * KM_TO_M; // (m)
-  const vx = parseEphemerisTable(substr, 'VX') * KM_TO_M; // (m/s)
-  const vy = parseEphemerisTable(substr, 'VY') * KM_TO_M; // (m/s)
-  const vz = parseEphemerisTable(substr, 'VZ') * KM_TO_M; // (m/s)
-  const range = parseEphemerisTable(substr, 'RG') * KM_TO_M; // (m)
-  const rangeRate = parseEphemerisTable(substr, 'RR') * KM_TO_M; // (m/s)
-
-  const [name, id] = parseEphemerisName(text, 'Target');
-  const [centerName, centerId] = parseEphemerisName(text, 'Center');
-  if (!name || !id || !centerName || !centerId) {
-    throw new Error('invalid id/name');
-  }
-
-  const vectorTable: VectorTable = {
-    position: [x, y, z],
-    velocity: [vx, vy, vz],
-    range,
-    rangeRate,
-  };
-
-  return {
-    id,
-    name,
-    centerId,
-    centerName,
-    epoch: parseEphemerisDate(substr),
-    ephemerisType: 'VECTORS',
-    table: vectorTable,
-  };
-}
-
 export function parsePhysicalData(text: Readonly<string>): PhysicalData {
   // Get the substring that contains the physical data.
   // NOTE: For the Earth, 'PHYSICAL DATA' is replaced with 'GEOPHYSICAL
@@ -251,11 +201,14 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
   // separately.
   const massExponent = getMassExponent(substr);
 
+  const siderealRotationRate = Math.abs(getRotationRate(substr));
+  const siderealRotationPeriod = TWO_PI / siderealRotationRate; // Time in seconds to make one full
+
   const table: PhysicalDataTable = {
     meanRadius: capturePhysicalProperty(substr, 'mean radius') * KM_TO_M, // (m)
     mass: capturePhysicalProperty(substr, 'Mass') * massExponent, // (kg)
-
-    siderealRotationRate: getRotationRate(substr), // (deg/s)
+    siderealRotationRate, // (rad/s)
+    siderealRotationPeriod, // (Days)
     gravParameter: capturePhysicalProperty(substr, 'GM') * KM_TO_M, // (m^3/s^2)
     obliquity: capturePhysicalProperty(substr, 'Obliquity'), // axial tilt (deg)
   };

@@ -1,13 +1,7 @@
-import {
-  computeEphemerides,
-  computePhysicalData,
-} from '@/helpers/horizons/compute/computeEphemerides';
-import {
-  saveComputedEphemerides,
-  saveComputedPhysicalData,
-} from '@/helpers/horizons/compute/saveComputed';
+import { computeEphemerides } from '@/helpers/horizons/compute/computeEphemerides';
+import { saveComputedEphemerides } from '@/helpers/horizons/compute/saveComputed';
 import { getEphemerides, getPhysicalData } from './getEphemerides';
-import { saveEphemerides, savePhysicalData } from './saveEphemerides';
+import { savePhysicalData } from './saveEphemerides';
 
 const SUN_CENTER = '500@10';
 // const SOLAR_SYSTEM_BARYCENTER = '500@0';
@@ -29,21 +23,26 @@ try {
   // Sun physical data.
   const sunPhysicalData = await getPhysicalData('10', '500@0');
   await savePhysicalData(sunPhysicalData);
-  const sunComputedPhysicalData = await computePhysicalData('Sun');
-  await saveComputedPhysicalData(sunComputedPhysicalData);
+
+  const massMap = new Map<string, number>();
+  massMap.set(sunPhysicalData.name, sunPhysicalData.table.mass);
 
   // Planetary ephemeris data.
   for (const { id, centerId } of idSets) {
-    const ephemerides = await getEphemerides(id, centerId);
-    await saveEphemerides(ephemerides);
-  }
+    // Fetch data from horizons.
+    const rawEphemerides = await getEphemerides(id, centerId);
 
-  // Computed ephemeris data.
-  for (const { name } of idSets) {
-    const computedEphemerides = await computeEphemerides(name);
+    // Add mass to map so orbiting bodies can retrieve it.
+    massMap.set(rawEphemerides.name, rawEphemerides.physicalDataTable.mass);
+    // Get mass of central body from map.
+    const centralMass = massMap.get(rawEphemerides.centerName);
+
+    // Compute missing data.
+    const computedEphemerides = computeEphemerides(
+      rawEphemerides,
+      centralMass!
+    );
     await saveComputedEphemerides(computedEphemerides);
-    const computedPhysicalData = await computePhysicalData(name);
-    await saveComputedPhysicalData(computedPhysicalData);
   }
 } catch (e) {
   console.error(e);

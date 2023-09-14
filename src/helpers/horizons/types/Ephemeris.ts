@@ -1,7 +1,6 @@
 import z from 'zod';
 import { ElementTableSchema } from './ElementTable';
-import { PhysicalDataSchema } from './PhysicalData';
-import { VectorTableSchema } from './VectorTable';
+import { PhysicalDataSchema, PhysicalDataTableSchema } from './PhysicalData';
 
 export const EphemerisSchema = z.object({
   id: z.string(),
@@ -10,7 +9,7 @@ export const EphemerisSchema = z.object({
   centerName: z.string(),
   epoch: z.string(),
   ephemerisType: z.string(),
-  table: z.union([ElementTableSchema, VectorTableSchema]),
+  table: ElementTableSchema,
 });
 
 export type Ephemeris = z.infer<typeof EphemerisSchema>;
@@ -22,8 +21,7 @@ export const EphemeridesSchema = z.object({
   centerName: z.string(),
   epoch: z.string(),
   elementTable: ElementTableSchema,
-  vectorTable: VectorTableSchema,
-  physicalData: PhysicalDataSchema,
+  physicalDataTable: PhysicalDataTableSchema,
 });
 
 export type Ephemerides = z.infer<typeof EphemeridesSchema>;

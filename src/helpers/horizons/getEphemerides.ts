@@ -2,11 +2,8 @@
  * @module getEphemerides
  */
 import { z } from 'zod';
-import {
-  parseElements,
-  parsePhysicalData,
-  parseVectors as parseVectorTable,
-} from './parseEphemerides';
+import { parseElements, parsePhysicalData } from './parseEphemerides';
+import { TWO_PI } from '@/constants';
 
 const horizonsURL: Readonly<string> =
   'https://ssd.jpl.nasa.gov/api/horizons.api';
@@ -75,18 +72,6 @@ export async function getElementTable(
   return parseElements(text);
 }
 
-export async function getVectorTable(
-  id: string, // Horizons' id for body.
-  centerId = DEFAULT_CENTER, // Horizons' id for central body.
-  referencePlane: ReferencePlane = 'ECLIPTIC'
-) {
-  // Get the raw text data from Horizons API.
-  const text = await fetchEphemerides(id, centerId, referencePlane, 'VECTORS');
-
-  // Parse the string to extract the element data.
-  return parseVectorTable(text);
-}
-
 export async function getPhysicalData(
   id: string, // Horizons' id for body.
   centerId = DEFAULT_CENTER, // Horizons' id for central body.
@@ -96,6 +81,11 @@ export async function getPhysicalData(
   const text = await fetchEphemerides(id, centerId, referencePlane, 'PHYSICAL');
 
   // Parse physical data.
+  const parsedPhysicalData = parsePhysicalData(text);
+
+  const siderealRotationRate = parsedPhysicalData.table.siderealRotationRate;
+
+  const siderealRotationPeriod = TWO_PI / siderealRotationRate; // Time in seconds to make one full rotation about the body's polar axis.
   return parsePhysicalData(text);
 }
 
@@ -106,11 +96,17 @@ export async function getEphemerides(
 ) {
   // Get ephemeris data from Horizons.
   const elements = await getElementTable(id, centerId, referencePlane);
-  const vectors = await getVectorTable(id, centerId, referencePlane);
   const physicalData = await getPhysicalData(id, centerId, referencePlane);
+  const elementTable = elements.table;
+  const physicalDataTable = physicalData.table;
+  const { name, epoch, centerName } = elements;
   return {
-    elements,
-    vectors,
-    physicalData,
+    id,
+    name,
+    centerId,
+    centerName,
+    epoch,
+    elementTable,
+    physicalDataTable,
   };
 }
