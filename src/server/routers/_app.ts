@@ -8,10 +8,8 @@ import {
 } from '@/helpers/horizons/loadEphemerides';
 import { z } from 'zod';
 import { procedure, router } from '../trpc';
-import {
-  type ComputedEphemerides,
-  type ComputedPhysicalData,
-} from '@/helpers/horizons/types/ComputedEphemerides';
+import { type ComputedEphemerides } from '@/helpers/horizons/types/ComputedEphemerides';
+import { type PhysicalData } from '@/helpers/horizons/types/PhysicalData';
 
 export const appRouter = router({
   // Load ephemerides procedure. (Query)
@@ -28,19 +26,7 @@ export const appRouter = router({
       return await loadPhysicalData(input.name);
     }),
 
-  loadComputedEphemerides: procedure
-    .input(z.object({ name: z.string() }))
-    .query(async ({ input }) => {
-      return await loadComputedEphemerides(input.name);
-    }),
-
-  loadComputedPhysicalData: procedure
-    .input(z.object({ name: z.string() }))
-    .query(async ({ input }) => {
-      return await loadComputedPhysicalData(input.name);
-    }),
-
-  loadAllComputedData: procedure.query(async () => {
+  loadAllEphemerides: procedure.query(async () => {
     // The promises don't rely on the fulfillment of each other, so we don't need to await each one before starting the next.
     const promises = [
       loadComputedPhysicalData('Sun'), // 0
@@ -57,7 +43,7 @@ export const appRouter = router({
 
     const data = await Promise.all(promises);
     return {
-      sun: data[0] as ComputedPhysicalData,
+      sun: data[0] as PhysicalData,
       mercury: data[1] as ComputedEphemerides,
       venus: data[2] as ComputedEphemerides,
       earth: data[3] as ComputedEphemerides,

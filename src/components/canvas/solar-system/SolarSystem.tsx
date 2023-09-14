@@ -40,7 +40,7 @@ export const SolarSystem = (): JSX.Element => {
   ]);
 
   // Load data.
-  const [data, dataQuery] = trpc.loadAllComputedData.useSuspenseQuery();
+  const [data, dataQuery] = trpc.loadAllEphemerides.useSuspenseQuery();
 
   const rootRef = useRef<KeplerBody>(null!);
 
