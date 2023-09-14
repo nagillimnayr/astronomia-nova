@@ -100,11 +100,11 @@ export const Body = memo(
       return (
         material ??
         new MeshBasicMaterial({
-          color: color,
+          color: 'white',
           map: texture,
         })
       );
-    }, [color, material, texture]);
+    }, [material, texture]);
 
     useEffect(() => {
       const body = bodyRef.current;
