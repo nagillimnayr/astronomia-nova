@@ -44,7 +44,7 @@ async function fetchEphemerides(
   const searchParams = new URLSearchParams({
     format: 'json',
     COMMAND: `'${id}'`,
-    OBJ_DATA: ephemerisType === 'PHYSICAL' ? 'YES' : 'NO',
+    OBJ_DATA: 'YES',
     MAKE_EPHEM: 'YES',
     EPHEM_TYPE: ephemerisType === 'PHYSICAL' ? 'VECTORS' : ephemerisType,
     CENTER: centerId,
@@ -113,8 +113,8 @@ export async function getEphemerides(
   const text = await fetchEphemerides(id, centerId, referencePlane, 'ELEMENTS');
 
   // Get ephemeris data from Horizons.
-  const elementTable = await getElementTable(id, centerId, referencePlane);
-  const physicalData = await getPhysicalData(id, centerId, referencePlane);
+  const elementTable = parseElements(text);
+  const physicalDataTable = parsePhysicalData(text);
 
   const name = parseEphemerisName(text, 'Target');
   const centerName = parseEphemerisName(text, 'Center');
@@ -127,7 +127,7 @@ export async function getEphemerides(
     centerName,
     epoch,
     elementTable,
-    physicalDataTable: physicalData.table,
+    physicalDataTable,
   };
 }
 
