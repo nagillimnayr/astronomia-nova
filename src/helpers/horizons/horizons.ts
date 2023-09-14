@@ -1,7 +1,6 @@
-import { computeEphemerides } from '@/helpers/horizons/compute/computeEphemerides';
-import { saveComputedEphemerides } from '@/helpers/horizons/compute/saveComputed';
-import { getEphemerides, getPhysicalData } from './getEphemerides';
-import { savePhysicalData } from './saveEphemerides';
+import { computeVectorTable, getEphemerides, getPhysicalData } from './getEphemerides';
+import { saveEphemerides, savePhysicalData } from './saveEphemerides';
+import { Ephemerides } from './types/Ephemerides';
 
 const SUN_CENTER = '500@10';
 // const SOLAR_SYSTEM_BARYCENTER = '500@0';
@@ -23,7 +22,6 @@ try {
   // Sun physical data.
   const sunPhysicalData = await getPhysicalData('10', '500@0');
   await savePhysicalData(sunPhysicalData);
-
   const massMap = new Map<string, number>();
   massMap.set(sunPhysicalData.name, sunPhysicalData.table.mass);
 
@@ -38,11 +36,15 @@ try {
     const centralMass = massMap.get(rawEphemerides.centerName);
 
     // Compute missing data.
-    const computedEphemerides = computeEphemerides(
-      rawEphemerides,
+    const vectorTable = computeVectorTable(
+      rawEphemerides.elementTable,
       centralMass!
     );
-    await saveComputedEphemerides(computedEphemerides);
+    const ephemerides: Ephemerides = {
+      ...rawEphemerides,
+      vectorTable
+    }
+    await saveEphemerides(ephemerides);
   }
 } catch (e) {
   console.error(e);

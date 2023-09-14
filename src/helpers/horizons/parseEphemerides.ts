@@ -1,13 +1,14 @@
 import { DAY, TWO_PI } from '@/constants';
 import type { ElementTable } from '@/helpers/horizons/types/ElementTable';
-import { type Ephemeris } from '@/helpers/horizons/types/Ephemeris';
 import {
   type PhysicalData,
   type PhysicalDataTable,
 } from '@/helpers/horizons/types/PhysicalData';
-import type { VectorTable } from '@/helpers/horizons/types/VectorTable';
 import type { ElementCode } from './types/ElementCodes';
 import type { VectorCode } from './types/VectorCodes';
+import { getSemiLatusRectumFromEccentricity } from '../physics/orbital-elements/axes/semi-latus-rectum';
+import { getSemiMinorAxisFromSemiLatusRectum } from '../physics/orbital-elements/axes/semi-minor-axis';
+import { getLinearEccentricityFromAxes } from '../physics/orbital-elements/linear-eccentricity';
 
 const KM_TO_M = 1000;
 
@@ -120,12 +121,11 @@ export function parseEphemerisName(
     throw new Error('no match found!');
   }
   const name = matches[1];
-  const id = matches[2];
 
-  return [name, id];
+  return name;
 }
 
-export function parseElements(text: Readonly<string>): Ephemeris {
+export function parseElements(text: Readonly<string>) {
   // Get substring with elements data.
   // Todo: use named capture groups.
   const regexp = /SOE\n([^]*)\$\$EOE/;
@@ -148,8 +148,25 @@ export function parseElements(text: Readonly<string>): Ephemeris {
     throw new Error('invalid id/name');
   }
 
-  const elementTable: ElementTable = {
-    eccentricity: parseEphemerisTable(substr, 'EC'),
+  const semiMajorAxis = parseEphemerisTable(substr, 'A') * KM_TO_M;
+  const eccentricity = parseEphemerisTable(substr, 'EC');
+
+  // Compute data not provided by Horizons.
+  const semiLatusRectum = getSemiLatusRectumFromEccentricity(
+    semiMajorAxis,
+    eccentricity
+  );
+  const semiMinorAxis = getSemiMinorAxisFromSemiLatusRectum(
+    semiMajorAxis,
+    semiLatusRectum
+  );
+
+  const linearEccentricity = getLinearEccentricityFromAxes(
+    semiMajorAxis,
+    semiMinorAxis
+  );
+
+  const elementTable = {
     periapsis: parseEphemerisTable(substr, 'QR') * KM_TO_M,
     inclination: parseEphemerisTable(substr, 'IN'),
     longitudeOfAscendingNode: parseEphemerisTable(substr, 'OM'),
@@ -158,23 +175,21 @@ export function parseElements(text: Readonly<string>): Ephemeris {
     meanMotion: parseEphemerisTable(substr, 'N'),
     meanAnomaly: parseEphemerisTable(substr, 'MA'),
     trueAnomaly: parseEphemerisTable(substr, 'TA'),
-    semiMajorAxis: parseEphemerisTable(substr, 'A') * KM_TO_M,
     apoapsis: parseEphemerisTable(substr, 'AD') * KM_TO_M,
     siderealOrbitPeriod: parseEphemerisTable(substr, 'PR'),
-  };
 
-  return {
-    id,
-    name,
-    centerId,
-    centerName,
-    epoch: parseEphemerisDate(substr),
-    ephemerisType: 'ELEMENTS',
-    table: elementTable,
+    semiMajorAxis,
+    semiMinorAxis,
+    semiLatusRectum,
+    eccentricity,
+    linearEccentricity
+
   };
+  return elementTable;
+
 }
 
-export function parsePhysicalData(text: Readonly<string>): PhysicalData {
+export function parsePhysicalData(text: Readonly<string>) {
   // Get the substring that contains the physical data.
   // NOTE: For the Earth, 'PHYSICAL DATA' is replaced with 'GEOPHYSICAL
   // PROPERTIES'. For the Moon, 'GEOPHYSICAL PROPERTIES' is replaced with
@@ -217,12 +232,8 @@ export function parsePhysicalData(text: Readonly<string>): PhysicalData {
   if (!name || !id) {
     throw new Error('invalid id/name');
   }
-
-  return {
-    id,
-    name,
-    table,
-  };
+  return table;
+ 
 }
 
 function capturePhysicalProperty(text: string, property: string) {

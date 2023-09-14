@@ -1,9 +1,7 @@
 import {
   type Ephemerides,
   EphemeridesSchema,
-  type Ephemeris,
-  EphemerisSchema,
-} from '@/helpers/horizons/types/Ephemeris';
+} from '@/helpers/horizons/types/Ephemerides';
 import {
   type PhysicalData,
   PhysicalDataSchema,
@@ -13,7 +11,7 @@ import _ from 'lodash';
 import path from 'path';
 import { fromZodError } from 'zod-validation-error';
 
-export async function loadEphemerides(name: string) {
+export async function loadEphemerides(name: string): Promise<Ephemerides> {
   // Create file path.
   const fileName = _.kebabCase(name);
 
@@ -36,38 +34,9 @@ export async function loadEphemerides(name: string) {
     throw new Error(validationError.toString());
   }
 
-  const ephemerides: Ephemerides = result.data;
-  return ephemerides;
+  return result.data;
 }
 
-export async function loadEphemeris(
-  name: string,
-  type: 'ELEMENTS' | 'VECTORS'
-): Promise<Ephemeris> {
-  // Create file path.
-  const fileName = _.kebabCase(name + '-' + type);
-  const jsonDirectory = path.join(process.cwd(), 'json');
-
-  const pathToFile = path.resolve(
-    jsonDirectory,
-    path.join('horizons', _.toLower(type), `${fileName}.json`)
-  );
-
-  // Read and parse JSON file.
-  const result = await EphemerisSchema.safeParseAsync(
-    (await fs.readJSON(pathToFile)) as unknown
-  );
-
-  // Throw error if parse was not successful.
-  if (!result.success) {
-    const validationError = fromZodError(result.error);
-    console.log(validationError);
-    throw new Error(validationError.toString());
-  }
-
-  const ephemeris: Ephemeris = result.data;
-  return ephemeris;
-}
 
 export async function loadPhysicalData(name: string): Promise<PhysicalData> {
   // Create file path.

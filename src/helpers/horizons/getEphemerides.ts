@@ -2,8 +2,14 @@
  * @module getEphemerides
  */
 import { z } from 'zod';
-import { parseElements, parsePhysicalData } from './parseEphemerides';
+import { parseElements, parseEphemerisDate, parseEphemerisName, parsePhysicalData } from './parseEphemerides';
 import { TWO_PI } from '@/constants';
+import { Vector3 } from 'three';
+import { ElementTable } from './types/ElementTable';
+import { getRadiusAtTrueAnomaly } from '../physics/orbital-elements/orbital-radius';
+import { getPositionFromRadius } from '../physics/orbital-state-vectors/position';
+import { getOrbitalSpeedFromRadius, getVelocityDirectionFromOrbitalElements } from '../physics/orbital-state-vectors/velocity';
+import { VectorTable } from './types/VectorTable';
 
 const horizonsURL: Readonly<string> =
   'https://ssd.jpl.nasa.gov/api/horizons.api';
@@ -23,6 +29,10 @@ const horizonsSchema = z.object({
 
 type ReferencePlane = 'ECLIPTIC' | 'FRAME' | 'BODY' | 'EQUATOR';
 type EphemerisType = 'ELEMENTS' | 'VECTORS' | 'PHYSICAL';
+
+const _pos = new Vector3();
+const _vel = new Vector3();
+
 
 async function fetchEphemerides(
   id: string,
@@ -81,12 +91,16 @@ export async function getPhysicalData(
   const text = await fetchEphemerides(id, centerId, referencePlane, 'PHYSICAL');
 
   // Parse physical data.
-  const parsedPhysicalData = parsePhysicalData(text);
+  const physicalDataTable = parsePhysicalData(text);
+ 
+  const name = parseEphemerisName(text, 'Target');
 
-  const siderealRotationRate = parsedPhysicalData.table.siderealRotationRate;
+  return {
+    id,
+    name,
+    table: physicalDataTable
+  }
 
-  const siderealRotationPeriod = TWO_PI / siderealRotationRate; // Time in seconds to make one full rotation about the body's polar axis.
-  return parsePhysicalData(text);
 }
 
 export async function getEphemerides(
@@ -94,12 +108,18 @@ export async function getEphemerides(
   centerId = DEFAULT_CENTER, // Horizons' id for central body.
   referencePlane: ReferencePlane = 'ECLIPTIC'
 ) {
+  
+  // Get the raw text data from the Horizons API.
+  const text = await fetchEphemerides(id, centerId, referencePlane, 'ELEMENTS');
+
   // Get ephemeris data from Horizons.
-  const elements = await getElementTable(id, centerId, referencePlane);
+  const elementTable = await getElementTable(id, centerId, referencePlane);
   const physicalData = await getPhysicalData(id, centerId, referencePlane);
-  const elementTable = elements.table;
-  const physicalDataTable = physicalData.table;
-  const { name, epoch, centerName } = elements;
+
+  const name = parseEphemerisName(text, 'Target');
+  const centerName = parseEphemerisName(text, 'Center');
+  const epoch = parseEphemerisDate(text);
+
   return {
     id,
     name,
@@ -107,6 +127,44 @@ export async function getEphemerides(
     centerName,
     epoch,
     elementTable,
-    physicalDataTable,
+    physicalDataTable: physicalData.table,
   };
+}
+
+
+export function computeVectorTable(
+  elementTable: ElementTable,
+  centralMass: number
+) {
+
+  const { semiMajorAxis, eccentricity, trueAnomaly} = elementTable;
+
+  const radius = getRadiusAtTrueAnomaly(
+    trueAnomaly,
+    semiMajorAxis,
+    eccentricity
+  );
+  getPositionFromRadius(radius, trueAnomaly, _pos);
+
+  // The Horizons ephemeris data for Jupiter seems to result in it wobbling a
+  // bit on its orbit. Re-computing the velocity fixes the issue.
+
+  // Compute the initial orbital speed.
+  const orbitalSpeed = getOrbitalSpeedFromRadius(
+    radius,
+    centralMass,
+    semiMajorAxis
+  );
+
+  // Compute the direction of the velocity vector.
+  getVelocityDirectionFromOrbitalElements(trueAnomaly, eccentricity, _vel);
+  _vel.multiplyScalar(orbitalSpeed);
+
+  const vectorTable: VectorTable = {
+    position: _pos.toArray(),
+    velocity: _vel.toArray(),
+  } ;
+
+
+  return vectorTable;
 }
