@@ -10,7 +10,7 @@ import { type Texture, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { Body } from '@/components/canvas/body';
 import { Trajectory } from './Trajectory';
-import { type ComputedEphemerides } from '@/helpers/horizons/types/ComputedEphemerides';
+import { Ephemerides } from '@/helpers/horizons/types/Ephemerides';
 
 const _pos = new Vector3();
 
@@ -25,13 +25,13 @@ declare module '@react-three/fiber' {
 export type OrbitProps = PropsWithChildren & {
   name: string;
   texture?: Texture;
-  ephemerides: ComputedEphemerides;
+  ephemerides: Ephemerides;
 };
 
 /**
  * @param {string} name
  * @param {Texture | undefined} texture
- * @param {ComputedEphemerides} ephemerides
+ * @param {Ephemerides} ephemerides
  * @returns {JSX.Element}
  * @constructor
  */
@@ -43,7 +43,7 @@ export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
   const orbitingBodyRef = useRef<KeplerBody | null>(null);
   const centralBodyRef = useContext(KeplerTreeContext);
 
-  const { ephemerisTable, physicalDataTable } = ephemerides;
+  const { elementTable, vectorTable, physicalDataTable } = ephemerides;
 
   const {
     semiMajorAxis,
@@ -55,12 +55,12 @@ export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
     trueAnomaly,
     periapsis,
     siderealOrbitPeriod,
-    initialPosition,
-    initialVelocity,
     longitudeOfAscendingNode,
     argumentOfPeriapsis,
     inclination,
-  } = ephemerisTable;
+  } = elementTable;
+
+  const { position: initialPosition, velocity: initialVelocity } = vectorTable;
 
   const color = colorMap.get(name) ?? 'white';
   const {
