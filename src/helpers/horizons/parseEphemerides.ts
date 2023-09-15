@@ -1,4 +1,4 @@
-import { DAY, TWO_PI } from '@/constants';
+import { DAY, DEG_TO_RADS, TWO_PI } from '@/constants';
 import { type PhysicalDataTable } from '@/helpers/horizons/types/PhysicalData';
 import type { ElementCode } from './types/ElementCodes';
 import type { VectorCode } from './types/VectorCodes';
@@ -164,13 +164,13 @@ export function parseElements(text: Readonly<string>) {
 
   const elementTable = {
     periapsis: parseEphemerisTable(substr, 'QR') * KM_TO_M,
-    inclination: parseEphemerisTable(substr, 'IN'),
-    longitudeOfAscendingNode: parseEphemerisTable(substr, 'OM'),
-    argumentOfPeriapsis: parseEphemerisTable(substr, 'W'),
+    inclination: parseEphemerisTable(substr, 'IN') * DEG_TO_RADS,
+    longitudeOfAscendingNode: parseEphemerisTable(substr, 'OM') * DEG_TO_RADS,
+    argumentOfPeriapsis: parseEphemerisTable(substr, 'W') * DEG_TO_RADS,
     timeOfPeriapsis: parseEphemerisTable(substr, 'Tp'),
-    meanMotion: parseEphemerisTable(substr, 'N'),
-    meanAnomaly: parseEphemerisTable(substr, 'MA'),
-    trueAnomaly: parseEphemerisTable(substr, 'TA'),
+    meanMotion: parseEphemerisTable(substr, 'N') * DEG_TO_RADS,
+    meanAnomaly: parseEphemerisTable(substr, 'MA') * DEG_TO_RADS,
+    trueAnomaly: parseEphemerisTable(substr, 'TA') * DEG_TO_RADS,
     apoapsis: parseEphemerisTable(substr, 'AD') * KM_TO_M,
     siderealOrbitPeriod: parseEphemerisTable(substr, 'PR'),
 
