@@ -38,17 +38,19 @@ const TimescaleDisplay = () => {
     updateText.current();
   }, []);
 
-  const handleClick = useCallback(() => {}, []);
+  const handleClick = useCallback(() => {
+    timeActor.send({ type: 'INCREMENT_TIMESCALE_UNIT' });
+  }, [timeActor]);
 
   return (
     <span className="w-min-fit flex flex-row justify-center whitespace-nowrap text-white">
       <span ref={timescaleSpanRef} />
-      &nbsp;
       <span
         ref={unitSpanRef}
-        className="pointer-events-auto rounded-md border-2 border-muted bg-opacity-20 px-1 transition-colors hover:border-gray-800 hover:bg-gray-500"
+        className="pointer-events-auto mx-[1px] rounded-md border-2 border-muted bg-opacity-20 px-1 transition-colors hover:border-gray-800 hover:bg-gray-500"
+        onClick={handleClick}
       />
-      &nbsp;{'/ Second'}
+      {'/ Second'}
     </span>
   );
 };

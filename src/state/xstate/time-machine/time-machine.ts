@@ -1,4 +1,5 @@
-import { J2000, TIME_MULT } from '@/constants/constants';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { J2000 } from '@/constants/constants';
 import { addSeconds } from 'date-fns';
 import { assign, createMachine } from 'xstate';
 
@@ -6,11 +7,18 @@ const MIN_TIMESCALE = -100;
 const MAX_TIMESCALE = 100;
 
 export enum TimeUnit {
-  Second = 1,
-  Minute = 60,
-  Hour = 3600,
-  Day = 86400,
+  Second,
+  Minute,
+  Hour,
+  Day,
 }
+
+const TimeUnitMap: ReadonlyMap<TimeUnit, number> = new Map<TimeUnit, number>([
+  [TimeUnit.Second, 1],
+  [TimeUnit.Minute, 60],
+  [TimeUnit.Hour, 3600],
+  [TimeUnit.Day, 86400],
+]);
 
 type Context = {
   timeElapsed: number;
@@ -32,6 +40,8 @@ type Events =
   | { type: 'DECREMENT_TIMESCALE' }
   | { type: 'SET_TIMESCALE'; timescale: number }
   | { type: 'SET_TIMESCALE_UNIT'; timescaleUnit: number }
+  | { type: 'INCREMENT_TIMESCALE_UNIT' }
+  | { type: 'DECREMENT_TIMESCALE_UNIT' }
   | { type: 'PAUSE' }
   | { type: 'UNPAUSE' }
   | { type: 'ADVANCE_TIME'; deltaTime: number }; // Advances time by a specific amount, no time scaling.
@@ -68,6 +78,15 @@ export const timeMachine = createMachine(
       SET_TIMESCALE: {
         cond: { type: 'validateTimescale' },
         actions: ['setTimescale'],
+      },
+      SET_TIMESCALE_UNIT: {
+        actions: ['setTimescaleUnit'],
+      },
+      INCREMENT_TIMESCALE_UNIT: {
+        actions: ['incrementTimescaleUnit'],
+      },
+      DECREMENT_TIMESCALE_UNIT: {
+        actions: ['decrementTimescaleUnit'],
       },
       ADVANCE_TIME: {
         actions: ['advanceTime', 'updateDate'],
@@ -108,13 +127,33 @@ export const timeMachine = createMachine(
       setTimescale: assign({
         timescale: (_, { timescale }) => timescale,
       }),
+      setTimescaleUnit: assign({
+        timescaleUnit: (_, event) => event.timescaleUnit,
+      }),
+      incrementTimescaleUnit: assign({
+        timescaleUnit: ({ timescaleUnit }, event) => {
+          const index = (timescaleUnit + 1) % 4;
+          const key = TimeUnit[index];
+          /** @ts-ignore */
+          return key ? (TimeUnit[key] as TimeUnit) : timescaleUnit;
+        },
+      }),
+      decrementTimescaleUnit: assign({
+        timescaleUnit: ({ timescaleUnit }, event) => {
+          const index = (timescaleUnit - 1) % 4;
+          const key = TimeUnit[index];
+          /** @ts-ignore */
+          return key ? (TimeUnit[key] as TimeUnit) : timescaleUnit;
+        },
+      }),
 
       updateTime: assign({
         timeElapsed: (
           { timeElapsed, timescale, timescaleUnit },
           { deltaTime }
         ) => {
-          const scaledDelta = deltaTime * timescale * timescaleUnit;
+          const scaledDelta =
+            deltaTime * timescale * TimeUnitMap.get(timescaleUnit)!;
           return timeElapsed + scaledDelta;
         },
       }),
