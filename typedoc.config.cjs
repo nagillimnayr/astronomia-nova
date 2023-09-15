@@ -1,7 +1,10 @@
 /** @type {import('typedoc').TypeDocOptions} */
 module.exports = {
   name: 'Astronomia Nova',
-  entryPoints: ['./src/'],
+  entryPoints: [
+    './src/components/canvas/body/',
+    './src/components/canvas/orbit/',
+  ],
   entryPointStrategy: 'Resolve',
   readme: './README.md',
   out: './docs/',
