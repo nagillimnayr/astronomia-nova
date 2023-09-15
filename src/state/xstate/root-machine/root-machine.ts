@@ -118,10 +118,16 @@ export const rootMachine = createMachine(
           const timeActor = context.timeActor.getSnapshot()!;
           return timeActor.matches('unpaused');
         },
-        actions: ['updateTimeActor', 'updateKeplerTreeActor'],
+        actions: [
+          'updateTimeActor',
+          // 'updateKeplerTreeActor'
+        ],
       },
       ADVANCE_TIME: {
-        actions: ['advanceTimeActor', 'advanceKeplerTreeActor'],
+        actions: [
+          'advanceTimeActor',
+          // 'advanceKeplerTreeActor'
+        ],
       },
       ADVANCE_DAY: {
         cond: ({ cameraActor }) => {
@@ -141,7 +147,8 @@ export const rootMachine = createMachine(
         ({ timeActor }) => timeActor,
         (_, { deltaTime }) => ({ type: 'UPDATE', deltaTime })
       ),
-      // updateKeplerTreeActor: send(
+      // updateKeplerTreeActor: sendTo(
+      //   ({ keplerTreeActor }) => keplerTreeActor,
       //   (context, { deltaTime }) => {
       //     // Scale deltaTime and send it to keplerTreeActor.
       //     const timeActor = context.timeActor.getSnapshot()!;
@@ -150,37 +157,25 @@ export const rootMachine = createMachine(
       //       type: 'UPDATE',
       //       deltaTime: scaledDelta,
       //     };
-      //   },
-      //   { to: (context) => context.keplerTreeActor }
+      //   }
       // ),
-      updateKeplerTreeActor: sendTo(
-        ({ keplerTreeActor }) => keplerTreeActor,
-        (context, { deltaTime }) => {
-          // Scale deltaTime and send it to keplerTreeActor.
-          const timeActor = context.timeActor.getSnapshot()!;
-          const scaledDelta = deltaTime * timeActor.context.timescale;
-          return {
-            type: 'UPDATE',
-            deltaTime: scaledDelta,
-          };
-        }
-      ),
+
       advanceTimeActor: sendTo(
         ({ timeActor }) => timeActor,
         (_, event) => event
       ),
 
-      advanceKeplerTreeActor: sendTo(
-        ({ keplerTreeActor }) => keplerTreeActor,
-        (context, { deltaTime }) => ({
-          type: 'UPDATE',
-          deltaTime: deltaTime / TIME_MULT, // Since deltaTime is already in
-          // seconds, it must be divided by
-          // TIME_MULT, as it will be
-          // multiplied by TIME_MULT when
-          // passed to the update function.
-        })
-      ),
+      // advanceKeplerTreeActor: sendTo(
+      //   ({ keplerTreeActor }) => keplerTreeActor,
+      //   (context, { deltaTime }) => ({
+      //     type: 'UPDATE',
+      //     deltaTime: deltaTime / TIME_MULT, // Since deltaTime is already in
+      //     // seconds, it must be divided by
+      //     // TIME_MULT, as it will be
+      //     // multiplied by TIME_MULT when
+      //     // passed to the update function.
+      //   })
+      // ),
       advanceDay: (context, { reverse }) => {
         const { cameraActor, keplerTreeActor, timeActor } = context;
         const { focusTarget } = cameraActor.getSnapshot()!.context;

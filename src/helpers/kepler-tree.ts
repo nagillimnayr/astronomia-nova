@@ -20,29 +20,27 @@ export function makePreOrderTreeTraversalFn(
   return (root: KeplerBody, deltaTime: number) => {
     console.assert(root, 'null root');
 
-    // stack to hold the nodes that still need to be visited
+    // Stack to hold the nodes that still need to be visited.
     const stack: KeplerBody[] = [];
 
-    // call the updateFn on the root node
-    // if there are no orbiting bodies, return
+    // Call the updateFn on the root node.
+    // If there are no orbiting bodies, return.
     if (root.orbitingBodies.length === 0) {
       updateFn(root, deltaTime);
       return;
     }
 
-    // push the root into the stack
+    // Push the root into the stack.
     stack.push(root);
 
     while (stack.length !== 0) {
       const node: KeplerBody = stack.pop()!;
       updateFn(node, deltaTime);
-      // Iterate backwards through child nodes and push each of them onto the
-      // stack from right to left.
+      // Iterate backwards through child nodes and push each of them onto the stack from right to left.
       for (let i = node.orbitingBodies.length - 1; i >= 0; i--) {
         stack.push(node.orbitingBodies[i]!);
       }
-      // the last one pushed onto the stack will be popped on the next
-      // iteration of the loop
+      // The last one pushed onto the stack will be popped on the next iteration of the loop.
     }
   };
 }
