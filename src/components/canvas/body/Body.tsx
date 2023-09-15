@@ -1,6 +1,6 @@
 import { KeplerTreeContext } from '@/context/KeplerTreeContext';
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { extend, type Object3DNode } from '@react-three/fiber';
+import { extend, useFrame, type Object3DNode } from '@react-three/fiber';
 import React, {
   forwardRef,
   memo,
@@ -18,11 +18,14 @@ import {
   type Texture,
   type Vector3Tuple,
   MeshBasicMaterial,
+  type ArrowHelper,
+  Vector3,
 } from 'three';
 import { BodyMesh } from './BodyMesh';
 import { KeplerBody } from './kepler-body';
 import { Markers } from '@/components/canvas/markers/Markers';
 import { KeplerOrbit } from '../orbit';
+import { ORIGIN, X_AXIS } from '@/constants';
 
 // Extend KeplerBody so the reconciler is aware of it.
 extend({ KeplerBody });
@@ -158,3 +161,19 @@ export const Body = memo(
     );
   })
 );
+
+const _dir = new Vector3();
+const VelocityArrow = () => {
+  const arrowRef = useRef<ArrowHelper>(null!);
+  const bodyRef = useContext(KeplerTreeContext);
+  useFrame(() => {
+    const body = bodyRef!.current;
+    _dir.copy(body!.velocity).normalize();
+    arrowRef.current.setDirection(_dir);
+  });
+  return (
+    <>
+      <arrowHelper ref={arrowRef} args={[X_AXIS, ORIGIN, 1e8, 'green']} />
+    </>
+  );
+};
