@@ -2,7 +2,6 @@ import { Object3D } from 'three';
 
 /**
  * @description Represents an idealized 2-body orbital system that only considers the gravitational attraction of the central body and neglects perturbing forces.
- * @class KeplerOrbit
  * @extends {Object3D}
  */
 export class KeplerOrbit extends Object3D {

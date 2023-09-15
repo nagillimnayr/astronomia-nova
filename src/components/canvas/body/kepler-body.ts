@@ -4,13 +4,7 @@ import { type MutableRefObject } from 'react';
 import { type Mesh, type Vector3Tuple } from 'three';
 
 /**
- * @module Body
- * @mergeTarget
- */
-
-/**
  * @description Class representing astronomical bodies, such as stars, planets, dwarf planets.
- * @class KeplerBody
  * @extends {DynamicBody}
  */
 export class KeplerBody extends DynamicBody {
