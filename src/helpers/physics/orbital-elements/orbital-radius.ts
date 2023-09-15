@@ -1,8 +1,7 @@
-import { degToRad } from 'three/src/math/MathUtils';
 import { getSemiLatusRectumFromEccentricity } from './axes/semi-latus-rectum';
 
 export function getRadiusAtTrueAnomaly(
-  trueAnomaly: number,
+  trueAnomaly: number, // Radians.
   semiMajorAxis: number,
   eccentricity: number
 ) {
@@ -12,8 +11,5 @@ export function getRadiusAtTrueAnomaly(
     semiMajorAxis,
     eccentricity
   );
-  const radius =
-    semiLatusRectum / (1 + eccentricity * Math.cos(degToRad(trueAnomaly)));
-
-  return radius;
+  return semiLatusRectum / (1 + eccentricity * Math.cos(trueAnomaly));
 }
