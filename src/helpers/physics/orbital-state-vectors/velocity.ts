@@ -9,9 +9,6 @@ import { GRAV_CONST } from '@/constants';
  * $$ \displaystyle |\vec{v}| = \sqrt{GM \left( \frac{2}{r} - \frac{1}{a}
  *   \right)} $$
  *
- * @author Ryan Milligan
- * @date 26/06/2023
- * @export
  * @param {number} radius
  * @param {number} centralMass
  * @param {number} semiMajorAxis
@@ -38,7 +35,6 @@ export function getOrbitalSpeedFromRadius(
  *
  * @description
  * https://orbital-mechanics.space/classical-orbital-elements/perifocal-frame.html#equation-eq-perifocal-simplified-velocity-vector#equation-eq-perifocal-simplified-velocity-vector
- *   The velocity is the derivative of the position.
  *
  * @export
  * @param {number} trueAnomaly in radians.
@@ -56,5 +52,21 @@ export function getVelocityDirectionFromOrbitalElements(
 
   // Swizzle the vector so that it is in the XZ plane.
   outVector.set(vx, 0, -vy);
-  return outVector.normalize();
+  // return outVector.normalize();
+  return outVector;
+}
+
+export function computeVelocityVector(
+  trueAnomaly: number, // Radians.
+  eccentricity: number,
+  centralMass: number,
+  specificAngularMomentum: number,
+  outVector: Vector3
+) {
+  const vx = -Math.sin(trueAnomaly);
+  const vy = eccentricity + Math.cos(trueAnomaly);
+  outVector
+    .set(vx, 0, -vy)
+    .multiplyScalar((GRAV_CONST * centralMass) / specificAngularMomentum);
+  return outVector;
 }
