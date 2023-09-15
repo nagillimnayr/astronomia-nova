@@ -3,6 +3,7 @@ import { Object3D } from 'three';
 import { type KeplerBody } from '../body';
 import {
   getPositionAtEccentricAnomaly,
+  getPositionAtTrueAnomaly,
   getPositionFromRadius,
 } from '@/helpers/physics/orbital-state-vectors/position';
 import { calculateTrueAnomalyFromEccentricAnomaly } from '@/helpers/physics/orbital-elements/anomalies/true-anomaly';
@@ -37,6 +38,8 @@ export class KeplerOrbit extends Object3D {
   private _meanAnomaly = 0;
   private _eccentricAnomaly = 0;
   private _trueAnomaly = 0;
+
+  private _specificAngularMomentum = 0;
 
   private _orbitingBody: KeplerBody = null!;
   private _centralBody: KeplerBody = null!;
@@ -155,13 +158,22 @@ export class KeplerOrbit extends Object3D {
       this._eccentricAnomaly,
       this._eccentricity
     );
-    getPositionAtEccentricAnomaly(
+    // getPositionAtEccentricAnomaly(
+    //   this._eccentricAnomaly,
+    //   this._semiMajorAxis,
+    //   this._eccentricity,
+    //   this._orbitingBody.position
+    // );
+    const radius = getRadiusAtTrueAnomaly(
+      this._trueAnomaly,
       this._semiMajorAxis,
-      this._eccentricity,
-      this._eccentricAnomaly,
+      this._eccentricity
+    );
+    getPositionFromRadius(
+      radius,
+      this._trueAnomaly,
       this._orbitingBody.position
     );
-    const radius = this._orbitingBody.position.length();
 
     // Compute the orbital speed.
     const orbitalSpeed = getOrbitalSpeedFromRadius(

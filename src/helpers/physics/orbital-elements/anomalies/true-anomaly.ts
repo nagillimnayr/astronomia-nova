@@ -40,9 +40,16 @@ export function calculateTrueAnomalyFromEccentricAnomaly(
   eccentricAnomaly: number,
   eccentricity: number
 ) {
-  const cosE = Math.cos(eccentricAnomaly);
-  const trueAnomaly = Math.acos(
-    (cosE - eccentricity) / (1 - eccentricity * cosE)
-  );
+  // const cosE = Math.cos(eccentricAnomaly);
+  // const trueAnomaly = (cosE - eccentricity) / (1 - eccentricity * cosE);
+
+  const beta = eccentricity / (1 + Math.sqrt(1 - eccentricity ** 2));
+  const trueAnomaly =
+    eccentricAnomaly +
+    2 *
+      Math.atan(
+        (beta * Math.sin(eccentricAnomaly)) /
+          (1 - beta * Math.cos(eccentricAnomaly))
+      );
   return trueAnomaly;
 }
