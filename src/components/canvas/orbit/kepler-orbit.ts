@@ -1,7 +1,16 @@
 import { getEccentricAnomalyNewtonsMethod } from '@/helpers/physics/orbital-elements/anomalies/eccentric-anomaly';
 import { Object3D } from 'three';
 import { type KeplerBody } from '../body';
-import { getPositionAtEccentricAnomaly } from '@/helpers/physics/orbital-state-vectors/position';
+import {
+  getPositionAtEccentricAnomaly,
+  getPositionFromRadius,
+} from '@/helpers/physics/orbital-state-vectors/position';
+import { calculateTrueAnomalyFromEccentricAnomaly } from '@/helpers/physics/orbital-elements/anomalies/true-anomaly';
+import { getRadiusAtTrueAnomaly } from '@/helpers/physics/orbital-elements/orbital-radius';
+import {
+  getOrbitalSpeedFromRadius,
+  getVelocityDirectionFromOrbitalElements,
+} from '@/helpers/physics/orbital-state-vectors/velocity';
 
 /**
  * @description Represents an idealized 2-body orbital system that only considers the gravitational attraction of the central body and neglects perturbing forces.
@@ -133,10 +142,17 @@ export class KeplerOrbit extends Object3D {
       console.warn('No orbiting body!');
       return;
     }
+    // Compute the mean anomaly.
     this._meanAnomaly =
       this._initialMeanAnomaly + this._meanMotion * timeElapsed;
+    // Compute the eccentric anomaly.
     this._eccentricAnomaly = getEccentricAnomalyNewtonsMethod(
       this._meanAnomaly,
+      this._eccentricity
+    );
+    // Compute the true anomaly.
+    this._trueAnomaly = calculateTrueAnomalyFromEccentricAnomaly(
+      this._eccentricAnomaly,
       this._eccentricity
     );
     getPositionAtEccentricAnomaly(
@@ -145,5 +161,20 @@ export class KeplerOrbit extends Object3D {
       this._eccentricAnomaly,
       this._orbitingBody.position
     );
+    const radius = this._orbitingBody.position.length();
+
+    // Compute the orbital speed.
+    const orbitalSpeed = getOrbitalSpeedFromRadius(
+      radius,
+      this._centralBody.mass,
+      this._semiMajorAxis
+    );
+    getVelocityDirectionFromOrbitalElements(
+      this._trueAnomaly,
+      this.eccentricity,
+      this._orbitingBody.velocity
+    );
+
+    this._orbitingBody.velocity.multiplyScalar(orbitalSpeed);
   }
 }
