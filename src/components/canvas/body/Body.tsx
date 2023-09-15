@@ -22,6 +22,7 @@ import {
 import { BodyMesh } from './BodyMesh';
 import { KeplerBody } from './kepler-body';
 import { Markers } from '@/components/canvas/markers/Markers';
+import { KeplerOrbit } from '../orbit';
 
 // Extend KeplerBody so the reconciler is aware of it.
 extend({ KeplerBody });
@@ -115,6 +116,14 @@ export const Body = memo(
       if (!centralBody) return;
       centralBody.addOrbitingBody(body);
     }, [centralBodyRef]);
+
+    useEffect(() => {
+      const body = bodyRef.current;
+      if (!body) return;
+      const parent = body.parent;
+      if (!(parent instanceof KeplerOrbit)) return;
+      parent.orbitingBody = body;
+    }, []);
 
     return (
       <>
