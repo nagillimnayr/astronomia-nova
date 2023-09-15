@@ -29,3 +29,18 @@ export function getPositionAtTrueAnomaly(
   );
   return getPositionFromRadius(radius, trueAnomaly, outVector);
 }
+
+export function getPositionAtEccentricAnomaly(
+  semiMajorAxis: number,
+  eccentricity: number,
+  eccentricAnomaly: number,
+  outVector: Vector3
+) {
+  const x = semiMajorAxis * (Math.cos(eccentricAnomaly) - eccentricity);
+  const y =
+    semiMajorAxis *
+    Math.sin(eccentricAnomaly) *
+    Math.sqrt(1 - eccentricity ** 2);
+
+  return outVector.set(x, 0, -y);
+}
