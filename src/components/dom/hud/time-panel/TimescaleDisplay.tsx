@@ -6,28 +6,25 @@ const TimescaleDisplay = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
   const timescaleSpanRef = useRef<HTMLSpanElement>(null!);
+  const unitSpanRef = useRef<HTMLSpanElement>(null!);
 
   const updateText = useRef<() => void>(null!);
   updateText.current = useCallback(() => {
     const timescaleSpan = timescaleSpanRef.current;
-    if (!timescaleSpan) return;
+    const unitSpan = unitSpanRef.current;
+    if (!timescaleSpan || !unitSpan) return;
     const { timescale, timescaleUnit } = timeActor.getSnapshot()!.context;
     const plural = Math.abs(timescale) === 1 ? '' : 's';
     const unitStr = TimeUnit[timescaleUnit]; // Reverse mapping to get name of enum.
-    const text = `${timescale.toString()} ${unitStr}${plural} `;
-    timescaleSpan.textContent = text;
+    timescaleSpan.textContent = timescale.toString();
+    unitSpan.textContent = unitStr + plural;
   }, [timeActor]);
 
   // Subscribe to state changes in useEffect so that the component wont rerender on state change, but we can update the view directly.
   useEffect(() => {
     const subscription = timeActor.subscribe((state) => {
       const event = state.event.type;
-      if (
-        event !== 'DECREMENT_TIMESCALE' &&
-        event !== 'INCREMENT_TIMESCALE' &&
-        event !== 'SET_TIMESCALE' &&
-        event !== 'SET_TIMESCALE_UNIT'
-      ) {
+      if (event === 'UPDATE') {
         return;
       }
       updateText.current();
@@ -41,9 +38,16 @@ const TimescaleDisplay = () => {
     updateText.current();
   }, []);
 
+  const handleClick = useCallback(() => {}, []);
+
   return (
     <span className="w-min-fit flex flex-row justify-center whitespace-nowrap text-white">
       <span ref={timescaleSpanRef} />
+      &nbsp;
+      <span
+        ref={unitSpanRef}
+        className="pointer-events-auto rounded-md border-2 border-muted bg-opacity-20 px-1 transition-colors hover:border-gray-800 hover:bg-gray-500"
+      />
       &nbsp;{'/ Second'}
     </span>
   );
