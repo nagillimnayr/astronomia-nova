@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { J2000 } from '@/constants/constants';
-import { addSeconds } from 'date-fns';
+import { addSeconds, differenceInSeconds } from 'date-fns';
 import { assign, createMachine } from 'xstate';
 
 const MIN_TIMESCALE = -100;
@@ -44,7 +44,8 @@ type Events =
   | { type: 'DECREMENT_TIMESCALE_UNIT' }
   | { type: 'PAUSE' }
   | { type: 'UNPAUSE' }
-  | { type: 'ADVANCE_TIME'; deltaTime: number }; // Advances time by a specific amount, no time scaling.
+  | { type: 'ADVANCE_TIME'; deltaTime: number } // Advances time by a specific amount, no time scaling.
+  | { type: 'SET_DATE'; date: Date };
 
 export const timeMachine = createMachine(
   {
@@ -90,6 +91,9 @@ export const timeMachine = createMachine(
       },
       ADVANCE_TIME: {
         actions: ['advanceTime', 'updateDate'],
+      },
+      SET_DATE: {
+        actions: ['setDate'],
       },
     },
 
@@ -169,6 +173,13 @@ export const timeMachine = createMachine(
       advanceTime: assign({
         timeElapsed: ({ timeElapsed }, { deltaTime }) => {
           return timeElapsed + deltaTime;
+        },
+      }),
+      setDate: assign({
+        timeElapsed: ({ refDate }, { date }) => {
+          return differenceInSeconds(date, refDate, {
+            roundingMethod: 'round',
+          });
         },
       }),
 
