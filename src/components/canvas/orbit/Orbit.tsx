@@ -89,9 +89,9 @@ export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
     orbit.getWorldPosition(_pos);
     _pos.add(Z_AXIS);
     orbit.lookAt(_pos);
-    orbit.rotateY(degToRad(longitudeOfAscendingNode));
-    orbit.rotateX(degToRad(inclination));
-    orbit.rotateY(degToRad(argumentOfPeriapsis));
+    orbit.rotateY(longitudeOfAscendingNode);
+    orbit.rotateX(inclination);
+    orbit.rotateY(argumentOfPeriapsis);
   }, [argumentOfPeriapsis, inclination, longitudeOfAscendingNode]);
 
   useEffect(() => {
