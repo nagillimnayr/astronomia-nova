@@ -31,9 +31,9 @@ export function getPositionAtTrueAnomaly(
 }
 
 export function getPositionAtEccentricAnomaly(
+  eccentricAnomaly: number,
   semiMajorAxis: number,
   eccentricity: number,
-  eccentricAnomaly: number,
   outVector: Vector3
 ) {
   const x = semiMajorAxis * (Math.cos(eccentricAnomaly) - eccentricity);
