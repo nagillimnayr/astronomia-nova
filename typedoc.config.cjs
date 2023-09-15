@@ -7,7 +7,7 @@ module.exports = {
   ],
   entryPointStrategy: 'Resolve',
   readme: './README.md',
-  out: './docs/',
+  out: './src/pages/info/docs/',
   tsconfig: 'tsconfig.json',
   compilerOptions: {
     tsx: 'react',
