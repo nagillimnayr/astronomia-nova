@@ -190,7 +190,7 @@ export const rootMachine = createMachine(
         // must be divided by TIME_MULT, as it will be
         // multiplied by TIME_MULT when passed to the
         // update function.
-        keplerTreeActor.send({ type: 'UPDATE', deltaTime });
+        // keplerTreeActor.send({ type: 'UPDATE', deltaTime });
       },
       logTimeActor: log((context) => context.timeActor),
       logKeplerTreeActor: log((context) => context.keplerTreeActor),
