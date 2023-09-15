@@ -4,11 +4,14 @@ import { ObservationPoint } from '@/components/canvas/surface-view/observation-p
 import { VRSurfaceDialog } from '@/components/canvas/vr/vr-hud/vr-details-panel/VRSurfaceDialog';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useFrame } from '@react-three/fiber';
-import React, { type PropsWithChildren } from 'react';
+import { fromUnixTime } from 'date-fns';
+import React, { useEffect, type PropsWithChildren } from 'react';
 
 const Simulation = ({ children }: PropsWithChildren) => {
   const rootActor = MachineContext.useActorRef();
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const { cameraActor, timeActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
 
   useFrame((_, delta) => {
     // Update simulation.
@@ -16,6 +19,12 @@ const Simulation = ({ children }: PropsWithChildren) => {
     // Update camera.
     cameraActor.send({ type: 'UPDATE', deltaTime: delta });
   }, -10);
+
+  useEffect(() => {
+    const date = new Date();
+    console.log('current date: ', date);
+    timeActor.send({ type: 'SET_DATE', date });
+  }, [timeActor]);
 
   return (
     <>
