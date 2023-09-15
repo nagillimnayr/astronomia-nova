@@ -48,13 +48,12 @@ export function getOrbitalSpeedFromRadius(
  * @returns {Vector3} {Vector3}
  */
 export function getVelocityDirectionFromOrbitalElements(
-  trueAnomaly: number,
+  trueAnomaly: number, // Radians.
   eccentricity: number,
   outVector: Vector3
 ): Vector3 {
-  const trueAnomalyRadians = trueAnomaly;
-  const vx = -Math.sin(trueAnomalyRadians);
-  const vy = eccentricity + Math.cos(trueAnomalyRadians);
+  const vx = -Math.sin(trueAnomaly);
+  const vy = eccentricity + Math.cos(trueAnomaly);
 
   // Swizzle the vector so that it is in the XZ plane.
   outVector.set(vx, 0, -vy);
