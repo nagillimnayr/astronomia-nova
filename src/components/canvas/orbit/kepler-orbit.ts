@@ -1,4 +1,7 @@
+import { getEccentricAnomalyNewtonsMethod } from '@/helpers/physics/orbital-elements/anomalies/eccentric-anomaly';
 import { Object3D } from 'three';
+import { type KeplerBody } from '../body';
+import { getPositionAtEccentricAnomaly } from '@/helpers/physics/orbital-state-vectors/position';
 
 /**
  * @description Represents an idealized 2-body orbital system that only considers the gravitational attraction of the central body and neglects perturbing forces.
@@ -18,10 +21,19 @@ export class KeplerOrbit extends Object3D {
   private _argumentOfPeriapsis = 0;
 
   private _orbitalPeriod = 0;
+  private _meanMotion = 0;
+  /** The initial mean anomaly at the reference epoch. */
+  private _initialMeanAnomaly = 0;
+  /** Current mean anomaly. */
+  private _meanAnomaly = 0;
+  private _eccentricAnomaly = 0;
+  private _trueAnomaly = 0;
+
+  private _orbitingBody: KeplerBody = null!;
+  private _centralBody: KeplerBody = null!;
 
   /**
    * Creates an instance of KeplerOrbit.
-   * @memberof KeplerOrbit
    */
   constructor() {
     super();
@@ -87,5 +99,51 @@ export class KeplerOrbit extends Object3D {
   }
   set orbitalPeriod(orbitalPeriod: number) {
     this._orbitalPeriod = orbitalPeriod;
+  }
+
+  get meanMotion() {
+    return this._meanMotion;
+  }
+  set meanMotion(meanMotion: number) {
+    this._meanMotion = meanMotion;
+  }
+
+  get initialMeanAnomaly() {
+    return this._initialMeanAnomaly;
+  }
+  set initialMeanAnomaly(initialMeanAnomaly: number) {
+    this._initialMeanAnomaly = initialMeanAnomaly;
+  }
+
+  get orbitingBody() {
+    return this._orbitingBody;
+  }
+  set orbitingBody(body: KeplerBody) {
+    this._orbitingBody = body;
+  }
+  get centralBody() {
+    return this._centralBody;
+  }
+  set centralBody(body: KeplerBody) {
+    this._centralBody = body;
+  }
+
+  updateOrbitingBody(timeElapsed: number) {
+    if (!this._orbitingBody) {
+      console.warn('No orbiting body!');
+      return;
+    }
+    this._meanAnomaly =
+      this._initialMeanAnomaly + this._meanMotion * timeElapsed;
+    this._eccentricAnomaly = getEccentricAnomalyNewtonsMethod(
+      this._meanAnomaly,
+      this._eccentricity
+    );
+    getPositionAtEccentricAnomaly(
+      this._semiMajorAxis,
+      this._eccentricity,
+      this._eccentricAnomaly,
+      this._orbitingBody.position
+    );
   }
 }

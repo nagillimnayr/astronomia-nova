@@ -7,10 +7,10 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { extend, type Object3DNode } from '@react-three/fiber';
 import { type PropsWithChildren, useContext, useEffect, useRef } from 'react';
 import { type Texture, Vector3 } from 'three';
-import { degToRad } from 'three/src/math/MathUtils';
 import { Body } from '@/components/canvas/body';
 import { Trajectory } from './Trajectory';
-import { Ephemerides } from '@/helpers/horizons/types/Ephemerides';
+import { type Ephemerides } from '@/helpers/horizons/types/Ephemerides';
+import { useRootStore } from '@/state/root-store';
 
 const _pos = new Vector3();
 
@@ -36,7 +36,9 @@ export type OrbitProps = PropsWithChildren & {
  * @constructor
  */
 export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
-  const { mapActor } = MachineContext.useSelector(({ context }) => context);
+  const { mapActor, timeActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
 
   // Refs.
   const orbitRef = useRef<KeplerOrbit | null>(null);
@@ -58,6 +60,9 @@ export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
     longitudeOfAscendingNode,
     argumentOfPeriapsis,
     inclination,
+
+    meanAnomaly,
+    meanMotion,
   } = elementTable;
 
   const { position: initialPosition, velocity: initialVelocity } = vectorTable;
@@ -101,6 +106,26 @@ export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
     mapActor.send({ type: 'ADD_ORBIT', orbit }); // Add to map.
   }, [mapActor]);
 
+  useEffect(() => {
+    const orbit = orbitRef.current;
+    if (!orbit || !centralBodyRef) return;
+    const centralBody = centralBodyRef.current;
+    if (!centralBody) return;
+    orbit.centralBody = centralBody;
+  }, [centralBodyRef]);
+
+  useEffect(() => {
+    const subscription = timeActor.subscribe((state) => {
+      const orbit = orbitRef.current;
+      if (!orbit) return;
+      if (state.matches('paused')) return;
+      const { timeElapsed } = state.context;
+      orbit.updateOrbitingBody(timeElapsed);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [timeActor]);
+
   return (
     <keplerOrbit
       name={name}
@@ -114,6 +139,8 @@ export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
       longitudeOfAscendingNode={longitudeOfAscendingNode}
       argumentOfPeriapsis={argumentOfPeriapsis}
       orbitalPeriod={siderealOrbitPeriod}
+      initialMeanAnomaly={meanAnomaly}
+      meanMotion={meanMotion}
     >
       <Body
         ref={orbitingBodyRef}
