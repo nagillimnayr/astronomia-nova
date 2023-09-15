@@ -1,6 +1,10 @@
-import { computeVectorTable, getEphemerides, getPhysicalData } from './getEphemerides';
+import {
+  computeVectorTable,
+  getEphemerides,
+  getPhysicalData,
+} from './getEphemerides';
 import { saveEphemerides, savePhysicalData } from './saveEphemerides';
-import { Ephemerides } from './types/Ephemerides';
+import { type Ephemerides } from './types/Ephemerides';
 
 const SUN_CENTER = '500@10';
 // const SOLAR_SYSTEM_BARYCENTER = '500@0';
@@ -42,8 +46,8 @@ try {
     );
     const ephemerides: Ephemerides = {
       ...rawEphemerides,
-      vectorTable
-    }
+      vectorTable,
+    };
     await saveEphemerides(ephemerides);
   }
 } catch (e) {

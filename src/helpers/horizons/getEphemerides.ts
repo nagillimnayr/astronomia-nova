@@ -7,12 +7,12 @@ import {
 } from './parseEphemerides';
 import { Vector3 } from 'three';
 import { type ElementTable } from './types/ElementTable';
-import { getRadiusAtTrueAnomaly } from '../physics/orbital-elements/orbital-radius';
-import { getPositionFromRadius } from '../physics/orbital-state-vectors/position';
+import { getRadiusAtTrueAnomaly } from '@/helpers/physics/orbital-elements/orbital-radius';
+import { getPositionFromRadius } from '@/helpers/physics/orbital-state-vectors/position';
 import {
   getOrbitalSpeedFromRadius,
   getVelocityDirectionFromOrbitalElements,
-} from '../physics/orbital-state-vectors/velocity';
+} from '@/helpers/physics/orbital-state-vectors/velocity';
 import { type VectorTable } from './types/VectorTable';
 
 const horizonsURL: Readonly<string> =

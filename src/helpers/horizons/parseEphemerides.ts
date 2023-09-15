@@ -2,17 +2,14 @@ import { DAY, DEG_TO_RADS, TWO_PI } from '@/constants';
 import { type PhysicalDataTable } from '@/helpers/horizons/types/PhysicalData';
 import type { ElementCode } from './types/ElementCodes';
 import type { VectorCode } from './types/VectorCodes';
-import { getSemiLatusRectumFromEccentricity } from '../physics/orbital-elements/axes/semi-latus-rectum';
-import { getSemiMinorAxisFromSemiLatusRectum } from '../physics/orbital-elements/axes/semi-minor-axis';
-import { getLinearEccentricityFromAxes } from '../physics/orbital-elements/linear-eccentricity';
+import { getSemiLatusRectumFromEccentricity } from '@/helpers/physics/orbital-elements/axes/semi-latus-rectum';
+import { getSemiMinorAxisFromSemiLatusRectum } from '@/helpers/physics/orbital-elements/axes/semi-minor-axis';
+import { getLinearEccentricityFromAxes } from '@/helpers/physics/orbital-elements/linear-eccentricity';
 
 const KM_TO_M = 1000;
 
 /**
- * @description
- * @author Ryan Milligan
- * @date 08/07/2023
- * @export
+ *
  * @param {string} text
  * @param {(Readonly<ElementCode | VectorCode>)} code
  * @returns {*}
