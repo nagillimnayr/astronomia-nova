@@ -1,15 +1,19 @@
-/**
- * @module getEphemerides
- */
 import { z } from 'zod';
-import { parseElements, parseEphemerisDate, parseEphemerisName, parsePhysicalData } from './parseEphemerides';
-import { TWO_PI } from '@/constants';
+import {
+  parseElements,
+  parseEphemerisDate,
+  parseEphemerisName,
+  parsePhysicalData,
+} from './parseEphemerides';
 import { Vector3 } from 'three';
-import { ElementTable } from './types/ElementTable';
+import { type ElementTable } from './types/ElementTable';
 import { getRadiusAtTrueAnomaly } from '../physics/orbital-elements/orbital-radius';
 import { getPositionFromRadius } from '../physics/orbital-state-vectors/position';
-import { getOrbitalSpeedFromRadius, getVelocityDirectionFromOrbitalElements } from '../physics/orbital-state-vectors/velocity';
-import { VectorTable } from './types/VectorTable';
+import {
+  getOrbitalSpeedFromRadius,
+  getVelocityDirectionFromOrbitalElements,
+} from '../physics/orbital-state-vectors/velocity';
+import { type VectorTable } from './types/VectorTable';
 
 const horizonsURL: Readonly<string> =
   'https://ssd.jpl.nasa.gov/api/horizons.api';
@@ -32,7 +36,6 @@ type EphemerisType = 'ELEMENTS' | 'VECTORS' | 'PHYSICAL';
 
 const _pos = new Vector3();
 const _vel = new Vector3();
-
 
 async function fetchEphemerides(
   id: string,
@@ -92,15 +95,14 @@ export async function getPhysicalData(
 
   // Parse physical data.
   const physicalDataTable = parsePhysicalData(text);
- 
+
   const name = parseEphemerisName(text, 'Target');
 
   return {
     id,
     name,
-    table: physicalDataTable
-  }
-
+    table: physicalDataTable,
+  };
 }
 
 export async function getEphemerides(
@@ -108,7 +110,6 @@ export async function getEphemerides(
   centerId = DEFAULT_CENTER, // Horizons' id for central body.
   referencePlane: ReferencePlane = 'ECLIPTIC'
 ) {
-  
   // Get the raw text data from the Horizons API.
   const text = await fetchEphemerides(id, centerId, referencePlane, 'ELEMENTS');
 
@@ -131,13 +132,11 @@ export async function getEphemerides(
   };
 }
 
-
 export function computeVectorTable(
   elementTable: ElementTable,
   centralMass: number
 ) {
-
-  const { semiMajorAxis, eccentricity, trueAnomaly} = elementTable;
+  const { semiMajorAxis, eccentricity, trueAnomaly } = elementTable;
 
   const radius = getRadiusAtTrueAnomaly(
     trueAnomaly,
@@ -163,8 +162,7 @@ export function computeVectorTable(
   const vectorTable: VectorTable = {
     position: _pos.toArray(),
     velocity: _vel.toArray(),
-  } ;
-
+  };
 
   return vectorTable;
 }
