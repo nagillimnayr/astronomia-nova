@@ -1,9 +1,5 @@
 import { DAY, TWO_PI } from '@/constants';
-import type { ElementTable } from '@/helpers/horizons/types/ElementTable';
-import {
-  type PhysicalData,
-  type PhysicalDataTable,
-} from '@/helpers/horizons/types/PhysicalData';
+import { type PhysicalDataTable } from '@/helpers/horizons/types/PhysicalData';
 import type { ElementCode } from './types/ElementCodes';
 import type { VectorCode } from './types/VectorCodes';
 import { getSemiLatusRectumFromEccentricity } from '../physics/orbital-elements/axes/semi-latus-rectum';
@@ -182,11 +178,9 @@ export function parseElements(text: Readonly<string>) {
     semiMinorAxis,
     semiLatusRectum,
     eccentricity,
-    linearEccentricity
-
+    linearEccentricity,
   };
   return elementTable;
-
 }
 
 export function parsePhysicalData(text: Readonly<string>) {
@@ -233,7 +227,6 @@ export function parsePhysicalData(text: Readonly<string>) {
     throw new Error('invalid id/name');
   }
   return table;
- 
 }
 
 function capturePhysicalProperty(text: string, property: string) {
