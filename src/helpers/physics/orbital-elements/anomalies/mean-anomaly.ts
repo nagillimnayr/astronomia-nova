@@ -1,16 +1,7 @@
-/**
- * @summary
- * @description
- * $$ \displaystyle M = l - \varpi $$
- *
- * @param {number} meanLongitude (deg)
- * @param {number} longitudeOfPeriapsis (deg)
- * @returns {*} {number} meanAnomaly
- */
-export const getMeanAnomalyFromMeanLongitude = (
-  meanLongitude: number,
-  longitudeOfPeriapsis: number
+export const computeMeanAnomalyFromMeanMotion = (
+  meanMotion: number,
+  timeElapsed: number
 ) => {
-  const meanAnomaly = meanLongitude - longitudeOfPeriapsis;
+  const meanAnomaly = meanMotion * timeElapsed;
   return meanAnomaly;
 };
