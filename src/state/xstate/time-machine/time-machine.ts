@@ -5,6 +5,13 @@ import { assign, createMachine } from 'xstate';
 const MIN_TIMESCALE = -100;
 const MAX_TIMESCALE = 100;
 
+export enum TimeUnit {
+  Second = 1,
+  Minute = 60,
+  Hour = 3600,
+  Day = 86400,
+}
+
 type Context = {
   timeElapsed: number;
   previousTime: number;
@@ -13,6 +20,7 @@ type Context = {
   date: Date;
   minTimescale: number;
   maxTimescale: number;
+  timescaleUnit: TimeUnit;
 };
 
 type Events =
@@ -23,10 +31,10 @@ type Events =
   | { type: 'INCREMENT_TIMESCALE' }
   | { type: 'DECREMENT_TIMESCALE' }
   | { type: 'SET_TIMESCALE'; timescale: number }
+  | { type: 'SET_TIMESCALE_UNIT'; timescaleUnit: number }
   | { type: 'PAUSE' }
   | { type: 'UNPAUSE' }
-  | { type: 'ADVANCE_TIME'; deltaTime: number }; // Advances time by a specific
-// amount, no time scaling.
+  | { type: 'ADVANCE_TIME'; deltaTime: number }; // Advances time by a specific amount, no time scaling.
 
 export const timeMachine = createMachine(
   {
@@ -45,6 +53,7 @@ export const timeMachine = createMachine(
       date: J2000,
       minTimescale: MIN_TIMESCALE,
       maxTimescale: MAX_TIMESCALE,
+      timescaleUnit: TimeUnit.Second,
     }),
 
     on: {
@@ -101,8 +110,11 @@ export const timeMachine = createMachine(
       }),
 
       updateTime: assign({
-        timeElapsed: ({ timeElapsed, timescale }, { deltaTime }) => {
-          const scaledDelta = deltaTime * timescale * TIME_MULT;
+        timeElapsed: (
+          { timeElapsed, timescale, timescaleUnit },
+          { deltaTime }
+        ) => {
+          const scaledDelta = deltaTime * timescale * timescaleUnit;
           return timeElapsed + scaledDelta;
         },
       }),
