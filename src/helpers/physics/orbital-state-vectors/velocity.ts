@@ -42,7 +42,7 @@ export function getOrbitalSpeedFromRadius(
  *   The velocity is the derivative of the position.
  *
  * @export
- * @param {number} trueAnomaly
+ * @param {number} trueAnomaly in radians.
  * @param {number} eccentricity
  * @param {Vector3} outVector
  * @returns {Vector3} {Vector3}
@@ -52,7 +52,7 @@ export function getVelocityDirectionFromOrbitalElements(
   eccentricity: number,
   outVector: Vector3
 ): Vector3 {
-  const trueAnomalyRadians = degToRad(trueAnomaly);
+  const trueAnomalyRadians = trueAnomaly;
   const vx = -Math.sin(trueAnomalyRadians);
   const vy = eccentricity + Math.cos(trueAnomalyRadians);
 
