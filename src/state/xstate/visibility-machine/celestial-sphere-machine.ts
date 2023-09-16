@@ -30,7 +30,12 @@ export const celestialSphereMachine = createMachine({
     // Spawn child actors.
     assign({
       constellations: () =>
-        spawn(opacityMachine, { name: 'constellations', sync: true }),
+        spawn(
+          opacityMachine.withContext(() => ({
+            opacity: 0.1,
+          })),
+          { name: 'constellations', sync: true }
+        ),
       celestialGrid: () =>
         spawn(opacityMachine, { name: 'celestialGrid', sync: true }),
     }),
