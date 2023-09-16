@@ -21,9 +21,7 @@ const Simulation = ({ children }: PropsWithChildren) => {
   }, -10);
 
   useEffect(() => {
-    const date = new Date();
-    console.log('current date: ', date);
-    timeActor.send({ type: 'SET_DATE', date });
+    timeActor.send({ type: 'SET_DATE_TO_NOW' });
   }, [timeActor]);
 
   return (
