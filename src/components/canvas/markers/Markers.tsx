@@ -89,9 +89,9 @@ export const Markers = ({ name, bodyRef, meanRadius }: Props) => {
     if (!bodyRef.current) {
       return 0;
     }
-    const log = Math.log(bodyRef.current.meanRadius);
-    //  console.log(bodyRef.current.name, logScale)
-    return log / 20;
+    const log = Math.log(bodyRef.current.meanRadius / 1e4);
+    console.log(bodyRef.current.name, log);
+    return log / 10;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bodyRef, bodyRef.current]);
 
