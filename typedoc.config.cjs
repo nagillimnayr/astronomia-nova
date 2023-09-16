@@ -4,6 +4,9 @@ module.exports = {
   entryPoints: [
     './src/components/canvas/body/',
     './src/components/canvas/orbit/',
+    './src/helpers/physics/orbital-elements/anomalies/eccentric-anomaly.ts',
+    './src/helpers/physics/orbital-elements/anomalies/mean-anomaly.ts',
+    './src/helpers/physics/orbital-elements/anomalies/true-anomaly.ts',
   ],
   entryPointStrategy: 'Resolve',
   readme: './README.md',
