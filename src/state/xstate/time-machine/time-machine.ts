@@ -45,7 +45,8 @@ type Events =
   | { type: 'PAUSE' }
   | { type: 'UNPAUSE' }
   | { type: 'ADVANCE_TIME'; deltaTime: number } // Advances time by a specific amount, no time scaling.
-  | { type: 'SET_DATE'; date: Date };
+  | { type: 'SET_DATE'; date: Date }
+  | { type: 'SET_DATE_TO_NOW' };
 
 export const timeMachine = createMachine(
   {
@@ -61,11 +62,13 @@ export const timeMachine = createMachine(
       timeElapsed: 0,
       timescale: 1,
       refDate: J2000,
-      date: J2000,
+      date: new Date(),
       minTimescale: MIN_TIMESCALE,
       maxTimescale: MAX_TIMESCALE,
       timescaleUnit: TimeUnit.Second,
     }),
+
+    entry: ['setDateToNow'],
 
     on: {
       INCREMENT_TIMESCALE: {
@@ -93,11 +96,14 @@ export const timeMachine = createMachine(
         actions: ['advanceTime', 'updateDate'],
       },
       SET_DATE: {
-        actions: ['setDate'],
+        actions: ['setDate', 'updateDate'],
+      },
+      SET_DATE_TO_NOW: {
+        actions: ['setDateToNow', 'updateDate'],
       },
     },
 
-    initial: 'paused',
+    initial: 'unpaused',
     states: {
       paused: {
         on: {
@@ -178,6 +184,14 @@ export const timeMachine = createMachine(
       setDate: assign({
         timeElapsed: ({ refDate }, { date }) => {
           return differenceInSeconds(date, refDate, {
+            roundingMethod: 'round',
+          });
+        },
+      }),
+      setDateToNow: assign({
+        timeElapsed: ({ refDate }) => {
+          const now = new Date();
+          return differenceInSeconds(now, refDate, {
             roundingMethod: 'round',
           });
         },
