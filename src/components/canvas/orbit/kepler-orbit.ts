@@ -4,7 +4,7 @@ import { type KeplerBody } from '../body';
 import { getPositionFromRadius } from '@/helpers/physics/orbital-state-vectors/position';
 import { calculateTrueAnomalyFromEccentricAnomaly } from '@/helpers/physics/orbital-elements/anomalies/true-anomaly';
 import { getRadiusAtTrueAnomaly } from '@/helpers/physics/orbital-elements/orbital-radius';
-import { computeMeanAnomalyFromMeanMotion } from '../../../helpers/physics/orbital-elements/anomalies/mean-anomaly';
+import { computeMeanAnomalyFromMeanMotion } from '@/helpers/physics/orbital-elements/anomalies/mean-anomaly';
 import {
   getOrbitalSpeedFromRadius,
   getVelocityDirectionFromOrbitalElements,
