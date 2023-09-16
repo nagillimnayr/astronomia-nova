@@ -2,7 +2,6 @@ import { DIST_MULT, GRAV_CONST } from '@/constants/constants';
 import { Vector3, type Vector3Tuple } from 'three';
 
 /**
- * @description
  * $$ \displaystyle a = \frac{GM}{r^2} = \frac{F_g}{m} $$
  *
  * @param {Vector3} position
