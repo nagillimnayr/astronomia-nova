@@ -1,6 +1,8 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { format } from 'date-fns';
+import { addSeconds, format } from 'date-fns';
 import { useEffect, useRef } from 'react';
+
+const _date = new Date();
 
 const DateDisplay = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
@@ -15,7 +17,7 @@ const DateDisplay = () => {
     const subscription = timeActor.subscribe(({ context }) => {
       if (!hoursRef.current || !dateRef.current) return;
       const { date } = context;
-      hoursRef.current.textContent = format(date, 'hh:mm:ss a');
+      hoursRef.current.textContent = format(date, 'hh:mm:ss a OOOO');
       dateRef.current.textContent = format(date, 'PPP');
     });
 
