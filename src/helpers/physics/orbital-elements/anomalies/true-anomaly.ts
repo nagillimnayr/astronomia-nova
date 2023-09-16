@@ -2,9 +2,7 @@ import { type Vector3 } from 'three';
 import { radToDeg } from 'three/src/math/MathUtils';
 
 /**
- * @description
- * $$ \displaystyle \nu = \arccos{\left(\frac{\vec{r}\cdot\vec{e}}{re}
- *   \right)} $$
+ * $$ \displaystyle \nu = \arccos{\left(\frac{\vec{r}\cdot\vec{e}}{re} \right)} $$
  *
  * @param {Vector3} position
  * @param {Vector3} velocity
@@ -42,9 +40,6 @@ export function calculateTrueAnomalyFromEccentricAnomaly(
   eccentricAnomaly: number,
   eccentricity: number
 ) {
-  // const cosE = Math.cos(eccentricAnomaly);
-  // const trueAnomaly = (cosE - eccentricity) / (1 - eccentricity * cosE);
-
   const beta = eccentricity / (1 + Math.sqrt(1 - eccentricity ** 2));
   const trueAnomaly =
     eccentricAnomaly +
