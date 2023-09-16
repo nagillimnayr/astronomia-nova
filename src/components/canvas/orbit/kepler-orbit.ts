@@ -1,13 +1,10 @@
 import { getEccentricAnomalyNewtonsMethod } from '@/helpers/physics/orbital-elements/anomalies/eccentric-anomaly';
 import { Object3D } from 'three';
 import { type KeplerBody } from '../body';
-import {
-  getPositionAtEccentricAnomaly,
-  getPositionAtTrueAnomaly,
-  getPositionFromRadius,
-} from '@/helpers/physics/orbital-state-vectors/position';
+import { getPositionFromRadius } from '@/helpers/physics/orbital-state-vectors/position';
 import { calculateTrueAnomalyFromEccentricAnomaly } from '@/helpers/physics/orbital-elements/anomalies/true-anomaly';
 import { getRadiusAtTrueAnomaly } from '@/helpers/physics/orbital-elements/orbital-radius';
+import { computeMeanAnomalyFromMeanMotion } from '../../../helpers/physics/orbital-elements/anomalies/mean-anomaly';
 import {
   getOrbitalSpeedFromRadius,
   getVelocityDirectionFromOrbitalElements,
@@ -146,8 +143,11 @@ export class KeplerOrbit extends Object3D {
       return;
     }
     // Compute the mean anomaly.
-    this._meanAnomaly =
-      this._initialMeanAnomaly + this._meanMotion * timeElapsed;
+    this._meanAnomaly = computeMeanAnomalyFromMeanMotion(
+      this._initialMeanAnomaly,
+      this._meanMotion,
+      timeElapsed
+    );
     // Compute the eccentric anomaly.
     this._eccentricAnomaly = getEccentricAnomalyNewtonsMethod(
       this._meanAnomaly,
@@ -158,12 +158,7 @@ export class KeplerOrbit extends Object3D {
       this._eccentricAnomaly,
       this._eccentricity
     );
-    // getPositionAtEccentricAnomaly(
-    //   this._eccentricAnomaly,
-    //   this._semiMajorAxis,
-    //   this._eccentricity,
-    //   this._orbitingBody.position
-    // );
+
     const radius = getRadiusAtTrueAnomaly(
       this._trueAnomaly,
       this._semiMajorAxis,

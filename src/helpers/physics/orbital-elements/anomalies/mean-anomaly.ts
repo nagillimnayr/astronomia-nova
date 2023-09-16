@@ -1,7 +1,9 @@
+/** @module Mean-Anomaly */
+
 export const computeMeanAnomalyFromMeanMotion = (
+  initialMeanAnomaly: number,
   meanMotion: number,
   timeElapsed: number
 ) => {
-  const meanAnomaly = meanMotion * timeElapsed;
-  return meanAnomaly;
+  return initialMeanAnomaly + meanMotion * timeElapsed;
 };
