@@ -30,7 +30,9 @@ export function calculateTrueAnomalyFromStateVectors(
 }
 
 /**
- * $$ \displaystyle \nu = \arccos{\left( \frac{\cos{E}-e}{1-e\cos{E}} \right)} $$
+ * $$ \displaystyle \beta = \frac{e}{1+\sqrt{1-e^2}} $$
+ *
+ * $$ \displaystyle \nu = E - 2\arctan{\left( \frac{\beta\sin{E}}{1-\beta\cos{E}} \right)} $$
  *
  * @param {number} eccentricAnomaly in radians.
  * @param {number} eccentricity
