@@ -14,7 +14,10 @@ export const HOUR = 3600; // Hour in seconds.
 export const YEAR = 360.25; // Year in Days.
 export const TIME_MULT = HOUR;
 // J2000 epoch (January 1st, 2000, 12:00:00pm TT)
-export const J2000: Readonly<Date> = new Date(2000, 0, 1, 12, 0, 0, 0);
+export const J2000: Readonly<Date> = new Date(
+  'January 01, 2000 12:00:00 GMT-0'
+);
+console.log('J2000: ', J2000);
 export const J2000_JD = 2451545.0; // J2000 in Julian Days.
 
 // export const DIST_MULT = 1e10; // Distance multiplier (10 units = 1x10^11m =
