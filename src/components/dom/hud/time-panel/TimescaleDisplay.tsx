@@ -47,7 +47,7 @@ const TimescaleDisplay = () => {
       <span ref={timescaleSpanRef} />
       <span
         ref={unitSpanRef}
-        className="pointer-events-auto mx-[1px] rounded-md border-2 border-muted bg-opacity-20 px-1 transition-colors hover:border-gray-800 hover:bg-gray-500"
+        className="pointer-events-auto mx-[1px] rounded-md border-2 border-muted bg-opacity-20 px-1 transition-colors hover:cursor-pointer hover:border-gray-800 hover:bg-gray-500"
         onClick={handleClick}
       />
       {'/ Second'}
