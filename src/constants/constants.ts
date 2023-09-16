@@ -17,7 +17,6 @@ export const TIME_MULT = HOUR;
 export const J2000: Readonly<Date> = new Date(
   'January 01, 2000 12:00:00 GMT-0'
 );
-console.log('J2000: ', J2000);
 export const J2000_JD = 2451545.0; // J2000 in Julian Days.
 
 // export const DIST_MULT = 1e10; // Distance multiplier (10 units = 1x10^11m =
