@@ -1,3 +1,5 @@
+/** @module Eccentric-Anomaly */
+
 const EPSILON = 1e-12;
 const TOLERANCE = 1e-6;
 const MAX_ITER = 10;
