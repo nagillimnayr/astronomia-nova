@@ -51,7 +51,7 @@ export const SiteHeader = ({ className }: SiteHeaderProps) => {
         </div>
 
         {/** Documentation Link. */}
-        <div className="ml-auto mr-5 flex items-center justify-center transition-colors hover:text-indigo-400">
+        {/* <div className="ml-auto mr-5 flex items-center justify-center transition-colors hover:text-indigo-400">
           <Link
             href={'/info/docs'}
             className="flex items-center justify-between gap-1"
@@ -59,7 +59,7 @@ export const SiteHeader = ({ className }: SiteHeaderProps) => {
             <span>Documentation</span>
             <span className="icon-[mdi--file-document]" />
           </Link>
-        </div>
+        </div> */}
       </header>
     </>
   );
