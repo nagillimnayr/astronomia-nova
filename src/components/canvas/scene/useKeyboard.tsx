@@ -5,7 +5,7 @@ export function useKeyboard() {
   const rootActor = MachineContext.useActorRef();
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
   useEventListener('keydown', (event) => {
-    // console.log(event.code);
+    console.log(event.code);
     // console.log(event);
     switch (event.code) {
       case 'ArrowLeft': {
@@ -22,6 +22,10 @@ export function useKeyboard() {
       }
       case 'Numpad6': {
         rootActor.send({ type: 'ADVANCE_DAY', reverse: false });
+        break;
+      }
+      case 'KeyU': {
+        timeActor.send({ type: 'INCREMENT_TIMESCALE_UNIT' });
         break;
       }
     }
