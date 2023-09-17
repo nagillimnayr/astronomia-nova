@@ -6,8 +6,8 @@ export function useKeyboard() {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
   useEventListener('keydown', (event) => {
     console.log(event.code);
-    // console.log(event);
     switch (event.code) {
+      /** Sidereal Day advancement. */
       case 'ArrowUp': {
         rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
         break;
@@ -24,6 +24,29 @@ export function useKeyboard() {
         rootActor.send({ type: 'ADVANCE_DAY', reverse: false });
         break;
       }
+      /** Increment/decrement timescale. */
+      case 'ArrowLeft': {
+        event.shiftKey
+          ? timeActor.send({ type: 'DECREMENT_TIMESCALE_UNIT' })
+          : timeActor.send({ type: 'DECREMENT_TIMESCALE' });
+        break;
+      }
+      case 'Numpad4': {
+        timeActor.send({ type: 'DECREMENT_TIMESCALE' });
+        break;
+      }
+      case 'ArrowRight': {
+        event.shiftKey
+          ? timeActor.send({ type: 'INCREMENT_TIMESCALE_UNIT' })
+          : timeActor.send({ type: 'INCREMENT_TIMESCALE' });
+        break;
+      }
+      case 'Numpad6': {
+        timeActor.send({ type: 'INCREMENT_TIMESCALE' });
+        break;
+      }
+
+      /** Cycle through timescale units. */
       case 'KeyU': {
         timeActor.send({ type: 'INCREMENT_TIMESCALE_UNIT' });
         break;
