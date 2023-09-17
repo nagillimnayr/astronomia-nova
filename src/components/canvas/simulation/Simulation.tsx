@@ -4,7 +4,6 @@ import { ObservationPoint } from '@/components/canvas/surface-view/observation-p
 import { VRSurfaceDialog } from '@/components/canvas/vr/vr-hud/vr-details-panel/VRSurfaceDialog';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useFrame } from '@react-three/fiber';
-import { fromUnixTime } from 'date-fns';
 import React, { useEffect, type PropsWithChildren } from 'react';
 
 const Simulation = ({ children }: PropsWithChildren) => {
