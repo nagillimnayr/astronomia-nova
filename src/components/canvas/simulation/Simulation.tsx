@@ -6,7 +6,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useFrame } from '@react-three/fiber';
 import React, { useEffect, type PropsWithChildren } from 'react';
 
-const Simulation = ({ children }: PropsWithChildren) => {
+export const Simulation = ({ children }: PropsWithChildren) => {
   const rootActor = MachineContext.useActorRef();
   const { cameraActor, timeActor } = MachineContext.useSelector(
     ({ context }) => context
@@ -37,5 +37,3 @@ const Simulation = ({ children }: PropsWithChildren) => {
     </>
   );
 };
-
-export default Simulation;
