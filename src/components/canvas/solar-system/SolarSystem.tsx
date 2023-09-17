@@ -2,18 +2,18 @@ import { type KeplerBody } from '@/components/canvas/body';
 import { trpc } from '@/helpers/trpc/trpc';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useTexture } from '@react-three/drei';
-import { useMemo, useRef, type JSX, useEffect } from 'react';
+import { useMemo, useRef, type JSX, useEffect, ReactNode } from 'react';
 import { Body } from '../body';
 import { Orbit } from '../orbit/Orbit';
 import { colorMap } from '@/helpers/color-map';
 import { MeshLambertMaterial } from 'three';
 
 /**
- * @description Component representing the Solar System
- * @returns {JSX.Element}
+ * Component representing the Solar System
+ * @returns {ReactNode}
  * @constructor
  */
-export const SolarSystem = (): JSX.Element => {
+export const SolarSystem = (): ReactNode => {
   // Load textures.
   const [
     sunTexture,
@@ -44,9 +44,8 @@ export const SolarSystem = (): JSX.Element => {
 
   const rootRef = useRef<KeplerBody>(null!);
 
-  const { keplerTreeActor, timeActor } = MachineContext.useSelector(
-    ({ context }) => context
-  );
+  const { keplerTreeActor, timeActor, cameraActor } =
+    MachineContext.useSelector(({ context }) => context);
 
   const sunParams = data.sun.table;
   const sunColor = colorMap.get('Sun');
@@ -60,11 +59,20 @@ export const SolarSystem = (): JSX.Element => {
     });
   }, [sunColor, sunTexture]);
 
+  // Set time to current time.
   useEffect(() => {
     if (dataQuery.isSuccess) {
       timeActor.send({ type: 'SET_DATE_TO_NOW' });
     }
   }, [dataQuery.isSuccess, timeActor]);
+
+  // Set sun as focus target.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (dataQuery.isSuccess && root) {
+      cameraActor.send({ type: 'SET_TARGET', focusTarget: root });
+    }
+  }, [cameraActor, dataQuery.isSuccess]);
 
   if (dataQuery.isError) {
     console.error(dataQuery.error);
