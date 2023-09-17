@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import {KBD} from '@/components/dom/ui/KBD';
+import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown} from '@/components/dom/ui/icons';
 
 # User Guide
 
@@ -8,16 +9,22 @@ import {KBD} from '@/components/dom/ui/KBD';
 
 
 ## Time Controls
+### Timescale increment/decrement:
+To increment or decrement the timescale by one, use the arrows to either side of the slider.
+
+Alternatively, the left/right <KBD><ArrowLeft/></KBD> <KBD><ArrowRight/></KBD> arrow keys, or the <KBD>4</KBD> and <KBD>6</KBD> keys on the numpad.
+
+
 ### Timescale units:
 To change the timescale units (Seconds, Minutes, Hours, Days), click the unit on the time panel.  
-![](/images/timescale-units.png)  
+![timescale-units](/images/timescale-units.png)  
 
-Alternatively, the key <KBD>U</KBD> will also cycle through the units.  
+Alternatively, the <KBD>U</KBD> key will cycle through the units.  
 
-### Sidereal Day Advancement:
+### Sidereal Day Advancement:  
 The buttons on either side of the Play/Pause button will advance time by +/- 1 sidereal Day.
 
-Alternatively, you can use the arrow keys: <KBD><svg fill="white" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="#ffffff" d="M10.05 16.94v-4h8.92l.03-2.01h-8.95V6.94l-5 5Z"/></svg></KBD> <KBD><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="#ffffff" d="M14 16.94v-4H5.08l-.03-2.01H14V6.94l5 5Z"/></svg></KBD>
+Alternatively, you can use the up/down arrow keys <KBD><ArrowUp/></KBD> <KBD><ArrowDown/></KBD> or the <KBD>8</KBD> and <KBD>2</KBD> keys on the numpad.
 
 ---
 ## VR Controls
