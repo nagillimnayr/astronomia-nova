@@ -45,12 +45,6 @@ export function useKeyboard() {
         timeActor.send({ type: 'INCREMENT_TIMESCALE' });
         break;
       }
-
-      /** Cycle through timescale units. */
-      case 'KeyU': {
-        timeActor.send({ type: 'INCREMENT_TIMESCALE_UNIT' });
-        break;
-      }
     }
   });
 }
