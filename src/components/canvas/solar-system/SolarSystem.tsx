@@ -2,7 +2,7 @@ import { type KeplerBody } from '@/components/canvas/body';
 import { trpc } from '@/helpers/trpc/trpc';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useTexture } from '@react-three/drei';
-import { useMemo, useRef, type JSX } from 'react';
+import { useMemo, useRef, type JSX, useEffect } from 'react';
 import { Body } from '../body';
 import { Orbit } from '../orbit/Orbit';
 import { colorMap } from '@/helpers/color-map';
@@ -44,7 +44,7 @@ export const SolarSystem = (): JSX.Element => {
 
   const rootRef = useRef<KeplerBody>(null!);
 
-  const { keplerTreeActor } = MachineContext.useSelector(
+  const { keplerTreeActor, timeActor } = MachineContext.useSelector(
     ({ context }) => context
   );
 
@@ -59,6 +59,12 @@ export const SolarSystem = (): JSX.Element => {
       emissiveIntensity: 1.5,
     });
   }, [sunColor, sunTexture]);
+
+  useEffect(() => {
+    if (dataQuery.isSuccess) {
+      timeActor.send({ type: 'SET_DATE_TO_NOW' });
+    }
+  }, [dataQuery.isSuccess, timeActor]);
 
   if (dataQuery.isError) {
     console.error(dataQuery.error);

@@ -19,10 +19,6 @@ const Simulation = ({ children }: PropsWithChildren) => {
     cameraActor.send({ type: 'UPDATE', deltaTime: delta });
   }, -10);
 
-  useEffect(() => {
-    timeActor.send({ type: 'SET_DATE_TO_NOW' });
-  }, [timeActor]);
-
   return (
     <>
       <group>
