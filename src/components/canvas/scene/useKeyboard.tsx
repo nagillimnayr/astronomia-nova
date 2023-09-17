@@ -8,19 +8,19 @@ export function useKeyboard() {
     console.log(event.code);
     // console.log(event);
     switch (event.code) {
-      case 'ArrowLeft': {
+      case 'ArrowUp': {
         rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
         break;
       }
-      case 'Numpad4': {
+      case 'Numpad8': {
         rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
         break;
       }
-      case 'ArrowRight': {
+      case 'ArrowDown': {
         rootActor.send({ type: 'ADVANCE_DAY', reverse: false });
         break;
       }
-      case 'Numpad6': {
+      case 'Numpad2': {
         rootActor.send({ type: 'ADVANCE_DAY', reverse: false });
         break;
       }
