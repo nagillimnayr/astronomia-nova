@@ -2,6 +2,7 @@ import { makeFixedUpdateFn } from '@/helpers/fixed-time-step';
 import { getGamepads, getXRButtons } from '@/helpers/xr/pollXRInputSources';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useFrame, useThree } from '@react-three/fiber';
+import { useXR } from '@react-three/xr';
 import { useMemo, useRef } from 'react';
 
 export function useVRButtonControls() {
@@ -9,8 +10,7 @@ export function useVRButtonControls() {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
   const getThree = useThree(({ get }) => get);
-
-  const remainder = useRef<number>(0);
+  const getXR = useXR(({ get }) => get);
 
   const pollXRButtons = useRef<(deltaTime: number) => void>(null!);
   pollXRButtons.current = useMemo(() => {
@@ -55,10 +55,9 @@ export function useVRButtonControls() {
     }, 10);
     return pollXRButtons;
   }, [cameraActor, getThree, rootActor]);
-  // useInterval(pollXRButtons, 100); // Poll buttons on interval.
 
-  useFrame((state, delta, frame) => {
-    if (!(frame instanceof XRFrame)) return;
+  useFrame((_, delta) => {
+    if (!getXR().isPresenting) return;
     pollXRButtons.current(delta);
   });
 }
