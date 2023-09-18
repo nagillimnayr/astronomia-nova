@@ -54,8 +54,8 @@ export const VRControllerRay = ({ handedness }: VRControllerRayProps) => {
 
   const indicatorRadius = 0.02;
 
-  useFrame(({ camera, gl }, _, frame) => {
-    if (!(frame instanceof XRFrame)) return;
+  useFrame(({ camera, gl }) => {
+    if (!getXR().isPresenting) return;
     const line = lineRef.current;
     const indicator = indicatorRef.current;
     const scaleObj = objRef.current; // For modifying scale based on distance

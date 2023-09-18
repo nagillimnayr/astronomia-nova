@@ -8,7 +8,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { animated, useSpring } from '@react-spring/three';
 import { useCursor } from '@react-three/drei';
 import { type ThreeEvent, useFrame } from '@react-three/fiber';
-import { Interactive, type XRInteractionEvent } from '@react-three/xr';
+import { Interactive, useXR, type XRInteractionEvent } from '@react-three/xr';
 import { useSelector } from '@xstate/react';
 import { clamp } from 'lodash';
 import { type MutableRefObject, useCallback, useMemo, useRef } from 'react';
@@ -46,6 +46,7 @@ export const Markers = ({ name, bodyRef, meanRadius }: Props) => {
 
   // Subscribe to state so that the component will re-render upon updates.
   useSelector(mapActor, ({ context }) => context.bodyMap);
+  const getXR = useXR(({ get }) => get);
 
   const color = colorMap.get(name);
 
@@ -122,7 +123,7 @@ export const Markers = ({ name, bodyRef, meanRadius }: Props) => {
     // called.
     controls.getCameraWorldUp(pivot.up);
 
-    const inVR = frame instanceof XRFrame;
+    const inVR = getXR().isPresenting;
 
     if (inVR) {
       // If in VR session, the tags should look directly at the camera, rather
