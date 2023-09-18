@@ -96,7 +96,7 @@ export const Markers = ({ name, bodyRef, meanRadius }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bodyRef, bodyRef.current]);
 
-  useFrame(({ camera }, _, frame) => {
+  useFrame(({ camera }) => {
     const body = bodyRef.current;
     if (!body) return;
     const pivot = pivotRef.current;
