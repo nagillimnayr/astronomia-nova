@@ -5,7 +5,7 @@ export function useKeyboard() {
   const rootActor = MachineContext.useActorRef();
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
   useEventListener('keydown', (event) => {
-    console.log(event.code);
+    // console.log(event.code);
     switch (event.code) {
       /** Sidereal Day advancement. */
       case 'ArrowUp': {
