@@ -39,17 +39,16 @@ const config = {
         argsIgnorePattern: '^_',
       },
     ],
-    '@typescript-eslint/no-inferrable-types': [
-      'off',
-    ],
+    '@typescript-eslint/no-inferrable-types': ['off'],
     '@typescript-eslint/no-misused-promises': [
-      2,
+      'off',
       {
         checksVoidReturn: {
           attributes: false,
         },
       },
     ],
+    '@typescript-eslint/no-floating-promises': ['off'],
     '@typescript-eslint/ban-types': [
       'error',
       {
