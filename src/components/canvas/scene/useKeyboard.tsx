@@ -9,19 +9,19 @@ export function useKeyboard() {
     switch (event.code) {
       /** Sidereal Day advancement. */
       case 'ArrowUp': {
-        rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
+        rootActor.send({ type: 'ADVANCE_DAY', reverse: false });
         break;
       }
       case 'Numpad8': {
-        rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
+        rootActor.send({ type: 'ADVANCE_DAY', reverse: false });
         break;
       }
       case 'ArrowDown': {
-        rootActor.send({ type: 'ADVANCE_DAY', reverse: false });
+        rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
         break;
       }
       case 'Numpad2': {
-        rootActor.send({ type: 'ADVANCE_DAY', reverse: false });
+        rootActor.send({ type: 'ADVANCE_DAY', reverse: true });
         break;
       }
       /** Increment/decrement timescale. */
