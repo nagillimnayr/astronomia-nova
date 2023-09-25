@@ -207,7 +207,7 @@ export const cameraMachine = createMachine(
           'attachToObserver',
         ],
         // Cleanup on exit:
-        exit: ['logEvent', 'attachToTarget'],
+        exit: ['logEvent', 'attachToTarget', 'exitSurface'],
         on: {
           // UPDATE event:
           UPDATE: {
@@ -380,6 +380,11 @@ export const cameraMachine = createMachine(
           controls.setPolarAngleTarget(PI_OVER_TWO);
         }, 1000);
       },
+      exitSurface: ({ controls, focusTarget }) => {
+        if (!(focusTarget instanceof KeplerBody)) return;
+        const radius = focusTarget.meanRadius * 3;
+        controls?.setTargetRadius(radius);
+      },
       updateSurfaceView: (context) => {
         const { controls, observer } = context;
         if (!controls || !observer) return;
@@ -412,14 +417,16 @@ export const cameraMachine = createMachine(
           console.error('error! focusTarget is not a KeplerBody');
           return;
         }
-        const body = context.focusTarget as KeplerBody; // Cast to KeplerBody.
-        if (body && controls) {
-          const radius = body.meanRadius / DIST_MULT;
 
-          // Set min distance relative to focus targets radius.
-          controls.minDistance = SPACE_MIN_DIST_FROM_SURFACE + radius;
-          controls.camera.near = NEAR_CLIP;
-        }
+        if (!focusTarget || !controls) return;
+        const meanRadius = focusTarget.meanRadius;
+
+        // Set min distance relative to focus targets radius.
+        controls.minDistance = SPACE_MIN_DIST_FROM_SURFACE + meanRadius;
+        controls.camera.near = NEAR_CLIP;
+
+        const radius = focusTarget.meanRadius * 5;
+        controls.radius < radius && controls.setTargetRadius(radius);
       },
       setSurfaceCamDistance: (context) => {
         const { controls } = context;

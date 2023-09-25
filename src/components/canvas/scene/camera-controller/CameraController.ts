@@ -149,63 +149,6 @@ export class CameraController extends Object3D {
     this._camera?.updateProjectionMatrix();
   }
 
-  private updateAzimuthalAngle(deltaTime: number) {
-    this._normalizeAzimuthalAngle();
-    const azimuthalAngle = this._spherical.theta;
-    const azimuthalAngleTarget = this._sphericalTarget.theta;
-    if (approxZero(azimuthalAngleTarget - azimuthalAngle)) return;
-
-    this._isMoving = true;
-
-    const [newValue, newVelocity] = smoothCritDamp(
-      azimuthalAngle,
-      azimuthalAngleTarget,
-      this._azimuthalAngleVelocity,
-      this._smoothTime,
-      deltaTime
-    );
-    this._azimuthalAngleVelocity = newVelocity;
-
-    this.setAzimuthalAngle(newValue);
-  }
-
-  private updatePolarAngle(deltaTime: number) {
-    const polarAngle = this._spherical.phi;
-    const polarAngleTarget = this._sphericalTarget.phi;
-    if (approxZero(polarAngleTarget - polarAngle)) return;
-
-    this._isMoving = true;
-
-    const [newValue, newVelocity] = smoothCritDamp(
-      polarAngle,
-      polarAngleTarget,
-      this._polarAngleVelocity,
-      this._smoothTime,
-      deltaTime
-    );
-    this._polarAngleVelocity = newVelocity;
-    this.setPolarAngle(newValue);
-  }
-
-  private updateRadius(deltaTime: number) {
-    const radius = this._spherical.radius;
-    const radiusTarget = this._sphericalTarget.radius;
-    if (approxZero(radiusTarget - radius)) return;
-
-    this._isMoving = true;
-
-    const [newValue, newVelocity] = smoothCritDamp(
-      radius,
-      radiusTarget,
-      this._radiusVelocity,
-      this._smoothTime,
-      deltaTime
-    );
-    this._radiusVelocity = newVelocity;
-    this._setRadius(newValue);
-    this._spherical.radius = newValue;
-  }
-
   /**
    * Sets the radius without clamping to min/max. This allows setting the min/max distance to trigger a transition to the clamped value.
    * @param {number} radius
