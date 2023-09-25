@@ -207,7 +207,7 @@ export const cameraMachine = createMachine(
           'attachToObserver',
         ],
         // Cleanup on exit:
-        exit: ['logEvent', 'attachToTarget', 'exitSurface'],
+        exit: ['logEvent', 'attachToTarget'],
         on: {
           // UPDATE event:
           UPDATE: {
@@ -380,11 +380,7 @@ export const cameraMachine = createMachine(
           controls.setPolarAngleTarget(PI_OVER_TWO);
         }, 1000);
       },
-      exitSurface: ({ controls, focusTarget }) => {
-        if (!(focusTarget instanceof KeplerBody)) return;
-        const radius = focusTarget.meanRadius * 3;
-        controls?.setTargetRadius(radius);
-      },
+
       updateSurfaceView: (context) => {
         const { controls, observer } = context;
         if (!controls || !observer) return;
