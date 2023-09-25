@@ -15,7 +15,6 @@ export function useVRButtonControls() {
   const pollXRButtons = useRef<(deltaTime: number) => void>(null!);
   pollXRButtons.current = useMemo(() => {
     const pollXRButtons = makeFixedUpdateFn((deltaTime: number) => {
-      console.log('deltaTime:', deltaTime);
       const { gl } = getThree();
       const { xr } = gl;
       if (!xr.isPresenting) return;
