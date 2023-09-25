@@ -150,7 +150,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
           {/** Button to select body. */}
           <button
             onClick={handleSelect}
-            className="m-0 inline-flex h-full w-full cursor-pointer items-center justify-start px-1 transition-colors hover:bg-subtle"
+            className="m-0 inline-flex h-full w-full cursor-pointer items-center justify-start rounded-md p-1 transition-colors hover:bg-subtle"
           >
             <span className="m-0 h-8 w-fit p-1 text-left align-middle font-sans text-2xl font-medium leading-none">
               {body.name}
@@ -171,7 +171,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
           {/** Add some left margin to indent each subtree from its parent, left padding to line up the left border with the list marker. */}
           <ul
             ref={listRef}
-            className="ml-2 h-fit overflow-y-hidden border-l border-gray-600 pl-1 marker:text-gray-600"
+            className="ml-2 mr-2 h-fit overflow-y-hidden border-l-2 border-gray-200 pl-1 marker:text-gray-300"
           >
             {body.orbitingBodies.map((child) => {
               // Recursively traverse the tree to construct the tree view.

@@ -37,7 +37,7 @@ export const HUD = ({ className }: Props) => {
 
         {/** Outliner. */}
         <div className={'relative col-start-2 row-start-[3] row-end-[-3]'}>
-          <div className="pointer-events-auto relative left-1/2 top-0 h-fit min-h-fit w-52 min-w-fit -translate-x-1/2 rounded-lg border-2 bg-muted p-3">
+          <div className="pointer-events-auto relative left-1/2 top-0 h-fit min-h-fit w-52 min-w-fit -translate-x-1/2 rounded-lg border-2 bg-muted py-2">
             <Outliner />
           </div>
         </div>
