@@ -10,7 +10,10 @@ import {Prose} from '@/components/mdx/Prose';
 ---
 
 ## The Kepler Problem
+Determining position as a function of time
 
+- The position of a body at a particular time can be determined using numerical integration to propagate the initial conditions forward in time. However, this approach has a time complexity of O(n), as the number of computations neccesary is linearly proportional to amount of time that is being advanced. This is fine if the simulation is being run continuously, so long as the timescale isn't too large, but it can cause severe performance issues if the user wants to jump to a specific date, which may be several years from the current simulation date.
+- To determine the position in O(1) time complexity, we can use the mean Anomaly to find the true Anomaly. The mean Anomaly can easily be found from the mean motion, which is constant. However, getting the true Anomaly from the mean Anomaly is not as straight forward.  The Kepler equation is a transcendental function, so it cannot be solved algebraically. It can be approximated though. Using Newton’s method, we can approximate the eccentric Anomaly to an arbitrary level of precision. The true anomaly can then be easily found from the eccentric anomaly, and the position can easily be found from the true anomaly.
 
 ---
 
