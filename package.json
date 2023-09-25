@@ -85,6 +85,8 @@
     "meshline": "^3.1.6",
     "next": "^13.4.4",
     "next-themes": "^0.2.1",
+    "nextra": "^2.13.0",
+    "nextra-theme-docs": "^2.13.0",
     "raw-loader": "^4.0.2",
     "react": "^18.2.0",
     "react-aria": "^3.25.0",
