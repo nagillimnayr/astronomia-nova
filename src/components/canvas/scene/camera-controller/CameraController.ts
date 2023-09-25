@@ -8,9 +8,16 @@ import {
 } from '@/constants/constants';
 import { normalizeAngle } from '@/helpers/rotation-utils';
 import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
-import { Object3D, type PerspectiveCamera, Spherical, Vector3 } from 'three';
+import {
+  Object3D,
+  type PerspectiveCamera,
+  Spherical,
+  Vector3,
+  Euler,
+} from 'three';
 import { clamp } from 'three/src/math/MathUtils';
 import { smoothCritDamp } from './smoothing';
+import { damp, dampAngle } from 'maath/easing';
 
 const EPSILON = 1e-3;
 
@@ -30,6 +37,9 @@ const DEFAULT_POLAR = PI_OVER_THREE;
 const _v1 = new Vector3();
 const _v2 = new Vector3();
 const _v3 = new Vector3();
+
+const _eul1 = new Euler();
+const _eul2 = new Euler();
 
 function approxZero(num: number, epsilon = EPSILON) {
   return Math.abs(num) <= epsilon;
@@ -82,19 +92,53 @@ export class CameraController extends Object3D {
    * @memberof CameraController
    */
   update(deltaTime: number) {
-    this._isMoving = false;
+    // this._isMoving = false;
 
-    this.updateRadius(deltaTime);
-    this.updatePolarAngle(deltaTime);
-    this.updateAzimuthalAngle(deltaTime);
+    const radiusMoving = damp(
+      this._spherical,
+      'radius',
+      this._sphericalTarget.radius,
+      this._smoothTime,
+      deltaTime
+    );
+    const azimuthMoving = damp(
+      this._spherical,
+      'theta',
+      this._sphericalTarget.theta,
+      this._smoothTime,
+      deltaTime
+    );
+    const polarMoving = damp(
+      this._spherical,
+      'phi',
+      this._sphericalTarget.phi,
+      this._smoothTime,
+      deltaTime
+    );
+    const isMoving = radiusMoving || azimuthMoving || polarMoving;
+    if (this._isMoving && !isMoving) {
+      this.dispatchEvent({ type: 'REST' });
+      console.log('REST');
+    }
+    this._isMoving = isMoving;
+
+    // this.updateRadius(deltaTime);
+    // this.updatePolarAngle(deltaTime);
+    // this.updateAzimuthalAngle(deltaTime);
+
     const pivotPoint = this._pivotPoint;
     const attachPoint = this._attachPoint;
+
     pivotPoint.rotation.set(0, 0, 0); // Reset rotations.
     attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
     this._camera?.position.set(0, 0, 0);
 
     const azimuthalAngle = this._spherical.theta;
     const polarAngle = this._spherical.phi;
+
+    const yRot = azimuthalAngle;
+    const xRot = -(PI_OVER_TWO - polarAngle);
+    _eul1.set(xRot, yRot, 0, 'YXZ');
 
     // Rotations are intrinsic, so the order matters. Rotation around local
     // y-axis must be done first in order to preserve the local up-vector.
