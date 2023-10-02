@@ -113,6 +113,27 @@ export const ProjectedTrail = ({
     return () => subscription.unsubscribe();
   }, [length, surfaceActor, timeActor, body]);
 
+  useEffect(() => {
+    // Subscribe to cameraActor, and reset trail whenever focus changes.
+    const subscription = cameraActor.subscribe((state) => {
+      if (state.event.type !== 'SET_TARGET') return;
+      const line = lineRef.current;
+      if (!line) return;
+      // Position of target won't have updated immediately, so reset the trail
+      // after a slight delay.
+      line.visible = false; // Toggle visibility temporarily, to avoid jank.
+      setTimeout(() => {
+        const anchor = anchorRef.current;
+        points.current = resetTrail(anchor, body, length);
+        // Update geometry.
+        line.geometry.setPositions(points.current);
+        line.visible = true;
+      }, 30);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [body, cameraActor, length]);
+
   /**  Update points. */
   useEffect(() => {
     const updatePosition = () => {
