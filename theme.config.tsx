@@ -13,6 +13,12 @@ const config: DocsThemeConfig = {
   editLink: {
     text: '',
   },
+
+  useNextSeoProps() {
+    return {
+      titleTemplate: '%s',
+    };
+  },
 };
 
 export default config;
