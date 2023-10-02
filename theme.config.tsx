@@ -19,6 +19,13 @@ const config: DocsThemeConfig = {
       titleTemplate: '%s',
     };
   },
+  head: (
+    <>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta property="og:title" content="Astronomia Nova" />
+      <meta property="og:description" content="Solar System Simulation" />
+    </>
+  ),
 };
 
 export default config;
