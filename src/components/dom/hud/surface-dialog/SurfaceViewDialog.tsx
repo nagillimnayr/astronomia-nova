@@ -63,7 +63,7 @@ const SurfaceViewDialog = () => {
 
         <div className="col-span-1 col-start-1 row-span-1 row-start-1 flex flex-col items-start justify-center">
           <Label className="mb-2 inline-flex items-center justify-center">
-            Latitude
+            Latitude&nbsp;
             <Input
               className="h-6 w-full"
               type="number"
@@ -94,7 +94,7 @@ const SurfaceViewDialog = () => {
         </div>
         <div className="col-span-1 col-start-2 row-span-1 row-start-1 flex flex-col items-start justify-center">
           <Label className="mb-2 inline-flex items-center justify-center ">
-            Longitude
+            Longitude&nbsp;
             <Input
               className="h-6  w-full"
               type="number"
