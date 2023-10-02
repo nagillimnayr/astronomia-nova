@@ -5,7 +5,7 @@ Astronomia Nova is a VR Solar System simulation created to be used as an educati
 
 > 'Astronomia Nova ΑΙΤΙΟΛΟΓΗΤΟΣ seu physica coelestis, tradita commentariis de motibus stellae Martis ex observationibus G.V. Tychonis Brahe'
 > 
-> (New Astronomy, reasoned from Causes, or Celestial Physics, Treated by Means of Commentaries on the Motions of the Star Mars, from the Observations of the noble Tycho Brahe)
+> New Astronomy, reasoned from Causes, or Celestial Physics, Treated by Means of Commentaries on the Motions of the Star Mars, from the Observations of the noble Tycho Brahe
 
 'Astronomia Nova' is the title of the book by Johannes Kepler where he published his first two laws of planetary motion:
 
