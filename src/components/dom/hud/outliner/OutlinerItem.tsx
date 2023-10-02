@@ -171,7 +171,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
           {/** Add some left margin to indent each subtree from its parent, left padding to line up the left border with the list marker. */}
           <ul
             ref={listRef}
-            className="ml-2 mr-2 h-fit overflow-y-hidden border-l-2 border-gray-200 pl-1 marker:text-gray-300"
+            className="ml-2  h-fit overflow-y-hidden border-l-2 border-gray-200 pl-1 marker:text-gray-300"
           >
             {body.orbitingBodies.map((child) => {
               // Recursively traverse the tree to construct the tree view.
