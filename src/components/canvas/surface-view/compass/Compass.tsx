@@ -21,12 +21,12 @@ export const Compass = () => {
     <>
       <object3D position={[0, DIST_OFF_GROUND, 0]}>
         {/* <axesHelper args={[innerRadius]} /> */}
-        <Ring
+        {/* <Ring
           args={[innerRadius, outerRadius, segments]}
           rotation={[-PI_OVER_TWO, 0, 0]}
         >
           <meshBasicMaterial color={'blue'} />
-        </Ring>
+        </Ring> */}
         {/* <polarGridHelper args={[innerRadius, GRID_SECTORS, radiusSegments]} /> */}
 
         <CompassMarker position={[-innerRadius, 0, 0]}>N</CompassMarker>
