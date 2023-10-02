@@ -3,6 +3,7 @@ import {KBD} from '@/components/dom/ui/KBD';
 import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown} from '@/components/dom/ui/icons';
 import {Prose} from '@/components/mdx/Prose';
 
+
 <title>User Guide</title>
 
 {/* <Prose> */}
@@ -12,27 +13,50 @@ import {Prose} from '@/components/mdx/Prose';
 
 ## Keyboard & Mouse Controls
 
-
 ## Time Controls
 ### Timescale increment/decrement:
-To increment or decrement the timescale by one, use the arrows to either side of the slider.
+- To increment or decrement the timescale by one, use the arrows to either side of the slider.
 
-Alternatively, the left/right <span className='inline-flex items-center justify-center gap-1'><KBD><ArrowLeft/></KBD> <KBD><ArrowRight/></KBD></span> arrow keys, or the <KBD>4</KBD> and <KBD>6</KBD> keys on the numpad.
+- Alternatively, the left/right <span className='inline-flex items-center justify-center gap-1'><KBD><ArrowLeft/></KBD> <KBD><ArrowRight/></KBD></span> arrow keys, or the <KBD>4</KBD> and <KBD>6</KBD> keys on the numpad.
 
 
 ### Timescale units:
-To cycle through the timescale units (Seconds, Minutes, Hours, Days), click the unit on the time panel.  
+- To cycle through the timescale units (Seconds, Minutes, Hours, Days), click the unit on the time panel.  
 ![timescale-units](/images/timescale-units.png)  
 
-Alternatively, <span className='inline-flex items-center justify-center gap-1'><KBD>shift</KBD> + <KBD><ArrowLeft/></KBD></span> will decrease the units and <span className='inline-flex items-center justify-center gap-1'><KBD>shift</KBD> + <KBD><ArrowRight/></KBD></span> will increase the units.  
+- Alternatively, <span className='inline-flex items-center justify-center gap-1'><KBD>shift</KBD> + <KBD><ArrowLeft/></KBD></span> will decrease the units and <span className='inline-flex items-center justify-center gap-1'><KBD>shift</KBD> + <KBD><ArrowRight/></KBD></span> will increase the units.  
 
 ### Sidereal Day Advancement:  
-The buttons on either side of the Play/Pause button will advance time by +/- 1 sidereal Day.
+- The buttons on either side of the Play/Pause button will advance time by +/- 1 sidereal Day.
 
-Alternatively, you can use the up/down arrow keys <span className='inline-flex items-center justify-center'> <span className='inline-flex items-center justify-center gap-1'><KBD><ArrowUp/></KBD> and <KBD><ArrowDown/></KBD></span> or the <span className='inline-flex items-center justify-center gap-1'><KBD>8</KBD> and <KBD>2</KBD></span></span> keys on the numpad.
+- Alternatively, you can use the up/down arrow keys <span className='inline-flex items-center justify-center'> <span className='inline-flex items-center justify-center gap-1'><KBD><ArrowUp/></KBD> and <KBD><ArrowDown/></KBD></span> or the <span className='inline-flex items-center justify-center gap-1'><KBD>8</KBD> and <KBD>2</KBD></span></span> keys on the numpad.
 
 ---
-## VR Controls
+
+## Apparent Retrograde Motion
+
+{/* Outliner item screenshot. */}
+Select a planet in the outliner to the left.
+<Image className={"mx-auto my-6"} src={"/images/outliner-item.png"} width={262} height={79} alt={"outliner-item"}/>
+
+
+{/* Surface button screenshot. */}
+Click the surface button.
+<Image className={"mx-auto my-6"} src={"/images/surface-button.png"} width={352} height={470} alt={"surface-button"}/>
+
+{/* Surface dialog screenshot. */}
+Select a position on the planet and click the confirm button.
+<Image className={"mx-auto my-6"} src={"/images/surface-dialog.png"} width={618} height={629} alt={"surface-dialog"}/>
+
+{/* Paused screenshot. */}
+The simulation must be paused in order for the trails to show.
+<Image className={"mx-auto my-6"} src={"/images/paused.png"} width={223} height={66} alt={"paused"}/>
+
+{/* Trails screenshot. */}
+Use the buttons to either side of the play/pause button or the keyboard controls to advance time by increments of one sidereal day.
+<Image className={"mx-auto my-6"} src={"/images/trails.png"} width={972} height={1087} alt={"trails"}/>
+
+{/* ## VR Controls */}
 
 
 {/* </Prose> */}
