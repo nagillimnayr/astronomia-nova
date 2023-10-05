@@ -56,6 +56,7 @@ export const ProjectedTrail = ({
   const onSurface = useSelector(cameraActor, (state) =>
     state.matches('surface')
   );
+  const isPaused = useSelector(timeActor, (state) => state.matches('paused'));
 
   const getThree = useThree(({ get }) => get);
   const size = useThree(({ size }) => size);
@@ -172,9 +173,10 @@ export const ProjectedTrail = ({
   const arr = useMemo(() => {
     return [0, 0, 0, 0, 0, 0];
   }, []);
+
   return (
     <>
-      <group ref={anchorRef}>
+      <group ref={anchorRef} visible={onSurface && isPaused}>
         <Line ref={lineRef} points={arr} lineWidth={2} color={color} />
       </group>
     </>
