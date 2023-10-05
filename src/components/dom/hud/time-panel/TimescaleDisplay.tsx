@@ -43,14 +43,17 @@ const TimescaleDisplay = () => {
   }, [timeActor]);
 
   return (
-    <span className="w-min-fit flex flex-row justify-center whitespace-nowrap text-white">
-      <span ref={timescaleSpanRef} />
+    <span className="w-min-fit flex h-fit flex-row justify-center whitespace-nowrap text-white">
+      <span
+        ref={timescaleSpanRef}
+        className="border border-transparent align-middle"
+      />
       <span
         ref={unitSpanRef}
-        className="pointer-events-auto mx-[1px] rounded-md border-2 border-muted bg-opacity-20 px-1 transition-colors hover:cursor-pointer hover:border-gray-800 hover:bg-gray-500"
+        className="pointer-events-auto mx-[1px] inline-flex h-fit w-fit items-center justify-center rounded-md border-2 border-muted bg-opacity-20 px-1 text-center align-middle transition-colors hover:cursor-pointer hover:border-gray-800 hover:bg-gray-500"
         onClick={handleClick}
       />
-      {'/ Second'}
+      <span className="border border-transparent">/&nbsp; Second</span>
     </span>
   );
 };

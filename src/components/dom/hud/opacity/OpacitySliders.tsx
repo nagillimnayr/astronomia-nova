@@ -55,22 +55,9 @@ export const OpacitySliders = ({
                 constellations.send({ type: 'SET_OPACITY', opacity: value });
               }}
             />
-            {/* <Input
-             className="h-6 w-16 text-sm"
-             type="number"
-             value={constellationOpacity}
-             min={0}
-             max={1}
-             step={0.01}
-             onChange={(event) => {
-             const value = parseFloat(event.target.value);
-             if (!value && value !== 0) return;
-             constellations.send({ type: 'SET_OPACITY', opacity: value });
-             }}
-             /> */}
           </div>
         </Label>
-        <Label className="inline-flex w-full flex-col gap-1">
+        {/* <Label className="inline-flex w-full flex-col gap-1">
           Grid Opacity
           <div className="inline-flex h-fit w-full flex-row items-center justify-start gap-2">
             <Slider
@@ -86,21 +73,9 @@ export const OpacitySliders = ({
                 celestialGrid.send({ type: 'SET_OPACITY', opacity: value });
               }}
             />
-            {/* <Input
-             className="h-6 w-16 text-sm"
-             type="number"
-             value={celestialGridOpacity}
-             min={0}
-             max={1}
-             step={0.01}
-             onChange={(event) => {
-             const value = parseFloat(event.target.value);
-             if (!value && value !== 0) return;
-             celestialGrid.send({ type: 'SET_OPACITY', opacity: value });
-             }}
-             /> */}
+            
           </div>
-        </Label>
+        </Label> */}
       </div>
     </>
   );

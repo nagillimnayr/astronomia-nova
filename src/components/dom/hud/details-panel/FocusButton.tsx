@@ -33,7 +33,7 @@ export const FocusButton = ({ children, className }: Props) => {
       <button
         onClick={handleClick}
         className={cn(
-          'pointer-events-auto flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 font-sans hover:bg-subtle hover:text-subtle-foreground',
+          'pointer-events-auto flex flex-row items-center justify-center rounded-md border-4 px-2 py-1 font-sans hover:bg-subtle hover:text-subtle-foreground',
           className
         )}
       >

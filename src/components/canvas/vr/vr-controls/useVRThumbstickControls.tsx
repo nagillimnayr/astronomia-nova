@@ -4,6 +4,7 @@ import {
 } from '@/helpers/xr/pollXRInputSources';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useFrame } from '@react-three/fiber';
+import { useXR } from '@react-three/xr';
 
 // Scaling factors for controlling strength of VR controller inputs.
 const ZOOM_SPEED = 4;
@@ -21,8 +22,11 @@ const AZIMUTH_SPEED = 2 ** 7;
 export function useVRThumbstickControls() {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
 
-  useFrame((state, delta, frame) => {
-    if (!(frame instanceof XRFrame)) return;
+  const getXR = useXR(({ get }) => get);
+
+  useFrame(({ gl }, delta) => {
+    if (!getXR().isPresenting) return;
+    const frame = gl.xr.getFrame();
 
     // Get gamepads.
     const { leftGamepad, rightGamepad } = getGamepads(frame.session);

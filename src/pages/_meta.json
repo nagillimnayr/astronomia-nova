@@ -1,13 +1,7 @@
 {
-  "docs": "Documentation",
-  "about": {
-    "title": "About",
-    "type": "page"
-  },
-  "equations": {
-    "title": "Equations"
-  },
-  "kepler": {
-    "title": "Kepler"
+  "user-guide": "User Guide",
+
+  "README": {
+    "title": "About"
   }
 }

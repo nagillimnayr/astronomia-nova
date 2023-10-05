@@ -89,7 +89,7 @@ const DetailsPanel = () => {
       ref={divRef}
       data-state={state.value}
       className={cn(
-        'relative flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border bg-muted p-4 text-muted-foreground',
+        'relative flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border-[3px] bg-muted p-4 text-muted-foreground',
         'transition-all duration-300 data-[state=closed]:hidden'
       )}
     >
@@ -105,12 +105,12 @@ const DetailsPanel = () => {
       <header className="flex w-full flex-row items-center justify-center">
         <h4 className="text-xl">{selected?.name}</h4>
       </header>
-      <Separator className="w-full bg-border" />
+      {/* <Separator className="w-full bg-border" /> */}
       {/** Attributes. */}
       {selected && (
         <>
-          <div className="h-full max-h-full w-full overflow-auto whitespace-nowrap border p-1">
-            <div className="flex w-full flex-col items-start justify-start gap-1">
+          <div className="h-full max-h-full w-full overflow-auto whitespace-nowrap rounded-md border-[3px] p-1">
+            <div className="flex w-full flex-col items-start justify-start gap-1 p-2">
               {/** Mass. */}
               <AttributeDetails name={'Mass'}>
                 {selected.mass.toExponential(3) + ' kg'}
@@ -129,17 +129,17 @@ const DetailsPanel = () => {
                   ' hr'}
               </AttributeDetails>
             </div>
-            <div className="flex w-full flex-col items-start justify-start"></div>
+            {/* <div className="flex w-full flex-col items-start justify-start"></div> */}
           </div>
         </>
       )}
       <div className="mt-auto flex w-full flex-row items-start justify-between">
         {/** Camera focus button. */}
-        <FocusButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
+        <FocusButton className="flex flex-row items-center justify-center rounded-md border-[3px] px-2 py-1 transition-colors hover:bg-subtle hover:text-subtle-foreground" />
 
-        <SurfaceViewButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
+        <SurfaceViewButton className="flex flex-row items-center justify-center rounded-md border-[3px] px-2 py-1 transition-colors hover:bg-subtle hover:text-subtle-foreground" />
 
-        <SpaceViewButton className="flex flex-row items-center justify-center rounded-md border-2 px-2 py-1 hover:bg-subtle hover:text-subtle-foreground" />
+        <SpaceViewButton className="flex flex-row items-center justify-center rounded-md border-[3px] px-2 py-1 transition-colors hover:bg-subtle hover:text-subtle-foreground" />
       </div>
     </div>
   );
