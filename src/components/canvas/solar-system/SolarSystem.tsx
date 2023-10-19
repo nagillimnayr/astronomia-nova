@@ -1,10 +1,9 @@
-import { type KeplerBody } from '@/components/canvas/body';
+import { type KeplerBody, Body } from '@/components/canvas/body';
 import { trpc } from '@/helpers/trpc/trpc';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useTexture } from '@react-three/drei';
-import { useMemo, useRef, type JSX, useEffect, ReactNode } from 'react';
-import { Body } from '../body';
-import { Orbit } from '../orbit/Orbit';
+import { useMemo, useRef, useEffect, type ReactNode } from 'react';
+import { Orbit } from '@/components/canvas//orbit';
 import { colorMap } from '@/helpers/color-map';
 import { MeshLambertMaterial } from 'three';
 
