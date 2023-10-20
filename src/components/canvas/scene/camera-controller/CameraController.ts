@@ -510,6 +510,30 @@ export class CameraController extends Object3D {
     return this._isMoving;
   }
 
+  animateTo(to: { radius?: number; azimuth?: number; polar?: number }) {
+    this.lock();
+
+    const { radius, azimuth, polar } = to;
+    if (radius) {
+      this.setRadiusTarget(radius);
+    }
+    if (azimuth) {
+      this.setAzimuthalAngleTarget(azimuth);
+    }
+    if (polar) {
+      this.setPolarAngleTarget(polar);
+    }
+
+    return new Promise<void>((resolve) => {
+      const onRest = () => {
+        this.unlock();
+        this.removeEventListener('REST', onRest);
+        resolve();
+      };
+      this.addEventListener('REST', onRest);
+    });
+  }
+
   private _onPointerDown = (event: PointerEvent) => {
     const button = event.button;
     if (!this._domElement) return;
