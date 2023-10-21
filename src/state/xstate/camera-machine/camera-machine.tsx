@@ -18,9 +18,13 @@ import {
   Vector3,
   Spherical,
 } from 'three';
+import { degToRad, radToDeg } from 'three/src/math/MathUtils';
 import { assign, createMachine } from 'xstate';
 
 const _observerUp = new Vector3();
+const _focusUp = new Vector3();
+const _cameraUp = new Vector3();
+
 const _observerPos = new Vector3();
 const _cameraPos = new Vector3();
 const _focusPos = new Vector3();
@@ -235,43 +239,59 @@ export const cameraMachine = createMachine(
               controls.worldToLocal(_observerPos);
               const observerRadius = _observerPos.length();
               _spherical.setFromVector3(_observerPos);
+              _spherical.makeSafe();
+
+              console.log(`theta: ${radToDeg(_spherical.theta)}`);
 
               const targetRadius = observerRadius * 3;
 
               console.log('Entering Surface Anim!');
 
               const dist = Math.min(controls.radius, targetRadius);
-              // const dist = targetRadius;
 
-              // controls.attachToWithoutMoving(observer);
-              // const thetaStart = controls.azimuthalAngle;
-              // const thetaEnd = Math.floor(thetaStart / PI) * PI;
+              const obliquity = degToRad(focusTarget.obliquity);
+
+              _focusUp.set(...getLocalUpInWorldCoords(focusTarget));
+              _cameraUp.set(...getLocalUpInWorldCoords(controls.camera));
+              const angle = _cameraUp.angleTo(_focusUp);
+
               void controls
                 .animateSequence([
                   {
+                    target: controls.camera.rotation,
+                    vars: {
+                      z: -angle,
+                      duration: 1,
+                    },
+                  },
+                  {
+                    target: controls.spherical,
                     vars: {
                       radius: dist,
                       phi: _spherical.phi,
                       theta: _spherical.theta,
                       duration: 1,
                     },
+                    position: '-=100%',
                     onComplete: () => {
                       controls.attachToWithoutMoving(observer);
-                      // _observerUp.set(...getLocalUpInWorldCoords(observer));
-                      // controls.up.copy(_observerUp);
+                      _observerUp.set(...getLocalUpInWorldCoords(observer));
+                      controls.up.copy(_observerUp);
+                      controls.camera.up.copy(controls.up);
+
                       controls.setAzimuthalAngle(PI);
                       controls.setPolarAngle(0);
-                      // controls.camera.up.copy(controls.up);
+                      controls.camera.rotation.z = 0;
                     },
                   },
-                  // {
-                  //   vars: { phi: 0, duration: 1 },
-                  // },
+
                   {
+                    target: controls.spherical,
                     vars: { radius: SURFACE_MIN_DIST, duration: 1 },
                     // position: '-=1',
                   },
                   {
+                    target: controls.spherical,
                     vars: { phi: PI_OVER_TWO, duration: 1 },
                     // position: '-=50%',
                   },

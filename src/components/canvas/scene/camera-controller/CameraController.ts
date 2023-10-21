@@ -518,6 +518,10 @@ export class CameraController extends Object3D {
     return this._isMoving;
   }
 
+  get spherical() {
+    return this._spherical;
+  }
+
   animateTo(to: { radius?: number; azimuth?: number; polar?: number }) {
     this.lock();
 
@@ -564,6 +568,7 @@ export class CameraController extends Object3D {
 
   animateSequence(
     animations: {
+      target: gsap.TweenTarget;
       vars: gsap.TweenVars;
       position?: gsap.Position;
       onComplete?: () => void;
@@ -573,15 +578,17 @@ export class CameraController extends Object3D {
     this.lock();
     const tl = gsap.timeline();
 
+    // this._normalizeAzimuthalAngle();
+
     return new Promise<void>((resolve) => {
       this._isAnimating = true;
       for (let i = 0; i < animations.length; ++i) {
         const anim = animations[i];
         if (!anim) continue;
-        const { vars, position } = anim;
+        const { target, vars, position } = anim;
 
         tl.to(
-          this._spherical,
+          target,
           {
             ...vars,
             onComplete:
