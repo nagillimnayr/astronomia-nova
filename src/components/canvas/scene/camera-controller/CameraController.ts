@@ -527,10 +527,15 @@ export class CameraController extends Object3D {
     this._sphericalTarget.set(radius, phi, theta);
   }
 
-  animateTo(to: { radius?: number; phi?: number; theta?: number }) {
+  animateTo(to: {
+    radius?: number;
+    phi?: number;
+    theta?: number;
+    duration?: number;
+  }) {
     this.lock();
     this.resetTarget();
-    const { radius, phi, theta } = to;
+    const { radius, phi, theta, duration } = to;
     if (
       typeof radius !== 'number' &&
       typeof phi !== 'number' &&
@@ -541,23 +546,13 @@ export class CameraController extends Object3D {
       return Promise.resolve();
     }
 
-    // console.log(`anim radius: ${radius ?? 'undefined'}`);
-    // console.log(`anim polar: ${polar ?? 'undefined'}`);
-    // console.log(`anim azimuth: ${azimuth ?? 'undefined'}`);
-
-    // this.setRadiusTarget(radius ?? this._spherical.radius);
-    // this.setPolarAngleTarget(phi ?? this._spherical.phi);
-    // this.setAzimuthalAngleTarget(theta ?? this._spherical.theta);
-
-    const duration = 5;
-
     return new Promise<void>((resolve) => {
       this._isAnimating = true;
       gsap.to(this._spherical, {
         radius: radius ?? this._spherical.radius,
         phi: phi ?? this._spherical.phi,
         theta: theta ?? this._spherical.theta,
-        duration: duration,
+        duration: duration ?? 1,
         onComplete: () => {
           this.unlock();
           this._isAnimating = false;
