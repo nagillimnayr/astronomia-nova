@@ -25,7 +25,7 @@ import { BodyMesh } from './BodyMesh';
 import { KeplerBody } from './kepler-body';
 import { Markers } from '@/components/canvas/markers/Markers';
 import { KeplerOrbit } from '../orbit';
-import { ORIGIN, X_AXIS } from '@/constants';
+import { ORIGIN, X_AXIS, Y_AXIS } from '@/constants';
 
 // Extend KeplerBody so the reconciler is aware of it.
 extend({ KeplerBody });
@@ -140,6 +140,7 @@ export const Body = memo(
           siderealRotationRate={siderealRotationRate}
           siderealRotationPeriod={siderealRotationPeriod}
         >
+          <arrowHelper args={[Y_AXIS, ORIGIN, meanRadius * 3, 'blue']} />
           {/* Make self available to children through context. */}
           <KeplerTreeContext.Provider value={bodyRef}>
             {children}

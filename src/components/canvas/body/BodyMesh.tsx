@@ -1,6 +1,6 @@
 import { type KeplerBody } from '@/components/canvas/body/kepler-body';
 import { PlanetRing } from '@/components/canvas/body/PlanetRing';
-import { METER, PI_OVER_TWO } from '@/constants/constants';
+import { METER, ORIGIN, PI_OVER_TWO, Y_AXIS } from '@/constants/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { MeshDiscardMaterial, Sphere } from '@react-three/drei';
 import { type ThreeEvent } from '@react-three/fiber';
@@ -126,6 +126,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
             args={sphereArgs}
             material={material}
           >
+            <arrowHelper args={[Y_AXIS, ORIGIN, radius * 3, 'green']} />
             <InteractionSphere radius={meanRadius} />
           </Sphere>
           {name === 'Saturn' && (
