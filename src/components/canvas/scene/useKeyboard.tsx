@@ -61,21 +61,21 @@ export function useKeyboard() {
         gsap.to(controls.rotation, {
           x: 0,
           y: 0,
-          z: -obliquity,
+          z: angle,
           duration: 1,
           onComplete: () => {
             controls.unlock();
           },
         });
-        gsap.to(controls.camera.rotation, {
-          x: 0,
-          y: 0,
-          z: 0,
-          duration: 1,
-          onComplete: () => {
-            controls.unlock();
-          },
-        });
+        // gsap.to(controls.camera.rotation, {
+        //   x: 0,
+        //   y: 0,
+        //   z: 0,
+        //   duration: 1,
+        //   onComplete: () => {
+        //     controls.unlock();
+        //   },
+        // });
 
         break;
       }
