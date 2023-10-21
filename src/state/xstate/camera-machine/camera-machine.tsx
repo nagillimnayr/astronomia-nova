@@ -231,8 +231,10 @@ export const cameraMachine = createMachine(
 
               observer.getWorldPosition(_observerPos);
 
+              // focusTarget.worldToLocal(_observerPos);
               controls.worldToLocal(_observerPos);
               const observerRadius = _observerPos.length();
+              _spherical.setFromVector3(_observerPos);
 
               const targetRadius = observerRadius * 3;
 
@@ -241,34 +243,42 @@ export const cameraMachine = createMachine(
               const dist = Math.min(controls.radius, targetRadius);
               // const dist = targetRadius;
 
-              controls.attachToWithoutMoving(observer);
+              // controls.attachToWithoutMoving(observer);
+              // const thetaStart = controls.azimuthalAngle;
+              // const thetaEnd = Math.floor(thetaStart / PI) * PI;
               void controls
-                .animateTo({
-                  radius: dist,
-                  polar: 0,
-                  azimuth: PI,
-                })
+                .animateSequence([
+                  {
+                    vars: {
+                      radius: dist,
+                      phi: _spherical.phi,
+                      theta: _spherical.theta,
+                      duration: 1,
+                    },
+                    onComplete: () => {
+                      controls.attachToWithoutMoving(observer);
+                      // _observerUp.set(...getLocalUpInWorldCoords(observer));
+                      // controls.up.copy(_observerUp);
+                      controls.setAzimuthalAngle(PI);
+                      controls.setPolarAngle(0);
+                      // controls.camera.up.copy(controls.up);
+                    },
+                  },
+                  // {
+                  //   vars: { phi: 0, duration: 1 },
+                  // },
+                  {
+                    vars: { radius: SURFACE_MIN_DIST, duration: 1 },
+                    // position: '-=1',
+                  },
+                  {
+                    vars: { phi: PI_OVER_TWO, duration: 1 },
+                    // position: '-=50%',
+                  },
+                ])
                 .then(() => {
-                  console.log('Surface Anim 1!');
-                  controls.camera.near = SURFACE_NEAR_CLIP;
-                  void controls
-                    .animateTo({
-                      radius: SURFACE_MIN_DIST,
-                      polar: PI_OVER_TWO,
-                      azimuth: PI,
-                    })
-                    .then(() => {
-                      void controls
-                        .animateTo({
-                          radius: SURFACE_MIN_DIST,
-                          polar: PI_OVER_TWO,
-                          azimuth: 0,
-                        })
-                        .then(() => {
-                          console.log('Surface Anim 2! Resolving!');
-                          resolve();
-                        });
-                    });
+                  console.log('Surface Anim Resolving!');
+                  resolve();
                 });
             }),
           id: 'entering_surface_promise',
@@ -430,7 +440,7 @@ export const cameraMachine = createMachine(
       attachToObserver: (context) => {
         const { controls, observer } = context;
         if (!controls || !observer) return;
-        controls.attachControllerTo(observer);
+        // controls.attachControllerTo(observer);
         _observerUp.set(...getLocalUpInWorldCoords(observer));
         controls.up.copy(_observerUp);
 
@@ -465,7 +475,7 @@ export const cameraMachine = createMachine(
       applySurfaceCamUp: (context) => {
         const { controls, observer, focusTarget } = context;
         if (!controls || !observer || !focusTarget) return;
-        controls.rotation.set(0, 0, 0); // Reset rotation.
+        // controls.rotation.set(0, 0, 0); // Reset rotation.
       },
       applySpaceCamUp: (context) => {
         // Reset up vector of camera.

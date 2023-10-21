@@ -528,29 +528,19 @@ export class CameraController extends Object3D {
       typeof polar !== 'number'
     ) {
       this.unlock();
+      this._isAnimating = false;
       return Promise.resolve();
     }
 
-    // if (typeof radius === 'number') {
-    //   this.setRadiusTarget(radius);
-    //   console.log(`anim radius target: ${radius}`);
-    // }
-    // if (typeof azimuth === 'number') {
-    //   this.setAzimuthalAngleTarget(azimuth);
-    //   console.log(`anim azimuth target: ${azimuth}`);
-    // }
-    // if (typeof polar === 'number') {
-    //   this.setPolarAngleTarget(polar);
-    //   console.log(`anim polar target: ${polar}`);
-    // }
-
-    console.log(`anim radius: ${radius ?? 'undefined'}`);
-    console.log(`anim polar: ${polar ?? 'undefined'}`);
-    console.log(`anim azimuth: ${azimuth ?? 'undefined'}`);
+    // console.log(`anim radius: ${radius ?? 'undefined'}`);
+    // console.log(`anim polar: ${polar ?? 'undefined'}`);
+    // console.log(`anim azimuth: ${azimuth ?? 'undefined'}`);
 
     this.setRadiusTarget(radius ?? this._spherical.radius);
     this.setPolarAngleTarget(polar ?? this._spherical.phi);
     this.setAzimuthalAngleTarget(azimuth ?? this._spherical.theta);
+
+    const duration = 5;
 
     return new Promise<void>((resolve) => {
       this._isAnimating = true;
@@ -558,23 +548,60 @@ export class CameraController extends Object3D {
         radius: radius ?? this._spherical.radius,
         phi: polar ?? this._spherical.phi,
         theta: azimuth ?? this._spherical.theta,
-        duration: 1,
+        duration: duration,
         onComplete: () => {
           this.unlock();
           this._isAnimating = false;
 
-          this.setRadiusTarget(radius ?? this._spherical.radius);
-          this.setPolarAngleTarget(polar ?? this._spherical.phi);
-          this.setAzimuthalAngleTarget(azimuth ?? this._spherical.theta);
+          this.setRadiusTarget(this._spherical.radius);
+          this.setPolarAngleTarget(this._spherical.phi);
+          this.setAzimuthalAngleTarget(this._spherical.theta);
           resolve();
         },
       });
-      // const onRest = () => {
-      //   this.unlock();
-      //   this.removeEventListener('REST', onRest);
-      //   resolve();
-      // };
-      // this.addEventListener('REST', onRest);
+    });
+  }
+
+  animateSequence(
+    animations: {
+      vars: gsap.TweenVars;
+      position?: gsap.Position;
+      onComplete?: () => void;
+    }[]
+  ) {
+    if (animations.length < 1) return Promise.resolve();
+    this.lock();
+    const tl = gsap.timeline();
+
+    return new Promise<void>((resolve) => {
+      this._isAnimating = true;
+      for (let i = 0; i < animations.length; ++i) {
+        const anim = animations[i];
+        if (!anim) continue;
+        const { vars, position } = anim;
+
+        tl.to(
+          this._spherical,
+          {
+            ...vars,
+            onComplete:
+              i === animations.length - 1
+                ? () => {
+                    this.unlock();
+                    this._isAnimating = false;
+
+                    this.setRadiusTarget(this._spherical.radius);
+                    this.setPolarAngleTarget(this._spherical.phi);
+                    this.setAzimuthalAngleTarget(this._spherical.theta);
+
+                    anim.onComplete && anim.onComplete();
+                    resolve();
+                  }
+                : anim.onComplete,
+          },
+          position
+        );
+      }
     });
   }
 
