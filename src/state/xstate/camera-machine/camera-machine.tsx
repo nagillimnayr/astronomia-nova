@@ -236,29 +236,36 @@ export const cameraMachine = createMachine(
                 return resolve();
               }
 
+              console.log('Entering Surface Anim!');
+
+              const obliquity = degToRad(focusTarget.obliquity);
+
               observer.getWorldPosition(_observerPos);
 
-              // focusTarget.worldToLocal(_observerPos);
+              /* Save current rotation of controller. */
+              const prevRotation = controls.rotation.clone();
+              /* Set rotation so that controller aligns with polar axis. */
+              controls.rotation.x = -obliquity;
+              /* Get Observer position in controller local space. */
               controls.worldToLocal(_observerPos);
+              /* Reset controller rotation so that it can be animated. */
+              controls.rotation.copy(prevRotation);
+
               const observerRadius = _observerPos.length();
 
+              /* Get spherical coordinates of observer position. */
               _spherical.setFromVector3(_observerPos);
               _spherical.makeSafe();
 
+              /* Normalize azimuthal angles so that the rotation will take the shortest path. */
               controls.normalizeAzimuthalAngle();
               const phi = _spherical.phi;
               const theta = normalizeAngle(_spherical.theta);
               const diffTheta = theta - controls.azimuthalAngle;
 
-              console.log(`theta: ${radToDeg(theta)}`);
-
               const targetRadius = observerRadius * 3;
 
-              console.log('Entering Surface Anim!');
-
               const dist = Math.min(controls.radius, targetRadius);
-
-              const obliquity = degToRad(focusTarget.obliquity);
 
               _focusUp.set(
                 ...getLocalUpInWorldCoords(focusTarget.meshRef.current!)
@@ -270,26 +277,32 @@ export const cameraMachine = createMachine(
 
               const tl = gsap.timeline();
 
+              /* Set controller targets to current values. */
               controls.resetTarget();
 
-              gsap.to(controls.camera.rotation, {
-                z: -obliquity,
-                duration: 1,
-              });
+              // gsap.to(controls.rotation, {
+              //   z: -obliquity,
+              //   duration: 1,
+              // });
+
               void controls
                 .animateSequence([
-                  // {
-                  //   target: controls.camera.rotation,
-                  //   vars: {
-                  //     z: -angle,
-                  //     duration: 1,
-                  //   },
-                  // },
                   {
+                    /* Animate alignment of controller with polar axis. */
+                    target: controls.rotation,
+                    vars: {
+                      x: -obliquity,
+                      z: 0,
+                      duration: 2,
+                    },
+                  },
+                  {
+                    /* Animate camera to be over observer position. */
                     target: controls.spherical,
                     vars: {
                       radius: dist,
                       phi: phi,
+                      /* Ensure camera takes shortest path. */
                       theta: Math.abs(diffTheta) < PI ? theta : theta - TWO_PI,
                       duration: 1,
                     },
@@ -308,13 +321,14 @@ export const cameraMachine = createMachine(
                       controls.camera.rotation.z = 0;
                     },
                   },
-
                   {
+                    /* Zoom in to surface. */
                     target: controls.spherical,
                     vars: { radius: SURFACE_MIN_DIST, duration: 1 },
                     // position: '-=1',
                   },
                   {
+                    /* Rotate camera to be parallel with surface. */
                     target: controls.spherical,
                     vars: { phi: PI_OVER_TWO, duration: 1 },
                     // position: '-=50%',
