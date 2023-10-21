@@ -120,13 +120,13 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     <>
       <object3D ref={objRef}>
         <group rotation={rotation}>
+          <arrowHelper args={[Y_AXIS, ORIGIN, radius * 3, 'green']} />
           <Sphere
             name={name + '-mesh'}
             ref={meshRef}
             args={sphereArgs}
             material={material}
           >
-            <arrowHelper args={[Y_AXIS, ORIGIN, radius * 3, 'green']} />
             <InteractionSphere radius={meanRadius} />
           </Sphere>
           {name === 'Saturn' && (
