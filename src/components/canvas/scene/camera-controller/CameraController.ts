@@ -245,7 +245,7 @@ export class CameraController extends Object3D {
     );
   }
 
-  private _normalizeAzimuthalAngle() {
+  normalizeAzimuthalAngle() {
     const deltaTheta = this._sphericalTarget.theta - this._spherical.theta;
     // Adjust angles to be within range [0, TWO_PI)
     this._sphericalTarget.theta = normalizeAngle(this._sphericalTarget.theta);
