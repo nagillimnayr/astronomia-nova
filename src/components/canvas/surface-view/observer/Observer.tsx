@@ -20,7 +20,7 @@ const Observer = () => {
               cameraActor.send({ type: 'ASSIGN_OBSERVER', observer });
             }}
           >
-            {/* <axesHelper args={[5 * METER]} /> */}
+            <axesHelper args={[5 * METER * 1e7]} />
             <Projector />
             {/* <Suspense>
              <SkySphere />
