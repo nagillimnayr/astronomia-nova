@@ -4,7 +4,7 @@ import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEventListener } from '@react-hooks-library/core';
 import { Spherical, Vector3 } from 'three';
-import { radToDeg } from 'three/src/math/MathUtils';
+import { degToRad, radToDeg } from 'three/src/math/MathUtils';
 import { gsap } from 'gsap';
 import { KeplerBody } from '../body';
 
@@ -17,6 +17,32 @@ export function useKeyboard() {
     // console.log(event.code);
 
     switch (event.code) {
+      case 'KeyY': {
+        const { controls } = cameraActor.getSnapshot()!.context;
+        if (!controls || !controls.camera) return;
+
+        controls.lock();
+        gsap.to(controls.rotation, {
+          x: 0,
+          y: 0,
+          z: 0,
+          duration: 1,
+          onComplete: () => {
+            controls.unlock();
+          },
+        });
+        gsap.to(controls.camera.rotation, {
+          z: 0,
+          x: 0,
+          y: 0,
+          duration: 1,
+          onComplete: () => {
+            controls.unlock();
+          },
+        });
+
+        break;
+      }
       case 'KeyU': {
         const { controls, observer, focusTarget } =
           cameraActor.getSnapshot()!.context;
@@ -27,13 +53,25 @@ export function useKeyboard() {
         const _cameraUp = new Vector3();
 
         _focusUp.set(...getLocalUpInWorldCoords(focusTarget.meshRef.current!));
-        _cameraUp.set(...getLocalUpInWorldCoords(controls.camera));
-
+        _cameraUp.set(...getLocalUpInWorldCoords(controls));
+        const obliquity = degToRad(focusTarget.obliquity);
         const angle = _cameraUp.angleTo(_focusUp);
         controls.lock();
+
+        gsap.to(controls.rotation, {
+          x: 0,
+          y: 0,
+          z: -obliquity,
+          duration: 1,
+          onComplete: () => {
+            controls.unlock();
+          },
+        });
         gsap.to(controls.camera.rotation, {
-          z: angle,
-          duration: 3,
+          x: 0,
+          y: 0,
+          z: 0,
+          duration: 1,
           onComplete: () => {
             controls.unlock();
           },
@@ -75,8 +113,8 @@ export function useKeyboard() {
         // controls.rotation.y = 0;
         // controls.rotation.x = 0;
         // controls.rotation.z = 0;
-        controls.setAzimuthalAngle(0);
-        controls.setAzimuthalAngleTarget(0);
+        // controls.setAzimuthalAngle(0);
+        // controls.setAzimuthalAngleTarget(0);
         break;
       }
       /** Sidereal Day advancement. */
