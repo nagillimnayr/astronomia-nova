@@ -522,14 +522,19 @@ export class CameraController extends Object3D {
     return this._spherical;
   }
 
-  animateTo(to: { radius?: number; azimuth?: number; polar?: number }) {
-    this.lock();
+  resetTarget() {
+    const { radius, phi, theta } = this._spherical;
+    this._sphericalTarget.set(radius, phi, theta);
+  }
 
-    const { radius, azimuth, polar } = to;
+  animateTo(to: { radius?: number; phi?: number; theta?: number }) {
+    this.lock();
+    this.resetTarget();
+    const { radius, phi, theta } = to;
     if (
       typeof radius !== 'number' &&
-      typeof azimuth !== 'number' &&
-      typeof polar !== 'number'
+      typeof phi !== 'number' &&
+      typeof theta !== 'number'
     ) {
       this.unlock();
       this._isAnimating = false;
@@ -540,9 +545,9 @@ export class CameraController extends Object3D {
     // console.log(`anim polar: ${polar ?? 'undefined'}`);
     // console.log(`anim azimuth: ${azimuth ?? 'undefined'}`);
 
-    this.setRadiusTarget(radius ?? this._spherical.radius);
-    this.setPolarAngleTarget(polar ?? this._spherical.phi);
-    this.setAzimuthalAngleTarget(azimuth ?? this._spherical.theta);
+    // this.setRadiusTarget(radius ?? this._spherical.radius);
+    // this.setPolarAngleTarget(phi ?? this._spherical.phi);
+    // this.setAzimuthalAngleTarget(theta ?? this._spherical.theta);
 
     const duration = 5;
 
@@ -550,17 +555,24 @@ export class CameraController extends Object3D {
       this._isAnimating = true;
       gsap.to(this._spherical, {
         radius: radius ?? this._spherical.radius,
-        phi: polar ?? this._spherical.phi,
-        theta: azimuth ?? this._spherical.theta,
+        phi: phi ?? this._spherical.phi,
+        theta: theta ?? this._spherical.theta,
         duration: duration,
         onComplete: () => {
           this.unlock();
           this._isAnimating = false;
 
-          this.setRadiusTarget(this._spherical.radius);
-          this.setPolarAngleTarget(this._spherical.phi);
-          this.setAzimuthalAngleTarget(this._spherical.theta);
+          this.resetTarget();
           resolve();
+        },
+      });
+      gsap.to(this._sphericalTarget, {
+        radius: radius ?? this._spherical.radius,
+        phi: phi ?? this._spherical.phi,
+        theta: theta ?? this._spherical.theta,
+        duration: duration,
+        onComplete: () => {
+          this.resetTarget();
         },
       });
     });
