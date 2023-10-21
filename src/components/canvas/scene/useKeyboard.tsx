@@ -3,10 +3,19 @@ import { useEventListener } from '@react-hooks-library/core';
 
 export function useKeyboard() {
   const rootActor = MachineContext.useActorRef();
-  const { timeActor } = MachineContext.useSelector(({ context }) => context);
+  const { timeActor, cameraActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   useEventListener('keydown', (event) => {
-    // console.log(event.code);
+    console.log(event.code);
     switch (event.code) {
+      case 'Space': {
+        const { controls } = cameraActor.getSnapshot()!.context;
+        console.log(
+          `azimuthal angle: ${controls?.azimuthalAngle ?? 'undefined'}`
+        );
+        break;
+      }
       /** Sidereal Day advancement. */
       case 'ArrowUp': {
         rootActor.send({ type: 'ADVANCE_DAY', reverse: false });

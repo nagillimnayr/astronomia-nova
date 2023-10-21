@@ -3,6 +3,7 @@ import { type CameraController } from '@/components/canvas/scene/camera-controll
 import {
   DIST_MULT,
   METER,
+  PI,
   PI_OVER_TWO,
   SIMULATION_RADIUS,
   SUN_RADIUS,
@@ -11,10 +12,19 @@ import { NEAR_CLIP, SURFACE_NEAR_CLIP } from '@/constants/scene-constants';
 import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
 import { type RootState } from '@react-three/fiber';
 import { type XRState } from '@react-three/xr';
-import { type Object3D, type PerspectiveCamera, Vector3 } from 'three';
+import {
+  type Object3D,
+  type PerspectiveCamera,
+  Vector3,
+  Spherical,
+} from 'three';
 import { assign, createMachine } from 'xstate';
 
 const _observerUp = new Vector3();
+const _observerPos = new Vector3();
+const _cameraPos = new Vector3();
+const _focusPos = new Vector3();
+const _spherical = new Spherical();
 
 const NEPTUNE_APOAPSIS = 4553758200000 * METER;
 
@@ -174,7 +184,7 @@ export const cameraMachine = createMachine(
           },
           TO_SURFACE: {
             // Transition to 'surface' view-mode:
-            target: 'surface',
+            target: 'entering_surface',
 
             actions: ['logEvent'],
           },
@@ -197,6 +207,72 @@ export const cameraMachine = createMachine(
               // 'showVRHud',
             ],
           },
+        },
+      },
+      entering_surface: {
+        on: {
+          UPDATE: {
+            actions: ['updateCamera'],
+          },
+        },
+        invoke: {
+          src: (context) =>
+            new Promise<void>((resolve) => {
+              const { controls, focusTarget, observer } = context;
+              if (
+                !controls ||
+                !controls.camera ||
+                !observer ||
+                !focusTarget ||
+                !(focusTarget instanceof KeplerBody)
+              ) {
+                return resolve();
+              }
+
+              observer.getWorldPosition(_observerPos);
+
+              controls.worldToLocal(_observerPos);
+              const observerRadius = _observerPos.length();
+
+              const targetRadius = observerRadius * 3;
+
+              console.log('Entering Surface Anim!');
+
+              const dist = Math.min(controls.radius, targetRadius);
+              // const dist = targetRadius;
+
+              controls.attachToWithoutMoving(observer);
+              void controls
+                .animateTo({
+                  radius: dist,
+                  polar: 0,
+                  azimuth: PI,
+                })
+                .then(() => {
+                  console.log('Surface Anim 1!');
+                  controls.camera.near = SURFACE_NEAR_CLIP;
+                  void controls
+                    .animateTo({
+                      radius: SURFACE_MIN_DIST,
+                      polar: PI_OVER_TWO,
+                      azimuth: PI,
+                    })
+                    .then(() => {
+                      void controls
+                        .animateTo({
+                          radius: SURFACE_MIN_DIST,
+                          polar: PI_OVER_TWO,
+                          azimuth: 0,
+                        })
+                        .then(() => {
+                          console.log('Surface Anim 2! Resolving!');
+                          resolve();
+                        });
+                    });
+                });
+            }),
+          id: 'entering_surface_promise',
+          onDone: { target: 'surface' },
         },
       },
       surface: {
@@ -375,10 +451,10 @@ export const cameraMachine = createMachine(
         if (!controls || !observer || !focusTarget) return;
 
         // Set polar angle to be horizontal relative to the surface.
-        controls.setPolarAngleTarget(0);
-        setTimeout(() => {
-          controls.setPolarAngleTarget(PI_OVER_TWO);
-        }, 1000);
+        // controls.setPolarAngleTarget(0);
+        // setTimeout(() => {
+        //   controls.setPolarAngleTarget(PI_OVER_TWO);
+        // }, 1000);
       },
 
       updateSurfaceView: (context) => {
