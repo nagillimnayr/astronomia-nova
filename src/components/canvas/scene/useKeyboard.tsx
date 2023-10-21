@@ -50,32 +50,32 @@ export function useKeyboard() {
           return;
 
         const _focusUp = new Vector3();
-        const _cameraUp = new Vector3();
+        const _controllerUp = new Vector3();
 
         _focusUp.set(...getLocalUpInWorldCoords(focusTarget.meshRef.current!));
-        _cameraUp.set(...getLocalUpInWorldCoords(controls));
+        const bodyMesh = focusTarget.meshRef.current;
+        if (!bodyMesh) return;
+        const meshParent = bodyMesh.parent;
+        if (!meshParent) return;
+        const rotation = meshParent.rotation;
+
+        _controllerUp.set(...getLocalUpInWorldCoords(controls));
+        _focusUp.set(...getLocalUpInWorldCoords(meshParent));
+
         const obliquity = degToRad(focusTarget.obliquity);
-        const angle = _cameraUp.angleTo(_focusUp);
+
+        const angle = _controllerUp.angleTo(_focusUp);
         controls.lock();
 
         gsap.to(controls.rotation, {
-          x: 0,
-          y: 0,
-          z: angle,
+          x: -obliquity,
+          // y: 0,
+          z: 0,
           duration: 1,
           onComplete: () => {
             controls.unlock();
           },
         });
-        // gsap.to(controls.camera.rotation, {
-        //   x: 0,
-        //   y: 0,
-        //   z: 0,
-        //   duration: 1,
-        //   onComplete: () => {
-        //     controls.unlock();
-        //   },
-        // });
 
         break;
       }
@@ -97,6 +97,7 @@ export function useKeyboard() {
         void controls.animateTo({
           phi,
           theta: Math.abs(diffTheta) < PI ? theta : theta - TWO_PI,
+          duration: 1,
         });
 
         break;
@@ -110,11 +111,7 @@ export function useKeyboard() {
         const azimuth = radToDeg(controls.azimuthalAngle);
         console.log(`azimuthal angle: ${azimuth}`);
         console.log(`controls angles: `, { x, y, z });
-        // controls.rotation.y = 0;
-        // controls.rotation.x = 0;
-        // controls.rotation.z = 0;
-        // controls.setAzimuthalAngle(0);
-        // controls.setAzimuthalAngleTarget(0);
+
         break;
       }
       /** Sidereal Day advancement. */
