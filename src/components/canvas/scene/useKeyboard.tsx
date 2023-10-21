@@ -1,5 +1,6 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEventListener } from '@react-hooks-library/core';
+import { radToDeg } from 'three/src/math/MathUtils';
 
 export function useKeyboard() {
   const rootActor = MachineContext.useActorRef();
@@ -7,13 +8,13 @@ export function useKeyboard() {
     ({ context }) => context
   );
   useEventListener('keydown', (event) => {
-    console.log(event.code);
+    // console.log(event.code);
     switch (event.code) {
       case 'Space': {
         const { controls } = cameraActor.getSnapshot()!.context;
-        console.log(
-          `azimuthal angle: ${controls?.azimuthalAngle ?? 'undefined'}`
-        );
+        if (!controls) return;
+        const azimuth = radToDeg(controls.azimuthalAngle);
+        console.log(`azimuthal angle: ${azimuth}`);
         break;
       }
       /** Sidereal Day advancement. */
