@@ -18,8 +18,11 @@ import {
 import { clamp } from 'three/src/math/MathUtils';
 import { smoothCritDamp } from './smoothing';
 import { damp, dampAngle } from 'maath/easing';
+import { gsap } from 'gsap';
 
 const EPSILON = 1e-3;
+
+const DAMP_EPS = 1e-2;
 
 const MIN_RADIUS_BOUND = Number.EPSILON;
 const MAX_RADIUS_BOUND = Infinity;
@@ -43,6 +46,10 @@ const _eul2 = new Euler();
 
 function approxZero(num: number, epsilon = EPSILON) {
   return Math.abs(num) <= epsilon;
+}
+
+function approxEqual(num1: number, num2: number, epsilon: number = EPSILON) {
+  return Math.abs(num1 - num2) <= epsilon;
 }
 
 /**
@@ -83,6 +90,7 @@ export class CameraController extends Object3D {
   private _locked = false;
 
   private _isMoving = false;
+  private _isAnimating = false;
 
   /**
    * @description Updates the camera. Should be called inside of the render loop each frame.
@@ -93,38 +101,38 @@ export class CameraController extends Object3D {
    */
   update(deltaTime: number) {
     // this._isMoving = false;
+    if (!this._isAnimating) {
+      const radiusMoving = damp(
+        this._spherical,
+        'radius',
+        this._sphericalTarget.radius,
+        this._smoothTime,
+        deltaTime
+      );
 
-    const radiusMoving = damp(
-      this._spherical,
-      'radius',
-      this._sphericalTarget.radius,
-      this._smoothTime,
-      deltaTime
-    );
-    const azimuthMoving = damp(
-      this._spherical,
-      'theta',
-      this._sphericalTarget.theta,
-      this._smoothTime,
-      deltaTime
-    );
-    const polarMoving = damp(
-      this._spherical,
-      'phi',
-      this._sphericalTarget.phi,
-      this._smoothTime,
-      deltaTime
-    );
-    const isMoving = radiusMoving || azimuthMoving || polarMoving;
-    if (this._isMoving && !isMoving) {
-      this.dispatchEvent({ type: 'REST' });
-      console.log('REST');
+      const azimuthMoving = damp(
+        this._spherical,
+        'theta',
+        this._sphericalTarget.theta,
+        this._smoothTime,
+        deltaTime
+      );
+
+      const polarMoving = damp(
+        this._spherical,
+        'phi',
+        this._sphericalTarget.phi,
+        this._smoothTime,
+        deltaTime
+      );
+
+      const isMoving = radiusMoving || azimuthMoving || polarMoving;
+      if (this._isMoving && !isMoving) {
+        this.dispatchEvent({ type: 'REST' });
+        console.log('REST');
+      }
+      this._isMoving = isMoving;
     }
-    this._isMoving = isMoving;
-
-    // this.updateRadius(deltaTime);
-    // this.updatePolarAngle(deltaTime);
-    // this.updateAzimuthalAngle(deltaTime);
 
     const pivotPoint = this._pivotPoint;
     const attachPoint = this._attachPoint;
@@ -514,23 +522,59 @@ export class CameraController extends Object3D {
     this.lock();
 
     const { radius, azimuth, polar } = to;
-    if (radius) {
-      this.setRadiusTarget(radius);
-    }
-    if (azimuth) {
-      this.setAzimuthalAngleTarget(azimuth);
-    }
-    if (polar) {
-      this.setPolarAngleTarget(polar);
+    if (
+      typeof radius !== 'number' &&
+      typeof azimuth !== 'number' &&
+      typeof polar !== 'number'
+    ) {
+      this.unlock();
+      return Promise.resolve();
     }
 
+    // if (typeof radius === 'number') {
+    //   this.setRadiusTarget(radius);
+    //   console.log(`anim radius target: ${radius}`);
+    // }
+    // if (typeof azimuth === 'number') {
+    //   this.setAzimuthalAngleTarget(azimuth);
+    //   console.log(`anim azimuth target: ${azimuth}`);
+    // }
+    // if (typeof polar === 'number') {
+    //   this.setPolarAngleTarget(polar);
+    //   console.log(`anim polar target: ${polar}`);
+    // }
+
+    console.log(`anim radius: ${radius ?? 'undefined'}`);
+    console.log(`anim polar: ${polar ?? 'undefined'}`);
+    console.log(`anim azimuth: ${azimuth ?? 'undefined'}`);
+
+    this.setRadiusTarget(radius ?? this._spherical.radius);
+    this.setPolarAngleTarget(polar ?? this._spherical.phi);
+    this.setAzimuthalAngleTarget(azimuth ?? this._spherical.theta);
+
     return new Promise<void>((resolve) => {
-      const onRest = () => {
-        this.unlock();
-        this.removeEventListener('REST', onRest);
-        resolve();
-      };
-      this.addEventListener('REST', onRest);
+      this._isAnimating = true;
+      gsap.to(this._spherical, {
+        radius: radius ?? this._spherical.radius,
+        phi: polar ?? this._spherical.phi,
+        theta: azimuth ?? this._spherical.theta,
+        duration: 1,
+        onComplete: () => {
+          this.unlock();
+          this._isAnimating = false;
+
+          this.setRadiusTarget(radius ?? this._spherical.radius);
+          this.setPolarAngleTarget(polar ?? this._spherical.phi);
+          this.setAzimuthalAngleTarget(azimuth ?? this._spherical.theta);
+          resolve();
+        },
+      });
+      // const onRest = () => {
+      //   this.unlock();
+      //   this.removeEventListener('REST', onRest);
+      //   resolve();
+      // };
+      // this.addEventListener('REST', onRest);
     });
   }
 
