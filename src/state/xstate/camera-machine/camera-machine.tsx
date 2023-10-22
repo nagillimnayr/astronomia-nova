@@ -255,7 +255,7 @@ export const cameraMachine = createMachine(
                 // x: -obliquity,
                 x: angle,
                 // z: 0,
-                duration: 1,
+                duration: 0.5,
                 onComplete: () => {
                   observer.getWorldPosition(_observerPos);
 
