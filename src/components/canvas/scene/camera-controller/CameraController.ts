@@ -5,6 +5,7 @@ import {
   PI_OVER_TWO,
   TWO_PI,
   Y_AXIS,
+  Z_AXIS,
 } from '@/constants/constants';
 import { normalizeAngle } from '@/helpers/rotation-utils';
 import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
@@ -15,7 +16,7 @@ import {
   Vector3,
   Euler,
 } from 'three';
-import { clamp } from 'three/src/math/MathUtils';
+import { clamp, radToDeg } from 'three/src/math/MathUtils';
 import { smoothCritDamp } from './smoothing';
 import { damp, dampAngle } from 'maath/easing';
 import { gsap } from 'gsap';
@@ -443,10 +444,9 @@ export class CameraController extends Object3D {
   applyWorldUp() {
     // Get the world position of the point 1 unit from the object in the z-axis.
     this.getWorldPosition(_v1);
-    _v2.set(0, 0, 1);
-    _v3.addVectors(_v1, _v2);
+    _v3.addVectors(_v1, Z_AXIS);
 
-    // Look down the z-axis.
+    // Look down the local z-axis.
     this.up.copy(Y_AXIS);
     this.lookAt(_v3);
   }
