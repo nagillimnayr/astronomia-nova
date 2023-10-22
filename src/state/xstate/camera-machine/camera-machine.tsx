@@ -362,7 +362,7 @@ export const cameraMachine = createMachine(
                         /* Rotate camera to be parallel with surface. */
                         target: controls.spherical,
                         vars: { phi: PI_OVER_TWO, duration: 1 },
-                        // position: '-=50%',
+                        position: '-=50%',
                       },
                     ])
                     .then(() => {
