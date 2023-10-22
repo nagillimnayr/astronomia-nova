@@ -1,7 +1,11 @@
+import { cn } from '@/helpers/cn';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import * as RadixSlider from '@radix-ui/react-slider';
 import { useSelector } from '@xstate/react';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+
+const MIN = -100;
+const MAX = 100;
 
 export const TimescaleSlider = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
@@ -9,12 +13,20 @@ export const TimescaleSlider = () => {
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
+  const rangeRef = useRef<HTMLDivElement>(null!);
+
   const handleChange = useCallback(
     (values: number[]) => {
       if (values.length >= 0 && values[0] !== undefined) {
         const value = values[0];
 
         timeActor.send({ type: 'SET_TIMESCALE', timescale: value });
+
+        /* Scale the range. */
+        const scale = value / MAX;
+        const range = rangeRef.current;
+        if (!range) return;
+        range.style.transform = `scale(${scale}, 1)`;
       }
     },
     [timeActor]
@@ -33,13 +45,18 @@ export const TimescaleSlider = () => {
         className="relative flex h-5 w-[180px] touch-none select-none items-center rounded-full"
         // defaultValue={[1]}
         value={[timescale]}
-        min={-100}
-        max={100}
+        min={MIN}
+        max={MAX}
         step={1}
         onValueChange={handleChange}
       >
         <RadixSlider.Track className="relative h-[3px] grow rounded-full bg-gray-500">
-          <RadixSlider.Range className="absolute h-full  rounded-full bg-white" />
+          {/* <RadixSlider.Range className="absolute h-full rounded-full bg-white" /> */}
+          <div
+            ref={rangeRef}
+            className={cn("absolute h-full scale-x-0 w-1/2 left-1/2 origin-left rounded-full bg-white")}
+            style={{transform: 'scale(0, 1)'}}
+          />
         </RadixSlider.Track>
         {/* <TimescaleTooltip show={isHovered}> */}
         <RadixSlider.Thumb
