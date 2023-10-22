@@ -126,6 +126,7 @@ export const ProjectedTrail = ({
       setTimeout(() => {
         const anchor = anchorRef.current;
         points.current = resetTrail(anchor, body, length);
+        // console.log('current points:', points.current);
         // Update geometry.
         line.geometry.setPositions(points.current);
         line.visible = true;
@@ -165,9 +166,13 @@ export const ProjectedTrail = ({
   }, [timeActor, body]);
 
   useFrame(() => {
+    const isPaused = timeActor.getSnapshot()!.matches('paused');
+    const onSurface = cameraActor.getSnapshot()!.matches('surface');
+
+    if (!isPaused || !onSurface) return;
+
     // Update geometry.
     const line = lineRef.current;
-
     line.geometry.setPositions(points.current);
   });
 
@@ -176,8 +181,8 @@ export const ProjectedTrail = ({
   }, []);
 
   useEffect(() => {
-    lineRef.current.geometry.name = 'trail-projection-geometry';
-  }, []);
+    lineRef.current.geometry.name = `trail-projection-geometry-${body.name}`;
+  }, [body.name]);
 
   return (
     <>
