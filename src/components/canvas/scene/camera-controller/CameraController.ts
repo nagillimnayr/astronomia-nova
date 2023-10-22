@@ -486,6 +486,8 @@ export class CameraController extends Object3D {
 
     // Attach to the object.
     obj.add(this);
+
+    this.rotation.set(0, 0, 0); // Reset rotation.
   }
 
   attachToController(obj: Object3D) {
