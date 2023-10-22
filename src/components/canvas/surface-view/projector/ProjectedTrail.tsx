@@ -79,13 +79,14 @@ export const ProjectedTrail = ({
       if (!line) return;
       // Position of target won't have updated immediately, so reset the trail
       // after a slight delay.
+      const prevVisibility = line.visible;
       line.visible = false; // Toggle visibility temporarily, to avoid jank.
       setTimeout(() => {
         const anchor = anchorRef.current;
         points.current = resetTrail(anchor, body, length);
         // Update geometry.
         line.geometry.setPositions(points.current);
-        line.visible = true;
+        line.visible = prevVisibility;
       }, 30);
     });
     return () => subscription.unsubscribe();
@@ -101,6 +102,7 @@ export const ProjectedTrail = ({
       if (state.event.type !== 'PAUSE') return;
       // Position of target won't have updated immediately, so reset the trail
       // after a slight delay.
+      const prevVisibility = line.visible;
       line.visible = false; // Toggle visibility temporarily, to avoid jank.
       setTimeout(() => {
         const anchor = anchorRef.current;
@@ -108,7 +110,7 @@ export const ProjectedTrail = ({
         // Update geometry.
         line.geometry.setPositions(points.current);
 
-        line.visible = true;
+        line.visible = prevVisibility;
       }, 30);
     });
     return () => subscription.unsubscribe();
@@ -119,8 +121,16 @@ export const ProjectedTrail = ({
     const subscription = cameraActor.subscribe((state) => {
       if (state.event.type !== 'SET_TARGET') return;
       const line = lineRef.current;
+
+      const { focusTarget } = cameraActor.getSnapshot()!.context;
+      if (body === focusTarget) {
+        line.visible = false;
+        return;
+      }
+
       if (!line) return;
-      // Position of target won't have updated immediately, so reset the trail
+      // Position of target won't have updated immediately, so reset the trail.
+      const prevVisibility = line.visible;
       // after a slight delay.
       line.visible = false; // Toggle visibility temporarily, to avoid jank.
       setTimeout(() => {
@@ -129,7 +139,7 @@ export const ProjectedTrail = ({
         // console.log('current points:', points.current);
         // Update geometry.
         line.geometry.setPositions(points.current);
-        line.visible = true;
+        line.visible = prevVisibility;
       }, 30);
     });
 
@@ -167,9 +177,11 @@ export const ProjectedTrail = ({
 
   useFrame(() => {
     const isPaused = timeActor.getSnapshot()!.matches('paused');
-    const onSurface = cameraActor.getSnapshot()!.matches('surface');
+    const cameraState = cameraActor.getSnapshot()!;
+    const onSurface = cameraState.matches('surface');
+    const { focusTarget } = cameraState.context;
 
-    if (!isPaused || !onSurface) return;
+    if (!isPaused || !onSurface || body === focusTarget) return;
 
     // Update geometry.
     const line = lineRef.current;
