@@ -17,6 +17,20 @@ export function useKeyboard() {
     // console.log(event.code);
 
     switch (event.code) {
+      case 'KeyX': {
+        const { controls } = cameraActor.getSnapshot()!.context;
+        if (!controls || !controls.camera) return;
+
+        controls.lock();
+        gsap.to(controls.rotation, {
+          x: 0,
+          duration: 1,
+          onComplete: () => {
+            controls.unlock();
+          },
+        });
+        break;
+      }
       case 'KeyZ': {
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
