@@ -17,6 +17,20 @@ export function useKeyboard() {
     // console.log(event.code);
 
     switch (event.code) {
+      case 'KeyZ': {
+        const { controls } = cameraActor.getSnapshot()!.context;
+        if (!controls || !controls.camera) return;
+
+        controls.lock();
+        gsap.to(controls.rotation, {
+          z: 0,
+          duration: 1,
+          onComplete: () => {
+            controls.unlock();
+          },
+        });
+        break;
+      }
       case 'KeyY': {
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
@@ -57,20 +71,20 @@ export function useKeyboard() {
         if (!bodyMesh) return;
         const meshParent = bodyMesh.parent;
         if (!meshParent) return;
-        const rotation = meshParent.rotation;
 
         _controllerUp.set(...getLocalUpInWorldCoords(controls));
         _focusUp.set(...getLocalUpInWorldCoords(meshParent));
 
         const obliquity = degToRad(focusTarget.obliquity);
 
-        const angle = _controllerUp.angleTo(_focusUp);
+        const angle = controls.rotation.x - _controllerUp.angleTo(_focusUp);
         controls.lock();
 
         gsap.to(controls.rotation, {
-          x: -obliquity,
+          // x: -obliquity,
+          x: angle,
           // y: 0,
-          z: 0,
+          // z: 0,
           duration: 1,
           onComplete: () => {
             controls.unlock();
