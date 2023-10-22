@@ -140,7 +140,8 @@ export const Body = memo(
           siderealRotationRate={siderealRotationRate}
           siderealRotationPeriod={siderealRotationPeriod}
         >
-          <arrowHelper args={[Y_AXIS, ORIGIN, meanRadius * 3, 'blue']} />
+          {/* <arrowHelper args={[Y_AXIS, ORIGIN, meanRadius * 3, 'blue']} /> */}
+
           {/* Make self available to children through context. */}
           <KeplerTreeContext.Provider value={bodyRef}>
             {children}
