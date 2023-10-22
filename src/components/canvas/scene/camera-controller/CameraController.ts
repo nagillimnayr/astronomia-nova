@@ -130,7 +130,7 @@ export class CameraController extends Object3D {
       const isMoving = radiusMoving || azimuthMoving || polarMoving;
       if (this._isMoving && !isMoving) {
         this.dispatchEvent({ type: 'REST' });
-        console.log('REST');
+        // console.log('REST');
       }
       this._isMoving = isMoving;
     }
