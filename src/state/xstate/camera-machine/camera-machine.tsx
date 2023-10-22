@@ -33,6 +33,10 @@ const _cameraPos = new Vector3();
 const _focusPos = new Vector3();
 const _spherical = new Spherical();
 
+const _v1 = new Vector3();
+const _v2 = new Vector3();
+const _v3 = new Vector3();
+
 const NEPTUNE_APOAPSIS = 4553758200000 * METER;
 
 // Space view constants:
@@ -239,105 +243,97 @@ export const cameraMachine = createMachine(
               console.log('Entering Surface Anim!');
 
               const obliquity = degToRad(focusTarget.obliquity);
+              const bodyMesh = focusTarget.meshRef.current;
+              if (!bodyMesh) return;
 
-              observer.getWorldPosition(_observerPos);
+              /* Get angle between up vector of controller and up vector of body. */
+              _v1.set(...getLocalUpInWorldCoords(controls));
+              _v2.set(...getLocalUpInWorldCoords(bodyMesh));
+              const angle = controls.rotation.x - _v1.angleTo(_v2);
 
-              /* Save current rotation of controller. */
-              const prevRotation = controls.rotation.clone();
-              /* Set rotation so that controller aligns with polar axis. */
-              controls.rotation.x = -obliquity;
-              /* Get Observer position in controller local space. */
-              controls.worldToLocal(_observerPos);
-              /* Reset controller rotation so that it can be animated. */
-              controls.rotation.copy(prevRotation);
+              /* Animate alignment of controller with polar axis. */
+              gsap.to(controls.rotation, {
+                // x: -obliquity,
+                x: angle,
+                // z: 0,
+                duration: 1,
+                onComplete: () => {
+                  observer.getWorldPosition(_observerPos);
 
-              const observerRadius = _observerPos.length();
+                  /* Get Observer position in controller local space. */
+                  controls.worldToLocal(_observerPos);
 
-              /* Get spherical coordinates of observer position. */
-              _spherical.setFromVector3(_observerPos);
-              _spherical.makeSafe();
+                  const observerRadius = _observerPos.length();
 
-              /* Normalize azimuthal angles so that the rotation will take the shortest path. */
-              controls.normalizeAzimuthalAngle();
-              const phi = _spherical.phi;
-              const theta = normalizeAngle(_spherical.theta);
-              const diffTheta = theta - controls.azimuthalAngle;
+                  /* Get spherical coordinates of observer position. */
+                  _spherical.setFromVector3(_observerPos);
+                  _spherical.makeSafe();
 
-              const targetRadius = observerRadius * 3;
+                  /* Normalize azimuthal angles so that the rotation will take the shortest path. */
+                  controls.normalizeAzimuthalAngle();
+                  const phi = _spherical.phi;
+                  const theta = normalizeAngle(_spherical.theta);
+                  const diffTheta = theta - controls.azimuthalAngle;
 
-              const dist = Math.min(controls.radius, targetRadius);
+                  console.log(`Current theta: ${controls.azimuthalAngle}`);
+                  console.log(`Target theta: ${theta}`);
+                  console.log(`Difference: ${diffTheta}`);
 
-              _focusUp.set(
-                ...getLocalUpInWorldCoords(focusTarget.meshRef.current!)
-              );
-              _cameraUp.set(...getLocalUpInWorldCoords(controls.camera));
+                  const targetRadius = observerRadius * 3;
 
-              // observer.worldToLocal(_focusUp);
-              const angle = _cameraUp.angleTo(_focusUp);
+                  const dist = Math.min(controls.radius, targetRadius);
 
-              const tl = gsap.timeline();
+                  /* Set controller targets to current values. */
+                  controls.resetTarget();
 
-              /* Set controller targets to current values. */
-              controls.resetTarget();
+                  void controls
+                    .animateSequence([
+                      {
+                        /* Animate camera to be over observer position. */
+                        target: controls.spherical,
+                        vars: {
+                          radius: dist,
+                          phi: phi,
+                          /* Ensure camera takes shortest path. */
+                          theta:
+                            Math.abs(diffTheta) < PI ? theta : theta - TWO_PI,
+                          duration: 1,
+                        },
+                        // position: '-=100%',
+                        onComplete: () => {
+                          const theta = radToDeg(controls.azimuthalAngle);
+                          console.log(`Theta: ${theta}`);
+                          controls.attachToWithoutMoving(observer);
+                          _observerUp.set(...getLocalUpInWorldCoords(observer));
+                          controls.up.copy(_observerUp);
+                          controls.camera.up.copy(controls.up);
 
-              // gsap.to(controls.rotation, {
-              //   z: -obliquity,
-              //   duration: 1,
-              // });
+                          controls.setAzimuthalAngle(PI_OVER_TWO);
+                          controls.setPolarAngle(0);
+                          controls.setPolarAngleTarget(0);
 
-              void controls
-                .animateSequence([
-                  {
-                    /* Animate alignment of controller with polar axis. */
-                    target: controls.rotation,
-                    vars: {
-                      x: -obliquity,
-                      z: 0,
-                      duration: 2,
-                    },
-                  },
-                  {
-                    /* Animate camera to be over observer position. */
-                    target: controls.spherical,
-                    vars: {
-                      radius: dist,
-                      phi: phi,
-                      /* Ensure camera takes shortest path. */
-                      theta: Math.abs(diffTheta) < PI ? theta : theta - TWO_PI,
-                      duration: 1,
-                    },
-                    // position: '-=100%',
-                    onComplete: () => {
-                      controls.attachToWithoutMoving(observer);
-                      _observerUp.set(...getLocalUpInWorldCoords(observer));
-                      controls.up.copy(_observerUp);
-                      controls.camera.up.copy(controls.up);
-
-                      controls.rotation.y = 0;
-                      controls.setAzimuthalAngle(-PI_OVER_TWO);
-                      controls.setAzimuthalAngleTarget(-PI_OVER_TWO);
-                      controls.setPolarAngle(0);
-                      controls.setPolarAngleTarget(0);
-                      controls.camera.rotation.z = 0;
-                    },
-                  },
-                  {
-                    /* Zoom in to surface. */
-                    target: controls.spherical,
-                    vars: { radius: SURFACE_MIN_DIST, duration: 1 },
-                    // position: '-=1',
-                  },
-                  {
-                    /* Rotate camera to be parallel with surface. */
-                    target: controls.spherical,
-                    vars: { phi: PI_OVER_TWO, duration: 1 },
-                    // position: '-=50%',
-                  },
-                ])
-                .then(() => {
-                  console.log('Surface Anim Resolving!');
-                  resolve();
-                });
+                          controls.resetTarget();
+                        },
+                      },
+                      {
+                        /* Zoom in to surface. */
+                        target: controls.spherical,
+                        vars: { radius: SURFACE_MIN_DIST, duration: 1 },
+                        // position: '-=1',
+                      },
+                      {
+                        /* Rotate camera to be parallel with surface. */
+                        target: controls.spherical,
+                        vars: { phi: PI_OVER_TWO, duration: 1 },
+                        // position: '-=50%',
+                      },
+                    ])
+                    .then(() => {
+                      console.log('Surface Anim Resolving!');
+                      resolve();
+                    });
+                },
+              });
             }),
           id: 'entering_surface_promise',
           onDone: { target: 'surface' },
