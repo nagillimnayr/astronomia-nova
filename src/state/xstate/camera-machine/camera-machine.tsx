@@ -242,9 +242,6 @@ export const cameraMachine = createMachine(
                 return resolve();
               }
 
-              console.log('Entering Surface Anim!');
-
-              const obliquity = degToRad(focusTarget.obliquity);
               const bodyMesh = focusTarget.meshRef.current;
               if (!bodyMesh) return;
 
@@ -273,18 +270,15 @@ export const cameraMachine = createMachine(
 
                   /* Normalize azimuthal angles so that the rotation will take the shortest path. */
                   controls.normalizeAzimuthalAngle();
-
                   const currentTheta = controls.azimuthalAngle;
-
                   const phi = _spherical.phi;
                   const targetTheta = normalizeAngle(_spherical.theta);
                   // const diffTheta = ( targetTheta - currentTheta + PI) % TWO_PI;
                   let diffTheta = 0;
                   let theta = 0;
 
-                  console.log(`Current theta: ${radToDeg(currentTheta)}`);
-
-                  console.log(`Target theta: ${radToDeg(targetTheta)}`);
+                  // console.log(`Current theta: ${radToDeg(currentTheta)}`);
+                  // console.log(`Target theta: ${radToDeg(targetTheta)}`);
 
                   /* Determine shortest angle path to target. */
                   if (currentTheta <= targetTheta) {
@@ -319,8 +313,8 @@ export const cameraMachine = createMachine(
                         : currentTheta + (TWO_PI - diffTheta);
                   }
 
-                  console.log(`diffTheta: ${radToDeg(diffTheta)}`);
-                  console.log(`shortest path theta: ${radToDeg(theta)}`);
+                  // console.log(`diffTheta: ${radToDeg(diffTheta)}`);
+                  // console.log(`shortest path theta: ${radToDeg(theta)}`);
 
                   const targetRadius = observerRadius * 3;
 
