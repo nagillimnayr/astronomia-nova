@@ -30,12 +30,14 @@ const _cameraUp = new Vector3();
 
 const _observerPos = new Vector3();
 const _cameraPos = new Vector3();
+const _controllerPos = new Vector3();
 const _focusPos = new Vector3();
 const _spherical = new Spherical();
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();
 const _v3 = new Vector3();
+const _v4 = new Vector3();
 
 const NEPTUNE_APOAPSIS = 4553758200000 * METER;
 
@@ -271,13 +273,54 @@ export const cameraMachine = createMachine(
 
                   /* Normalize azimuthal angles so that the rotation will take the shortest path. */
                   controls.normalizeAzimuthalAngle();
-                  const phi = _spherical.phi;
-                  const theta = normalizeAngle(_spherical.theta);
-                  const diffTheta = theta - controls.azimuthalAngle;
 
-                  console.log(`Current theta: ${controls.azimuthalAngle}`);
-                  console.log(`Target theta: ${theta}`);
-                  console.log(`Difference: ${diffTheta}`);
+                  const currentTheta = controls.azimuthalAngle;
+
+                  const phi = _spherical.phi;
+                  const targetTheta = normalizeAngle(_spherical.theta);
+                  // const diffTheta = ( targetTheta - currentTheta + PI) % TWO_PI;
+                  let diffTheta = 0;
+                  let theta = 0;
+
+                  console.log(`Current theta: ${radToDeg(currentTheta)}`);
+
+                  console.log(`Target theta: ${radToDeg(targetTheta)}`);
+
+                  /* Determine shortest angle path to target. */
+                  if (currentTheta <= targetTheta) {
+                    /**
+                     * e.g. currentTheta is 30 deg and targetTheta is 330 deg,
+                     * 330 - 30 = 300 deg
+                     * 300 - 360 = -60 deg
+                     * 30 + (-60) = -30 deg
+                     * -30 deg == 330 deg
+                     */
+                    diffTheta = targetTheta - currentTheta;
+
+                    /* If difference between angles is less than PI, then no need for adjustment. */
+                    theta =
+                      diffTheta < PI
+                        ? targetTheta
+                        : currentTheta + (diffTheta - TWO_PI);
+                  } else {
+                    /**
+                     * e.g. currentTheta is 330 deg and targetTheta is 30 deg,
+                     * 330 - 30 = 300 deg
+                     * 360 - 300 = 60 deg
+                     * 330 + 60 deg = 390 deg
+                     * 390 deg = 30 deg
+                     */
+                    diffTheta = currentTheta - targetTheta;
+
+                    /* If difference between angles is less than PI, then no need for adjustment. */
+                    theta =
+                      diffTheta < PI
+                        ? targetTheta
+                        : currentTheta + (TWO_PI - diffTheta);
+                  }
+
+                  console.log(`diffTheta: ${radToDeg(diffTheta)}`);
+                  console.log(`shortest path theta: ${radToDeg(theta)}`);
 
                   const targetRadius = observerRadius * 3;
 
@@ -295,14 +338,14 @@ export const cameraMachine = createMachine(
                           radius: dist,
                           phi: phi,
                           /* Ensure camera takes shortest path. */
-                          theta:
-                            Math.abs(diffTheta) < PI ? theta : theta - TWO_PI,
+                          theta: theta,
+                          // Math.abs(diffTheta) < PI ? theta : theta - TWO_PI,
                           duration: 1,
                         },
                         // position: '-=100%',
                         onComplete: () => {
-                          const theta = radToDeg(controls.azimuthalAngle);
-                          console.log(`Theta: ${theta}`);
+                          // const theta = radToDeg(controls.azimuthalAngle);
+                          // console.log(`Theta: ${theta}`);
                           controls.attachToWithoutMoving(observer);
                           _observerUp.set(...getLocalUpInWorldCoords(observer));
                           controls.up.copy(_observerUp);
