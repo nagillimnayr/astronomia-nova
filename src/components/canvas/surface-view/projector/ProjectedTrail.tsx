@@ -167,6 +167,7 @@ export const ProjectedTrail = ({
   useFrame(() => {
     // Update geometry.
     const line = lineRef.current;
+
     line.geometry.setPositions(points.current);
   });
 
@@ -174,10 +175,20 @@ export const ProjectedTrail = ({
     return [0, 0, 0, 0, 0, 0];
   }, []);
 
+  useEffect(() => {
+    lineRef.current.geometry.name = 'trail-projection-geometry';
+  }, []);
+
   return (
     <>
       <group ref={anchorRef} visible={onSurface && isPaused}>
-        <Line ref={lineRef} points={arr} lineWidth={2} color={color} />
+        <Line
+          ref={lineRef}
+          points={arr}
+          lineWidth={2}
+          color={color}
+          name="projected-trail"
+        />
       </group>
     </>
   );
