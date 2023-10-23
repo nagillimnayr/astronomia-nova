@@ -57,7 +57,7 @@ export const SiteHeader = ({ className }: SiteHeaderProps) => {
             className="flex items-center justify-between gap-1 text-xl"
           >
             <span className="font-sans">User Guide</span>
-            <span className="icon-[mdi--help-circle-outline] h-8 w-8" />
+            <span className="icon-[mdi--help-circle-outline] h-6 w-6 aspect-square" />
           </Link>
         </div>
       </header>
