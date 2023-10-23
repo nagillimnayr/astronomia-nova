@@ -132,7 +132,6 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
       const { selected } = state.context;
       const button = buttonRef.current;
       if (Object.is(body, selected)) {
-        console.log('select gsap anim');
         gsap.to(button, {
           outlineColor: 'white',
           outlineWidth: '2px',
