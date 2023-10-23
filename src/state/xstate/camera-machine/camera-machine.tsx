@@ -250,12 +250,12 @@ export const cameraMachine = createMachine(
               _v2.set(...getLocalUpInWorldCoords(bodyMesh));
               const angle = controls.rotation.x - _v1.angleTo(_v2);
 
-              /* Animate alignment of controller with polar axis. */
+              /* Animate alignment of controller with equator/ polar axis. */
               gsap.to(controls.rotation, {
                 // x: -obliquity,
                 x: angle,
                 // z: 0,
-                duration: 1,
+                duration: 0.5,
                 onComplete: () => {
                   observer.getWorldPosition(_observerPos);
 
