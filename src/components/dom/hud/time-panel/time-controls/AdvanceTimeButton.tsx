@@ -2,6 +2,7 @@ import { cn } from '@/helpers/cn';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useCallback } from 'react';
 import { type ClassNameValue } from 'tailwind-merge';
+import { useSelector } from '@xstate/react';
 
 type Props = {
   reverse?: boolean;
@@ -9,23 +10,32 @@ type Props = {
 };
 export const AdvanceTimeButton = ({ reverse, className }: Props) => {
   const rootActor = MachineContext.useActorRef();
+  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const focusTarget = useSelector(
+    cameraActor,
+    ({ context }) => context.focusTarget
+  );
 
   const handleClick = useCallback(() => {
-    // Advance time by the sidereal rotation period of the reference body. This
-    // way, the body will maintain its orientation relative to the fixed stars.
-
+    const { focusTarget } = cameraActor.getSnapshot()!.context;
+    if (!focusTarget) return;
+    /* Advance time by the sidereal rotation period of the reference body. 
+    This way, the body will maintain its orientation relative to the fixed stars. */
     rootActor.send({
       type: 'ADVANCE_DAY',
       reverse,
     });
-  }, [reverse, rootActor]);
+  }, [cameraActor, reverse, rootActor]);
+
   return (
     <>
       <button
         className={cn(
-          'p- inline-flex aspect-square items-center justify-center rounded-full border-2',
-          className
+          'inline-flex aspect-square items-center justify-center rounded-full border-2',
+          className,
+          'disabled:text-opacity-25'
         )}
+        disabled={!focusTarget}
         onClick={handleClick}
       >
         <span
