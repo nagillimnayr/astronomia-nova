@@ -16,8 +16,11 @@ export function useKeyboard() {
   useEventListener('keydown', (event) => {
     // console.log(event.code);
 
+    const env = process.env.NODE_ENV;
+
     switch (event.code) {
       case 'KeyX': {
+        if (env !== 'development') return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
 
@@ -32,6 +35,7 @@ export function useKeyboard() {
         break;
       }
       case 'KeyZ': {
+        if (env !== 'development') return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
 
@@ -46,6 +50,7 @@ export function useKeyboard() {
         break;
       }
       case 'KeyY': {
+        if (env !== 'development') return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
 
@@ -72,6 +77,7 @@ export function useKeyboard() {
         break;
       }
       case 'KeyU': {
+        if (env !== 'development') return;
         const { controls, observer, focusTarget } =
           cameraActor.getSnapshot()!.context;
         if (!controls || !focusTarget || !(focusTarget instanceof KeplerBody))
@@ -89,7 +95,7 @@ export function useKeyboard() {
         _controllerUp.set(...getLocalUpInWorldCoords(controls));
         _focusUp.set(...getLocalUpInWorldCoords(meshParent));
 
-        const obliquity = degToRad(focusTarget.obliquity);
+        // const obliquity = degToRad(focusTarget.obliquity);
 
         const angle = controls.rotation.x - _controllerUp.angleTo(_focusUp);
         controls.lock();
@@ -108,6 +114,7 @@ export function useKeyboard() {
         break;
       }
       case 'KeyP': {
+        if (env !== 'development') return;
         const { controls, observer } = cameraActor.getSnapshot()!.context;
         const spherical = new Spherical();
         const observerPos = new Vector3();
@@ -131,6 +138,7 @@ export function useKeyboard() {
         break;
       }
       case 'Space': {
+        if (env !== 'development') return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls) return;
         const x = radToDeg(controls.rotation.x);
