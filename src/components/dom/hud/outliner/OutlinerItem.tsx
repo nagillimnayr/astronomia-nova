@@ -15,13 +15,20 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
     ({ context }) => context
   );
 
-  // Bind to state changes so that the component will re-render whenever
-  // bodyMap is modified.
+  /* Bind to state changes so that the component will re-render 
+  whenever bodyMap is modified. */
   useSelector(mapActor, ({ context }) => context.bodyMap);
 
-  const rootRef = useRef<HTMLDivElement | null>(null);
-  const contentRef = useRef<HTMLDivElement | null>(null);
-  const listRef = useRef<HTMLUListElement | null>(null);
+  const selected = useSelector(
+    selectionActor,
+    ({ context }) => context.selected
+  );
+  const isSelected = Object.is(body, selected);
+
+  const rootRef = useRef<HTMLDivElement>(null!);
+  const buttonRef = useRef<HTMLButtonElement>(null!);
+  const contentRef = useRef<HTMLDivElement>(null!);
+  const listRef = useRef<HTMLUListElement>(null!);
 
   const openSubtree = useCallback(() => {
     return new Promise((resolve) => {
@@ -31,9 +38,9 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
       // Save current height value.
       const fromHeight = window.getComputedStyle(content).height;
 
-      // 'fit-content' is not an animatable property, so we must get the
-      // computed value to use in the animation. Get the computed value of
-      // height at fit-content.
+      /* 'fit-content' is not an animatable property, so we must get the
+      computed value to use in the animation. Get the computed value of
+      height at fit-content. */
       content.style.height = 'fit-content';
       const toHeight = window.getComputedStyle(content).height;
 
@@ -99,6 +106,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
   });
   const isOpen = state.matches('open');
 
+  /* Close if no children. */
   useEffect(() => {
     const subscription = mapActor.subscribe(() => {
       if (isOpen && body.orbitingBodies.length < 1) {
@@ -119,6 +127,26 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
     }
   }, [actor, body.orbitingBodies.length, defaultOpen]);
 
+  useEffect(() => {
+    const subscription = selectionActor.subscribe((state) => {
+      const { selected } = state.context;
+      const button = buttonRef.current;
+      if (Object.is(body, selected)) {
+        gsap.to(button, {
+          outlineColor: 'white',
+          outlineWidth: '2px',
+        });
+      } else {
+        gsap.to(button, {
+          outlineColor: 'transparent',
+          outlineWidth: '0px',
+        });
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [body, selectionActor]);
+
   const handleSelect = useCallback(() => {
     // Select the object.
     selectionActor.send({ type: 'SELECT', selection: body });
@@ -129,7 +157,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
     <div
       ref={rootRef}
       className={cn(
-        'm-0 flex h-fit min-h-fit w-full flex-col items-center justify-start rounded-none text-center'
+        'mx-0 my-[2px] flex h-fit min-h-fit w-full flex-col items-center justify-start rounded-none text-center'
       )}
     >
       <div className="m-0 h-fit w-full p-0">
@@ -137,6 +165,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
           {/** Trigger to toggle collapsible content open/closed. */}
           <button
             data-state={dataState}
+            data-selected={isSelected ? 'true' : 'false'}
             className={cn(
               'm-0 inline-flex aspect-square h-full min-h-fit flex-col items-center justify-center overflow-hidden whitespace-nowrap rounded-full p-0 transition-all duration-500 hover:bg-subtle',
               'data-[state=open]:rotate-90 data-[state=opening]:rotate-90'
@@ -149,8 +178,13 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
 
           {/** Button to select body. */}
           <button
+            ref={buttonRef}
+            data-selected={isSelected ? 'true' : 'false'}
             onClick={handleSelect}
-            className="m-0 inline-flex h-full w-full cursor-pointer items-center justify-start rounded-md p-1 transition-colors hover:bg-subtle"
+            className={cn(
+              'm-0 mr-1 inline-flex h-full w-full cursor-pointer items-center justify-start rounded-md p-1 outline transition-colors hover:bg-subtle',
+              'data-[selected=true]:bg-subtle '
+            )}
           >
             <span className="m-0 h-8 w-fit p-1 text-left align-middle font-sans text-2xl font-medium leading-none">
               {body.name}
@@ -171,7 +205,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
           {/** Add some left margin to indent each subtree from its parent, left padding to line up the left border with the list marker. */}
           <ul
             ref={listRef}
-            className="ml-2  h-fit overflow-y-hidden border-l-2 border-gray-200 pl-1 marker:text-gray-300"
+            className="ml-2 h-fit overflow-y-hidden border-l-2 border-gray-200 pl-1 marker:text-gray-300"
           >
             {body.orbitingBodies.map((child) => {
               // Recursively traverse the tree to construct the tree view.

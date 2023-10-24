@@ -149,7 +149,7 @@ export const Trajectory = ({
 
   return (
     <>
-      <animated.object3D visible={isVisible} ref={objRef}>
+      <animated.object3D visible={isVisible && !onSurface} ref={objRef}>
         {/** @ts-ignore */}
         <Line
           ref={lineRef}

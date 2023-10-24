@@ -43,7 +43,7 @@ const SurfaceViewDialog = () => {
   const confirm = useCallback(() => {
     cameraActor.send('TO_SURFACE');
     surfaceDialogActor.send({ type: 'CLOSE' });
-    trajectories.send({ type: 'DISABLE' });
+    // trajectories.send({ type: 'DISABLE' });
   }, [cameraActor, surfaceDialogActor, trajectories]);
 
   const [state, send] = useActor(surfaceDialogActor);

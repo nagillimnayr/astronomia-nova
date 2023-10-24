@@ -366,7 +366,6 @@ export const cameraMachine = createMachine(
                       },
                     ])
                     .then(() => {
-                      console.log('Surface Anim Resolving!');
                       resolve();
                     });
                 },
