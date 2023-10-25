@@ -59,10 +59,12 @@ export const surfaceMachine = createMachine(
       },
 
       setLatitude: assign({
-        latitude: (_, { value }) => value,
+        /* Round to two decimal places. */
+        latitude: (_, { value }) => Math.round(value * 100) / 100,
       }),
       setLongitude: assign({
-        longitude: (_, { value }) => value,
+        /* Round to two decimal places. */
+        longitude: (_, { value }) => Math.round(value * 100) / 100,
       }),
       // Expects the vector to be in local coordinates relative to the body.
       setCoordsFromVector: assign((_, { pos }) => {
@@ -84,9 +86,10 @@ export const surfaceMachine = createMachine(
           longitude += 360;
         }
 
+        /* Round to two decimal places. */
         return {
-          latitude,
-          longitude,
+          latitude: Math.round(latitude * 100) / 100,
+          longitude: Math.round(longitude * 100) / 100,
         };
       }),
     },
