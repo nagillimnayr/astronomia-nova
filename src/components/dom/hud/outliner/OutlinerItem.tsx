@@ -167,13 +167,13 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
             data-state={dataState}
             data-selected={isSelected ? 'true' : 'false'}
             className={cn(
-              'm-0 inline-flex aspect-square h-full min-h-fit flex-col items-center justify-center overflow-hidden whitespace-nowrap rounded-full p-0 transition-all duration-500 hover:bg-subtle',
+              'm-0 mr-2 inline-flex aspect-square h-full min-h-fit flex-col items-center justify-center overflow-hidden whitespace-nowrap rounded-full  transition-all duration-500 hover:bg-subtle',
               'data-[state=open]:rotate-90 data-[state=opening]:rotate-90'
             )}
             onClick={() => send({ type: 'TOGGLE' })}
           >
             {/** Chevron icon. */}
-            <span className={cn('icon-[mdi--chevron-right]')} />{' '}
+            <span className={cn('icon-[mdi--chevron-right] h-8 w-8')} />
           </button>
 
           {/** Button to select body. */}
