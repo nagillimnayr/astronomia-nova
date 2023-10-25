@@ -110,7 +110,7 @@ const DetailsPanel = () => {
       {selected && (
         <>
           <div className="h-full max-h-full w-full overflow-auto whitespace-nowrap rounded-md border-[3px] p-1">
-            <div className="flex w-full flex-col items-start justify-start gap-1 p-2">
+            <div className="flex h-full w-full flex-col items-start justify-evenly gap-1 p-0 ">
               {/** Mass. */}
               <AttributeDetails name={'Mass'}>
                 {selected.mass.toExponential(3) + ' kg'}
