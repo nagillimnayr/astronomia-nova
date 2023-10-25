@@ -79,7 +79,9 @@ export class KeplerBody extends DynamicBody {
     // If mesh has already been assigned, do nothing.
     if (this._meshRef) {
       if (this._meshRef === meshRef) return;
-      console.log('meshRef is already assigned');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('meshRef is already assigned');
+      }
       return;
     }
     this._meshRef = meshRef;
@@ -87,15 +89,18 @@ export class KeplerBody extends DynamicBody {
 
   addOrbitingBody(body: KeplerBody) {
     if (!this._orbitingBodies.includes(body)) {
-      console.log(`Adding ${body.name} as orbiter of ${this.name}.`);
+      if (process.env.NODE_ENV === 'development')
+        console.log(`Adding ${body.name} as orbiter of ${this.name}.`);
       this._orbitingBodies.push(body);
     } else {
-      console.warn(`${body.name} is already an orbiter of ${this.name}.`);
+      if (process.env.NODE_ENV === 'development')
+        console.warn(`${body.name} is already an orbiter of ${this.name}.`);
     }
   }
 
   removeOrbitingBody(body: KeplerBody) {
-    console.log(`removing ${body.name} as orbiter of ${this.name}`);
+    if (process.env.NODE_ENV === 'development')
+      console.log(`removing ${body.name} as orbiter of ${this.name}`);
     this._orbitingBodies = this._orbitingBodies.filter((item) => {
       return !Object.is(item, body);
     });
