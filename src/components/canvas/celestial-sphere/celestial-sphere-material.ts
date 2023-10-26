@@ -18,19 +18,20 @@ const fragShader = /*glsl*/ `
 precision highp float;
 
 uniform sampler2D starMap;
-uniform sampler2D gridMap;
+// uniform sampler2D gridMap;
 uniform sampler2D figureMap;
-uniform float gridOpacity;
+// uniform float gridOpacity;
 uniform float figureOpacity;
 
 varying vec2 vUv;
 
 void main() {
   vec4 starColor = texture( starMap, vUv );
-  vec4 gridColor = texture( gridMap, vUv ) * gridOpacity;
+  // vec4 gridColor = texture( gridMap, vUv ) * gridOpacity;
   vec4 figureColor = texture( figureMap, vUv ) * figureOpacity;
 
-  gl_FragColor = starColor + gridColor + figureColor;
+  // gl_FragColor = starColor + gridColor + figureColor;
+  gl_FragColor = starColor + figureColor;
 }
 
 `;
@@ -38,9 +39,9 @@ void main() {
 export const CelestialSphereMaterial = shaderMaterial(
   {
     starMap: new Texture(),
-    gridMap: new Texture(),
+    // gridMap: new Texture(),
     figureMap: new Texture(),
-    gridOpacity: 1,
+    // gridOpacity: 1,
     figureOpacity: 1,
   },
   vertexShader,
@@ -49,8 +50,8 @@ export const CelestialSphereMaterial = shaderMaterial(
 
 export type CelestialSphereMaterialImpl = {
   starMap: Texture;
-  gridMap: Texture;
+  // gridMap: Texture;
   figureMap: Texture;
-  gridOpacity: number;
+  // gridOpacity: number;
   figureOpacity: number;
 } & JSX.IntrinsicElements['shaderMaterial'];

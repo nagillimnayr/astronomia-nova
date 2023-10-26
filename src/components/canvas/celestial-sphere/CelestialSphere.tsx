@@ -28,8 +28,11 @@ export const CelestialSphere = () => {
   const [starmap] = useLoader(EXRLoader, [
     'assets/textures/stars/starmap_2020_4k.exr',
   ]);
-  const [celestialGridTexture, constellationTexture] = useTexture([
-    'assets/textures/stars/celestial_grid_16k.jpg',
+  // const [celestialGridTexture, constellationTexture] = useTexture([
+  //   'assets/textures/stars/celestial_grid_16k.jpg',
+  //   'assets/textures/stars/constellation_figures_8k.jpg',
+  // ]);
+  const [constellationTexture] = useTexture([
     'assets/textures/stars/constellation_figures_8k.jpg',
   ]);
 
@@ -38,22 +41,26 @@ export const CelestialSphere = () => {
   const { celestialSphereActor } = MachineContext.useSelector(
     ({ context }) => context
   );
-  const { celestialGrid, constellations } = useSelector(
+  // const { celestialGrid, constellations } = useSelector(
+  //   celestialSphereActor,
+  //   ({ context }) => context
+  // );
+  const { constellations } = useSelector(
     celestialSphereActor,
     ({ context }) => context
   );
 
-  useEffect(() => {
-    const subscription = celestialGrid.subscribe(({ context }) => {
-      if (!materialRef.current) return;
-      const shader = materialRef.current as CelestialSphereMaterialImpl;
-      shader.gridOpacity = context.opacity;
-    });
+  // useEffect(() => {
+  //   const subscription = celestialGrid.subscribe(({ context }) => {
+  //     if (!materialRef.current) return;
+  //     const shader = materialRef.current as CelestialSphereMaterialImpl;
+  //     // shader.gridOpacity = context.opacity;
+  //   });
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [celestialGrid]);
+  //   return () => {
+  //     subscription.unsubscribe();
+  //   };
+  // }, [celestialGrid]);
 
   useEffect(() => {
     const subscription = constellations.subscribe(({ context }) => {
@@ -75,15 +82,15 @@ export const CelestialSphere = () => {
           scale={[-1, 1, 1]}
           rotation-x={degToRad(23.44)}
         >
-          {starmap && celestialGridTexture && constellationTexture ? (
+          {starmap && constellationTexture ? (
             <celestialSphereMaterial
               key={CelestialSphereMaterial.key}
               ref={materialRef}
               name="celestial-sphere-material"
               starMap={starmap}
-              gridMap={celestialGridTexture}
+              // gridMap={celestialGridTexture}
               figureMap={constellationTexture}
-              gridOpacity={0}
+              // gridOpacity={0}
               figureOpacity={0}
               side={BackSide}
             />
