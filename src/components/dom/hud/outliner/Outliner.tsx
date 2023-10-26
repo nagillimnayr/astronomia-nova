@@ -16,7 +16,7 @@ const Outliner = () => {
     return <LoadingFallback />;
   }
   return (
-    <div className="pointer-events-auto flex h-full min-h-fit w-full min-w-fit flex-col items-start justify-start gap-0 rounded-lg p-4 text-xl">
+    <div className="pointer-events-auto flex h-full min-h-fit w-full min-w-fit flex-col items-start justify-start gap-0 rounded-lg border-4 border-border bg-muted p-4 px-6 text-xl">
       <OutlinerItem body={root} defaultOpen />
     </div>
   );
