@@ -16,7 +16,7 @@ export const SiteHeader = ({ className }: SiteHeaderProps) => {
       <header
         ref={headerRef}
         className={cn(
-          `relative z-40 flex h-full w-full min-w-full translate-y-[0%] flex-row items-center justify-start border-b bg-muted py-4 pl-6 pr-36 text-muted-foreground`,
+          `relative z-40 flex h-full w-full min-w-full translate-y-[0%] flex-row items-center justify-start border-b border-border bg-muted py-4 pl-6 pr-36 text-muted-foreground`,
           className
         )}
       >

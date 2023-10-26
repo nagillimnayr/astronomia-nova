@@ -52,7 +52,7 @@ const SurfaceViewDialog = () => {
     <div
       ref={divRef}
       data-state={state.value}
-      className="prose pointer-events-auto flex h-40 w-96 max-w-[50vw] flex-col items-center justify-center overflow-hidden rounded-lg border-2 bg-card px-6 font-sans data-[state=closed]:hidden prose-headings:m-0"
+      className="prose pointer-events-auto flex h-40 w-96 max-w-[50vw] flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-border bg-card px-6 font-sans data-[state=closed]:hidden prose-headings:m-0"
     >
       {/** Title. */}
       {/* <header className="m-0 text-center text-3xl">Surface View</header> */}
@@ -138,7 +138,7 @@ const SurfaceViewDialog = () => {
 
           {/** Confirm button. */}
           <button
-            className="col-span-1 col-start-2 row-span-1 row-start-2 h-fit w-full min-w-fit place-items-center rounded-md  border border-muted px-2 py-1 text-xl hover:bg-muted"
+            className="col-span-1 col-start-2 row-span-1 row-start-2 h-fit w-full min-w-fit place-items-center rounded-md border border-muted px-2 py-1 text-xl hover:bg-muted"
             onClick={confirm}
           >
             Confirm

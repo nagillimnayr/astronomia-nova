@@ -89,7 +89,7 @@ const DetailsPanel = () => {
       ref={divRef}
       data-state={state.value}
       className={cn(
-        'relative flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border-[3px] bg-muted p-4 text-muted-foreground',
+        'relative flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border-[3px] border-border bg-muted p-4 text-muted-foreground',
         'transition-all duration-300 data-[state=closed]:hidden'
       )}
     >
@@ -109,7 +109,7 @@ const DetailsPanel = () => {
       {/** Attributes. */}
       {selected && (
         <>
-          <div className="h-full max-h-full w-full overflow-auto whitespace-nowrap rounded-md border-[3px] p-1">
+          <div className="h-full max-h-full w-full overflow-auto whitespace-nowrap rounded-md border-[3px] border-border p-1">
             <div className="flex h-full w-full flex-col items-start justify-evenly gap-1 p-0 ">
               {/** Mass. */}
               <AttributeDetails name={'Mass'}>
@@ -135,11 +135,11 @@ const DetailsPanel = () => {
       )}
       <div className="mt-auto flex w-full flex-row items-start justify-between">
         {/** Camera focus button. */}
-        <FocusButton className="flex flex-row items-center justify-center rounded-md border-[3px] px-2 py-1 transition-colors hover:bg-subtle hover:text-subtle-foreground" />
+        <FocusButton className="flex flex-row items-center justify-center rounded-md  border-[3px] border-border px-2 py-1 transition-colors hover:bg-subtle hover:text-subtle-foreground" />
 
-        <SurfaceViewButton className="flex flex-row items-center justify-center rounded-md border-[3px] px-2 py-1 transition-colors hover:bg-subtle hover:text-subtle-foreground" />
+        <SurfaceViewButton className="flex flex-row items-center justify-center rounded-md border-[3px] border-border px-2 py-1 transition-colors hover:bg-subtle hover:text-subtle-foreground" />
 
-        <SpaceViewButton className="flex flex-row items-center justify-center rounded-md border-[3px] px-2 py-1 transition-colors hover:bg-subtle hover:text-subtle-foreground" />
+        <SpaceViewButton className="flex flex-row items-center justify-center rounded-md border-[3px] border-border px-2 py-1 transition-colors hover:bg-subtle hover:text-subtle-foreground" />
       </div>
     </div>
   );

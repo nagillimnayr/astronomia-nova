@@ -31,7 +31,7 @@ export const AdvanceTimeButton = ({ reverse, className }: Props) => {
     <>
       <button
         className={cn(
-          'inline-flex aspect-square items-center justify-center rounded-full border-2',
+          'inline-flex aspect-square items-center justify-center rounded-full border-2 border-border',
           className,
           'disabled:text-opacity-25'
         )}

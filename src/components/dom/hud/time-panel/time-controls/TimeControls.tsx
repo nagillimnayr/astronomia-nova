@@ -8,7 +8,7 @@ const TimeControls = () => {
 
   return (
     <div className="flex flex-col items-center justify-start">
-      <div className="border-none/30 pointer-events-auto mt-2  flex w-fit flex-row items-center justify-center gap-2 self-center rounded-full">
+      <div className="  pointer-events-auto mt-2  flex w-fit flex-row items-center justify-center gap-2 self-center rounded-full">
         <AdvanceTimeButton
           reverse
           className={
