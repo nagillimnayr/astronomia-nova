@@ -134,12 +134,12 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
       if (Object.is(body, selected)) {
         gsap.to(button, {
           outlineColor: 'white',
-          outlineWidth: '2px',
+          // outlineWidth: '2px',
         });
       } else {
         gsap.to(button, {
           outlineColor: 'transparent',
-          outlineWidth: '0px',
+          // outlineWidth: '0px',
         });
       }
     });
@@ -167,7 +167,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
             data-state={dataState}
             data-selected={isSelected ? 'true' : 'false'}
             className={cn(
-              'm-0 mr-2 inline-flex aspect-square h-full min-h-fit flex-col items-center justify-center overflow-hidden whitespace-nowrap rounded-full  transition-all duration-500 hover:bg-subtle',
+              'm-0 mr-2 inline-flex aspect-square h-full min-h-fit flex-col items-center justify-center overflow-hidden whitespace-nowrap rounded-full transition-all duration-500 hover:bg-subtle',
               'data-[state=open]:rotate-90 data-[state=opening]:rotate-90'
             )}
             onClick={() => send({ type: 'TOGGLE' })}
@@ -182,7 +182,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
             data-selected={isSelected ? 'true' : 'false'}
             onClick={handleSelect}
             className={cn(
-              'm-0 mr-1 inline-flex h-full w-full cursor-pointer items-center justify-start rounded-md p-1 outline transition-colors hover:bg-subtle',
+              'm-0 my-[3px] mr-1 inline-flex h-full w-full cursor-pointer items-center justify-start rounded-md p-1 outline outline-2 outline-transparent transition-colors hover:bg-subtle',
               'data-[selected=true]:bg-subtle '
             )}
           >
