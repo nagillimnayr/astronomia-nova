@@ -24,7 +24,7 @@ export const LoadingFallback = ({
       >
         <div
           className={cn(
-            'relative flex aspect-square w-12 animate-spin items-center justify-center rounded-full border-b-2 border-l-2 border-gray-100 bg-transparent',
+            'relative my-3 flex aspect-square w-12 animate-spin items-center justify-center rounded-full border-b-2 border-l-2 border-gray-100 bg-transparent',
             // 'animate-spin',
             className
           )}
