@@ -15,12 +15,12 @@ import {
   Spherical,
   Vector3,
   Euler,
-  Vector3Tuple,
+  type Vector3Tuple,
 } from 'three';
 import { clamp, radToDeg } from 'three/src/math/MathUtils';
 import { damp, dampAngle } from 'maath/easing';
 import { gsap } from 'gsap';
-import { Controller, Spring, SpringRef } from '@react-spring/three';
+import { Controller } from '@react-spring/three';
 
 const EPSILON = 1e-3;
 
@@ -93,11 +93,18 @@ export class CameraController extends Object3D {
   private _isMoving = false;
   private _isAnimating = false;
 
-  private _spring = new Controller({
+  private _camera_spring = new Controller({
     rotation: [0, 0, 0],
     config: {
       mass: 1.0,
       friction: 50.0,
+    },
+  });
+  private _controls_spring = new Controller({
+    rotation: [0, 0, 0],
+    config: {
+      mass: 1.0,
+      friction: 30.0,
     },
   });
 
@@ -511,6 +518,8 @@ export class CameraController extends Object3D {
     obj.attach(this);
     /* Set controller position to that of the object. */
     this.position.set(0, 0, 0);
+    
+    this.rotation.set(0, 0, 0);
 
     /* Convert previous camera world position to controller local space. */
     this.worldToLocal(_v1);
@@ -539,8 +548,8 @@ export class CameraController extends Object3D {
 
     // this.lock();
 
-    const { x, y, z } = this.camera.rotation;
-    await this._spring.start({
+    const [x,y,z] = this.camera.rotation.toArray();
+    await this._camera_spring.start({
       from: { rotation: [x, y, z] },
       to: { rotation: [0, 0, 0] },
       onChange: (result) => {
@@ -617,7 +626,7 @@ export class CameraController extends Object3D {
     this._isAnimating = true;
 
     const { x, y, z } = this.rotation;
-    await this._spring.start({
+    await this._camera_spring.start({
       from: { rotation: [x, y, z] },
       to: { rotation: [angle, y, z] },
       onChange: ({ value }) => {
@@ -679,7 +688,7 @@ export class CameraController extends Object3D {
       }
     }
 
-    await this._spring.start({
+    await this._camera_spring.start({
       from: {
         radius: this.radius,
         phi: this.polarAngle,
