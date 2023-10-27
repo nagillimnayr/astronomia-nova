@@ -15,6 +15,7 @@ import {
   Spherical,
   Vector3,
   Euler,
+  Vector3Tuple,
 } from 'three';
 import { clamp, radToDeg } from 'three/src/math/MathUtils';
 import { damp, dampAngle } from 'maath/easing';
@@ -92,7 +93,7 @@ export class CameraController extends Object3D {
   private _isMoving = false;
   private _isAnimating = false;
 
-  private _rotationSpring = new Controller({
+  private _spring = new Controller({
     rotation: [0, 0, 0],
     config: {
       mass: 1.0,
@@ -497,8 +498,8 @@ export class CameraController extends Object3D {
    * @param {Object3D} obj
    * @memberof CameraController
    */
-  attachToWithoutMoving(obj: Object3D) {
-    this.camera.rotation.set(0, 0, 0);
+  async attachToWithoutMoving(obj: Object3D) {
+    // this.camera.rotation.set(0, 0, 0);
     this.camera.getWorldDirection(_camDirection);
     this.camera.getWorldPosition(_camPos);
     this.getWorldPosition(_controllerPos);
@@ -538,23 +539,18 @@ export class CameraController extends Object3D {
 
     // this.lock();
 
-    return new Promise<void>((resolve) => {
-      const { x, y, z } = this.camera.rotation;
-      void this._rotationSpring.start({
-        from: { rotation: [x, y, z] },
-        to: { rotation: [0, 0, 0] },
-        onChange: (result) => {
-          const value = result.value as { rotation: [number, number, number] };
-          /* Update camera rotation. */
-          this.camera.rotation.set(...value.rotation);
-          // console.log('result.value:', value);
-        },
-        onResolve: () => {
-          // this.unlock();
-          resolve();
-        },
-      });
+    const { x, y, z } = this.camera.rotation;
+    await this._spring.start({
+      from: { rotation: [x, y, z] },
+      to: { rotation: [0, 0, 0] },
+      onChange: (result) => {
+        const value = result.value as { rotation: [number, number, number] };
+        /* Update camera rotation. */
+        this.camera.rotation.set(...value.rotation);
+        // console.log('result.value:', value);
+      },
     });
+    // this.unlock();
   }
 
   attachToController(obj: Object3D) {
@@ -603,15 +599,29 @@ export class CameraController extends Object3D {
     this._isAnimating = isAnimating;
   }
 
-  animateTo(to: {
-    radius?: number;
-    phi?: number;
-    theta?: number;
-    duration?: number;
-  }) {
+  async animateRotation(angle: number) {
+    this.lock();
+    this._isAnimating = true;
+
+    const { x, y, z } = this.rotation;
+    await this._spring.start({
+      from: { rotation: [x, y, z] },
+      to: { rotation: [angle, y, z] },
+      onChange: ({ value }) => {
+        const rotation = value.rotation as Vector3Tuple;
+        this.rotation.x = rotation[0];
+      },
+    });
+
+    this.unlock();
+    this._isAnimating = false;
+  }
+
+  async animateTo(to: { radius?: number; phi?: number; theta?: number }) {
     this.lock();
     this.resetTarget();
-    const { radius, phi, theta, duration } = to;
+    this._isAnimating = true;
+    const { radius, phi, theta } = to;
     if (
       typeof radius !== 'number' &&
       typeof phi !== 'number' &&
@@ -619,34 +629,65 @@ export class CameraController extends Object3D {
     ) {
       this.unlock();
       this._isAnimating = false;
-      return Promise.resolve();
+      return;
     }
 
-    return new Promise<void>((resolve) => {
-      this._isAnimating = true;
-      gsap.to(this._spherical, {
-        radius: radius ?? this._spherical.radius,
-        phi: phi ?? this._spherical.phi,
-        theta: theta ?? this._spherical.theta,
-        duration: duration ?? 1,
-        onComplete: () => {
-          this.unlock();
-          this._isAnimating = false;
+    let targetTheta = theta ? normalizeAngle(theta) : undefined;
+    if (targetTheta) {
+      const currentTheta = this.azimuthalAngle;
 
-          this.resetTarget();
-          resolve();
-        },
-      });
-      gsap.to(this._sphericalTarget, {
-        radius: radius ?? this._spherical.radius,
-        phi: phi ?? this._spherical.phi,
-        theta: theta ?? this._spherical.theta,
-        duration: duration,
-        onComplete: () => {
-          this.resetTarget();
-        },
-      });
+      let diffTheta = 0;
+      if (currentTheta <= targetTheta) {
+        /**
+         * e.g. currentTheta is 30 deg and targetTheta is 330 deg,
+         * 330 - 30 = 300 deg
+         * 300 - 360 = -60 deg
+         * 30 + (-60) = -30 deg
+         * -30 deg == 330 deg
+         */
+        diffTheta = targetTheta - currentTheta;
+
+        /* If difference between angles is less than PI, then no need for adjustment. */
+        targetTheta =
+          diffTheta < PI ? targetTheta : currentTheta + (diffTheta - TWO_PI);
+      } else {
+        /**
+         * e.g. currentTheta is 330 deg and targetTheta is 30 deg,
+         * 330 - 30 = 300 deg
+         * 360 - 300 = 60 deg
+         * 330 + 60 deg = 390 deg
+         * 390 deg = 30 deg
+         */
+        diffTheta = currentTheta - targetTheta;
+
+        /* If difference between angles is less than PI, then no need for adjustment. */
+        targetTheta =
+          diffTheta < PI ? targetTheta : currentTheta + (TWO_PI - diffTheta);
+      }
+    }
+
+    await this._spring.start({
+      from: {
+        radius: this.radius,
+        phi: this.polarAngle,
+        theta: this.azimuthalAngle,
+      },
+      to: {
+        radius: radius ?? this.radius,
+        phi: phi ?? this.polarAngle,
+        theta: targetTheta ?? this.azimuthalAngle,
+      },
+      onChange: ({ value }) => {
+        radius && this.setRadius(value.radius as number);
+        phi && this.setPolarAngle(value.phi as number);
+        theta && this.setAzimuthalAngle(value.theta as number);
+        this.updateCameraPosition();
+        this.resetTarget();
+      },
     });
+
+    this.unlock();
+    this._isAnimating = false;
   }
 
   animateSequence(
