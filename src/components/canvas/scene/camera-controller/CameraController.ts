@@ -550,6 +550,7 @@ export class CameraController extends Object3D {
         // console.log('result.value:', value);
       },
     });
+    this.resetRotation();
     // this.unlock();
   }
 
