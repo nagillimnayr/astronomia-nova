@@ -258,24 +258,20 @@ export const cameraMachine = createMachine(
           },
           changingTarget: {
             invoke: {
-              src: (context, event) => {
-                return new Promise<void>((resolve, reject) => {
-                  const { controls, focusTarget, getThree } = context;
+              src: async (context) => {
+                const { controls, focusTarget } = context;
 
-                  if (!controls || !focusTarget) {
-                    return reject();
-                  }
-                  const camera = controls.camera;
-                  if (!camera) {
-                    return reject();
-                  }
+                if (!controls || !focusTarget) {
+                  return;
+                }
+                const camera = controls.camera;
+                if (!camera) {
+                  return;
+                }
 
-                  void controls.attachToWithoutMoving(focusTarget).then(() => {
-                    // controls.applyWorldUp();
-                    resolve();
-                  });
-                });
+                await controls.attachToWithoutMoving(focusTarget);
               },
+
               id: 'change-target-promise',
               onDone: { target: 'idle', actions: ['setSpaceCamDistance'] },
               onError: { target: 'idle' },
