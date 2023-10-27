@@ -101,13 +101,7 @@ export class CameraController extends Object3D {
       tension: 280.0,
     },
   });
-  private _controls_spring = new Controller({
-    rotation: [0, 0, 0],
-    config: {
-      mass: 1.0,
-      friction: 30.0,
-    },
-  });
+  
 
   updateCameraPosition() {
     this._attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
