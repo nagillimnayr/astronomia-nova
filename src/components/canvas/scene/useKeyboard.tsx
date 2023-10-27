@@ -132,7 +132,6 @@ export function useKeyboard() {
         void controls.animateTo({
           phi,
           theta: Math.abs(diffTheta) < PI ? theta : theta - TWO_PI,
-          duration: 1,
         });
 
         break;
