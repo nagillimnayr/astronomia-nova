@@ -54,25 +54,23 @@ export function useKeyboard() {
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
         if (controls.isAnimating) return;
-        void (async () => {
-          await controls.animateRotation([0, 0, 0]);
-          controls.resetRotation();
-        })();
-
+        // void (async () => {
+        //   // await controls.animateRotation([0, 0, 0]);
+        //   controls.resetRotation();
+        // })();
+        // controls.resetRotation();
+        void controls.animateRoll(0);
         break;
       }
       case 'KeyU': {
         if (env !== 'development') return;
-        const { controls, observer, focusTarget } =
-          cameraActor.getSnapshot()!.context;
+        const { controls, focusTarget } = cameraActor.getSnapshot()!.context;
         if (!controls || !focusTarget || !(focusTarget instanceof KeplerBody))
           return;
 
         if (controls.isAnimating) return;
 
         void (async () => {
-          await controls.animateRotation([0, 0, 0]);
-          controls.resetRotation();
           const _focusUp = new Vector3();
           const _controllerUp = new Vector3();
 
@@ -84,13 +82,14 @@ export function useKeyboard() {
           const meshParent = bodyMesh.parent;
           if (!meshParent) return;
 
-          controls.resetRotation();
+          // controls.resetRotation();
           _controllerUp.set(...getLocalUpInWorldCoords(controls));
           _focusUp.set(...getLocalUpInWorldCoords(meshParent));
 
-          const angle = controls.rotation.x - _controllerUp.angleTo(_focusUp);
+          const angle = _controllerUp.angleTo(_focusUp);
 
-          void controls.animateRotation([angle, 0, 0]);
+          // void controls.animateRotation([angle, 0, ]);
+          await controls.animateRoll(angle);
         })();
 
         break;
@@ -128,6 +127,7 @@ export function useKeyboard() {
         console.log(`controls rotation: `, controls.rotation.toArray());
 
         console.log(`camera rotation: `, controls.camera.rotation.toArray());
+        console.log(`camera roll: `, controls.roll);
 
         break;
       }
