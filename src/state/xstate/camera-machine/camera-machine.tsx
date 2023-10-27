@@ -313,17 +313,8 @@ export const cameraMachine = createMachine(
 
             controls.lock();
 
-            const { x, y, z } = controls.camera.rotation;
-            await spring.start({
-              from: { rotation: [x, y, z] },
-              to: { rotation: [angle, 0, 0] },
-              onChange: ({ value }) => {
-                const rotation = value.rotation as Vector3Tuple;
-                controls.rotation.x = rotation[0];
-              },
-            });
-
             controls.resetRotation();
+
             await controls.animateRotation(angle);
 
             observer.getWorldPosition(_observerPos);
