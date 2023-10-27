@@ -323,6 +323,7 @@ export const cameraMachine = createMachine(
               },
             });
 
+            controls.resetRotation();
             await controls.animateRotation(angle);
 
             observer.getWorldPosition(_observerPos);
@@ -340,49 +341,7 @@ export const cameraMachine = createMachine(
             controls.normalizeAzimuthalAngle();
             // const currentTheta = controls.azimuthalAngle;
             const phi = _spherical.phi;
-            const theta = normalizeAngle(_spherical.theta);
-            // const diffTheta = ( targetTheta - currentTheta + PI) % TWO_PI;
-            // let diffTheta = 0;
-            // let theta = 0;
-
-            // console.log(`Current theta: ${radToDeg(currentTheta)}`);
-            // console.log(`Target theta: ${radToDeg(targetTheta)}`);
-
-            /* Determine shortest angle path to target. */
-            // if (currentTheta <= targetTheta) {
-            //   /**
-            //    * e.g. currentTheta is 30 deg and targetTheta is 330 deg,
-            //    * 330 - 30 = 300 deg
-            //    * 300 - 360 = -60 deg
-            //    * 30 + (-60) = -30 deg
-            //    * -30 deg == 330 deg
-            //    */
-            //   diffTheta = targetTheta - currentTheta;
-
-            //   /* If difference between angles is less than PI, then no need for adjustment. */
-            //   theta =
-            //     diffTheta < PI
-            //       ? targetTheta
-            //       : currentTheta + (diffTheta - TWO_PI);
-            // } else {
-            //   /**
-            //    * e.g. currentTheta is 330 deg and targetTheta is 30 deg,
-            //    * 330 - 30 = 300 deg
-            //    * 360 - 300 = 60 deg
-            //    * 330 + 60 deg = 390 deg
-            //    * 390 deg = 30 deg
-            //    */
-            //   diffTheta = currentTheta - targetTheta;
-
-            //   /* If difference between angles is less than PI, then no need for adjustment. */
-            //   theta =
-            //     diffTheta < PI
-            //       ? targetTheta
-            //       : currentTheta + (TWO_PI - diffTheta);
-            // }
-
-            // console.log(`diffTheta: ${radToDeg(diffTheta)}`);
-            // console.log(`shortest path theta: ${radToDeg(theta)}`);
+            const theta = _spherical.theta;
 
             const targetRadius = observerRadius * 3;
 
@@ -394,30 +353,7 @@ export const cameraMachine = createMachine(
             controls.setMinRadius(SURFACE_MIN_DIST);
 
             await controls.animateTo({ radius, phi, theta });
-            // await spring.start({
-            //   from: {
-            //     radius: controls.spherical.radius,
-            //     phi: controls.spherical.phi,
-            //     theta: controls.spherical.theta,
-            //   },
-            //   to: {
-            //     radius: radius,
-            //     phi: phi,
-            //     /* Ensure camera takes shortest path. */
-            //     theta: theta,
-            //   },
-
-            //   onChange: ({ value }) => {
-            //     console.log('value 1: ', value);
-            //     controls.setRadius(value.radius as number);
-            //     controls.setPolarAngle(value.phi as number);
-            //     controls.setAzimuthalAngle(value.theta as number);
-            //     controls.updateCameraPosition();
-            //     controls.resetTarget();
-            //   },
-            // });
-
-            // await controls.attachToWithoutMoving(observer);
+            controls.lock();
             observer.attach(controls);
 
             controls.camera.getWorldPosition(_cameraPos);
@@ -431,45 +367,15 @@ export const cameraMachine = createMachine(
             controls.applyLocalUp();
 
             controls.setAzimuthalAngle(PI_OVER_TWO);
-            console.log('set azimuthal angle');
             controls.setPolarAngle(0);
 
             controls.spherical.makeSafe();
             controls.resetTarget();
 
-            await spring.start({
-              from: {
-                radius: controls.spherical.radius,
-                // phi: controls.spherical.phi,
-                // theta: controls.spherical.theta,
-              },
-              to: { radius: SURFACE_MAX_DIST },
-
-              onChange: ({ value }) => {
-                // console.log('value 2: ', value);
-                controls.setRadius(value.radius as number);
-                controls.updateCameraPosition();
-                controls.resetTarget();
-              },
-              onResolve: () => {
-                console.log('SURFACE_MIN_DIST:', SURFACE_MIN_DIST);
-                console.log('control radius:', controls.radius);
-              },
-            });
-
-            await spring.start({
-              from: { phi: controls.polarAngle },
-              to: { phi: PI_OVER_TWO },
-              onChange: ({ value }) => {
-                // console.log('value 3: ', value);
-                controls.setPolarAngle(value.phi as number);
-                controls.updateCameraPosition();
-                controls.resetTarget();
-              },
-            });
+            await controls.animateTo({ radius: SURFACE_MAX_DIST });
+            await controls.animateTo({ phi: PI_OVER_TWO });
 
             controls.unlock();
-            console.log('aaa');
           },
           id: 'entering_surface_promise',
           onDone: { target: 'surface' },
@@ -573,7 +479,7 @@ export const cameraMachine = createMachine(
                 radius: dist,
               },
               onChange: ({ value }) => {
-                console.log('radius:', value.radius);
+                // console.log('radius:', value.radius);
                 const rotation = value.rotation as Vector3Tuple;
                 controls.rotation.set(...rotation);
                 controls.setRadius(value.radius as number);
