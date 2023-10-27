@@ -42,8 +42,10 @@ export const CameraManager = () => {
         camera,
       });
     }
-    camera.add(arrowRef.current);
-    arrowRef.current.setLength(1e5, 1, 0.2);
+    if (arrowRef.current) {
+      camera.add(arrowRef.current);
+      arrowRef.current.setLength(1e5, 1, 0.2);
+    }
   }, [cameraActor, getThree]);
 
   return (
