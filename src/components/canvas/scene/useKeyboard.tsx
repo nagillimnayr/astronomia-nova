@@ -141,12 +141,12 @@ export function useKeyboard() {
         if (env !== 'development') return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls) return;
-        const x = radToDeg(controls.rotation.x);
-        const y = radToDeg(controls.rotation.y);
-        const z = radToDeg(controls.rotation.z);
+        
         const azimuth = radToDeg(controls.azimuthalAngle);
         console.log(`azimuthal angle: ${azimuth}`);
-        console.log(`controls angles: `, { x, y, z });
+        console.log(`controls rotation: `, controls.rotation.toArray());
+
+        console.log(`camera rotation: `, controls.camera.rotation.toArray());
 
         break;
       }
