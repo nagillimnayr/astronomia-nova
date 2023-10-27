@@ -520,36 +520,54 @@ export const cameraMachine = createMachine(
         invoke: {
           src: (context) =>
             new Promise<void>((resolve) => {
-              const { controls, spring, focusTarget } = context;
-              if (!focusTarget || !controls) return resolve();
-
+              const { controls, spring, focusTarget, observer } = context;
+              if (!focusTarget || !controls || !observer) return resolve();
+              if (process.env.NODE_ENV === 'development') {
+                console.log('entering space');
+              }
               void (async () => {
+                focusTarget.attach(controls);
+                controls.position.set(0, 0, 0);
+
                 // await controls.attachToWithoutMoving(focusTarget);
                 controls.applyWorldUp();
 
                 // console.log('control rotation:', controls?.rotation.toArray());
                 const body = focusTarget as KeplerBody;
-                const dist = body.meanRadius * 4;
-                await spring.start({
-                  from: {
-                    rotation: controls.rotation.toArray(),
-                    radius: controls.radius,
-                  },
-                  to: {
-                    // rotation: [0, 0, 0],
-                    radius: dist,
-                  },
-                  onChange: ({ value }) => {
-                    const rotation = value.rotation as Vector3Tuple;
-                    // controls.rotation.set(...rotation);
-                    controls.setRadius(value.radius as number);
-                    controls.updateCameraPosition();
-                    controls.resetTarget();
-                  },
-                  onResolve: () => {
-                    resolve();
-                  },
-                });
+                const dist = body.meanRadius * 40;
+
+                controls.rotation.set(0, 0, 0);
+
+                observer.getWorldPosition(_observerPos);
+                controls.worldToLocal(_observerPos);
+                controls.spherical.setFromVector3(_observerPos);
+
+                controls.setRadius(body.meanRadius);
+                controls.resetTarget();
+                controls.setTargetRadius(dist);
+
+                resolve();
+
+                // await spring.start({
+                //   from: {
+                //     rotation: controls.rotation.toArray(),
+                //     radius: controls.radius,
+                //   },
+                //   to: {
+                //     rotation: [0, 0, 0],
+                //     radius: dist,
+                //   },
+                //   onChange: ({ value }) => {
+                //     const rotation = value.rotation as Vector3Tuple;
+                //     controls.rotation.set(...rotation);
+                //     controls.setRadius(value.radius as number);
+                //     controls.updateCameraPosition();
+                //     controls.resetTarget();
+                //   },
+                //   onResolve: () => {
+                //     resolve();
+                //   },
+                // });
               })();
             }),
           id: 'enter-space-promise',
