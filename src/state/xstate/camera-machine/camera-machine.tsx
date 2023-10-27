@@ -447,27 +447,7 @@ export const cameraMachine = createMachine(
             controls.resetTarget();
             controls.setTargetRadius(dist);
 
-            // await controls.animateTo({ radius: dist });
-            // await controls.animateRotation(0);
-            const { x, y, z } = controls.rotation;
-            await spring.start({
-              from: {
-                rotation: [x, y, z],
-                radius: controls.radius,
-              },
-              to: {
-                rotation: [0, 0, 0],
-                radius: dist,
-              },
-              onChange: ({ value }) => {
-                // console.log('radius:', value.radius);
-                const rotation = value.rotation as Vector3Tuple;
-                controls.rotation.set(...rotation);
-                controls.setRadius(value.radius as number);
-                controls.updateCameraPosition();
-                controls.resetTarget();
-              },
-            });
+            await controls.animateTo({ radius: dist });
           },
           id: 'enter-space-promise',
           onDone: { target: 'space' },
