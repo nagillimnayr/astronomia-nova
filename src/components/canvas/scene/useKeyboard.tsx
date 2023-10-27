@@ -55,7 +55,7 @@ export function useKeyboard() {
         if (!controls || !controls.camera) return;
         if (controls.isAnimating) return;
         void (async () => {
-          await controls.animateRotation(0);
+          await controls.animateRotation([0, 0, 0]);
           controls.resetRotation();
         })();
 
@@ -71,7 +71,7 @@ export function useKeyboard() {
         if (controls.isAnimating) return;
 
         void (async () => {
-          await controls.animateRotation(0);
+          await controls.animateRotation([0, 0, 0]);
           controls.resetRotation();
           const _focusUp = new Vector3();
           const _controllerUp = new Vector3();
@@ -90,7 +90,7 @@ export function useKeyboard() {
 
           const angle = controls.rotation.x - _controllerUp.angleTo(_focusUp);
 
-          void controls.animateRotation(angle);
+          void controls.animateRotation([angle, 0, 0]);
         })();
 
         break;

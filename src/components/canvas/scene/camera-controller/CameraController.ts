@@ -603,7 +603,7 @@ export class CameraController extends Object3D {
     // console.log('rotation after:', this.rotation.toArray());
   }
 
-  async animateRotation(angle: number) {
+  async animateRotation(targetRotation: Vector3Tuple) {
     if (this._isAnimating) return;
     this.lock();
     this._isAnimating = true;
@@ -611,7 +611,7 @@ export class CameraController extends Object3D {
     const { x, y, z } = this.rotation;
     await this._camera_spring.start({
       from: { rotation: [x, y, z] },
-      to: { rotation: [angle, y, z] },
+      to: { rotation: targetRotation },
       onChange: ({ value }) => {
         const rotation = value.rotation as Vector3Tuple;
         this.rotation.x = rotation[0];

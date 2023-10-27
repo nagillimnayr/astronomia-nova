@@ -311,7 +311,7 @@ export const cameraMachine = createMachine(
 
             controls.resetRotation();
 
-            await controls.animateRotation(angle);
+            await controls.animateRotation([angle, 0, 0]);
 
             observer.getWorldPosition(_observerPos);
 
