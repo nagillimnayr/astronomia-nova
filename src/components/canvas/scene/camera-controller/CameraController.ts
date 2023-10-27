@@ -102,9 +102,9 @@ export class CameraController extends Object3D {
       clamp: true,
       restVelocity: 0.001,
     },
-    onRest: () => {
-      console.log('rest!');
-    },
+    // onRest: () => {
+    //   console.log('rest!');
+    // },
   });
 
   updateCameraPosition() {
