@@ -56,12 +56,6 @@ function approxZero(num: number, epsilon = EPSILON) {
   return Math.abs(num) <= epsilon;
 }
 
-type RotationSpring = {
-  x: number;
-  y: number;
-  z: number;
-};
-
 /**
  * @description Controller to manage the camera, handle inputs, and smooth the camera motions.
  * @author Ryan Milligan
@@ -104,6 +98,10 @@ export class CameraController extends Object3D {
 
   private _rotationSpring = new Controller({
     rotation: [0, 0, 0],
+    config: {
+      mass: 1.0,
+      friction: 50.0,
+    },
   });
 
   /**
@@ -556,24 +554,6 @@ export class CameraController extends Object3D {
           resolve();
         },
       });
-
-      // gsap.to(this.camera.rotation, {
-      //   x: 0,
-      //   y: 0,
-      //   z: 0,
-      //   duration: duration,
-      //   ease: 'power2.inOut',
-      //   onUpdate: () => {
-      //     this.camera.updateProjectionMatrix();
-      //     this.camera.dispatchEvent({ type: 'UPDATED' });
-      //   },
-      //   onComplete: () => {
-      //     this.unlock();
-      //     this._isAnimating = false;
-      //     // this.camera.up.copy(this.up);
-      //     resolve();
-      //   },
-      // });
     });
   }
 
