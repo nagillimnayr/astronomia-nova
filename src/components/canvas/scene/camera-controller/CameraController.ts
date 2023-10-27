@@ -17,7 +17,6 @@ import {
   Euler,
 } from 'three';
 import { clamp, radToDeg } from 'three/src/math/MathUtils';
-import { smoothCritDamp } from './smoothing';
 import { damp, dampAngle } from 'maath/easing';
 import { gsap } from 'gsap';
 import { Controller, Spring, SpringRef } from '@react-spring/three';
@@ -46,9 +45,6 @@ const _v3 = new Vector3();
 const _camPos = new Vector3();
 const _camDirection = new Vector3();
 const _controllerPos = new Vector3();
-
-const _camUp1 = new Vector3();
-const _camUp2 = new Vector3();
 
 const _eul1 = new Euler();
 
@@ -100,9 +96,18 @@ export class CameraController extends Object3D {
     rotation: [0, 0, 0],
     config: {
       mass: 1.0,
-      friction: 40.0,
+      friction: 50.0,
     },
   });
+
+  updateCameraPosition() {
+    this._attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
+    const yRot = this._spherical.theta;
+    const xRot = -(PI_OVER_TWO - this._spherical.phi);
+    this._pivotPoint.rotation.set(xRot, yRot, 0, 'YXZ');
+
+    this._camera?.updateProjectionMatrix();
+  }
 
   /**
    * @description Updates the camera. Should be called inside of the render loop each frame.
@@ -157,21 +162,23 @@ export class CameraController extends Object3D {
     attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
     this._camera?.position.set(0, 0, 0);
 
-    const azimuthalAngle = this._spherical.theta;
-    const polarAngle = this._spherical.phi;
+    // const azimuthalAngle = this._spherical.theta;
+    // const polarAngle = this._spherical.phi;
 
-    const yRot = azimuthalAngle;
-    const xRot = -(PI_OVER_TWO - polarAngle);
-    _eul1.set(xRot, yRot, 0, 'YXZ');
-
+    // const yRot = azimuthalAngle;
+    // const xRot = -(PI_OVER_TWO - polarAngle);
+    // // _eul1.set(xRot, yRot, 0, 'YXZ');
+    // pivotPoint.rotation.set(xRot, yRot, 0, 'YXZ');
     // Rotations are intrinsic, so the order matters. Rotation around local
     // y-axis must be done first in order to preserve the local up-vector.
-    pivotPoint.rotateY(azimuthalAngle); // Rotate around local y-axis.
-    pivotPoint.rotateX(-(PI_OVER_TWO - polarAngle)); // Rotate around local x-axis.
+    // pivotPoint.rotateY(azimuthalAngle); // Rotate around local y-axis.
+    // pivotPoint.rotateX(-(PI_OVER_TWO - polarAngle)); // Rotate around local x-axis.
     // this.camera.position.setFromSphericalCoords(0, polarAngle, azimuthalAngle);
     // this.camera.up.copy(this.up);
 
-    this._camera?.updateProjectionMatrix();
+    // this._camera?.updateProjectionMatrix();
+
+    this.updateCameraPosition();
   }
 
   /**
@@ -467,6 +474,12 @@ export class CameraController extends Object3D {
     this.lookAt(_v3);
     this.rotation.set(0, 0, 0);
   }
+  applyLocalUp() {
+    this.getWorldPosition(_v1);
+    _v3.addVectors(_v1, Z_AXIS);
+    this.lookAt(_v3);
+    this.rotation.set(0, 0, 0);
+  }
 
   /**
    * @description Attach the controller to the object.
@@ -517,17 +530,7 @@ export class CameraController extends Object3D {
 
     const yRot = azimuthalAngle;
     const xRot = -(PI_OVER_TWO - polarAngle);
-    pivotPoint.rotateY(yRot); // Rotate around local y-axis.
-    pivotPoint.rotateX(xRot); // Rotate around local x-axis.
-
-    /* Get the angle between previous direction and target direction. */
-    this.camera.getWorldDirection(_v2);
-    const angle = _camDirection.angleTo(_v2);
-
-    /* Use the angle to determine the duration of the animation. */
-    console.log('angle:', angle);
-    const duration = 10 * (angle / PI);
-    console.log('duration:', duration);
+    pivotPoint.rotation.set(xRot, yRot, 0, 'YXZ');
 
     this.camera.up.set(0, 1, 0);
     // this.camera.up.set(...getLocalUpInWorldCoords(this.camera));
@@ -548,11 +551,7 @@ export class CameraController extends Object3D {
         },
         onResolve: () => {
           // this.unlock();
-          console.log('RESOLVE', Date.now());
           resolve();
-        },
-        onRest: () => {
-          console.log('REST', Date.now());
         },
       });
     });
@@ -595,6 +594,13 @@ export class CameraController extends Object3D {
   resetTarget() {
     const { radius, phi, theta } = this._spherical;
     this._sphericalTarget.set(radius, phi, theta);
+  }
+
+  get isAnimating() {
+    return this._isAnimating;
+  }
+  set isAnimating(isAnimating: boolean) {
+    this._isAnimating = isAnimating;
   }
 
   animateTo(to: {
