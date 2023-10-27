@@ -53,27 +53,11 @@ export function useKeyboard() {
         if (env !== 'development') return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
-
-        controls.resetRotation();
-        controls.lock();
-        gsap.to(controls.rotation, {
-          x: 0,
-          y: 0,
-          z: 0,
-          duration: 1,
-          onComplete: () => {
-            controls.unlock();
-          },
-        });
-        gsap.to(controls.camera.rotation, {
-          z: 0,
-          x: 0,
-          y: 0,
-          duration: 1,
-          onComplete: () => {
-            controls.unlock();
-          },
-        });
+        if (controls.isAnimating) return;
+        void (async () => {
+          await controls.animateRotation(0);
+          controls.resetRotation();
+        })();
 
         break;
       }
@@ -84,33 +68,30 @@ export function useKeyboard() {
         if (!controls || !focusTarget || !(focusTarget instanceof KeplerBody))
           return;
 
-        const _focusUp = new Vector3();
-        const _controllerUp = new Vector3();
+        if (controls.isAnimating) return;
 
-        _focusUp.set(...getLocalUpInWorldCoords(focusTarget.meshRef.current!));
-        const bodyMesh = focusTarget.meshRef.current;
-        if (!bodyMesh) return;
-        const meshParent = bodyMesh.parent;
-        if (!meshParent) return;
+        void (async () => {
+          await controls.animateRotation(0);
+          controls.resetRotation();
+          const _focusUp = new Vector3();
+          const _controllerUp = new Vector3();
 
-        _controllerUp.set(...getLocalUpInWorldCoords(controls));
-        _focusUp.set(...getLocalUpInWorldCoords(meshParent));
+          _focusUp.set(
+            ...getLocalUpInWorldCoords(focusTarget.meshRef.current!)
+          );
+          const bodyMesh = focusTarget.meshRef.current;
+          if (!bodyMesh) return;
+          const meshParent = bodyMesh.parent;
+          if (!meshParent) return;
 
-        // const obliquity = degToRad(focusTarget.obliquity);
+          controls.resetRotation();
+          _controllerUp.set(...getLocalUpInWorldCoords(controls));
+          _focusUp.set(...getLocalUpInWorldCoords(meshParent));
 
-        const angle = controls.rotation.x - _controllerUp.angleTo(_focusUp);
-        controls.lock();
+          const angle = controls.rotation.x - _controllerUp.angleTo(_focusUp);
 
-        gsap.to(controls.rotation, {
-          // x: -obliquity,
-          x: angle,
-          // y: 0,
-          // z: 0,
-          duration: 1,
-          onComplete: () => {
-            controls.unlock();
-          },
-        });
+          void controls.animateRotation(angle);
+        })();
 
         break;
       }
@@ -141,7 +122,7 @@ export function useKeyboard() {
         if (env !== 'development') return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls) return;
-        
+
         const azimuth = radToDeg(controls.azimuthalAngle);
         console.log(`azimuthal angle: ${azimuth}`);
         console.log(`controls rotation: `, controls.rotation.toArray());
