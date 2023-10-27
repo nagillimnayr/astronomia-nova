@@ -97,11 +97,15 @@ export class CameraController extends Object3D {
     rotation: [0, 0, 0],
     config: {
       mass: 1.0,
-      friction: 50.0,
-      tension: 280.0,
+      friction: 30.0,
+      tension: 300.0,
+      clamp: true,
+      restVelocity: 0.001,
+    },
+    onRest: () => {
+      console.log('rest!');
     },
   });
-  
 
   updateCameraPosition() {
     this._attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
@@ -164,22 +168,6 @@ export class CameraController extends Object3D {
     pivotPoint.rotation.set(0, 0, 0); // Reset rotations.
     attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
     this._camera?.position.set(0, 0, 0);
-
-    // const azimuthalAngle = this._spherical.theta;
-    // const polarAngle = this._spherical.phi;
-
-    // const yRot = azimuthalAngle;
-    // const xRot = -(PI_OVER_TWO - polarAngle);
-    // // _eul1.set(xRot, yRot, 0, 'YXZ');
-    // pivotPoint.rotation.set(xRot, yRot, 0, 'YXZ');
-    // Rotations are intrinsic, so the order matters. Rotation around local
-    // y-axis must be done first in order to preserve the local up-vector.
-    // pivotPoint.rotateY(azimuthalAngle); // Rotate around local y-axis.
-    // pivotPoint.rotateX(-(PI_OVER_TWO - polarAngle)); // Rotate around local x-axis.
-    // this.camera.position.setFromSphericalCoords(0, polarAngle, azimuthalAngle);
-    // this.camera.up.copy(this.up);
-
-    // this._camera?.updateProjectionMatrix();
 
     this.updateCameraPosition();
   }
@@ -513,7 +501,7 @@ export class CameraController extends Object3D {
     obj.attach(this);
     /* Set controller position to that of the object. */
     this.position.set(0, 0, 0);
-    
+
     this.resetRotation();
 
     /* Convert previous camera world position to controller local space. */
@@ -542,7 +530,7 @@ export class CameraController extends Object3D {
 
     // this.lock();
 
-    const [x,y,z] = this.camera.rotation.toArray();
+    const [x, y, z] = this.camera.rotation.toArray();
     await this._camera_spring.start({
       from: { rotation: [x, y, z] },
       to: { rotation: [0, 0, 0] },
@@ -551,7 +539,6 @@ export class CameraController extends Object3D {
         /* Update camera rotation. */
         this.camera.rotation.set(...value.rotation);
       },
-      
     });
     this.resetRotation();
     // this.unlock();
@@ -604,6 +591,7 @@ export class CameraController extends Object3D {
   }
 
   resetRotation() {
+    if (this._isAnimating) return;
     // console.log('rotation before:', this.rotation.toArray());
     if (!this._camera) return;
     this._camera.getWorldPosition(_camPos);
@@ -616,6 +604,7 @@ export class CameraController extends Object3D {
   }
 
   async animateRotation(angle: number) {
+    if (this._isAnimating) return;
     this.lock();
     this._isAnimating = true;
 
@@ -634,6 +623,8 @@ export class CameraController extends Object3D {
   }
 
   async animateTo(to: { radius?: number; phi?: number; theta?: number }) {
+    if (this._isAnimating) return;
+
     this.lock();
     this.resetTarget();
     this._isAnimating = true;
