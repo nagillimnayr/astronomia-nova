@@ -57,17 +57,6 @@ const SURFACE_MAX_DIST = 1.5 * SURFACE_MIN_DIST;
 // Default FOV.
 const FOV = 40;
 
-type RotationParams = {
-  startQuaternion: Quaternion;
-  endQuaternion: Quaternion;
-  slerpResultQuaternion: Quaternion;
-  slerpFactor: number;
-};
-
-type AnimParam = {
-  animFactor: number;
-};
-
 type Context = {
   getThree: () => RootState;
   getXR: () => XRState;
