@@ -277,7 +277,7 @@ export const cameraMachine = createMachine(
         invoke: {
           src: async (context) => {
             console.log('entering surface');
-            const { controls, focusTarget, observer, spring } = context;
+            const { controls, focusTarget, observer } = context;
             if (
               !controls ||
               !controls.camera ||
@@ -294,13 +294,13 @@ export const cameraMachine = createMachine(
             /* Get angle between up vector of controller and up vector of body. */
             _v1.set(...getLocalUpInWorldCoords(controls));
             _v2.set(...getLocalUpInWorldCoords(bodyMesh));
-            const angle = controls.rotation.x - _v1.angleTo(_v2);
+            const roll = -_v1.angleTo(_v2);
 
             controls.lock();
 
             controls.resetRotation();
 
-            await controls.animateRotation([angle, 0, 0]);
+            // await controls.animateRoll(angle);
 
             observer.getWorldPosition(_observerPos);
 
@@ -328,8 +328,9 @@ export const cameraMachine = createMachine(
             controls.resetTarget();
             controls.setMinRadius(SURFACE_MIN_DIST);
 
-            await controls.animateTo({ radius, phi, theta });
-            controls.lock();
+            await controls.animateTo({ radius, phi, theta, roll });
+
+            /* Attach so that camera maintains its worldspace coords. */
             observer.attach(controls);
 
             controls.camera.getWorldPosition(_cameraPos);
@@ -348,8 +349,12 @@ export const cameraMachine = createMachine(
             controls.spherical.makeSafe();
             controls.resetTarget();
 
-            await controls.animateTo({ radius: SURFACE_MAX_DIST });
-            await controls.animateTo({ phi: PI_OVER_TWO });
+            await controls.animateTo({
+              radius: SURFACE_MAX_DIST,
+              phi: PI_OVER_TWO,
+              roll: 0,
+            });
+            // await controls.animateTo({ phi: PI_OVER_TWO });
 
             controls.unlock();
           },
