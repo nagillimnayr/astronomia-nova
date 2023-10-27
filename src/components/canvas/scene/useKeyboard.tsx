@@ -54,6 +54,7 @@ export function useKeyboard() {
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
 
+        controls.resetRotation();
         controls.lock();
         gsap.to(controls.rotation, {
           x: 0,
