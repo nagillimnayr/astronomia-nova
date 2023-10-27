@@ -600,7 +600,7 @@ export class CameraController extends Object3D {
   }
 
   resetRotation() {
-    console.log('rotation before:', this.rotation.toArray());
+    // console.log('rotation before:', this.rotation.toArray());
     if (!this._camera) return;
     this._camera.getWorldPosition(_camPos);
     this.rotation.set(0, 0, 0);
@@ -608,7 +608,7 @@ export class CameraController extends Object3D {
     this.spherical.setFromVector3(_camPos);
     this.spherical.makeSafe();
     this.resetTarget();
-    console.log('rotation after:', this.rotation.toArray());
+    // console.log('rotation after:', this.rotation.toArray());
   }
 
   async animateRotation(angle: number) {
