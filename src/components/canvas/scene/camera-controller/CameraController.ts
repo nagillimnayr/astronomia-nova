@@ -20,7 +20,7 @@ import {
 import { clamp, radToDeg } from 'three/src/math/MathUtils';
 import { damp, dampAngle } from 'maath/easing';
 import { gsap } from 'gsap';
-import { Controller } from '@react-spring/three';
+import { Controller, SpringValue } from '@react-spring/three';
 
 const EPSILON = 1e-3;
 
@@ -47,8 +47,6 @@ const _camPos = new Vector3();
 const _camDirection = new Vector3();
 const _controllerPos = new Vector3();
 
-const _eul1 = new Euler();
-
 function approxZero(num: number, epsilon = EPSILON) {
   return Math.abs(num) <= epsilon;
 }
@@ -68,6 +66,7 @@ export class CameraController extends Object3D {
   private _spherical = new Spherical();
   private _sphericalTarget = new Spherical();
 
+  private _rollPoint = new Object3D();
   private _pivotPoint = new Object3D();
   private _attachPoint = new Object3D();
 
@@ -95,6 +94,10 @@ export class CameraController extends Object3D {
 
   private _camera_spring = new Controller({
     rotation: [0, 0, 0],
+    radius: 0.0,
+    phi: 0.0,
+    theta: 0.0,
+    roll: 0.0,
     config: {
       mass: 1.0,
       friction: 30.0,
@@ -107,13 +110,25 @@ export class CameraController extends Object3D {
     // },
   });
 
+  private _roll = 0;
+
   updateCameraPosition() {
+    if (!this._camera) return;
+    this._camera.position.set(0, 0, 0);
     this._attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
+
+    // const yRot = this._spherical.theta;
+    // const xRot = -(PI_OVER_TWO - this._spherical.phi);
+
     const yRot = this._spherical.theta;
     const xRot = -(PI_OVER_TWO - this._spherical.phi);
-    this._pivotPoint.rotation.set(xRot, yRot, 0, 'YXZ');
+    const roll = this._roll;
 
-    this._camera?.updateProjectionMatrix();
+    // this._rollPoint.rotation.set(0, 0, roll);
+    this._pivotPoint.rotation.set(xRot, yRot, 0, 'YXZ');
+    this.camera.rotation.z = -roll;
+
+    this._camera.updateProjectionMatrix();
   }
 
   /**
@@ -161,13 +176,6 @@ export class CameraController extends Object3D {
       }
       this._isMoving = isMoving;
     }
-
-    const pivotPoint = this._pivotPoint;
-    const attachPoint = this._attachPoint;
-
-    pivotPoint.rotation.set(0, 0, 0); // Reset rotations.
-    attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
-    this._camera?.position.set(0, 0, 0);
 
     this.updateCameraPosition();
   }
@@ -515,7 +523,7 @@ export class CameraController extends Object3D {
 
     /* Use the spherical coords to position the camera at its previous world space coords. */
     const pivotPoint = this._pivotPoint;
-    pivotPoint.rotation.set(0, 0, 0);
+    // pivotPoint.rotation.set(0, 0, 0);
     this._attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
 
     const azimuthalAngle = this._spherical.theta;
@@ -523,7 +531,9 @@ export class CameraController extends Object3D {
 
     const yRot = azimuthalAngle;
     const xRot = -(PI_OVER_TWO - polarAngle);
-    pivotPoint.rotation.set(xRot, yRot, 0, 'YXZ');
+    // pivotPoint.rotation.set(xRot, yRot, 0, 'YXZ');
+    const zRot = pivotPoint.rotation.z;
+    pivotPoint.rotation.set(xRot, yRot, zRot, 'ZYX');
 
     this.camera.up.set(0, 1, 0);
     this.camera.lookAt(_controllerPos);
@@ -578,6 +588,10 @@ export class CameraController extends Object3D {
     return this._spherical;
   }
 
+  get roll() {
+    return this._roll;
+  }
+
   resetTarget() {
     const { radius, phi, theta } = this._spherical;
     this._sphericalTarget.set(radius, phi, theta);
@@ -592,15 +606,47 @@ export class CameraController extends Object3D {
 
   resetRotation() {
     if (this._isAnimating) return;
-    // console.log('rotation before:', this.rotation.toArray());
     if (!this._camera) return;
+    if (process.env.NODE_ENV === 'development') {
+      console.log('rotation before:', this.rotation.toArray());
+    }
     this._camera.getWorldPosition(_camPos);
     this.rotation.set(0, 0, 0);
     this.worldToLocal(_camPos);
     this.spherical.setFromVector3(_camPos);
     this.spherical.makeSafe();
     this.resetTarget();
+    if (process.env.NODE_ENV === 'development') {
+      console.log('rotation after:', this.rotation.toArray());
+    }
+    // this._roll = 0;
+    this.updateCameraPosition();
     // console.log('rotation after:', this.rotation.toArray());
+  }
+
+  async animateResetRoll() {
+    await this.animateRoll(0);
+  }
+
+  async animateRoll(angle: number) {
+    if (this._isAnimating) return;
+    if (!this._camera) return;
+    this.lock();
+    this._isAnimating = true;
+
+    this._camera.getWorldPosition(_camPos);
+    this.worldToLocal(_camPos);
+
+    await this._camera_spring.start({
+      to: { roll: angle },
+      onChange: ({ value }) => {
+        this._roll = value.roll as number;
+        this.updateCameraPosition();
+      },
+    });
+
+    this.unlock();
+    this._isAnimating = false;
   }
 
   async animateRotation(targetRotation: Vector3Tuple) {
@@ -608,10 +654,31 @@ export class CameraController extends Object3D {
     this.lock();
     this._isAnimating = true;
 
-    const { x, y, z } = this.rotation;
+    const { x, y, z } = this._pivotPoint.rotation;
     await this._camera_spring.start({
       from: { rotation: [x, y, z] },
       to: { rotation: targetRotation },
+      onChange: ({ value }) => {
+        const rotation = value.rotation as Vector3Tuple;
+        const [x, y, z] = value.rotation as Vector3Tuple;
+        // this.rotation.x = rotation[0];
+        // this._pivotPoint.rotation.z = z;
+      },
+    });
+
+    this.unlock();
+    this._isAnimating = false;
+  }
+
+  async animateRotationAboutAxis(axis: Vector3Tuple, angle: number) {
+    if (this._isAnimating) return;
+    this.lock();
+    this._isAnimating = true;
+
+    const [x, y, z] = this.rotation.toArray();
+    await this._camera_spring.start({
+      from: { rotation: [x, y, z] },
+      // to: { rotation: targetRotation },
       onChange: ({ value }) => {
         const rotation = value.rotation as Vector3Tuple;
         this.rotation.x = rotation[0];
@@ -622,17 +689,23 @@ export class CameraController extends Object3D {
     this._isAnimating = false;
   }
 
-  async animateTo(to: { radius?: number; phi?: number; theta?: number }) {
+  async animateTo(to: {
+    radius?: number;
+    phi?: number;
+    theta?: number;
+    roll?: number;
+  }) {
     if (this._isAnimating) return;
 
     this.lock();
     this.resetTarget();
     this._isAnimating = true;
-    const { radius, phi, theta } = to;
+    const { radius, phi, theta, roll } = to;
     if (
       typeof radius !== 'number' &&
       typeof phi !== 'number' &&
-      typeof theta !== 'number'
+      typeof theta !== 'number' &&
+      typeof roll !== 'number'
     ) {
       this.unlock();
       this._isAnimating = false;
@@ -678,16 +751,19 @@ export class CameraController extends Object3D {
         radius: this.radius,
         phi: this.polarAngle,
         theta: this.azimuthalAngle,
+        from: this._roll,
       },
       to: {
         radius: radius ?? this.radius,
         phi: phi ?? this.polarAngle,
         theta: targetTheta ?? this.azimuthalAngle,
+        roll: roll ?? this._roll,
       },
       onChange: ({ value }) => {
-        radius && this.setRadius(value.radius as number);
-        phi && this.setPolarAngle(value.phi as number);
-        theta && this.setAzimuthalAngle(value.theta as number);
+        radius !== undefined && this.setRadius(value.radius as number);
+        phi !== undefined && this.setPolarAngle(value.phi as number);
+        theta !== undefined && this.setAzimuthalAngle(value.theta as number);
+        roll !== undefined && (this._roll = value.roll as number);
         this.updateCameraPosition();
         this.resetTarget();
       },
@@ -903,7 +979,8 @@ export class CameraController extends Object3D {
     polarAngle: number = DEFAULT_POLAR
   ) {
     super();
-    this.add(this._pivotPoint);
+    this.add(this._rollPoint);
+    this._rollPoint.add(this._pivotPoint);
     this._pivotPoint.add(this._attachPoint);
     this.name = 'camera-controller';
     this._pivotPoint.name = 'camera-pivot-point';
