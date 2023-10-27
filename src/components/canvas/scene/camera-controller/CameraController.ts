@@ -98,6 +98,7 @@ export class CameraController extends Object3D {
     config: {
       mass: 1.0,
       friction: 50.0,
+      tension: 280.0,
     },
   });
   private _controls_spring = new Controller({
@@ -519,7 +520,7 @@ export class CameraController extends Object3D {
     /* Set controller position to that of the object. */
     this.position.set(0, 0, 0);
     
-    this.rotation.set(0, 0, 0);
+    this.resetRotation();
 
     /* Convert previous camera world position to controller local space. */
     this.worldToLocal(_v1);
@@ -543,7 +544,6 @@ export class CameraController extends Object3D {
     pivotPoint.rotation.set(xRot, yRot, 0, 'YXZ');
 
     this.camera.up.set(0, 1, 0);
-    // this.camera.up.set(...getLocalUpInWorldCoords(this.camera));
     this.camera.lookAt(_controllerPos);
 
     // this.lock();
@@ -556,8 +556,8 @@ export class CameraController extends Object3D {
         const value = result.value as { rotation: [number, number, number] };
         /* Update camera rotation. */
         this.camera.rotation.set(...value.rotation);
-        // console.log('result.value:', value);
       },
+      
     });
     this.resetRotation();
     // this.unlock();
