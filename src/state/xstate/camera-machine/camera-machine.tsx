@@ -14,15 +14,18 @@ import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
 import { type RootState } from '@react-three/fiber';
 import { type XRState } from '@react-three/xr';
 import {
-  type Object3D,
+  Object3D,
   type PerspectiveCamera,
   Vector3,
   Spherical,
+  Euler,
+  Quaternion,
 } from 'three';
-import { degToRad, radToDeg } from 'three/src/math/MathUtils';
+import { degToRad, lerp, radToDeg } from 'three/src/math/MathUtils';
 import { assign, createMachine } from 'xstate';
 import { gsap } from 'gsap';
 import { normalizeAngle } from '@/helpers/rotation-utils';
+import { damp3 } from 'maath/easing';
 
 const _observerUp = new Vector3();
 const _focusUp = new Vector3();
@@ -52,6 +55,17 @@ const SURFACE_MAX_DIST = 1.5 * SURFACE_MIN_DIST;
 // Default FOV.
 const FOV = 40;
 
+type RotationParams = {
+  startQuaternion: Quaternion;
+  endQuaternion: Quaternion;
+  slerpResultQuaternion: Quaternion;
+  slerpFactor: number;
+};
+
+type AnimParam = {
+  animFactor: number;
+};
+
 type Context = {
   getThree: () => RootState;
   getXR: () => XRState;
@@ -60,6 +74,8 @@ type Context = {
   focusTarget: Object3D | null;
   observer: Object3D | null;
   vrHud: Object3D | null;
+
+  animTarget: Object3D;
 };
 
 type Events =
@@ -102,6 +118,7 @@ export const cameraMachine = createMachine(
       observer: null,
       focusTarget: null,
       vrHud: null,
+      animTarget: new Object3D(),
     }),
 
     // Context assignment events:
@@ -219,6 +236,41 @@ export const cameraMachine = createMachine(
               // 'setSpaceCamDistance',
               // 'showVRHud',
             ],
+          },
+        },
+        initial: 'idle',
+        states: {
+          idle: {
+            on: {
+              SET_TARGET: {
+                actions: ['assignTarget'],
+                target: 'changingTarget',
+              },
+            },
+          },
+          changingTarget: {
+            invoke: {
+              src: (context, event) => {
+                return new Promise<void>((resolve, reject) => {
+                  const { controls, focusTarget, getThree } = context;
+                  const { scene } = getThree();
+                  if (!controls || !focusTarget) {
+                    return reject();
+                  }
+                  const camera = controls.camera;
+                  if (!camera) {
+                    return reject();
+                  }
+
+                  void controls.attachToWithoutMoving(focusTarget).then(() => {
+                    resolve();
+                  });
+                });
+              },
+              id: 'change-target-promise',
+              onDone: { target: 'idle', actions: ['setSpaceCamDistance'] },
+              onError: { target: 'idle' },
+            },
           },
         },
       },
@@ -340,7 +392,7 @@ export const cameraMachine = createMachine(
                         onComplete: () => {
                           // const theta = radToDeg(controls.azimuthalAngle);
                           // console.log(`Theta: ${theta}`);
-                          controls.attachToWithoutMoving(observer);
+                          void controls.attachToWithoutMoving(observer);
                           _observerUp.set(...getLocalUpInWorldCoords(observer));
                           controls.up.copy(_observerUp);
                           controls.camera.up.copy(controls.up);
@@ -436,7 +488,11 @@ export const cameraMachine = createMachine(
       },
 
       assignGetThree: assign({
-        getThree: (_, { getThree }) => getThree,
+        getThree: ({ animTarget }, { getThree }) => {
+          const { scene } = getThree();
+          scene.add(animTarget);
+          return getThree;
+        },
       }),
       assignControls: assign({
         controls: (_, event) => {
@@ -524,8 +580,8 @@ export const cameraMachine = createMachine(
         const { controls, focusTarget } = context;
         if (!focusTarget || !controls) return;
         // controls.attachControllerTo(focusTarget);
-        controls.attachToWithoutMoving(focusTarget);
-        controls.applyWorldUp();
+        // controls.attachToWithoutMoving(focusTarget);
+        // controls.applyWorldUp();
       },
       attachToObserver: (context) => {
         const { controls, observer } = context;

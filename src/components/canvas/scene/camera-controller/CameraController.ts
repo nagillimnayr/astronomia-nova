@@ -20,6 +20,7 @@ import { clamp, radToDeg } from 'three/src/math/MathUtils';
 import { smoothCritDamp } from './smoothing';
 import { damp, dampAngle } from 'maath/easing';
 import { gsap } from 'gsap';
+import { Controller, Spring, SpringRef } from '@react-spring/three';
 
 const EPSILON = 1e-3;
 
@@ -42,16 +43,24 @@ const _v1 = new Vector3();
 const _v2 = new Vector3();
 const _v3 = new Vector3();
 
+const _camPos = new Vector3();
+const _camDirection = new Vector3();
+const _controllerPos = new Vector3();
+
+const _camUp1 = new Vector3();
+const _camUp2 = new Vector3();
+
 const _eul1 = new Euler();
-const _eul2 = new Euler();
 
 function approxZero(num: number, epsilon = EPSILON) {
   return Math.abs(num) <= epsilon;
 }
 
-function approxEqual(num1: number, num2: number, epsilon: number = EPSILON) {
-  return Math.abs(num1 - num2) <= epsilon;
-}
+type RotationSpring = {
+  x: number;
+  y: number;
+  z: number;
+};
 
 /**
  * @description Controller to manage the camera, handle inputs, and smooth the camera motions.
@@ -93,6 +102,10 @@ export class CameraController extends Object3D {
   private _isMoving = false;
   private _isAnimating = false;
 
+  private _rotationSpring = new Controller({
+    rotation: [0, 0, 0],
+  });
+
   /**
    * @description Updates the camera. Should be called inside of the render loop each frame.
    * @author Ryan Milligan
@@ -102,6 +115,10 @@ export class CameraController extends Object3D {
    */
   update(deltaTime: number) {
     // this._isMoving = false;
+    if (this._isAnimating) {
+      this._camera?.updateProjectionMatrix();
+      return;
+    }
     if (!this._isAnimating) {
       const radiusMoving = damp(
         this._spherical,
@@ -152,8 +169,9 @@ export class CameraController extends Object3D {
     // Rotations are intrinsic, so the order matters. Rotation around local
     // y-axis must be done first in order to preserve the local up-vector.
     pivotPoint.rotateY(azimuthalAngle); // Rotate around local y-axis.
-    pivotPoint.rotateX(-(PI_OVER_TWO - polarAngle)); // Rotate around local
-    // x-axis.
+    pivotPoint.rotateX(-(PI_OVER_TWO - polarAngle)); // Rotate around local x-axis.
+    // this.camera.position.setFromSphericalCoords(0, polarAngle, azimuthalAngle);
+    // this.camera.up.copy(this.up);
 
     this._camera?.updateProjectionMatrix();
   }
@@ -303,7 +321,7 @@ export class CameraController extends Object3D {
   }
 
   getCameraWorldDirection(vec: Vector3) {
-    return this._attachPoint.getWorldDirection(vec).multiplyScalar(-1);
+    return this.camera.getWorldDirection(vec);
   }
 
   getCameraWorldUp(vec: Vector3) {
@@ -449,6 +467,7 @@ export class CameraController extends Object3D {
     // Look down the local z-axis.
     this.up.copy(Y_AXIS);
     this.lookAt(_v3);
+    this.rotation.set(0, 0, 0);
   }
 
   /**
@@ -468,26 +487,94 @@ export class CameraController extends Object3D {
    * @memberof CameraController
    */
   attachToWithoutMoving(obj: Object3D) {
-    // Get world position of camera.
+    this.camera.rotation.set(0, 0, 0);
+    this.camera.getWorldDirection(_camDirection);
+    this.camera.getWorldPosition(_camPos);
+    this.getWorldPosition(_controllerPos);
+
+    /* Record camera world position before attachment. */
     this.camera.getWorldPosition(_v1);
-    // Get world position of object.
-    obj.getWorldPosition(_v2);
-    // Get vector from object to camera.
-    _v3.subVectors(_v1, _v2);
-    // Get the spherical coordinates.
-    this._spherical.setFromVector3(_v3);
+
+    // Attach to the object so that the world transform is preserved.
+    obj.attach(this);
+    /* Set controller position to that of the object. */
+    this.position.set(0, 0, 0);
+
+    /* Convert previous camera world position to controller local space. */
+    this.worldToLocal(_v1);
+    /* Get spherical coordinates from previous camera position. */
+    this._spherical.setFromVector3(_v1);
     this._sphericalTarget.theta = this._spherical.theta;
     this._sphericalTarget.phi = this._spherical.phi;
+    this._sphericalTarget.radius = this._spherical.radius;
+    this._spherical.makeSafe();
 
-    // Set radius with distance to new target.
-    const radius = _v3.length();
-    this._setRadius(radius);
-    this.setTargetRadius(radius);
+    /* Use the spherical coords to position the camera at its previous world space coords. */
+    const pivotPoint = this._pivotPoint;
+    pivotPoint.rotation.set(0, 0, 0);
+    this._attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
 
-    // Attach to the object.
-    obj.add(this);
+    const azimuthalAngle = this._spherical.theta;
+    const polarAngle = this._spherical.phi;
 
-    this.rotation.set(0, 0, 0); // Reset rotation.
+    const yRot = azimuthalAngle;
+    const xRot = -(PI_OVER_TWO - polarAngle);
+    pivotPoint.rotateY(yRot); // Rotate around local y-axis.
+    pivotPoint.rotateX(xRot); // Rotate around local x-axis.
+
+    /* Get the angle between previous direction and target direction. */
+    this.camera.getWorldDirection(_v2);
+    const angle = _camDirection.angleTo(_v2);
+
+    /* Use the angle to determine the duration of the animation. */
+    console.log('angle:', angle);
+    const duration = 10 * (angle / PI);
+    console.log('duration:', duration);
+
+    this.camera.up.set(0, 1, 0);
+    // this.camera.up.set(...getLocalUpInWorldCoords(this.camera));
+    this.camera.lookAt(_controllerPos);
+
+    this._isAnimating = true;
+    this.lock();
+
+    return new Promise<void>((resolve) => {
+      const { x, y, z } = this.camera.rotation;
+      void this._rotationSpring.start({
+        from: { rotation: [x, y, z] },
+        to: { rotation: [0, 0, 0] },
+        onChange: (result) => {
+          const value = result.value as { rotation: [number, number, number] };
+          /* Update camera rotation. */
+          this.camera.rotation.set(...value.rotation);
+          // console.log('result.value:', value);
+        },
+        onResolve: () => {
+          this.unlock();
+          this._isAnimating = false;
+          // this.camera.up.copy(this.up);
+          resolve();
+        },
+      });
+
+      // gsap.to(this.camera.rotation, {
+      //   x: 0,
+      //   y: 0,
+      //   z: 0,
+      //   duration: duration,
+      //   ease: 'power2.inOut',
+      //   onUpdate: () => {
+      //     this.camera.updateProjectionMatrix();
+      //     this.camera.dispatchEvent({ type: 'UPDATED' });
+      //   },
+      //   onComplete: () => {
+      //     this.unlock();
+      //     this._isAnimating = false;
+      //     // this.camera.up.copy(this.up);
+      //     resolve();
+      //   },
+      // });
+    });
   }
 
   attachToController(obj: Object3D) {
