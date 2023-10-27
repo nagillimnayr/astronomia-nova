@@ -100,7 +100,7 @@ export class CameraController extends Object3D {
     rotation: [0, 0, 0],
     config: {
       mass: 1.0,
-      friction: 50.0,
+      friction: 40.0,
     },
   });
 
@@ -533,8 +533,7 @@ export class CameraController extends Object3D {
     // this.camera.up.set(...getLocalUpInWorldCoords(this.camera));
     this.camera.lookAt(_controllerPos);
 
-    this._isAnimating = true;
-    this.lock();
+    // this.lock();
 
     return new Promise<void>((resolve) => {
       const { x, y, z } = this.camera.rotation;
@@ -548,10 +547,12 @@ export class CameraController extends Object3D {
           // console.log('result.value:', value);
         },
         onResolve: () => {
-          this.unlock();
-          this._isAnimating = false;
-          // this.camera.up.copy(this.up);
+          // this.unlock();
+          console.log('RESOLVE', Date.now());
           resolve();
+        },
+        onRest: () => {
+          console.log('REST', Date.now());
         },
       });
     });
