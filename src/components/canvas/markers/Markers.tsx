@@ -21,6 +21,7 @@ import {
 } from 'three';
 import { SelectionMarker } from './SelectionMarker';
 import { SphereMarker } from './SphereMarker';
+import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
 
 const threshold = 0.02;
 const DIST_TO_CAM_THRESHOLD = 1e9 * METER;
@@ -141,6 +142,7 @@ export const Markers = ({ name, bodyRef, meanRadius }: Props) => {
       // Add the direction to the position of the body.
       _lookPos.addVectors(_bodyWorldPos, _direction);
 
+      pivot.up.set(...getLocalUpInWorldCoords(camera));
       // Look in direction parallel to the line of sight of the camera.
       pivot.lookAt(_lookPos);
     }
