@@ -319,7 +319,7 @@ export const cameraMachine = createMachine(
             const phi = _spherical.phi;
             const theta = _spherical.theta;
 
-            const targetRadius = observerRadius * 3;
+            const targetRadius = observerRadius * 2.5;
 
             const radius = Math.min(controls.radius, targetRadius);
 
