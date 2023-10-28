@@ -28,6 +28,7 @@ import { gsap } from 'gsap';
 import { normalizeAngle } from '@/helpers/rotation-utils';
 import { damp3 } from 'maath/easing';
 import { Controller } from '@react-spring/core';
+import { delay } from '@/helpers/utils';
 
 const _observerUp = new Vector3();
 const _focusUp = new Vector3();
@@ -294,7 +295,7 @@ export const cameraMachine = createMachine(
             /* Get angle between up vector of controller and up vector of body. */
             _v1.set(...getLocalUpInWorldCoords(controls));
             _v2.set(...getLocalUpInWorldCoords(bodyMesh));
-            const roll = -_v1.angleTo(_v2);
+            const roll = _v1.angleTo(_v2);
 
             controls.lock();
 
@@ -330,24 +331,36 @@ export const cameraMachine = createMachine(
 
             await controls.animateTo({ radius, phi, theta, roll });
 
-            /* Attach so that camera maintains its worldspace coords. */
-            observer.attach(controls);
+            console.log('control rotation:', controls.rotation.toArray());
 
             controls.camera.getWorldPosition(_cameraPos);
-            observer.worldToLocal(_cameraPos);
-            controls.spherical.setFromVector3(_cameraPos);
-            controls.position.set(0, 0, 0);
+            /* Attach so that camera maintains its worldspace coords. */
+            observer.attach(controls);
 
             _observerUp.set(...getLocalUpInWorldCoords(observer));
             controls.up.copy(_observerUp);
             // controls.camera.up.copy(controls.up);
             controls.applyLocalUp();
+            controls.worldToLocal(_cameraPos);
+            controls.spherical.setFromVector3(_cameraPos);
+            controls.position.set(0, 0, 0);
 
-            controls.setAzimuthalAngle(PI_OVER_TWO);
-            controls.setPolarAngle(0);
+            console.log('control rotation:', controls.rotation.toArray());
+            // controls.setPolarAngle(0);
 
             controls.spherical.makeSafe();
             controls.resetTarget();
+            controls.updateCameraPosition();
+
+            await delay(500);
+            console.log('hello');
+            console.log('phi:', controls.polarAngle);
+            console.log('theta:', controls.azimuthalAngle);
+            await delay(1000);
+            // controls.setAzimuthalAngle(PI_OVER_TWO);
+            controls.setPolarAngle(0);
+
+            await delay(3000);
 
             await controls.animateTo({
               radius: SURFACE_MAX_DIST,

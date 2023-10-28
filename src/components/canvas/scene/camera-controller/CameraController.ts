@@ -478,7 +478,7 @@ export class CameraController extends Object3D {
     this.getWorldPosition(_v1);
     _v3.addVectors(_v1, Z_AXIS);
     this.lookAt(_v3);
-    this.rotation.set(0, 0, 0);
+    // this.rotation.set(0, 0, 0);
   }
 
   /**
@@ -623,6 +623,9 @@ export class CameraController extends Object3D {
     // console.log('rotation after:', this.rotation.toArray());
   }
 
+  resetRoll() {
+    this._roll = 0;
+  }
   async animateResetRoll() {
     await this.animateRoll(0);
   }
