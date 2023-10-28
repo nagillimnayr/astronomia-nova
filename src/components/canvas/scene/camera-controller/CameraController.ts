@@ -638,7 +638,7 @@ export class CameraController extends Object3D {
       onChange: ({ value }) => {
         // this._roll = value.roll as number;
         this.rotation.x = value.roll as number;
-        console.log('cam world pos:', _camWorldPos.toArray());
+        // console.log('cam world pos:', _camWorldPos.toArray());
         _camPos.copy(_camWorldPos);
         this.worldToLocal(_camPos);
         this._spherical.setFromVector3(_camPos);
@@ -647,7 +647,7 @@ export class CameraController extends Object3D {
         this.updateCameraPosition();
         this.resetTarget();
         this.camera.getWorldPosition(_camPos);
-        console.log('cam pos:', _camPos.toArray());
+        // console.log('cam pos:', _camPos.toArray());
       },
     });
 
