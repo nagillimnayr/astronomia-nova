@@ -40,9 +40,9 @@ export const TimescaleSlider = () => {
   }, []);
 
   return (
-    <div>
+    <div className="flex w-full  items-center justify-center rounded-full bg-gray-400/20 px-4 py-1">
       <RadixSlider.Root
-        className="relative flex h-5 w-[180px] touch-none select-none items-center rounded-full"
+        className="relative flex h-5 w-full touch-none select-none items-center rounded-full"
         // defaultValue={[1]}
         value={[timescale]}
         min={MIN}
@@ -54,8 +54,10 @@ export const TimescaleSlider = () => {
           {/* <RadixSlider.Range className="absolute h-full rounded-full bg-white" /> */}
           <div
             ref={rangeRef}
-            className={cn("absolute h-full scale-x-0 w-1/2 left-1/2 origin-left rounded-full bg-white")}
-            style={{transform: 'scale(0, 1)'}}
+            className={cn(
+              'absolute left-1/2 h-full w-1/2 origin-left scale-x-0 rounded-full bg-white'
+            )}
+            style={{ transform: 'scale(0, 1)' }}
           />
         </RadixSlider.Track>
         {/* <TimescaleTooltip show={isHovered}> */}

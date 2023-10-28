@@ -1,6 +1,6 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { TimeUnit } from '@/state/xstate/time-machine/time-machine';
-import { useCallback, useEffect, useRef } from 'react';
+import { type MouseEvent, useCallback, useEffect, useRef } from 'react';
 
 const TimescaleDisplay = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
@@ -38,20 +38,27 @@ const TimescaleDisplay = () => {
     updateText.current();
   }, []);
 
-  const incrementTimescaleUnit = useCallback(() => {
-    timeActor.send({ type: 'INCREMENT_TIMESCALE_UNIT' });
-  }, [timeActor]);
+  const incrementTimescaleUnit = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation();
+      timeActor.send({ type: 'INCREMENT_TIMESCALE_UNIT' });
+    },
+    [timeActor]
+  );
 
-  const decrementTimescaleUnit = useCallback(() => {
-    timeActor.send({ type: 'DECREMENT_TIMESCALE_UNIT' });
-  }, [timeActor]);
+  const decrementTimescaleUnit = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation();
+      timeActor.send({ type: 'DECREMENT_TIMESCALE_UNIT' });
+    },
+    [timeActor]
+  );
 
   return (
-    // <div className="w-min-fit flex h-fit flex-row ">
-    <div className="flex h-fit w-fit min-w-full flex-row items-center justify-center whitespace-nowrap px-4 text-center text-white">
+    <div className="pointer-events-auto flex h-fit w-fit min-w-full flex-row items-center justify-center whitespace-nowrap px-4 text-center text-white">
       <button
         className={
-          'icon-[mdi--menu-left] pointer-events-auto mr-auto aspect-square h-6 w-6 hover:cursor-pointer'
+          'icon-[mdi--menu-left]  mr-auto aspect-square h-6 w-6 hover:cursor-pointer'
         }
         onClick={decrementTimescaleUnit}
       />
@@ -71,7 +78,6 @@ const TimescaleDisplay = () => {
         }
         onClick={incrementTimescaleUnit}
       />
-      {/* </div> */}
     </div>
   );
 };
