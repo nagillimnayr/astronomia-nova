@@ -455,7 +455,14 @@ export const cameraMachine = createMachine(
             controls.resetTarget();
             controls.setTargetRadius(dist);
 
-            await controls.animateTo({ radius: dist });
+            await gsap.to(controls.spherical, {
+              radius: dist,
+              duration: 1,
+              onUpdate: () => {
+                controls.updateCameraPosition();
+              },
+            });
+            // await controls.animateTo({ radius: dist });
           },
           id: 'enter-space-promise',
           onDone: { target: 'space' },
