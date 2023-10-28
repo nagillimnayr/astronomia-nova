@@ -334,14 +334,9 @@ export const cameraMachine = createMachine(
             console.log('control rotation:', controls.rotation.toArray());
 
             controls.camera.getWorldPosition(_cameraPos);
-            /* Attach so that camera maintains its worldspace coords. */
             observer.add(controls);
             controls.resetRotation();
 
-            // _observerUp.set(...getLocalUpInWorldCoords(observer));
-            // controls.up.copy(_observerUp);
-            // controls.camera.up.copy(controls.up);
-            // controls.applyLocalUp();
             controls.worldToLocal(_cameraPos);
             controls.spherical.setFromVector3(_cameraPos);
             controls.spherical.makeSafe();
@@ -361,7 +356,6 @@ export const cameraMachine = createMachine(
               // phi: PI_OVER_TWO,
               // roll: 0,
             });
-            // controls.resetRotation();
             await controls.animateTo({ phi: PI_OVER_TWO, theta: 0 });
 
             controls.unlock();

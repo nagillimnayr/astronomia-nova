@@ -90,25 +90,15 @@ export function useKeyboard() {
         if (controls.isAnimating) return;
 
         void (async () => {
-          const _focusUp = new Vector3();
-          const _controllerUp = new Vector3();
-
-          _focusUp.set(
-            ...getLocalUpInWorldCoords(focusTarget.meshRef.current!)
-          );
-          const bodyMesh = focusTarget.meshRef.current;
-          if (!bodyMesh) return;
-          const meshParent = bodyMesh.parent;
-          if (!meshParent) return;
-
           const obliquity = degToRad(focusTarget.obliquity);
 
-          _controllerUp.set(...getLocalUpInWorldCoords(controls));
-          _focusUp.set(...getLocalUpInWorldCoords(meshParent));
-
-          const angle = _controllerUp.angleTo(_focusUp);
-
           await controls.animateRoll(obliquity);
+          // await gsap.to(controls.rotation, {
+          //   x: -obliquity,
+          //   y: 0,
+          //   z: 0,
+          //   duration: 1,
+          // });
         })();
 
         break;
