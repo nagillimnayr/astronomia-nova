@@ -4,7 +4,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Line } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   type ColorRepresentation,
   type Group,
@@ -13,6 +13,7 @@ import {
 } from 'three';
 import { type Line2 } from 'three-stdlib';
 
+const DELAY = 15;
 const _newPos = new Vector3();
 
 const shiftLeft = (collection: Float32Array, steps = 1): Float32Array => {
@@ -65,6 +66,29 @@ export const ProjectedTrail = ({
   const lineRef = useRef<Line2>(null!);
   const points = useRef<Float32Array>(null!);
 
+  const reset = useRef<() => void>(null!);
+
+  /* Store reset callback function in a ref so it can be reused inside of useEffect. */
+  reset.current = useCallback(() => {
+    const line = lineRef.current;
+    if (!line) return;
+
+    /* Position of target won't have updated immediately, 
+          so reset the trail after a slight delay. */
+    const prevVisibility = line.visible;
+    line.visible = false; // Toggle visibility temporarily, to avoid jank.
+
+    /* Reset after slight delay. */
+    setTimeout(() => {
+      console.log('resetting trail');
+      const anchor = anchorRef.current;
+      points.current = resetTrail(anchor, body, length);
+      // Update geometry.
+      line.geometry.setPositions(points.current);
+      line.visible = prevVisibility;
+    }, DELAY);
+  }, [body, length]);
+
   useEffect(() => {
     const anchor = anchorRef.current;
     points.current = resetTrail(anchor, body, length);
@@ -75,43 +99,16 @@ export const ProjectedTrail = ({
   useEffect(() => {
     // Subscribe to surfaceActor, and reset trail whenever coordinates change.
     const subscription = surfaceActor.subscribe((state) => {
-      const line = lineRef.current;
-      if (!line) return;
-      // Position of target won't have updated immediately, so reset the trail
-      // after a slight delay.
-      const prevVisibility = line.visible;
-      line.visible = false; // Toggle visibility temporarily, to avoid jank.
-      setTimeout(() => {
-        const anchor = anchorRef.current;
-        points.current = resetTrail(anchor, body, length);
-        // Update geometry.
-        line.geometry.setPositions(points.current);
-        line.visible = prevVisibility;
-      }, 30);
+      reset.current();
     });
     return () => subscription.unsubscribe();
-  }, [length, surfaceActor, body]);
+  }, [surfaceActor]);
   useEffect(() => {
-    // Subscribe to timeActor, and reset trail whenever time is paused.
+    // Subscribe to timeActor, and reset trail whenever time is unpaused.
     const subscription = timeActor.subscribe((state) => {
-      const line = lineRef.current;
-      if (!line) return;
       if (state.event.type === 'UNPAUSE') {
-        line.visible = false;
+        reset.current();
       }
-      if (state.event.type !== 'PAUSE') return;
-      // Position of target won't have updated immediately, so reset the trail
-      // after a slight delay.
-      const prevVisibility = line.visible;
-      line.visible = false; // Toggle visibility temporarily, to avoid jank.
-      setTimeout(() => {
-        const anchor = anchorRef.current;
-        points.current = resetTrail(anchor, body, length);
-        // Update geometry.
-        line.geometry.setPositions(points.current);
-
-        line.visible = prevVisibility;
-      }, 30);
     });
     return () => subscription.unsubscribe();
   }, [length, surfaceActor, timeActor, body]);
@@ -120,27 +117,17 @@ export const ProjectedTrail = ({
     // Subscribe to cameraActor, and reset trail whenever focus changes.
     const subscription = cameraActor.subscribe((state) => {
       if (state.event.type !== 'SET_TARGET') return;
-      const line = lineRef.current;
 
       const { focusTarget } = cameraActor.getSnapshot()!.context;
       if (body === focusTarget) {
-        line.visible = false;
+        /* Hide trail of currently focused body. */
+        lineRef.current.visible = false;
+
+        /* Resetting the trail of the focused body causes an error, so skip the reset. */
         return;
       }
 
-      if (!line) return;
-      // Position of target won't have updated immediately, so reset the trail.
-      const prevVisibility = line.visible;
-      // after a slight delay.
-      line.visible = false; // Toggle visibility temporarily, to avoid jank.
-      setTimeout(() => {
-        const anchor = anchorRef.current;
-        points.current = resetTrail(anchor, body, length);
-        // console.log('current points:', points.current);
-        // Update geometry.
-        line.geometry.setPositions(points.current);
-        line.visible = prevVisibility;
-      }, 30);
+      reset.current();
     });
 
     return () => subscription.unsubscribe();
@@ -169,24 +156,24 @@ export const ProjectedTrail = ({
       if (state.matches('unpaused')) return; // Do nothing if unpaused.
       // Only update if the last event was a sidereal advancement of time.
       if (state.event.type !== 'ADVANCE_TIME') return;
-      setTimeout(updatePosition, 30);
+      setTimeout(updatePosition, DELAY);
     });
 
     return () => subscription.unsubscribe();
   }, [timeActor, body]);
 
-  useFrame(() => {
-    const isPaused = timeActor.getSnapshot()!.matches('paused');
-    const cameraState = cameraActor.getSnapshot()!;
-    const onSurface = cameraState.matches('surface');
-    const { focusTarget } = cameraState.context;
+  // useFrame(() => {
+  //   const isPaused = timeActor.getSnapshot()!.matches('paused');
+  //   const cameraState = cameraActor.getSnapshot()!;
+  //   const onSurface = cameraState.matches('surface');
+  //   const { focusTarget } = cameraState.context;
 
-    if (!isPaused || !onSurface || body === focusTarget) return;
+  //   if (!isPaused || !onSurface || body === focusTarget) return;
 
-    // Update geometry.
-    const line = lineRef.current;
-    line.geometry.setPositions(points.current);
-  });
+  //   // Update geometry.
+  //   const line = lineRef.current;
+  //   line.geometry.setPositions(points.current);
+  // });
 
   const arr = useMemo(() => {
     return [0, 0, 0, 0, 0, 0];
