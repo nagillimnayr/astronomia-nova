@@ -49,17 +49,26 @@ export function useKeyboard() {
         });
         break;
       }
+      case 'KeyR': {
+        if (env !== 'development') return;
+        const { controls } = cameraActor.getSnapshot()!.context;
+        if (!controls || !controls.camera) return;
+        if (controls.isAnimating) return;
+
+        void controls.animateResetRotation();
+
+        break;
+      }
       case 'KeyY': {
         if (env !== 'development') return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
         if (controls.isAnimating) return;
-        // void (async () => {
-        //   // await controls.animateRotation([0, 0, 0]);
-        //   controls.resetRotation();
-        // })();
-        // controls.resetRotation();
-        void controls.animateRoll(0);
+
+        void (async () => {
+          await controls.animateRoll(0);
+          // controls.resetTarget();
+        })();
         break;
       }
       case 'KeyU': {
@@ -89,7 +98,9 @@ export function useKeyboard() {
           const angle = _controllerUp.angleTo(_focusUp);
 
           // void controls.animateRotation([angle, 0, ]);
+
           await controls.animateRoll(angle);
+          // controls.resetTarget();
         })();
 
         break;
@@ -121,6 +132,7 @@ export function useKeyboard() {
         if (env !== 'development') return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls) return;
+        event.preventDefault();
 
         const azimuth = radToDeg(controls.azimuthalAngle);
         console.log(`azimuthal angle: ${azimuth}`);
