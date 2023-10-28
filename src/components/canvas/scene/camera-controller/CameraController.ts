@@ -636,13 +636,18 @@ export class CameraController extends Object3D {
     // this.lock();
     // this._isAnimating = true;
 
-    this._camera.getWorldPosition(_camPos);
-    this.worldToLocal(_camPos);
+    this._camera.getWorldPosition(_camWorldPos);
 
     await this._camera_spring.start({
-      to: { roll: angle },
+      from: { roll: this.rotation.x },
+      to: { roll: -angle },
       onChange: ({ value }) => {
-        this._roll = value.roll as number;
+        // this._roll = value.roll as number;
+        this.rotation.x = value.roll as number;
+        _camPos.copy(_camWorldPos);
+        this.worldToLocal(_camPos);
+        this._spherical.setFromVector3(_camPos);
+
         this.updateCameraPosition();
       },
     });
