@@ -38,12 +38,23 @@ const TimescaleDisplay = () => {
     updateText.current();
   }, []);
 
-  const handleClick = useCallback(() => {
+  const incrementTimescaleUnit = useCallback(() => {
     timeActor.send({ type: 'INCREMENT_TIMESCALE_UNIT' });
   }, [timeActor]);
 
+  const decrementTimescaleUnit = useCallback(() => {
+    timeActor.send({ type: 'DECREMENT_TIMESCALE_UNIT' });
+  }, [timeActor]);
+
   return (
-    <span className="w-min-fit flex h-fit flex-row justify-center whitespace-nowrap text-white">
+    // <div className="w-min-fit flex h-fit flex-row ">
+    <div className="flex h-fit w-fit min-w-full flex-row items-center justify-center whitespace-nowrap px-4 text-center text-white">
+      <button
+        className={
+          'icon-[mdi--menu-left] pointer-events-auto mr-auto aspect-square h-6 w-6 hover:cursor-pointer'
+        }
+        onClick={decrementTimescaleUnit}
+      />
       <span
         ref={timescaleSpanRef}
         className="border border-transparent align-middle"
@@ -51,10 +62,17 @@ const TimescaleDisplay = () => {
       <span
         ref={unitSpanRef}
         className="pointer-events-auto mx-[1px] inline-flex h-fit w-fit items-center justify-center rounded-md border-2 border-muted bg-opacity-20 px-1 text-center align-middle transition-colors hover:cursor-pointer hover:border-gray-800 hover:bg-gray-500"
-        onClick={handleClick}
+        onClick={incrementTimescaleUnit}
       />
       <span className="border border-transparent">/&nbsp; Second</span>
-    </span>
+      <button
+        className={
+          'icon-[mdi--menu-right] pointer-events-auto ml-auto aspect-square h-6 w-6 hover:cursor-pointer'
+        }
+        onClick={incrementTimescaleUnit}
+      />
+      {/* </div> */}
+    </div>
   );
 };
 
