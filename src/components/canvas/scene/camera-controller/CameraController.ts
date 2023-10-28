@@ -821,52 +821,6 @@ export class CameraController extends Object3D {
     this._isAnimating = false;
   }
 
-  animateSequence(
-    animations: {
-      target: gsap.TweenTarget;
-      vars: gsap.TweenVars;
-      position?: gsap.Position;
-      onComplete?: () => void;
-    }[]
-  ) {
-    if (animations.length < 1) return Promise.resolve();
-    this.lock();
-    const tl = gsap.timeline();
-
-    // this._normalizeAzimuthalAngle();
-
-    return new Promise<void>((resolve) => {
-      this._isAnimating = true;
-      for (let i = 0; i < animations.length; ++i) {
-        const anim = animations[i];
-        if (!anim) continue;
-        const { target, vars, position } = anim;
-
-        tl.to(
-          target,
-          {
-            ...vars,
-            onComplete:
-              i === animations.length - 1
-                ? () => {
-                    this.unlock();
-                    this._isAnimating = false;
-
-                    this.setRadiusTarget(this._spherical.radius);
-                    this.setPolarAngleTarget(this._spherical.phi);
-                    this.setAzimuthalAngleTarget(this._spherical.theta);
-
-                    anim.onComplete && anim.onComplete();
-                    resolve();
-                  }
-                : anim.onComplete,
-          },
-          position
-        );
-      }
-    });
-  }
-
   private _onPointerDown = (event: PointerEvent) => {
     const button = event.button;
     if (!this._domElement) return;
