@@ -600,18 +600,18 @@ export class CameraController extends Object3D {
   resetRotation() {
     if (this._isAnimating) return;
     if (!this._camera) return;
-    if (process.env.NODE_ENV === 'development') {
-      console.log('rotation before:', this.rotation.toArray());
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    //   console.log('rotation before:', this.rotation.toArray());
+    // }
     this._camera.getWorldPosition(_camPos);
     this.rotation.set(0, 0, 0);
     this.worldToLocal(_camPos);
     this.spherical.setFromVector3(_camPos);
     this.spherical.makeSafe();
     this.resetTarget();
-    if (process.env.NODE_ENV === 'development') {
-      console.log('rotation after:', this.rotation.toArray());
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    //   console.log('rotation after:', this.rotation.toArray());
+    // }
     // this._roll = 0;
     this.updateCameraPosition();
     // console.log('rotation after:', this.rotation.toArray());
