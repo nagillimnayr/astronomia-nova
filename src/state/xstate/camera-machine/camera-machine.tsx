@@ -355,15 +355,14 @@ export const cameraMachine = createMachine(
             controls.resetTarget();
             controls.updateCameraPosition();
 
-            await delay(2000);
-
             await controls.animateTo({
               radius: SURFACE_MAX_DIST,
+              theta: 0,
               // phi: PI_OVER_TWO,
               // roll: 0,
             });
-            controls.resetRotation();
-            await controls.animateTo({ phi: PI_OVER_TWO });
+            // controls.resetRotation();
+            await controls.animateTo({ phi: PI_OVER_TWO, theta: 0 });
 
             controls.unlock();
           },
