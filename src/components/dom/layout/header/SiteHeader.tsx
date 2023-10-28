@@ -2,14 +2,26 @@
 import { cn } from '@/helpers/cn';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { type ClassNameValue } from 'tailwind-merge';
+import { useSpring, animated } from '@react-spring/web';
 
 type SiteHeaderProps = {
   className?: ClassNameValue;
 };
 export const SiteHeader = ({ className }: SiteHeaderProps) => {
   const headerRef = useRef<HTMLElement>(null!);
+
+  const [spring, springRef] = useSpring(() => ({
+    color: 'white',
+  }));
+
+  const handlePointerEnter = useCallback(() => {
+    springRef.start({ color: 'transparent' });
+  }, [springRef]);
+  const handlePointerLeave = useCallback(() => {
+    springRef.start({ color: 'white' });
+  }, [springRef]);
 
   return (
     <>
@@ -38,11 +50,20 @@ export const SiteHeader = ({ className }: SiteHeaderProps) => {
           <Link
             className="flex h-full w-full items-center justify-center whitespace-nowrap"
             href="/"
+            onPointerEnter={handlePointerEnter}
+            onPointerLeave={handlePointerLeave}
           >
             <h2
-              className={`mx-4 text-center font-display text-3xl font-extrabold tracking-tight`}
+              className={`mx-4 bg-gradient-to-r text-center font-display text-3xl font-extrabold tracking-tight`}
             >
-              Astronomia{' '}
+              <animated.span
+                style={spring}
+                className={
+                  ' bg-gradient-to-r from-indigo-500 to-violet-600 bg-clip-text'
+                }
+              >
+                Astronomia{' '}
+              </animated.span>
               <span className="bg-gradient-to-r from-indigo-500 to-violet-600 bg-clip-text text-transparent">
                 Nova
               </span>
