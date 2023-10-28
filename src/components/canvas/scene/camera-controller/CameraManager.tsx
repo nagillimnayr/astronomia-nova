@@ -3,7 +3,7 @@ import { FAR_CLIP, NEAR_CLIP } from '@/constants/scene-constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { extend, type Object3DNode, useThree } from '@react-three/fiber';
 import { useLayoutEffect, useMemo, useRef } from 'react';
-import { ArrowHelper, PerspectiveCamera, Vector3 } from 'three';
+import { ArrowHelper, AxesHelper, PerspectiveCamera, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 
 const startRadius = 2e11;
@@ -21,6 +21,7 @@ export const CameraManager = () => {
   const { cameraActor } = MachineContext.useSelector(({ context }) => context);
   const controllerRef = useRef<CameraController>(null!);
   const arrowRef = useRef<ArrowHelper>(null!);
+  const axesRef = useRef<AxesHelper>(null!);
   const getThree = useThree(({ get }) => get);
 
   useLayoutEffect(() => {
@@ -53,7 +54,9 @@ export const CameraManager = () => {
       <cameraController
         args={[undefined, startRadius, startAzimuth, startPolar]}
         ref={controllerRef}
-      ></cameraController>
+      >
+        {/* <axesHelper ref={axesRef} scale={1e10} /> */}
+      </cameraController>
       {/* {process.env.NODE_ENV === 'development' && (
         <arrowHelper
           ref={arrowRef}

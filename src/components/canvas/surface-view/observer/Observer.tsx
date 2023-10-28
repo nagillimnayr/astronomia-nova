@@ -14,7 +14,7 @@ const Observer = () => {
           {/** Position observer 2 meters above the surface. */}
           <object3D
             position-y={DIST_ABOVE_SURFACE}
-            rotation-y={-PI_OVER_TWO}
+            rotation-y={PI_OVER_TWO}
             name="observer"
             ref={(observer) => {
               if (!observer) return;
