@@ -24,14 +24,19 @@ export function useKeyboard() {
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
 
-        controls.lock();
-        gsap.to(controls.rotation, {
-          x: 0,
-          duration: 1,
-          onComplete: () => {
-            controls.unlock();
-          },
-        });
+        const { x, y, z } = controls.rotation;
+
+        void controls.animateRotation([0, y, z]);
+        break;
+      }
+      case 'KeyC': {
+        if (env !== 'development') return;
+        const { controls } = cameraActor.getSnapshot()!.context;
+        if (!controls || !controls.camera) return;
+
+        const { x, y, z } = controls.rotation;
+
+        void controls.animateRotation([x, 0, z]);
         break;
       }
       case 'KeyZ': {
@@ -39,14 +44,19 @@ export function useKeyboard() {
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
 
-        controls.lock();
-        gsap.to(controls.rotation, {
-          z: 0,
-          duration: 1,
-          onComplete: () => {
-            controls.unlock();
-          },
-        });
+        const { x, y, z } = controls.rotation;
+
+        void controls.animateRotation([x, y, 0]);
+        break;
+      }
+      case 'O': {
+        if (env !== 'development') return;
+        const { controls } = cameraActor.getSnapshot()!.context;
+        if (!controls || !controls.camera) return;
+        if (controls.isAnimating) return;
+
+        controls.resetRotation();
+
         break;
       }
       case 'KeyR': {
@@ -91,16 +101,14 @@ export function useKeyboard() {
           const meshParent = bodyMesh.parent;
           if (!meshParent) return;
 
-          // controls.resetRotation();
+          const obliquity = degToRad(focusTarget.obliquity);
+
           _controllerUp.set(...getLocalUpInWorldCoords(controls));
           _focusUp.set(...getLocalUpInWorldCoords(meshParent));
 
           const angle = _controllerUp.angleTo(_focusUp);
 
-          // void controls.animateRotation([angle, 0, ]);
-
-          await controls.animateRoll(angle);
-          // controls.resetTarget();
+          await controls.animateRoll(obliquity);
         })();
 
         break;
@@ -138,8 +146,8 @@ export function useKeyboard() {
         console.log(`azimuthal angle: ${azimuth}`);
         console.log(`controls rotation: `, controls.rotation.toArray());
 
-        console.log(`camera rotation: `, controls.camera.rotation.toArray());
-        console.log(`camera roll: `, controls.roll);
+        // console.log(`camera rotation: `, controls.camera.rotation.toArray());
+        // console.log(`camera roll: `, controls.roll);
 
         break;
       }
