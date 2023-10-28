@@ -7,7 +7,7 @@ import {
   Y_AXIS,
   Z_AXIS,
 } from '@/constants/constants';
-import { normalizeAngle } from '@/helpers/rotation-utils';
+import { normalizeAngle, normalizeAngle180 } from '@/helpers/rotation-utils';
 import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
 import {
   Object3D,
@@ -44,6 +44,7 @@ const _v2 = new Vector3();
 const _v3 = new Vector3();
 
 const _camPos = new Vector3();
+const _camWorldPos = new Vector3();
 const _camDirection = new Vector3();
 const _controllerPos = new Vector3();
 
@@ -93,7 +94,8 @@ export class CameraController extends Object3D {
   private _isAnimating = false;
 
   private _camera_spring = new Controller({
-    rotation: [0, 0, 0],
+    camRotation: [0, 0, 0],
+    ctrlRotation: [0, 0, 0],
     radius: 0.0,
     phi: 0.0,
     theta: 0.0,
@@ -101,13 +103,10 @@ export class CameraController extends Object3D {
     config: {
       mass: 1.0,
       friction: 30.0,
-      tension: 300.0,
+      tension: 200.0,
       clamp: true,
-      restVelocity: 0.001,
+      // restVelocity: 0.001,
     },
-    // onRest: () => {
-    //   console.log('rest!');
-    // },
   });
 
   private _roll = 0;
@@ -510,7 +509,7 @@ export class CameraController extends Object3D {
     /* Set controller position to that of the object. */
     this.position.set(0, 0, 0);
 
-    this.resetRotation();
+    // this.resetRotation();
 
     /* Convert previous camera world position to controller local space. */
     this.worldToLocal(_v1);
@@ -521,36 +520,34 @@ export class CameraController extends Object3D {
     this._sphericalTarget.radius = this._spherical.radius;
     this._spherical.makeSafe();
 
-    /* Use the spherical coords to position the camera at its previous world space coords. */
-    const pivotPoint = this._pivotPoint;
-    // pivotPoint.rotation.set(0, 0, 0);
-    this._attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
-
-    const azimuthalAngle = this._spherical.theta;
-    const polarAngle = this._spherical.phi;
-
-    const yRot = azimuthalAngle;
-    const xRot = -(PI_OVER_TWO - polarAngle);
-    // pivotPoint.rotation.set(xRot, yRot, 0, 'YXZ');
-    const zRot = pivotPoint.rotation.z;
-    pivotPoint.rotation.set(xRot, yRot, zRot, 'ZYX');
+    this.updateCameraPosition();
 
     this.camera.up.set(0, 1, 0);
     this.camera.lookAt(_controllerPos);
 
     // this.lock();
 
-    const [x, y, z] = this.camera.rotation.toArray();
+    const [camX0, camY0, camZ0] = this.camera.rotation.toArray();
+    const [ctrlX0, ctrlY0, ctrlZ0] = this.rotation.toArray();
     await this._camera_spring.start({
-      from: { rotation: [x, y, z] },
-      to: { rotation: [0, 0, 0] },
-      onChange: (result) => {
-        const value = result.value as { rotation: [number, number, number] };
+      from: {
+        camRotation: [camX0, camY0, camZ0],
+        ctrlRotation: [ctrlX0, ctrlY0, ctrlZ0],
+      },
+      to: {
+        camRotation: [0, 0, 0],
+        ctrlRotation: [0, 0, 0],
+      },
+      onChange: ({ value }) => {
+        const camRotation = value.camRotation as Vector3Tuple;
+        const ctrlRotation = value.ctrlRotation as Vector3Tuple;
+
         /* Update camera rotation. */
-        this.camera.rotation.set(...value.rotation);
+        this.camera.rotation.set(...camRotation);
+        // this.rotation.set(...ctrlRotation);
       },
     });
-    this.resetRotation();
+    // this.resetRotation();
     // this.unlock();
   }
 
@@ -631,8 +628,8 @@ export class CameraController extends Object3D {
   async animateRoll(angle: number) {
     if (this._isAnimating) return;
     if (!this._camera) return;
-    this.lock();
-    this._isAnimating = true;
+    // this.lock();
+    // this._isAnimating = true;
 
     this._camera.getWorldPosition(_camPos);
     this.worldToLocal(_camPos);
@@ -645,8 +642,8 @@ export class CameraController extends Object3D {
       },
     });
 
-    this.unlock();
-    this._isAnimating = false;
+    // this.unlock();
+    // this._isAnimating = false;
   }
 
   async animateRotation(targetRotation: Vector3Tuple) {
@@ -654,15 +651,13 @@ export class CameraController extends Object3D {
     this.lock();
     this._isAnimating = true;
 
-    const { x, y, z } = this._pivotPoint.rotation;
+    const [x0, y0, z0] = this.rotation.toArray();
     await this._camera_spring.start({
-      from: { rotation: [x, y, z] },
+      from: { rotation: [x0, y0, z0] },
       to: { rotation: targetRotation },
       onChange: ({ value }) => {
         const rotation = value.rotation as Vector3Tuple;
-        const [x, y, z] = value.rotation as Vector3Tuple;
-        // this.rotation.x = rotation[0];
-        // this._pivotPoint.rotation.z = z;
+        this.rotation.set(...rotation);
       },
     });
 
@@ -670,20 +665,63 @@ export class CameraController extends Object3D {
     this._isAnimating = false;
   }
 
-  async animateRotationAboutAxis(axis: Vector3Tuple, angle: number) {
+  async animateResetRotation() {
     if (this._isAnimating) return;
+    if (!this._camera) return;
     this.lock();
     this._isAnimating = true;
 
-    const [x, y, z] = this.rotation.toArray();
+    const devEnv = process.env.NODE_ENV === 'development';
+
+    /* Record start rotation. */
+    let [x0, y0, z0] = this.rotation.toArray() as Vector3Tuple;
+    if (devEnv) {
+      console.log('rotation before: ', { x0, y0, z0 });
+    }
+    x0 = normalizeAngle180(x0);
+    y0 = normalizeAngle180(y0);
+    z0 = normalizeAngle180(z0);
+    if (devEnv) {
+      console.log('rotation normalized: ', { x0, y0, z0 });
+    }
+
+    this._camera.getWorldPosition(_camWorldPos);
+    // this.rotation.set(0, 0, 0);
+    // this.worldToLocal(_camPos);
+    // this._sphericalTarget.setFromVector3(_camPos);
+    // this._sphericalTarget.makeSafe();
+    // this.rotation.set(x0, y0, z0);
+
     await this._camera_spring.start({
-      from: { rotation: [x, y, z] },
-      // to: { rotation: targetRotation },
+      from: {
+        rotation: [x0, y0, z0],
+      },
+      to: {
+        rotation: [0, 0, 0],
+      },
       onChange: ({ value }) => {
         const rotation = value.rotation as Vector3Tuple;
-        this.rotation.x = rotation[0];
+        this.rotation.set(...rotation);
+
+        _camPos.copy(_camWorldPos);
+        this.worldToLocal(_camPos);
+        this._spherical.setFromVector3(_camPos);
+        this._spherical.makeSafe();
+
+        // this.setRadius(value.radius as number);
+        // this.setPolarAngle(value.phi as number);
+        // this.setAzimuthalAngle(value.theta as number);
+
+        this.updateCameraPosition();
+        this.resetTarget();
       },
     });
+
+    this.rotation.set(0, 0, 0);
+    _camPos.copy(_camWorldPos);
+    this.worldToLocal(_camPos);
+    this._spherical.setFromVector3(_camPos);
+    this._spherical.makeSafe();
 
     this.unlock();
     this._isAnimating = false;
