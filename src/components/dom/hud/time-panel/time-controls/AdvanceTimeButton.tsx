@@ -10,7 +10,9 @@ type Props = {
 };
 export const AdvanceTimeButton = ({ reverse, className }: Props) => {
   const rootActor = MachineContext.useActorRef();
-  const { cameraActor } = MachineContext.useSelector(({ context }) => context);
+  const { cameraActor, timeActor } = MachineContext.useSelector(
+    ({ context }) => context
+  );
   const focusTarget = useSelector(
     cameraActor,
     ({ context }) => context.focusTarget
@@ -19,13 +21,14 @@ export const AdvanceTimeButton = ({ reverse, className }: Props) => {
   const handleClick = useCallback(() => {
     const { focusTarget } = cameraActor.getSnapshot()!.context;
     if (!focusTarget) return;
+    timeActor.send({ type: 'PAUSE' });
     /* Advance time by the sidereal rotation period of the reference body. 
     This way, the body will maintain its orientation relative to the fixed stars. */
     rootActor.send({
       type: 'ADVANCE_DAY',
       reverse,
     });
-  }, [cameraActor, reverse, rootActor]);
+  }, [cameraActor, reverse, rootActor, timeActor]);
 
   return (
     <>
