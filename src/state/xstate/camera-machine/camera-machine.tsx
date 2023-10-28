@@ -293,15 +293,14 @@ export const cameraMachine = createMachine(
             if (!bodyMesh) return;
 
             /* Get angle between up vector of controller and up vector of body. */
-            _v1.set(...getLocalUpInWorldCoords(controls));
-            _v2.set(...getLocalUpInWorldCoords(bodyMesh));
-            const roll = _v1.angleTo(_v2);
+            // _v1.set(...getLocalUpInWorldCoords(controls));
+            // _v2.set(...getLocalUpInWorldCoords(bodyMesh));
+            // const roll = _v1.angleTo(_v2);
 
+            const roll = degToRad(focusTarget.obliquity);
             controls.lock();
 
             controls.resetRotation();
-
-            // await controls.animateRoll(angle);
 
             observer.getWorldPosition(_observerPos);
 
@@ -329,45 +328,42 @@ export const cameraMachine = createMachine(
             controls.resetTarget();
             controls.setMinRadius(SURFACE_MIN_DIST);
 
-            await controls.animateTo({ radius, phi, theta, roll });
+            await controls.animateTo({ radius, phi, theta });
+            await controls.animateRoll(roll);
 
             console.log('control rotation:', controls.rotation.toArray());
 
             controls.camera.getWorldPosition(_cameraPos);
             /* Attach so that camera maintains its worldspace coords. */
-            observer.attach(controls);
+            observer.add(controls);
+            controls.resetRotation();
 
-            _observerUp.set(...getLocalUpInWorldCoords(observer));
-            controls.up.copy(_observerUp);
+            // _observerUp.set(...getLocalUpInWorldCoords(observer));
+            // controls.up.copy(_observerUp);
             // controls.camera.up.copy(controls.up);
-            controls.applyLocalUp();
+            // controls.applyLocalUp();
             controls.worldToLocal(_cameraPos);
             controls.spherical.setFromVector3(_cameraPos);
-            controls.position.set(0, 0, 0);
+            controls.spherical.makeSafe();
 
             console.log('control rotation:', controls.rotation.toArray());
-            // controls.setPolarAngle(0);
+            console.log('phi:', controls.polarAngle);
+            console.log('theta:', controls.azimuthalAngle);
 
-            controls.spherical.makeSafe();
+            controls.setAzimuthalAngle(0);
+            controls.setPolarAngle(0);
             controls.resetTarget();
             controls.updateCameraPosition();
 
-            await delay(500);
-            console.log('hello');
-            console.log('phi:', controls.polarAngle);
-            console.log('theta:', controls.azimuthalAngle);
-            await delay(1000);
-            // controls.setAzimuthalAngle(PI_OVER_TWO);
-            controls.setPolarAngle(0);
-
-            await delay(3000);
+            await delay(2000);
 
             await controls.animateTo({
               radius: SURFACE_MAX_DIST,
-              phi: PI_OVER_TWO,
-              roll: 0,
+              // phi: PI_OVER_TWO,
+              // roll: 0,
             });
-            // await controls.animateTo({ phi: PI_OVER_TWO });
+            controls.resetRotation();
+            await controls.animateTo({ phi: PI_OVER_TWO });
 
             controls.unlock();
           },
@@ -437,10 +433,10 @@ export const cameraMachine = createMachine(
             controls.setMaxRadius(SPACE_MAX_DIST);
 
             controls.camera.getWorldPosition(_cameraPos);
+            focusTarget.add(controls);
+            // controls.position.set(0, 0, 0);
             controls.worldToLocal(_cameraPos);
             controls.spherical.setFromVector3(_cameraPos);
-            focusTarget.attach(controls);
-            controls.position.set(0, 0, 0);
             controls.resetTarget();
 
             // await controls.attachToWithoutMoving(focusTarget);
