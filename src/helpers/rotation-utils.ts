@@ -1,4 +1,4 @@
-import { TWO_PI } from '@/constants/constants';
+import { PI, TWO_PI } from '@/constants/constants';
 
 /**
  * @description Adjust the angle to be within the range [0, 2PI).
@@ -13,6 +13,21 @@ export function normalizeAngle(angle: number) {
   let adjustedAngle = angle % TWO_PI;
   while (adjustedAngle < 0) {
     adjustedAngle += TWO_PI;
+  }
+
+  return adjustedAngle;
+}
+
+/**
+ * @description Adjust the angle to be within the range [-PI, PI].
+ * */
+export function normalizeAngle180(angle: number) {
+  let adjustedAngle = angle % TWO_PI;
+  while (adjustedAngle < -PI) {
+    adjustedAngle += TWO_PI;
+  }
+  while (adjustedAngle > PI) {
+    adjustedAngle -= TWO_PI;
   }
 
   return adjustedAngle;
