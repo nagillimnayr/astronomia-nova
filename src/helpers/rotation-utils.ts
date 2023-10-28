@@ -22,13 +22,5 @@ export function normalizeAngle(angle: number) {
  * @description Adjust the angle to be within the range [-PI, PI].
  * */
 export function normalizeAngle180(angle: number) {
-  let adjustedAngle = angle % TWO_PI;
-  while (adjustedAngle < -PI) {
-    adjustedAngle += TWO_PI;
-  }
-  while (adjustedAngle > PI) {
-    adjustedAngle -= TWO_PI;
-  }
-
-  return adjustedAngle;
+  return angle % PI;
 }
