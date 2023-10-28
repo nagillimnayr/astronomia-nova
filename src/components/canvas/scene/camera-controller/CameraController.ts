@@ -93,6 +93,14 @@ export class CameraController extends Object3D {
   private _isMoving = false;
   private _isAnimating = false;
 
+  private _springConfigDefault = {
+    mass: 1.0,
+    friction: 32.0,
+    tension: 225.0,
+    clamp: true,
+    // restVelocity: 0.001,
+  };
+
   private _camera_spring = new Controller({
     camRotation: [0, 0, 0],
     ctrlRotation: [0, 0, 0],
@@ -100,13 +108,7 @@ export class CameraController extends Object3D {
     phi: 0.0,
     theta: 0.0,
     roll: 0.0,
-    config: {
-      mass: 1.0,
-      friction: 30.0,
-      tension: 200.0,
-      clamp: true,
-      // restVelocity: 0.001,
-    },
+    config: this._springConfigDefault,
   });
 
   private _roll = 0;
