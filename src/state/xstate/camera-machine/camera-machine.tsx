@@ -331,7 +331,7 @@ export const cameraMachine = createMachine(
             await controls.animateTo({ radius, phi, theta });
             await controls.animateRoll(roll);
 
-            console.log('control rotation:', controls.rotation.toArray());
+            // console.log('control rotation:', controls.rotation.toArray());
 
             controls.camera.getWorldPosition(_cameraPos);
             observer.add(controls);
@@ -341,9 +341,9 @@ export const cameraMachine = createMachine(
             controls.spherical.setFromVector3(_cameraPos);
             controls.spherical.makeSafe();
 
-            console.log('control rotation:', controls.rotation.toArray());
-            console.log('phi:', controls.polarAngle);
-            console.log('theta:', controls.azimuthalAngle);
+            // console.log('control rotation:', controls.rotation.toArray());
+            // console.log('phi:', controls.polarAngle);
+            // console.log('theta:', controls.azimuthalAngle);
 
             controls.setAzimuthalAngle(0);
             controls.setPolarAngle(0);
