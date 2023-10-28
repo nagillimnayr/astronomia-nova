@@ -134,7 +134,10 @@ export const rootMachine = createMachine(
           const { focusTarget } = cameraActor.getSnapshot()!.context;
           return focusTarget instanceof KeplerBody;
         },
-        actions: ['advanceDay'],
+        actions: [
+          sendTo(({ timeActor }) => timeActor, { type: 'PAUSE' }),
+          'advanceDay',
+        ],
       },
       LOG_CHILDREN: {
         actions: ['logTimeActor', 'logKeplerTreeActor', 'logEvent'],

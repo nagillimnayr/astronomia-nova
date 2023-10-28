@@ -92,9 +92,9 @@ export const timeMachine = createMachine(
       DECREMENT_TIMESCALE_UNIT: {
         actions: ['decrementTimescaleUnit'],
       },
-      ADVANCE_TIME: {
-        actions: ['advanceTime', 'updateDate'],
-      },
+      // ADVANCE_TIME: {
+      //   actions: ['advanceTime', 'updateDate'],
+      // },
       SET_DATE: {
         actions: ['setDate', 'updateDate'],
       },
@@ -111,6 +111,9 @@ export const timeMachine = createMachine(
             target: 'unpaused',
             actions: ['logEvent'],
           },
+          ADVANCE_TIME: {
+            actions: ['advanceTime', 'updateDate'],
+          },
         },
       },
       unpaused: {
@@ -121,6 +124,10 @@ export const timeMachine = createMachine(
           PAUSE: {
             target: 'paused',
             actions: ['logEvent'],
+          },
+          ADVANCE_TIME: {
+            target: 'paused',
+            actions: ['advanceTime', 'updateDate'],
           },
         },
       },
