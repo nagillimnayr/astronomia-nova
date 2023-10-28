@@ -506,12 +506,8 @@ export class CameraController extends Object3D {
     /* Record camera world position before attachment. */
     this.camera.getWorldPosition(_v1);
 
-    // Attach to the object so that the world transform is preserved.
-    obj.attach(this);
-    /* Set controller position to that of the object. */
-    this.position.set(0, 0, 0);
-
-    // this.resetRotation();
+    // Attach to the object.
+    obj.add(this);
 
     /* Convert previous camera world position to controller local space. */
     this.worldToLocal(_v1);
@@ -542,11 +538,9 @@ export class CameraController extends Object3D {
       },
       onChange: ({ value }) => {
         const camRotation = value.camRotation as Vector3Tuple;
-        const ctrlRotation = value.ctrlRotation as Vector3Tuple;
 
         /* Update camera rotation. */
         this.camera.rotation.set(...camRotation);
-        // this.rotation.set(...ctrlRotation);
       },
     });
     // this.resetRotation();
@@ -661,6 +655,8 @@ export class CameraController extends Object3D {
     this.lock();
     this._isAnimating = true;
 
+    this.camera.getWorldPosition(_camWorldPos);
+    this.rotation.y = 0;
     const [x0, y0, z0] = this.rotation.toArray();
     await this._camera_spring.start({
       from: { rotation: [x0, y0, z0] },
@@ -668,6 +664,14 @@ export class CameraController extends Object3D {
       onChange: ({ value }) => {
         const rotation = value.rotation as Vector3Tuple;
         this.rotation.set(...rotation);
+
+        _camPos.copy(_camWorldPos);
+        this.worldToLocal(_camPos);
+        this._spherical.setFromVector3(_camPos);
+        this._spherical.makeSafe();
+        this.resetTarget();
+
+        this.updateCameraPosition();
       },
     });
 
@@ -684,23 +688,10 @@ export class CameraController extends Object3D {
     const devEnv = process.env.NODE_ENV === 'development';
 
     /* Record start rotation. */
-    let [x0, y0, z0] = this.rotation.toArray() as Vector3Tuple;
-    if (devEnv) {
-      console.log('rotation before: ', { x0, y0, z0 });
-    }
-    x0 = normalizeAngle180(x0);
-    y0 = normalizeAngle180(y0);
-    z0 = normalizeAngle180(z0);
-    if (devEnv) {
-      console.log('rotation normalized: ', { x0, y0, z0 });
-    }
 
     this._camera.getWorldPosition(_camWorldPos);
-    // this.rotation.set(0, 0, 0);
-    // this.worldToLocal(_camPos);
-    // this._sphericalTarget.setFromVector3(_camPos);
-    // this._sphericalTarget.makeSafe();
-    // this.rotation.set(x0, y0, z0);
+
+    const [x0, y0, z0] = this.rotation.toArray() as Vector3Tuple;
 
     await this._camera_spring.start({
       from: {
@@ -714,24 +705,15 @@ export class CameraController extends Object3D {
         this.rotation.set(...rotation);
 
         _camPos.copy(_camWorldPos);
+
         this.worldToLocal(_camPos);
         this._spherical.setFromVector3(_camPos);
         this._spherical.makeSafe();
-
-        // this.setRadius(value.radius as number);
-        // this.setPolarAngle(value.phi as number);
-        // this.setAzimuthalAngle(value.theta as number);
 
         this.updateCameraPosition();
         this.resetTarget();
       },
     });
-
-    this.rotation.set(0, 0, 0);
-    _camPos.copy(_camWorldPos);
-    this.worldToLocal(_camPos);
-    this._spherical.setFromVector3(_camPos);
-    this._spherical.makeSafe();
 
     this.unlock();
     this._isAnimating = false;
