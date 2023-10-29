@@ -22,7 +22,6 @@ import {
 import { degToRad } from 'three/src/math/MathUtils';
 import { assign, createMachine } from 'xstate';
 import { gsap } from 'gsap';
-import { Controller } from '@react-spring/core';
 import { delay } from '@/helpers/utils';
 import { DEV_ENV } from '@/constants/constants';
 
@@ -64,8 +63,6 @@ type Context = {
   focusTarget: Object3D | null;
   observer: Object3D | null;
   vrHud: Object3D | null;
-
-  spring: Controller;
 };
 
 type Events =
@@ -79,7 +76,7 @@ type Events =
   | { type: 'ASSIGN_CAMERA'; camera: PerspectiveCamera }
   | { type: 'ASSIGN_OBSERVER'; observer: Object3D | null }
   | { type: 'ASSIGN_VR_HUD'; vrHud: Object3D }
-  | { type: 'SET_TARGET'; focusTarget: Object3D | null }
+  | { type: 'SET_TARGET'; focusTarget: Object3D | null; zoomIn?: boolean }
   | { type: 'ROTATE_AZIMUTHAL'; deltaAngle: number }
   | { type: 'ROTATE_POLAR'; deltaAngle: number }
   | { type: 'ZOOM'; deltaZoom: number }
@@ -108,13 +105,6 @@ export const cameraMachine = createMachine(
       observer: null,
       focusTarget: null,
       vrHud: null,
-
-      spring: new Controller({
-        rotation: [0, 0, 0],
-        phi: 0,
-        theta: 0,
-        radius: 0,
-      }),
     }),
 
     // Context assignment events:
@@ -238,10 +228,18 @@ export const cameraMachine = createMachine(
         states: {
           idle: {
             on: {
-              SET_TARGET: {
-                actions: ['assignTarget'],
-                target: 'changingTarget',
-              },
+              SET_TARGET: [
+                {
+                  cond: (_, { zoomIn }) => !Boolean(zoomIn),
+                  actions: ['assignTarget'],
+                  target: 'changingTarget',
+                },
+                {
+                  cond: (_, { zoomIn }) => Boolean(zoomIn),
+                  actions: ['assignTarget'],
+                  target: 'changingTargetAndZooming',
+                },
+              ],
             },
           },
           changingTarget: {
@@ -257,6 +255,28 @@ export const cameraMachine = createMachine(
               },
 
               id: 'change-target-promise',
+              onDone: { target: 'idle', actions: ['setSpaceCamDistance'] },
+              onError: { target: 'idle' },
+            },
+          },
+          changingTargetAndZooming: {
+            invoke: {
+              src: async (context) => {
+                const { controls, focusTarget } = context;
+
+                if (
+                  !controls ||
+                  !focusTarget ||
+                  !(focusTarget instanceof KeplerBody)
+                ) {
+                  return;
+                }
+                const radius = focusTarget.meanRadius * 4;
+                await controls.attachToWithoutMoving(focusTarget);
+                await controls.animateToSpring({ radius: radius });
+              },
+
+              id: 'change-target-zoom-promise',
               onDone: { target: 'idle', actions: ['setSpaceCamDistance'] },
               onError: { target: 'idle' },
             },
@@ -448,7 +468,7 @@ export const cameraMachine = createMachine(
       enteringSpace: {
         invoke: {
           src: async (context) => {
-            const { controls, spring, focusTarget, observer } = context;
+            const { controls, focusTarget, observer } = context;
             if (!focusTarget || !controls || !observer) return;
             DEV_ENV && console.log('entering space');
             controls.setMinRadius(SPACE_MIN_DIST_FROM_SURFACE);
@@ -623,30 +643,13 @@ export const cameraMachine = createMachine(
         // }, 1000);
       },
       exitSurfaceView: (context) => {
-        // const { controls, spring, focusTarget } = context;
+        // const { controls,  focusTarget } = context;
         // controls?.attachToWithoutMoving()
         // controls?.applyWorldUp();
         // if (!focusTarget || !controls) return;
         // // console.log('control rotation:', controls?.rotation.toArray());
         // const body = focusTarget as KeplerBody;
         // const dist = body.meanRadius * 4;
-        // void spring.start({
-        //   from: {
-        //     rotation: controls.rotation.toArray(),
-        //     radius: controls.radius,
-        //   },
-        //   to: {
-        //     rotation: [0, 0, 0],
-        //     radius: dist,
-        //   },
-        //   onChange: ({ value }) => {
-        //     const rotation = value.rotation as Vector3Tuple;
-        //     controls.rotation.set(...rotation);
-        //     controls.setRadius(value.radius as number);
-        //     controls.updateCameraPosition();
-        //     controls.resetTarget();
-        //   },
-        // });
       },
 
       updateSurfaceView: (context) => {
