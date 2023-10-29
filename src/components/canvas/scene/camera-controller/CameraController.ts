@@ -56,6 +56,7 @@ const _camWorldPos = new Vector3();
 const _camUp = new Vector3();
 const _camDirection = new Vector3();
 const _controllerPos = new Vector3();
+const _lookPos = new Vector3();
 
 function approxZero(num: number, epsilon = EPSILON) {
   return Math.abs(num) <= epsilon;
@@ -76,8 +77,8 @@ export class CameraController extends Object3D {
   private _spherical = new Spherical();
   private _sphericalTarget = new Spherical();
 
-  private _rollPoint = new Object3D();
   private _pivotPoint = new Object3D();
+  private _offsetPoint = new Object3D();
   private _attachPoint = new Object3D();
 
   private _radiusVelocity = 0;
@@ -125,7 +126,9 @@ export class CameraController extends Object3D {
   updateCameraPosition() {
     if (!this._camera) return;
     this._camera.position.set(0, 0, 0);
-    this._attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
+    this._offsetPoint.position.set(0, 0, this._spherical.radius); // Set the offset of the camera.
+    this._pivotPoint.position.set(0, 0, 0);
+    this._attachPoint.position.set(0, 0, 0);
 
     const yRot = this._spherical.theta;
     const xRot = -(PI_OVER_TWO - this._spherical.phi);
@@ -511,10 +514,13 @@ export class CameraController extends Object3D {
 
     /* Record camera world position before attachment. */
     this.camera.getWorldPosition(_camWorldPos);
+    this._attachPoint.getWorldDirection(_camDirection);
+    _lookPos.addVectors(_camWorldPos, _camDirection);
     _camPos.copy(_camWorldPos);
     this.getWorldPosition(_controllerPos);
 
-    this.camera.up.set(...getLocalUpInWorldCoords(this.camera));
+    // this.camera.up.set(...getLocalUpInWorldCoords(this.camera));
+    this._attachPoint.up.set(...getLocalUpInWorldCoords(this._attachPoint));
 
     // Attach to the object.
     obj.add(this);
@@ -529,7 +535,9 @@ export class CameraController extends Object3D {
     this.updateCameraPosition();
 
     /* Look at previous focus position. */
-    this.camera.lookAt(_controllerPos);
+    // this.camera.lookAt(_controllerPos);
+    _v3.copy(_controllerPos).negate();
+    this._attachPoint.lookAt(_lookPos);
 
     /* Get the angle between previous look direction and target look direction. */
     this.getWorldPosition(_v1);
@@ -541,7 +549,7 @@ export class CameraController extends Object3D {
     const duration = Math.max(2.5 * angle, 1.0);
 
     /* Animate the camera's rotation to 0. */
-    await gsap.to(this.camera.rotation, {
+    await gsap.to(this._attachPoint.rotation, {
       x: 0,
       y: 0,
       z: 0,
@@ -1024,11 +1032,12 @@ export class CameraController extends Object3D {
     polarAngle: number = DEFAULT_POLAR
   ) {
     super();
-    this.add(this._rollPoint);
-    this._rollPoint.add(this._pivotPoint);
-    this._pivotPoint.add(this._attachPoint);
+    this.add(this._pivotPoint);
+    this._pivotPoint.add(this._offsetPoint);
+    this._offsetPoint.add(this._attachPoint);
     this.name = 'camera-controller';
     this._pivotPoint.name = 'camera-pivot-point';
+    this._offsetPoint.name = 'camera-offset-point';
     this._attachPoint.name = 'camera-attach-point';
 
     if (camera) {
