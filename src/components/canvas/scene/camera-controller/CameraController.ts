@@ -127,9 +127,6 @@ export class CameraController extends Object3D {
     this._camera.position.set(0, 0, 0);
     this._attachPoint.position.set(0, 0, this._spherical.radius); // Set the position of the camera.
 
-    // const yRot = this._spherical.theta;
-    // const xRot = -(PI_OVER_TWO - this._spherical.phi);
-
     const yRot = this._spherical.theta;
     const xRot = -(PI_OVER_TWO - this._spherical.phi);
     const roll = this._roll;
@@ -253,6 +250,7 @@ export class CameraController extends Object3D {
   }
 
   addPolarRotation(polarRotation: number) {
+    if (this._locked) return;
     // if (approxZero(polarRotation)) return;
     this.setPolarAngleTarget(
       this._sphericalTarget.phi +
@@ -287,12 +285,14 @@ export class CameraController extends Object3D {
   }
 
   addAzimuthalRotation(azimuthalRotation: number) {
+    if (this._locked) return;
     // if (approxZero(azimuthalRotation)) return;
     this._sphericalTarget.theta +=
       azimuthalRotation * this._rotationSpeed * DEG_TO_RADS;
   }
 
   addRotation(azimuthalRotation: number, polarRotation: number) {
+    if (this._locked) return;
     this.addAzimuthalRotation(azimuthalRotation);
     this.addPolarRotation(polarRotation);
   }
