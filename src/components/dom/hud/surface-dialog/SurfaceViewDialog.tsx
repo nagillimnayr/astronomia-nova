@@ -17,6 +17,10 @@ const SurfaceViewDialog = () => {
     MachineContext.useSelector(({ context }) => context);
   const { surfaceDialogActor } = useSelector(uiActor, ({ context }) => context);
 
+  const inSpace = useSelector(cameraActor, (state) =>
+    state.matches('space.idle')
+  );
+
   const { latitude, longitude } = useSelector(
     surfaceActor,
     ({ context }) => context
@@ -44,14 +48,20 @@ const SurfaceViewDialog = () => {
     cameraActor.send('TO_SURFACE');
     surfaceDialogActor.send({ type: 'CLOSE' });
     // trajectories.send({ type: 'DISABLE' });
-  }, [cameraActor, surfaceDialogActor, trajectories]);
+  }, [cameraActor, surfaceDialogActor]);
 
   const [state, send] = useActor(surfaceDialogActor);
+
+  // useEffect(() => {
+  //   if (!inSpace) {
+  //     send({ type: 'CLOSE' });
+  //   }
+  // }, [inSpace, send]);
 
   return (
     <div
       ref={divRef}
-      data-state={state.value}
+      data-state={inSpace ? state.value : 'closed'}
       className="prose pointer-events-auto flex h-40 w-96 max-w-[50vw] flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-border bg-card px-6 font-sans data-[state=closed]:hidden prose-headings:m-0"
     >
       {/** Title. */}
