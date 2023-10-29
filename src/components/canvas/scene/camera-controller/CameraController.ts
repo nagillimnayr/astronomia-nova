@@ -591,6 +591,7 @@ export class CameraController extends Object3D {
     return this._roll;
   }
 
+  /** Set the target coords to the current coords.  */
   resetTarget() {
     const { radius, phi, theta } = this._spherical;
     this._sphericalTarget.set(radius, phi, theta);
