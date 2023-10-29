@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useVRControls } from './vr-controls/useVRControls';
 import { VRPlayer } from './VRPlayer';
 import { useXR } from '@react-three/xr';
+import { useVRTicker } from './hooks/useVRTicker';
 
 export const VRManager = () => {
   const { cameraActor, vrActor } = MachineContext.useSelector(
@@ -24,6 +25,9 @@ export const VRManager = () => {
     // Pass frame to vrActor.
     vrActor.send({ type: 'UPDATE', frame });
   });
+
+  /* Necessary to update GSAP animations when in VR. */
+  useVRTicker();
 
   useVRControls();
 
