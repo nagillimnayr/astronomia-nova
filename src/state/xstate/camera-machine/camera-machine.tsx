@@ -47,6 +47,8 @@ const _v4 = new Vector3();
 
 const NEPTUNE_APOAPSIS = 4553758200000 * METER;
 
+const tl = gsap.timeline();
+
 // Space view constants:
 const SPACE_MAX_DIST = SIMULATION_RADIUS - NEPTUNE_APOAPSIS;
 const SPACE_MIN_DIST_FROM_SURFACE = 1e-3;
@@ -328,7 +330,8 @@ export const cameraMachine = createMachine(
             controls.resetTarget();
             controls.setMinRadius(SURFACE_MIN_DIST);
 
-            await controls.animateTo({ radius, phi, theta });
+            await controls.animateTo({ radius });
+            await controls.animateTo({ phi, theta });
             await controls.animateRoll(roll);
 
             // console.log('control rotation:', controls.rotation.toArray());
@@ -350,13 +353,37 @@ export const cameraMachine = createMachine(
             controls.resetTarget();
             controls.updateCameraPosition();
 
-            await controls.animateTo({
-              radius: SURFACE_MAX_DIST,
-              theta: 0,
-              // phi: PI_OVER_TWO,
-              // roll: 0,
-            });
-            await controls.animateTo({ phi: PI_OVER_TWO, theta: 0 });
+            /* Zoom in to the surface. */
+            // await controls.animateTo({
+            //   radius: SURFACE_MAX_DIST,
+            //   theta: 0,
+            //   // phi: PI_OVER_TWO,
+            //   // roll: 0,
+            // });
+            await tl
+              .to(controls.spherical, {
+                radius: SURFACE_MAX_DIST,
+                theta: 0,
+                duration: 1,
+                onUpdate: () => {
+                  controls.updateCameraPosition();
+                  controls.resetTarget();
+                },
+              })
+              .to(
+                controls.spherical,
+                {
+                  phi: PI_OVER_TWO,
+                  duration: 1,
+                  onUpdate: () => {
+                    controls.updateCameraPosition();
+                    controls.resetTarget();
+                  },
+                },
+                '>-25%'
+              );
+            /* Pan camera upwards to the horizon. */
+            // await controls.animateTo({ phi: PI_OVER_TWO, theta: 0 });
 
             controls.unlock();
           },
