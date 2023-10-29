@@ -78,6 +78,7 @@ export const VRSurfaceButton = ({ position, width }: VRSurfaceButtonProps) => {
       cameraActor.send({
         type: 'SET_TARGET',
         focusTarget: selected,
+        zoomIn: true,
       });
 
       // Open surface dialog.
