@@ -333,7 +333,7 @@ export const cameraMachine = createMachine(
             // await controls.animateRoll(roll);
 
             const diffRadius = controls.radius - radius;
-            const duration = Math.log(diffRadius / 5e7);
+            const duration = Math.log(Math.max(diffRadius, 1)) / 5;
             devEnv && console.log('duration:', duration);
 
             /* Zoom in to body. */
@@ -346,7 +346,7 @@ export const cameraMachine = createMachine(
                 controls.resetTarget();
               },
             });
-            await delay(250);
+            // await delay(250);
             /* Rotate to be above observation point. */
             await controls.animateTo({
               phi: phi,
