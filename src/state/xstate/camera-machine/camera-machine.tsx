@@ -14,19 +14,14 @@ import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
 import { type RootState } from '@react-three/fiber';
 import { type XRState } from '@react-three/xr';
 import {
-  Object3D,
+  type Object3D,
   type PerspectiveCamera,
   Vector3,
   Spherical,
-  Euler,
-  Quaternion,
-  Vector3Tuple,
 } from 'three';
 import { degToRad, lerp, radToDeg } from 'three/src/math/MathUtils';
 import { assign, createMachine } from 'xstate';
 import { gsap } from 'gsap';
-import { normalizeAngle } from '@/helpers/rotation-utils';
-import { damp3 } from 'maath/easing';
 import { Controller } from '@react-spring/core';
 import { delay } from '@/helpers/utils';
 import { DEV_ENV } from '../../../constants/constants';
