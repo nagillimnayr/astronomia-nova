@@ -52,6 +52,7 @@ const Annotation = forwardRef<Object3D, AnnotationProps>(function Annotation(
             scale-z={1e-5}
           >
             <Center bottom>
+              {/* There are issues with the transparency of the Troika text, but using 3D text geometry solves those issues. */}
               <Text3D font={fontURL} letterSpacing={0.15}>
                 {annotation}
               </Text3D>
