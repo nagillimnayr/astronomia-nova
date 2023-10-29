@@ -785,12 +785,14 @@ export class CameraController extends Object3D {
       phi: phi ?? this.polarAngle,
       theta: targetTheta ?? this.azimuthalAngle,
       duration: duration,
+      ease: 'power1.inOut',
       onUpdate: () => {
         this.updateCameraPosition();
         this.resetTarget();
       },
     });
 
+    this.resetTarget();
     this.unlock();
     this._isAnimating = false;
   }
