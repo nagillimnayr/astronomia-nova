@@ -16,11 +16,13 @@ import {
   Vector3,
   Euler,
   type Vector3Tuple,
+  Quaternion,
 } from 'three';
 import { clamp, radToDeg } from 'three/src/math/MathUtils';
 import { damp, dampAngle } from 'maath/easing';
 import { gsap } from 'gsap';
 import { Controller, SpringValue } from '@react-spring/three';
+import { delay } from '@/helpers/utils';
 
 const EPSILON = 1e-3;
 
@@ -42,6 +44,8 @@ const DEFAULT_POLAR = PI_OVER_THREE;
 const _v1 = new Vector3();
 const _v2 = new Vector3();
 const _v3 = new Vector3();
+
+const _q1 = new Quaternion();
 
 const _camPos = new Vector3();
 const _camWorldPos = new Vector3();
@@ -95,8 +99,8 @@ export class CameraController extends Object3D {
 
   private _springConfigDefault = {
     mass: 1.0,
-    friction: 32.0,
-    tension: 225.0,
+    friction: 100.0,
+    // tension: 225.0,
     clamp: true,
     // restVelocity: 0.001,
   };
@@ -498,6 +502,8 @@ export class CameraController extends Object3D {
    * @memberof CameraController
    */
   async attachToWithoutMoving(obj: Object3D) {
+    const devEnv = process.env.NODE_ENV === 'development';
+
     // this.camera.rotation.set(0, 0, 0);
     this.camera.getWorldDirection(_camDirection);
     this.camera.getWorldPosition(_camPos);
@@ -505,23 +511,36 @@ export class CameraController extends Object3D {
 
     /* Record camera world position before attachment. */
     this.camera.getWorldPosition(_v1);
+    /* Record camera world rotation before attachment. */
+    this.camera.getWorldQuaternion(_q1);
+
+    if (devEnv) {
+      console.log('cam rotation: ', this.camera.rotation.toArray());
+    }
 
     // Attach to the object.
     obj.add(this);
+    this.camera.setRotationFromQuaternion(_q1);
 
     /* Convert previous camera world position to controller local space. */
     this.worldToLocal(_v1);
     /* Get spherical coordinates from previous camera position. */
     this._spherical.setFromVector3(_v1);
-    this._sphericalTarget.theta = this._spherical.theta;
-    this._sphericalTarget.phi = this._spherical.phi;
-    this._sphericalTarget.radius = this._spherical.radius;
     this._spherical.makeSafe();
+    this.resetTarget();
 
     this.updateCameraPosition();
 
     this.camera.up.set(0, 1, 0);
     this.camera.lookAt(_controllerPos);
+
+    if (devEnv) {
+      console.log('cam rotation: ', this.camera.rotation.toArray());
+    }
+
+    this.camera.rotation.z = 0;
+
+    await delay(3000);
 
     // this.lock();
 
