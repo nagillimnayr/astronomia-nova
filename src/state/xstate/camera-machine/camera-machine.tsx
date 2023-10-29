@@ -194,10 +194,10 @@ export const cameraMachine = createMachine(
           UPDATE: {
             actions: ['updateCamera'],
           },
-          SET_TARGET: {
-            internal: true,
-            actions: ['assignTarget', 'attachToTarget', 'setSpaceCamDistance'],
-          },
+          // SET_TARGET: {
+          //   internal: true,
+          //   actions: ['assignTarget', 'attachToTarget', 'setSpaceCamDistance'],
+          // },
           TO_SURFACE: {
             // Transition to 'surface' view-mode:
             target: 'entering_surface',
@@ -230,14 +230,14 @@ export const cameraMachine = createMachine(
             on: {
               SET_TARGET: [
                 {
-                  cond: (_, { zoomIn }) => !Boolean(zoomIn),
-                  actions: ['assignTarget'],
-                  target: 'changingTarget',
-                },
-                {
                   cond: (_, { zoomIn }) => Boolean(zoomIn),
                   actions: ['assignTarget'],
                   target: 'changingTargetAndZooming',
+                },
+                {
+                  cond: (_, { zoomIn }) => !Boolean(zoomIn),
+                  actions: ['assignTarget'],
+                  target: 'changingTarget',
                 },
               ],
             },
@@ -271,9 +271,22 @@ export const cameraMachine = createMachine(
                 ) {
                   return;
                 }
-                const radius = focusTarget.meanRadius * 4;
+                const radius = focusTarget.meanRadius * 5;
+                const diffRadius = Math.abs(controls.radius - radius);
+                const duration = Math.log(Math.max(diffRadius, 1)) / 5;
+
+                DEV_ENV && console.log('change target and zoom!');
+                DEV_ENV && console.log('diffRadius:', diffRadius);
+                DEV_ENV && console.log('duration:', duration);
+
                 await controls.attachToWithoutMoving(focusTarget);
-                await controls.animateToSpring({ radius: radius });
+                await controls.animateTo({
+                  radius: radius,
+                  duration: duration,
+                });
+
+                DEV_ENV && console.log('target radius:', radius);
+                DEV_ENV && console.log('final radius:', controls.radius);
               },
 
               id: 'change-target-zoom-promise',
