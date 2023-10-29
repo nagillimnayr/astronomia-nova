@@ -157,7 +157,8 @@ export const timeMachine = createMachine(
       }),
       decrementTimescaleUnit: assign({
         timescaleUnit: ({ timescaleUnit }, event) => {
-          const index = (timescaleUnit - 1) % 4;
+          const unit = timescaleUnit > 0 ? timescaleUnit : timescaleUnit + 4;
+          const index = (unit - 1) % 4;
           const key = TimeUnit[index];
           /** @ts-ignore */
           return key ? (TimeUnit[key] as TimeUnit) : timescaleUnit;
