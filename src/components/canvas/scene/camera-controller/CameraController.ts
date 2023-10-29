@@ -536,42 +536,17 @@ export class CameraController extends Object3D {
     this.resetTarget();
     this.updateCameraPosition();
 
-    this._attachPoint.getWorldPosition(_v2);
-    this.camera.getWorldPosition(_camPos);
-
-    console.log('_camPos:', _camPos.toArray());
-    console.log('_camWorldPos:', _camWorldPos.toArray());
-    console.log('_attachPoint:', _v2.toArray());
-
-    // this._attachPoint.attach(this.camera);
     this.camera.lookAt(_controllerPos);
 
-    // await delay(1000);
-
     this.lock();
+    this.getWorldPosition(_v1);
+    _v2.subVectors(_controllerPos, _camWorldPos);
+    _v3.subVectors(_v1, _camWorldPos);
+    const angle = Math.abs(_v2.angleTo(_v3));
 
-    const length = _v1.setFromEuler(this.camera.rotation).length();
+    // const length = _v1.setFromEuler(this.camera.rotation).length();
 
-    const duration = Math.max(2 * length, 1.0);
-
-    // const [camX0, camY0, camZ0] = this.camera.rotation.toArray();
-    // const [ctrlX0, ctrlY0, ctrlZ0] = this.rotation.toArray();
-    // await this._camera_spring.start({
-    //   from: {
-    //     camRotation: [camX0, camY0, camZ0],
-    //     // ctrlRotation: [ctrlX0, ctrlY0, ctrlZ0],
-    //   },
-    //   to: {
-    //     camRotation: [0, 0, 0],
-    //     // ctrlRotation: [0, 0, 0],
-    //   },
-    //   onChange: ({ value }) => {
-    //     const camRotation = value.camRotation as Vector3Tuple;
-
-    //     /* Update camera rotation. */
-    //     this.camera.rotation.set(...camRotation);
-    //   },
-    // });
+    const duration = Math.max(2.5 * angle, 1.0);
 
     await gsap.to(this.camera.rotation, {
       x: 0,
