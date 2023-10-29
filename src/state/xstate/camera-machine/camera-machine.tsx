@@ -19,12 +19,12 @@ import {
   Vector3,
   Spherical,
 } from 'three';
-import { degToRad, lerp, radToDeg } from 'three/src/math/MathUtils';
+import { degToRad } from 'three/src/math/MathUtils';
 import { assign, createMachine } from 'xstate';
 import { gsap } from 'gsap';
 import { Controller } from '@react-spring/core';
 import { delay } from '@/helpers/utils';
-import { DEV_ENV } from '../../../constants/constants';
+import { DEV_ENV } from '@/constants/constants';
 
 const _observerUp = new Vector3();
 const _focusUp = new Vector3();
@@ -701,15 +701,15 @@ export const cameraMachine = createMachine(
         controls.camera.near = SURFACE_NEAR_CLIP;
       },
       rotateAzimuthal: ({ controls }, event) => {
-        if (!controls) return;
+        if (!controls || controls.locked) return;
         controls.addAzimuthalRotation(event.deltaAngle);
       },
       rotatePolar: ({ controls }, event) => {
-        if (!controls) return;
+        if (!controls || controls.locked) return;
         controls.addPolarRotation(event.deltaAngle);
       },
       addRadialZoom: ({ controls }, event) => {
-        if (!controls) return;
+        if (!controls || controls.locked) return;
         controls.addRadialZoom(event.deltaZoom);
       },
       showVRHud: (context) => {
