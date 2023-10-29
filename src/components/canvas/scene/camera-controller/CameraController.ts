@@ -182,7 +182,6 @@ export class CameraController extends Object3D {
       const isMoving = radiusMoving || azimuthMoving || polarMoving;
       if (this._isMoving && !isMoving) {
         this.dispatchEvent({ type: 'REST' });
-        // console.log('REST');
       }
       this._isMoving = isMoving;
     }
@@ -510,17 +509,10 @@ export class CameraController extends Object3D {
     this.lock();
     this._isAnimating = true;
 
-    const devEnv = process.env.NODE_ENV === 'development';
-
     /* Record camera world position before attachment. */
-    this.camera.getWorldDirection(_camDirection);
     this.camera.getWorldPosition(_camWorldPos);
     _camPos.copy(_camWorldPos);
     this.getWorldPosition(_controllerPos);
-
-    if (devEnv) {
-      console.log('cam rotation: ', this.camera.rotation.toArray());
-    }
 
     this.camera.up.set(...getLocalUpInWorldCoords(this.camera));
 
@@ -536,18 +528,19 @@ export class CameraController extends Object3D {
     this.resetTarget();
     this.updateCameraPosition();
 
+    /* Look at previous focus position. */
     this.camera.lookAt(_controllerPos);
 
-    this.lock();
+    /* Get the angle between previous look direction and target look direction. */
     this.getWorldPosition(_v1);
     _v2.subVectors(_controllerPos, _camWorldPos);
     _v3.subVectors(_v1, _camWorldPos);
     const angle = Math.abs(_v2.angleTo(_v3));
 
-    // const length = _v1.setFromEuler(this.camera.rotation).length();
-
+    /* Use the angle to scale the duration, with a minimum duration of 1s. */
     const duration = Math.max(2.5 * angle, 1.0);
 
+    /* Animate the camera's rotation to 0. */
     await gsap.to(this.camera.rotation, {
       x: 0,
       y: 0,
@@ -613,21 +606,15 @@ export class CameraController extends Object3D {
   resetRotation() {
     if (this._isAnimating) return;
     if (!this._camera) return;
-    // if (process.env.NODE_ENV === 'development') {
-    //   console.log('rotation before:', this.rotation.toArray());
-    // }
+
     this._camera.getWorldPosition(_camPos);
     this.rotation.set(0, 0, 0);
     this.worldToLocal(_camPos);
     this.spherical.setFromVector3(_camPos);
     this.spherical.makeSafe();
     this.resetTarget();
-    // if (process.env.NODE_ENV === 'development') {
-    //   console.log('rotation after:', this.rotation.toArray());
-    // }
-    // this._roll = 0;
+
     this.updateCameraPosition();
-    // console.log('rotation after:', this.rotation.toArray());
   }
 
   resetRoll() {
@@ -658,28 +645,6 @@ export class CameraController extends Object3D {
         this.resetTarget();
       },
     });
-
-    // await this._camera_spring.start({
-    //   from: { roll: this.rotation.x },
-    //   to: { roll: -angle },
-    //   onChange: ({ value }) => {
-    //     // this._roll = value.roll as number;
-    //     this.rotation.x = value.roll as number;
-    //     // console.log('cam world pos:', _camWorldPos.toArray());
-    //     _camPos.copy(_camWorldPos);
-    //     this.worldToLocal(_camPos);
-    //     this._spherical.setFromVector3(_camPos);
-    //     this._spherical.makeSafe();
-
-    //     this.updateCameraPosition();
-    //     this.resetTarget();
-    //     // this.camera.getWorldPosition(_camPos);
-    //     // console.log('cam pos:', _camPos.toArray());
-    //   },
-    // });
-
-    // this.unlock();
-    // this._isAnimating = false;
   }
 
   async animateRotation(targetRotation: Vector3Tuple) {
@@ -717,12 +682,9 @@ export class CameraController extends Object3D {
     this.lock();
     this._isAnimating = true;
 
-    const devEnv = process.env.NODE_ENV === 'development';
-
-    /* Record start rotation. */
-
     this._camera.getWorldPosition(_camWorldPos);
 
+    /* Record start rotation. */
     const [x0, y0, z0] = this.rotation.toArray() as Vector3Tuple;
 
     await this._camera_spring.start({
@@ -875,17 +837,6 @@ export class CameraController extends Object3D {
           diffTheta < PI ? targetTheta : currentTheta + (TWO_PI - diffTheta);
       }
     }
-
-    // await gsap.to(this.spherical, {
-    //   radius: radius ?? this.radius,
-    //   phi: phi ?? this.polarAngle,
-    //   theta: targetTheta ?? this.azimuthalAngle,
-    //   duration: duration,
-    //   onUpdate: () => {
-    //     this.updateCameraPosition();
-    //     this.resetTarget();
-    //   },
-    // });
 
     await this._camera_spring.start({
       from: {
