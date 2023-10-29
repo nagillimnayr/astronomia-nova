@@ -1,5 +1,5 @@
 import { DynamicBody } from '@/components/canvas/body/dynamic-body';
-import { EARTH_RADIUS } from '@/constants';
+import { EARTH_RADIUS, DEV_ENV } from '@/constants';
 import { type MutableRefObject } from 'react';
 import { type Mesh, type Vector3Tuple } from 'three';
 
@@ -79,9 +79,7 @@ export class KeplerBody extends DynamicBody {
     // If mesh has already been assigned, do nothing.
     if (this._meshRef) {
       if (this._meshRef === meshRef) return;
-      if (process.env.NODE_ENV === 'development') {
-        console.log('meshRef is already assigned');
-      }
+      DEV_ENV && console.log('meshRef is already assigned');
       return;
     }
     this._meshRef = meshRef;
@@ -89,18 +87,16 @@ export class KeplerBody extends DynamicBody {
 
   addOrbitingBody(body: KeplerBody) {
     if (!this._orbitingBodies.includes(body)) {
-      if (process.env.NODE_ENV === 'development')
-        console.log(`Adding ${body.name} as orbiter of ${this.name}.`);
+      DEV_ENV && console.log(`Adding ${body.name} as orbiter of ${this.name}.`);
       this._orbitingBodies.push(body);
     } else {
-      if (process.env.NODE_ENV === 'development')
+      DEV_ENV &&
         console.warn(`${body.name} is already an orbiter of ${this.name}.`);
     }
   }
 
   removeOrbitingBody(body: KeplerBody) {
-    if (process.env.NODE_ENV === 'development')
-      console.log(`removing ${body.name} as orbiter of ${this.name}`);
+    DEV_ENV && console.log(`removing ${body.name} as orbiter of ${this.name}`);
     this._orbitingBodies = this._orbitingBodies.filter((item) => {
       return !Object.is(item, body);
     });
