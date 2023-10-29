@@ -321,7 +321,7 @@ export const cameraMachine = createMachine(
             const phi = _spherical.phi;
             const theta = _spherical.theta;
 
-            const targetRadius = observerRadius * 2.5;
+            const targetRadius = observerRadius * 3.5;
 
             const radius = Math.min(controls.radius, targetRadius);
 
@@ -334,16 +334,19 @@ export const cameraMachine = createMachine(
             // await controls.animateTo({ phi, theta });
             // await controls.animateRoll(roll);
 
+            const diffRadius = controls.radius - radius;
+
             /* Zoom in to body. */
             await gsap.to(controls.spherical, {
               radius: radius,
-              duration: radius / 1e7,
+              duration: diffRadius / 5e7,
+              ease: 'power2.inOut',
               onUpdate: () => {
                 controls.updateCameraPosition();
                 controls.resetTarget();
               },
             });
-
+            await delay(500);
             /* Rotate to be above observation point. */
             await controls.animateTo({
               phi: phi,
