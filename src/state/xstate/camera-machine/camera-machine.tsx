@@ -279,7 +279,9 @@ export const cameraMachine = createMachine(
         // },
         invoke: {
           src: async (context) => {
-            console.log('entering surface');
+            if (process.env.NODE_ENV === 'development') {
+              console.log('entering surface');
+            }
             const { controls, focusTarget, observer } = context;
             if (
               !controls ||
@@ -290,6 +292,8 @@ export const cameraMachine = createMachine(
             ) {
               return;
             }
+
+            const devEnv = process.env.NODE_ENV === 'development';
 
             const bodyMesh = focusTarget.meshRef.current;
             if (!bodyMesh) return;
@@ -330,8 +334,28 @@ export const cameraMachine = createMachine(
             controls.resetTarget();
             controls.setMinRadius(SURFACE_MIN_DIST);
 
-            await controls.animateTo({ radius });
-            await controls.animateTo({ phi, theta });
+            // await controls.animateTo({ radius });
+            // await controls.animateTo({ phi, theta });
+            // await controls.animateRoll(roll);
+
+            /* Zoom in to body. */
+            await gsap.to(controls.spherical, {
+              radius: radius,
+              duration: radius / 1e7,
+              onUpdate: () => {
+                controls.updateCameraPosition();
+                controls.resetTarget();
+              },
+            });
+
+            /* Rotate to be above observation point. */
+            await controls.animateTo({
+              phi: phi,
+              theta: theta,
+              duration: 2,
+            });
+
+            /* Rotate to align with equator/polar axis. */
             await controls.animateRoll(roll);
 
             // console.log('control rotation:', controls.rotation.toArray());
@@ -354,27 +378,22 @@ export const cameraMachine = createMachine(
             controls.updateCameraPosition();
 
             /* Zoom in to the surface. */
-            // await controls.animateTo({
-            //   radius: SURFACE_MAX_DIST,
-            //   theta: 0,
-            //   // phi: PI_OVER_TWO,
-            //   // roll: 0,
-            // });
             await tl
               .to(controls.spherical, {
                 radius: SURFACE_MAX_DIST,
                 theta: 0,
-                duration: 1,
+                duration: 2,
                 onUpdate: () => {
                   controls.updateCameraPosition();
                   controls.resetTarget();
                 },
               })
+              /* Pan camera upwards to the horizon. */
               .to(
                 controls.spherical,
                 {
                   phi: PI_OVER_TWO,
-                  duration: 1,
+                  duration: 2,
                   onUpdate: () => {
                     controls.updateCameraPosition();
                     controls.resetTarget();
@@ -382,8 +401,6 @@ export const cameraMachine = createMachine(
                 },
                 '>-25%'
               );
-            /* Pan camera upwards to the horizon. */
-            // await controls.animateTo({ phi: PI_OVER_TWO, theta: 0 });
 
             controls.unlock();
           },

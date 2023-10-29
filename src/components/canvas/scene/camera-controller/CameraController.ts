@@ -624,7 +624,7 @@ export class CameraController extends Object3D {
     await this.animateRoll(0);
   }
 
-  async animateRoll(angle: number) {
+  async animateRoll(angle: number, duration = 1) {
     if (this._isAnimating) return;
     if (!this._camera) return;
     // this.lock();
@@ -632,13 +632,10 @@ export class CameraController extends Object3D {
 
     this._camera.getWorldPosition(_camWorldPos);
 
-    await this._camera_spring.start({
-      from: { roll: this.rotation.x },
-      to: { roll: -angle },
-      onChange: ({ value }) => {
-        // this._roll = value.roll as number;
-        this.rotation.x = value.roll as number;
-        // console.log('cam world pos:', _camWorldPos.toArray());
+    await gsap.to(this.rotation, {
+      x: -angle,
+      duration: duration,
+      onUpdate: () => {
         _camPos.copy(_camWorldPos);
         this.worldToLocal(_camPos);
         this._spherical.setFromVector3(_camPos);
@@ -646,10 +643,27 @@ export class CameraController extends Object3D {
 
         this.updateCameraPosition();
         this.resetTarget();
-        // this.camera.getWorldPosition(_camPos);
-        // console.log('cam pos:', _camPos.toArray());
       },
     });
+
+    // await this._camera_spring.start({
+    //   from: { roll: this.rotation.x },
+    //   to: { roll: -angle },
+    //   onChange: ({ value }) => {
+    //     // this._roll = value.roll as number;
+    //     this.rotation.x = value.roll as number;
+    //     // console.log('cam world pos:', _camWorldPos.toArray());
+    //     _camPos.copy(_camWorldPos);
+    //     this.worldToLocal(_camPos);
+    //     this._spherical.setFromVector3(_camPos);
+    //     this._spherical.makeSafe();
+
+    //     this.updateCameraPosition();
+    //     this.resetTarget();
+    //     // this.camera.getWorldPosition(_camPos);
+    //     // console.log('cam pos:', _camPos.toArray());
+    //   },
+    // });
 
     // this.unlock();
     // this._isAnimating = false;
@@ -728,20 +742,19 @@ export class CameraController extends Object3D {
     radius?: number;
     phi?: number;
     theta?: number;
-    roll?: number;
+    duration?: number;
   }) {
     if (this._isAnimating) return;
 
     this.lock();
     this.resetTarget();
     this._isAnimating = true;
-    const { radius, phi } = to;
-    const { theta, roll } = to;
+    const { radius, phi, theta } = to;
+    const duration = to.duration ?? 1;
     if (
       typeof radius !== 'number' &&
       typeof phi !== 'number' &&
-      typeof theta !== 'number' &&
-      typeof roll !== 'number'
+      typeof theta !== 'number'
     ) {
       this.unlock();
       this._isAnimating = false;
@@ -783,6 +796,84 @@ export class CameraController extends Object3D {
       }
     }
 
+    await gsap.to(this.spherical, {
+      radius: radius ?? this.radius,
+      phi: phi ?? this.polarAngle,
+      theta: targetTheta ?? this.azimuthalAngle,
+      duration: duration,
+      onUpdate: () => {
+        this.updateCameraPosition();
+        this.resetTarget();
+      },
+    });
+
+    this.unlock();
+    this._isAnimating = false;
+  }
+
+  async animateToSpring(to: { radius?: number; phi?: number; theta?: number }) {
+    if (this._isAnimating) return;
+
+    this.lock();
+    this.resetTarget();
+    this._isAnimating = true;
+    const { radius, phi, theta } = to;
+    if (
+      typeof radius !== 'number' &&
+      typeof phi !== 'number' &&
+      typeof theta !== 'number'
+    ) {
+      this.unlock();
+      this._isAnimating = false;
+      return;
+    }
+
+    let targetTheta = theta ? normalizeAngle(theta) : this.azimuthalAngle;
+    if (theta !== undefined) {
+      const currentTheta = this.azimuthalAngle;
+
+      /* Determine shortest path to target theta. */
+      let diffTheta = 0;
+      if (currentTheta <= targetTheta) {
+        /**
+         * e.g. currentTheta is 30 deg and targetTheta is 330 deg,
+         * 330 - 30 = 300 deg
+         * 300 - 360 = -60 deg
+         * 30 + (-60) = -30 deg
+         * -30 deg == 330 deg
+         */
+        diffTheta = targetTheta - currentTheta;
+
+        /* If difference between angles is less than PI, then no need for adjustment. */
+        targetTheta =
+          diffTheta < PI ? targetTheta : currentTheta + (diffTheta - TWO_PI);
+      } else {
+        /**
+         * e.g. currentTheta is 330 deg and targetTheta is 30 deg,
+         * 330 - 30 = 300 deg
+         * 360 - 300 = 60 deg
+         * 330 + 60 deg = 390 deg
+         * 390 deg = 30 deg
+         */
+        diffTheta = currentTheta - targetTheta;
+
+        /* If difference between angles is less than PI, then no need for adjustment. */
+        targetTheta =
+          diffTheta < PI ? targetTheta : currentTheta + (TWO_PI - diffTheta);
+      }
+    }
+
+    // await gsap.to(this.spherical, {
+    //   radius: radius ?? this.radius,
+    //   phi: phi ?? this.polarAngle,
+    //   theta: targetTheta ?? this.azimuthalAngle,
+    //   duration: duration,
+    //   onUpdate: () => {
+    //     this.updateCameraPosition();
+    //     this.resetTarget();
+    //   },
+    // });
+
     await this._camera_spring.start({
       from: {
         radius: this.radius,
@@ -794,13 +885,11 @@ export class CameraController extends Object3D {
         radius: radius ?? this.radius,
         phi: phi ?? this.polarAngle,
         theta: targetTheta ?? this.azimuthalAngle,
-        roll: roll ?? this._roll,
       },
       onChange: ({ value }) => {
         radius !== undefined && this.setRadius(value.radius as number);
         phi !== undefined && this.setPolarAngle(value.phi as number);
         theta !== undefined && this.setAzimuthalAngle(value.theta as number);
-        roll !== undefined && (this._roll = value.roll as number);
         this.updateCameraPosition();
         this.resetTarget();
       },

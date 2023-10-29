@@ -119,7 +119,7 @@ export function useKeyboard() {
         const theta = normalizeAngle(spherical.theta);
         const diffTheta = theta - controls.azimuthalAngle;
 
-        void controls.animateTo({
+        void controls.animateToSpring({
           phi,
           theta: Math.abs(diffTheta) < PI ? theta : theta - TWO_PI,
         });
