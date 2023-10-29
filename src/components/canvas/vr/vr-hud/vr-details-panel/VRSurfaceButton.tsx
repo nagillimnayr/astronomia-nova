@@ -7,8 +7,8 @@ import { Interactive, type XRInteractionEvent } from '@react-three/xr';
 import { useSelector } from '@xstate/react';
 import { useCallback, useEffect, useRef } from 'react';
 import { type Group, type Vector3Tuple } from 'three';
-import { colors, depth } from '../../../../../constants/vr-hud-constants';
-import { ICON_MATERIAL_BASE } from '../../../../../constants/vr-ui-materials';
+import { colors, depth } from '@/constants/vr-hud-constants';
+import { ICON_MATERIAL_BASE } from '@/constants/vr-ui-materials';
 import { VRPanel } from '../vr-ui-components/vr-panel/VRPanel';
 
 type VRSurfaceButtonProps = {
