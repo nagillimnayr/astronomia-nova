@@ -275,7 +275,8 @@ export const cameraMachine = createMachine(
         // },
         invoke: {
           src: async (context) => {
-            if (process.env.NODE_ENV === 'development') {
+            const devEnv = process.env.NODE_ENV === 'development';
+            if (devEnv) {
               console.log('entering surface');
             }
             const { controls, focusTarget, observer } = context;
@@ -289,8 +290,6 @@ export const cameraMachine = createMachine(
               return;
             }
 
-            const devEnv = process.env.NODE_ENV === 'development';
-
             const bodyMesh = focusTarget.meshRef.current;
             if (!bodyMesh) return;
 
@@ -300,7 +299,6 @@ export const cameraMachine = createMachine(
             // const roll = _v1.angleTo(_v2);
 
             const roll = degToRad(focusTarget.obliquity);
-            controls.lock();
 
             controls.resetRotation();
 
@@ -335,18 +333,20 @@ export const cameraMachine = createMachine(
             // await controls.animateRoll(roll);
 
             const diffRadius = controls.radius - radius;
+            const duration = Math.log(diffRadius / 5e7);
+            devEnv && console.log('duration:', duration);
 
             /* Zoom in to body. */
             await gsap.to(controls.spherical, {
               radius: radius,
-              duration: diffRadius / 5e7,
+              duration: duration,
               ease: 'power2.inOut',
               onUpdate: () => {
                 controls.updateCameraPosition();
                 controls.resetTarget();
               },
             });
-            await delay(500);
+            await delay(250);
             /* Rotate to be above observation point. */
             await controls.animateTo({
               phi: phi,
