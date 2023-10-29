@@ -340,13 +340,13 @@ export const cameraMachine = createMachine(
             await gsap.to(controls.spherical, {
               radius: radius,
               duration: duration,
-              ease: 'power2.inOut',
+              ease: 'power1.inOut',
               onUpdate: () => {
                 controls.updateCameraPosition();
                 controls.resetTarget();
               },
             });
-            // await delay(250);
+            await delay(100);
             /* Rotate to be above observation point. */
             await controls.animateTo({
               phi: phi,
