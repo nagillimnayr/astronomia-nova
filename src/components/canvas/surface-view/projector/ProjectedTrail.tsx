@@ -80,7 +80,6 @@ export const ProjectedTrail = ({
 
     /* Reset after slight delay. */
     setTimeout(() => {
-      console.log('resetting trail');
       const anchor = anchorRef.current;
       points.current = resetTrail(anchor, body, length);
       // Update geometry.
