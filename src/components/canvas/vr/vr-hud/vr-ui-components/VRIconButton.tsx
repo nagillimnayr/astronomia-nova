@@ -5,13 +5,9 @@ import { type ThreeEvent } from '@react-three/fiber';
 import { Interactive, type XRInteractionEvent } from '@react-three/xr';
 import { useCallback, useEffect, useRef } from 'react';
 import { type Group, type Vector3Tuple } from 'three';
-import {
-  colors,
-  depth,
-  icons,
-} from '../../../../../constants/vr-hud-constants';
-import { ICON_MATERIAL_BASE } from '../../../../../constants/vr-ui-materials';
-import { anim } from '../../../../../helpers/react-spring-utils/animated-components';
+import { colors, depth, icons } from '@/constants/vr-hud-constants';
+import { ICON_MATERIAL_BASE } from '@/constants/vr-ui-materials';
+import { anim } from '@/helpers/react-spring-utils/animated-components';
 
 const dummyFn = () => {
   return;
