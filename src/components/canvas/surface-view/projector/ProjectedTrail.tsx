@@ -151,6 +151,7 @@ export const ProjectedTrail = ({
 
       // Update geometry.
       line.geometry.setPositions(points.current);
+      line.computeLineDistances();
     };
     const subscription = timeActor.subscribe((state) => {
       if (state.matches('unpaused')) return; // Do nothing if unpaused.
@@ -189,9 +190,13 @@ export const ProjectedTrail = ({
         <Line
           ref={lineRef}
           points={arr}
-          lineWidth={2}
+          lineWidth={3}
           color={color}
           name="projected-trail"
+          dashed={true}
+          // dashSize={1e2}
+          // dashScale={1e2}
+          // gapSize={1e2}
         />
       </group>
     </>
