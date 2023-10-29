@@ -17,6 +17,8 @@ import {
   Euler,
   type Vector3Tuple,
   Quaternion,
+  Matrix4,
+  Scene,
 } from 'three';
 import { clamp, radToDeg } from 'three/src/math/MathUtils';
 import { damp, dampAngle } from 'maath/easing';
@@ -46,9 +48,12 @@ const _v2 = new Vector3();
 const _v3 = new Vector3();
 
 const _q1 = new Quaternion();
+const _q2 = new Quaternion();
+const _m1 = new Matrix4();
 
 const _camPos = new Vector3();
 const _camWorldPos = new Vector3();
+const _camUp = new Vector3();
 const _camDirection = new Vector3();
 const _controllerPos = new Vector3();
 
@@ -502,68 +507,82 @@ export class CameraController extends Object3D {
    * @memberof CameraController
    */
   async attachToWithoutMoving(obj: Object3D) {
+    this.lock();
+    this._isAnimating = true;
+
     const devEnv = process.env.NODE_ENV === 'development';
 
-    // this.camera.rotation.set(0, 0, 0);
-    this.camera.getWorldDirection(_camDirection);
-    this.camera.getWorldPosition(_camPos);
-    this.getWorldPosition(_controllerPos);
-
     /* Record camera world position before attachment. */
-    this.camera.getWorldPosition(_v1);
-    /* Record camera world rotation before attachment. */
-    this.camera.getWorldQuaternion(_q1);
+    this.camera.getWorldDirection(_camDirection);
+    this.camera.getWorldPosition(_camWorldPos);
+    _camPos.copy(_camWorldPos);
+    this.getWorldPosition(_controllerPos);
 
     if (devEnv) {
       console.log('cam rotation: ', this.camera.rotation.toArray());
     }
+
+    this.camera.up.set(...getLocalUpInWorldCoords(this.camera));
 
     // Attach to the object.
     obj.add(this);
-    this.camera.setRotationFromQuaternion(_q1);
 
     /* Convert previous camera world position to controller local space. */
-    this.worldToLocal(_v1);
+    this.worldToLocal(_camPos);
     /* Get spherical coordinates from previous camera position. */
-    this._spherical.setFromVector3(_v1);
+    this._spherical.setFromVector3(_camPos);
     this._spherical.makeSafe();
-    this.resetTarget();
 
+    this.resetTarget();
     this.updateCameraPosition();
 
-    this.camera.up.set(0, 1, 0);
+    this._attachPoint.getWorldPosition(_v2);
+    this.camera.getWorldPosition(_camPos);
+
+    console.log('_camPos:', _camPos.toArray());
+    console.log('_camWorldPos:', _camWorldPos.toArray());
+    console.log('_attachPoint:', _v2.toArray());
+
+    // this._attachPoint.attach(this.camera);
     this.camera.lookAt(_controllerPos);
 
-    if (devEnv) {
-      console.log('cam rotation: ', this.camera.rotation.toArray());
-    }
+    // await delay(1000);
 
-    this.camera.rotation.z = 0;
+    this.lock();
 
-    await delay(3000);
+    const length = _v1.setFromEuler(this.camera.rotation).length();
 
-    // this.lock();
+    const duration = Math.max(2 * length, 1.0);
 
-    const [camX0, camY0, camZ0] = this.camera.rotation.toArray();
-    const [ctrlX0, ctrlY0, ctrlZ0] = this.rotation.toArray();
-    await this._camera_spring.start({
-      from: {
-        camRotation: [camX0, camY0, camZ0],
-        ctrlRotation: [ctrlX0, ctrlY0, ctrlZ0],
-      },
-      to: {
-        camRotation: [0, 0, 0],
-        ctrlRotation: [0, 0, 0],
-      },
-      onChange: ({ value }) => {
-        const camRotation = value.camRotation as Vector3Tuple;
+    // const [camX0, camY0, camZ0] = this.camera.rotation.toArray();
+    // const [ctrlX0, ctrlY0, ctrlZ0] = this.rotation.toArray();
+    // await this._camera_spring.start({
+    //   from: {
+    //     camRotation: [camX0, camY0, camZ0],
+    //     // ctrlRotation: [ctrlX0, ctrlY0, ctrlZ0],
+    //   },
+    //   to: {
+    //     camRotation: [0, 0, 0],
+    //     // ctrlRotation: [0, 0, 0],
+    //   },
+    //   onChange: ({ value }) => {
+    //     const camRotation = value.camRotation as Vector3Tuple;
 
-        /* Update camera rotation. */
-        this.camera.rotation.set(...camRotation);
-      },
+    //     /* Update camera rotation. */
+    //     this.camera.rotation.set(...camRotation);
+    //   },
+    // });
+
+    await gsap.to(this.camera.rotation, {
+      x: 0,
+      y: 0,
+      z: 0,
+      duration: duration,
+      ease: 'power2.inOut',
     });
-    // this.resetRotation();
-    // this.unlock();
+
+    this.unlock();
+    this._isAnimating = false;
   }
 
   attachToController(obj: Object3D) {

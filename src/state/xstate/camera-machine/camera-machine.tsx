@@ -256,10 +256,6 @@ export const cameraMachine = createMachine(
                 if (!controls || !focusTarget) {
                   return;
                 }
-                const camera = controls.camera;
-                if (!camera) {
-                  return;
-                }
 
                 await controls.attachToWithoutMoving(focusTarget);
               },
