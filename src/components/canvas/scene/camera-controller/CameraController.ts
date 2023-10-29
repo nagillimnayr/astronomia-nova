@@ -646,7 +646,7 @@ export class CameraController extends Object3D {
 
         this.updateCameraPosition();
         this.resetTarget();
-        this.camera.getWorldPosition(_camPos);
+        // this.camera.getWorldPosition(_camPos);
         // console.log('cam pos:', _camPos.toArray());
       },
     });
@@ -735,7 +735,8 @@ export class CameraController extends Object3D {
     this.lock();
     this.resetTarget();
     this._isAnimating = true;
-    const { radius, phi, theta, roll } = to;
+    const { radius, phi } = to;
+    const { theta, roll } = to;
     if (
       typeof radius !== 'number' &&
       typeof phi !== 'number' &&
@@ -747,10 +748,11 @@ export class CameraController extends Object3D {
       return;
     }
 
-    let targetTheta = theta ? normalizeAngle(theta) : undefined;
-    if (targetTheta) {
+    let targetTheta = theta ? normalizeAngle(theta) : this.azimuthalAngle;
+    if (theta !== undefined) {
       const currentTheta = this.azimuthalAngle;
 
+      /* Determine shortest path to target theta. */
       let diffTheta = 0;
       if (currentTheta <= targetTheta) {
         /**
