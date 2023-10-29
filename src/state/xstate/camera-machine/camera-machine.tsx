@@ -29,6 +29,7 @@ import { normalizeAngle } from '@/helpers/rotation-utils';
 import { damp3 } from 'maath/easing';
 import { Controller } from '@react-spring/core';
 import { delay } from '@/helpers/utils';
+import { DEV_ENV } from '../../../constants/constants';
 
 const _observerUp = new Vector3();
 const _focusUp = new Vector3();
@@ -268,17 +269,9 @@ export const cameraMachine = createMachine(
         },
       },
       entering_surface: {
-        // on: {
-        //   UPDATE: {
-        //     actions: ['updateCamera'],
-        //   },
-        // },
         invoke: {
           src: async (context) => {
-            const devEnv = process.env.NODE_ENV === 'development';
-            if (devEnv) {
-              console.log('entering surface');
-            }
+            DEV_ENV && console.log('entering surface');
             const { controls, focusTarget, observer } = context;
             if (
               !controls ||
@@ -334,7 +327,7 @@ export const cameraMachine = createMachine(
 
             const diffRadius = controls.radius - radius;
             const duration = Math.log(Math.max(diffRadius, 1)) / 5;
-            devEnv && console.log('duration:', duration);
+            DEV_ENV && console.log('duration:', duration);
 
             /* Zoom in to body. */
             await gsap.to(controls.spherical, {
@@ -462,9 +455,7 @@ export const cameraMachine = createMachine(
           src: async (context) => {
             const { controls, spring, focusTarget, observer } = context;
             if (!focusTarget || !controls || !observer) return;
-            if (process.env.NODE_ENV === 'development') {
-              console.log('entering space');
-            }
+            DEV_ENV && console.log('entering space');
             controls.setMinRadius(SPACE_MIN_DIST_FROM_SURFACE);
             controls.setMaxRadius(SPACE_MAX_DIST);
 
