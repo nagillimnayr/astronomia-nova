@@ -91,6 +91,7 @@
     "raw-loader": "^4.0.2",
     "react": "^18.2.0",
     "react-aria": "^3.25.0",
+    "react-day-picker": "^8.9.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.1",
     "react-use-measure": "^2.1.1",
