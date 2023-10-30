@@ -41,10 +41,10 @@ export const VRSurfaceDialog = ({
     uiActor,
     ({ context }) => context.vrSurfaceDialogActor
   );
-  const trajectories = useSelector(
-    visibilityActor,
-    ({ context }) => context.trajectories
-  );
+  // const trajectories = useSelector(
+  //   visibilityActor,
+  //   ({ context }) => context.trajectories
+  // );
   const focusTarget = useSelector(
     cameraActor,
     ({ context }) => context.focusTarget
@@ -59,8 +59,8 @@ export const VRSurfaceDialog = ({
   const confirm = useCallback(() => {
     vrSurfaceDialogActor.send({ type: 'DISABLE' });
     cameraActor.send('TO_SURFACE');
-    trajectories.send({ type: 'DISABLE' }); // Disable trajectories.
-  }, [cameraActor, trajectories, vrSurfaceDialogActor]);
+    // trajectories.send({ type: 'DISABLE' }); // Disable trajectories.
+  }, [cameraActor, vrSurfaceDialogActor]);
 
   const handleLatitudeChange = useCallback(
     (newValue: number) => {
