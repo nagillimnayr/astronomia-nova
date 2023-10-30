@@ -182,7 +182,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
             data-selected={isSelected ? 'true' : 'false'}
             onClick={handleSelect}
             className={cn(
-              'm-0 mr-1 mt-[3px] inline-flex h-full w-full cursor-pointer items-center justify-start rounded-md p-1 outline outline-2 outline-transparent transition-colors hover:bg-subtle',
+              'm-0 mr-1 mt-[3px] inline-flex h-full w-full cursor-pointer items-center justify-start rounded-md p-1 pr-4 outline outline-2 outline-transparent transition-colors hover:bg-subtle',
               'data-[selected=true]:bg-subtle '
             )}
           >
@@ -205,7 +205,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
           {/** Add some left margin to indent each subtree from its parent, left padding to line up the left border with the list marker. */}
           <ul
             ref={listRef}
-            className="ml-2 h-fit overflow-y-hidden border-l-2 border-gray-200 pl-1 marker:text-gray-300"
+            className="ml-3 h-fit overflow-y-hidden border-l-2 border-gray-200 pl-1 marker:text-gray-300"
           >
             {body.orbitingBodies.map((child) => {
               // Recursively traverse the tree to construct the tree view.
