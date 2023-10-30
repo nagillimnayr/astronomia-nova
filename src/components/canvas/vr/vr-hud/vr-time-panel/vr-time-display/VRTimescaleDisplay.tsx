@@ -4,7 +4,6 @@ import { type TextMesh } from '@/type-declarations/troika-three-text/Text';
 import { Text } from '@react-three/drei';
 import { useCallback, useEffect, useRef } from 'react';
 import { type Vector3Tuple } from 'three';
-import { VRIconButton } from '../../vr-ui-components/VRIconButton';
 
 type VRTimescaleDisplayProps = {
   position?: Vector3Tuple;
