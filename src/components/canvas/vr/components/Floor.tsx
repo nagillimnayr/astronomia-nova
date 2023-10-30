@@ -28,7 +28,7 @@ export const Floor = ({ position = [0, 0, 0], ...props }: Props) => {
             <MeshDiscardMaterial />
           </Plane>
         </Interactive>
-        <Grid infiniteGrid />
+        <Grid infiniteGrid sectionColor={'white'} />
       </group>
     </>
   );
