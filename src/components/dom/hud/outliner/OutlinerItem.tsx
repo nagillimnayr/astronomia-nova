@@ -182,7 +182,7 @@ const OutlinerItem = ({ body, defaultOpen = false }: OutlinerItemProps) => {
             data-selected={isSelected ? 'true' : 'false'}
             onClick={handleSelect}
             className={cn(
-              'm-0 my-[3px] mr-1 inline-flex h-full w-full cursor-pointer items-center justify-start rounded-md p-1 outline outline-2 outline-transparent transition-colors hover:bg-subtle',
+              'm-0 mr-1 mt-[3px] inline-flex h-full w-full cursor-pointer items-center justify-start rounded-md p-1 outline outline-2 outline-transparent transition-colors hover:bg-subtle',
               'data-[selected=true]:bg-subtle '
             )}
           >
