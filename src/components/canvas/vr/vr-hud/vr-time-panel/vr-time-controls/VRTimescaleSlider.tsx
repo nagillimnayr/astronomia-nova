@@ -37,7 +37,7 @@ export const VRTimescaleSlider = ({
         {/** Slider */}
         <VRSlider
           // incrementers
-          width={8}
+          width={7.6}
           height={0.5}
           thumbRadius={0.45}
           value={timescale}
