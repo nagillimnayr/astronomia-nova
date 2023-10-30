@@ -46,7 +46,7 @@ export const VRTimescaleDisplay = ({
   //   timeActor.send({ type: 'DECREMENT_TIMESCALE_UNIT' });
   // }, [timeActor]);
 
-  const fontSize = 1;
+  const fontSize = 0.8;
   // const xOffset = 6;
   // const iconSize = 0.6;
   return (
