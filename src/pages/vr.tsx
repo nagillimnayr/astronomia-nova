@@ -23,7 +23,7 @@ const VRPage: NextPage = () => {
         <meta name="description" content="" />
       </Head>
 
-      <main className="h-full w-full">
+      <main className="h-screen w-full">
         <VRCanvas>
           <VRScene />
         </VRCanvas>
