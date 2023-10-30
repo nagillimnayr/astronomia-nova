@@ -1,9 +1,9 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { AdvanceTimeButton } from './AdvanceTimeButton';
-import PauseButton from './PauseButton';
+import { PauseButton } from './PauseButton';
 
-const TimeControls = () => {
-  const { timeActor } = MachineContext.useSelector(({ context }) => context);
+export const TimeControls = () => {
+  // const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
   return (
     <div className="flex flex-col items-center justify-start">
@@ -28,5 +28,3 @@ const TimeControls = () => {
     </div>
   );
 };
-
-export default TimeControls;

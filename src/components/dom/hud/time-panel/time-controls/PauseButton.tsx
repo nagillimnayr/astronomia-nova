@@ -6,7 +6,7 @@ import { type ClassNameValue } from 'tailwind-merge';
 type Props = {
   className?: ClassNameValue;
 };
-const PauseButton = ({ className }: Props) => {
+export const PauseButton = ({ className }: Props) => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
   // Check whether paused or not.
@@ -33,5 +33,3 @@ const PauseButton = ({ className }: Props) => {
     </button>
   );
 };
-
-export default PauseButton;

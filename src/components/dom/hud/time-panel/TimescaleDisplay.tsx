@@ -2,7 +2,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { TimeUnit } from '@/state/xstate/time-machine/time-machine';
 import { type MouseEvent, useCallback, useEffect, useRef } from 'react';
 
-const TimescaleDisplay = () => {
+export const TimescaleDisplay = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
   const timescaleSpanRef = useRef<HTMLSpanElement>(null!);
@@ -81,5 +81,3 @@ const TimescaleDisplay = () => {
     </div>
   );
 };
-
-export default TimescaleDisplay;

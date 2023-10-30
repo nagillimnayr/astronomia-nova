@@ -2,9 +2,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { addSeconds, format } from 'date-fns';
 import { useEffect, useRef } from 'react';
 
-const _date = new Date();
-
-const DateDisplay = () => {
+export const DateDisplay = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
   const { refDate } = timeActor.getSnapshot()!.context;
@@ -32,5 +30,3 @@ const DateDisplay = () => {
     </div>
   );
 };
-
-export default DateDisplay;
