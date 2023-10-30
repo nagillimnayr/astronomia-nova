@@ -5,6 +5,8 @@ import { Text } from '@react-three/drei';
 import { useCallback, useEffect, useRef } from 'react';
 import { type Vector3Tuple } from 'three';
 
+const FONT_SIZE = 0.8;
+
 type VRTimescaleDisplayProps = {
   position?: Vector3Tuple;
 };
@@ -37,12 +39,16 @@ export const VRTimescaleDisplay = ({
     return () => subscription.unsubscribe();
   }, [timeActor]);
 
-  const fontSize = 0.8;
-
   return (
     <>
       <group position={position}>
-        <Text ref={textRef} fontSize={fontSize}>
+        <Text
+          position-y={-0.05}
+          ref={textRef}
+          fontSize={FONT_SIZE}
+          anchorX={'center'}
+          anchorY={'middle'}
+        >
           {'text'}
         </Text>
       </group>
