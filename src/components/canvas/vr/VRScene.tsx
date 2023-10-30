@@ -10,6 +10,7 @@ import { randFloat } from 'three/src/math/MathUtils';
 import { Floor } from './components/Floor';
 import { VRGrabbable } from './components/VRGrabbable';
 import { VRCameraManager } from './VRCameraManager';
+import { ORIGIN, X_AXIS, Y_AXIS, Z_AXIS } from '@/constants';
 
 const LOW_X = -15;
 const HIGH_X = 15;
@@ -30,6 +31,7 @@ export const VRScene = () => {
     timeActor.send({ type: 'UPDATE', deltaTime: delta });
   });
 
+  const arrowLength = 5;
   return (
     <>
       <VRCameraManager position={[0, 0, 0]} />
@@ -42,126 +44,20 @@ export const VRScene = () => {
       />
       <ambientLight intensity={0.75} />
 
-      <VRGrabbable
+      {/* <axesHelper scale={5} /> */}
+
+      <arrowHelper args={[X_AXIS, ORIGIN, arrowLength, 'red']} />
+      <arrowHelper args={[Y_AXIS, ORIGIN, arrowLength, 'lightgreen']} />
+      <arrowHelper args={[Z_AXIS, ORIGIN, arrowLength, 'blue']} />
+
+      {/* <VRGrabbable
         position={[
           randFloat(LOW_X, HIGH_X),
           randFloat(LOW_Y, HIGH_Y),
           randFloat(LOW_Z, HIGH_Z),
         ]}
         color={'magenta'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'aliceblue'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'coral'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'cornflowerblue'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'hotpink'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'magenta'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'aliceblue'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'coral'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'cornflowerblue'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'hotpink'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'magenta'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'aliceblue'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'coral'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'cornflowerblue'}
-      />
-      <VRGrabbable
-        position={[
-          randFloat(LOW_X, HIGH_X),
-          randFloat(LOW_Y, HIGH_Y),
-          randFloat(LOW_Z, HIGH_Z),
-        ]}
-        color={'hotpink'}
-      />
+      /> */}
 
       <Floor />
 
