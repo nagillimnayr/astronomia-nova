@@ -36,7 +36,7 @@ export const VRTimescaleSlider = ({
       <group position={position}>
         {/** Slider */}
         <VRSlider
-          incrementers
+          // incrementers
           width={8}
           height={0.5}
           thumbRadius={0.45}
