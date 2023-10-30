@@ -32,7 +32,7 @@ export const VRTimeControls = ({
       <group position={position} scale={scale}>
         <Interactive onSelect={dummyFn}>
           <object3D scale={4}>
-            <VRPanel width={3.5} height={1.5} />
+            <VRPanel width={3.2} height={1.5} />
           </object3D>
         </Interactive>
         <group position-z={depth.xs} position-y={0.5}>
