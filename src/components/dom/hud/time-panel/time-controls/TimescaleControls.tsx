@@ -21,10 +21,10 @@ export const TimescaleControls = () => {
     [timeActor]
   );
   return (
-    <div className="pointer-events-auto my-2  flex h-fit w-full min-w-full flex-row  items-center justify-center self-center whitespace-nowrap px-2">
+    <div className="pointer-events-auto my-2 flex h-fit w-full min-w-full flex-row items-center justify-center self-center whitespace-nowrap bg-muted px-2">
       <button
         className={
-          'icon-[mdi--menu-left] ml-2 mr-auto inline-flex aspect-square h-6 w-6 items-center justify-center rounded-full p-0'
+          'icon-[mdi--menu-left] ml-2 mr-auto inline-flex aspect-square h-6 w-6 items-center justify-center rounded-full p-0 text-white'
         }
         onClick={decrementTimescale}
       />
@@ -35,7 +35,7 @@ export const TimescaleControls = () => {
 
       <button
         className={
-          'icon-[mdi--menu-right] ml-auto mr-2 inline-flex aspect-square h-6 w-6 items-center justify-center rounded-full p-0'
+          'icon-[mdi--menu-right] ml-auto mr-2 inline-flex aspect-square h-6 w-6 items-center justify-center rounded-full p-0 text-white'
         }
         onClick={incrementTimescale}
       ></button>
