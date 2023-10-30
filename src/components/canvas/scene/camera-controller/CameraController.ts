@@ -731,7 +731,6 @@ export class CameraController extends Object3D {
     if (this._isAnimating) return;
 
     this.lock();
-    this.resetTarget();
     this._isAnimating = true;
     const { radius, phi, theta } = to;
     const duration = to.duration ?? 1;
@@ -801,7 +800,6 @@ export class CameraController extends Object3D {
     if (this._isAnimating) return;
 
     this.lock();
-    this.resetTarget();
     this._isAnimating = true;
     const { radius, phi, theta } = to;
     if (
@@ -870,6 +868,61 @@ export class CameraController extends Object3D {
       },
     });
 
+    this.resetTarget();
+    this.unlock();
+    this._isAnimating = false;
+  }
+
+  async animateZoomTo(targetRadius: number, duration?: number) {
+    if (this._isAnimating) return;
+
+    this.lock();
+    this._isAnimating = true;
+
+    if (duration === undefined) {
+      const diffRadius = Math.abs(this._spherical.radius - targetRadius);
+      duration = Math.log(Math.max(diffRadius, 1)) / 5;
+    }
+
+    await gsap.to(this._spherical, {
+      radius: targetRadius,
+      duration: duration,
+      onUpdate: () => {
+        if (this._spherical.radius < targetRadius) {
+          console.log('diff: ', targetRadius - this._spherical.radius);
+        }
+        this.updateCameraPosition();
+        this.resetTarget();
+      },
+    });
+
+    this.resetTarget();
+    this.unlock();
+    this._isAnimating = false;
+  }
+  async animateZoomToSpring(targetRadius: number) {
+    if (this._isAnimating) return;
+
+    this.lock();
+    this._isAnimating = true;
+
+    await this._camera_spring.start({
+      from: {
+        radius: this.radius,
+      },
+      to: {
+        radius: targetRadius,
+      },
+      onChange: ({ value }) => {
+        const radius = value.radius as number;
+        this.setRadius(radius);
+
+        this.updateCameraPosition();
+        this.resetTarget();
+      },
+    });
+
+    this.resetTarget();
     this.unlock();
     this._isAnimating = false;
   }
