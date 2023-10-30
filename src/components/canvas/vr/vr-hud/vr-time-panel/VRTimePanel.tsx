@@ -37,8 +37,8 @@ export const VRTimePanel = ({
         scale={scale}
       >
         {/* <VRTimescaleDisplay position={[0, 4, 0]} /> */}
-        <VRDateDisplay position={[0, 2, 0]} />
-        <VRTimeControls position={[0, -1.5, 0]} />
+        <VRDateDisplay position={[0, 2.25, 0]} />
+        <VRTimeControls position={[0, -2.25, 0]} />
       </group>
     </>
   );
