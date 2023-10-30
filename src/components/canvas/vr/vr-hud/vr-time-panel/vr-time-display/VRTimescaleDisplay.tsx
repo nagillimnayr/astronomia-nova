@@ -38,36 +38,14 @@ export const VRTimescaleDisplay = ({
     return () => subscription.unsubscribe();
   }, [timeActor]);
 
-  // const incrementTimescaleUnit = useCallback(() => {
-  //   timeActor.send({ type: 'INCREMENT_TIMESCALE_UNIT' });
-  // }, [timeActor]);
-
-  // const decrementTimescaleUnit = useCallback(() => {
-  //   timeActor.send({ type: 'DECREMENT_TIMESCALE_UNIT' });
-  // }, [timeActor]);
-
   const fontSize = 0.8;
-  // const xOffset = 6;
-  // const iconSize = 0.6;
+
   return (
     <>
       <group position={position}>
-        {/* <VRIconButton
-          position={[-xOffset, 0, 0]}
-          iconSrc="icons/MdiChevronLeft.svg"
-          radius={iconSize}
-          onClick={decrementTimescaleUnit}
-        /> */}
-
         <Text ref={textRef} fontSize={fontSize}>
           {'text'}
         </Text>
-        {/* <VRIconButton
-          position={[xOffset, 0, 0]}
-          iconSrc="icons/MdiChevronRight.svg"
-          radius={iconSize}
-          onClick={incrementTimescaleUnit}
-        /> */}
       </group>
     </>
   );
