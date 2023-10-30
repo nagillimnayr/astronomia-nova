@@ -243,6 +243,7 @@ export const cameraMachine = createMachine(
             },
           },
           changingTarget: {
+            entry: ['setSpaceCamDistance'],
             invoke: {
               src: async (context) => {
                 const { controls, focusTarget } = context;
@@ -255,11 +256,12 @@ export const cameraMachine = createMachine(
               },
 
               id: 'change-target-promise',
-              onDone: { target: 'idle', actions: ['setSpaceCamDistance'] },
+              onDone: { target: 'idle' },
               onError: { target: 'idle' },
             },
           },
           changingTargetAndZooming: {
+            entry: ['setSpaceCamDistance'],
             invoke: {
               src: async (context) => {
                 const { controls, focusTarget } = context;
@@ -271,26 +273,26 @@ export const cameraMachine = createMachine(
                 ) {
                   return;
                 }
-                const radius = focusTarget.meanRadius * 5;
+                await controls.attachToWithoutMoving(focusTarget);
+
+                const radius = focusTarget.meanRadius * 10;
                 const diffRadius = Math.abs(controls.radius - radius);
                 const duration = Math.log(Math.max(diffRadius, 1)) / 5;
 
                 DEV_ENV && console.log('change target and zoom!');
+                DEV_ENV && console.log('minRadius:', controls.minRadius);
+                DEV_ENV && console.log('targetRadius:', radius);
                 DEV_ENV && console.log('diffRadius:', diffRadius);
                 DEV_ENV && console.log('duration:', duration);
 
-                await controls.attachToWithoutMoving(focusTarget);
-                await controls.animateTo({
-                  radius: radius,
-                  duration: duration,
-                });
+                await controls.animateZoomTo(radius);
 
                 DEV_ENV && console.log('target radius:', radius);
                 DEV_ENV && console.log('final radius:', controls.radius);
               },
 
               id: 'change-target-zoom-promise',
-              onDone: { target: 'idle', actions: ['setSpaceCamDistance'] },
+              onDone: { target: 'idle' },
               onError: { target: 'idle' },
             },
           },
@@ -687,22 +689,15 @@ export const cameraMachine = createMachine(
 
         controls.maxDistance = SPACE_MAX_DIST;
         // controls.maxDistance = Infinity;
-        if (!focusTarget) {
-          controls.minDistance =
-            SPACE_MIN_DIST_FROM_SURFACE + SUN_RADIUS / DIST_MULT;
-          return;
-        }
-        // Type guard.
-        if (!(focusTarget instanceof KeplerBody)) {
-          console.error('error! focusTarget is not a KeplerBody');
+        if (!focusTarget || !(focusTarget instanceof KeplerBody)) {
+          controls.minDistance = SUN_RADIUS * 1.1;
           return;
         }
 
-        if (!focusTarget || !controls) return;
         const meanRadius = focusTarget.meanRadius;
 
         // Set min distance relative to focus targets radius.
-        controls.minDistance = SPACE_MIN_DIST_FROM_SURFACE + meanRadius;
+        controls.minDistance = 1.1 * meanRadius;
         controls.camera.near = NEAR_CLIP;
 
         const radius = focusTarget.meanRadius * 5;
