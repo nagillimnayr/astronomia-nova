@@ -2,13 +2,17 @@ import React from 'react';
 import { type DocsThemeConfig } from 'nextra-theme-docs';
 
 const config: DocsThemeConfig = {
-  logo: <strong>Astronomia Nova</strong>,
+  logo: (
+    <strong className="nx-text-slate-900 dark:nx-text-slate-100">
+      Astronomia Nova
+    </strong>
+  ),
   project: {
     link: 'https://github.com/nagillimnayr/astronomia-nova',
   },
   docsRepositoryBase: 'https://github.com/nagillimnayr/astronomia-nova',
   footer: {
-    text: 'Astronomia Nova Documentation',
+    text: 'Astronomia Nova',
   },
   editLink: {
     text: '',
