@@ -40,34 +40,36 @@ export const TimescaleSlider = () => {
   }, []);
 
   return (
-    <div className="flex w-full  items-center justify-center rounded-full bg-gray-400/20 px-4 py-1">
-      <RadixSlider.Root
-        className="relative flex h-5 w-full touch-none select-none items-center rounded-full"
-        // defaultValue={[1]}
-        value={[timescale]}
-        min={MIN}
-        max={MAX}
-        step={1}
-        onValueChange={handleChange}
-      >
-        <RadixSlider.Track className="relative h-[3px] grow rounded-full bg-gray-500">
-          {/* <RadixSlider.Range className="absolute h-full rounded-full bg-white" /> */}
-          <div
-            ref={rangeRef}
-            className={cn(
-              'absolute left-1/2 h-full w-1/2 origin-left scale-x-0 rounded-full bg-white'
-            )}
-            style={{ transform: 'scale(0, 1)' }}
+    <div className="flex w-full  items-center justify-center rounded-full py-2">
+      <div className="w-full rounded-full bg-gray-400/20 px-4">
+        <RadixSlider.Root
+          className="relative flex h-5 w-full touch-none select-none items-center rounded-full"
+          // defaultValue={[1]}
+          value={[timescale]}
+          min={MIN}
+          max={MAX}
+          step={1}
+          onValueChange={handleChange}
+        >
+          <RadixSlider.Track className="relative h-[3px] grow rounded-full bg-gray-500">
+            {/* <RadixSlider.Range className="absolute h-full rounded-full bg-white" /> */}
+            <div
+              ref={rangeRef}
+              className={cn(
+                'absolute left-1/2 h-full w-1/2 origin-left scale-x-0 rounded-full bg-white'
+              )}
+              style={{ transform: 'scale(0, 1)' }}
+            />
+          </RadixSlider.Track>
+          {/* <TimescaleTooltip show={isHovered}> */}
+          <RadixSlider.Thumb
+            className="pointer-events-auto block aspect-square w-4 cursor-pointer rounded-full bg-white shadow-primary outline-none transition-colors hover:border hover:border-white hover:bg-subtle hover:shadow-[0_2px_10px] focus:border focus:border-white focus:bg-subtle focus:shadow-[0_2px_10px]"
+            onPointerEnter={handlePointerEnter}
+            onPointerLeave={handlePointerLeave}
           />
-        </RadixSlider.Track>
-        {/* <TimescaleTooltip show={isHovered}> */}
-        <RadixSlider.Thumb
-          className="pointer-events-auto block aspect-square w-4 cursor-pointer rounded-full bg-white shadow-primary outline-none transition-colors hover:border hover:border-white hover:bg-subtle hover:shadow-[0_2px_10px] focus:border focus:border-white focus:bg-subtle focus:shadow-[0_2px_10px]"
-          onPointerEnter={handlePointerEnter}
-          onPointerLeave={handlePointerLeave}
-        />
-        {/* </TimescaleTooltip> */}
-      </RadixSlider.Root>
+          {/* </TimescaleTooltip> */}
+        </RadixSlider.Root>
+      </div>
     </div>
   );
 };

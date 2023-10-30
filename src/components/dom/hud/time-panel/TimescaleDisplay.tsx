@@ -55,7 +55,7 @@ export const TimescaleDisplay = () => {
   );
 
   return (
-    <div className="pointer-events-auto flex h-fit w-fit min-w-full select-none flex-row items-center justify-center whitespace-nowrap px-4 text-center text-white">
+    <div className="pointer-events-auto flex h-fit w-fit min-w-full select-none flex-row items-center justify-center whitespace-nowrap bg-muted px-4 py-2 text-center text-white">
       <button
         className={
           'icon-[mdi--menu-left]  mr-auto aspect-square h-6 w-6 hover:cursor-pointer'
