@@ -24,7 +24,7 @@ export const VRScene = () => {
     ({ context }) => context
   );
   const dirLightRef = useRef<DirectionalLight>(null!);
-  useHelper(dirLightRef, DirectionalLightHelper);
+  // useHelper(dirLightRef, DirectionalLightHelper);
 
   useFrame((state, delta) => {
     cameraActor.send({ type: 'UPDATE', deltaTime: delta });
