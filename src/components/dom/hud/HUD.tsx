@@ -1,12 +1,12 @@
 import { EnterVRButton } from '@/components/canvas/vr/EnterVRButton';
 import { cn } from '@/helpers/cn';
-import { ClassNameValue } from 'tailwind-merge';
+import { type ClassNameValue } from 'tailwind-merge';
 import { DetailsPanel } from './details-panel/DetailsPanel';
 import DouglasLogo from './DouglasLogo';
 import Outliner from './outliner/Outliner';
 import { SettingsMenu } from './settings/SettingsMenu';
 import { SurfaceViewDialog } from './surface-dialog/SurfaceViewDialog';
-import TimePanel from './time-panel/TimePanel';
+import { TimePanel } from './time-panel/TimePanel';
 
 type Props = {
   className?: ClassNameValue;
