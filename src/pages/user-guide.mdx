@@ -2,6 +2,8 @@ import Image from 'next/image';
 import {KBD} from '@/components/dom/ui/KBD';
 import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown} from '@/components/dom/ui/icons';
 import {Prose} from '@/components/mdx/Prose';
+import {TimescaleControls} from '@/components/dom/hud/time-panel/time-controls/TimescaleControls';
+import {TimescaleDisplay} from '@/components/dom/hud/time-panel/TimescaleDisplay';
 
 
 <title>User Guide</title>
@@ -18,11 +20,13 @@ import {Prose} from '@/components/mdx/Prose';
 - To increment or decrement the timescale by one, use the arrows to either side of the slider.
 
 - Alternatively, the left/right <span className='inline-flex items-center justify-center gap-1'><KBD><ArrowLeft/></KBD> <KBD><ArrowRight/></KBD></span> arrow keys, or the <KBD>4</KBD> and <KBD>6</KBD> keys on the numpad.
+<div className='mx-auto w-72  flex items-center justify-center p-2'><TimescaleControls/></div>
 
 
 ### Timescale units  
-- To cycle through the timescale units (Seconds, Minutes, Hours, Days), click the unit on the time panel.  
-![timescale-units](/images/timescale-units.png)  
+- To cycle through the timescale units (Seconds, Minutes, Hours, Days), click the unit on the time panel or use the arrows to either side.  
+{/* ![timescale-units](/images/timescale-units.png)   */}
+<div className='mx-auto w-72  flex items-center justify-center p-2'><TimescaleDisplay/></div>
 
 - Alternatively, <span className='inline-flex items-center justify-center gap-1'><KBD>shift</KBD> + <KBD><ArrowLeft/></KBD></span> will decrease the units and <span className='inline-flex items-center justify-center gap-1'><KBD>shift</KBD> + <KBD><ArrowRight/></KBD></span> will increase the units.  
 
