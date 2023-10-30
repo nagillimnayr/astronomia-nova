@@ -14,8 +14,6 @@ export const VRTimescaleDisplay = ({
 }: VRTimescaleDisplayProps) => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
-  const timescale = timeActor.getSnapshot()!.context.timescale;
-
   const textRef = useRef<TextMesh>(null!);
 
   const updateText = useRef<() => void>(null!);
