@@ -53,7 +53,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                 frameRate={FRAMERATE}
                 onSessionStart={(event) => {
                   const session = event.target;
-                  console.log('onSessionStart');
+                  // console.log('onSessionStart');
                   // Send start session event.
                   vrActor.send({ type: 'START_SESSION' });
                   cameraActor.send({
@@ -61,7 +61,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
                   });
                 }}
                 onSessionEnd={(event) => {
-                  console.log('onSessionEnd');
+                  // console.log('onSessionEnd');
                   const session = event.target;
                   // Send end session event.
                   vrActor.send({ type: 'END_SESSION' });
