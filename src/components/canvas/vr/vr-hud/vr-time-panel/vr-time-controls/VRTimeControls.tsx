@@ -14,7 +14,7 @@ const dummyFn = () => {
   return;
 };
 
-const BUTTON_X_OFFSET = 5.5;
+const BUTTON_X_OFFSET = 5;
 const BUTTON_SCALE = 0.5;
 
 type VRTimeControlProps = {
