@@ -7,6 +7,8 @@ import { useSelector } from '@xstate/react';
 import { forwardRef, useEffect } from 'react';
 import { type Object3D } from 'three';
 
+const FONT_URL = 'fonts/Roboto_Regular.json';
+
 type AnnotationProps = {
   annotation: string;
   meanRadius: number;
@@ -38,7 +40,6 @@ const Annotation = forwardRef<Object3D, AnnotationProps>(function Annotation(
     springRef.start({ scale: isVisible ? textScale : 0 });
   }, [isVisible, springRef]);
 
-  const fontURL = 'fonts/Roboto_Regular.json';
   return (
     <>
       <object3D>
@@ -53,7 +54,7 @@ const Annotation = forwardRef<Object3D, AnnotationProps>(function Annotation(
           >
             <Center bottom>
               {/* There are issues with the transparency of the Troika text, but using 3D text geometry solves those issues. */}
-              <Text3D font={fontURL} letterSpacing={0.15}>
+              <Text3D font={FONT_URL} letterSpacing={0.15}>
                 {annotation}
               </Text3D>
             </Center>
