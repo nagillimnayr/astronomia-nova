@@ -1,3 +1,4 @@
+import { cn } from '@/helpers/cn';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { TimeUnit } from '@/state/xstate/time-machine/time-machine';
 import { type MouseEvent, useCallback, useEffect, useRef } from 'react';
@@ -68,7 +69,11 @@ export const TimescaleDisplay = () => {
       />
       <span
         ref={unitSpanRef}
-        className="pointer-events-auto mx-[1px] inline-flex h-fit w-fit items-center justify-center rounded-md border-2 border-muted bg-opacity-20 px-1 text-center align-middle transition-colors hover:cursor-pointer hover:border-gray-800 hover:bg-gray-500"
+        className={cn(
+          'pointer-events-auto mx-[1px] inline-flex h-fit w-fit items-center justify-center rounded-md border-2 border-muted bg-opacity-20 px-1 text-center align-middle transition-colors hover:cursor-pointer hover:border-gray-800',
+          // "hover:bg-gray-500",
+          'hover:bg-subtle'
+        )}
         onClick={incrementTimescaleUnit}
       />
       <span className="border border-transparent">/&nbsp; Second</span>
