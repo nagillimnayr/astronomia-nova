@@ -3,30 +3,55 @@ import { addSeconds, format } from 'date-fns';
 import { useEffect, useRef } from 'react';
 
 export const DateDisplay = () => {
-  const { timeActor } = MachineContext.useSelector(({ context }) => context);
-
-  const { refDate } = timeActor.getSnapshot()!.context;
-  const hoursRef = useRef<HTMLSpanElement>(null!);
-  const dateRef = useRef<HTMLSpanElement>(null!);
-
-  // Subscribe to changes in useEffect so that the component wont re-render on
-  // state change, but we can update the view directly.
-  useEffect(() => {
-    const subscription = timeActor.subscribe(({ context }) => {
-      if (!hoursRef.current || !dateRef.current) return;
-      const { date } = context;
-      hoursRef.current.textContent = format(date, 'hh:mm:ss a OOOO');
-      dateRef.current.textContent = format(date, 'PPP');
-    });
-
-    return () => subscription.unsubscribe();
-  }, [timeActor]);
   return (
     <div className="flex flex-col items-center text-white">
-      {/* hours */}
-      <span ref={hoursRef}>{format(refDate, 'hh:mm:ss a')}</span>
-      {/* date */}
-      <span ref={dateRef}>{format(refDate, 'PPP')}</span>
+      <TimeText />
+      <DateText />
     </div>
+  );
+};
+
+const DateText = () => {
+  const { timeActor } = MachineContext.useSelector(({ context }) => context);
+  const { refDate } = timeActor.getSnapshot()!.context;
+  const dateRef = useRef<HTMLSpanElement>(null!);
+
+  /* Subscribe to changes in useEffect so that the component wont re-render on
+  state change, but we can update the view directly. */
+  useEffect(() => {
+    const subscription = timeActor.subscribe(({ context }) => {
+      if (!dateRef.current) return;
+      const { date } = context;
+      dateRef.current.textContent = format(date, 'PPP');
+    });
+    return () => subscription.unsubscribe();
+  }, [timeActor]);
+
+  return (
+    <>
+      <span ref={dateRef}>{format(refDate, 'PPP')}</span>
+    </>
+  );
+};
+const TimeText = () => {
+  const { timeActor } = MachineContext.useSelector(({ context }) => context);
+  const { refDate } = timeActor.getSnapshot()!.context;
+  const timeRef = useRef<HTMLSpanElement>(null!);
+
+  /* Subscribe to changes in useEffect so that the component wont re-render on
+  state change, but we can update the view directly. */
+  useEffect(() => {
+    const subscription = timeActor.subscribe(({ context }) => {
+      if (!timeRef.current) return;
+      const { date } = context;
+      timeRef.current.textContent = format(date, 'hh:mm:ss a OOOO');
+    });
+    return () => subscription.unsubscribe();
+  }, [timeActor]);
+
+  return (
+    <>
+      <span ref={timeRef}>{format(refDate, 'hh:mm:ss a')}</span>
+    </>
   );
 };
