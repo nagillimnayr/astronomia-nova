@@ -38,7 +38,7 @@ export const DateDisplay = () => {
           </span>
         </PopoverTrigger>
 
-        <PopoverContent>
+        <PopoverContent className="w-auto p-0">
           <Calendar
             mode="single"
             selected={refDate}
