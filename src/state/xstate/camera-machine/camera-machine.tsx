@@ -481,6 +481,7 @@ export const cameraMachine = createMachine(
         },
       },
       enteringSpace: {
+        on: {},
         invoke: {
           src: async (context) => {
             const { controls, focusTarget, observer } = context;
@@ -491,15 +492,12 @@ export const cameraMachine = createMachine(
 
             controls.camera.getWorldPosition(_cameraPos);
             focusTarget.add(controls);
-            // controls.position.set(0, 0, 0);
+            controls.applyWorldUp();
+
             controls.worldToLocal(_cameraPos);
             controls.spherical.setFromVector3(_cameraPos);
             controls.resetTarget();
 
-            // await controls.attachToWithoutMoving(focusTarget);
-            controls.applyWorldUp();
-
-            // console.log('control rotation:', controls?.rotation.toArray());
             const body = focusTarget as KeplerBody;
             const dist = body.meanRadius * 40;
 
@@ -510,17 +508,15 @@ export const cameraMachine = createMachine(
             controls.spherical.setFromVector3(_observerPos);
 
             controls.setRadius(body.meanRadius);
-            controls.resetTarget();
-            controls.setTargetRadius(dist);
 
             await gsap.to(controls.spherical, {
               radius: dist,
               duration: 1,
               onUpdate: () => {
                 controls.updateCameraPosition();
+                controls.resetTarget();
               },
             });
-            // await controls.animateTo({ radius: dist });
           },
           id: 'enter-space-promise',
           onDone: { target: 'space' },
