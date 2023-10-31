@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 
 export const DateDisplay = () => {
   return (
-    <div className="flex flex-col items-center text-white">
+    <div className="pointer-events-auto flex select-none flex-col items-center text-white">
       <TimeText />
       <DateText />
     </div>
@@ -29,7 +29,9 @@ const DateText = () => {
 
   return (
     <>
-      <span ref={dateRef}>{format(refDate, 'PPP')}</span>
+      <span ref={dateRef} className={'hover:bg-subtle'}>
+        {format(refDate, 'PPP')}
+      </span>
     </>
   );
 };
