@@ -31,7 +31,9 @@ const DateText = () => {
     <>
       <span
         ref={dateRef}
-        className={'rounded-sm px-2 transition-colors hover:bg-subtle'}
+        className={
+          'rounded-sm px-2 transition-colors hover:cursor-pointer hover:bg-subtle'
+        }
       >
         {format(refDate, 'PPP')}
       </span>
