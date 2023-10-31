@@ -29,7 +29,10 @@ const DateText = () => {
 
   return (
     <>
-      <span ref={dateRef} className={'hover:bg-subtle'}>
+      <span
+        ref={dateRef}
+        className={'rounded-sm px-2 transition-colors hover:bg-subtle'}
+      >
         {format(refDate, 'PPP')}
       </span>
     </>
