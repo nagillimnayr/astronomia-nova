@@ -1,6 +1,6 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { addSeconds, format, differenceInSeconds, startOfDay } from 'date-fns';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Popover,
   PopoverContent,
@@ -9,6 +9,7 @@ import {
 import { Calendar } from '@/components/dom/ui/calendar';
 import { useSelector } from '@xstate/react';
 import { type SelectSingleEventHandler } from 'react-day-picker';
+import { J2000 } from '@/constants';
 
 export const DateDisplay = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
@@ -53,7 +54,7 @@ const CalendarPopover = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
   const date = useSelector(timeActor, (state) => state.context.date);
 
-  const setDate: SelectSingleEventHandler = useCallback(
+  const handleSelect: SelectSingleEventHandler = useCallback(
     (day) => {
       if (!day) return;
       const { date } = timeActor.getSnapshot()!.context;
@@ -72,8 +73,9 @@ const CalendarPopover = () => {
       <PopoverContent className="w-auto -translate-y-10 p-0">
         <Calendar
           mode="single"
+          month={date}
           selected={date}
-          onSelect={setDate}
+          onSelect={handleSelect}
           initialFocus
         />
       </PopoverContent>
