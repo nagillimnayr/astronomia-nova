@@ -1,17 +1,19 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { addSeconds, format } from 'date-fns';
-import { useEffect, useRef } from 'react';
+import { addSeconds, format, differenceInSeconds, startOfDay } from 'date-fns';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/dom/ui/popover';
 import { Calendar } from '@/components/dom/ui/calendar';
+import { useSelector } from '@xstate/react';
+import { type SelectSingleEventHandler } from 'react-day-picker';
 
 export const DateDisplay = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
   const { refDate } = timeActor.getSnapshot()!.context;
-  const dateRef = useRef<HTMLSpanElement>(null!);
+  const dateRef = useRef<HTMLButtonElement>(null!);
 
   /* Subscribe to changes in useEffect so that the component wont re-render on
   state change, but we can update the view directly. */
@@ -30,23 +32,46 @@ export const DateDisplay = () => {
         <PopoverTrigger>
           <span
             ref={dateRef}
-            className={
-              'rounded-sm px-2 transition-colors hover:cursor-pointer hover:bg-subtle'
-            }
+            className={'rounded-sm px-2 transition-colors hover:bg-subtle'}
           >
             {format(refDate, 'PPP')}
           </span>
         </PopoverTrigger>
 
-        <PopoverContent className="w-auto p-0">
-          <Calendar
-            mode="single"
-            selected={refDate}
-            // onSelect={setDate}
-            initialFocus
-          />
-        </PopoverContent>
+        <CalendarPopover />
       </Popover>
+    </>
+  );
+};
+
+const CalendarPopover = () => {
+  const { timeActor } = MachineContext.useSelector(({ context }) => context);
+  const date = useSelector(timeActor, (state) => state.context.date);
+
+  const setDate: SelectSingleEventHandler = useCallback(
+    (day) => {
+      if (!day) return;
+      const { date } = timeActor.getSnapshot()!.context;
+
+      /* Preserve the time of day. */
+      const timeOfDayInSeconds = differenceInSeconds(date, startOfDay(date));
+      const newDate = addSeconds(day, timeOfDayInSeconds);
+
+      timeActor.send({ type: 'SET_DATE', date: newDate });
+    },
+    [timeActor]
+  );
+
+  return (
+    <>
+      <PopoverContent className="w-auto p-0">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          initialFocus
+        />
+      </PopoverContent>
     </>
   );
 };
