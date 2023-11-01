@@ -118,8 +118,14 @@ export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
     const subscription = timeActor.subscribe((state) => {
       const orbit = orbitRef.current;
       if (!orbit) return;
-      const event = state.event;
-      if (event.type !== 'ADVANCE_TIME' && event.type !== 'UPDATE') return;
+      const event = state.event.type;
+      if (
+        event !== 'ADVANCE_TIME' &&
+        event !== 'UPDATE' &&
+        event !== 'SET_DATE' &&
+        event !== 'SET_DATE_TO_NOW'
+      )
+        return;
       const { timeElapsed } = state.context;
       orbit.updateOrbitingBody(timeElapsed);
     });
