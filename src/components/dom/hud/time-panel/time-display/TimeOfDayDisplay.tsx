@@ -40,7 +40,7 @@ export const TimeOfDayDisplay = () => {
 
   return (
     <>
-      <div className="flex select-none flex-col items-center justify-center gap-2 px-1 py-0">
+      <div className="flex select-none flex-col items-center justify-center gap-2 px-1 py-1">
         {/* <span ref={timeRef}>{format(J2000, 'hh:mm:ss a')}</span> */}
         <Input
           ref={inputRef}

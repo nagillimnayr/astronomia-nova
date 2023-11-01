@@ -44,10 +44,12 @@ export const DateDisplay = () => {
   return (
     <>
       <Popover>
-        <PopoverTrigger onClick={handleOpen}>
+        <PopoverTrigger className="bg-muted py-1" onClick={handleOpen}>
           <span
             ref={dateRef}
-            className={'rounded-sm px-2 transition-colors hover:bg-subtle'}
+            className={
+              'my-1 rounded-sm px-2 py-1 transition-colors hover:bg-subtle'
+            }
           >
             {format(refDate, 'PPP')}
           </span>
