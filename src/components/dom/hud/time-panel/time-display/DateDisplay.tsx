@@ -26,10 +26,15 @@ export const DateDisplay = () => {
     return () => subscription.unsubscribe();
   }, [timeActor]);
 
+  const handleOpen = useCallback(() => {
+    /* Pause when opening calendar. */
+    timeActor.send({ type: 'PAUSE' });
+  }, [timeActor]);
+
   return (
     <>
       <Popover>
-        <PopoverTrigger>
+        <PopoverTrigger onClick={handleOpen}>
           <span
             ref={dateRef}
             className={'rounded-sm px-2 transition-colors hover:bg-subtle'}
