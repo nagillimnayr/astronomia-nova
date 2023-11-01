@@ -73,6 +73,7 @@ const CalendarPopover = () => {
       <PopoverContent className="w-auto -translate-y-10 p-0">
         <Calendar
           mode="single"
+          fixedWeeks
           month={date}
           selected={date}
           onSelect={handleSelect}
