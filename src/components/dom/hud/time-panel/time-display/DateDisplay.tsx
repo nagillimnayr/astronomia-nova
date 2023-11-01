@@ -1,5 +1,14 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { addSeconds, format, differenceInSeconds, startOfDay } from 'date-fns';
+import {
+  addSeconds,
+  format,
+  differenceInSeconds,
+  startOfDay,
+  addMonths,
+  subMonths,
+  isSameDay,
+  isSameMonth,
+} from 'date-fns';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Popover,
@@ -52,7 +61,7 @@ export const DateDisplay = () => {
 
 const CalendarPopover = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
-  const date = useSelector(timeActor, (state) => state.context.date);
+  // const date = useSelector(timeActor, (state) => state.context.date);
 
   const handleSelect: SelectSingleEventHandler = useCallback(
     (day) => {
@@ -68,15 +77,44 @@ const CalendarPopover = () => {
     [timeActor]
   );
 
+  const [selectedDate, setSelectedDate] = useState<Date>(J2000);
+  const [month, setMonth] = useState<Date>(J2000);
+
+  const dateRef = useRef<Date>(null!);
+  dateRef.current = selectedDate;
+
+  useEffect(() => {
+    const subscription = timeActor.subscribe((state) => {
+      const event = state.event.type;
+      if (
+        event !== 'ADVANCE_TIME' &&
+        event !== 'UPDATE' &&
+        event !== 'SET_DATE' &&
+        event !== 'SET_DATE_TO_NOW'
+      )
+        return;
+
+      const { date } = state.context;
+      if (isSameDay(date, dateRef.current)) return;
+      setSelectedDate(date);
+      setMonth(date);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [timeActor]);
+
   return (
     <>
       <PopoverContent className="w-auto -translate-y-10 p-0">
         <Calendar
           mode="single"
           fixedWeeks
-          month={date}
-          selected={date}
+          month={month}
+          selected={selectedDate}
           onSelect={handleSelect}
+          onMonthChange={setMonth}
           initialFocus
         />
       </PopoverContent>
