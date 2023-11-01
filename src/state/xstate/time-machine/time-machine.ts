@@ -46,7 +46,6 @@ type Events =
   | { type: 'UNPAUSE' }
   | { type: 'ADVANCE_TIME'; deltaTime: number } // Advances time by a specific amount, no time scaling.
   | { type: 'SET_DATE'; date: Date }
-  | { type: 'SET_TIME_OF_DAY'; timeOfDay: Date }
   | { type: 'SET_DATE_TO_NOW' };
 
 export const timeMachine = createMachine(
@@ -98,9 +97,6 @@ export const timeMachine = createMachine(
       // },
       SET_DATE: {
         actions: ['setDate', 'updateDate'],
-      },
-      SET_TIME_OF_DAY: {
-        actions: ['setTimeOfDay', 'updateDate'],
       },
       SET_DATE_TO_NOW: {
         actions: ['setDateToNow', 'updateDate'],
@@ -200,18 +196,7 @@ export const timeMachine = createMachine(
           });
         },
       }),
-      setTimeOfDay: assign({
-        timeElapsed: ({ refDate, date }, { timeOfDay }) => {
-          const timeOfDayInSeconds = differenceInSeconds(
-            timeOfDay,
-            startOfDay(timeOfDay)
-          );
-          const newDate = addSeconds(startOfDay(date), timeOfDayInSeconds);
-          return differenceInSeconds(newDate, refDate, {
-            roundingMethod: 'round',
-          });
-        },
-      }),
+
       setDateToNow: assign({
         timeElapsed: ({ refDate }) => {
           const now = new Date();
