@@ -20,7 +20,7 @@ function Calendar({
         fontFamily: 'sans-serif',
       }}
       showOutsideDays={showOutsideDays}
-      className={cn('p-3 font-sans', className)}
+      className={cn('pointer-events-auto select-none p-3 font-sans', className)}
       classNames={{
         months:
           'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 font-sans',
@@ -39,13 +39,13 @@ function Calendar({
         head_cell:
           'text-muted-foreground rounded-md w-9 font-semibold  text-[0.8rem] font-sans',
         row: 'flex w-full mt-2 font-sans',
-        cell: 'h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20  font-sans',
+        cell: 'h-9 w-9 text-center text-sm p-0 relative select-none [&:has([aria-selected])]:bg-muted  first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20  font-sans',
         day: cn(
           buttonVariants({ variant: 'ghost' }),
           'h-9 w-9 p-0  aria-selected:opacity-100 font-sans'
         ),
         day_selected:
-          'bg-primary text-primary-foreground hover:bg-subtle hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground  font-sans',
+          'bg-muted text-primary-foreground hover:bg-subtle  hover:text-primary-foreground focus:outline-1 focus:outline focus:outline-white/50 focus:bg-subtle focus:text-primary-foreground font-sans ',
         day_today: 'bg-subtle text-accent-foreground font-sans',
         day_outside: 'text-muted-foreground opacity-50 font-sans',
         day_disabled: 'text-muted-foreground opacity-50 font-sans',
