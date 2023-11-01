@@ -68,7 +68,7 @@ export const timeMachine = createMachine(
       timescaleUnit: TimeUnit.Second,
     }),
 
-    entry: ['setDateToNow'],
+    entry: ['setDateToNow', 'updateDate'],
 
     on: {
       INCREMENT_TIMESCALE: {
