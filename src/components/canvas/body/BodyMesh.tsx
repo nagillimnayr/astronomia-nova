@@ -3,6 +3,7 @@ import { PlanetRing } from '@/components/canvas/body/PlanetRing';
 import {
   METER,
   ORIGIN,
+  PI,
   PI_OVER_TWO,
   X_AXIS,
   Y_AXIS,
@@ -10,7 +11,7 @@ import {
 } from '@/constants/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { MeshDiscardMaterial, Sphere } from '@react-three/drei';
-import { type ThreeEvent } from '@react-three/fiber';
+import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { Interactive, type XRInteractionEvent } from '@react-three/xr';
 import { useSelector } from '@xstate/react';
 import {
@@ -28,9 +29,11 @@ import {
   Vector3,
   type Vector3Tuple,
   type Material,
+  ArrowHelper,
 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { normalizeAngle } from '@/helpers/rotation-utils';
+import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
 
 /**
  * @module Body
@@ -68,7 +71,8 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 ) {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
 
-  const objRef = useRef<Object3D>(null!);
+  const meridianRef = useRef<Object3D>(null!);
+  const rotatorRef = useRef<Object3D>(null!);
   const meshRef = useRef<Mesh>(null!);
 
   // Set forwarded ref, the return value of the callback function will be assigned to fwdRef.
@@ -83,36 +87,56 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   useEffect(() => {
     // Subscribe to updates from timeActor.
     const subscription = timeActor.subscribe((state) => {
-      const mesh = meshRef.current;
-      if (!mesh) return;
-      const eventType = state.event.type;
-      // Only relevant if time has changed.
-      if (eventType !== 'UPDATE' && eventType !== 'ADVANCE_TIME') return;
-
-      // Rotation rate is constant, so the current rotation can be found as a
-      // simple function of time.
+      /* Rotation rate is constant, so the current rotation can be found as a  simple function of time. */
       const timeElapsed = state.context.timeElapsed;
       const axialRotation = normalizeAngle(siderealRotationRate * timeElapsed);
 
       // Rotate the body around its rotational axis.
-      mesh.rotation.set(0, axialRotation, 0); // Rotate around local y-axis.
+      rotatorRef.current.rotation.set(0, axialRotation, 0); // Rotate around local y-axis.
     });
 
     return () => subscription.unsubscribe();
   }, [obliquity, siderealRotationRate, timeActor]);
 
-  useEffect(() => {
-    // Make the prime meridian face the central body.
-    const body = bodyRef.current;
-    if (!body) return;
+  // useEffect(() => {
+  //   // Make the prime meridian face the central body.
+  //   const body = bodyRef.current;
+  //   if (!body) return;
 
+  //   // Central body will be at local zero-vector.
+  //   _centralWorldPos.set(0, 0, 0);
+  //   body.localToWorld(_centralWorldPos);
+  //   const obj = meridianRef.current;
+  //   getLocalUpInWorldCoords(obj, obj.up);
+  //   obj.lookAt(_centralWorldPos);
+  // }, [bodyRef]);
+
+  const resetPrimeMeridian = useCallback(() => {
     // Central body will be at local zero-vector.
     _centralWorldPos.set(0, 0, 0);
-    body.localToWorld(_centralWorldPos);
-    const obj = objRef.current;
+    const body = bodyRef.current;
+    if (!body) return;
+    const orbit = body.parent;
+    if (!orbit) return;
+    const obj = meridianRef.current;
+    orbit.localToWorld(_centralWorldPos);
+    getLocalUpInWorldCoords(obj, obj.up);
     obj.lookAt(_centralWorldPos);
-    obj.rotateY(-PI_OVER_TWO);
+    console.log('central pos:', _centralWorldPos.toArray());
   }, [bodyRef]);
+
+  useEffect(() => {
+    const subscription = timeActor.subscribe((state) => {
+      if (state.event.type !== 'RESET') return;
+
+      setTimeout(resetPrimeMeridian, 30);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [resetPrimeMeridian, timeActor]);
+
+  // const arrowRef = useRef<ArrowHelper>(null!);
+  const arrowRef = useRef<Object3D>(null!);
 
   const radius = meanRadius * METER;
   const rotation: Vector3Tuple = useMemo(
@@ -125,25 +149,42 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   }, [radius]);
   return (
     <>
-      <object3D ref={objRef}>
+      <object3D ref={meridianRef}>
+        {/* <arrowHelper args={[Z_AXIS, ORIGIN, radius * 3e9, 'lightgreen']} /> */}
         <group rotation={rotation}>
-          {/* <arrowHelper args={[X_AXIS, ORIGIN, radius * 3, 'orange']} />
-          <arrowHelper args={[Y_AXIS, ORIGIN, radius * 3, 'yellow']} />
-          <arrowHelper args={[Z_AXIS, ORIGIN, radius * 3, 'cyan']} /> */}
-          <Sphere
-            name={name + '-mesh'}
-            ref={meshRef}
-            args={sphereArgs}
-            material={material}
-          >
-            <InteractionSphere radius={meanRadius} />
-          </Sphere>
-          {name === 'Saturn' && (
-            <PlanetRing
-              innerRadius={(meanRadius + 7e6) * METER}
-              outerRadius={(meanRadius + 80e6) * METER}
-            />
-          )}
+          {/* <arrowHelper args={[X_AXIS, ORIGIN, radius * 3, 'orange']} /> */}
+          {/* <arrowHelper args={[Y_AXIS, ORIGIN, radius * 3, 'pink']} /> */}
+          <object3D ref={arrowRef}>
+            {/* <arrowHelper args={[Z_AXIS, ORIGIN, radius * 3, 'magenta']} /> */}
+          </object3D>
+          {/* <arrowHelper args={[Z_AXIS, ORIGIN, radius * 3, 'lightgreen']} /> */}
+          {/* <arrowHelper args={[Y_AXIS, ORIGIN, radius * 3, 'yellow']} /> */}
+          <object3D ref={rotatorRef}>
+            {/* <object3D rotation-y={-PI_OVER_TWO}> */}
+            {/* <arrowHelper args={[X_AXIS, ORIGIN, radius * 3, 'orange']} /> */}
+            {/* <arrowHelper args={[Z_AXIS, ORIGIN, radius * 3, 'cyan']} /> */}
+            <Sphere
+              name={name + '-mesh'}
+              ref={meshRef}
+              args={sphereArgs}
+              material={material}
+              rotation-y={-PI_OVER_TWO}
+              // onBeforeRender={onBeforeRender}
+            >
+              {/* <axesHelper scale={radius * 3} /> */}
+              {/* <arrowHelper args={[X_AXIS, ORIGIN, radius * 3, 'orange']} /> */}
+              {/* <arrowHelper args={[Y_AXIS, ORIGIN, radius * 3, 'yellow']} /> */}
+              {/* <arrowHelper args={[Z_AXIS, ORIGIN, radius * 3, 'cyan']} /> */}
+              <InteractionSphere radius={meanRadius} />
+            </Sphere>
+            {name === 'Saturn' && (
+              <PlanetRing
+                innerRadius={(meanRadius + 7e6) * METER}
+                outerRadius={(meanRadius + 80e6) * METER}
+              />
+            )}
+            {/* </object3D> */}
+          </object3D>
         </group>
       </object3D>
     </>
