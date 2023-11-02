@@ -11,7 +11,7 @@ import {
   parse,
 } from 'date-fns';
 import {
-  FormEventHandler,
+  type FormEventHandler,
   useCallback,
   useEffect,
   useRef,
@@ -70,6 +70,7 @@ export const DateDisplay = () => {
       <Input
         ref={inputRef}
         type="date"
+        onClick={handleOpen}
         onInput={handleInput}
         className="text-md inline-flex h-8 min-h-fit w-full min-w-fit select-none items-center justify-center py-0 text-center"
       ></Input>
