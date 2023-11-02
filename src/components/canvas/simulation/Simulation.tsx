@@ -14,6 +14,10 @@ export const Simulation = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     timeActor.send({ type: 'RESET' });
+
+    setTimeout(() => {
+      timeActor.send({ type: 'SET_DATE_TO_NOW' });
+    }, 30);
   }, [timeActor]);
 
   useFrame((_, delta) => {
