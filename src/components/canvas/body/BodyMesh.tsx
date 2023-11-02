@@ -98,19 +98,6 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     return () => subscription.unsubscribe();
   }, [obliquity, siderealRotationRate, timeActor]);
 
-  // useEffect(() => {
-  //   // Make the prime meridian face the central body.
-  //   const body = bodyRef.current;
-  //   if (!body) return;
-
-  //   // Central body will be at local zero-vector.
-  //   _centralWorldPos.set(0, 0, 0);
-  //   body.localToWorld(_centralWorldPos);
-  //   const obj = meridianRef.current;
-  //   getLocalUpInWorldCoords(obj, obj.up);
-  //   obj.lookAt(_centralWorldPos);
-  // }, [bodyRef]);
-
   const resetPrimeMeridian = useCallback(() => {
     // Central body will be at local zero-vector.
     _centralWorldPos.set(0, 0, 0);
@@ -139,7 +126,7 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
 
   const radius = meanRadius * METER;
   const rotation: Vector3Tuple = useMemo(
-    () => [0, 0, degToRad(obliquity)],
+    () => [-degToRad(obliquity), 0, 0],
     [obliquity]
   );
   const sphereArgs = useMemo(() => {
@@ -182,7 +169,6 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
                 outerRadius={(meanRadius + 80e6) * METER}
               />
             )}
-            {/* </object3D> */}
           </object3D>
         </group>
       </object3D>
