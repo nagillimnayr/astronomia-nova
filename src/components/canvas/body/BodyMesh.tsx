@@ -122,7 +122,6 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     orbit.localToWorld(_centralWorldPos);
     getLocalUpInWorldCoords(obj, obj.up);
     obj.lookAt(_centralWorldPos);
-    console.log('central pos:', _centralWorldPos.toArray());
   }, [bodyRef]);
 
   useEffect(() => {
