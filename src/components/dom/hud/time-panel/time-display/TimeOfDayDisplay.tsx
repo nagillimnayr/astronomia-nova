@@ -40,16 +40,16 @@ export const TimeOfDayDisplay = () => {
 
   return (
     <>
-      <div className="flex select-none flex-col items-center justify-center gap-2 px-1 py-1">
-        {/* <span ref={timeRef}>{format(J2000, 'hh:mm:ss a')}</span> */}
-        <Input
-          ref={inputRef}
-          className="text-md inline-flex h-8 min-h-fit min-w-fit select-none items-center justify-center py-0 text-center"
-          type="time"
-          step={1}
-          onInput={handleInput}
-        ></Input>
-      </div>
+      {/* <div className="flex select-none flex-col items-center justify-center gap-2 px-1 py-1" > */}
+      {/* <span ref={timeRef}>{format(J2000, 'hh:mm:ss a')}</span> */}
+      <Input
+        ref={inputRef}
+        className="text-md inline-flex h-8 min-h-fit w-full min-w-fit select-none items-center justify-center py-0 text-center"
+        type="time"
+        step={1}
+        onInput={handleInput}
+      ></Input>
+      {/* </div> */}
     </>
   );
 };
