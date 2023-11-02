@@ -36,6 +36,7 @@ type Events =
       type: 'UPDATE';
       deltaTime: number;
     }
+  | { type: 'RESET' }
   | { type: 'INCREMENT_TIMESCALE' }
   | { type: 'DECREMENT_TIMESCALE' }
   | { type: 'SET_TIMESCALE'; timescale: number }
@@ -71,6 +72,7 @@ export const timeMachine = createMachine(
     entry: ['setDateToNow', 'updateDate'],
 
     on: {
+      RESET: { actions: ['reset'] },
       INCREMENT_TIMESCALE: {
         cond: ({ timescale, maxTimescale }) => timescale < maxTimescale,
         actions: ['incrementTimescale'],
@@ -135,6 +137,10 @@ export const timeMachine = createMachine(
   },
   {
     actions: {
+      reset: assign({
+        timeElapsed: 0,
+        date: ({ refDate }) => refDate,
+      }),
       incrementTimescale: assign({
         timescale: ({ timescale }) => timescale + 1,
       }),

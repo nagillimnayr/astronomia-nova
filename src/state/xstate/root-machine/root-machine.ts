@@ -30,6 +30,7 @@ type Events =
   | { type: 'UPDATE'; deltaTime: number }
   | { type: 'ADVANCE_TIME'; deltaTime: number }
   | { type: 'ADVANCE_DAY'; reverse?: boolean }
+  | { type: 'RESET' }
   | { type: 'LOG_CHILDREN' };
 
 export const rootMachine = createMachine(
@@ -113,6 +114,9 @@ export const rootMachine = createMachine(
     ],
 
     on: {
+      RESET: {
+        actions: ['reset'],
+      },
       UPDATE: {
         cond: (context) => {
           const timeActor = context.timeActor.getSnapshot()!;
@@ -146,6 +150,10 @@ export const rootMachine = createMachine(
   },
   {
     actions: {
+      reset: sendTo(
+        ({ timeActor }) => timeActor,
+        () => ({ type: 'RESET' })
+      ),
       updateTimeActor: sendTo(
         ({ timeActor }) => timeActor,
         (_, { deltaTime }) => ({ type: 'UPDATE', deltaTime })

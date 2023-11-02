@@ -12,6 +12,10 @@ export const Simulation = ({ children }: PropsWithChildren) => {
     ({ context }) => context
   );
 
+  useEffect(() => {
+    timeActor.send({ type: 'RESET' });
+  }, [timeActor]);
+
   useFrame((_, delta) => {
     // Update simulation.
     rootActor.send({ type: 'UPDATE', deltaTime: delta });
