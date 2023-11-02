@@ -52,6 +52,7 @@ export const TimeDisplay = () => {
         className="text-md inline-flex h-8 min-h-fit w-full min-w-fit select-none items-center justify-center py-0 text-center"
         type="time"
         step={1}
+        onClick={handleOpen}
         onInput={handleInput}
       ></Input>
 
