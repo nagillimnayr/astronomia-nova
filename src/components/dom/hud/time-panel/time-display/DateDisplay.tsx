@@ -8,8 +8,15 @@ import {
   subMonths,
   isSameDay,
   isSameMonth,
+  parse,
 } from 'date-fns';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  FormEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   Popover,
   PopoverContent,
@@ -19,19 +26,22 @@ import { Calendar } from '@/components/dom/ui/calendar';
 import { useSelector } from '@xstate/react';
 import { type SelectSingleEventHandler } from 'react-day-picker';
 import { J2000 } from '@/constants';
+import { Input } from '@/components/dom/ui/input';
 
 export const DateDisplay = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
   const { refDate } = timeActor.getSnapshot()!.context;
   const dateRef = useRef<HTMLButtonElement>(null!);
+  const inputRef = useRef<HTMLInputElement>(null!);
 
   /* Subscribe to changes in useEffect so that the component wont re-render on
   state change, but we can update the view directly. */
   useEffect(() => {
     const subscription = timeActor.subscribe(({ context }) => {
-      if (!dateRef.current) return;
       const { date } = context;
-      dateRef.current.textContent = format(date, 'PPP');
+      // if (!dateRef.current) return;
+      // dateRef.current.textContent = format(date, 'PPP');
+      inputRef.current.valueAsDate = date;
     });
     return () => subscription.unsubscribe();
   }, [timeActor]);
@@ -41,9 +51,29 @@ export const DateDisplay = () => {
     timeActor.send({ type: 'PAUSE' });
   }, [timeActor]);
 
+  const handleInput: FormEventHandler = useCallback(
+    (event) => {
+      const target = event.target as HTMLInputElement;
+      const timeOfDay = target.valueAsDate;
+      if (!timeOfDay) return;
+
+      const { date } = timeActor.getSnapshot()!.context;
+
+      const newDate = parse(target.value, 'yyyy-MM-dd', date);
+      timeActor.send({ type: 'SET_DATE', date: newDate });
+    },
+    [timeActor]
+  );
+
   return (
     <>
-      <Popover>
+      <Input
+        ref={inputRef}
+        type="date"
+        onInput={handleInput}
+        className="text-md inline-flex h-8 min-h-fit w-full min-w-fit select-none items-center justify-center py-0 text-center"
+      ></Input>
+      {/* <Popover>
         <PopoverTrigger className="bg-muted py-1" onClick={handleOpen}>
           <span
             ref={dateRef}
@@ -56,7 +86,7 @@ export const DateDisplay = () => {
         </PopoverTrigger>
 
         <CalendarPopover />
-      </Popover>
+      </Popover> */}
     </>
   );
 };
@@ -87,15 +117,6 @@ const CalendarPopover = () => {
 
   useEffect(() => {
     const subscription = timeActor.subscribe((state) => {
-      const event = state.event.type;
-      if (
-        event !== 'ADVANCE_TIME' &&
-        event !== 'UPDATE' &&
-        event !== 'SET_DATE' &&
-        event !== 'SET_DATE_TO_NOW'
-      )
-        return;
-
       const { date } = state.context;
       if (isSameDay(date, dateRef.current)) return;
       setSelectedDate(date);
