@@ -199,7 +199,6 @@ export const ProjectedTrail = ({
 
     const onEnterSurface = () => {
       setVisibility.current();
-      console.log('entered surface!');
     };
     const onExitSurface = () => {
       const line = lineRef.current;
