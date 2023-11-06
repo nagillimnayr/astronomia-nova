@@ -4,10 +4,10 @@ import { useEventListener } from '@react-hooks-library/core';
 
 import { parse } from 'date-fns';
 
-const LATITUDE = 0.0;
-const LONGITUDE = 0.0;
+const LATITUDE = 60;
+const LONGITUDE = 116;
 
-const DATE = parse('2024-12-30', 'yyyy-mm-dd', J2000);
+const DATE = new Date('2024-10-01');
 
 export function useAutoAnimateCamera() {
   const { cameraActor, timeActor, mapActor, selectionActor, surfaceActor } =
@@ -33,6 +33,7 @@ export function useAutoAnimateCamera() {
 
     // cameraActor.send({ type: 'SET_TARGET', focusTarget: mars, zoomIn: true });
 
-    cameraActor.send({ type: 'TO_SURFACE' });
+    // cameraActor.send({ type: 'TO_SURFACE' });
+    cameraActor.send({ type: 'AUTO_ANIMATE', focusTarget: mars });
   });
 }

@@ -20,7 +20,7 @@ import {
   Spherical,
 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
-import { assign, createMachine } from 'xstate';
+import { assign, createMachine, log } from 'xstate';
 import { gsap } from 'gsap';
 import { delay } from '@/helpers/utils';
 import { DEV_ENV } from '@/constants/constants';
@@ -241,33 +241,16 @@ export const cameraMachine = createMachine(
                   target: 'changingTarget',
                 },
               ],
-              // AUTO_ANIMATE: {
-              //   actions: ['assignTarget'],
-              //   target: 'autoAnimating',
-              // },
+              AUTO_ANIMATE: {
+                actions: ['assignTarget'],
+                target: 'autoAnimating',
+              },
             },
           },
           changingTarget: {
             entry: ['setSpaceCamDistance'],
             invoke: {
-              src: async (context) => {
-                const { controls, focusTarget } = context;
-
-                if (
-                  !controls ||
-                  !focusTarget ||
-                  !(focusTarget instanceof KeplerBody)
-                ) {
-                  return;
-                }
-
-                const bodyMesh = focusTarget.getObjectByName(
-                  `${focusTarget.name}-meridian`
-                );
-                if (!bodyMesh) return;
-                console.log(bodyMesh);
-                await controls.attachToWithoutMoving(bodyMesh);
-              },
+              src: 'changeTargetPromise',
 
               id: 'change-target-promise',
               onDone: { target: 'idle' },
@@ -277,204 +260,38 @@ export const cameraMachine = createMachine(
           changingTargetAndZooming: {
             entry: ['setSpaceCamDistance'],
             invoke: {
-              src: async (context) => {
-                const { controls, focusTarget } = context;
-
-                if (
-                  !controls ||
-                  !focusTarget ||
-                  !(focusTarget instanceof KeplerBody)
-                ) {
-                  return;
-                }
-
-                const bodyMesh = focusTarget.getObjectByName(
-                  `${focusTarget.name}-meridian`
-                );
-                if (!bodyMesh) return;
-                console.log(bodyMesh);
-                await controls.attachToWithoutMoving(bodyMesh);
-
-                const radius = focusTarget.meanRadius * 10;
-                const diffRadius = Math.abs(controls.radius - radius);
-                const duration = Math.log(Math.max(diffRadius, 1)) / 5;
-
-                DEV_ENV && console.log('change target and zoom!');
-                DEV_ENV && console.log('minRadius:', controls.minRadius);
-                DEV_ENV && console.log('targetRadius:', radius);
-                DEV_ENV && console.log('diffRadius:', diffRadius);
-                DEV_ENV && console.log('duration:', duration);
-
-                await controls.animateZoomTo(radius);
-
-                DEV_ENV && console.log('target radius:', radius);
-                DEV_ENV && console.log('final radius:', controls.radius);
-              },
+              src: 'changeTargetAndZoomPromise',
 
               id: 'change-target-zoom-promise',
               onDone: { target: 'idle' },
               onError: { target: 'idle' },
             },
           },
-          // autoAnimating: {
-          //   invoke: {
-          //     src: async (context) => {
-          //       const { controls, focusTarget } = context;
-          //       if (
-          //         !controls ||
-          //         !focusTarget ||
-          //         !(focusTarget instanceof KeplerBody)
-          //       ) {
-          //         return;
-          //       }
-
-          //       await controls.attachToWithoutMoving(focusTarget);
-
-          //       const radius = focusTarget.meanRadius * 10;
-          //       const diffRadius = Math.abs(controls.radius - radius);
-          //       const duration = Math.log(Math.max(diffRadius, 1)) / 5;
-
-          //       await controls.animateZoomTo(radius);
-          //     },
-          //     id: 'auto-animate-promise',
-          //     onDone: { target: 'idle' },
-          //     onError: { target: 'idle' },
-          //   },
-          // },
+          autoAnimating: {
+            initial: 'lookAtTarget',
+            states: {
+              lookAtTarget: {
+                invoke: {
+                  src: 'changeTargetAndZoomPromise',
+                  id: 'auto-animate-look-at-promise',
+                  onDone: { target: 'goToSurface' },
+                  onError: { target: 'goToSurface' },
+                },
+              },
+              goToSurface: {
+                invoke: {
+                  src: 'enterSurfacePromise',
+                  onDone: { target: '#camera-machine.surface.autoAnimating' },
+                  onError: { target: '#camera-machine.surface.autoAnimating' },
+                },
+              },
+            },
+          },
         },
       },
       entering_surface: {
         invoke: {
-          src: async (context) => {
-            DEV_ENV && console.log('entering surface');
-            const { controls, focusTarget, observer } = context;
-            if (
-              !controls ||
-              !controls.camera ||
-              !observer ||
-              !focusTarget ||
-              !(focusTarget instanceof KeplerBody)
-            ) {
-              return;
-            }
-
-            const bodyMesh = focusTarget.getObjectByName(
-              `${focusTarget.name}-meridian`
-            );
-
-            if (!bodyMesh) return;
-            console.log(bodyMesh);
-
-            /* Get angle between up vector of controller and up vector of body. */
-            // _v1.set(...getLocalUpInWorldCoords(controls));
-            // _v2.set(...getLocalUpInWorldCoords(bodyMesh));
-            // const roll = _v1.angleTo(_v2);
-
-            const roll = degToRad(focusTarget.obliquity);
-
-            controls.resetRotation();
-
-            observer.getWorldPosition(_observerPos);
-
-            /* Get Observer position in controller local space. */
-            controls.worldToLocal(_observerPos);
-
-            const observerRadius = _observerPos.length();
-
-            /* Get spherical coordinates of observer position. */
-            _spherical.setFromVector3(_observerPos);
-            _spherical.makeSafe();
-
-            /* Normalize azimuthal angles so that the rotation will take the shortest path. */
-            controls.normalizeAzimuthalAngle();
-            // const currentTheta = controls.azimuthalAngle;
-            const phi = _spherical.phi;
-            const theta = _spherical.theta;
-
-            const targetRadius = observerRadius * 3.5;
-
-            const radius = Math.min(controls.radius, targetRadius);
-
-            /* Set controller targets to current values. */
-            controls.spherical.makeSafe();
-            controls.resetTarget();
-            controls.setMinRadius(SURFACE_MIN_DIST);
-
-            // await controls.animateTo({ radius });
-            // await controls.animateTo({ phi, theta });
-            // await controls.animateRoll(roll);
-
-            const diffRadius = controls.radius - radius;
-            const duration = Math.log(Math.max(diffRadius, 1)) / 5;
-            DEV_ENV && console.log('duration:', duration);
-
-            /* Zoom in to body. */
-            await gsap.to(controls.spherical, {
-              radius: radius,
-              duration: duration,
-              ease: 'power1.inOut',
-              onUpdate: () => {
-                controls.updateCameraPosition();
-                controls.resetTarget();
-              },
-            });
-            await delay(100);
-            /* Rotate to be above observation point. */
-            await controls.animateTo({
-              phi: phi,
-              theta: theta,
-              duration: 2,
-            });
-
-            /* Rotate to align with equator/polar axis. */
-            await controls.animateRoll(roll);
-
-            // console.log('control rotation:', controls.rotation.toArray());
-
-            controls.camera.getWorldPosition(_cameraPos);
-            observer.add(controls);
-            controls.resetRotation();
-
-            controls.worldToLocal(_cameraPos);
-            controls.spherical.setFromVector3(_cameraPos);
-            controls.spherical.makeSafe();
-
-            // console.log('control rotation:', controls.rotation.toArray());
-            // console.log('phi:', controls.polarAngle);
-            // console.log('theta:', controls.azimuthalAngle);
-
-            controls.setAzimuthalAngle(0);
-            // controls.setPolarAngle(0);
-            controls.resetTarget();
-            controls.updateCameraPosition();
-
-            /* Zoom in to the surface. */
-            await tl
-              .to(controls.spherical, {
-                radius: SURFACE_MAX_DIST,
-                theta: 0,
-                duration: 2,
-                onUpdate: () => {
-                  controls.updateCameraPosition();
-                  controls.resetTarget();
-                },
-              })
-              /* Pan camera upwards to the horizon. */
-              .to(
-                controls.spherical,
-                {
-                  phi: PI_OVER_TWO,
-                  duration: 2,
-                  onUpdate: () => {
-                    controls.updateCameraPosition();
-                    controls.resetTarget();
-                  },
-                },
-                '>-25%'
-              );
-
-            controls.unlock();
-          },
+          src: 'enterSurfacePromise',
           id: 'entering_surface_promise',
           onDone: { target: 'surface' },
         },
@@ -528,45 +345,19 @@ export const cameraMachine = createMachine(
             ],
           },
         },
+
+        initial: 'idle',
+        states: {
+          idle: {},
+          autoAnimating: {
+            entry: [log('Entering surface.autoAnimating')],
+          },
+        },
       },
       enteringSpace: {
         on: {},
         invoke: {
-          src: async (context) => {
-            const { controls, focusTarget, observer } = context;
-            if (!focusTarget || !controls || !observer) return;
-            DEV_ENV && console.log('entering space');
-            controls.setMinRadius(SPACE_MIN_DIST_FROM_SURFACE);
-            controls.setMaxRadius(SPACE_MAX_DIST);
-
-            controls.camera.getWorldPosition(_cameraPos);
-            focusTarget.add(controls);
-            controls.applyWorldUp();
-
-            controls.worldToLocal(_cameraPos);
-            controls.spherical.setFromVector3(_cameraPos);
-            controls.resetTarget();
-
-            const body = focusTarget as KeplerBody;
-            const dist = body.meanRadius * 40;
-
-            controls.rotation.set(0, 0, 0);
-
-            observer.getWorldPosition(_observerPos);
-            controls.worldToLocal(_observerPos);
-            controls.spherical.setFromVector3(_observerPos);
-
-            controls.setRadius(body.meanRadius);
-
-            await gsap.to(controls.spherical, {
-              radius: dist,
-              duration: 1,
-              onUpdate: () => {
-                controls.updateCameraPosition();
-                controls.resetTarget();
-              },
-            });
-          },
+          src: 'enterSpacePromise',
           id: 'enter-space-promise',
           onDone: { target: 'space' },
         },
@@ -783,6 +574,220 @@ export const cameraMachine = createMachine(
         if (!vrHud) return;
         vrHud.visible = false;
       },
+    },
+    services: {
+      enterSurfacePromise: async (context) => {
+        DEV_ENV && console.log('entering surface');
+        const { controls, focusTarget, observer } = context;
+        if (
+          !controls ||
+          !controls.camera ||
+          !observer ||
+          !focusTarget ||
+          !(focusTarget instanceof KeplerBody)
+        ) {
+          return;
+        }
+
+        const bodyMesh = focusTarget.getObjectByName(
+          `${focusTarget.name}-meridian`
+        );
+
+        if (!bodyMesh) return;
+        console.log(bodyMesh);
+
+        /* Get angle between up vector of controller and up vector of body. */
+        // _v1.set(...getLocalUpInWorldCoords(controls));
+        // _v2.set(...getLocalUpInWorldCoords(bodyMesh));
+        // const roll = _v1.angleTo(_v2);
+
+        const roll = degToRad(focusTarget.obliquity);
+
+        controls.resetRotation();
+
+        observer.getWorldPosition(_observerPos);
+
+        /* Get Observer position in controller local space. */
+        controls.worldToLocal(_observerPos);
+
+        const observerRadius = _observerPos.length();
+
+        /* Get spherical coordinates of observer position. */
+        _spherical.setFromVector3(_observerPos);
+        _spherical.makeSafe();
+
+        /* Normalize azimuthal angles so that the rotation will take the shortest path. */
+        controls.normalizeAzimuthalAngle();
+        // const currentTheta = controls.azimuthalAngle;
+        const phi = _spherical.phi;
+        const theta = _spherical.theta;
+
+        const targetRadius = observerRadius * 3.5;
+
+        const radius = Math.min(controls.radius, targetRadius);
+
+        /* Set controller targets to current values. */
+        controls.spherical.makeSafe();
+        controls.resetTarget();
+        controls.setMinRadius(SURFACE_MIN_DIST);
+
+        // await controls.animateTo({ radius });
+        // await controls.animateTo({ phi, theta });
+        // await controls.animateRoll(roll);
+
+        const diffRadius = controls.radius - radius;
+        const duration = Math.log(Math.max(diffRadius, 1)) / 5;
+        DEV_ENV && console.log('duration:', duration);
+
+        /* Zoom in to body. */
+        await gsap.to(controls.spherical, {
+          radius: radius,
+          duration: duration,
+          ease: 'power1.inOut',
+          onUpdate: () => {
+            controls.updateCameraPosition();
+            controls.resetTarget();
+          },
+        });
+        await delay(100);
+        /* Rotate to be above observation point. */
+        await controls.animateTo({
+          phi: phi,
+          theta: theta,
+          duration: 2,
+        });
+
+        /* Rotate to align with equator/polar axis. */
+        await controls.animateRoll(roll);
+
+        // console.log('control rotation:', controls.rotation.toArray());
+
+        controls.camera.getWorldPosition(_cameraPos);
+        observer.add(controls);
+        controls.resetRotation();
+
+        controls.worldToLocal(_cameraPos);
+        controls.spherical.setFromVector3(_cameraPos);
+        controls.spherical.makeSafe();
+
+        // console.log('control rotation:', controls.rotation.toArray());
+        // console.log('phi:', controls.polarAngle);
+        // console.log('theta:', controls.azimuthalAngle);
+
+        controls.setAzimuthalAngle(0);
+        // controls.setPolarAngle(0);
+        controls.resetTarget();
+        controls.updateCameraPosition();
+
+        /* Zoom in to the surface. */
+        await tl
+          .to(controls.spherical, {
+            radius: SURFACE_MAX_DIST,
+            theta: 0,
+            duration: 2,
+            onUpdate: () => {
+              controls.updateCameraPosition();
+              controls.resetTarget();
+            },
+          })
+          /* Pan camera upwards to the horizon. */
+          .to(
+            controls.spherical,
+            {
+              phi: PI_OVER_TWO,
+              duration: 2,
+              onUpdate: () => {
+                controls.updateCameraPosition();
+                controls.resetTarget();
+              },
+            },
+            '>-25%'
+          );
+
+        controls.unlock();
+      },
+      enterSpacePromise: async (context) => {
+        const { controls, focusTarget, observer } = context;
+        if (!focusTarget || !controls || !observer) return;
+        DEV_ENV && console.log('entering space');
+        controls.setMinRadius(SPACE_MIN_DIST_FROM_SURFACE);
+        controls.setMaxRadius(SPACE_MAX_DIST);
+
+        controls.camera.getWorldPosition(_cameraPos);
+        focusTarget.add(controls);
+        controls.applyWorldUp();
+
+        controls.worldToLocal(_cameraPos);
+        controls.spherical.setFromVector3(_cameraPos);
+        controls.resetTarget();
+
+        const body = focusTarget as KeplerBody;
+        const dist = body.meanRadius * 40;
+
+        controls.rotation.set(0, 0, 0);
+
+        observer.getWorldPosition(_observerPos);
+        controls.worldToLocal(_observerPos);
+        controls.spherical.setFromVector3(_observerPos);
+
+        controls.setRadius(body.meanRadius);
+
+        await gsap.to(controls.spherical, {
+          radius: dist,
+          duration: 1,
+          onUpdate: () => {
+            controls.updateCameraPosition();
+            controls.resetTarget();
+          },
+        });
+      },
+
+      changeTargetPromise: async (context) => {
+        const { controls, focusTarget } = context;
+
+        if (!controls || !focusTarget || !(focusTarget instanceof KeplerBody)) {
+          return;
+        }
+
+        const bodyMesh = focusTarget.getObjectByName(
+          `${focusTarget.name}-meridian`
+        );
+        if (!bodyMesh) return;
+        console.log(bodyMesh);
+        await controls.attachToWithoutMoving(bodyMesh);
+      },
+
+      changeTargetAndZoomPromise: async (context) => {
+        const { controls, focusTarget } = context;
+
+        if (!controls || !focusTarget || !(focusTarget instanceof KeplerBody)) {
+          return;
+        }
+
+        const bodyMesh = focusTarget.getObjectByName(
+          `${focusTarget.name}-meridian`
+        );
+        if (!bodyMesh) return;
+        console.log(bodyMesh);
+        await controls.attachToWithoutMoving(bodyMesh);
+
+        const radius = focusTarget.meanRadius * 10;
+        const diffRadius = Math.abs(controls.radius - radius);
+        const duration = Math.log(Math.max(diffRadius, 1)) / 5;
+
+        DEV_ENV && console.log('change target and zoom!');
+        DEV_ENV && console.log('minRadius:', controls.minRadius);
+        DEV_ENV && console.log('targetRadius:', radius);
+        DEV_ENV && console.log('diffRadius:', diffRadius);
+        DEV_ENV && console.log('duration:', duration);
+
+        await controls.animateZoomTo(radius);
+
+        DEV_ENV && console.log('target radius:', radius);
+        DEV_ENV && console.log('final radius:', controls.radius);
+      },
+
+      /* End of services. */
     },
   }
 );
