@@ -84,7 +84,8 @@ type Events =
   | { type: 'HIDE_VR_HUD' }
   | { type: 'SHOW_VR_HUD' }
   | { type: 'LOCK_CONTROLS' }
-  | { type: 'UNLOCK_CONTROLS' };
+  | { type: 'UNLOCK_CONTROLS' }
+  | { type: 'AUTO_ANIMATE'; focusTarget: KeplerBody };
 
 export const cameraMachine = createMachine(
   {
@@ -240,6 +241,10 @@ export const cameraMachine = createMachine(
                   target: 'changingTarget',
                 },
               ],
+              // AUTO_ANIMATE: {
+              //   actions: ['assignTarget'],
+              //   target: 'autoAnimating',
+              // },
             },
           },
           changingTarget: {
@@ -296,6 +301,31 @@ export const cameraMachine = createMachine(
               onError: { target: 'idle' },
             },
           },
+          // autoAnimating: {
+          //   invoke: {
+          //     src: async (context) => {
+          //       const { controls, focusTarget } = context;
+          //       if (
+          //         !controls ||
+          //         !focusTarget ||
+          //         !(focusTarget instanceof KeplerBody)
+          //       ) {
+          //         return;
+          //       }
+
+          //       await controls.attachToWithoutMoving(focusTarget);
+
+          //       const radius = focusTarget.meanRadius * 10;
+          //       const diffRadius = Math.abs(controls.radius - radius);
+          //       const duration = Math.log(Math.max(diffRadius, 1)) / 5;
+
+          //       await controls.animateZoomTo(radius);
+          //     },
+          //     id: 'auto-animate-promise',
+          //     onDone: { target: 'idle' },
+          //     onError: { target: 'idle' },
+          //   },
+          // },
         },
       },
       entering_surface: {

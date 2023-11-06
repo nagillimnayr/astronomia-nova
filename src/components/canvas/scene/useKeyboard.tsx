@@ -90,9 +90,9 @@ export function useKeyboard() {
         if (controls.isAnimating) return;
 
         void (async () => {
-          const obliquity = degToRad(focusTarget.obliquity);
+          const roll = degToRad(focusTarget.obliquity);
 
-          await controls.animateRoll(obliquity);
+          await controls.animateRoll(roll);
           // await gsap.to(controls.rotation, {
           //   x: -obliquity,
           //   y: 0,
