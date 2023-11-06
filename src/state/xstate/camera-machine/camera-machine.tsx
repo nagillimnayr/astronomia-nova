@@ -823,10 +823,10 @@ export const cameraMachine = createMachine(
         /* Clear interval after timeout. */
         setTimeout(() => {
           clearInterval(intervalID);
-        }, 1000 * 20);
+        }, 1000 * 30);
 
         /* Look east. */
-        await controls.animateTo({ theta: 3 * PI_OVER_TWO, duration: 10 });
+        await controls.animateTo({ theta: 3 * PI_OVER_TWO, duration: 6 });
       },
 
       /* End of services. */
