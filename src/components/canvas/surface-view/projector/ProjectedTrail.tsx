@@ -75,18 +75,29 @@ export const ProjectedTrail = ({
 
     /* Position of target won't have updated immediately, 
           so reset the trail after a slight delay. */
-    const prevVisibility = line.visible;
     line.visible = false; // Toggle visibility temporarily, to avoid jank.
 
     /* Reset after slight delay. */
     setTimeout(() => {
       const anchor = anchorRef.current;
       points.current = resetTrail(anchor, body, length);
+
+      console.log(`${line.geometry.name}: `, points.current);
+
+      /* Check if line should be visible. */
+      const camState = cameraActor.getSnapshot()!;
+      const surface = camState.matches('surface');
+      const { focusTarget } = camState.context;
+      const isFocused = Object.is(body, focusTarget);
+      const paused = timeActor.getSnapshot()!.matches('paused');
+
+      const visible = surface && paused && !isFocused;
+
       // Update geometry.
       line.geometry.setPositions(points.current);
-      line.visible = prevVisibility;
+      line.visible = visible;
     }, DELAY);
-  }, [body, length]);
+  }, [body, cameraActor, length, timeActor]);
 
   useEffect(() => {
     const anchor = anchorRef.current;
@@ -180,6 +191,7 @@ export const ProjectedTrail = ({
   }, []);
 
   useEffect(() => {
+    /* Set name of geometry, to help with debugging. */
     lineRef.current.geometry.name = `trail-projection-geometry-${body.name}`;
   }, [body.name]);
 
