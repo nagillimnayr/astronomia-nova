@@ -778,7 +778,7 @@ export const cameraMachine = createMachine(
           `${focusTarget.name}-meridian`
         );
         if (!bodyMesh) return;
-        console.log(bodyMesh);
+        // DEV_ENV && console.log(bodyMesh);
         await controls.attachToWithoutMoving(bodyMesh);
 
         const radius = focusTarget.meanRadius * 10;
