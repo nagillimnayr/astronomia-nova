@@ -813,9 +813,9 @@ export const cameraMachine = createMachine(
         if (!bodyMesh) return;
         // DEV_ENV && console.log(bodyMesh);
         await controls.attachToWithoutMoving(bodyMesh);
-        const radius = focusTarget.meanRadius * 10;
+        const radius = focusTarget.meanRadius * 3;
 
-        await controls.animateZoomTo(radius, 2);
+        await controls.animateZoomTo(radius, 2, 'power4.out');
       },
 
       autoRotate: async (context) => {
