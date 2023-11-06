@@ -1,4 +1,5 @@
 import { DEV_ENV, J2000 } from '@/constants';
+import { delay } from '@/helpers/utils';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEventListener } from '@react-hooks-library/core';
 
@@ -15,7 +16,7 @@ export function useAutoAnimateCamera() {
   const { cameraActor, timeActor, mapActor, selectionActor, surfaceActor } =
     MachineContext.useSelector(({ context }) => context);
 
-  useEventListener('keydown', (event) => {
+  useEventListener('keydown', async (event) => {
     if (!DEV_ENV) return;
     if (event.code !== 'KeyA') return;
 
@@ -29,14 +30,11 @@ export function useAutoAnimateCamera() {
     timeActor.send({ type: 'PAUSE' });
     timeActor.send({ type: 'SET_DATE', date: DATE });
 
-    // selectionActor.send({ type: 'SELECT', selection: mars });
+    await delay(1000);
 
     surfaceActor.send({ type: 'SET_LATITUDE', value: LATITUDE });
     surfaceActor.send({ type: 'SET_LONGITUDE', value: LONGITUDE });
 
-    // cameraActor.send({ type: 'SET_TARGET', focusTarget: mars, zoomIn: true });
-
-    // cameraActor.send({ type: 'TO_SURFACE' });
     cameraActor.send({ type: 'AUTO_ANIMATE', focusTarget: mars });
   });
 
