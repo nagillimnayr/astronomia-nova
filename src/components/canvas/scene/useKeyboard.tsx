@@ -1,4 +1,4 @@
-import { J2000, PI, TWO_PI } from '@/constants';
+import { DEV_ENV, J2000, PI, TWO_PI } from '@/constants';
 import { normalizeAngle } from '@/helpers/rotation-utils';
 import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
 import { MachineContext } from '@/state/xstate/MachineProviders';
@@ -20,12 +20,12 @@ export function useKeyboard() {
 
     switch (event.code) {
       case 'KeyJ': {
-        if (env !== 'development') return;
+        if (!DEV_ENV) return;
         timeActor.send({ type: 'SET_DATE', date: J2000 });
         break;
       }
       case 'KeyX': {
-        if (env !== 'development') return;
+        if (!DEV_ENV) return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
 
@@ -35,7 +35,7 @@ export function useKeyboard() {
         break;
       }
       case 'KeyC': {
-        if (env !== 'development') return;
+        if (!DEV_ENV) return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
 
@@ -45,7 +45,7 @@ export function useKeyboard() {
         break;
       }
       case 'KeyZ': {
-        if (env !== 'development') return;
+        if (!DEV_ENV) return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
 
@@ -55,7 +55,7 @@ export function useKeyboard() {
         break;
       }
       case 'O': {
-        if (env !== 'development') return;
+        if (!DEV_ENV) return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
         if (controls.isAnimating) return;
@@ -65,7 +65,7 @@ export function useKeyboard() {
         break;
       }
       case 'KeyR': {
-        if (env !== 'development') return;
+        if (!DEV_ENV) return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
         if (controls.isAnimating) return;
@@ -75,7 +75,7 @@ export function useKeyboard() {
         break;
       }
       case 'KeyY': {
-        if (env !== 'development') return;
+        if (!DEV_ENV) return;
         const { controls } = cameraActor.getSnapshot()!.context;
         if (!controls || !controls.camera) return;
         if (controls.isAnimating) return;
@@ -87,7 +87,7 @@ export function useKeyboard() {
         break;
       }
       case 'KeyU': {
-        if (env !== 'development') return;
+        if (!DEV_ENV) return;
         const { controls, focusTarget } = cameraActor.getSnapshot()!.context;
         if (!controls || !focusTarget || !(focusTarget instanceof KeplerBody))
           return;
@@ -109,7 +109,7 @@ export function useKeyboard() {
         break;
       }
       case 'KeyP': {
-        if (env !== 'development') return;
+        if (!DEV_ENV) return;
         const { controls, observer } = cameraActor.getSnapshot()!.context;
         const spherical = new Spherical();
         const observerPos = new Vector3();
@@ -132,7 +132,7 @@ export function useKeyboard() {
         break;
       }
       case 'Space': {
-        if (env !== 'development') return;
+        if (!DEV_ENV) return;
         const { controls, focusTarget } = cameraActor.getSnapshot()!.context;
         if (!controls) return;
         event.preventDefault();
