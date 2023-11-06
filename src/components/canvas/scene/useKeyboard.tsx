@@ -122,7 +122,7 @@ export function useKeyboard() {
         event.preventDefault();
 
         const theta = radToDeg(controls.azimuthalAngle);
-        const phi = radToDeg(controls.azimuthalAngle);
+        const phi = radToDeg(controls.polarAngle);
         console.log(`azimuthal angle: ${theta}`);
         console.log(`polar angle: ${phi}`);
         console.log(`controls rotation: `, controls.rotation.toArray());
