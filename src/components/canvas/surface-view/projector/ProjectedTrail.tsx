@@ -21,11 +21,6 @@ const shiftLeft = (collection: Float32Array, steps = 1): Float32Array => {
   collection.fill(-Infinity, -steps);
   return collection;
 };
-// const shiftLeft = (points: number[], steps = 1): number[] => {
-//   const newPoints = points.slice(steps);
-//   newPoints.fill(-Infinity, -steps);
-//   return newPoints;
-// };
 
 const resetTrail = (anchor: Object3D, target: Object3D, length: number) => {
   if (!anchor || !target) {
