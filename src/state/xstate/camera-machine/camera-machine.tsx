@@ -355,10 +355,10 @@ export const cameraMachine = createMachine(
         initial: 'idle',
         states: {
           idle: {
-            entry: [log('Entering surface.autoAnimating'), 'enterSurfaceView'],
+            entry: ['enterSurfaceView'],
           },
           autoAnimating: {
-            entry: [log('Entering surface.autoAnimating'), 'enterSurfaceView'],
+            entry: ['enterSurfaceView'],
 
             initial: 'autoRotating',
             states: {
@@ -591,7 +591,7 @@ export const cameraMachine = createMachine(
     },
     services: {
       enterSurfacePromise: async (context) => {
-        DEV_ENV && console.log('entering surface');
+        // DEV_ENV && console.log('entering surface');
         const { controls, focusTarget, observer } = context;
         if (
           !controls ||
@@ -812,7 +812,7 @@ export const cameraMachine = createMachine(
         await controls.animateTo({ theta: -(PI + 1e-2), duration: 2 });
 
         /* Look up a bit. */
-        await controls.animateTo({ phi: 1.85, duration: 1 });
+        // await controls.animateTo({ phi: 1.85, duration: 1 });
 
         const advanceDayInterval = () => {
           eventDispatcher.dispatchEvent({ type: 'ADVANCE_DAY' });
@@ -826,7 +826,11 @@ export const cameraMachine = createMachine(
         }, 1000 * 30);
 
         /* Look east. */
-        await controls.animateTo({ theta: 3 * PI_OVER_TWO, duration: 6 });
+        await controls.animateTo({
+          theta: 3 * PI_OVER_TWO,
+          phi: 1.85,
+          duration: 4,
+        });
       },
 
       /* End of services. */
