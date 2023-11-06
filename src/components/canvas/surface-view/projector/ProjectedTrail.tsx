@@ -77,14 +77,18 @@ export const ProjectedTrail = ({
       const anchor = anchorRef.current;
       points.current = resetTrail(anchor, body, length);
 
-      console.log(`${line.geometry.name}: `, points.current);
-
       /* Check if line should be visible. */
       const camState = cameraActor.getSnapshot()!;
       const surface = camState.matches('surface');
       const { focusTarget } = camState.context;
       const isFocused = Object.is(body, focusTarget);
       const paused = timeActor.getSnapshot()!.matches('paused');
+
+      if (isFocused) {
+        // console.log(`${line.geometry.name}: `, points.current);
+        /* Resetting the trail of the currently focused body causes errors. */
+        return;
+      }
 
       const visible = surface && paused && !isFocused;
 
@@ -121,10 +125,11 @@ export const ProjectedTrail = ({
   useEffect(() => {
     // Subscribe to cameraActor, and reset trail whenever focus changes.
     const subscription = cameraActor.subscribe((state) => {
-      if (state.event.type !== 'SET_TARGET') return;
+      const event = state.event.type;
+      if (event !== 'SET_TARGET' && event !== 'AUTO_ANIMATE') return;
 
       const { focusTarget } = cameraActor.getSnapshot()!.context;
-      if (body === focusTarget) {
+      if (Object.is(body, focusTarget)) {
         /* Hide trail of currently focused body. */
         lineRef.current.visible = false;
 
@@ -167,19 +172,6 @@ export const ProjectedTrail = ({
 
     return () => subscription.unsubscribe();
   }, [timeActor, body]);
-
-  // useFrame(() => {
-  //   const isPaused = timeActor.getSnapshot()!.matches('paused');
-  //   const cameraState = cameraActor.getSnapshot()!;
-  //   const onSurface = cameraState.matches('surface');
-  //   const { focusTarget } = cameraState.context;
-
-  //   if (!isPaused || !onSurface || body === focusTarget) return;
-
-  //   // Update geometry.
-  //   const line = lineRef.current;
-  //   line.geometry.setPositions(points.current);
-  // });
 
   const arr = useMemo(() => {
     return [0, 0, 0, 0, 0, 0];
