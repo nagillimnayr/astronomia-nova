@@ -834,6 +834,7 @@ export const cameraMachine = createMachine(
           phi: 1.85,
           theta: 3 * PI_OVER_TWO,
           duration: 4,
+          ease: 'sine.inOut',
         });
 
         const advanceDayInterval = () => {
