@@ -88,12 +88,6 @@ export function useKeyboard() {
           const roll = degToRad(focusTarget.obliquity);
 
           await controls.animateRoll(roll);
-          // await gsap.to(controls.rotation, {
-          //   x: -obliquity,
-          //   y: 0,
-          //   z: 0,
-          //   duration: 1,
-          // });
         })();
 
         break;
@@ -131,8 +125,6 @@ export function useKeyboard() {
         console.log(`azimuthal angle: ${azimuth}`);
         console.log(`controls rotation: `, controls.rotation.toArray());
 
-        // console.log(`camera rotation: `, controls.camera.rotation.toArray());
-        // console.log(`camera roll: `, controls.roll);
         if (!focusTarget || !(focusTarget instanceof KeplerBody)) return;
         console.log('focus target rotation:', focusTarget.rotation.toArray());
         const mesh = focusTarget.meshRef.current;
