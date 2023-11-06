@@ -3,6 +3,7 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEventListener } from '@react-hooks-library/core';
 
 import { parse } from 'date-fns';
+import { useEffect } from 'react';
 
 const LATITUDE = 60;
 const LONGITUDE = 116;
@@ -10,6 +11,7 @@ const LONGITUDE = 116;
 const DATE = new Date('2024-10-01');
 
 export function useAutoAnimateCamera() {
+  const rootActor = MachineContext.useActorRef();
   const { cameraActor, timeActor, mapActor, selectionActor, surfaceActor } =
     MachineContext.useSelector(({ context }) => context);
 
@@ -37,4 +39,18 @@ export function useAutoAnimateCamera() {
     // cameraActor.send({ type: 'TO_SURFACE' });
     cameraActor.send({ type: 'AUTO_ANIMATE', focusTarget: mars });
   });
+
+  useEffect(() => {
+    /* hacky workaround to trigger ADVANCE_DAY event from inside of cameraMachine. */
+    const onAdvanceDay = () => {
+      rootActor.send({ type: 'ADVANCE_DAY' });
+    };
+    const { eventDispatcher } = cameraActor.getSnapshot()!.context;
+
+    eventDispatcher.addEventListener('ADVANCE_DAY', onAdvanceDay);
+
+    return () => {
+      eventDispatcher.removeEventListener('ADVANCE_DAY', onAdvanceDay);
+    };
+  }, [cameraActor, rootActor]);
 }
