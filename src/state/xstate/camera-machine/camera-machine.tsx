@@ -829,30 +829,28 @@ export const cameraMachine = createMachine(
         /* Look south. */
         await controls.animateTo({ theta: -(PI + 1e-2), duration: 2 });
 
-        /* Look up a bit. */
-        await controls.animateTo({
+        const duration = 4;
+        /* Look up and east. */
+        void controls.animateTo({
           phi: 1.85,
-          theta: 2.2 * PI_OVER_TWO,
-          duration: 2,
+          theta: 3 * PI_OVER_TWO,
+          duration: duration,
         });
+
+        await delay(duration * 500);
 
         const advanceDayInterval = () => {
           eventDispatcher.dispatchEvent({ type: 'ADVANCE_DAY' });
         };
         /* Trigger ADVANCE_DAY event on interval. */
-        const intervalID = setInterval(advanceDayInterval, 50);
+        const intervalID = setInterval(advanceDayInterval, 30);
 
         /* Clear interval after timeout. */
         setTimeout(() => {
           clearInterval(intervalID);
         }, 1000 * 30);
 
-        /* Look east. */
-        await controls.animateTo({
-          theta: 3 * PI_OVER_TWO,
-          phi: 1.85,
-          duration: 6,
-        });
+        await delay(duration * 500);
       },
 
       /* End of services. */
