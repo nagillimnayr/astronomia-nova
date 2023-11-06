@@ -730,12 +730,13 @@ export class CameraController extends Object3D {
     phi?: number;
     theta?: number;
     duration?: number;
+    ease?: string | gsap.EaseFunction | undefined;
   }) {
     if (this._isAnimating) return;
 
     this.lock();
     this._isAnimating = true;
-    const { radius, phi, theta } = to;
+    const { radius, phi, theta, ease } = to;
     const duration = to.duration ?? 1;
     if (
       typeof radius !== 'number' &&
@@ -787,7 +788,7 @@ export class CameraController extends Object3D {
       phi: phi ?? this.polarAngle,
       theta: targetTheta ?? this.azimuthalAngle,
       duration: duration,
-      ease: 'power1.inOut',
+      ease: ease ?? 'power1.inOut',
       onUpdate: () => {
         this.updateCameraPosition();
         this.resetTarget();
