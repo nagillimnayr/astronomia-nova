@@ -63,6 +63,28 @@ export const ProjectedTrail = ({
   const points = useRef<Float32Array>(null!);
 
   const reset = useRef<() => void>(null!);
+  const setVisibility = useRef<() => void>(null!);
+
+  setVisibility.current = useCallback(() => {
+    const line = lineRef.current;
+    if (!line) return;
+    /* Check if line should be visible. */
+    const camState = cameraActor.getSnapshot()!;
+    const surface = camState.matches('surface');
+    const { focusTarget } = camState.context;
+    const isFocused = Object.is(body, focusTarget);
+    const paused = timeActor.getSnapshot()!.matches('paused');
+
+    const visible = surface && paused && !isFocused;
+    line.visible = visible;
+  }, [body, cameraActor, timeActor]);
+
+  useEffect(() => {
+    const anchor = anchorRef.current;
+    points.current = resetTrail(anchor, body, length);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [length, body]);
 
   /* Store reset callback function in a ref so it can be reused inside of useEffect. */
   reset.current = useCallback(() => {
@@ -80,32 +102,23 @@ export const ProjectedTrail = ({
 
       /* Check if line should be visible. */
       const camState = cameraActor.getSnapshot()!;
-      const surface = camState.matches('surface');
+
       const { focusTarget } = camState.context;
       const isFocused = Object.is(body, focusTarget);
-      const paused = timeActor.getSnapshot()!.matches('paused');
 
+      setVisibility.current();
       if (isFocused) {
         // console.log(`${line.geometry.name}: `, points.current);
         /* Resetting the trail of the currently focused body causes errors. */
         return;
       }
 
-      const visible = surface && paused && !isFocused;
       // DEV_ENV && console.log(`${line.geometry.name} visible?: `, visible);
 
       // Update geometry.
       line.geometry.setPositions(points.current);
-      line.visible = visible;
     }, DELAY);
-  }, [body, cameraActor, length, timeActor]);
-
-  useEffect(() => {
-    const anchor = anchorRef.current;
-    points.current = resetTrail(anchor, body, length);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [length, body]);
+  }, [body, cameraActor, length]);
 
   useEffect(() => {
     // Subscribe to surfaceActor, and reset trail whenever coordinates change.
@@ -181,23 +194,7 @@ export const ProjectedTrail = ({
     const { eventDispatcher } = cameraActor.getSnapshot()!.context;
 
     const onEnterSurface = () => {
-      const line = lineRef.current;
-      if (!line) return;
-
-      /* Check if line should be visible. */
-      const camState = cameraActor.getSnapshot()!;
-      const surface = camState.matches('surface');
-      const { focusTarget } = camState.context;
-      const isFocused = Object.is(body, focusTarget);
-      const paused = timeActor.getSnapshot()!.matches('paused');
-
-      const visible = surface && paused && !isFocused;
-      line.visible = visible;
-      // console.log(`${line.geometry.name} visible?`, visible);
-      // console.log(`on surface?`, surface);
-      // console.log(`paused?`, paused);
-      // console.log(`focused?`, isFocused, '\n');
-      // console.log('camera state:', camState.value);
+      setVisibility.current();
     };
     const onExitSurface = () => {
       const line = lineRef.current;
