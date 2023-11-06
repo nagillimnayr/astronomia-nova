@@ -277,7 +277,7 @@ export const cameraMachine = createMachine(
             states: {
               lookAtTarget: {
                 invoke: {
-                  src: 'changeTargetAndZoomPromise',
+                  src: 'autoLookAtTarget',
                   id: 'auto-animate-look-at-promise',
                   onDone: { target: 'goToSurface' },
                   onError: { target: 'goToSurface' },
@@ -800,6 +800,24 @@ export const cameraMachine = createMachine(
         // DEV_ENV && console.log('final radius:', controls.radius);
       },
 
+      autoLookAtTarget: async (context) => {
+        const { controls, focusTarget } = context;
+
+        if (!controls || !focusTarget || !(focusTarget instanceof KeplerBody)) {
+          return;
+        }
+
+        const bodyMesh = focusTarget.getObjectByName(
+          `${focusTarget.name}-meridian`
+        );
+        if (!bodyMesh) return;
+        // DEV_ENV && console.log(bodyMesh);
+        await controls.attachToWithoutMoving(bodyMesh);
+        const radius = focusTarget.meanRadius * 10;
+
+        await controls.animateZoomTo(radius, 2);
+      },
+
       autoRotate: async (context) => {
         const { controls, eventDispatcher } = context;
         if (!controls) {
@@ -812,13 +830,17 @@ export const cameraMachine = createMachine(
         await controls.animateTo({ theta: -(PI + 1e-2), duration: 2 });
 
         /* Look up a bit. */
-        // await controls.animateTo({ phi: 1.85, duration: 1 });
+        await controls.animateTo({
+          phi: 1.85,
+          theta: 2.2 * PI_OVER_TWO,
+          duration: 2,
+        });
 
         const advanceDayInterval = () => {
           eventDispatcher.dispatchEvent({ type: 'ADVANCE_DAY' });
         };
         /* Trigger ADVANCE_DAY event on interval. */
-        const intervalID = setInterval(advanceDayInterval, 100);
+        const intervalID = setInterval(advanceDayInterval, 50);
 
         /* Clear interval after timeout. */
         setTimeout(() => {
@@ -829,7 +851,7 @@ export const cameraMachine = createMachine(
         await controls.animateTo({
           theta: 3 * PI_OVER_TWO,
           phi: 1.85,
-          duration: 4,
+          duration: 6,
         });
       },
 
