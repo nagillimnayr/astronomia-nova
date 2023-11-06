@@ -122,9 +122,10 @@ export function useKeyboard() {
         event.preventDefault();
 
         const theta = radToDeg(controls.azimuthalAngle);
-        const phi = radToDeg(controls.polarAngle);
+        const phi = controls.polarAngle;
         console.log(`azimuthal angle: ${theta}`);
-        console.log(`polar angle: ${phi}`);
+        console.log(`polar angle: ${radToDeg(phi)}`);
+        console.log(`polar angle radians: ${phi}`);
         console.log(`controls rotation: `, controls.rotation.toArray());
 
         if (!focusTarget || !(focusTarget instanceof KeplerBody)) return;
