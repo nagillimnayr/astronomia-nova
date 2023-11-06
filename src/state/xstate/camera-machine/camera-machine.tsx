@@ -253,11 +253,20 @@ export const cameraMachine = createMachine(
               src: async (context) => {
                 const { controls, focusTarget } = context;
 
-                if (!controls || !focusTarget) {
+                if (
+                  !controls ||
+                  !focusTarget ||
+                  !(focusTarget instanceof KeplerBody)
+                ) {
                   return;
                 }
 
-                await controls.attachToWithoutMoving(focusTarget);
+                const bodyMesh = focusTarget.getObjectByName(
+                  `${focusTarget.name}-meridian`
+                );
+                if (!bodyMesh) return;
+                console.log(bodyMesh);
+                await controls.attachToWithoutMoving(bodyMesh);
               },
 
               id: 'change-target-promise',
@@ -278,7 +287,13 @@ export const cameraMachine = createMachine(
                 ) {
                   return;
                 }
-                await controls.attachToWithoutMoving(focusTarget);
+
+                const bodyMesh = focusTarget.getObjectByName(
+                  `${focusTarget.name}-meridian`
+                );
+                if (!bodyMesh) return;
+                console.log(bodyMesh);
+                await controls.attachToWithoutMoving(bodyMesh);
 
                 const radius = focusTarget.meanRadius * 10;
                 const diffRadius = Math.abs(controls.radius - radius);
@@ -343,8 +358,12 @@ export const cameraMachine = createMachine(
               return;
             }
 
-            const bodyMesh = focusTarget.meshRef.current;
+            const bodyMesh = focusTarget.getObjectByName(
+              `${focusTarget.name}-meridian`
+            );
+
             if (!bodyMesh) return;
+            console.log(bodyMesh);
 
             /* Get angle between up vector of controller and up vector of body. */
             // _v1.set(...getLocalUpInWorldCoords(controls));
@@ -425,7 +444,7 @@ export const cameraMachine = createMachine(
             // console.log('theta:', controls.azimuthalAngle);
 
             controls.setAzimuthalAngle(0);
-            controls.setPolarAngle(0);
+            // controls.setPolarAngle(0);
             controls.resetTarget();
             controls.updateCameraPosition();
 
@@ -649,9 +668,14 @@ export const cameraMachine = createMachine(
 
       attachToTarget: (context) => {
         const { controls, focusTarget } = context;
-        if (!focusTarget || !controls) return;
+        if (!focusTarget || !controls || !(focusTarget instanceof KeplerBody))
+          return;
         // controls.attachControllerTo(focusTarget);
-        // // controls.attachToWithoutMoving(focusTarget);
+        const bodyMesh = focusTarget.getObjectByName(
+          `${focusTarget.name}-meridian`
+        );
+        if (!bodyMesh) return;
+        // controls.attachControllerTo(bodyMesh);
         // controls.applyWorldUp();
       },
       attachToObserver: (context) => {
