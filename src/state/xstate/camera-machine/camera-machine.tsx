@@ -827,30 +827,28 @@ export const cameraMachine = createMachine(
         eventDispatcher.dispatchEvent({ type: 'ENABLE_TRAIL_VISIBILITY' });
 
         /* Look south. */
-        await controls.animateTo({ theta: -(PI + 1e-2), duration: 2 });
+        // await controls.animateTo({ theta: -(PI + 1e-2), duration: 2 });
 
-        const duration = 4;
         /* Look up and east. */
-        void controls.animateTo({
+        await controls.animateTo({
           phi: 1.85,
           theta: 3 * PI_OVER_TWO,
-          duration: duration,
+          duration: 4,
         });
-
-        await delay(duration * 500);
 
         const advanceDayInterval = () => {
           eventDispatcher.dispatchEvent({ type: 'ADVANCE_DAY' });
         };
+        const duration = 20 * 1000;
         /* Trigger ADVANCE_DAY event on interval. */
         const intervalID = setInterval(advanceDayInterval, 30);
 
         /* Clear interval after timeout. */
         setTimeout(() => {
           clearInterval(intervalID);
-        }, 1000 * 30);
+        }, duration);
 
-        await delay(duration * 500);
+        await delay(duration);
       },
 
       /* End of services. */
