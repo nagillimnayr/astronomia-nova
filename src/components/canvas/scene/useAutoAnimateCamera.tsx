@@ -26,7 +26,7 @@ export function useAutoAnimateCamera() {
 
     timeActor.send({ type: 'SET_DATE', date: DATE });
 
-    selectionActor.send({ type: 'SELECT', selection: mars });
+    // selectionActor.send({ type: 'SELECT', selection: mars });
 
     surfaceActor.send({ type: 'SET_LATITUDE', value: LATITUDE });
     surfaceActor.send({ type: 'SET_LONGITUDE', value: LONGITUDE });
