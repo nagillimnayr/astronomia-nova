@@ -763,7 +763,7 @@ export const cameraMachine = createMachine(
           `${focusTarget.name}-meridian`
         );
         if (!bodyMesh) return;
-        console.log(bodyMesh);
+        // DEV_ENV && console.log(bodyMesh);
         await controls.attachToWithoutMoving(bodyMesh);
       },
 
@@ -803,7 +803,7 @@ export const cameraMachine = createMachine(
           return;
         }
         /* Look south. */
-        await controls.animateTo({ theta: -PI, duration: 2 });
+        await controls.animateTo({ theta: PI + 1e-3, duration: 2 });
       },
 
       /* End of services. */
