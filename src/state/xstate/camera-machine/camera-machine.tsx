@@ -785,16 +785,16 @@ export const cameraMachine = createMachine(
         const diffRadius = Math.abs(controls.radius - radius);
         const duration = Math.log(Math.max(diffRadius, 1)) / 5;
 
-        DEV_ENV && console.log('change target and zoom!');
-        DEV_ENV && console.log('minRadius:', controls.minRadius);
-        DEV_ENV && console.log('targetRadius:', radius);
-        DEV_ENV && console.log('diffRadius:', diffRadius);
+        // DEV_ENV && console.log('change target and zoom!');
+        // DEV_ENV && console.log('minRadius:', controls.minRadius);
+        // DEV_ENV && console.log('targetRadius:', radius);
+        // DEV_ENV && console.log('diffRadius:', diffRadius);
         DEV_ENV && console.log('duration:', duration);
 
         await controls.animateZoomTo(radius);
 
-        DEV_ENV && console.log('target radius:', radius);
-        DEV_ENV && console.log('final radius:', controls.radius);
+        // DEV_ENV && console.log('target radius:', radius);
+        // DEV_ENV && console.log('final radius:', controls.radius);
       },
 
       autoRotate: async (context) => {
