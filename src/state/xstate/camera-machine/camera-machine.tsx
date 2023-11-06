@@ -806,7 +806,7 @@ export const cameraMachine = createMachine(
           return;
         }
 
-        eventDispatcher.dispatchEvent({ type: 'ENTERED_SURFACE' });
+        eventDispatcher.dispatchEvent({ type: 'ENABLE_TRAIL_VISIBILITY' });
 
         /* Look south. */
         await controls.animateTo({ theta: -(PI + 1e-2), duration: 2 });

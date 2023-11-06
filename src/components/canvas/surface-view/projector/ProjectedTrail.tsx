@@ -77,6 +77,10 @@ export const ProjectedTrail = ({
 
     const visible = surface && paused && !isFocused;
     line.visible = visible;
+
+    console.log(`${line.geometry.name} visible?`, visible);
+    console.log(`onSurface?`, surface);
+    console.log(`camState?`, camState.value);
   }, [body, cameraActor, timeActor]);
 
   useEffect(() => {
@@ -195,6 +199,7 @@ export const ProjectedTrail = ({
 
     const onEnterSurface = () => {
       setVisibility.current();
+      console.log('entered surface!');
     };
     const onExitSurface = () => {
       const line = lineRef.current;
@@ -202,12 +207,28 @@ export const ProjectedTrail = ({
       line.visible = false;
     };
 
+    const onEnableTrailVisibility = () => {
+      const line = lineRef.current;
+      if (!line) return;
+      const { focusTarget } = cameraActor.getSnapshot()!.context;
+      const isFocused = Object.is(body, focusTarget);
+      line.visible = !isFocused;
+    };
+
     eventDispatcher.addEventListener('ENTERED_SURFACE', onEnterSurface);
     eventDispatcher.addEventListener('EXITED_SURFACE', onExitSurface);
+    eventDispatcher.addEventListener(
+      'ENABLE_TRAIL_VISIBILITY',
+      onEnableTrailVisibility
+    );
 
     return () => {
       eventDispatcher.removeEventListener('ENTERED_SURFACE', onEnterSurface);
       eventDispatcher.removeEventListener('EXITED_SURFACE', onExitSurface);
+      eventDispatcher.removeEventListener(
+        'ENABLE_TRAIL_VISIBILITY',
+        onEnableTrailVisibility
+      );
     };
   }, [body, cameraActor, timeActor]);
 
