@@ -78,9 +78,9 @@ export const ProjectedTrail = ({
     const visible = surface && paused && !isFocused;
     line.visible = visible;
 
-    console.log(`${line.geometry.name} visible?`, visible);
-    console.log(`onSurface?`, surface);
-    console.log(`camState?`, camState.value);
+    // console.log(`${line.geometry.name} visible?`, visible);
+    // console.log(`onSurface?`, surface);
+    // console.log(`camState?`, camState.value);
   }, [body, cameraActor, timeActor]);
 
   useEffect(() => {
