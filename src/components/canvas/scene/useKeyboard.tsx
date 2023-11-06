@@ -1,4 +1,4 @@
-import { PI, TWO_PI } from '@/constants';
+import { J2000, PI, TWO_PI } from '@/constants';
 import { normalizeAngle } from '@/helpers/rotation-utils';
 import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
 import { MachineContext } from '@/state/xstate/MachineProviders';
@@ -19,6 +19,11 @@ export function useKeyboard() {
     const env = process.env.NODE_ENV;
 
     switch (event.code) {
+      case 'KeyJ': {
+        if (env !== 'development') return;
+        timeActor.send({ type: 'SET_DATE', date: J2000 });
+        break;
+      }
       case 'KeyX': {
         if (env !== 'development') return;
         const { controls } = cameraActor.getSnapshot()!.context;
