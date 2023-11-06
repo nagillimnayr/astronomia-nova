@@ -135,9 +135,9 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
   }, [radius]);
   return (
     <>
-      <object3D ref={meridianRef}>
-        {/* <arrowHelper args={[Z_AXIS, ORIGIN, radius * 3e9, 'lightgreen']} /> */}
-        {/* <arrowHelper args={[Y_AXIS, ORIGIN, radius * 3, 'lightgreen']} /> */}
+      <object3D name={`${name}-meridian`} ref={meridianRef}>
+        {/* <arrowHelper args={[Z_AXIS, ORIGIN, radius * 3, 'lightgreen']} /> */}
+        {/* <arrowHelper args={[Y_AXIS, ORIGIN, radius * 3, 'cyan']} /> */}
         <group rotation={rotation}>
           {/* <arrowHelper args={[X_AXIS, ORIGIN, radius * 3, 'orange']} /> */}
           {/* <arrowHelper args={[Y_AXIS, ORIGIN, radius * 3, 'pink']} /> */}
