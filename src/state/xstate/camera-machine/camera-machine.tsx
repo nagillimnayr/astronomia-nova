@@ -20,7 +20,7 @@ import {
   Spherical,
   EventDispatcher,
 } from 'three';
-import { degToRad } from 'three/src/math/MathUtils';
+import { clamp, degToRad } from 'three/src/math/MathUtils';
 import { assign, createMachine, log } from 'xstate';
 import { gsap } from 'gsap';
 import { delay } from '@/helpers/utils';
@@ -608,7 +608,7 @@ export const cameraMachine = createMachine(
         );
 
         if (!bodyMesh) return;
-        console.log(bodyMesh);
+        // DEV_ENV && console.log(bodyMesh);
 
         /* Get angle between up vector of controller and up vector of body. */
         // _v1.set(...getLocalUpInWorldCoords(controls));
@@ -783,7 +783,10 @@ export const cameraMachine = createMachine(
 
         const radius = focusTarget.meanRadius * 10;
         const diffRadius = Math.abs(controls.radius - radius);
-        const duration = Math.log(Math.max(diffRadius, 1)) / 5;
+        let duration = Math.log(Math.max(diffRadius, 1)) / 8;
+        DEV_ENV && console.log('duration:', duration);
+        // Clamp to be between 0 and 4 seconds.
+        duration = clamp(duration, 0, 3.5);
 
         // DEV_ENV && console.log('change target and zoom!');
         // DEV_ENV && console.log('minRadius:', controls.minRadius);
@@ -798,12 +801,32 @@ export const cameraMachine = createMachine(
       },
 
       autoRotate: async (context) => {
-        const { controls } = context;
+        const { controls, eventDispatcher } = context;
         if (!controls) {
           return;
         }
+
+        eventDispatcher.dispatchEvent({ type: 'ENTERED_SURFACE' });
+
         /* Look south. */
-        await controls.animateTo({ theta: PI + 1e-3, duration: 2 });
+        await controls.animateTo({ theta: -(PI + 1e-2), duration: 2 });
+
+        /* Look up a bit. */
+        await controls.animateTo({ phi: 1.85, duration: 1 });
+
+        const advanceDayInterval = () => {
+          eventDispatcher.dispatchEvent({ type: 'ADVANCE_DAY' });
+        };
+        /* Trigger ADVANCE_DAY event on interval. */
+        const intervalID = setInterval(advanceDayInterval, 200);
+
+        /* Clear interval after timeout. */
+        setTimeout(() => {
+          clearInterval(intervalID);
+        }, 1000 * 20);
+
+        /* Look east. */
+        await controls.animateTo({ theta: 3 * PI_OVER_TWO, duration: 10 });
       },
 
       /* End of services. */
