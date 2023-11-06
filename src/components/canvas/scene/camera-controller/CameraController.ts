@@ -642,7 +642,7 @@ export class CameraController extends Object3D {
     this._camera.getWorldPosition(_camWorldPos);
 
     await gsap.to(this.rotation, {
-      z: -angle,
+      x: -angle,
       duration: duration,
       onUpdate: () => {
         _camPos.copy(_camWorldPos);
