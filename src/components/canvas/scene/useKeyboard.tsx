@@ -128,7 +128,7 @@ export function useKeyboard() {
       }
       case 'Space': {
         if (env !== 'development') return;
-        const { controls } = cameraActor.getSnapshot()!.context;
+        const { controls, focusTarget } = cameraActor.getSnapshot()!.context;
         if (!controls) return;
         event.preventDefault();
 
@@ -138,7 +138,11 @@ export function useKeyboard() {
 
         // console.log(`camera rotation: `, controls.camera.rotation.toArray());
         // console.log(`camera roll: `, controls.roll);
-
+        if (!focusTarget || !(focusTarget instanceof KeplerBody)) return;
+        console.log('focus target rotation:', focusTarget.rotation.toArray());
+        const mesh = focusTarget.meshRef.current;
+        if (!mesh) return;
+        console.log('mesh rotation:', mesh.rotation.toArray());
         break;
       }
       /** Sidereal Day advancement. */
