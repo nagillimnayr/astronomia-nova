@@ -50,9 +50,9 @@ export const ProjectedTrail = ({
     ({ context }) => context
   );
 
-  const onSurface = useSelector(cameraActor, (state) =>
-    state.matches('surface')
-  );
+  // const onSurface = useSelector(cameraActor, (state) =>
+  //   state.matches('surface')
+  // );
   const isPaused = useSelector(timeActor, (state) => state.matches('paused'));
 
   const getThree = useThree(({ get }) => get);
@@ -105,7 +105,7 @@ export const ProjectedTrail = ({
     points.current = resetTrail(anchor, body, length);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [length, body, onSurface]);
+  }, [length, body]);
 
   useEffect(() => {
     // Subscribe to surfaceActor, and reset trail whenever coordinates change.
@@ -177,6 +177,43 @@ export const ProjectedTrail = ({
     return () => subscription.unsubscribe();
   }, [timeActor, body, cameraActor]);
 
+  useEffect(() => {
+    const { eventDispatcher } = cameraActor.getSnapshot()!.context;
+
+    const onEnterSurface = () => {
+      const line = lineRef.current;
+      if (!line) return;
+
+      /* Check if line should be visible. */
+      const camState = cameraActor.getSnapshot()!;
+      const surface = camState.matches('surface');
+      const { focusTarget } = camState.context;
+      const isFocused = Object.is(body, focusTarget);
+      const paused = timeActor.getSnapshot()!.matches('paused');
+
+      const visible = surface && paused && !isFocused;
+      line.visible = visible;
+      // console.log(`${line.geometry.name} visible?`, visible);
+      // console.log(`on surface?`, surface);
+      // console.log(`paused?`, paused);
+      // console.log(`focused?`, isFocused, '\n');
+      // console.log('camera state:', camState.value);
+    };
+    const onExitSurface = () => {
+      const line = lineRef.current;
+      if (!line) return;
+      line.visible = false;
+    };
+
+    eventDispatcher.addEventListener('ENTERED_SURFACE', onEnterSurface);
+    eventDispatcher.addEventListener('EXITED_SURFACE', onExitSurface);
+
+    return () => {
+      eventDispatcher.removeEventListener('ENTERED_SURFACE', onEnterSurface);
+      eventDispatcher.removeEventListener('EXITED_SURFACE', onExitSurface);
+    };
+  }, [body, cameraActor, timeActor]);
+
   const arr = useMemo(() => {
     return [0, 0, 0, 0, 0, 0];
   }, []);
@@ -188,7 +225,7 @@ export const ProjectedTrail = ({
 
   return (
     <>
-      <group ref={anchorRef} visible={onSurface && isPaused}>
+      <group ref={anchorRef} visible={isPaused}>
         <Line
           ref={lineRef}
           points={arr}
