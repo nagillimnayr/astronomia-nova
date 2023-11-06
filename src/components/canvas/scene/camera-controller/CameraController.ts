@@ -876,7 +876,7 @@ export class CameraController extends Object3D {
     this._isAnimating = false;
   }
 
-  async animateZoomTo(targetRadius: number, duration?: number) {
+  async animateZoomTo(targetRadius: number, duration?: number, ease?: string) {
     if (this._isAnimating) return;
 
     this.lock();
@@ -890,6 +890,7 @@ export class CameraController extends Object3D {
     await gsap.to(this._spherical, {
       radius: targetRadius,
       duration: duration,
+      ease: ease ?? 'power2.out',
       onUpdate: () => {
         if (this._spherical.radius < targetRadius) {
           console.log('diff: ', targetRadius - this._spherical.radius);
