@@ -18,6 +18,7 @@ import {
   type PerspectiveCamera,
   Vector3,
   Spherical,
+  EventDispatcher,
 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import { assign, createMachine, log } from 'xstate';
@@ -63,6 +64,8 @@ type Context = {
   focusTarget: Object3D | null;
   observer: Object3D | null;
   vrHud: Object3D | null;
+
+  eventDispatcher: EventDispatcher;
 };
 
 type Events =
@@ -106,6 +109,8 @@ export const cameraMachine = createMachine(
       observer: null,
       focusTarget: null,
       vrHud: null,
+
+      eventDispatcher: new EventDispatcher(),
     }),
 
     // Context assignment events:
@@ -300,7 +305,6 @@ export const cameraMachine = createMachine(
       /* Surface State.*/
       surface: {
         entry: [
-          'enterSurfaceView',
           'applySurfaceCamUp',
           'setSurfaceCamDistance',
           'attachToObserver',
@@ -350,9 +354,11 @@ export const cameraMachine = createMachine(
 
         initial: 'idle',
         states: {
-          idle: {},
+          idle: {
+            entry: [log('Entering surface.autoAnimating'), 'enterSurfaceView'],
+          },
           autoAnimating: {
-            entry: [log('Entering surface.autoAnimating')],
+            entry: [log('Entering surface.autoAnimating'), 'enterSurfaceView'],
 
             initial: 'autoRotating',
             states: {
@@ -429,7 +435,7 @@ export const cameraMachine = createMachine(
         }
       },
       startXRSession: (context) => {
-        const { getThree, controls, vrHud } = context;
+        const { getThree, controls, vrHud, eventDispatcher } = context;
         if (!controls) {
           console.error('error initializing xr session. Controls are null.');
           return;
@@ -451,9 +457,12 @@ export const cameraMachine = createMachine(
         // Position vrHud.
         if (vrHud) {
         }
+
+        eventDispatcher.dispatchEvent({ type: 'STARTED_XR_SESSION' });
       },
       endXRSession: (context) => {
-        const { vrHud, controls, mainCamera, getThree } = context;
+        const { vrHud, controls, mainCamera, getThree, eventDispatcher } =
+          context;
         if (vrHud) {
         }
 
@@ -469,6 +478,8 @@ export const cameraMachine = createMachine(
           controls?.attachToController(xrCamera);
           xrCamera.rotation.set(0, 0, 0);
         }
+
+        eventDispatcher.dispatchEvent({ type: 'ENDED_XR_SESSION' });
       },
 
       attachToTarget: (context) => {
@@ -503,23 +514,12 @@ export const cameraMachine = createMachine(
       },
 
       enterSurfaceView: (context) => {
-        const { controls, observer, focusTarget } = context;
-        if (!controls || !observer || !focusTarget) return;
-
-        // Set polar angle to be horizontal relative to the surface.
-        // controls.setPolarAngleTarget(0);
-        // setTimeout(() => {
-        //   controls.setPolarAngleTarget(PI_OVER_TWO);
-        // }, 1000);
+        const { eventDispatcher } = context;
+        eventDispatcher.dispatchEvent({ type: 'ENTERED_SURFACE' });
       },
       exitSurfaceView: (context) => {
-        // const { controls,  focusTarget } = context;
-        // controls?.attachToWithoutMoving()
-        // controls?.applyWorldUp();
-        // if (!focusTarget || !controls) return;
-        // // console.log('control rotation:', controls?.rotation.toArray());
-        // const body = focusTarget as KeplerBody;
-        // const dist = body.meanRadius * 4;
+        const { eventDispatcher } = context;
+        eventDispatcher.dispatchEvent({ type: 'EXITED_SURFACE' });
       },
 
       updateSurfaceView: (context) => {
@@ -683,10 +683,6 @@ export const cameraMachine = createMachine(
         controls.worldToLocal(_cameraPos);
         controls.spherical.setFromVector3(_cameraPos);
         controls.spherical.makeSafe();
-
-        // console.log('control rotation:', controls.rotation.toArray());
-        // console.log('phi:', controls.polarAngle);
-        // console.log('theta:', controls.azimuthalAngle);
 
         controls.setAzimuthalAngle(0);
         // controls.setPolarAngle(0);
