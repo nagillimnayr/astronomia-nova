@@ -1,9 +1,17 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { format, parse } from 'date-fns';
+import { format, isAfter, isBefore, parse } from 'date-fns';
 import { FormEventHandler, useCallback, useEffect, useRef } from 'react';
 import { TimeOfDayDisplay } from './TimeOfDayDisplay';
 import { DateDisplay } from './DateDisplay';
 import { Input } from '@/components/dom/ui/input';
+import { J2000 } from '@/constants';
+
+const MIN_YEAR = 1900;
+const MAX_YEAR = 2099;
+const MIN_DATE_STR = `${MIN_YEAR}-01-01`;
+const MAX_DATE_STR = `${MAX_YEAR}-01-01`;
+const MIN_DATE = parse(MIN_DATE_STR, 'yyyy-mm-dd', J2000);
+const MAX_DATE = parse(MAX_DATE_STR, 'yyyy-mm-dd', J2000);
 
 export const TimeDisplay = () => {
   const { timeActor } = MachineContext.useSelector(({ context }) => context);
@@ -24,7 +32,21 @@ export const TimeDisplay = () => {
       const dateInput = dateInputRef.current;
       const { date } = timeActor.getSnapshot()!.context;
 
-      const newDate = parse(dateInput.value, 'yyyy-MM-dd', date);
+      let newDate = parse(dateInput.value, 'yyyy-MM-dd', date);
+
+      /* Clamp date. */
+      if (isBefore(newDate, MIN_DATE)) {
+        console.log('before');
+      }
+      if (isAfter(newDate, MAX_DATE)) {
+        console.log('after');
+      }
+      // console.log(newDate);
+      // console.log('min date:', MIN_DATE);
+      // console.log('max date:', MAX_DATE);
+      newDate = isBefore(newDate, MIN_DATE) ? MIN_DATE : newDate;
+      newDate = isAfter(newDate, MAX_DATE) ? MAX_DATE : newDate;
+
       const newDateAndTime = parse(timeOfDayInput.value, 'HH:mm:ss', newDate);
       timeActor.send({ type: 'SET_DATE', date: newDateAndTime });
     },
@@ -61,7 +83,11 @@ export const TimeDisplay = () => {
         type="date"
         onClick={handleOpen}
         onInput={handleInput}
-        className="text-md inline-flex h-8 min-h-fit w-full min-w-fit select-none items-center justify-center py-0 text-center"
+        className={
+          'text-md inline-flex h-8 min-h-fit w-full min-w-fit select-none items-center justify-center py-0 text-center'
+        }
+        min={MIN_DATE_STR}
+        max={MAX_DATE_STR}
       ></Input>
     </div>
   );
