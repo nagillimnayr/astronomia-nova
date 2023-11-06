@@ -891,7 +891,7 @@ export class CameraController extends Object3D {
     await gsap.to(this._spherical, {
       radius: targetRadius,
       duration: duration,
-      ease: ease ?? 'power2.out',
+      ease: ease ?? 'power4.out',
       onUpdate: () => {
         if (this._spherical.radius < targetRadius) {
           console.log('diff: ', targetRadius - this._spherical.radius);
