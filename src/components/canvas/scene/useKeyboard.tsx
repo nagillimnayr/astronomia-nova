@@ -54,16 +54,6 @@ export function useKeyboard() {
         void controls.animateRotation([x, y, 0]);
         break;
       }
-      case 'O': {
-        if (!DEV_ENV) return;
-        const { controls } = cameraActor.getSnapshot()!.context;
-        if (!controls || !controls.camera) return;
-        if (controls.isAnimating) return;
-
-        controls.resetRotation();
-
-        break;
-      }
       case 'KeyR': {
         if (!DEV_ENV) return;
         const { controls } = cameraActor.getSnapshot()!.context;
