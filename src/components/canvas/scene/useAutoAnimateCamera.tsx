@@ -2,6 +2,7 @@ import { DEV_ENV, J2000 } from '@/constants';
 import { delay } from '@/helpers/utils';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useEventListener } from '@react-hooks-library/core';
+import { useSelector } from '@xstate/react';
 
 import { parse } from 'date-fns';
 import { useEffect } from 'react';
@@ -13,8 +14,18 @@ const DATE = new Date('2024-10-01');
 
 export function useAutoAnimateCamera() {
   const rootActor = MachineContext.useActorRef();
-  const { cameraActor, timeActor, mapActor, selectionActor, surfaceActor } =
-    MachineContext.useSelector(({ context }) => context);
+  const {
+    cameraActor,
+    timeActor,
+    mapActor,
+    celestialSphereActor,
+    surfaceActor,
+  } = MachineContext.useSelector(({ context }) => context);
+
+  const { constellations } = useSelector(
+    celestialSphereActor,
+    ({ context }) => context
+  );
 
   useEventListener('keydown', async (event) => {
     if (!DEV_ENV) return;
@@ -29,6 +40,8 @@ export function useAutoAnimateCamera() {
 
     timeActor.send({ type: 'PAUSE' });
     timeActor.send({ type: 'SET_DATE', date: DATE });
+
+    constellations.send({ type: 'SET_OPACITY', opacity: 0.3 });
 
     await delay(1000);
 
