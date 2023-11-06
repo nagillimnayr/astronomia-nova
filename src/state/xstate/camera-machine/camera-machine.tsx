@@ -296,6 +296,8 @@ export const cameraMachine = createMachine(
           onDone: { target: 'surface' },
         },
       },
+
+      /* Surface State.*/
       surface: {
         entry: [
           'enterSurfaceView',
@@ -351,6 +353,18 @@ export const cameraMachine = createMachine(
           idle: {},
           autoAnimating: {
             entry: [log('Entering surface.autoAnimating')],
+
+            initial: 'autoRotating',
+            states: {
+              autoRotating: {
+                invoke: {
+                  src: 'autoRotate',
+                  id: 'auto-rotate-promise',
+                  onDone: { target: '#camera-machine.surface.idle' },
+                  onError: { target: '#camera-machine.surface.idle' },
+                },
+              },
+            },
           },
         },
       },
@@ -785,6 +799,15 @@ export const cameraMachine = createMachine(
 
         DEV_ENV && console.log('target radius:', radius);
         DEV_ENV && console.log('final radius:', controls.radius);
+      },
+
+      autoRotate: async (context) => {
+        const { controls } = context;
+        if (!controls) {
+          return;
+        }
+        /* Look south. */
+        await controls.animateTo({ theta: -PI, duration: 2 });
       },
 
       /* End of services. */
