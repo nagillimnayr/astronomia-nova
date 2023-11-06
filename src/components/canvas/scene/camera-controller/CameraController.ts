@@ -636,8 +636,8 @@ export class CameraController extends Object3D {
   async animateRoll(angle: number, duration = 1) {
     if (this._isAnimating) return;
     if (!this._camera) return;
-    // this.lock();
-    // this._isAnimating = true;
+    this.lock();
+    this._isAnimating = true;
 
     this._camera.getWorldPosition(_camWorldPos);
 
@@ -654,6 +654,9 @@ export class CameraController extends Object3D {
         this.resetTarget();
       },
     });
+
+    this.unlock();
+    this.isAnimating = false;
   }
 
   async animateRotation(targetRotation: Vector3Tuple) {
