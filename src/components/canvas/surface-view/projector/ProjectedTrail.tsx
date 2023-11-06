@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type KeplerBody } from '@/components/canvas/body/kepler-body';
+import { DEV_ENV } from '@/constants';
 import { MachineContext } from '@/state/xstate/MachineProviders';
 import { Line } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -91,6 +92,7 @@ export const ProjectedTrail = ({
       }
 
       const visible = surface && paused && !isFocused;
+      // DEV_ENV && console.log(`${line.geometry.name} visible?: `, visible);
 
       // Update geometry.
       line.geometry.setPositions(points.current);
@@ -165,13 +167,15 @@ export const ProjectedTrail = ({
     };
     const subscription = timeActor.subscribe((state) => {
       if (state.matches('unpaused')) return; // Do nothing if unpaused.
+      const onSurface = cameraActor.getSnapshot()!.matches('surface');
+      if (!onSurface) return;
       // Only update if the last event was a sidereal advancement of time.
       if (state.event.type !== 'ADVANCE_TIME') return;
       setTimeout(updatePosition, DELAY);
     });
 
     return () => subscription.unsubscribe();
-  }, [timeActor, body]);
+  }, [timeActor, body, cameraActor]);
 
   const arr = useMemo(() => {
     return [0, 0, 0, 0, 0, 0];
