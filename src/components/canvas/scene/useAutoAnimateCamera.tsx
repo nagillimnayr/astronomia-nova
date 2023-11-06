@@ -24,6 +24,7 @@ export function useAutoAnimateCamera() {
       return;
     }
 
+    timeActor.send({ type: 'PAUSE' });
     timeActor.send({ type: 'SET_DATE', date: DATE });
 
     // selectionActor.send({ type: 'SELECT', selection: mars });
