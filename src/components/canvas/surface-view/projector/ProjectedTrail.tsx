@@ -195,7 +195,7 @@ export const ProjectedTrail = ({
   }, [timeActor, body, cameraActor]);
 
   useEffect(() => {
-    const { eventDispatcher } = cameraActor.getSnapshot()!.context;
+    const { eventManager } = cameraActor.getSnapshot()!.context;
 
     const onEnterSurface = () => {
       setVisibility.current();
@@ -214,17 +214,17 @@ export const ProjectedTrail = ({
       line.visible = !isFocused;
     };
 
-    eventDispatcher.addEventListener('ENTERED_SURFACE', onEnterSurface);
-    eventDispatcher.addEventListener('EXITED_SURFACE', onExitSurface);
-    eventDispatcher.addEventListener(
+    eventManager.addEventListener('ENTERED_SURFACE', onEnterSurface);
+    eventManager.addEventListener('EXITED_SURFACE', onExitSurface);
+    eventManager.addEventListener(
       'ENABLE_TRAIL_VISIBILITY',
       onEnableTrailVisibility
     );
 
     return () => {
-      eventDispatcher.removeEventListener('ENTERED_SURFACE', onEnterSurface);
-      eventDispatcher.removeEventListener('EXITED_SURFACE', onExitSurface);
-      eventDispatcher.removeEventListener(
+      eventManager.removeEventListener('ENTERED_SURFACE', onEnterSurface);
+      eventManager.removeEventListener('EXITED_SURFACE', onExitSurface);
+      eventManager.removeEventListener(
         'ENABLE_TRAIL_VISIBILITY',
         onEnableTrailVisibility
       );
