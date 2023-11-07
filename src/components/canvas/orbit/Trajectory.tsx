@@ -156,17 +156,20 @@ export const Trajectory = ({
   );
 };
 
+type PseudoTrajectoryProps = {
+  bodyRef: MutableRefObject<KeplerBody>;
+};
 /**
  * This line object helps to cover up a lot of the flickering of the trajectory when very close to a planet.
  */
-export const PseudoTrajectory = () => {
+export const PseudoTrajectory = ({ bodyRef }: PseudoTrajectoryProps) => {
   const { cameraActor, visibilityActor } = MachineContext.useSelector(
     ({ context }) => context
   );
-  const focusTarget = useSelector(
-    cameraActor,
-    ({ context }) => context.focusTarget
-  );
+  // const focusTarget = useSelector(
+  //   cameraActor,
+  //   ({ context }) => context.focusTarget
+  // );
   const onSurface = useSelector(cameraActor, (state) =>
     state.matches('surface')
   );
@@ -194,8 +197,9 @@ export const PseudoTrajectory = () => {
   const lineRef = useRef<Line2>(null!);
 
   useFrame(() => {
-    const body = cameraActor.getSnapshot()!.context.focusTarget;
-    if (!(body instanceof KeplerBody)) return;
+    // const body = cameraActor.getSnapshot()!.context.focusTarget;
+    const body = bodyRef.current;
+    if (!body) return;
     if (onSurface) return;
 
     const line = lineRef.current;
@@ -223,8 +227,22 @@ export const PseudoTrajectory = () => {
   );
   const lineWidth = thickness * (isPresenting ? 0.75 : 1) * 1.1;
 
-  if (!focusTarget) return;
-  return createPortal(
+  // if (!bodyRef.current) return;
+  // return createPortal(
+  //   <>
+  //     <Line
+  //       visible={isVisible}
+  //       ref={lineRef}
+  //       points={points}
+  //       lineWidth={lineWidth}
+  //       scale={scale}
+  //       color={'white'}
+  //     />
+  //   </>,
+  //   // focusTarget
+  // );
+
+  return (
     <>
       <Line
         visible={isVisible}
@@ -234,7 +252,6 @@ export const PseudoTrajectory = () => {
         scale={scale}
         color={'white'}
       />
-    </>,
-    focusTarget
+    </>
   );
 };

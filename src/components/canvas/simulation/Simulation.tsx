@@ -40,7 +40,6 @@ export const Simulation = ({ children }: PropsWithChildren) => {
         <ambientLight intensity={0.5} />
         <ObservationPoint />
         <VRSurfaceDialog />
-        <PseudoTrajectory />
       </group>
     </>
   );

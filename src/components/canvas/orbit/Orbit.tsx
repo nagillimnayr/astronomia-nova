@@ -8,7 +8,7 @@ import { extend, type Object3DNode } from '@react-three/fiber';
 import { type PropsWithChildren, useContext, useEffect, useRef } from 'react';
 import { type Texture, Vector3 } from 'three';
 import { Body } from '@/components/canvas/body';
-import { Trajectory } from './Trajectory';
+import { PseudoTrajectory, Trajectory } from './Trajectory';
 import { type Ephemerides } from '@/helpers/horizons/types/Ephemerides';
 import { useRootStore } from '@/state/root-store';
 
@@ -41,8 +41,8 @@ export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
   );
 
   // Refs.
-  const orbitRef = useRef<KeplerOrbit | null>(null);
-  const orbitingBodyRef = useRef<KeplerBody | null>(null);
+  const orbitRef = useRef<KeplerOrbit>(null!);
+  const orbitingBodyRef = useRef<KeplerBody>(null!);
   const centralBodyRef = useContext(KeplerTreeContext);
 
   const { elementTable, vectorTable, physicalDataTable } = ephemerides;
@@ -156,6 +156,7 @@ export const Orbit = ({ children, name, texture, ephemerides }: OrbitProps) => {
         texture={texture}
       >
         {children}
+        <PseudoTrajectory bodyRef={orbitingBodyRef} />
       </Body>
 
       <Trajectory
