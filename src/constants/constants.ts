@@ -21,6 +21,9 @@ export const J2000: Readonly<Date> = new Date(
 );
 export const J2000_JD = 2451545.0; // J2000 in Julian Days.
 
+export const MIN_TIMESCALE = -100;
+export const MAX_TIMESCALE = 100;
+
 // export const DIST_MULT = 1e10; // Distance multiplier (10 units = 1x10^11m =
 // 100,000,000km) export const DIST_MULT = 1e9; // Distance multiplier (100
 // units = 1x10^11m = 100,000,000km) export const DIST_MULT = 1e8; // Distance

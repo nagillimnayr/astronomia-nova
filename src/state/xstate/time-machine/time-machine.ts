@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { J2000 } from '@/constants/constants';
+import { J2000, MAX_TIMESCALE, MIN_TIMESCALE } from '@/constants/constants';
 import { addSeconds, differenceInSeconds, startOfDay } from 'date-fns';
+import { EventDispatcher } from 'three';
 import { assign, createMachine } from 'xstate';
-
-const MIN_TIMESCALE = -100;
-const MAX_TIMESCALE = 100;
 
 export enum TimeUnit {
   Second,
@@ -29,6 +27,8 @@ type Context = {
   minTimescale: number;
   maxTimescale: number;
   timescaleUnit: TimeUnit;
+
+  eventManager: EventDispatcher;
 };
 
 type Events =
@@ -67,6 +67,8 @@ export const timeMachine = createMachine(
       minTimescale: MIN_TIMESCALE,
       maxTimescale: MAX_TIMESCALE,
       timescaleUnit: TimeUnit.Second,
+
+      eventManager: new EventDispatcher(),
     }),
 
     entry: ['setDateToNow', 'updateDate'],

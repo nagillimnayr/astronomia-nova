@@ -1,5 +1,10 @@
 import { KeplerBody } from '@/components/canvas/body/kepler-body';
-import { TIME_MULT } from '@/constants/constants';
+import {
+  J2000,
+  MAX_TIMESCALE,
+  MIN_TIMESCALE,
+  TIME_MULT,
+} from '@/constants/constants';
 import { type ActorRefFrom, assign, createMachine, log, spawn } from 'xstate';
 import { sendTo } from 'xstate/lib/actions';
 import { cameraMachine } from '../camera-machine/camera-machine';
@@ -7,11 +12,12 @@ import { keplerTreeMachine } from '../kepler-tree-machine/kepler-tree-machine';
 import { mapMachine } from '../map-machine/map-machine';
 import { selectionMachine } from '../selection-machine/selection-machine';
 import { surfaceMachine } from '../surface-machine/surface-machine';
-import { timeMachine } from '../time-machine/time-machine';
+import { TimeUnit, timeMachine } from '../time-machine/time-machine';
 import { uiMachine } from '../ui-machine/ui-machine';
 import { celestialSphereMachine } from '../visibility-machine/celestial-sphere-machine';
 import { visibilityMachine } from '../visibility-machine/visibility-machine';
 import { vrMachine } from '../vr-machine/vr-machine';
+import { EventDispatcher } from 'three';
 
 type Context = {
   timeActor: ActorRefFrom<typeof timeMachine>;
@@ -24,6 +30,8 @@ type Context = {
   mapActor: ActorRefFrom<typeof mapMachine>;
   surfaceActor: ActorRefFrom<typeof surfaceMachine>;
   vrActor: ActorRefFrom<typeof vrMachine>;
+
+  eventManager: EventDispatcher;
 };
 
 type Events =
@@ -43,7 +51,7 @@ export const rootMachine = createMachine(
     },
     id: 'root-machine',
 
-    context: {
+    context: () => ({
       timeActor: null!,
       keplerTreeActor: null!,
       selectionActor: null!,
@@ -54,58 +62,84 @@ export const rootMachine = createMachine(
       mapActor: null!,
       surfaceActor: null!,
       vrActor: null!,
-    },
+
+      eventManager: new EventDispatcher(),
+    }),
 
     entry: [
       assign({
-        timeActor: () =>
-          spawn(timeMachine, {
-            name: 'timeActor',
-            sync: true,
-          }),
-        keplerTreeActor: () =>
+        timeActor: ({ eventManager }) =>
+          spawn(
+            timeMachine.withContext({
+              timeElapsed: 0,
+              timescale: 1,
+              refDate: J2000,
+              date: new Date(),
+              minTimescale: MIN_TIMESCALE,
+              maxTimescale: MAX_TIMESCALE,
+              timescaleUnit: TimeUnit.Second,
+              eventManager: eventManager,
+            }),
+            {
+              name: 'timeActor',
+              sync: true,
+            }
+          ),
+        keplerTreeActor: ({ eventManager }) =>
           spawn(keplerTreeMachine, {
             name: 'keplerTreeActor',
             sync: true,
           }),
 
-        selectionActor: () =>
+        selectionActor: ({ eventManager }) =>
           spawn(selectionMachine, {
             name: 'selectionActor',
             sync: true,
           }),
-        cameraActor: () =>
-          spawn(cameraMachine, {
-            name: 'cameraActor',
-            sync: true,
-          }),
-        uiActor: () =>
+        cameraActor: ({ eventManager }) =>
+          spawn(
+            cameraMachine.withContext({
+              controls: null,
+              getThree: null!,
+              getXR: null!,
+              mainCamera: null,
+              observer: null,
+              focusTarget: null,
+              vrHud: null,
+              eventManager: eventManager,
+            }),
+            {
+              name: 'cameraActor',
+              sync: true,
+            }
+          ),
+        uiActor: ({ eventManager }) =>
           spawn(uiMachine, {
             name: 'uiActor',
             sync: true,
           }),
-        visibilityActor: () =>
+        visibilityActor: ({ eventManager }) =>
           spawn(visibilityMachine, {
             name: 'visibilityActor',
             sync: true,
           }),
 
-        celestialSphereActor: () =>
+        celestialSphereActor: ({ eventManager }) =>
           spawn(celestialSphereMachine, {
             name: 'celestialSphereActor',
             sync: true,
           }),
-        mapActor: () =>
+        mapActor: ({ eventManager }) =>
           spawn(mapMachine, {
             name: 'mapActor',
             sync: true,
           }),
-        surfaceActor: () =>
+        surfaceActor: ({ eventManager }) =>
           spawn(surfaceMachine, {
             name: 'surfaceActor',
             sync: true,
           }),
-        vrActor: () =>
+        vrActor: ({ eventManager }) =>
           spawn(vrMachine, {
             name: 'vrActor',
             sync: true,
