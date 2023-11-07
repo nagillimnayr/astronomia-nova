@@ -864,6 +864,8 @@ export const cameraMachine = createMachine(
           ease: 'sine.inOut',
         });
 
+        await delay(500);
+
         const advanceDayInterval = () => {
           eventDispatcher.dispatchEvent({ type: 'ADVANCE_DAY' });
         };
