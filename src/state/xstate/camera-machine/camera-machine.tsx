@@ -606,7 +606,7 @@ export const cameraMachine = createMachine(
           controls,
           focusTarget,
           observer,
-          eventManager: eventDispatcher,
+          eventManager: eventManager,
         } = context;
         if (
           !controls ||
@@ -617,6 +617,8 @@ export const cameraMachine = createMachine(
         ) {
           return;
         }
+
+        eventManager.dispatchEvent({ type: 'PAUSE' });
 
         const bodyMesh = focusTarget.getObjectByName(
           `${focusTarget.name}-meridian`
@@ -722,7 +724,7 @@ export const cameraMachine = createMachine(
               phi: PI_OVER_TWO,
               duration: 2,
               onStart: () => {
-                eventDispatcher.dispatchEvent({
+                eventManager.dispatchEvent({
                   type: 'DISABLE_TRAJECTORY_VISIBILITY',
                 });
               },
@@ -737,14 +739,12 @@ export const cameraMachine = createMachine(
         controls.unlock();
       },
       enterSpacePromise: async (context) => {
-        const {
-          controls,
-          focusTarget,
-          observer,
-          eventManager: eventDispatcher,
-        } = context;
+        const { controls, focusTarget, observer, eventManager } = context;
         if (!focusTarget || !controls || !observer) return;
         DEV_ENV && console.log('entering space');
+
+        eventManager.dispatchEvent({ type: 'PAUSE' });
+
         controls.setMinRadius(SPACE_MIN_DIST_FROM_SURFACE);
         controls.setMaxRadius(SPACE_MAX_DIST);
 
@@ -767,7 +767,7 @@ export const cameraMachine = createMachine(
 
         controls.setRadius(body.meanRadius);
 
-        eventDispatcher.dispatchEvent({ type: 'ENABLE_TRAJECTORY_VISIBILITY' });
+        eventManager.dispatchEvent({ type: 'ENABLE_TRAJECTORY_VISIBILITY' });
 
         await gsap.to(controls.spherical, {
           radius: dist,
