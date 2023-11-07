@@ -8,6 +8,8 @@ import { Compass } from '../compass/Compass';
 import { Observer } from '../observer/Observer';
 import { ObservationPointIndicator } from './ObservationPointIndicator';
 
+const METERS_ABOVE_SURFACE = 20;
+
 type Props = {
   children?: ReactNode;
 };
@@ -96,7 +98,11 @@ const ObservationPoint = ({ children }: Props) => {
             {/** Attach group at a distance so that it is on the surface of the body. */}
             <group
               name="observation-point"
-              position={[body.meanRadius * METER, 0, 0]} // Position on surface.
+              position={[
+                (body.meanRadius + METERS_ABOVE_SURFACE) * METER,
+                0,
+                0,
+              ]} // Position on surface.
               rotation={[0, 0, -PI_OVER_TWO]} // Rotate so that the pole of the
               // sphere is perpendicular to the
               // surface of the body.
