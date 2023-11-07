@@ -14,10 +14,10 @@ export function useEventManager() {
 
   useEffect(() => {
     const enableTrajectoryVisibility = () => {
-      trajectories.send({ type: 'DISABLE' });
+      trajectories.send({ type: 'ENABLE' });
     };
     const disableTrajectoryVisibility = () => {
-      trajectories.send({ type: 'ENABLE' });
+      trajectories.send({ type: 'DISABLE' });
     };
 
     const { eventManager } = rootActor.getSnapshot()!.context;
