@@ -40,6 +40,9 @@ import { getLocalUpInWorldCoords } from '@/helpers/vector-utils';
  * @mergeTarget
  */
 
+const SPHERE_HEIGHT_SEGMENTS = 256;
+const SPHERE_WIDTH_SEGMENTS = 512;
+
 const _centralWorldPos = new Vector3();
 
 /**
@@ -130,7 +133,11 @@ export const BodyMesh = forwardRef<Mesh, BodyMeshProps>(function BodyMesh(
     [obliquity]
   );
   const sphereArgs = useMemo(() => {
-    const args: [number, number, number] = [radius, 128, 128];
+    const args: [number, number, number] = [
+      radius,
+      SPHERE_WIDTH_SEGMENTS,
+      SPHERE_HEIGHT_SEGMENTS,
+    ];
     return args;
   }, [radius]);
   return (
