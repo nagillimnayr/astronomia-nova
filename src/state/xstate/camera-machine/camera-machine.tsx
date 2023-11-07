@@ -65,7 +65,7 @@ type Context = {
   observer: Object3D | null;
   vrHud: Object3D | null;
 
-  eventDispatcher: EventDispatcher;
+  eventManager: EventDispatcher;
 };
 
 type Events =
@@ -110,7 +110,7 @@ export const cameraMachine = createMachine(
       focusTarget: null,
       vrHud: null,
 
-      eventDispatcher: new EventDispatcher(),
+      eventManager: new EventDispatcher(),
     }),
 
     // Context assignment events:
@@ -435,7 +435,12 @@ export const cameraMachine = createMachine(
         }
       },
       startXRSession: (context) => {
-        const { getThree, controls, vrHud, eventDispatcher } = context;
+        const {
+          getThree,
+          controls,
+          vrHud,
+          eventManager: eventDispatcher,
+        } = context;
         if (!controls) {
           console.error('error initializing xr session. Controls are null.');
           return;
@@ -461,8 +466,13 @@ export const cameraMachine = createMachine(
         eventDispatcher.dispatchEvent({ type: 'STARTED_XR_SESSION' });
       },
       endXRSession: (context) => {
-        const { vrHud, controls, mainCamera, getThree, eventDispatcher } =
-          context;
+        const {
+          vrHud,
+          controls,
+          mainCamera,
+          getThree,
+          eventManager: eventDispatcher,
+        } = context;
         if (vrHud) {
         }
 
@@ -514,11 +524,11 @@ export const cameraMachine = createMachine(
       },
 
       enterSurfaceView: (context) => {
-        const { eventDispatcher } = context;
+        const { eventManager: eventDispatcher } = context;
         eventDispatcher.dispatchEvent({ type: 'ENTERED_SURFACE' });
       },
       exitSurfaceView: (context) => {
-        const { eventDispatcher } = context;
+        const { eventManager: eventDispatcher } = context;
         eventDispatcher.dispatchEvent({ type: 'EXITED_SURFACE' });
       },
 
@@ -592,7 +602,12 @@ export const cameraMachine = createMachine(
     services: {
       enterSurfacePromise: async (context) => {
         // DEV_ENV && console.log('entering surface');
-        const { controls, focusTarget, observer } = context;
+        const {
+          controls,
+          focusTarget,
+          observer,
+          eventManager: eventDispatcher,
+        } = context;
         if (
           !controls ||
           !controls.camera ||
@@ -706,6 +721,11 @@ export const cameraMachine = createMachine(
             {
               phi: PI_OVER_TWO,
               duration: 2,
+              onStart: () => {
+                eventDispatcher.dispatchEvent({
+                  type: 'DISABLE_TRAJECTORY_VISIBILITY',
+                });
+              },
               onUpdate: () => {
                 controls.updateCameraPosition();
                 controls.resetTarget();
@@ -717,7 +737,12 @@ export const cameraMachine = createMachine(
         controls.unlock();
       },
       enterSpacePromise: async (context) => {
-        const { controls, focusTarget, observer } = context;
+        const {
+          controls,
+          focusTarget,
+          observer,
+          eventManager: eventDispatcher,
+        } = context;
         if (!focusTarget || !controls || !observer) return;
         DEV_ENV && console.log('entering space');
         controls.setMinRadius(SPACE_MIN_DIST_FROM_SURFACE);
@@ -741,6 +766,8 @@ export const cameraMachine = createMachine(
         controls.spherical.setFromVector3(_observerPos);
 
         controls.setRadius(body.meanRadius);
+
+        eventDispatcher.dispatchEvent({ type: 'ENABLE_TRAJECTORY_VISIBILITY' });
 
         await gsap.to(controls.spherical, {
           radius: dist,
@@ -819,7 +846,7 @@ export const cameraMachine = createMachine(
       },
 
       autoRotate: async (context) => {
-        const { controls, eventDispatcher } = context;
+        const { controls, eventManager: eventDispatcher } = context;
         if (!controls) {
           return;
         }
