@@ -768,6 +768,7 @@ export const cameraMachine = createMachine(
         controls.setRadius(body.meanRadius);
 
         eventManager.dispatchEvent({ type: 'ENABLE_TRAJECTORY_VISIBILITY' });
+        eventManager.dispatchEvent({ type: 'EXITED_SURFACE' });
 
         await gsap.to(controls.spherical, {
           radius: dist,
