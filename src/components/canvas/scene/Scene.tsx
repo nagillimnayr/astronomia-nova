@@ -4,10 +4,12 @@ import { Simulation } from '@/components/canvas/simulation/Simulation';
 import { type PropsWithChildren } from 'react';
 import { useKeyboard } from './useKeyboard';
 import { useAutoAnimateCamera } from './useAutoAnimateCamera';
+import { useEventManager } from './useEventManager';
 
 const Scene = ({ children }: PropsWithChildren) => {
   useKeyboard();
   useAutoAnimateCamera();
+  useEventManager();
   return (
     <>
       <CameraManager />
