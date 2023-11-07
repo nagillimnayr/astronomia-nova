@@ -52,6 +52,7 @@ export function useAutoAnimateCamera() {
   });
 
   useEffect(() => {
+    if (!DEV_ENV) return;
     /* hacky workaround to trigger ADVANCE_DAY event from inside of cameraMachine. */
     const onAdvanceDay = () => {
       rootActor.send({ type: 'ADVANCE_DAY' });
