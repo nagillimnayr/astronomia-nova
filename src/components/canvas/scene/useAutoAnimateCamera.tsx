@@ -57,12 +57,12 @@ export function useAutoAnimateCamera() {
     const onAdvanceDay = () => {
       rootActor.send({ type: 'ADVANCE_DAY' });
     };
-    const { eventDispatcher } = cameraActor.getSnapshot()!.context;
+    const { eventManager } = cameraActor.getSnapshot()!.context;
 
-    eventDispatcher.addEventListener('ADVANCE_DAY', onAdvanceDay);
+    eventManager.addEventListener('ADVANCE_DAY', onAdvanceDay);
 
     return () => {
-      eventDispatcher.removeEventListener('ADVANCE_DAY', onAdvanceDay);
+      eventManager.removeEventListener('ADVANCE_DAY', onAdvanceDay);
     };
   }, [cameraActor, rootActor]);
 }
