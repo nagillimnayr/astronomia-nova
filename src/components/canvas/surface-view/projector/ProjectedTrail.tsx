@@ -197,36 +197,39 @@ export const ProjectedTrail = ({
   useEffect(() => {
     const { eventManager } = cameraActor.getSnapshot()!.context;
 
-    const onEnterSurface = () => {
-      setVisibility.current();
-    };
-    const onExitSurface = () => {
-      const line = lineRef.current;
-      if (!line) return;
-      line.visible = false;
-    };
-
-    const onEnableTrailVisibility = () => {
+    const enableTrailVisibility = () => {
       const line = lineRef.current;
       if (!line) return;
       const { focusTarget } = cameraActor.getSnapshot()!.context;
       const isFocused = Object.is(body, focusTarget);
       line.visible = !isFocused;
+      // DEV_ENV && console.log(`${line.geometry.name} vis: `, line.visible);
+    };
+    const disableTrailVisibility = () => {
+      const line = lineRef.current;
+      if (!line) return;
+      line.visible = false;
     };
 
-    eventManager.addEventListener('ENTERED_SURFACE', onEnterSurface);
-    eventManager.addEventListener('EXITED_SURFACE', onExitSurface);
+    eventManager.addEventListener('ENTERED_SURFACE', enableTrailVisibility);
+    eventManager.addEventListener('EXITED_SURFACE', disableTrailVisibility);
     eventManager.addEventListener(
       'ENABLE_TRAIL_VISIBILITY',
-      onEnableTrailVisibility
+      enableTrailVisibility
     );
 
     return () => {
-      eventManager.removeEventListener('ENTERED_SURFACE', onEnterSurface);
-      eventManager.removeEventListener('EXITED_SURFACE', onExitSurface);
+      eventManager.removeEventListener(
+        'ENTERED_SURFACE',
+        enableTrailVisibility
+      );
+      eventManager.removeEventListener(
+        'EXITED_SURFACE',
+        disableTrailVisibility
+      );
       eventManager.removeEventListener(
         'ENABLE_TRAIL_VISIBILITY',
-        onEnableTrailVisibility
+        enableTrailVisibility
       );
     };
   }, [body, cameraActor, timeActor]);

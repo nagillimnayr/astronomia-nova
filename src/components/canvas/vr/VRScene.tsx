@@ -11,6 +11,7 @@ import { Floor } from './components/Floor';
 import { VRGrabbable } from './components/VRGrabbable';
 import { VRCameraManager } from './VRCameraManager';
 import { ORIGIN, X_AXIS, Y_AXIS, Z_AXIS } from '@/constants';
+import { AnnularCylinder } from '../misc/AnnularCylinder';
 
 const LOW_X = -15;
 const HIGH_X = 15;
@@ -68,6 +69,10 @@ export const VRScene = () => {
       />
       <Controllers />
       <VRHud />
+
+      <AnnularCylinder innerRadius={0.6} outerRadius={1} depth={1}>
+        <meshStandardMaterial color={'white'} />
+      </AnnularCylinder>
       {/* <VRDebugPortal position={[0, 0.5, -2]} scale={0.05} /> */}
     </>
   );

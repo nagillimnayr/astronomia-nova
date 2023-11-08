@@ -4,10 +4,15 @@ import { MachineContext } from '@/state/xstate/MachineProviders';
 import { useThree } from '@react-three/fiber';
 import { useRef } from 'react';
 import { Group, Vector3, Vector3Tuple } from 'three';
-import { GOLDEN_RATIO } from '../../../../../constants/vr-hud-constants';
+import { GOLDEN_RATIO } from '@/constants/vr-hud-constants';
+import { Interactive } from '@react-three/xr';
 
 const _camWorldPos = new Vector3();
 const _camWorldUp = new Vector3();
+
+const dummyFn = () => {
+  return;
+};
 
 type VRTimePanelProps = {
   position?: Vector3Tuple;
@@ -30,16 +35,18 @@ export const VRTimePanel = ({
   const width = height * GOLDEN_RATIO;
   return (
     <>
-      <group
-        position={position}
-        ref={containerRef}
-        name="vr-time-panel"
-        scale={scale}
-      >
-        {/* <VRTimescaleDisplay position={[0, 4, 0]} /> */}
-        <VRDateDisplay position={[0, 2.25, 0]} />
-        <VRTimeControls position={[0, -2.25, 0]} />
-      </group>
+      <Interactive onSelect={dummyFn}>
+        <group
+          position={position}
+          ref={containerRef}
+          name="vr-time-panel"
+          scale={scale}
+        >
+          {/* <VRTimescaleDisplay position={[0, 4, 0]} /> */}
+          <VRDateDisplay position={[0, 2.25, 0]} />
+          <VRTimeControls position={[0, -2.25, 0]} />
+        </group>
+      </Interactive>
     </>
   );
 };

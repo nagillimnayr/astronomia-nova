@@ -1,10 +1,12 @@
 import { MachineContext } from '@/state/xstate/MachineProviders';
-import { useSpring } from '@react-spring/three';
-import { Sphere } from '@react-three/drei';
+import { useSpring, animated } from '@react-spring/three';
+import { Ring, Sphere } from '@react-three/drei';
 import { useController, useXR, useXREvent } from '@react-three/xr';
 import { useMemo, useRef } from 'react';
-import { DoubleSide, Group, Mesh, Vector3 } from 'three';
-import { anim } from '../../../helpers/react-spring-utils/animated-components';
+import { DoubleSide, type Group, type Mesh, Vector3 } from 'three';
+import { anim } from '@/helpers/react-spring-utils/animated-components';
+import { makeAnnularCylinderGeometry } from '@/helpers/geometry/annular-cylinder';
+import { AnnularCylinder } from '../misc/AnnularCylinder';
 
 const _camWorldPos = new Vector3();
 const _worldPos = new Vector3();
@@ -55,12 +57,12 @@ export const VRHoverIndicator = ({
     { handedness: handedness }
   );
 
-  const ringArgs: [number, number, number] = useMemo(() => {
-    const outerRadius = 1;
-    const innerRadius = 0.9;
-    const segments = 32;
-    return [innerRadius, outerRadius, segments];
-  }, []);
+  // const ringArgs: [number, number, number] = useMemo(() => {
+  //   const outerRadius = 1;
+  //   const innerRadius = 0.9;
+  //   const segments = 32;
+  //   return [innerRadius, outerRadius, segments];
+  // }, []);
 
   return (
     <>
@@ -70,22 +72,19 @@ export const VRHoverIndicator = ({
         ref={indicatorRef}
         scale={radius}
       >
-        <Sphere scale={0.2} />
+        <Sphere scale={0.1} />
         {/* <axesHelper args={[radius * 2]} scale={200} /> */}
         {/* <arrowHelper args={[Z_AXIS, ORIGIN, 10, 'cyan']} /> */}
-        <group position-z={0.1}>
-          <anim.Ring
-            name={`hover-indicator-ring-${handedness}`}
-            args={ringArgs}
+        <group position-z={0.25}>
+          <animated.object3D
             ref={ringRef}
+            name={`hover-indicator-ring-${handedness}`}
             scale={spring.scale}
           >
-            <meshBasicMaterial side={DoubleSide} color={'white'} />
-            {/* <anim.Circle
-             material-transparent={true}
-             material-opacity={spring.opacity}
-             /> */}
-          </anim.Ring>
+            <AnnularCylinder innerRadius={0.7} outerRadius={1} depth={0.01}>
+              <meshBasicMaterial side={DoubleSide} color={'white'} />
+            </AnnularCylinder>
+          </animated.object3D>
         </group>
       </group>
     </>
