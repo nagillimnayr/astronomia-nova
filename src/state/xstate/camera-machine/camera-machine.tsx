@@ -869,9 +869,9 @@ export const cameraMachine = createMachine(
         const advanceDayInterval = () => {
           eventDispatcher.dispatchEvent({ type: 'ADVANCE_DAY' });
         };
-        const duration = 20 * 1000;
+        const duration = 15 * 1000;
         /* Trigger ADVANCE_DAY event on interval. */
-        const intervalID = setInterval(advanceDayInterval, 30);
+        const intervalID = setInterval(advanceDayInterval, 50);
 
         /* Clear interval after timeout. */
         setTimeout(() => {
