@@ -156,6 +156,7 @@ export const Trajectory = ({
   );
 };
 
+const PSEUDO_RESOLUTION = 256;
 type PseudoTrajectoryProps = {
   bodyRef: MutableRefObject<KeplerBody>;
 };
@@ -185,8 +186,8 @@ export const PseudoTrajectory = ({ bodyRef }: PseudoTrajectoryProps) => {
 
   const points = useMemo(() => {
     const points: Vector3[] = [];
-    for (let i = 0; i < NUM_OF_POINTS + 1; i++) {
-      points.push(new Vector3(0, 0, -1 + (i * 2) / NUM_OF_POINTS));
+    for (let i = 0; i < PSEUDO_RESOLUTION + 1; i++) {
+      points.push(new Vector3(0, 0, -1 + (i * 2) / PSEUDO_RESOLUTION));
     }
     return points;
   }, []);
