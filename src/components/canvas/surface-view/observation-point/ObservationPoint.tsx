@@ -8,7 +8,7 @@ import { Compass } from '../compass/Compass';
 import { Observer } from '../observer/Observer';
 import { ObservationPointIndicator } from './ObservationPointIndicator';
 
-const METERS_ABOVE_SURFACE = 50;
+const METERS_ABOVE_SURFACE = 100;
 
 type Props = {
   children?: ReactNode;
