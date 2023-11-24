@@ -30,7 +30,7 @@ const _vel = new Vector3();
 
 const DIST_TO_CAM_THRESHOLD = 1e8 * METER;
 
-const NUM_OF_POINTS = 2 ** 14;
+const NUM_OF_POINTS = 2 ** 13;
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
@@ -156,7 +156,7 @@ export const Trajectory = ({
   );
 };
 
-const PSEUDO_RESOLUTION = 256;
+const PSEUDO_RESOLUTION = 64;
 type PseudoTrajectoryProps = {
   bodyRef: MutableRefObject<KeplerBody>;
 };
@@ -226,7 +226,7 @@ export const PseudoTrajectory = ({ bodyRef }: PseudoTrajectoryProps) => {
   const thickness = useRootStore(
     ({ trajectoryThickness }) => trajectoryThickness
   );
-  const lineWidth = thickness * (isPresenting ? 0.75 : 1) * 1.1;
+  const lineWidth = thickness * (isPresenting ? 0.75 : 1) * 1.2;
 
   // if (!bodyRef.current) return;
   // return createPortal(
