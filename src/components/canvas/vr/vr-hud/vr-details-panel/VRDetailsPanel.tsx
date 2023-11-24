@@ -265,7 +265,7 @@ const CloseButton = ({ size }: CloseButtonProps) => {
             </animated.mesh>
           </Interactive>
 
-          <object3D position-z={depth.md}>
+          <object3D position-z={0.2}>
             <Center onCentered={dummyFn} disableZ>
               <Suspense>
                 <Svg
