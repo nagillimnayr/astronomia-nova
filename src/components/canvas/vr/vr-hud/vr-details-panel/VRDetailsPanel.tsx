@@ -11,8 +11,8 @@ import {
   depth,
   GOLDEN_RATIO,
   text,
-} from '../../../../../constants/vr-hud-constants';
-import { ICON_MATERIAL_BASE } from '../../../../../constants/vr-ui-materials';
+} from '@/constants/vr-hud-constants';
+import { ICON_MATERIAL_BASE } from '@/constants/vr-ui-materials';
 import { VRPanel } from '../vr-ui-components/vr-panel/VRPanel';
 import { VRFocusButton } from './VRFocusButton';
 import { VRSurfaceButton } from './VRSurfaceButton';
