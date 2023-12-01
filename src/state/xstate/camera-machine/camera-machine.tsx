@@ -601,7 +601,6 @@ export const cameraMachine = createMachine(
     },
     services: {
       enterSurfacePromise: async (context) => {
-        // DEV_ENV && console.log('entering surface');
         const {
           controls,
           focusTarget,
@@ -625,12 +624,6 @@ export const cameraMachine = createMachine(
         );
 
         if (!bodyMesh) return;
-        // DEV_ENV && console.log(bodyMesh);
-
-        /* Get angle between up vector of controller and up vector of body. */
-        // _v1.set(...getLocalUpInWorldCoords(controls));
-        // _v2.set(...getLocalUpInWorldCoords(bodyMesh));
-        // const roll = _v1.angleTo(_v2);
 
         const roll = degToRad(focusTarget.obliquity);
 
@@ -662,10 +655,6 @@ export const cameraMachine = createMachine(
         controls.resetTarget();
         controls.setMinRadius(SURFACE_MIN_DIST);
 
-        // await controls.animateTo({ radius });
-        // await controls.animateTo({ phi, theta });
-        // await controls.animateRoll(roll);
-
         const diffRadius = controls.radius - radius;
         const duration = Math.log(Math.max(diffRadius, 1)) / 5;
         DEV_ENV && console.log('duration:', duration);
@@ -690,8 +679,6 @@ export const cameraMachine = createMachine(
 
         /* Rotate to align with equator/polar axis. */
         await controls.animateRoll(roll);
-
-        // console.log('control rotation:', controls.rotation.toArray());
 
         controls.camera.getWorldPosition(_cameraPos);
         observer.add(controls);
