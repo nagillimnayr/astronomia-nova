@@ -173,7 +173,7 @@ export const rootMachine = createMachine(
           return focusTarget instanceof KeplerBody;
         },
         actions: [
-          sendTo(({ timeActor }) => timeActor, { type: 'PAUSE' }),
+          // sendTo(({ timeActor }) => timeActor, { type: 'PAUSE' }),
           'advanceDay',
         ],
       },

@@ -71,12 +71,29 @@ export const ProjectedTrail = ({
     /* Check if line should be visible. */
     const camState = cameraActor.getSnapshot()!;
     const surface = camState.matches('surface');
+    if (!surface) {
+      line.visible = false;
+      return;
+    }
+    const paused = timeActor.getSnapshot()!.matches('paused');
+    if (!paused) {
+      line.visible = false;
+      return;
+    }
+
     const { focusTarget } = camState.context;
     const isFocused = Object.is(body, focusTarget);
-    const paused = timeActor.getSnapshot()!.matches('paused');
 
     const visible = surface && paused && !isFocused;
     line.visible = visible;
+
+    // if (body.name === 'Earth') {
+    //   console.log('------------');
+    //   console.log('surface: ', surface);
+    //   console.log('isFocused: ', isFocused);
+    //   console.log('paused: ', paused);
+    //   console.log('visible: ', visible);
+    // }
 
     // console.log(`${line.geometry.name} visible?`, visible);
     // console.log(`onSurface?`, surface);
@@ -101,6 +118,10 @@ export const ProjectedTrail = ({
 
     /* Reset after slight delay. */
     setTimeout(() => {
+      // if (body.name === 'Earth') {
+      //   console.log('RESET');
+      // }
+
       const anchor = anchorRef.current;
       points.current = resetTrail(anchor, body, length);
 
@@ -131,11 +152,13 @@ export const ProjectedTrail = ({
     });
     return () => subscription.unsubscribe();
   }, [surfaceActor]);
+
   useEffect(() => {
     // Subscribe to timeActor, and reset trail whenever time is unpaused.
     const subscription = timeActor.subscribe((state) => {
       const event = state.event.type;
-      if (event === 'UNPAUSE' || event === 'PAUSE' || event === 'RESET') {
+      if (event === 'UNPAUSE' || event === 'PAUSE') {
+        // console.log('time event: ', event);
         reset.current();
       }
     });
@@ -177,11 +200,18 @@ export const ProjectedTrail = ({
       // Make room for new position.
       shiftLeft(points.current, 3);
       // Add new position to the end of the array.
-      points.current.set(_newPos.toArray(), points.current.length - 3);
+      const newPosArr = _newPos.toArray();
+      points.current.set(newPosArr, points.current.length - 3);
 
       // Update geometry.
       line.geometry.setPositions(points.current);
       line.computeLineDistances();
+
+      setVisibility.current();
+      // if (body.name == 'Earth') {
+      //   console.log('Earth line visible: ', line.visible);
+      //   console.log('Earth points: ', points.current);
+      // }
     };
     const subscription = timeActor.subscribe((state) => {
       if (state.matches('unpaused')) return; // Do nothing if unpaused.
