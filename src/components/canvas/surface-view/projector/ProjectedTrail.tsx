@@ -134,7 +134,8 @@ export const ProjectedTrail = ({
   useEffect(() => {
     // Subscribe to timeActor, and reset trail whenever time is unpaused.
     const subscription = timeActor.subscribe((state) => {
-      if (state.event.type === 'UNPAUSE') {
+      const event = state.event.type;
+      if (event === 'UNPAUSE' || event === 'PAUSE' || event === 'RESET') {
         reset.current();
       }
     });
