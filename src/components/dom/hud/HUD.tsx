@@ -43,8 +43,8 @@ export const HUD = ({ className }: Props) => {
         </div>
 
         {/** Details Panel. */}
-        <div className={'relative col-end-[-2] row-start-[3]'}>
-          <div className="pointer-events-auto relative top-0 h-fit w-fit -translate-x-1/2 -translate-y-1/4 scale-90 md:translate-y-0 md:scale-100 lg:left-1/2">
+        <div className={'relative col-end-[-2] row-start-[3] m-0'}>
+          <div className="pointer-events-auto absolute top-0 m-0 h-fit w-fit -translate-x-2/3 -translate-y-1/4 scale-90 sm:relative sm:-translate-x-1/2 md:translate-y-0 md:scale-100 lg:left-1/2">
             <DetailsPanel />
           </div>
         </div>

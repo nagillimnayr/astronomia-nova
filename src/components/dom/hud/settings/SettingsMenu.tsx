@@ -54,7 +54,7 @@ export const SettingsMenu = ({ defaultOpen }: Props) => {
         ref={divRef}
         data-state={state.value}
         className={cn(
-          'items-left absolute right-full  top-full m-0 flex min-h-fit w-52 min-w-fit flex-col justify-start gap-2 rounded-lg border-2 bg-muted p-3 font-sans text-xl text-muted-foreground data-[state=closed]:pointer-events-none data-[state=open]:pointer-events-auto data-[state=closed]:hidden '
+          'items-left absolute right-full top-full m-0 flex min-h-fit w-52 min-w-fit flex-col justify-start gap-2 rounded-lg border-2 bg-muted p-3 font-sans text-xl text-muted-foreground data-[state=closed]:pointer-events-none data-[state=open]:pointer-events-auto data-[state=closed]:hidden '
         )}
       >
         {/** Close button. */}

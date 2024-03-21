@@ -12,7 +12,10 @@ export const SiteLayout = ({ children }: SiteLayoutProps) => {
   return (
     <>
       <div
-        className={cn(...fontVariables, 'h-full min-h-fit w-full min-w-fit')}
+        className={cn(
+          ...fontVariables,
+          'm-0 h-screen min-h-fit w-screen min-w-fit'
+        )}
       >
         {children}
       </div>

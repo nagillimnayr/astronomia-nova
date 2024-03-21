@@ -89,7 +89,7 @@ const DetailsPanel = () => {
       ref={divRef}
       data-state={state.value}
       className={cn(
-        'relative flex h-80 w-60 flex-col items-center justify-start gap-2 rounded-sm border-[3px] border-border bg-muted p-4 text-muted-foreground',
+        'relative flex h-fit w-60 flex-col items-center justify-start gap-2 rounded-sm border-[3px] border-border bg-muted p-4 text-muted-foreground sm:h-80',
         'transition-all duration-300 data-[state=closed]:hidden'
       )}
     >
@@ -109,7 +109,7 @@ const DetailsPanel = () => {
       {/** Attributes. */}
       {selected && (
         <>
-          <div className="h-full max-h-full w-full overflow-auto whitespace-nowrap rounded-md border-[3px] border-border p-1">
+          <div className="hidden h-full max-h-full w-full overflow-auto whitespace-nowrap rounded-md border-[3px] border-border p-1 sm:flex">
             <div className="flex h-full w-full flex-col items-start justify-evenly gap-1 p-0 ">
               {/** Mass. */}
               <AttributeDetails name={'Mass'}>

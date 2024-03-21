@@ -29,7 +29,7 @@ const CanvasWrapper = ({ children }: PropsWithChildren) => {
         <div ref={container} className="relative z-0 h-full w-full">
           <div className="relative z-0 h-full w-full">
             <Canvas
-              className="z-[0]"
+              className="relative z-[0] h-full w-full"
               // eventSource={container}
               gl={{
                 logarithmicDepthBuffer: true,

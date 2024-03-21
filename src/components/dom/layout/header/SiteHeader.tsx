@@ -28,9 +28,9 @@ export const SiteHeader = ({ className }: SiteHeaderProps) => {
       <header
         ref={headerRef}
         className={cn(
-          `relative z-40 flex h-full w-full min-w-full translate-y-[0%] flex-row
-           items-center justify-start border-b border-border bg-muted py-4 pl-6 
-           text-muted-foreground md:pr-12 lg:pr-36`,
+          `relative z-40 hidden h-full w-full min-w-full translate-y-[0%]
+           flex-row items-center justify-start border-b border-border bg-muted py-4 
+           pl-6 text-muted-foreground sm:flex md:pr-12 lg:pr-36`,
           className
         )}
       >
