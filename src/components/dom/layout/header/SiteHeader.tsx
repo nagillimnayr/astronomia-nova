@@ -28,7 +28,9 @@ export const SiteHeader = ({ className }: SiteHeaderProps) => {
       <header
         ref={headerRef}
         className={cn(
-          `relative z-40 flex h-full w-full min-w-full translate-y-[0%] flex-row items-center justify-start border-b border-border bg-muted py-4 pl-6 pr-36 text-muted-foreground`,
+          `relative z-40 flex h-full w-full min-w-full translate-y-[0%] flex-row
+           items-center justify-start border-b border-border bg-muted py-4 pl-6 
+           text-muted-foreground md:pr-12 lg:pr-36`,
           className
         )}
       >
@@ -75,7 +77,7 @@ export const SiteHeader = ({ className }: SiteHeaderProps) => {
         <div className="ml-auto mr-5 flex items-center justify-center transition-colors hover:text-indigo-400">
           <Link
             href={'/user-guide'}
-            className="flex items-center justify-between gap-1 text-xl"
+            className="hidden items-center justify-between gap-1 text-xl md:flex"
           >
             <span className="font-sans">User Guide</span>
             <span className="icon-[mdi--help-circle-outline] aspect-square h-6 w-6" />
