@@ -6,7 +6,7 @@ import { TimeDisplay } from './time-display/TimeDisplay';
 //type TimePanelProps = {};
 export const TimePanel = () => {
   return (
-    <div className="sm:w-min-full h-min-fit pointer-events-none flex h-fit select-none flex-col items-center justify-start self-center rounded-lg border-2 border-border bg-muted p-2 sm:w-72">
+    <div className="sm:w-min-full h-min-fit pointer-events-none flex h-fit -translate-y-1/2 select-none flex-col items-center justify-start self-center rounded-lg border-2 border-border bg-muted p-2 sm:w-72 sm:translate-y-0">
       <TimeDisplay />
       <div className="z-10 -my-1 w-full">
         <TimeControls />
