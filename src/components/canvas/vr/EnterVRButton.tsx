@@ -44,7 +44,7 @@ export const EnterVRButton = () => {
           maxWidth: '124px',
         }}
         className={
-          'select-none border-2 border-white  p-2 transition-all hover:bg-subtle hover:bg-opacity-20'
+          'hidden select-none border-2  border-white p-2 transition-all hover:bg-subtle hover:bg-opacity-20 md:block'
         }
       >
         {(status) => (status === 'unsupported' ? `WebXR ${status}` : text)}
