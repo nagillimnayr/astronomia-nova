@@ -62,16 +62,16 @@ const SurfaceViewDialog = () => {
     <div
       ref={divRef}
       data-state={inSpace ? state.value : 'closed'}
-      className="prose pointer-events-auto flex h-40 w-96 max-w-[50vw] flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-border bg-card px-6 font-sans data-[state=closed]:hidden prose-headings:m-0"
+      className="prose pointer-events-auto flex h-fit w-fit max-w-[50vw] flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-border bg-card px-2 font-sans data-[state=closed]:hidden prose-headings:m-0 sm:h-40 sm:w-96 sm:px-6"
     >
       {/** Title. */}
       {/* <header className="m-0 text-center text-3xl">Surface View</header> */}
 
       {/** Content. */}
-      <div className="my-auto flex h-full w-full grid-cols-2 grid-rows-2 flex-col items-stretch justify-center gap-x-6 gap-y-4 font-sans">
+      <div className=" my-auto flex h-full w-full grid-cols-2 grid-rows-2 flex-col items-stretch justify-center gap-x-6 gap-y-4 font-sans ">
         {/** Inputs for latitude and longitude. */}
 
-        <div className="flex flex-row items-center justify-center gap-6">
+        <div className="flex flex-col items-center justify-center gap-6 py-2 sm:flex-row sm:py-0">
           <div className="flex flex-col items-start justify-center">
             <Label className="mb-2 inline-flex items-center justify-center">
               Latitude&nbsp;
@@ -136,11 +136,11 @@ const SurfaceViewDialog = () => {
           </div>
         </div>
 
-        <div className="flex flex-row items-center justify-stretch gap-6 ">
+        <div className="flex flex-row items-center justify-stretch gap-2 sm:gap-6 ">
           {/** Cancel button. */}
 
           <button
-            className="h-fit w-full min-w-fit  place-items-center rounded-md border border-muted px-2 py-1 text-xl hover:bg-muted"
+            className="h-fit w-full min-w-fit  place-items-center rounded-md border border-muted py-1 text-lg hover:bg-muted sm:px-2 sm:text-xl"
             onClick={close}
           >
             Cancel
@@ -148,7 +148,7 @@ const SurfaceViewDialog = () => {
 
           {/** Confirm button. */}
           <button
-            className="col-span-1 col-start-2 row-span-1 row-start-2 h-fit w-full min-w-fit place-items-center rounded-md border border-muted px-2 py-1 text-xl hover:bg-muted"
+            className="col-span-1 col-start-2 row-span-1 row-start-2 h-fit w-full min-w-fit place-items-center rounded-md border border-muted py-1 text-lg hover:bg-muted sm:px-2 sm:text-xl"
             onClick={confirm}
           >
             Confirm
