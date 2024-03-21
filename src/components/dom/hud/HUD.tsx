@@ -44,7 +44,7 @@ export const HUD = ({ className }: Props) => {
 
         {/** Details Panel. */}
         <div className={'relative col-end-[-2] row-start-[3]'}>
-          <div className="pointer-events-auto relative left-1/2 top-0 h-fit w-fit -translate-x-1/2">
+          <div className="pointer-events-auto relative top-0 h-fit w-fit -translate-x-1/2 -translate-y-1/4 scale-90 md:translate-y-0 md:scale-100 lg:left-1/2">
             <DetailsPanel />
           </div>
         </div>

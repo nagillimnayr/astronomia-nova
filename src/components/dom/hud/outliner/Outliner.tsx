@@ -25,7 +25,7 @@ const Outliner = () => {
     flex-col 
     items-start justify-start gap-0 rounded-lg 
     border-4 border-border bg-muted p-4 
-    px-6 text-xl md:flex"
+    px-6 text-xl lg:flex"
     >
       <OutlinerItem body={root} defaultOpen />
     </div>
