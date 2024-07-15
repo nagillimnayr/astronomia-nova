@@ -11,10 +11,12 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs',
     options: {},
   },
+
   stories: [
     '../src/**/*.stories.mdx',
     '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
   ],
+
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
@@ -35,11 +37,13 @@ const config: StorybookConfig = {
         },
       },
     },
+    '@chromatic-com/storybook'
   ],
-  docs: {
-    autodocs: 'tag',
-  },
+
+  docs: {},
+
   staticDirs: ['../public', '../json'],
+
   async webpackFinal(config, { configType }) {
     if (configType === 'DEVELOPMENT') {
       // Modify config for development
@@ -56,5 +60,9 @@ const config: StorybookConfig = {
 
     return config;
   },
+
+  typescript: {
+    reactDocgen: 'react-docgen-typescript'
+  }
 };
 export default config;
