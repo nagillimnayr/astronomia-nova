@@ -37,7 +37,7 @@ const config: StorybookConfig = {
         },
       },
     },
-    '@chromatic-com/storybook'
+    '@chromatic-com/storybook',
   ],
 
   docs: {},
@@ -62,7 +62,7 @@ const config: StorybookConfig = {
   },
 
   typescript: {
-    reactDocgen: 'react-docgen-typescript'
-  }
+    reactDocgen: 'react-docgen',
+  },
 };
 export default config;
