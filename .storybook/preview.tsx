@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/react';
-import { withThemeByClassName } from '@storybook/addon-styling';
+// import { withThemeByClassName } from '@storybook/addon-styling';
 import * as React from 'react';
 
 import '../src/styles/globals.css';
@@ -22,13 +22,13 @@ const preview: Preview = {
   decorators: [
     // Adds theme switching support.
     // NOTE: requires setting "darkMode" to "class" in your tailwind config
-    withThemeByClassName({
-      themes: {
-        light: 'light',
-        dark: 'dark',
-      },
-      defaultTheme: 'light',
-    }),
+    // withThemeByClassName({
+    //   themes: {
+    //     light: 'light',
+    //     dark: 'dark',
+    //   },
+    //   defaultTheme: 'light',
+    // }),
     (Story) => {
       return (
         <Providers>
@@ -39,6 +39,8 @@ const preview: Preview = {
       );
     },
   ],
+
+  tags: ['autodocs'],
 };
 
 export default preview;

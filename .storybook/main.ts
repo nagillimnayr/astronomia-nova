@@ -12,10 +12,7 @@ const config: StorybookConfig = {
     options: {},
   },
 
-  stories: [
-    '../src/**/*.stories.mdx',
-    '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-  ],
+  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
 
   addons: [
     '@storybook/addon-links',
@@ -62,7 +59,7 @@ const config: StorybookConfig = {
   },
 
   typescript: {
-    reactDocgen: 'react-docgen',
+    reactDocgen: 'react-docgen-typescript',
   },
 };
 export default config;
